@@ -483,18 +483,54 @@ def test_group_exposures_use_the_summed_dimson_betas_and_add_up_to_the_book():
     assert abs(fit.beta.at["AAA", ("TERM", 0)] - fit.beta_sum.at["AAA", "TERM"]) > 0.5
 
 
-def test_factor_pnl_needs_the_immediately_previous_session_in_the_positions():
-    """E(t-1) x f(t) needs the book at t-1's close. Across a gap in the positions dates no
-    P&L is booked: an older book is not t-1's book."""
+def test_factor_pnl_pairs_each_positions_date_with_its_next_session_flat_or_not():
+    """E(t-1) x f(t) needs only the book at t-1's close (team lead, 2026-11-11/12, on the second
+    review of PR #82). Each positions date tp is paired with its next price session t, whether
+    or not t is itself a positions date (a date with no row holds nothing: the session on which
+    the book goes flat), up to the last positions date or `pnl_through`, and never across a gap:
+    an older book is not t-1's book, and a session after a flat close has no exposure going in.
+    Until that ruling this test said a gap booked nothing; it fails on the parent 8eb9ce1 (no row
+    for the session the book went flat)."""
     R = _returns_with_names()
     px = _px_from_returns(R)
-    gap = [SESS[150], SESS[152]]
+    gap = [SESS[150], SESS[152]]                     # held at 150, flat at 151, held at 152
     ro = ER.readout(px, _positions(gap, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L)
-    assert len(ro.factor_pnl) == 0
-    some = [SESS[150], SESS[151], SESS[153]]
-    ro = ER.readout(px, _positions(some, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L)
     assert sorted(ro.factor_pnl["date"].unique()) == [SESS[151]]
     assert set(ro.factor_pnl["prev"]) == {SESS[150]}
+    some = [SESS[150], SESS[151], SESS[153]]          # flat at 152
+    ro = ER.readout(px, _positions(some, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L)
+    pairs = sorted({(d, p) for d, p in zip(ro.factor_pnl["date"], ro.factor_pnl["prev"])})
+    assert pairs == [(SESS[151], SESS[150]), (SESS[152], SESS[151])]   # never (153, 151): 152's book was empty
+    # the bound: the last positions date by default; the report job passes its as-of close
+    ro = ER.readout(px, _positions(gap, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L, pnl_through=SESS[153])
+    pairs = sorted({(d, p) for d, p in zip(ro.factor_pnl["date"], ro.factor_pnl["prev"])})
+    assert pairs == [(SESS[151], SESS[150]), (SESS[153], SESS[152])]
+    with pytest.raises(ER.ReadoutError, match="is before the last positions date"):
+        ER.readout(px, _positions(gap, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L, pnl_through=SESS[151])
+
+
+def test_a_flat_entry_sessions_factor_pnl_is_the_held_books_own_row():
+    """The session a book closes flat earns E(t-1) x f(t) on the book it held at t-1's close, the
+    same term a book still held at t's close earns (team lead, 2026-11-11/12). A book held at 150
+    and 151, flat at 152 and held again at 153 has, for 151 and 152, exactly the rows of the same
+    book held on all four dates, value for value; and 152's is E(151) x f(152) by hand. Fails on
+    the parent 8eb9ce1, which had no row for 152 (the review measured the dropped term at 25% of a
+    fixture's cumulative MUNI factor P&L)."""
+    R = _returns_with_names()
+    px = _px_from_returns(R)
+    book, groups = {"AAA": 1000.0, "BBB": -400.0}, {"AAA": "multi", "BBB": "muni"}
+    flat_at_152 = ER.readout(px, _positions([SESS[150], SESS[151], SESS[153]], book), groups, window=W, lags=L)
+    held = ER.readout(px, _positions(list(SESS[150:154]), book), groups, window=W, lags=L)
+    key = ["date", "prev", "scope", "factor"]
+    a = flat_at_152.factor_pnl[flat_at_152.factor_pnl["date"].isin([SESS[151], SESS[152]])].sort_values(key)
+    b = held.factor_pnl[held.factor_pnl["date"].isin([SESS[151], SESS[152]])].sort_values(key)
+    pd.testing.assert_frame_equal(a.reset_index(drop=True), b.reset_index(drop=True), check_exact=True)
+    R2, C2, _ = ER.returns_panel(px)
+    fit = ER.fit_window(R2, SESS, SESS[151], list(book), window=W, lags=L)
+    E = (pd.Series(book) * C2.loc[SESS[151], list(book)]).to_numpy() @ fit.beta_sum.to_numpy()
+    f = R2.loc[SESS[152], ETFS].to_numpy() @ fit.M.to_numpy()
+    got = a[(a["date"] == SESS[152]) & (a["scope"] == "book")].set_index("factor")["pnl_summed"]
+    assert got.reindex(list(ER.FACTOR_NAMES)).to_numpy() == pytest.approx(E * f, rel=1e-10, abs=1e-12)
 
 
 # --------------------------------------------------------------------------- plateau check

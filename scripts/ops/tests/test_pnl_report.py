@@ -731,14 +731,13 @@ def _cum_lines(f):
 
 
 def test_every_cumulative_factor_pnl_line_labels_the_sessions_it_covers(tmp_path, monkeypatch):
-    """Second review of PR #82 (2026-11-11): the cumulative factor P&L leaves out a session that
-    closed flat after a held close (the team lead left that to a follow-up PR), so each line that
-    prints it says which sessions it covers: the count, the first and last, and the rule (the
-    sums are the readout's own, not changed). Held through 01-22: 01-21 and 01-22. Flat at
-    01-22: 01-21 only. Fails on
-    the parent 51b209f, whose held line named no session and whose flat line only the last."""
-    rule = ("each a session whose previous close and own close both held a position; a session that closed flat "
-            "after a held close is not in it (not read here: a follow-up PR, team lead, 2026-11-11)")
+    """Second review of PR #82 (2026-11-11): each line that prints the cumulative factor P&L says
+    which sessions it covers: the count, the first and last, and the rule. Since the follow-up PR
+    (team lead, 2026-11-11/12) the rule counts the session the book closed flat, so held through
+    01-22 and flat at 01-22 both cover 01-21 and 01-22. Fails on the parent 8eb9ce1, whose rule
+    left the flat-entry session out (the flat line covered 01-21 only)."""
+    rule = ("each a session from the first trade to the as-of close whose previous close held a position, a session "
+            "that closed flat included (E(t-1) x f(t) needs only the previous close's book; team lead, 2026-11-11/12)")
     rep, _ = run(tmp_path / "held")
     f = rep["factor"]
     assert f["status"] == "OK" and len(_cum_lines(f)) == 1
@@ -749,32 +748,91 @@ def test_every_cumulative_factor_pnl_line_labels_the_sessions_it_covers(tmp_path
     rep, _ = run(tmp_path / "flat")
     f = rep["factor"]
     assert f["status"] == P.FLAT and len(_cum_lines(f)) == 1
-    assert _cum_lines(f)[0].startswith(f"Cumulative factor P&L (book, E(t-1) x f(t), model reading) over 1 session(s), "
-                                       f"{TRADED[1]} to {TRADED[1]}, {rule}: MUNI ")
-    assert f["factor_pnl_sessions"] == {"count": 1, "first": TRADED[1].isoformat(), "last": TRADED[1].isoformat()}
+    assert _cum_lines(f)[0].startswith(f"Cumulative factor P&L (book, E(t-1) x f(t), model reading) over 2 session(s), "
+                                       f"{TRADED[1]} to {TRADED[2]}, {rule}: MUNI ")
+    assert f["factor_pnl_sessions"] == {"count": 2, "first": TRADED[1].isoformat(), "last": TRADED[2].isoformat()}
     assert P.FACTOR_PNL_SESSIONS == rule
 
 
-@pytest.mark.parametrize("night", ["held_interlude", "flat_after_one_close"])
-def test_no_session_held_at_both_closes_says_why_there_is_no_factor_pnl(tmp_path, monkeypatch, night):
-    """Second review of PR #82 (2026-11-11): after held -> flat -> held, no session was held at
-    both its previous close and its own, so the readout has no factor P&L row; the held block
-    printed no cumulative line at all and its JSON said `factor_pnl: null` with no reason. Now
-    the block says it was not read and why, in a line and in `factor_pnl_why`; a flat block whose
-    history is one held close does the same. Fails on the parent 51b209f (no line, no reason)."""
-    fills = INTERLUDE if night == "held_interlude" else FILLS[:2] + [
-        ("f3", "AAA", "sell", 5000, "10.20", TRADED[1]), ("f4", "BBB", "buy", 2000, "20.20", TRADED[1])]
+def _readout_rows(fills, on):
+    """The book factor P&L rows dated `on` of a strict readout of `fills`' held closes, read here
+    from the fixture's own shares and equity, not from the job."""
+    q, rows, eq = {"AAA": 0, "BBB": 0}, [], dict(equity_series())
+    for d in TRADED:
+        for _, s, side, n, _, dd in fills:
+            if dd == d:
+                q[s] += SIGN[side] * n
+        rows += [dict(date=d.isoformat(), symbol=s, shares=float(n), equity=eq[d]) for s, n in q.items() if n]
+    fs = ER.factor_set("cef")
+    fp = ER.readout(price_history(fs), pd.DataFrame(rows), GROUPS, fs=fs, pnl_through=ASOF).factor_pnl
+    return fp[(fp["scope"] == "book") & (fp["date"] == pd.Timestamp(on))].set_index("factor")["pnl_summed"].to_dict()
+
+
+@pytest.mark.parametrize("night", ["held_interlude", "flat_after_one_close", "flat_at_the_as_of"])
+def test_the_session_a_book_closes_flat_is_in_the_factor_pnl(tmp_path, monkeypatch, night):
+    """The team lead's ruling for the follow-up PR (2026-11-11/12, on the second review of PR
+    #82): the factor P&L of the session on which the book goes flat, E(t-1) x f(t), is read. After
+    held -> flat -> held (the review's interlude), and held then flat on 01-21, the block reads
+    01-21's term, the plain fixture's own 01-21 row (the same 01-20 book); flat at the 01-22 close,
+    the cumulative equals the book held through 01-22, to the last bit (the same 01-21 book earns
+    the same f(01-22)). Fails on the parent 8eb9ce1: no factor P&L in the first two (the review
+    found the interlude's empty) and 01-22's term missing from the third (25% of its MUNI sum)."""
+    fills = {"held_interlude": INTERLUDE,
+             "flat_after_one_close": FILLS[:2] + [("f3", "AAA", "sell", 5000, "10.20", TRADED[1]),
+                                                  ("f4", "BBB", "buy", 2000, "20.20", TRADED[1])],
+             "flat_at_the_as_of": FILLS + FLATTEN}[night]
+    held, _ = run(tmp_path / "held")
     monkeypatch.setattr(THIS, "FILLS", fills)
-    rep, code = run(tmp_path)
+    rep, code = run(tmp_path / night)
     f = rep["factor"]
     assert code == P.EXIT_OK and rep["attribution"]["reconciled"] is True
     assert f["status"] == ("OK" if night == "held_interlude" else P.FLAT), f["lines"]
+    if night == "flat_at_the_as_of":
+        assert f["factor_pnl_sessions"] == {"count": 2, "first": TRADED[1].isoformat(), "last": TRADED[2].isoformat()}
+        assert f["factor_pnl"] == held["factor"]["factor_pnl"]
+        return
+    assert f["factor_pnl_sessions"] == {"count": 1, "first": TRADED[1].isoformat(), "last": TRADED[1].isoformat()}
+    want = _readout_rows(FILLS, TRADED[1])              # the plain fixture's 01-21 term: the same 01-20 book
+    assert f["factor_pnl"] == pytest.approx(want, rel=1e-12) and set(f["factor_pnl"]) == set(want)
+    assert "factor_pnl_why" not in f
+
+
+def test_a_book_first_held_at_the_as_of_close_has_no_factor_pnl_and_says_why(tmp_path, monkeypatch):
+    """A book whose only held close is the as-of close (its first trade that session) has no
+    session after a held close, so no factor P&L: the block says it was not read and why, in a
+    line and in `factor_pnl_why` (second review of PR #82). A pin on the wording under the new
+    rule; on the parent 8eb9ce1 the reason named the old rule."""
+    monkeypatch.setattr(THIS, "FILLS", [("f1", "AAA", "buy", 4000, "10.05", TRADED[2])])
+    rep, code = run(tmp_path)
+    f = rep["factor"]
+    assert code == P.EXIT_OK and f["status"] == "OK", f["lines"]
     cum = _cum_lines(f)
-    assert len(cum) == 1, f["lines"]
-    assert cum[0].startswith("Cumulative factor P&L not read: no session since the first trade held a position at "
-                             "both its previous close and its own, so no E(t-1) x f(t) was read")
-    assert f["factor_pnl"] is None and cum[0] == f"Cumulative factor P&L not read: {f.get('factor_pnl_why')}"
-    assert "factor_pnl_sessions" not in f
+    assert len(cum) == 1 and cum[0] == f"Cumulative factor P&L not read: {f['factor_pnl_why']}"
+    assert f["factor_pnl_why"] == ("no session from the first trade to the as-of close followed a close that held a "
+                                   "position (the only held close is the as-of close), so no E(t-1) x f(t) was read")
+    assert f["factor_pnl"] is None and "factor_pnl_sessions" not in f
+
+
+def test_a_flat_as_of_term_without_its_factor_returns_is_unmeasured_and_named(tmp_path, monkeypatch):
+    """The book closes flat at 01-22, so 01-22's factor P&L is E(01-21) x f(01-22), and the price
+    fetch has no factor ETF row on 01-22. That term alone is UNMEASURED, named in its own line and
+    in `asof_term_why`; the cumulative covers 01-21 and says 01-22 is not in it; the block stays
+    FLAT (the FLAT reading needs no price). Fails on the parent 8eb9ce1, which never read the term
+    and so never said it was missing."""
+    monkeypatch.setattr(THIS, "FILLS", FILLS + FLATTEN)
+    etfs = ER.factor_set("cef").etfs
+    rep, code = run(tmp_path, price_fetcher=_late(set(etfs)))
+    f = rep["factor"]
+    assert code == P.EXIT_OK and rep["status"] == "OK" and f["status"] == P.FLAT, f["lines"]
+    assert f["asof_term_why"] == (f"the factor ETF return(s) at the close of {ASOF} are not in the price fetch: "
+                                  + "; ".join(f"{e} (no close on {ASOF})" for e in etfs))
+    line = [ln for ln in f["lines"] if ln.startswith(f"Factor P&L of the as-of session {ASOF} UNMEASURED")]
+    assert line == [f"Factor P&L of the as-of session {ASOF} UNMEASURED: the book held positions at the close of "
+                    f"{TRADED[1]} and closed flat at {ASOF}, so that session's factor P&L is E({TRADED[1]}) x f({ASOF}), "
+                    f"and {f['asof_term_why']}"]
+    assert f["factor_pnl_sessions"] == {"count": 1, "first": TRADED[1].isoformat(), "last": TRADED[1].isoformat()}
+    assert _cum_lines(f)[0].endswith(f"; not in it: the factor P&L of the as-of session {ASOF}, E({TRADED[1]}) x "
+                                     f"f({ASOF}), the session the book closed flat, is UNMEASURED: {f['asof_term_why']}")
 
 
 def test_the_block_refuses_a_readout_whose_last_date_is_not_the_as_of_close():

@@ -1272,7 +1272,13 @@ distributions, then factor exposure at the last close against the review line
 (REVIEW_FRACTION x vol_target_annual x sizing_multiplier, each read from the book's own
 spec, the multiplier since the team lead's ruling of 2026-11-10 because the account holds m
 x the unit book; the report prints the three inputs beside the line), headline first, by
-muni/taxable (core) or by family (C4). The rebuild must reconcile to official to the
+muni/taxable (core) or by family (C4), with the cumulative factor P&L, E(t-1) x f(t) summed
+per factor over every session from the first trade to the as-of close whose previous close
+held a position, labelled with its count, first and last session. The session on which the
+book closes flat is in it (team lead, 2026-11-11/12, on the second review of PR #82: until
+this follow-up it was left out); a flat book whose
+as-of term lacks a factor ETF's return at the as-of names that term UNMEASURED and sums the
+sessions before it. The rebuild must reconcile to official to the
 cent, or the report says so at its top (overall status UNRECONCILED, not OK). **A breach of a review line is report-only: it
 appears in the report and sends NOTHING** (no push, no ACT, no halt, no trade; team lead,
 2026-11-09). `risk_daily`'s attribution and factor blocks read this job's JSON and stay

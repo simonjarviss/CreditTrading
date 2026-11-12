@@ -325,7 +325,8 @@ the W sessions STRICTLY BEFORE t (the y rows), with lagged factor rows reaching 
 further back. `assert_strictly_before` raises `LookaheadError` if any row of either window
 is dated t or later; it is an explicit raise, not an `assert`, so `python -O` cannot strip
 it. The factor P&L of session t uses the exposure of the previous session (E(t-1) x f(t)),
-with f(t) built from E(t-1)'s own slopes.
+with f(t) built from E(t-1)'s own slopes; it is read for the session after every positions
+date, a session the book closes flat included (team lead, 2026-11-11/12; `readout`).
 
 TOTAL RETURNS (H15)
 -------------------
@@ -1409,12 +1410,26 @@ def _missing_input(s: str, t, C: pd.DataFrame, R: pd.DataFrame, sessions: pd.Dat
 
 def readout(px: pd.DataFrame, positions: pd.DataFrame, groups: dict, *, window: int | None = None,
             lags: int | None = None, vol_target: float | None = None, fs: FactorSet = CORE,
-            partial: bool = False) -> Readout:
-    """Exposures on every positions date, and the factor P&L on every positions date whose
-    previous session is also a positions date (E(t-1) x f(t), and the lag-distributed
-    second method). `window`, `lags` and `vol_target` default to the book's (`fs`); a book
-    whose lag rule has not run raises rather than guess a lag. The line's multiplier is
-    always the book's own (`fs.multiplier`, team lead, 2026-11-10).
+            partial: bool = False, pnl_through=None) -> Readout:
+    """Exposures on every positions date, and the factor P&L of the session after each positions
+    date (E(t-1) x f(t), and the lag-distributed second method). `window`, `lags` and
+    `vol_target` default to the book's (`fs`); a book whose lag rule has not run raises rather
+    than guess a lag. The line's multiplier is always the book's own (`fs.multiplier`, team
+    lead, 2026-11-10).
+
+    THE FACTOR P&L PAIRS EACH POSITIONS DATE tp WITH ITS NEXT PRICE SESSION t (team lead,
+    2026-11-11/12, on the second review of PR #82). E(t-1) x f(t) needs only the book at t-1's
+    close, so session t is read whether or not t is itself a positions date. Before that ruling
+    a row needed t to be a positions date too, so the session on which a book goes flat (a date
+    with no row: the report job's `positions_frame` drops flat closes, and in a positions file a
+    date with no row holds nothing) had no factor P&L, although its book at t-1 earned f(t): the
+    review measured the dropped term at 25% of a two-session fixture's cumulative MUNI factor
+    P&L, and after held -> flat -> held the P&L was empty. Rows for consecutive positions dates
+    are unchanged, value for value and in order; the only new rows are flat-entry sessions.
+    t is the price cache's next session after tp, and is read only if t <= `pnl_through`
+    (default: the last positions date, so nothing after the book the caller gave is read; the
+    report job passes its attribution's as-of close). A `pnl_through` before the last positions
+    date raises: it would drop that date's own next session without a word.
 
     `partial` (default False: the strict readout, unchanged; True from the daily report job
     only, team lead 2026-11-10, module docstring PARTIAL): a held name without every input on
@@ -1492,14 +1507,17 @@ def readout(px: pd.DataFrame, positions: pd.DataFrame, groups: dict, *, window: 
         for etf in fs.etfs:
             def_rows.append(dict(date=t, etf=etf, **{k: float(fit.M.at[etf, k]) for k in fs.names}))
 
-    # factor P&L: t whose previous session is a positions date
+    # factor P&L: each positions date tp with its next price session t <= the bound (docstring)
     pnl_rows = []
-    pos_set = set(dates)
-    for t in dates:
-        i = int(sessions.searchsorted(t))
-        if i == 0 or sessions[i - 1] not in pos_set:
+    bound = dates[-1] if pnl_through is None else pd.Timestamp(pnl_through)
+    if bound < dates[-1]:
+        raise ReadoutError(f"pnl_through {bound.date()} is before the last positions date {dates[-1].date()}: the "
+                           "factor P&L of that date's next session would be dropped")
+    for tp in dates:
+        i = int(sessions.searchsorted(tp)) + 1      # tp is a cached session (checked above); i is t's index
+        if i >= len(sessions) or sessions[i] > bound:
             continue
-        tp = sessions[i - 1]
+        t = sessions[i]
         fit, value = fits[tp], values[tp]
         held = list(value.index)
         f_t = R.loc[[t], list(fs.etfs)]

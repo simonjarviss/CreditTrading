@@ -433,7 +433,8 @@ def build_factor(book: str, res, inp, *, groups: dict, asof: dt.date, reconciled
         return _factor_unmeasured(f"book {book} has no Dimson lag: its lag rule has not produced one "
                                   "(scripts/cef/exposure_readout.py, THE C4 LAG RULE)", fs)
     try:
-        ro, failed = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher, etf_close_on=last)
+        ro, failed, _ = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher, etf_close_on=last,
+                              pnl_through=last)
     except _NotRead as e:
         return _factor_unmeasured(str(e), fs)
     return _factor_report(ro, fs, book, last, partial=partial_info(ro, res, failed, last),
@@ -450,11 +451,19 @@ class _NotRead(Exception):
 
 
 def _read(fs: ER.FactorSet, P: pd.DataFrame, groups: dict, *, first: dt.date, asof: dt.date, price_fetcher,
-          etf_close_on: dt.date | None):
+          etf_close_on: dt.date | None, pnl_through: dt.date, flat_close: dt.date | None = None):
     """Fetch every held name's and factor ETF's prices and read the partial readout on P.
-    Returns (readout, the fetch's failures by ticker). `etf_close_on` is the close every factor
-    ETF must have a price on (the as-of close of a held book); None for a flat book's history,
-    whose dates are all earlier and whose ETF returns `readout` checks on every window."""
+    Returns (readout, the fetch's failures by ticker, why the as-of term is not read or None).
+    `etf_close_on` is the close every factor ETF must have a price on (the as-of close of a held
+    book); None for a flat book's history, whose dates are all earlier and whose ETF returns
+    `readout` checks on every window. `pnl_through` is the attribution's as-of close: the factor
+    P&L reads each held close's next session up to it (team lead, 2026-11-11/12).
+
+    `flat_close` (a flat book's as-of close, `_factor_flat`): when the book closed flat on that
+    very session, its factor P&L E(last held close) x f(as-of) needs every factor ETF's return at
+    the as-of. If one is not in the fetch, that term alone is UNMEASURED and named (the third
+    value), and the P&L is read through the session before it; the FLAT reading needs no price
+    and stands (the team lead's instruction for this PR)."""
     tickers = sorted(set(P["symbol"]) | set(fs.etfs))
     # 252 sessions of beta window (about 370 calendar days) plus lags before the first positions date.
     start = pd.Timestamp(first).date() - dt.timedelta(days=int(fs.window * 1.6) + 30)
@@ -471,12 +480,45 @@ def _read(fs: ER.FactorSet, P: pd.DataFrame, groups: dict, *, first: dt.date, as
                            + "; ".join(f"{e} ({failed.get(e, 'no row on that date')})" for e in etf_gone)
                            + ("; held name(s) without a price history: " + "; ".join(
                                f"{t} ({failed[t]})" for t in held_failed) if held_failed else ""))
+    term_why = None if flat_close is None else _asof_term_gap(px, fs, P, flat_close)
+    if term_why is not None:
+        pnl_through = flat_close - dt.timedelta(days=1)   # every session before the as-of; the as-of term is named
     try:
-        ro = ER.readout(px, P, groups, fs=fs, partial=True)
+        ro = ER.readout(px, P, groups, fs=fs, partial=True, pnl_through=pnl_through)
     except ER.NoInputsError as e:
         raise _NotRead(f"{e}" + ("; fetch: " + "; ".join(f"{t} ({failed[t]})" for t in held_failed)
                                  if held_failed else "")) from e
-    return ro, failed
+    return ro, failed, term_why
+
+
+def _asof_term_gap(px: pd.DataFrame, fs: ER.FactorSet, P: pd.DataFrame, last: dt.date) -> str | None:
+    """Why the factor P&L of a flat book's as-of session cannot be read, or None (`_read`).
+
+    There is such a term only when the book's last held close is the NYSE session just before
+    the as-of (it closed flat on the as-of itself); a book that went flat earlier has no exposure
+    going into the as-of session, so that session's factor P&L is not missing, it is not there.
+    The term needs each factor ETF's return at the as-of: a finite close on the as-of and on the
+    price cache's session before it (`exposure_readout.returns_panel` divides one by the other)."""
+    held = pd.DatetimeIndex(pd.to_datetime(P["date"]).unique()).sort_values()
+    last_held = held[-1].date()
+    after = ER.nyse_sessions(last_held + dt.timedelta(days=1), last)
+    if not len(after) or after[0] != pd.Timestamp(last):
+        return None
+    t = pd.Timestamp(last)
+    dates = pd.DatetimeIndex(pd.to_datetime(px["date"]).unique()).sort_values()
+    if t not in dates:
+        return f"the price fetch has no row on {last} for any ticker, so no factor ETF return at that close was read"
+    prev = dates[dates.get_loc(t) - 1]
+    rows = px.assign(_d=pd.to_datetime(px["date"]))
+    gone = []
+    for e in fs.etfs:
+        for d in (prev, t):
+            c = rows.loc[(rows["ticker"] == e) & (rows["_d"] == d), "close"].to_numpy(float)
+            if len(c) != 1 or not np.isfinite(c[0]):
+                gone.append(f"{e} (no close on {d.date()})")
+    if not gone:
+        return None
+    return f"the factor ETF return(s) at the close of {last} are not in the price fetch: {'; '.join(gone)}"
 
 
 def exclusions(ro, failed: dict) -> list[dict]:
@@ -554,16 +596,17 @@ def _earlier_note(earlier: list[dict], why_no_severity: str) -> str:
 
 
 # Which sessions the cumulative factor P&L covers, said on every line that prints it (second
-# review of PR #82, 2026-11-11). `exposure_readout.readout` reads E(t-1) x f(t) only on a
-# positions date whose previous session is one, and `positions_frame` drops flat closes, so a
-# session that closes flat after a held close has no row: its factor P&L is not read. The team
-# lead left that gap to a follow-up PR (2026-11-11); until then the label keeps it visible.
-FACTOR_PNL_SESSIONS = ("each a session whose previous close and own close both held a position; a session that "
-                       "closed flat after a held close is not in it (not read here: a follow-up PR, team lead, "
-                       "2026-11-11)")
+# review of PR #82, 2026-11-11). Until the follow-up PR (team lead, 2026-11-11/12) the readout read
+# E(t-1) x f(t) only on a positions date whose previous session was one, and `positions_frame`
+# drops flat closes, so the session on which the book went flat was left out, and the label said
+# so. Now the readout pairs each held close with its next session up to the attribution's as-of
+# close (`exposure_readout.readout`, `pnl_through`), so that session is in the sum.
+FACTOR_PNL_SESSIONS = ("each a session from the first trade to the as-of close whose previous close held a position, "
+                       "a session that closed flat included (E(t-1) x f(t) needs only the previous close's book; team "
+                       "lead, 2026-11-11/12)")
 
 
-def _factor_pnl(ro, order, pdates: set) -> tuple[list[str], dict]:
+def _factor_pnl(ro, order, pdates: set, note: str | None = None) -> tuple[list[str], dict]:
     """The cumulative factor P&L's line and JSON fields: the book's summed factor P&L per factor,
     labelled with the sessions it covers (FACTOR_PNL_SESSIONS: their count, first and last) and
     how many were read on a PARTIAL previous-session book.
@@ -573,12 +616,17 @@ def _factor_pnl(ro, order, pdates: set) -> tuple[list[str], dict]:
     interlude), the readout has no factor P&L row; before that review the block then printed no
     line at all and its JSON said `factor_pnl: null` with no reason. Now the line says it was not
     read and why, and `factor_pnl_why` carries the same. No figure changes: the sums are the
-    readout's own, over the same rows."""
+    readout's own, over the same rows.
+
+    Since the follow-up PR (team lead, 2026-11-11/12) a flat-entry session is read, so the held ->
+    flat -> held interlude has its row; a block with none is one whose only held close is the
+    as-of close (the first trade's own session), or a flat block whose one term is the as-of
+    session's and could not be read (`note`, from `_factor_flat`)."""
     fp = ro.factor_pnl
     if not len(fp):
-        why = ("no session since the first trade held a position at both its previous close and its own, so no "
-               "E(t-1) x f(t) was read; a session that closed flat after a held close is not read here (a "
-               "follow-up PR, team lead, 2026-11-11)")
+        why = ("no session from the first trade to the as-of close followed a close that held a position (the only "
+               "held close is the as-of close), so no E(t-1) x f(t) was read") if note is None else \
+              f"no session before the as-of close followed a close that held a position, and {note}"
         return [f"Cumulative factor P&L not read: {why}"], {"factor_pnl": None, "factor_pnl_why": why}
     book_rows = fp[fp["scope"] == "book"]
     pnl = {k: float(book_rows[book_rows["factor"] == k]["pnl_summed"].sum()) for k in order}
@@ -588,7 +636,8 @@ def _factor_pnl(ro, order, pdates: set) -> tuple[list[str], dict]:
     line = (f"Cumulative factor P&L (book, E(t-1) x f(t), model reading) over {len(sessions)} session(s), "
             f"{sessions[0]} to {sessions[-1]}, {FACTOR_PNL_SESSIONS}: "
             + ", ".join(f"{k} {v:+,.2f}" for k, v in pnl.items())
-            + (f" ({on_partial} session(s) on a PARTIAL previous-session book)" if on_partial else ""))
+            + (f" ({on_partial} session(s) on a PARTIAL previous-session book)" if on_partial else "")
+            + (f"; not in it: {note}" if note else ""))
     return [line], {"factor_pnl": pnl,
                     "factor_pnl_sessions": {"count": len(sessions), "first": sessions[0], "last": sessions[-1]}}
 
@@ -605,8 +654,11 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
     It says so in its first line and reads nothing for that close: no exposure, no within or
     REVIEW flag, no PARTIAL, no share. Before this review the block showed the previous held
     close's exposure as the as-of reading, under status OK, dated but easy to miss. The
-    history since the first trade (the review-flag counts and the factor P&L over the earlier
-    held closes) is still read, and every line of it says which dates it covers; a name left
+    history since the first trade (the review-flag counts over the earlier held closes, and the
+    factor P&L of each session after one, up to the as-of: the session the book closed flat
+    included, team lead 2026-11-11/12) is still read, and every line of it says which dates it
+    covers; that as-of term needs the factor ETFs' returns at the as-of, and without them it is
+    UNMEASURED in its own line, named (`_read`, `_asof_term_gap`); a name left
     out on one of those dates is the history's note and raises nothing. A history with no
     reading for a named reason (`_NotRead`: no held name with its inputs on an earlier date, or
     a book with no Dimson lag) is UNMEASURED in its own line, named, and leaves the as-of
@@ -638,7 +690,8 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
         if fs.dimson_lags is None:
             raise _NotRead(f"book {book} has no Dimson lag: its lag rule has not produced one "
                            "(scripts/cef/exposure_readout.py, THE C4 LAG RULE)")
-        ro, failed = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher, etf_close_on=None)
+        ro, failed, term_why = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher,
+                                     etf_close_on=None, pnl_through=last, flat_close=last)
     except _NotRead as e:                        # a named reason only; a bug, a LookaheadError or a failed fetch propagates
         why = str(e)
         lines.append(f"History since the first trade ({first}) UNMEASURED: {why}")
@@ -656,7 +709,15 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
                  f"close(s) with a position, {held[0]} to {held[-1]}; REVIEW on "
                  + ", ".join(f"{k} {history[k]['review_dates']} of {history[k]['dates']}" for k in order)
                  + (f" ({len(pdates)} of those dates PARTIAL)" if pdates else ""))
-    pnl_lines, pnl_out = _factor_pnl(ro, order, pdates)
+    note = None
+    if term_why is not None:
+        note = (f"the factor P&L of the as-of session {last}, E({held[-1]}) x f({last}), the session the book closed "
+                f"flat, is UNMEASURED: {term_why}")
+        lines.append(f"Factor P&L of the as-of session {last} UNMEASURED: the book held positions at the close of "
+                     f"{held[-1]} and closed flat at {last}, so that session's factor P&L is E({held[-1]}) x f({last}), "
+                     f"and {term_why}")
+        out["asof_term_why"] = term_why
+    pnl_lines, pnl_out = _factor_pnl(ro, order, pdates, note)
     lines.extend(pnl_lines)
     if excluded:
         lines.append(_earlier_note(excluded, f"no severity: the book holds nothing at the close of {last}"))
