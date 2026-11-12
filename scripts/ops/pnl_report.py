@@ -114,6 +114,12 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     phantom sale of 2,000 AAA left the block OK at half the true MUNI exposure). A held book on
     an unreconciled night is read, for diagnosis, under status UNRECONCILED, never OK
     (`build_factor`).
+  * Alpaca's EOD history with no point for the as-of D yet: the job reads the latest session it
+    has, D-1, under D's name (`build_attribution`). The markdown's title and the line under its
+    status then say "READ AT THE CLOSE OF D-1, NOT D", the JSON's `session_read` names D-1, and
+    risk_daily shows both blocks UNMEASURED for D, never INFO (team lead, 2026-11-11/12, on the
+    third review of PR #82, where D's report passed D-1's FLAT as INFO; `render_md`,
+    `risk_daily._reading_of`).
   * a book whose Dimson lag rule has no answer: the factor block says UNMEASURED and why.
 
 NO LOOKAHEAD (H7). The attribution uses fills and closes of the sessions it reports, the
@@ -832,9 +838,22 @@ def safe_dist_fetcher(gaps: list):
 
 
 def render_md(rep: dict) -> str:
-    out = [f"# P&L attribution and factor exposure, {rep['book']}, as-of {rep['asof']}", "",
+    """The report's markdown. When the session read is not the as-of the job ran for (Alpaca's EOD
+    history had no point for it yet: `build_attribution` reads the latest session it has), the
+    title and the line under the status say so in capitals (team lead, 2026-11-11/12, on the
+    third review of PR #82: the as-of session must be unmistakable). Before that the title said
+    "as-of D" over figures that were all D-1's, and only a line inside the attribution section
+    said otherwise. On any other night the markdown is unchanged, byte for byte."""
+    read = rep.get("session_read")
+    late = read is not None and read != rep["asof"]
+    title = f"# P&L attribution and factor exposure, {rep['book']}, as-of {rep['asof']}"
+    out = [title + (f": READ AT THE CLOSE OF {read}, NOT {rep['asof']}" if late else ""), "",
            f"Generated {rep['generated_at']} (report only; nothing here touches an order; zero trials).",
            f"Overall: **{rep['status']}**."]
+    if late:
+        out.append(f"**Alpaca's EOD history had no point for {rep['asof']} when this ran, so every figure below, the "
+                   f"attribution and the factor exposure, is of the close of {read}, its latest point; nothing here is "
+                   f"read for {rep['asof']}.**")
     if rep["status"] == UNRECONCILED:
         out += [f"**{ln}**" for ln in (rep["attribution"].get("reconciliation") or {}).get("lines", [])]
     out += ["", "## Attribution"]
@@ -925,10 +944,14 @@ def run_report(book: str, state: Path, asof: dt.date, *, now_utc=None, reader=No
     rep = {"book": book, "asof": asof.isoformat(), "generated_at": now.astimezone(ET).isoformat(timespec="seconds"),
            "status": status, "attribution": att, "factor": factor, "gaps": gaps,
            "note": "report only; zero trials; a review-line breach sends nothing"}
+    if att.get("effective_session") is not None:  # the session read: the as-of's, or the latest EOD point before it
+        rep["session_read"] = att["effective_session"]
     write_atomic(out_dir / f"{asof.isoformat()}.json", json.dumps(rep, indent=1, default=str))
     write_atomic(out_dir / f"{asof.isoformat()}.md", render_md(rep))
     code = exit_code(incomplete=incomplete, reconciled=att.get("reconciled"))   # after both files exist
-    print(f"pnl_report {book} {asof}: {status}; exit {code}; wrote {out_dir / f'{asof.isoformat()}.md'}")
+    read = rep.get("session_read")
+    late = f" (READ AT THE CLOSE OF {read}, NOT {asof})" if read not in (None, asof.isoformat()) else ""
+    print(f"pnl_report {book} {asof}: {status}{late}; exit {code}; wrote {out_dir / f'{asof.isoformat()}.md'}")
     return rep, code
 
 

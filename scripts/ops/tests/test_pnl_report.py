@@ -1020,3 +1020,63 @@ def test_a_phantom_sale_that_reconciles_is_caught_by_the_cross_check(tmp_path):
     b = RD.factor_block("cef", truth, ASOF)
     assert b["status"] == RD.INFO and b["lines"][1:] == rep["factor"]["lines"]
     assert f["rebuild_positions"]["qty"] == {"AAA": 2000, "BBB": -2000}      # the phantom's, read by the job as OK
+
+
+# --- a late EOD point (team lead, 2026-11-11/12, third review of PR #82) ---
+
+class _LateEODReader(FakeReader):
+    """Alpaca's EOD history has no point for the as-of yet when the job runs."""
+    def eod_equity_history(self, start, end):
+        return [p for p in super().eod_equity_history(start, end) if p.date != ASOF]
+
+
+def test_a_late_eod_point_puts_the_session_read_in_the_headline(tmp_path, capsys):
+    """The job reads 01-21, the latest point, under 01-22's name. The markdown's title and the
+    line under its status say so in capitals, the JSON's `session_read` names it, and the stdout
+    line too; a night with its own point keeps the title as it was, byte for byte. Fails on the
+    parent 8eb9ce1, whose title said "as-of 2026-01-22" over 01-21's figures."""
+    rep, code = run(tmp_path / "late", reader=_LateEODReader())
+    assert code == P.EXIT_OK and rep["attribution"]["effective_session"] == TRADED[1].isoformat()
+    md = (tmp_path / "late" / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text().splitlines()
+    assert md[0] == f"# P&L attribution and factor exposure, cef, as-of {ASOF}: READ AT THE CLOSE OF {TRADED[1]}, NOT {ASOF}"
+    assert md[4] == (f"**Alpaca's EOD history had no point for {ASOF} when this ran, so every figure below, the "
+                     f"attribution and the factor exposure, is of the close of {TRADED[1]}, its latest point; nothing "
+                     f"here is read for {ASOF}.**")
+    assert rep["session_read"] == TRADED[1].isoformat() and rep["factor"]["asof"] == TRADED[1].isoformat()
+    assert f"pnl_report cef {ASOF}: OK (READ AT THE CLOSE OF {TRADED[1]}, NOT {ASOF}); exit 0" in capsys.readouterr().out
+    rep, _ = run(tmp_path / "own", reader=FakeReader())
+    md = (tmp_path / "own" / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text().splitlines()
+    assert md[0] == f"# P&L attribution and factor exposure, cef, as-of {ASOF}" and md[3] == "Overall: **OK**."
+    assert md[4] == "" and rep["session_read"] == ASOF.isoformat()
+
+
+# flat at the 01-21 close, AAA re-bought on 01-22 (the third review's late-point scenario)
+STALE_FLAT = FILLS[:2] + [("f3", "AAA", "sell", 5000, "10.20", TRADED[1]), ("f4", "BBB", "buy", 2000, "20.20", TRADED[1]),
+                          ("f5", "AAA", "buy", 4000, "10.05", TRADED[2])]
+
+
+@pytest.mark.parametrize("night", ["held", "flat"])
+def test_a_late_eod_point_is_never_info_in_risk_daily(tmp_path, monkeypatch, night):
+    """The third review of PR #82 (team lead, 2026-11-11/12): Alpaca's EOD history has no 01-22
+    point when the job runs, so it reads 01-21, a held book or (the review's case) a book flat at
+    01-21 that bought AAA on 01-22. risk_daily's 01-22 report shows both blocks UNMEASURED, saying
+    the reading is 01-21's, not 01-22's, with 01-21's account record agreeing; a 01-21 record that
+    disagrees is still a WATCH. Fails on the parent 8eb9ce1, where both blocks were INFO ("FLAT at
+    the close of 2026-01-21, cross-checked" on 01-22's report)."""
+    from scripts.ops import risk_daily as RD
+    if night == "flat":
+        monkeypatch.setattr(THIS, "FILLS", STALE_FLAT)
+    rep, code = run(tmp_path, reader=_LateEODReader())
+    state = tmp_path / "cef"
+    assert rep["factor"]["status"] == ("OK" if night == "held" else P.FLAT)
+    at_prev = {"AAA": 4000, "BBB": -2000} if night == "held" else {}
+    _account_record(state, TRADED[1], at_prev)
+    _account_record(state, ASOF, {"AAA": 4000})
+    f, a = RD.factor_block("cef", state, ASOF), RD.attribution_block("cef", state, ASOF)
+    assert f["status"] == a["status"] == RD.UNMEASURED, (f["lines"][0], a["lines"][0])
+    assert f["lines"][0].startswith(f"Factor exposure UNMEASURED for {ASOF}: the P&L job read the close of {TRADED[1]}, "
+                                    f"NOT {ASOF}")
+    assert a["lines"][0].startswith(f"Attribution UNMEASURED for {ASOF}: the P&L job read the close of {TRADED[1]}, NOT {ASOF}")
+    assert "cross-checked" in f["lines"][1] and f"at the close of {TRADED[1]}" in f["lines"][1]
+    _account_record(state, TRADED[1], {"AAA": 3000})
+    assert RD.factor_block("cef", state, ASOF)["status"] == RD.WATCH

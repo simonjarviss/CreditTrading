@@ -1363,6 +1363,13 @@ step after D's close and before the next open), for every factor status. The cro
 INFO when the record holds the same positions, a WATCH naming the counts and the symbols that
 differ when it holds others, and UNMEASURED when the record is missing, unreadable, for another
 session or not whole shares, so a reading the account record cannot confirm is never INFO.
+When Alpaca's EOD history has no point for the as-of D when the job runs, it reads the latest
+session it has, D-1, and writes it under D's name. Its markdown then says so in its title and
+under its status ("READ AT THE CLOSE OF D-1, NOT D"), its JSON names the session read
+(`session_read`), and `risk_daily`'s D report shows the attribution and factor blocks as
+UNMEASURED for D, never INFO, each first line saying the reading is D-1's and D-1's lines below
+it as history; a WATCH in D-1's reading stays a WATCH (team lead, 2026-11-11/12, on the third
+review of PR #82; UNMEASURED because a block that cannot measure D says so, 8.11).
 A factor ETF
 without its price, or no held name with its inputs, makes the block UNMEASURED, naming it;
 the attribution above it stays either way. A book whose lag rule has produced no Dimson lag

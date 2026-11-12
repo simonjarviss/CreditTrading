@@ -356,7 +356,14 @@ def attribution_block(book: str, state: Path, asof: dt.date) -> dict:
     """The discount/NAV attribution from the P&L job's report, verbatim, or UNMEASURED naming
     the file. A rebuild that does not reconcile to the official EOD change is a WATCH, not an
     ACT: it names a data or execution problem, and the report it comes from names the session;
-    a review-line breach has no line here at all. Never an ACT (no ACT line can come from the job)."""
+    a review-line breach has no line here at all. Never an ACT (no ACT line can come from the job).
+
+    A READING OF AN EARLIER SESSION IS NEVER INFO (team lead, 2026-11-11/12, on the third review
+    of PR #82; `_reading_of`). When Alpaca's EOD history has no point for the as-of yet, the job
+    reads the latest session it has, D-1, and before that ruling this block passed D-1's
+    attribution as INFO on D's report. Now it is UNMEASURED for D, its first line saying the
+    reading is D-1's, not D's, with D-1's lines below as history; a WATCH they carry (an
+    unreconciled rebuild) stays a WATCH."""
     rep, path = _pnl_report(state, asof)
     if rep is None:
         return _unmeasured(f"no P&L report at {path} (the 20:30 job has not written one for {asof}, or "
@@ -364,7 +371,51 @@ def attribution_block(book: str, state: Path, asof: dt.date) -> dict:
     att = rep.get("attribution") or {}
     lines = list(att.get("lines") or [f"attribution UNMEASURED: {att.get('why')}"])
     status = UNMEASURED if att.get("status") != "OK" else (WATCH if att.get("reconciled") is False else INFO)
-    return block(status, lines, report=str(path), reconciled=att.get("reconciled"), first_trade=att.get("first_trade"))
+    session = att.get("effective_session") if att.get("status") == "OK" else None
+    if att.get("status") == "OK":
+        line = _reading_of("Attribution", session, rep, asof)
+        if line is not None:
+            lines.insert(0, line)
+            status = max(status, UNMEASURED, key=RANK.get)
+    return block(status, lines, report=str(path), reconciled=att.get("reconciled"), first_trade=att.get("first_trade"),
+                 session_read=session)
+
+
+def _reading_of(what: str, session, rep: dict, asof: dt.date) -> str | None:
+    """None when a block read from the P&L job's JSON is a reading of the as-of session; else the
+    UNMEASURED line that says plainly which session it is of (team lead, 2026-11-11/12, on the
+    third review of PR #82).
+
+    WHY. At 20:30 Alpaca's EOD history may have no point for the session just closed; the job
+    then reads the latest session it has, D-1 (`pnl_report.build_attribution`: the session
+    section is D-1's, with a note, and the factor block is read at D-1's close), and writes it
+    under D's name. Before the ruling this report passed that reading as INFO on D's report:
+    "FLAT at the close of D-1, cross-checked" while D's account record held positions.
+
+    THE SEVERITY. UNMEASURED for D, with D-1's lines kept below as labelled history, never INFO.
+    The design settles it: a report that cannot measure a block says UNMEASURED and names what is
+    missing (docs/RUNBOOK.md 8.11; this module's docstring, A MISSING INPUT IS UNMEASURED AND
+    NAMED), and D's reading is the missing input; WATCH is a line near a limit or a data-QA flag
+    on a held name (RUNBOOK 8.11, design s2.3), which a late EOD point is not. The caller keeps the
+    louder of this and the reading's own severity, so a WATCH in D-1's reading (an unreconciled
+    rebuild, a cross-check that disagrees, a PARTIAL) is not hidden. A JSON that names no
+    session for its reading, or another as-of than D, is UNMEASURED too: it cannot be shown to
+    be D's."""
+    want = asof.isoformat()
+    if rep.get("asof") != want:
+        return (f"{what} UNMEASURED for {want}: the P&L job's report at this path is for as-of "
+                f"{rep.get('asof')!r}, not {want}, so nothing below is {want}'s")
+    if not isinstance(session, str) or not _iso_session(session):
+        return (f"{what} UNMEASURED for {want}: the P&L job's JSON names no session for this reading "
+                f"({session!r}), so whether it is {want}'s is unknown; the lines below are shown as they are")
+    if session == want:
+        return None
+    if session < want:
+        return (f"{what} UNMEASURED for {want}: the P&L job read the close of {session}, NOT {want} (Alpaca's EOD "
+                f"history had no point for {want} when it ran); nothing below is {want}'s, and the lines below are "
+                f"{session}'s, shown as history (team lead, 2026-11-11/12)")
+    return (f"{what} UNMEASURED for {want}: the P&L job's reading is dated {session}, after {want}; nothing below "
+            f"is {want}'s")
 
 
 def factor_block(book: str, state: Path, asof: dt.date) -> dict:
@@ -409,8 +460,15 @@ def factor_block(book: str, state: Path, asof: dt.date) -> dict:
     else UNMEASURED) and the cross-check's (agrees INFO, disagrees WATCH, cannot be read
     UNMEASURED): so a disagreement is a WATCH, and a reading the account record cannot confirm is
     never INFO. A held book read on a rebuild that does not reconcile is at least a WATCH, whatever
-    the job's JSON calls it (the same ruling; a job from before it called that block OK). Status:
-    INFO, WATCH or UNMEASURED, never ACT."""
+    the job's JSON calls it (the same ruling; a job from before it called that block OK).
+
+    A READING OF AN EARLIER SESSION IS NEVER INFO (the same ruling; `_reading_of`). When
+    Alpaca's EOD history had no point for the as-of when the job ran, its factor block is read
+    at D-1's close; before the ruling this block passed "FLAT at the close of D-1, cross-checked"
+    (or a held D-1 exposure) as INFO on D's report while D's account record held positions. Now
+    the block is UNMEASURED for D, its first line saying the reading is D-1's, not D's, with D-1's
+    lines below as history (its cross-check reads D-1's record, the close it describes); a WATCH
+    it carries stays a WATCH. Status: INFO, WATCH or UNMEASURED, never ACT."""
     rep, path = _pnl_report(state, asof)
     if rep is None:
         return _unmeasured(f"no P&L report at {path} (the 20:30 job has not written one for {asof})")
@@ -457,6 +515,14 @@ def factor_block(book: str, state: Path, asof: dt.date) -> dict:
                        "whatever the block reads is on positions not shown to be the account's (the attribution "
                        "block names the session)")
         status = max(status, WATCH, key=RANK.get)
+    rb = fac.get("rebuild_positions") if isinstance(fac.get("rebuild_positions"), dict) else {}
+    session = fac.get("asof") or rb.get("session")
+    data["session_read"] = session
+    if session is not None or rep.get("asof") != asof.isoformat():   # no session at all: the cross-check line names it
+        line = _reading_of("Factor exposure", session, rep, asof)
+        if line is not None:
+            head.insert(0, line)
+            status = max(status, UNMEASURED, key=RANK.get)
     return block(status, head + [cline] + lines, **data)
 
 

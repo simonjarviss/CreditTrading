@@ -232,13 +232,16 @@ def test_a_blocks_own_bug_is_unmeasured_and_the_others_still_run(state, monkeypa
 REBUILD = {"HQH": -1000}     # the fill rebuild's positions at the as-of close, the fixture's account record's own
 
 
-def _pnl(state, *, reconciled=True, factor_status="OK", review="REVIEW", rebuild=REBUILD):
+def _pnl(state, *, reconciled=True, factor_status="OK", review="REVIEW", rebuild=REBUILD, session=ASOF):
     """The P&L job's JSON for the as-of. `rebuild` is the job's `rebuild_positions` qty at the
-    as-of close (None: a JSON without the field, a job from before the third review of PR #82)."""
+    as-of close (None: a JSON without the field, a job from before the third review of PR #82).
+    `session` is the session the job read (`effective_session`, the factor block's close): the
+    as-of, or an earlier one when Alpaca's EOD history had no point for the as-of yet."""
     d = state / "reports" / "pnl"
     d.mkdir(parents=True, exist_ok=True)
     rep = {"book": "cef", "asof": ASOF.isoformat(), "status": "OK",
            "attribution": {"status": "OK", "reconciled": reconciled, "first_trade": "2026-09-29",
+                           "effective_session": session.isoformat(),
                            "lines": ["Session 2026-11-05: official +12.00; hold +10.00 = NAV part +4.00 + discount part +6.00",
                                      "Cumulative from the first trade (2026-09-29, 26 sessions): official -100.00"]
                            + (["RECONCILIATION FAILED on 1 session(s): 2026-10-01 residual +5.00. ..."] if not reconciled else [])},
@@ -246,9 +249,9 @@ def _pnl(state, *, reconciled=True, factor_status="OK", review="REVIEW", rebuild
                       "lines": [f"MUNI (headline): E -30,000 USD (-0.300 of equity), c/target 0.25, t -1.0: {review}; "
                                 "REVIEW on 3 of 20 date(s) so far"]}}
     if factor_status != "UNMEASURED":
-        rep["factor"]["asof"] = ASOF.isoformat()
+        rep["factor"]["asof"] = session.isoformat()
     if rebuild is not None:
-        rep["factor"]["rebuild_positions"] = {"session": ASOF.isoformat(), "qty": rebuild, "source": "the fill rebuild"}
+        rep["factor"]["rebuild_positions"] = {"session": session.isoformat(), "qty": rebuild, "source": "the fill rebuild"}
     (d / f"{ASOF.isoformat()}.json").write_text(json.dumps(rep))
 
 
@@ -558,3 +561,65 @@ def test_a_flat_block_with_the_jobs_rebuild_positions_is_checked_the_same_way(st
     _flat(state, rebuild_positions={"session": ASOF.isoformat(), "qty": {"HQH": -1000}, "source": "x"})
     b = r.factor_block("cef", state, ASOF)
     assert b["status"] == r.UNMEASURED and "the JSON contradicts itself" in b["lines"][0]
+
+
+# --- a late EOD point: a reading of an earlier session (team lead, 2026-11-11/12, third review of PR #82) ---
+
+PREV = ASOF - dt.timedelta(days=1)
+
+
+@pytest.mark.parametrize("factor_status", ["OK", "FLAT"])
+def test_a_reading_of_an_earlier_session_is_never_info(state, factor_status):
+    """Alpaca's EOD history had no point for the as-of when the job ran, so its JSON is a reading
+    of the close before. Both blocks are UNMEASURED for the as-of, never INFO, their first line
+    saying the reading is the earlier session's, NOT the as-of's, and the earlier lines follow as
+    history; the factor block's cross-check reads that earlier close's record. Fails on the parent
+    8eb9ce1, where both were INFO."""
+    _pnl(state, factor_status=factor_status, session=PREV, rebuild={} if factor_status == "FLAT" else REBUILD)
+    _record(state, PREV, {} if factor_status == "FLAT" else dict(REBUILD))
+    _record(state, ASOF, {"AAA": 4000})                 # the as-of's own record holds something else
+    a = r.attribution_block("cef", state, ASOF)
+    f = r.factor_block("cef", state, ASOF)
+    want = f"the P&L job read the close of {PREV}, NOT {ASOF} (Alpaca's EOD history had no point for {ASOF} when it ran)"
+    assert a["status"] == r.UNMEASURED and a["lines"][0] == (
+        f"Attribution UNMEASURED for {ASOF}: {want}; nothing below is {ASOF}'s, and the lines below are {PREV}'s, "
+        "shown as history (team lead, 2026-11-11/12)")
+    assert a["lines"][1].startswith("Session 2026-11-05") and a["data"]["session_read"] == PREV.isoformat()
+    assert f["status"] == r.UNMEASURED and f["lines"][0].startswith(f"Factor exposure UNMEASURED for {ASOF}: {want}")
+    assert f"at the close of {PREV}" in f["lines"][1] and "cross-checked" in f["lines"][1]
+    rep, code = r.run_report("cef", state, ASOF, now_utc=dt.datetime(2026, 11, 6, 3, 30, tzinfo=dt.timezone.utc),
+                             send=lambda *a: True)
+    assert rep["blocks"]["attribution"]["status"] == rep["blocks"]["factor_exposure"]["status"] == r.UNMEASURED
+
+
+def test_a_watch_in_an_earlier_sessions_reading_stays_a_watch(state):
+    """The louder of the two: an earlier session's unreconciled rebuild, or a cross-check that
+    disagrees with that session's record, is still a WATCH on the as-of's report, labelled as the
+    earlier session's. Fails on the parent 8eb9ce1, where the factor block was INFO."""
+    _pnl(state, reconciled=False, session=PREV)
+    _record(state, PREV, {"HQH": -900})
+    a = r.attribution_block("cef", state, ASOF)
+    f = r.factor_block("cef", state, ASOF)
+    assert a["status"] == r.WATCH and a["lines"][0].startswith(f"Attribution UNMEASURED for {ASOF}: the P&L job read "
+                                                               f"the close of {PREV}, NOT {ASOF}")
+    assert f["status"] == r.WATCH and f["lines"][0].startswith(f"Factor exposure UNMEASURED for {ASOF}")
+
+
+@pytest.mark.parametrize("case", ["no_session", "other_asof"])
+def test_a_json_that_cannot_show_its_reading_is_the_as_ofs_is_unmeasured(state, case):
+    """A JSON whose attribution names no session read, or that is filed under the as-of but says
+    another, cannot be shown to be the as-of's reading: UNMEASURED, never INFO. Fails on the parent
+    8eb9ce1, where both blocks were INFO."""
+    _pnl(state)
+    p = state / "reports" / "pnl" / f"{ASOF.isoformat()}.json"
+    rep = json.loads(p.read_text())
+    if case == "no_session":
+        del rep["attribution"]["effective_session"]
+    else:
+        rep["asof"] = PREV.isoformat()
+    p.write_text(json.dumps(rep))
+    a = r.attribution_block("cef", state, ASOF)
+    assert a["status"] == r.UNMEASURED and a["lines"][0].startswith(f"Attribution UNMEASURED for {ASOF}: ")
+    if case == "other_asof":
+        f = r.factor_block("cef", state, ASOF)
+        assert f["status"] == r.UNMEASURED and "is for as-of '2026-11-04', not 2026-11-05" in f["lines"][0]
