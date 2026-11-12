@@ -631,8 +631,11 @@ def test_a_phantom_closing_fill_never_makes_the_block_flat(tmp_path):
     """Team lead, 2026-11-11 (second review of PR #82): FLAT is never read from a rebuild that
     does not reconcile. A closing fill the account never made flattens the rebuild, and the
     rebuild misses the official change on 01-22; the block is UNMEASURED, saying whether the book
-    is flat cannot be read from it, and risk_daily shows UNMEASURED. Fails on the parent d498c4f,
-    where the block was FLAT and risk_daily INFO while the account held two positions."""
+    is flat cannot be read from it. Fails on the parent d498c4f, where the block was FLAT and
+    risk_daily INFO while the account held two positions. Since the third review of PR #82 (team
+    lead, 2026-11-11/12) risk_daily cross-checks every status against the account record, so the
+    rebuild's empty book against the record's two positions is a WATCH, naming them (it was
+    UNMEASURED from d498c4f to 8eb9ce1)."""
     from scripts.ops import risk_daily as RD
     rep, code = run(tmp_path, reader=_PhantomReader(FLATTEN))
     f = rep["factor"]
@@ -643,7 +646,10 @@ def test_a_phantom_closing_fill_never_makes_the_block_flat(tmp_path):
     assert "whether the book is flat at that close cannot be read from it" in f["why"]
     assert "flat" not in f and not any("FLAT, the book holds no position" in ln for ln in f["lines"])
     _account_record(tmp_path / "cef", ASOF, {"AAA": 4000, "BBB": -2000})
-    assert RD.factor_block("cef", tmp_path / "cef", ASOF)["status"] == RD.UNMEASURED
+    b = RD.factor_block("cef", tmp_path / "cef", ASOF)
+    assert b["status"] == RD.WATCH, b["lines"][0]
+    assert "they differ on 2 symbol(s) (in the account only: AAA, BBB)" in b["lines"][0]
+    assert f["rebuild_positions"] == {"session": ASOF.isoformat(), "qty": {}, "source": P.REBUILD_POSITIONS_SOURCE}
 
 
 def test_a_phantom_fill_that_reconciles_is_caught_by_risk_dailys_cross_check(tmp_path):
@@ -708,8 +714,10 @@ def test_a_name_left_out_only_on_an_earlier_date_is_a_history_note_not_partial(t
         assert x["exposure_usd"] == pytest.approx(float(direct.at[k, "exposure_usd"]), rel=1e-12), k
         assert x["review"] == direct.at[k, "review"], k
     from scripts.ops import risk_daily as RD
+    _account_record(tmp_path / "cef", ASOF, {"AAA": 4000})        # the account holds what the rebuild holds
     b = RD.factor_block("cef", tmp_path / "cef", ASOF)
-    assert b["status"] == RD.INFO and b["lines"] == f["lines"]
+    assert b["status"] == RD.INFO and b["lines"][1:] == f["lines"]
+    assert b["lines"][0].startswith(f"Factor exposure at the close of {ASOF}, cross-checked")
 
 
 # held 01-20, flat 01-21, held again 01-22 (the 01-20 book is the plain fixture's): the review's interlude
@@ -922,3 +930,93 @@ def test_cli_requires_a_state_dir(capsys, monkeypatch):
     monkeypatch.delenv("QUANTT_STATE_DIR", raising=False)
     assert P.main(["--book", "cef"]) == 2
     assert "no --state-dir" in capsys.readouterr().err
+
+
+# --- the third review of PR #82 (team lead, 2026-11-11/12): a held night's positions, checked ---
+
+HALF_PHANTOM = [("p1", "AAA", "sell", 2000, "10.05", TRADED[2])]   # a sale of 2,000 AAA the account never made
+# The same sale at a price whose fill P&L cancels its modelled fees to the cent, so the rebuild
+# reconciles although its AAA is half the account's (found by the third review's search; the
+# test below asserts that it reconciles rather than trusting this comment).
+HALF_PHANTOM_RECONCILING = [("p1", "AAA", "sell", 2000, "10.050213", TRADED[2])]
+
+
+def test_the_json_carries_the_rebuilds_positions_for_every_factor_status(tmp_path, monkeypatch):
+    """Team lead, 2026-11-11/12: the job writes the rebuild's signed whole shares at the factor
+    block's as-of close for every factor status, for risk_daily's cross-check: a held OK block,
+    a FLAT one, and an UNMEASURED one (a bug in the readout). Fails on the parent 8eb9ce1, whose
+    JSON had no such field."""
+    base = list(FILLS)
+    rep, _ = run(tmp_path / "held")
+    assert rep["factor"]["status"] == "OK"
+    assert "rebuild_positions" in rep["factor"], sorted(rep["factor"])
+    want = {"session": ASOF.isoformat(), "source": P.REBUILD_POSITIONS_SOURCE}
+    assert rep["factor"]["rebuild_positions"] == dict(want, qty={"AAA": 4000, "BBB": -2000})
+    monkeypatch.setattr(THIS, "FILLS", FILLS + FLATTEN)
+    rep, _ = run(tmp_path / "flat")
+    assert rep["factor"]["status"] == P.FLAT and rep["factor"]["rebuild_positions"] == dict(want, qty={})
+    monkeypatch.setattr(THIS, "FILLS", base)
+
+    def raises(*a, **k):
+        raise TypeError("simulated bug in the readout")
+    monkeypatch.setattr(ER, "readout", raises)
+    rep, _ = run(tmp_path / "bug")
+    assert rep["factor"]["status"] == P.UNMEASURED
+    assert rep["factor"]["rebuild_positions"] == dict(want, qty={"AAA": 4000, "BBB": -2000})
+    on_disk = json.loads((tmp_path / "bug" / "cef" / "reports" / "pnl" / f"{ASOF}.json").read_text())
+    assert on_disk["factor"]["rebuild_positions"]["qty"] == {"AAA": 4000, "BBB": -2000}
+
+
+def test_a_phantom_sale_on_a_held_night_is_never_ok_or_info(tmp_path):
+    """The third review of PR #82 (team lead, 2026-11-11/12): the activities list a sale of 2,000
+    AAA at the 01-22 close that the account never made, so the rebuild holds AAA 2,000 where the
+    account holds 4,000, and the rebuild does not reconcile. The block is read for diagnosis but
+    is UNRECONCILED, never OK, every flag says so, and risk_daily shows a WATCH naming AAA when
+    the collector's record holds the account's positions, and a WATCH still when it has no record
+    (an unreconciled held night). Fails on the parent 8eb9ce1, where the block was OK at half the
+    true MUNI exposure and risk_daily INFO."""
+    from scripts.ops import risk_daily as RD
+    rep, code = run(tmp_path, reader=_PhantomReader(HALF_PHANTOM))
+    f = rep["factor"]
+    assert rep["attribution"]["reconciled"] is False and rep["status"] == P.UNRECONCILED and code == P.EXIT_UNRECONCILED
+    assert f["status"] == P.UNRECONCILED and f["reading_status"] == "OK" and f["reconciled"] is False
+    assert f["lines"][0].startswith(f"Factor exposure UNRECONCILED (team lead, 2026-11-11/12): every reading below is "
+                                    f"on the fill rebuild's positions at the close of {ASOF}")
+    assert all(x["review"].endswith(" (UNRECONCILED)") for x in f["factors"].values())
+    assert all("(UNRECONCILED)" in ln for ln in f["lines"] if ln.startswith(("MUNI (", "TERM (", "CREDIT (", "LOANS (")))
+    assert f["rebuild_positions"]["qty"] == {"AAA": 2000, "BBB": -2000}
+    md = (tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text()
+    assert "## Factor exposure against the review line (UNRECONCILED)" in md
+    state = tmp_path / "cef"
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.WATCH, b["lines"][0]                 # no account record: still at least a WATCH
+    _account_record(state, ASOF, {"AAA": 4000, "BBB": -2000})
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.WATCH and "they differ on 1 symbol(s) (a different quantity of AAA)" in b["lines"][0]
+    assert RD.attribution_block("cef", state, ASOF)["status"] == RD.WATCH
+
+
+def test_a_phantom_sale_that_reconciles_is_caught_by_the_cross_check(tmp_path):
+    """The third review's second variant (team lead, 2026-11-11/12): the phantom sale priced so the
+    rebuild reconciles. The job cannot see it (its block is OK, on AAA 2,000); risk_daily's
+    cross-check against the collector's record for 01-22 makes it a WATCH naming AAA, and
+    UNMEASURED when there is no record, never INFO; the true book with a matching record is INFO.
+    Fails on the parent 8eb9ce1, where every one of these was INFO."""
+    from scripts.ops import risk_daily as RD
+    rep, code = run(tmp_path / "phantom", reader=_PhantomReader(HALF_PHANTOM_RECONCILING))
+    f = rep["factor"]
+    assert rep["attribution"]["reconciled"] is True and rep["status"] == "OK" and code == P.EXIT_OK
+    assert f["status"] == "OK"
+    state = tmp_path / "phantom" / "cef"
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.UNMEASURED and "not cross-checked (UNMEASURED): no account record at" in b["lines"][0]
+    _account_record(state, ASOF, {"AAA": 4000, "BBB": -2000})
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.WATCH and b["data"]["positions_cross_check"]["differ"] == ["AAA"]
+    assert b["lines"][1:] == f["lines"] and "4000" not in b["lines"][0] and "2000" not in b["lines"][0]
+    rep, _ = run(tmp_path / "truth")
+    truth = tmp_path / "truth" / "cef"
+    _account_record(truth, ASOF, {"AAA": 4000, "BBB": -2000})
+    b = RD.factor_block("cef", truth, ASOF)
+    assert b["status"] == RD.INFO and b["lines"][1:] == rep["factor"]["lines"]
+    assert f["rebuild_positions"]["qty"] == {"AAA": 2000, "BBB": -2000}      # the phantom's, read by the job as OK

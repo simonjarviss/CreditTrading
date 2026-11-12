@@ -102,11 +102,18 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     exposure, no flag and no PARTIAL for that close, and never shows an earlier close's
     reading as the as-of one. FLAT is read only from a rebuild that reconciles: an
     unreconciled one makes the block UNMEASURED, naming why (team lead, 2026-11-11;
-    `build_factor`), and risk_daily cross-checks every FLAT against the collector's account
-    record for that close. Its history since the first trade is labelled with its dates;
+    `build_factor`). Its history since the first trade is labelled with its dates;
     a history with no reading for a named reason is an UNMEASURED line in the FLAT block, and
     a bug, a LookaheadError or a failed price fetch while reading it makes the whole block
     UNMEASURED, as on a held night (second review of PR #82, 2026-11-11; `_factor_flat`).
+  * the factor block reads the fill rebuild's positions, never the account's. So the JSON
+    carries those positions at the block's as-of close for every factor status
+    (`rebuild_positions`), and risk_daily compares them, share for share, with the collector's
+    account record of that close: a disagreement is its WATCH, a record it cannot read its
+    UNMEASURED, never INFO (team lead, 2026-11-11/12, on the third review of PR #82, whose
+    phantom sale of 2,000 AAA left the block OK at half the true MUNI exposure). A held book on
+    an unreconciled night is read, for diagnosis, under status UNRECONCILED, never OK
+    (`build_factor`).
   * a book whose Dimson lag rule has no answer: the factor block says UNMEASURED and why.
 
 NO LOOKAHEAD (H7). The attribution uses fills and closes of the sessions it reports, the
@@ -247,6 +254,40 @@ def positions_frame(res, inp, first: dt.date, last: dt.date) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=["date", "symbol", "shares", "equity"])
 
 
+REBUILD_POSITIONS_SOURCE = ("the fill rebuild's signed whole shares per held name at the close the factor block is "
+                            "read at (live_attribution name_day q_end, the positions the factor readout reads)")
+
+
+def rebuild_positions(res) -> dict:
+    """The rebuild's per-name signed shares at the factor block's as-of close (`res.asof`), for
+    `risk_daily` to compare with the collector's account record of that close. Team lead,
+    2026-11-11/12, on the third review of PR #82.
+
+    WHY. The factor block reads the fill rebuild's positions, never the account's. The third
+    review listed a sale of 2,000 AAA at the close that the account never made: the rebuild held
+    AAA 2,000 where the account held 4,000, the block read OK with MUNI exposure at half its true
+    value, and risk_daily passed it as INFO; priced so the rebuild still reconciled, every status
+    was OK or INFO. Until then only a FLAT block was checked against the account
+    (`risk_daily._flat_cross_check`). So the job now writes what the readout read, and risk_daily
+    checks it for every factor status (`risk_daily.factor_block`).
+
+    {"session": the as-of close, "qty": {symbol: signed shares}, "source": ...}. Only names with a
+    non-zero position are listed (an empty `qty` is a flat close), as the collector's
+    `positions.qty` lists only positions. Every quantity is a whole share: `Fill.signed_qty` is an
+    int, so a rebuild quantity that is not one is a bug and raises (the caller names it)."""
+    last = res.asof
+    nd = res.name_day[(res.name_day["date"] == last) & (res.name_day["q_end"] != 0)]
+    qty: dict = {}
+    for r in nd.itertuples():
+        q = Fraction(r.q_end)
+        if q.denominator != 1:
+            raise ValueError(f"the rebuild holds {r.symbol} {q} at the close of {last}: not a whole share")
+        if r.symbol in qty:
+            raise ValueError(f"the rebuild lists {r.symbol} twice at the close of {last}")
+        qty[r.symbol] = int(q)
+    return {"session": last.isoformat(), "qty": dict(sorted(qty.items())), "source": REBUILD_POSITIONS_SOURCE}
+
+
 def attribution_lines(sess: dict, cum: dict, recon: dict, *, session_note: str | None) -> list[str]:
     """The report's text for the attribution: session then cumulative. Every line is read by
     `risk_daily` as a report line; none may start with "ACT" (risk_daily's push keys on it),
@@ -356,11 +397,20 @@ def build_factor(book: str, res, inp, *, groups: dict, asof: dt.date, reconciled
     the rebuild failed to reconcile that night, which was the only sign. `reconciled` is the
     attribution's own (`reconciliation`, every session from the first trade, to the cent), and
     anything but True means the rebuild's positions are not shown to be the account's: the
-    block is then UNMEASURED, naming why, and no FLAT and no exposure is read. A held book on
-    an unreconciled night is read as before (the report's overall status is UNRECONCILED, the
-    loudest, either way). A rebuild that reconciles while its positions are still wrong (the
-    review's contrived fill whose P&L cancels its modelled fees) is caught by risk_daily's
-    cross-check of a FLAT against the collector's account record (`risk_daily.factor_block`)."""
+    block is then UNMEASURED, naming why, and no FLAT and no exposure is read. A rebuild that
+    reconciles while its positions are still wrong (the review's contrived fill whose P&L
+    cancels its modelled fees) is caught by risk_daily's cross-check against the collector's
+    account record (`risk_daily.factor_block`).
+
+    A HELD BOOK ON AN UNRECONCILED NIGHT IS NEVER OK (team lead, 2026-11-11/12, on the third
+    review of PR #82). It is still read, as the attribution rows still print on such a night,
+    for diagnosis; but the block's status is UNRECONCILED, its first line says the readings are
+    on a rebuild not shown to be the account's, and every flag says "(UNRECONCILED)"
+    (`_factor_report`). Before that ruling it was OK: the review's phantom sale of 2,000 AAA at
+    the close left the rebuild holding half the account's AAA, the block read OK with MUNI
+    exposure at half its true value, and risk_daily read it INFO. risk_daily shows such a block
+    as at least a WATCH; and since the same review every factor status carries the rebuild's
+    positions (`rebuild_positions`, written by `run_report`) for its cross-check."""
     fs = ER.factor_set(book)
     first = min(f.date for f in inp.fills)
     last = dt.date.fromisoformat(res.asof.isoformat())
@@ -381,7 +431,7 @@ def build_factor(book: str, res, inp, *, groups: dict, asof: dt.date, reconciled
     except _NotRead as e:
         return _factor_unmeasured(str(e), fs)
     return _factor_report(ro, fs, book, last, partial=partial_info(ro, res, failed, last),
-                          excluded=exclusions(ro, failed))
+                          excluded=exclusions(ro, failed), unreconciled=reconciled is not True)
 
 
 class _NotRead(Exception):
@@ -611,7 +661,7 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
 
 
 def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict | None = None,
-                   excluded: list[dict] | None = None) -> dict:
+                   excluded: list[dict] | None = None, unreconciled: bool = False) -> dict:
     """The exposure at the as-of close and the review history. A review-line breach is a word
     in this report and nothing else: it pushes nothing and sets no severity (team lead,
     2026-11-09: report-only). The line is REVIEW_FRACTION x vol_target_annual x
@@ -629,7 +679,13 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
     the as-of one (a flat book never reaches here; `_factor_flat`). `excluded` is every name
     the readout left out on any date; those before `last`, when nothing is missing at `last`,
     are the history's named note, and the block stays OK (that review: the status follows the
-    as-of reading)."""
+    as-of reading).
+
+    With `unreconciled` (the attribution's rebuild does not reconcile to the official EOD
+    change; team lead, 2026-11-11/12, `build_factor`) the status is UNRECONCILED, never OK or
+    PARTIAL; `reading_status` keeps which of the two the reading would otherwise be, the first
+    line says why, and every flag says "(UNRECONCILED)", in the JSON as in the text, as PARTIAL
+    labels its flags. No figure changes."""
     ex = ro.exposure
     if pd.Timestamp(ex["date"].max()) != pd.Timestamp(last):
         raise ER.ReadoutError(f"the readout's last date {pd.Timestamp(ex['date'].max()).date()} is not the as-of "
@@ -639,11 +695,12 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
     today = ex[ex["date"] == last].set_index("factor")
     pdates = set(_partial_dates(excluded))
     lab = " (PARTIAL)" if partial else ""
+    ulab = " (UNRECONCILED)" if unreconciled else ""
     def fac(k):
         r = today.loc[k]
         return {"exposure_usd": float(r["exposure_usd"]), "exposure_frac": float(r["exposure_frac"]),
                 "contrib_of_target": float(r["contrib_of_target"]), "t_stat": float(r["t_stat"]),
-                "review": str(r["review"]) + lab, "factor_vol": float(r["factor_vol"])}
+                "review": str(r["review"]) + lab + ulab, "factor_vol": float(r["factor_vol"])}
     order = [fs.headline] + list(fs.indicative)
     factors = {k: fac(k) for k in order}
     history = {k: {"review_dates": int(ex[(ex["factor"] == k) & (ex["review"] == "REVIEW")]["date"].nunique()),
@@ -673,6 +730,12 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
                           "remaining names, each labelled PARTIAL")
         lines.insert(1, "Dates with a name left out: " + "; ".join(f"{d} {', '.join(s)}"
                                                                    for d, s in sorted(_partial_dates(excluded).items())))
+    if unreconciled:
+        lines.insert(0, f"Factor exposure UNRECONCILED (team lead, 2026-11-11/12): every reading below is on the fill "
+                        f"rebuild's positions at the close of {last.date()}, and that rebuild does not reconcile to "
+                        f"Alpaca's official EOD change (the attribution's RECONCILIATION FAILED line names the "
+                        f"session(s)), so they are not shown to be the account's positions; each flag says "
+                        f"UNRECONCILED. risk_daily checks the positions against the collector's account record")
     for k in order:
         f = factors[k]
         tag = "headline" if k == fs.headline else "indicative"
@@ -706,11 +769,14 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
     earlier = [x for x in excluded if x["date"] < last.date().isoformat()]
     if earlier and not partial:
         lines.append(_earlier_note(earlier, f"no severity: every name held at the close of {last.date()} is read"))
-    out = {"status": "PARTIAL" if partial else "OK", "asof": last.date().isoformat(),
+    reading = "PARTIAL" if partial else "OK"
+    out = {"status": UNRECONCILED if unreconciled else reading, "asof": last.date().isoformat(),
            "headline": fs.headline, "review_line": review_line,
             "factors": factors, "history": history, "split": split, "factor_pnl": pnl_out["factor_pnl"],
             "lines": lines, "gross_usd": float(tv["gross_usd"]), "net_usd": float(tv["net_usd"]),
             "total_of_target": float(tv["total_of_target"])}
+    if unreconciled:
+        out.update(reading_status=reading, reconciled=False)
     out.update(pnl_out)                          # factor_pnl_sessions, or factor_pnl_why when there is none
     if partial:
         out.update(partial)
@@ -843,6 +909,11 @@ def run_report(book: str, state: Path, asof: dt.date, *, now_utc=None, reader=No
     except Exception as e:                       # the factor readout's failure costs only its block
         factor = {"status": UNMEASURED, "why": f"{type(e).__name__}: {e}",
                   "lines": [f"Factor exposure UNMEASURED: {type(e).__name__}: {e}"]}
+    if res is not None:                          # every factor status, for risk_daily's cross-check (`rebuild_positions`)
+        try:
+            factor["rebuild_positions"] = rebuild_positions(res)
+        except Exception as e:                   # a bug: named, and risk_daily then cannot cross-check (UNMEASURED)
+            factor["rebuild_positions_why"] = f"{type(e).__name__}: {e}"
     if att["status"] != "OK":
         status = UNMEASURED
     elif att.get("reconciled") is False:

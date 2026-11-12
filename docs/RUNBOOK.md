@@ -1348,14 +1348,21 @@ says the book is flat and reads no exposure, flag or PARTIAL for that close, nev
 previous close's reading; its history since the first trade is labelled with its dates;
 the report's overall status is OK. A bug, the
 no-lookahead assertion or a failed price fetch (yfinance down) while reading that history
-makes the block UNMEASURED, as on a held night (second review of PR #82, 2026-11-11). FLAT
-is read from the fill rebuild, so two checks guard it (team lead, 2026-11-11): the job never
-says FLAT when the rebuild does not reconcile (the block is UNMEASURED, saying whether the
-book is flat cannot be read from it), and `risk_daily` cross-checks every FLAT against the
-collector's account record for that same close, `<state>/data/<D>/account.json` (written by
-the collector's `account_snapshot` step after D's close and before the next open). The block
-is INFO when that record holds no position, a WATCH naming the count and the symbols when
-it holds any, and UNMEASURED when the record is missing, unreadable or for another session.
+makes the block UNMEASURED, as on a held night (second review of PR #82, 2026-11-11). Every
+factor block, FLAT or held, is read from the fill rebuild's positions, never the account's, so
+checks guard it (team lead, 2026-11-11 for FLAT, 2026-11-11/12 for every status after the
+third review of PR #82, whose phantom sale of 2,000 AAA at the close left a held block OK at
+half the true MUNI exposure). The job never says FLAT when the rebuild does not reconcile (the
+block is UNMEASURED, saying whether the book is flat cannot be read from it), and never OK on a
+held night whose rebuild does not reconcile (the block is read for diagnosis under status
+UNRECONCILED, every flag labelled; `risk_daily` shows it as at least a WATCH). The JSON carries
+the rebuild's signed shares per name at the block's close (`factor.rebuild_positions`), and
+`risk_daily` compares them, share for share, with the collector's account record for that
+same close, `<state>/data/<D>/account.json` (written by the collector's `account_snapshot`
+step after D's close and before the next open), for every factor status. The cross-check is
+INFO when the record holds the same positions, a WATCH naming the counts and the symbols that
+differ when it holds others, and UNMEASURED when the record is missing, unreadable, for another
+session or not whole shares, so a reading the account record cannot confirm is never INFO.
 A factor ETF
 without its price, or no held name with its inputs, makes the block UNMEASURED, naming it;
 the attribution above it stays either way. A book whose lag rule has produced no Dimson lag
