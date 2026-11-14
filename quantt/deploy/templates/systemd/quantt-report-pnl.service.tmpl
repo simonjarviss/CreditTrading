@@ -1,0 +1,37 @@
+# quantt-${BOOK}-pnl.service : the daily P&L attribution and factor readout for ${BOOK}, REPORT ONLY.
+# Scheduled 20:30 and 20:35 ET by book, Mon-Fri (timer alongside), after the 20:00
+# EOD stamp and clear of the 21:40 collect.
+#
+# RENDERED by quantt/deploy/install_vm.py --reports from release tag ${TAG}. Do not
+# hand-edit the installed copy.
+#
+# It reads the account through scripts/ops/alpaca_read.py (HTTP GET only, no order code;
+# scripts/ops/tests/test_report_no_order_path.py) and writes only under
+# ${STATE_DIR}/reports/pnl (<asof>.{md,json} and a cache beside them, none in git).
+# The broker key comes from the vault at run time: Wants=/After= ${SECRET_UNIT} writes it
+# to ${ENV_FILE} (tmpfs, this book's own key, nothing else), which the EnvironmentFile loads.
+# If that file is absent the job still runs and its report says the attribution is
+# UNMEASURED naming the missing variable, and this unit exits non-zero; it is a failed
+# unit and nothing else (no lock, no panel, nothing another unit reads).
+# ReadOnlyPaths= holds it to the promise that it cannot write the clone or data/.
+[Unit]
+Description=QUANTT ${BOOK} daily P&L attribution, report only (release ${TAG})
+Wants=${SECRET_UNIT}
+After=${SECRET_UNIT}
+
+[Service]
+Type=oneshot
+User=${USER}
+Group=${USER}
+WorkingDirectory=${PROD_DIR}
+Environment=PATH=${PATH}
+Environment=PYTHONUNBUFFERED=1
+Environment=QUANTT_STATE_DIR=${STATE_DIR}
+EnvironmentFile=-${ENV_FILE}
+ExecStart=${PYTHON} -B -m ${MODULE} --book ${BOOK}
+ReadOnlyPaths=${PROD_DIR}
+MemoryMax=${MEMORY_MAX}
+Nice=10
+TimeoutStartSec=${TIMEOUT_S}
+StandardOutput=append:${LOG_DIR}/${KIND}.out.log
+StandardError=append:${LOG_DIR}/${KIND}.err.log

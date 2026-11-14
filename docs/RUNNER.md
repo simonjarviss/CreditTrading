@@ -209,6 +209,29 @@ gets one recorded exception, **paper only**: `ops/books/cef_discount_book.json`
   print (`fill_vs_auction_bp`), beside the shadow benchmark. Revisit after a week.
 - **Revert:** delete the `execution` block; the runner sends `cls` exactly as before.
 
+## As built (2026-11-09): the daily P&L report, beside the runner and outside its order path
+
+**The job.** `scripts/ops/pnl_report.py` (timers `quantt-{cef,c4}-pnl`, 20:30 and 20:35 ET;
+`docs/RUNBOOK.md` 8.12), report-only, one per book: the attribution
+(`scripts/cef/live_attribution.py`) and the factor readout (`scripts/cef/exposure_readout.py`)
+of the session just closed and cumulative from the first trade, written to
+`<state>/reports/pnl/<date>.{md,json}`, which `scripts/ops/risk_daily.py` reads into its
+attribution and factor blocks. The runner does not read these, and they cannot reach it:
+the job holds no order code, no broker client and no panel lock, and it reads the account
+through `scripts/ops/alpaca_read.py`, a GET-only reader with no method that can change
+anything (`scripts/ops/tests/test_report_no_order_path.py` walks every import from the job and
+fails on any path to order code). A review-line breach appears in the report and goes no
+further: no ACT, no push (team lead, 2026-11-09).
+
+**The reader is a copy on purpose.** It re-implements the reads the job needs from
+`quantt/broker/alpaca.py` (EOD history mapped to sessions, FILL and FEE activities, calendar,
+SIP daily bars, distributions, the strict corporate-action read) instead of importing
+them, because that module holds `submit_order`; `scripts/ops/tests/test_alpaca_read.py` keeps
+the copy honest by running both on the same fixture responses and requiring equal output,
+read by read, and equal raises on the malformed shapes. Its keys are `ALPACA_<BOOK>_KEY_ID` /
+`_SECRET_KEY` from the process environment only, which systemd loads from a tmpfs file of
+its own per book (RUNBOOK 8.12), never `QUANTT_ENV_FILE`.
+
 ## As built (2026-11-03): CEF trial 55 ("te4"), the thin-session rule, PAPER ONLY, dark
 
 **The rule.** `frozen.below_min_names = "trade_eligible"` with `frozen.below_min_names_floor`

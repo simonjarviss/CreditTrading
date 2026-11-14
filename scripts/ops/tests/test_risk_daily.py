@@ -224,3 +224,199 @@ def test_a_blocks_own_bug_is_unmeasured_and_the_others_still_run(state, monkeypa
     assert rep["blocks"]["pnl"]["status"] == r.UNMEASURED and "ValueError" in rep["blocks"]["pnl"]["lines"][0]
     assert rep["blocks"]["exposure"]["status"] != r.UNMEASURED
     assert code == 0
+
+
+# --- the P&L job's report (team lead, 2026-11-09) --------------------------------------
+
+def _pnl(state, *, reconciled=True, factor_status="OK", review="REVIEW"):
+    d = state / "reports" / "pnl"
+    d.mkdir(parents=True)
+    rep = {"book": "cef", "asof": ASOF.isoformat(), "status": "OK",
+           "attribution": {"status": "OK", "reconciled": reconciled, "first_trade": "2026-09-29",
+                           "lines": ["Session 2026-11-05: official +12.00; hold +10.00 = NAV part +4.00 + discount part +6.00",
+                                     "Cumulative from the first trade (2026-09-29, 26 sessions): official -100.00"]
+                           + (["RECONCILIATION FAILED on 1 session(s): 2026-10-01 residual +5.00. ..."] if not reconciled else [])},
+           "factor": {"status": factor_status, "headline": "MUNI",
+                      "lines": [f"MUNI (headline): E -30,000 USD (-0.300 of equity), c/target 0.25, t -1.0: {review}; "
+                                "REVIEW on 3 of 20 date(s) so far"]}}
+    (d / f"{ASOF.isoformat()}.json").write_text(json.dumps(rep))
+
+
+def test_attribution_and_factor_blocks_are_unmeasured_and_named_without_the_job_report(state):
+    blocks = {"a": r.attribution_block("cef", state, ASOF), "f": r.factor_block("cef", state, ASOF)}
+    for b in blocks.values():
+        assert b["status"] == r.UNMEASURED and "no P&L report at" in b["lines"][0] and ASOF.isoformat() in b["lines"][0]
+
+
+def test_attribution_and_factor_blocks_read_the_jobs_json(state):
+    _pnl(state)
+    a = r.attribution_block("cef", state, ASOF)
+    f = r.factor_block("cef", state, ASOF)
+    assert a["status"] == r.INFO and a["lines"][0].startswith("Session 2026-11-05")
+    assert f["status"] == r.INFO and "MUNI (headline)" in f["lines"][0] and "REVIEW" in f["lines"][0]
+
+
+def test_a_review_breach_never_reaches_act_or_the_notifier(state, tmp_path):
+    _pnl(state, review="REVIEW")
+    sent = []
+    rep, code = r.run_report("cef", state, ASOF, now_utc=dt.datetime(2026, 11, 6, 3, 30, tzinfo=dt.timezone.utc),
+                             send=lambda *a: sent.append(a) or True)
+    assert code == 0 and rep["blocks"]["factor_exposure"]["status"] == r.INFO
+    assert "REVIEW" in rep["blocks"]["factor_exposure"]["lines"][0]
+    assert not rep["act_lines"] and rep["notification"] is None and sent == []
+
+
+def test_an_unreconciled_attribution_is_a_watch_not_an_act(state):
+    _pnl(state, reconciled=False)
+    a = r.attribution_block("cef", state, ASOF)
+    assert a["status"] == r.WATCH and any(ln.startswith("RECONCILIATION FAILED") for ln in a["lines"])
+    assert not any(ln.startswith("ACT") for ln in a["lines"])
+
+
+def test_a_factor_block_the_job_could_not_measure_stays_unmeasured_not_info(state):
+    _pnl(state, factor_status="UNMEASURED")
+    assert r.factor_block("cef", state, ASOF)["status"] == r.UNMEASURED
+
+
+def _partial(state, **extra):
+    _pnl(state, factor_status="PARTIAL")
+    p = state / "reports" / "pnl" / f"{ASOF.isoformat()}.json"
+    rep = json.loads(p.read_text())
+    rep["factor"].update(extra)
+    p.write_text(json.dumps(rep))
+
+
+def test_a_partial_factor_block_is_a_watch_naming_the_names_and_their_share(state):
+    """Ruling C (team lead, 2026-11-10): the job's PARTIAL block (a held name without a same-day
+    price, left out) is a WATCH whose first line names what was left out and its share of the
+    gross, then the job's lines verbatim; never an ACT. Fails on the parent commit (UNMEASURED)."""
+    _partial(state, missing=[{"symbol": "LATE", "shares": -1000.0, "gross_usd": 9000.0, "reason": "no close"}],
+             missing_gross_share=0.0912)
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.WATCH and b["data"]["missing"] == ["LATE"] and b["data"]["missing_gross_share"] == 0.0912
+    assert b["lines"][0].startswith("Factor exposure PARTIAL: LATE left out at the last close, 9.1% of the book's gross")
+    assert b["lines"][1].startswith("MUNI (headline)")
+    assert not any(ln.startswith("ACT") for ln in b["lines"])
+    rep, code = r.run_report("cef", state, ASOF, now_utc=dt.datetime(2026, 11, 6, 3, 30, tzinfo=dt.timezone.utc),
+                             send=lambda *a: True)
+    assert rep["blocks"]["factor_exposure"]["status"] == r.WATCH and not rep["act_lines"]
+
+
+def test_a_partial_block_without_its_share_says_unmeasured_never_a_number(state):
+    _partial(state, missing=[{"symbol": "LATE"}])
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.WATCH and "share of the book's gross UNMEASURED" in b["lines"][0]
+
+
+FLAT_LINE = (f"Factor exposure at the close of {ASOF}: FLAT, the book holds no position at that close, so there is "
+             f"nothing to expose")
+
+
+def _flat(state, **factor):
+    """The job's FLAT block for the as-of close (scripts/ops/pnl_report.py `_factor_flat`)."""
+    _pnl(state, factor_status="FLAT")
+    p = state / "reports" / "pnl" / f"{ASOF.isoformat()}.json"
+    rep = json.loads(p.read_text())
+    rep["factor"].update({"asof": ASOF.isoformat(), "flat": True, "lines": [FLAT_LINE], **factor})
+    p.write_text(json.dumps(rep))
+
+
+def _record(state, day, qty, **over):
+    """The collector's account record for `day` (quantt/collect/collect.py account_snapshot)."""
+    d = state / "data" / day.isoformat()
+    d.mkdir(parents=True, exist_ok=True)
+    rec = {"date": day.isoformat(), "read_at_utc": f"{day.isoformat()}T21:10:04+00:00",
+           "account": {"equity": "100000", "maintenance_margin": "0"}, "positions": {"qty": qty, "raw": []}}
+    rec.update(over)
+    (d / "account.json").write_text(json.dumps(rec))
+    return d / "account.json"
+
+
+def test_a_flat_factor_block_is_info_when_the_account_record_holds_nothing(state):
+    """A FLAT block (the book holds nothing at the as-of close; independent review of PR #82,
+    2026-11-11) carries no factor risk, and it is INFO when the collector's account record for
+    that close holds no position either (team lead, 2026-11-11): the cross-check's line first,
+    then the job's lines verbatim, never an ACT. Fails on the parent d498c4f, which passed the
+    job's lines as INFO without reading the account record."""
+    _flat(state)
+    path = _record(state, ASOF, {})
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.INFO and b["lines"][1:] == [FLAT_LINE]
+    assert b["lines"][0] == (f"Factor exposure FLAT at the close of {ASOF}, cross-checked: the collector's account "
+                             f"record for {ASOF} ({path}, read {ASOF}T21:10:04+00:00) holds no position either")
+    assert b["data"]["flat_cross_check"]["status"] == r.INFO and b["data"]["flat_cross_check"]["positions"] == 0
+    rep, code = r.run_report("cef", state, ASOF, now_utc=dt.datetime(2026, 11, 6, 3, 30, tzinfo=dt.timezone.utc),
+                             send=lambda *a: True)
+    assert rep["blocks"]["factor_exposure"]["status"] == r.INFO and not rep["act_lines"]
+
+
+def test_a_flat_block_the_account_record_disagrees_with_is_a_watch(state):
+    """Team lead, 2026-11-11 (second review of PR #82): the job reads FLAT from its fill rebuild,
+    and a fill the account never made can flatten that rebuild. When the account record for the
+    same close holds positions, the block is a WATCH naming the counts and the symbols (no
+    quantity), never an ACT. Fails on the parent d498c4f, where the block was INFO."""
+    _flat(state)
+    _record(state, ASOF, {"HQH": -1000, "AAA": 1500, "BBB": -500})
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.WATCH, b["lines"][0]
+    assert b["lines"][0].startswith(f"Factor exposure FLAT DISAGREES with the account at the close of {ASOF} (WATCH)")
+    assert "shows 3 position(s), 1 long and 2 short (AAA, BBB, HQH)" in b["lines"][0]
+    assert not any(q in b["lines"][0] for q in ("1000", "1500", "500"))
+    assert b["lines"][1:] == [FLAT_LINE]
+    assert {k: b["data"]["flat_cross_check"][k] for k in ("positions", "long", "short")} == {"positions": 3, "long": 1, "short": 2}
+    rep, code = r.run_report("cef", state, ASOF, now_utc=dt.datetime(2026, 11, 6, 3, 30, tzinfo=dt.timezone.utc),
+                             send=lambda *a: True)
+    assert rep["blocks"]["factor_exposure"]["status"] == r.WATCH and not rep["act_lines"] and code == 0
+
+
+@pytest.mark.parametrize("case", ["missing", "earlier_only", "other_session", "not_json", "no_qty", "no_asof"])
+def test_a_flat_block_whose_account_record_cannot_be_read_is_unmeasured_never_info(state, case):
+    """Team lead, 2026-11-11: a FLAT the account record cannot confirm is UNMEASURED for the
+    cross-check, naming why, never INFO by default. The record read is the FLAT close's own,
+    never the newest on or before it. Fails on the parent d498c4f, where every case was INFO."""
+    path = state / "data" / ASOF.isoformat() / "account.json"
+    _flat(state, **({"asof": None} if case == "no_asof" else {}))
+    why = {"missing": f"no account record at {path}", "earlier_only": f"no account record at {path}",
+           "other_session": f"the account record {path} is for session '2026-11-04', not {ASOF}",
+           "not_json": f"the account record {path} is unreadable: JSONDecodeError",
+           "no_qty": f"the account record {path} has no positions.qty of whole-share quantities",
+           "no_asof": "the job's FLAT block names no as-of close (None)"}[case]
+    if case in ("missing", "earlier_only"):
+        path.unlink()                                  # the fixture's own record (it holds HQH)
+    if case == "earlier_only":
+        _record(state, ASOF - dt.timedelta(days=1), {})   # an earlier session that held nothing
+    if case == "other_session":
+        _record(state, ASOF, {}, date="2026-11-04")
+    if case == "not_json":
+        path.write_text("{not json")
+    if case == "no_qty":
+        _record(state, ASOF, {}, positions={"raw": []})
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.UNMEASURED, (case, b["lines"][0])
+    assert b["lines"][0].startswith("Factor exposure FLAT") and "not cross-checked (UNMEASURED)" in b["lines"][0]
+    assert why in b["lines"][0], (case, b["lines"][0])
+    assert b["lines"][1:] == [FLAT_LINE]
+
+
+def test_a_partial_block_with_nothing_missing_at_the_close_is_info_not_watch(state):
+    """The severity follows the as-of reading (independent review of PR #82, 2026-11-11): a
+    PARTIAL block whose `missing` is empty (every name held at the close read, one left out only
+    on an earlier date: the JSON of a job from before the review) is INFO, saying so. Fails on
+    the parent commit, where it was a WATCH every night from then on."""
+    _partial(state, missing=[], missing_gross_share=0.0)
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.INFO and b["data"]["missing"] == []
+    assert b["lines"][0].startswith("Factor exposure: every held name read at the last close; a name was left out "
+                                    "only on an earlier date (history, no severity")
+    assert b["lines"][1].startswith("MUNI (headline)")
+
+
+def test_a_partial_block_that_does_not_say_what_was_missing_stays_a_watch_naming_it(state):
+    """A PARTIAL block with no `missing` cannot say whether the as-of reading was complete, so it
+    is never read as complete: WATCH, naming the gap. Fails on the parent commit, which read
+    the absent list as empty and said every held name was read."""
+    _partial(state, missing_gross_share=0.25)
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.WATCH and b["data"]["missing"] is None
+    assert b["lines"][0].startswith("Factor exposure PARTIAL: names left out UNMEASURED (not in the job's JSON), "
+                                    "25.0% of the book's gross")

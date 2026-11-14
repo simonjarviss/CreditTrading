@@ -23,6 +23,7 @@ results/cef/live_attribution/_cache/
 # Its analyse outputs carry the same account data (daily.csv holds the EOD equity
 # of every session); the tool refuses to write either where git can see it.
 results/cef/live_attribution/_out/
+results/cef/live_attribution/_out_c4/
 # The evidence pack's row-level live records (per name, per fill, positions). Team lead,
 # 2026-11-03: "Aggregates in repo, rows private". results/**/_cache_* covers it too; this line
 # says so by name, and scripts/report/tests pins it.
@@ -114,3 +115,4 @@ results/events/cef_corp_action_events_full.csv
 # This repository is public; the module also refuses any path git can see.
 results/cef/exposure_readout/_cache/
 results/cef/exposure_readout/_out/
+results/cef/exposure_readout/_out_c4/

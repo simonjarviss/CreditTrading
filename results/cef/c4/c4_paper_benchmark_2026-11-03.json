@@ -1,8 +1,8 @@
 {
  "spec_id": "c4_families.v5.20261103",
- "spec_sha256": "6e131c14de08193597f79e52d549cf95e86099fd6729a7c06a5a635d0d26b48c",
+ "spec_sha256": "65c19a9e498fb917cf5d7ba4ca3cc87129d9ba4242ec3018455bce4ab55d1d10",
  "core_spec_id": "cef_discount.v9.20261102",
- "run_utc": "2026-11-03T23:31:11.127230+00:00",
+ "run_utc": "2026-11-11T16:54:04.234788+00:00",
  "families_cut": {
   "cef_prices": {
    "rows": 775180,
@@ -235,7 +235,7 @@
   "derived_on": {
    "book": "blend: CEF trial 54's level_signal (z_share 0.5), spec_targets, x sizing_multiplier 1.26, uncapped band",
    "spec_id": "c4_families.v5.20261103",
-   "spec_sha256": "6e131c14de08193597f79e52d549cf95e86099fd6729a7c06a5a635d0d26b48c"
+   "spec_sha256": "65c19a9e498fb917cf5d7ba4ca3cc87129d9ba4242ec3018455bce4ab55d1d10"
   },
   "override": {
    "ruled": "2026-11-03",

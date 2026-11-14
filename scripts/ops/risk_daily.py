@@ -26,8 +26,9 @@ It never sends, cancels, arms, disarms, halts, or changes a spec or a book json.
 A MISSING INPUT IS UNMEASURED AND NAMED, never inferred (CLAUDE.md). Blocks whose
 inputs do not exist on the VM say so, with the exact command that would measure
 them on a machine that has them: R1-R3 need `stops.py`'s fit series, the
-attribution needs `live_attribution.py`'s cache, the factor readout needs
-`exposure_readout.py`'s cache. Those are stated gaps, not silent zeros.
+attribution and factor readout read `<state>/reports/pnl/<asof>.json`, written by
+the 20:30 job (`scripts/ops/pnl_report.py`, the team lead's report of 2026-11-09;
+absent, they stay UNMEASURED and named). Those are stated gaps, not silent zeros.
 
 THE DRAWDOWN READ. At 22:15 the as-of day's EOD row is not written yet, so
 `drawdown.check` says UNMEASURED. The team lead ruled (2026-11-08) that this report
@@ -343,16 +344,163 @@ def exposure_block(book: str, state: Path, spec: dict, asof: dt.date) -> dict:
 
 # ------------------------------------------------------------------- the other blocks
 
-def attribution_block(book: str) -> dict:
-    return _unmeasured("the discount/NAV attribution reads a `live_attribution.py fetch` cache (keys and "
-                       "yfinance), which a report job has neither; run scripts/cef/live_attribution.py on a "
-                       "machine holding that cache")
+def _pnl_report(state: Path, asof: dt.date) -> tuple[dict | None, Path]:
+    """The P&L job's JSON for the as-of (`scripts/ops/pnl_report.py`, 20:30 ET), or None."""
+    path = state / "reports" / "pnl" / f"{asof.isoformat()}.json"
+    if not path.is_file():
+        return None, path
+    return json.loads(path.read_text()), path
 
 
-def factor_block(book: str) -> dict:
-    return _unmeasured("the factor readout needs `scripts/cef/exposure_readout.py fetch`'s gitignored "
-                       "price cache, and for C4 the risk lanes' equity/sector readouts; neither exists "
-                       "on this machine")
+def attribution_block(book: str, state: Path, asof: dt.date) -> dict:
+    """The discount/NAV attribution from the P&L job's report, verbatim, or UNMEASURED naming
+    the file. A rebuild that does not reconcile to the official EOD change is a WATCH, not an
+    ACT: it names a data or execution problem, and the report it comes from names the session;
+    a review-line breach has no line here at all. Never an ACT (no ACT line can come from the job)."""
+    rep, path = _pnl_report(state, asof)
+    if rep is None:
+        return _unmeasured(f"no P&L report at {path} (the 20:30 job has not written one for {asof}, or "
+                           f"its key service failed; `systemctl status quantt-{book}-pnl`)")
+    att = rep.get("attribution") or {}
+    lines = list(att.get("lines") or [f"attribution UNMEASURED: {att.get('why')}"])
+    status = UNMEASURED if att.get("status") != "OK" else (WATCH if att.get("reconciled") is False else INFO)
+    return block(status, lines, report=str(path), reconciled=att.get("reconciled"), first_trade=att.get("first_trade"))
+
+
+def factor_block(book: str, state: Path, asof: dt.date) -> dict:
+    """The factor exposure from the P&L job's report, verbatim, or UNMEASURED naming the file.
+    A review-line breach is in these lines and changes nothing: report only (team lead,
+    2026-11-09), so a breach never raises the status, and no line is an ACT line.
+
+    A PARTIAL block (team lead, 2026-11-10: a held name without a same-day price is left out
+    and named, not the whole block UNMEASURED) is a WATCH, with a first line naming the names
+    left out and their share of the book's gross, as an unreconciled attribution is a WATCH:
+    it is a data gap on a held name, which the design's severity table (s2.3) already makes a
+    WATCH, and a reading on part of the book should not pass as INFO. A share the job's JSON
+    does not carry is said to be UNMEASURED, never filled in. Status: INFO, WATCH or
+    UNMEASURED, never ACT.
+
+    THE SEVERITY FOLLOWS THE AS-OF READING (independent review of PR #82, 2026-11-11). WATCH
+    only when a name held at the as-of close was left out. Before that review a PARTIAL block
+    whose `missing` was empty (every name held at the close read, one left out only on an
+    earlier date) was a WATCH too, and since the job re-reads from the first trade, a fund
+    once held that yfinance no longer serves (merged, renamed) would have kept every later
+    night a WATCH. The job now writes such a block as OK with the earlier dates in a history
+    note; a PARTIAL block with an empty `missing` (a job from before the review) is INFO, and
+    says why. A PARTIAL block with no `missing` at all cannot say what was left out at the
+    close, so it stays a WATCH naming that, never read as complete.
+
+    A FLAT block (the same review: the book holds nothing at the as-of close) carries no factor
+    risk, so there is nothing to review and nothing missing; the job's lines say it is flat and
+    that no earlier close's reading stands in. It is INFO only when the account agrees
+    (`_flat_cross_check`, team lead 2026-11-11): the job reads FLAT from its fill rebuild alone,
+    and a fill the account never made can make that rebuild flat while the account holds
+    positions."""
+    rep, path = _pnl_report(state, asof)
+    if rep is None:
+        return _unmeasured(f"no P&L report at {path} (the 20:30 job has not written one for {asof})")
+    fac = rep.get("factor") or {}
+    lines = list(fac.get("lines") or [f"factor readout UNMEASURED: {fac.get('why')}"])
+    st = fac.get("status")
+    if st == "FLAT":
+        cst, line, check = _flat_cross_check(state, fac)
+        return block(cst, [line] + lines, report=str(path), headline=fac.get("headline"), flat_cross_check=check)
+    if st == "PARTIAL":
+        miss = fac.get("missing")
+        if isinstance(miss, list) and not miss:  # nothing left out at the as-of close: history only
+            lines.insert(0, "Factor exposure: every held name read at the last close; a name was left out only on "
+                            "an earlier date (history, no severity: the reading at the close is complete)")
+            return block(INFO, lines, report=str(path), headline=fac.get("headline"), missing=[],
+                         missing_gross_share=fac.get("missing_gross_share"))
+        share = fac.get("missing_gross_share")
+        names = ("names left out UNMEASURED (not in the job's JSON)" if miss is None
+                 else ", ".join(str(m.get("symbol")) for m in miss) + " left out at the last close")
+        lines.insert(0, f"Factor exposure PARTIAL: {names}, "
+                     + (f"{share:.1%} of the book's gross" if isinstance(share, (int, float)) and not isinstance(share, bool)
+                        else "share of the book's gross UNMEASURED (not in the job's JSON)")
+                     + "; the readings below are on the remaining names (WATCH: a data gap on a held name; "
+                       "a review-line breach still sends nothing)")
+        return block(WATCH, lines, report=str(path), headline=fac.get("headline"),
+                     missing=None if miss is None else [m.get("symbol") for m in miss], missing_gross_share=share)
+    status = INFO if st == "OK" else UNMEASURED
+    return block(status, lines, report=str(path), headline=fac.get("headline"))
+
+
+def _flat_cross_check(state: Path, fac: dict) -> tuple[str, str, dict]:
+    """A FLAT factor block against the collector's account record for the same close: (status,
+    first line, data). Team lead, 2026-11-11, on the second review of PR #82.
+
+    WHY. The P&L job reads FLAT from its fill rebuild alone. In the review a closing fill the
+    account never made (a phantom sale of the whole book in the activities) made the block
+    FLAT, the report OK and this block INFO while the account held positions; and when that
+    fill's P&L cancelled its modelled fees the rebuild even reconciled, so the job's own
+    refusal of an unreconciled FLAT (`pnl_report.build_factor`) cannot see it. A second source
+    for the same fact can: Alpaca's positions as the collector recorded them.
+
+    WHICH FILE, FOR WHICH SESSION, WRITTEN WHEN. `<state>/data/<D>/account.json`, where D is
+    the FLAT block's own `asof`, the attribution's session (`pnl_report.build_factor`'s
+    `res.asof`), read for that session only, never the newest on or before it as
+    `exposure_block` does. The collector writes it in its `account_snapshot` step
+    (quantt/collect/collect.py): D is a data day only once its close + CLOSE_SETTLE (45
+    minutes) has passed by Alpaca's clock, the step refuses unless the market is shut and the
+    next open is the first trading day after D, the record carries `date` D and `read_at_utc`,
+    and a completed step is never redone. So it is Alpaca's positions after D's close and
+    before the next open, the close the FLAT describes, written by the first :10/:40 collector
+    slot after that, hours before this job's 22:15/22:20 run; comparing the two is the same
+    close from two sources. `positions.qty` is {symbol: signed whole shares}; the client
+    refuses a zero quantity, so any entry is a position.
+
+    THE OUTCOMES. The record holds no position: INFO, the account agrees. It holds any: WATCH,
+    naming the count, the long and short counts and the symbols (this report lives in the state
+    directory, never in git; no quantity is printed), because the book's factor risk at that
+    close was not read. The record is missing, unreadable, for another session, or the block
+    names no close: UNMEASURED, naming which, never INFO by default: an unchecked FLAT is not
+    a known one. Never an ACT; a review-line breach still sends nothing."""
+    d = fac.get("asof")
+    try:
+        named = dt.date.fromisoformat(d).isoformat() == d   # the directory name is the ISO date
+    except (TypeError, ValueError):
+        named = False
+    if not named:
+        return (UNMEASURED, f"Factor exposure FLAT not cross-checked (UNMEASURED): the job's FLAT block names no "
+                            f"as-of close ({d!r}), so which session's account record to read is unknown",
+                {"status": UNMEASURED, "session": d})
+    path = state / "data" / d / "account.json"
+    check: dict = {"session": d, "account_record": str(path)}
+
+    def unmeasured(why: str):
+        check["status"] = UNMEASURED
+        check["why"] = why
+        return (UNMEASURED, f"Factor exposure FLAT at the close of {d} not cross-checked (UNMEASURED): {why}; "
+                            f"whether the account holds anything at that close is unread here", check)
+    if not path.is_file():
+        return unmeasured(f"no account record at {path} (the collector's account_snapshot step writes it after "
+                          f"the close of {d})")
+    try:
+        rec = json.loads(path.read_text())
+    except (OSError, ValueError) as e:
+        return unmeasured(f"the account record {path} is unreadable: {type(e).__name__}: {e}")
+    if not isinstance(rec, dict):
+        return unmeasured(f"the account record {path} is not a JSON object")
+    if rec.get("date") != d:
+        return unmeasured(f"the account record {path} is for session {rec.get('date')!r}, not {d}")
+    pos = rec.get("positions")
+    qty = pos.get("qty") if isinstance(pos, dict) else None
+    if not isinstance(qty, dict) or not all(isinstance(q, int) and not isinstance(q, bool) for q in qty.values()):
+        return unmeasured(f"the account record {path} has no positions.qty of whole-share quantities")
+    held = sorted(s for s, q in qty.items() if q != 0)
+    n_long = sum(1 for s in held if qty[s] > 0)
+    read_at = rec.get("read_at_utc") or "read time not recorded"
+    check.update(status=WATCH if held else INFO, read_at_utc=rec.get("read_at_utc"), positions=len(held),
+                 long=n_long, short=len(held) - n_long, symbols=held)
+    if held:
+        return (WATCH, f"Factor exposure FLAT DISAGREES with the account at the close of {d} (WATCH): the P&L job's "
+                       f"fill rebuild holds no position there, but the collector's account record for {d} ({path}, "
+                       f"read {read_at}) shows {len(held)} position(s), {n_long} long and {len(held) - n_long} short "
+                       f"({', '.join(held)}); no factor exposure was read for them, so the book's factor risk at that "
+                       f"close is unread (report only: nothing is sent)", check)
+    return (INFO, f"Factor exposure FLAT at the close of {d}, cross-checked: the collector's account record for {d} "
+                  f"({path}, read {read_at}) holds no position either", check)
 
 
 def execution_block(state: Path, asof: dt.date, plan: dict | None) -> dict:
@@ -476,8 +624,8 @@ def run_report(book: str, state: Path, asof: dt.date, *, stops_output=None,
         "stops": guard(lambda: stops_block(book, spec, stops_output)),
         "kill_rules": guard(lambda: kill_rules_block(book, state, spec, asof)),
         "exposure": guard(lambda: exposure_block(book, state, spec, asof)),
-        "attribution": guard(lambda: attribution_block(book)),
-        "factor_exposure": guard(lambda: factor_block(book)),
+        "attribution": guard(lambda: attribution_block(book, state, asof)),
+        "factor_exposure": guard(lambda: factor_block(book, state, asof)),
         "execution": guard(lambda: execution_block(state, asof, plan)),
         "diversification": guard(lambda: diversification_block(book, state, asof)),
         "data_qa": guard(lambda: data_qa_block(state, asof)),
