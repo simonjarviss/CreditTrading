@@ -95,3 +95,74 @@ def test_a_held_name_with_no_print_is_a_logged_gap_and_an_unmeasured_session(tmp
     assert "DDD" in (st / "marks_gaps.csv").read_text()
     sc = pd.read_csv(st / "t1" / "scores.csv").set_index("date")
     assert sc.at[str(days[5]), "status"] == "UNMEASURED"
+
+
+# ---- a book whose names change (2026-11-14): marks are asked for only where a decision holds the name
+
+class RecordingSrc(FakeSrc):
+    def prints(self, syms, day):
+        self.calls.append((day, tuple(sorted(syms))))
+        rows = self.px[(self.px["date"].dt.date == day) & self.px["symbol"].isin(syms)]
+        return dict(zip(rows["symbol"], rows["close"]))
+
+
+def _decision(st, slug, asof, weights):
+    d = st / slug / "decisions"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"{asof}.json").write_text(json.dumps({"asof": asof.isoformat(), "weights": weights}))
+
+
+def test_a_name_is_marked_only_while_a_decision_holds_it(tmp_path):
+    days = _days(10)
+    px = _px(days, seed=3)                                          # AAA..EEE print every day
+    st = tmp_path / "state"
+    st.mkdir()
+    b = _book(tmp_path, days, [])
+    _decision(st, "t1", days[1], {"AAA": 1.0})
+    _decision(st, "t1", days[2], {"AAA": 1.0})
+    _decision(st, "t1", days[3], {"BBB": 1.0})                      # AAA dropped, BBB new
+    for d in days[4:9]:
+        _decision(st, "t1", d, {"BBB": 1.0})
+    src = RecordingSrc(px, days)
+    assert nightly.update_marks(st, [b], src, _check(px), days, days[8]) == 0
+    asked = {}
+    for day, syms in src.calls:
+        for s in syms:
+            asked.setdefault(s, set()).add(day)
+    # AAA: from its first decision to two sessions after the decision that replaced it
+    assert asked["AAA"] == set(days[1:6])
+    # BBB: never asked for before the decision that first named it
+    assert asked["BBB"] == set(days[3:9])
+    assert set(asked) == {"AAA", "BBB"}
+
+
+def test_the_latest_decision_is_held_until_replaced_so_its_names_stay_needed(tmp_path):
+    days = _days(8)
+    px = _px(days, seed=4)
+    st = tmp_path / "state"
+    st.mkdir()
+    b = _book(tmp_path, days, [])
+    _decision(st, "t1", days[1], {"CCC": 1.0})                      # then the book stops deciding
+    src = RecordingSrc(px, days)
+    nightly.update_marks(st, [b], src, _check(px), days, days[6])
+    assert {day for day, _ in src.calls} == set(days[1:7])
+
+
+def test_an_old_gap_is_not_asked_for_again_after_the_retry_window(tmp_path):
+    days = _days(10)
+    px = _px(days, seed=5)
+    holes = px[~((px["symbol"] == "DDD") & (px["date"].dt.date == days[2]))]
+    st = tmp_path / "state"
+    st.mkdir()
+    b = _book(tmp_path, days, [])
+    src = RecordingSrc(holes, days)
+    asked_for_hole = []
+    for k in range(1, 9):
+        _decision(st, "t1", days[k], {"DDD": 1.0})
+        before = len(src.calls)
+        nightly.update_marks(st, [b], src, _check(px), days, days[k])
+        asked_for_hole.append(any(day == days[2] for day, _ in src.calls[before:]))
+    # asked on its own night and while it is among the last GAP_RETRY_SESSIONS sessions, never after
+    assert asked_for_hole == [False, True, True, True, False, False, False, False]
+    gaps = (st / "marks_gaps.csv").read_text().splitlines()
+    assert len(gaps) == 2 and "DDD" in gaps[1]                      # header and ONE row: logged once

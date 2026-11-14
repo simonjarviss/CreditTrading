@@ -447,3 +447,9 @@ from a named source; [doc] copied from a named note.
 **Spin-offs, 2026-11-12** (`results/report/EVIDENCE_LOG.md` E-2026-11-12-04).
 - **Research.** 387 new spin-offs from CRSP, 2000 to 2025. The new company falls in each of its sessions 2 to 6 (3.2% against IWM over sessions 2–5, t −4.6) and other new listings do not. The pre-specified book, long from session 21 to 252, is weak (0.49). A short over sessions 3–5, read from the profile and so not pre-specified, has a gross Sharpe of 0.96 (t 4.84) and is positive in every era [V: `results/ideas/2026-11-12_spinoffs.md`]. An independent review found no defect; without its ten best names the book scores 0.64.
 - **Open.** Whether a share can be borrowed on its second day of trading, and a live reader for upcoming spin-offs.
+
+**The spin-off shadow book and two shadow fixes, 2026-11-14** (`results/report/EVIDENCE_LOG.md` E-2026-11-14-01).
+- **Shadow.** `spinoff_first_week` starts 2026-11-16, $1M: short a new spin-off on the decisions of its first three regular-way sessions, long IWM against it. Its reader stores each Alpaca spin-off row with the day first seen, because when the feed publishes a row is not known. Six shadow books now exist.
+- **Fixed.** The nightly marks step asked for every symbol on every past session; it now asks for a symbol only on sessions a decision holds it, and re-asks for a missing print for three sessions only (`shadow/nightly.py`). Needed for any book whose names change.
+- **Found.** ET, SUN, SUNC and USAC print their official close on the Texas Stock Exchange, not the exchange Alpaca records, so the units books would have read UNMEASURED on every invested session. Mapped in `shadow/sources.py` (`docs/REFERENCES.md` §12so).
+- **Not confirmed.** The VM has not been reachable from the laptop since 2026-11-10, so none of this, and no shadow run since 18:50 that day, has been read there. A full nightly cycle was run on the laptop against the real sources instead.

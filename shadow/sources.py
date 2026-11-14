@@ -38,6 +38,17 @@ DIST_WINDOW_PAD_DAYS = 75
 # measures its row and adds it here.
 EXTRA_EXCHANGE_SIP_NAME = {"ARCA": "NYSE Arca"}
 
+# Symbols whose official close is NOT on the exchange Alpaca's asset record names. Each is
+# measured, never assumed, and an entry is the only way a print from another venue is used.
+#   ET, SUN, SUNC, USAC -> "Texas Stock Exchange" (SIP code F). [V 2026-11-14: /v2/assets
+#   says NYSE for all four; on 2026-11-13 none has a condition-M print under N; each has one
+#   under F that equals Yahoo's close to the cent (19.40, 65.23, 66.00, 25.14), and they had
+#   no N print on any of the six sessions 2026-11-06..13. They are one corporate family.]
+# Found because the units shadow books hold them: without this every session those books
+# were invested read UNMEASURED.
+SYMBOL_PRIMARY_SIP_NAME = {"ET": "Texas Stock Exchange", "SUN": "Texas Stock Exchange",
+                           "SUNC": "Texas Stock Exchange", "USAC": "Texas Stock Exchange"}
+
 
 class ReadOnlyData:
     """Auction prints and distributions from Alpaca's data API. Read-only by construction."""
@@ -75,7 +86,8 @@ class ReadOnlyData:
         then EXTRA_EXCHANGE_SIP_NAME. Exactly one code must carry the name, else raise."""
         from quantt.broker.alpaca import ASSET_EXCHANGE_SIP_NAME, UnmappedExchange
         ex = self.__client.asset(symbol)["exchange"]
-        name = ASSET_EXCHANGE_SIP_NAME.get(ex) or EXTRA_EXCHANGE_SIP_NAME.get(ex)
+        name = (SYMBOL_PRIMARY_SIP_NAME.get(symbol) or ASSET_EXCHANGE_SIP_NAME.get(ex)
+                or EXTRA_EXCHANGE_SIP_NAME.get(ex))
         if name is None:
             raise UnmappedExchange(f"{symbol}: asset exchange {ex!r} has no measured SIP name "
                                    "(shadow/sources.py EXTRA_EXCHANGE_SIP_NAME)")
@@ -93,13 +105,66 @@ class ReadOnlyData:
     def asset_flags(self, symbol: str) -> dict | None:
         """{tradable, shortable, borrow_status, exchange} for one symbol, or None when Alpaca
         does not list it. Read on its date only: all of these change daily."""
-        from quantt.broker.alpaca import AssetNotFound
+        from quantt.broker.alpaca import AssetNotFound, _SYMBOL_RE
+        # The spin-off feed names "new symbols" that are not tickers at all (a contingent value
+        # right listed as '457CVR025', seen 2026-11-14). The client refuses to look such a
+        # string up, rightly; here it simply is not a listed share.
+        if not isinstance(symbol, str) or not _SYMBOL_RE.match(symbol):
+            return None
         try:
             a = self.__client.asset(symbol)
         except AssetNotFound:
             return None
         return {"tradable": a["tradable"], "shortable": a["shortable"],
-                "borrow_status": a.get("borrow_status"), "exchange": a["exchange"]}
+                "borrow_status": a.get("borrow_status"), "exchange": a["exchange"],
+                "name": a.get("name") or "", "status": a["status"]}
+
+    def spin_offs(self, first: dt.date, last: dt.date) -> tuple[list, int]:
+        """Every spin-off row Alpaca's corporate-actions feed lists with a process date in
+        [first, last], for the whole market: ([{id, source_symbol, new_symbol, ex_date,
+        process_date}], number of rows left out as unreadable).
+
+        WHY NOT `AlpacaClient.corporate_actions`. That method is the live gate's: it answers
+        "does any action name one of OUR symbols" and validates every type for that purpose.
+        This asks a different question, which symbols are NEW, so it requests the one type
+        and reads five fields. It goes through the client's own GET, so the key headers,
+        the redirect refusal and the error scrubbing are the client's, unchanged; the
+        client has no public method for a bare request, hence the private call.
+        `data_quality=all`: the default leaves out rows still missing a field, and a row
+        that is late is exactly what the caller must count.
+        A row is unreadable when its id, either symbol or its ex-date is missing or
+        malformed. It is counted and left out, never guessed at: it cannot name a tradable
+        new symbol, and the caller prints the count."""
+        c = self.__client
+        rows, bad, token = [], 0, None
+        for _ in range(50):
+            params = {"types": "spin_off", "start": first.isoformat(), "end": last.isoformat(),
+                      "limit": 1000, "data_quality": "all"}
+            if token:
+                params["page_token"] = token
+            body = c._get(c._data, "/v1/corporate-actions", params)
+            if not isinstance(body, dict) or "corporate_actions" not in body:
+                raise RuntimeError("corporate-actions: the response has no corporate_actions object")
+            got = (body["corporate_actions"] or {}).get("spin_offs") or []
+            if not isinstance(got, list):
+                raise RuntimeError("corporate-actions: spin_offs is not a list")
+            for r in got:
+                try:
+                    ok = (isinstance(r["id"], str) and r["id"] and isinstance(r["source_symbol"], str)
+                          and isinstance(r["new_symbol"], str) and r["new_symbol"])
+                    row = {"id": r["id"], "source_symbol": r["source_symbol"], "new_symbol": r["new_symbol"],
+                           "ex_date": dt.date.fromisoformat(r["ex_date"]),
+                           "process_date": dt.date.fromisoformat(r["process_date"])} if ok else None
+                except (KeyError, TypeError, ValueError):
+                    row = None
+                if row is None:
+                    bad += 1
+                else:
+                    rows.append(row)
+            token = body.get("next_page_token")
+            if not token:
+                return rows, bad
+        raise RuntimeError("corporate-actions: more than 50 pages of spin-offs; refusing to continue")
 
     def sessions(self, first: dt.date, last: dt.date) -> list:
         """Trading days from the exchange calendar Alpaca serves."""

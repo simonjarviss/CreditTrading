@@ -83,4 +83,13 @@ pre-specified. They reuse the fund books' signal code unchanged.
 
 Of 12,987 ordinary distributions by units since 2000, 98.9% were declared at least one day before the ex-date and 98.2% at least three; the median gap is 9 days; 0.9% have no declaration date. So the "known the day before" assumption above holds for the short-after book.
 
+## Added 2026-11-14: four units were unmarkable until today [V: `docs/REFERENCES.md` §12so]
+
+ET, SUN, SUNC and USAC print their official close on the Texas Stock Exchange while Alpaca's
+asset record says NYSE, so the shadow marks found no print for them. The short-after book
+holds every eligible unit on its long side, so every session it was invested from 2026-11-11
+would read UNMEASURED. `shadow/sources.py` now maps the four, each measured against Yahoo's
+close. Sessions before the fix reaches the VM stay unmeasured; the engine re-asks for a
+missing print for three sessions only.
+
 ![equity curve, units](exdate_other_wrappers/units/equity.png)
