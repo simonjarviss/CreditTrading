@@ -4261,3 +4261,18 @@ that adds it does not exist when it is written.
 - source: `results/ideas/2026-11-12_merger_arb.md` @ `3c1d68f`; `results/ideas/merger_arb/results.json` @ `3c1d68f`; `results/ideas/merger_arb/crosscheck_edgar.json` @ `3c1d68f`; `docs/REFERENCES.md` @ `3c1d68f` (§12ma)
 - supports: §3, §4
 - status: current. The premium figures were re-derived by a separate reviewer agent in the session; the reviewer's own script is not stored. The friendly filter is not pre-specified. The staging selects on SDC's final status (830 rumour, seeking-buyer and intent rows left out), whose effect is unmeasured. Stock deals, costs and borrow are untested. Not on shadow: there is no live deal list with break dates yet
+
+### E-2026-11-12-04 · Result: a newly spun-off company falls about 3% against small companies in its first week and other new listings do not; a short over its sessions 3 to 5 has a gross Sharpe of 0.96, not pre-specified
+- kind: result
+- era: ALPACA
+- date: 2026-11-12
+- figures:
+  - 387 new spin-offs (CRSP code SECSO, the distributed company a US common share first listed within 10 days of the ex-date), ex-dates 2000 to 2025; 26 already-listed children left out [S]
+  - return less IWM over life sessions 2–5: −3.2% (t −4.6 by start month); 6–20 +1.8% (t 1.9); 21–63 +1.5% (t 1.7); the control, 5,725 other new listings: −0.3% over sessions 2–5 [S]
+  - pre-specified book, long from life session 21 to 252 against IWM: gross Sharpe 0.49, t 2.46, halves 0.67 and 0.28; eras 0.46, 0.50, −0.12, −0.34, 1.96; the parents' book −0.01 and the other new listings' −0.33 [S]
+  - not pre-specified, windows read from the session profile: short over sessions 3–5 at 10% of the book a name against IWM: gross Sharpe 0.96, t 4.84, 3.18%/yr at 3.31% vol, halves 1.07 and 0.88, eras 1.31, 0.35, 1.25, 1.58, 0.50; 336 names; invested on 12% of sessions [S]
+  - not pre-specified: long over sessions 7–63: 0.47, t 2.36; both together 0.80, t 4.03 [S]
+  - independent review: on the 336 traded names the sessions 3–5 fall is 2.45% (t −4.5), 2.31% winsorised; the ten best names are 41% of the first-week book's P&L and without them the Sharpe is 0.64; using only companies whose first row is the ex-date gives 0.97; a window of sessions 6–8 gives 0.14; beta to IWM 0.006 [S]
+- source: `results/ideas/2026-11-12_spinoffs.md` @ `549de39`; `results/ideas/spinoffs/results.json` @ `549de39`
+- supports: §3, §4
+- status: current. Figures re-derived by a separate reviewer agent in the session; the reviewer's scripts and the liquidity and era splits quoted in the card are not stored in the repository. The event books' windows were chosen after seeing the profile. No cost or borrow is modelled, and whether a share can be borrowed on its second day of trading is unknown. Not on shadow: no live spin-off reader yet
