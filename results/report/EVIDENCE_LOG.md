@@ -4276,3 +4276,17 @@ that adds it does not exist when it is written.
 - source: `results/ideas/2026-11-12_spinoffs.md` @ `549de39`; `results/ideas/spinoffs/results.json` @ `549de39`
 - supports: §3, §4
 - status: current. Figures re-derived by a separate reviewer agent in the session; the reviewer's scripts and the liquidity and era splits quoted in the card are not stored in the repository. The event books' windows were chosen after seeing the profile. No cost or borrow is modelled, and whether a share can be borrowed on its second day of trading is unknown. Not on shadow: no live spin-off reader yet
+
+### E-2026-11-14-01 · Method: a spin-off first-week shadow book starts on a first-seen reader of Alpaca's feed; the nightly marks step now follows changing names; four units' closing prints were on the Texas Stock Exchange
+- kind: method
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - Alpaca's feed: 215 spin-off rows with process dates 2023-01-01 to 2026-11-14, none later; process date equals the ex-date at the median and is 10 days later at the 75th percentile [S]
+  - of 6 rows with process dates in the 30 days to 2026-11-14: 3 contingent value rights, 1 already listed share, 1 back-filled, 1 new common share [S]
+  - replay on that one share (MSGR, first regular-way session 2026-10-27, $69.6M traded): the rule holds it on 10-27, 10-28 and 10-29; over sessions 3 to 5 the trade would have lost about 1.7% of the book (Yahoo closes; a replay, not a record) [S]
+  - ET, SUN, SUNC and USAC: no closing print under NYSE on any of 6 sessions (2026-11-06 to 11-13); a print under the Texas Stock Exchange equal to Yahoo's close on 2026-11-13 (19.40, 65.23, 66.00, 25.14) [S]
+  - a full nightly cycle on the laptop against the real sources, twice: six books loaded, five decided for 2026-11-13, 109 symbols marked, the four units' gaps filled on the second run after the mapping [S]
+- source: `shadow/signals/spinoff.py` @ `fcfccd3`; `shadow/fetch/spinoffs.py` @ `fcfccd3`; `shadow/books/spinoff_first_week.json` @ `fcfccd3`; `shadow/nightly.py` @ `fcfccd3`; `shadow/sources.py` @ `fcfccd3`; `docs/REFERENCES.md` @ `fcfccd3` (§12so)
+- supports: §4, §5
+- status: current. A shadow book under the 2026-11-09 one-time approval (E-2026-11-09-03); SIMULATED, $1M, no borrow modelled. The probe of the feed and the print-by-exchange check were run in the session and are not stored as scripts. The VM has been unreachable from the laptop since 2026-11-10, so no shadow run there has been read and the units books' sessions from 2026-11-11 until this commit reaches the VM are expected to be UNMEASURED
