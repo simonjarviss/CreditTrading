@@ -1349,6 +1349,16 @@ reading and REVIEW flag on the partial book says PARTIAL; `risk_daily` shows tha
 WATCH naming the share. PARTIAL is about the as-of close only (independent review of PR #82,
 2026-11-11): a name left out only on an earlier date (a fund once held that yfinance no
 longer serves) is a named history note in an OK block, and `risk_daily` shows it as INFO. A
+split record in a fund the book has held leaves that fund out, named with its ex-date and
+yfinance's ratio, only on the dates the split can touch (team lead, 2026-11-14, option A of the
+third review of PR #82): the dates it was held before the ex-date (its close may be on the
+post-split basis) and, for the core, the dates whose beta window (the spec's z_window sessions)
+holds the ex-date; at the as-of close that is PARTIAL, only earlier a history note, and every
+other reading is unchanged. Before that ruling one split made the block UNMEASURED every night
+after. A share-count corporate action that Alpaca reports on a fund the book has traded still
+stops the attribution itself every night (`live_attribution`'s refusal: the report is
+UNMEASURED and the unit exits 4) until the team lead rules on that refusal (a separate
+investigation, 2026-11-14). A
 book that holds nothing at the as-of close has a FLAT factor block (the same review): it
 says the book is flat and reads no exposure, flag or PARTIAL for that close, never the
 previous close's reading; its history since the first trade is labelled with its dates;

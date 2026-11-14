@@ -1138,3 +1138,86 @@ def test_a_late_eod_point_is_never_info_in_risk_daily(tmp_path, monkeypatch, nig
     assert "cross-checked" in f["lines"][1] and f"at the close of {TRADED[1]}" in f["lines"][1]
     _account_record(state, TRADED[1], {"AAA": 3000})
     assert RD.factor_block("cef", state, ASOF)["status"] == RD.WATCH
+
+
+# --- a split record in a fund the book held (team lead, 2026-11-14: option A of the third review of PR #82) ---
+
+def _split_fetch(sym, day, book="cef", ratio=2.0):
+    """A price fetch in which `sym` carries a yfinance split record on `day` and no split-sized
+    step in its close (yfinance's post-split basis, once it has adjusted); every other row as
+    served (split_driver.py's scenarios, third review of PR #82)."""
+    def fetch(tickers, start, asof):
+        px = price_history(ER.factor_set(book)).copy()
+        px.loc[(px["ticker"] == sym) & (px["date"] == pd.Timestamp(day)), "split"] = ratio
+        return px, {}, {}
+    return fetch
+
+
+OPEN_BBB_ON_THE_EX_DATE = [("f1", "AAA", "buy", 5000, "10.00", TRADED[0]), ("f2", "BBB", "sell_short", 2000, "20.20", TRADED[1]),
+                           ("f3", "AAA", "sell", 1000, "10.15", TRADED[1])]
+# case: (fills, BBB's ex-date, {book: (factor status, dates BBB is left out on)})
+SPLIT_CASES = {
+    "held_before": (FILLS + COVER_BBB_EARLY, TRADED[2], {"cef": ("OK", [TRADED[0]]), "c4": ("OK", [TRADED[0]])}),
+    "held_across": (FILLS, TRADED[1], {"cef": ("PARTIAL", [TRADED[0], TRADED[2]]), "c4": ("OK", [TRADED[0]])}),
+    "held_only_after": (OPEN_BBB_ON_THE_EX_DATE, TRADED[1], {"cef": ("PARTIAL", [TRADED[2]]), "c4": ("OK", [])}),
+    "beta_window_only": (FILLS, FUNDED[-1], {"cef": ("PARTIAL", list(TRADED)), "c4": ("OK", [])}),
+    "flat_after_holding_before": (FILLS + COVER_BBB_EARLY + [("f5", "AAA", "sell", 4000, "10.05", TRADED[2])], TRADED[2],
+                                  {"cef": (P.FLAT, [TRADED[0]]), "c4": (P.FLAT, [TRADED[0]])}),
+}
+
+
+@pytest.mark.parametrize("book", ["cef", "c4"])
+@pytest.mark.parametrize("case", sorted(SPLIT_CASES))
+def test_a_split_leaves_the_fund_out_only_where_it_can_touch_the_reading(tmp_path, monkeypatch, case, book):
+    """Team lead, 2026-11-14 (option A of the third review of PR #82). Before it, a split record
+    in any fund the book ever held made the factor block UNMEASURED every night after: the
+    readout refused any split after the first positions date, and the core's guard refused an
+    already-adjusted split anywhere in the fetch. Now, in the job's partial mode, the fund is
+    left out, named (symbol, ex-date, ratio), only on the dates the split can touch: those it
+    was held before the ex-date and, for the core, those whose beta window holds it. So held
+    only before the split (sold first): an OK or FLAT block with a history note; held across it,
+    opened on the ex-date, or with the split only in its beta window: the core is PARTIAL at
+    the close (risk_daily WATCH naming BBB) and C4, which reads through a split after its
+    ex-date, is OK. Fails on the parent 3743ad9, where every case was UNMEASURED but C4's
+    beta-window-only one (a pin: C4's guard already dropped that multiplier)."""
+    from scripts.ops import risk_daily as RD
+    fills, ex, want = SPLIT_CASES[case]
+    status, left_out = want[book]
+    monkeypatch.setattr(THIS, "FILLS", fills)
+    rep, code = run(tmp_path, book=book, price_fetcher=_split_fetch("BBB", ex, book))
+    f = rep["factor"]
+    assert code == P.EXIT_OK and rep["attribution"]["reconciled"] is True
+    assert f["status"] == status, f["lines"]
+    assert f.get("partial_dates", {}) == {d.isoformat(): ["BBB"] for d in left_out}
+    named = f"a split record of BBB ex {ex} (yfinance ratio 2)"
+    reasons = [x["reason"] for x in f.get("earlier_exclusions", [])] + [m["reason"] for m in f.get("missing", [])]
+    assert len(reasons) == len(left_out) and all(r.startswith(named) for r in reasons), reasons
+    if status == "PARTIAL":
+        assert [m["symbol"] for m in f["missing"]] == ["BBB"] and f"in its 252-session beta window before {ASOF}" in \
+            f["missing"][0]["reason"]
+        q = _positions_at_closes()[-1]
+        _account_record(tmp_path / book, ASOF, {s: n for s, n in q.items() if n})
+        b = RD.factor_block(book, tmp_path / book, ASOF)
+        assert b["status"] == RD.WATCH and b["lines"][0].startswith("Factor exposure PARTIAL: BBB left out at the last close")
+    elif left_out:
+        note = [ln for ln in f["lines"] if ln.startswith("History note")]
+        assert len(note) == 1 and f"{left_out[0]} BBB ({named} after this close" in note[0]
+
+
+def test_a_split_the_reading_cannot_see_leaves_the_as_of_reading_as_it_was(tmp_path, monkeypatch):
+    """The split touches only the readings it can (team lead, 2026-11-14): BBB held at 01-20 only
+    and split on 01-22, the core's as-of reading of AAA is the reading with no split record at
+    all, figure for figure, and so is C4's when BBB is held across its split (C4 reads through
+    it after the ex-date). Fails on the parent 3743ad9, where the split made the block UNMEASURED."""
+    monkeypatch.setattr(THIS, "FILLS", FILLS + COVER_BBB_EARLY)
+    with_split, _ = run(tmp_path / "split", price_fetcher=_split_fetch("BBB", TRADED[2]))
+    without, _ = run(tmp_path / "none")
+    assert with_split["factor"]["status"] == "OK", with_split["factor"]["lines"]
+    for k in ("factors", "gross_usd", "net_usd", "total_of_target", "split"):
+        assert with_split["factor"][k] == without["factor"][k], k
+    monkeypatch.setattr(THIS, "FILLS", list(SPLIT_CASES["held_across"][0]))
+    with_split, _ = run(tmp_path / "c4split", book="c4", price_fetcher=_split_fetch("BBB", TRADED[1], "c4"))
+    without, _ = run(tmp_path / "c4none", book="c4")
+    assert with_split["factor"]["status"] == "OK", with_split["factor"]["lines"]
+    for k in ("factors", "gross_usd", "net_usd", "total_of_target"):
+        assert with_split["factor"][k] == without["factor"][k], k

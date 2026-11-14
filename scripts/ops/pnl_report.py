@@ -97,6 +97,14 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     left out on an earlier date alone is a named note in the block's history, and the block
     is OK, because the job re-reads from the first trade every night and a fund yfinance no
     longer serves (merged, renamed) would otherwise keep every later night PARTIAL.
+  * a split record in a fund the book has held: the fund is left out, named (symbol, ex-date,
+    yfinance's ratio), only on the dates the split can touch, before its ex-date and, for the
+    core, with the ex-date in its beta window (team lead, 2026-11-14, option A of the third
+    review of PR #82; `exposure_readout._split_scope`); PARTIAL at the as-of close, a history
+    note earlier, as above. Before that ruling one split in a fund ever held made the block
+    UNMEASURED every night after. A share-count corporate action Alpaca reports on a traded
+    fund still refuses the attribution itself (`live_attribution`), so the report is
+    UNMEASURED and the unit exits 4, until the team lead rules on that refusal.
   * a book that holds nothing at the as-of close: the factor block is FLAT (independent
     review of PR #82, 2026-11-11). Nothing is held, so nothing is exposed; the block reads no
     exposure, no flag and no PARTIAL for that close, and never shows an earlier close's
