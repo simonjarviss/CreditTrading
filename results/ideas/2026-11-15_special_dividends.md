@@ -1,8 +1,8 @@
 # Idea card — special cash dividends: the wait for the ex-date pays, the days after it reverse
 
 **Slugs:** `specdiv_wait`, `specdiv_after`, `specdiv_exday` · **Written:** 2026-11-15 ·
-**Status:** `specdiv_wait` EXPLORE, cleared its checks; `specdiv_after` EXPLORE, weak;
-`specdiv_exday` SET ASIDE ·
+**Status:** `specdiv_wait` SHADOW book built, starting 2026-11-17 if its commit reaches the
+`shadow` branch by then (see Next); `specdiv_after` EXPLORE, weak; `specdiv_exday` SET ASIDE ·
 **Reproducer:** `python3 results/ideas/special_dividends/explore.py`, then
 `python3 results/ideas/special_dividends/checks.py` and `checks.py --shifted` ·
 **Panels:** CRSP distributions and daily rows on R2 (`scripts/research/stage_crsp_special_divs.py`),
@@ -101,5 +101,18 @@ window; 64 have no declaration date and are left out.
 
 ## Next
 
-A simulated shadow book for WAIT on a first-seen reader of Alpaca's feed, which also
-measures the feed's lag. AFTER waits for more evidence. EXDAY is closed.
+- **Shadow book `specdiv_wait`** (`shadow/books/specdiv_wait.json`, `shadow/signals/specdiv.py`,
+  `shadow/fetch/specdivs.py`), simulated, $1M, under the 2026-11-09 one-time approval. Long
+  each eligible company 10% against IWM from the first session it is seen in Alpaca's feed
+  to three sessions before the ex-date. Each row is stored with the day it was first seen,
+  which measures the feed's lag. The live filter approximates CRSP's common-share code with
+  the feed's `foreign` flag, the asset's exchange and its name.
+- **First read of the real feed, 2026-11-15:** 67 special rows not marked foreign, 47 with a
+  future ex-date; 22 companies pass the type filter with an ex-date at least three sessions
+  ahead, and 12 of those yield 1% or more on the 2026-11-13 close (among them Costco at 2.7%
+  and one at 88%, a liquidating payment). All 67 were already listed when the reader first
+  ran, so none of them measures the lag.
+- **Not running yet.** The commit is local: the team lead stopped pushes on 2026-11-15, and
+  the VM follows the remote `shadow` branch. The start date in the book file must be moved
+  if the push comes after 2026-11-17.
+- AFTER waits for more evidence. EXDAY is closed.

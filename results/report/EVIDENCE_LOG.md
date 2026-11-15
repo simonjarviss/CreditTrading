@@ -4386,3 +4386,18 @@ that adds it does not exist when it is written.
 - source: `shadow/sources.py` @ `db57aa7`; `shadow/tests/test_sources_exchange.py` @ `db57aa7`
 - supports: §5
 - status: current. The log files were printed by the team lead's own command (the agent's read as the service user was refused by the permission check); the state directory, scoreboard and marks_gaps.csv on the VM have not been read. The venue check was run in the session and is not stored as a script
+
+### E-2026-11-15-02 · Result: a common stock gains between a special dividend's announcement and its ex-date; gross Sharpe 1.10 against IWM, 0.62 in names trading $5M a day; a shadow book is built and not yet running
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 3,601 special cash dividends on common shares with ex-dates 2000-06-01 to 2025-12-31 (CRSP on R2, prices to 2025-12-31); 64 have no declaration date and are left out [V]
+  - pre-specified WAIT book (long from the session after the news is public to the close before the ex-date, 10% a name against IWM, yield 1% or more): 1,654 events, gross Sharpe 1.10 (t 5.57), halves 0.78 / 1.36, eras 0.67, 1.09, 1.76, 2.23, 0.64; the same book on ordinary dividends 0.59 [V]
+  - pre-specified AFTER book (short X+1 to X+3): 0.63 (t 3.21), halves 0.64 / 0.64, −0.20 in 2023–25, placebo ten sessions later 0.06. EXDAY book: 0.56, with the ordinary-dividend control at 1.11 [V]
+  - checks not pre-specified: WAIT alpha 6.9% a year (t 5.85) with betas to IWM and SPY of −0.07 and 0.05; 0.98 without its ten best events; 0.62 (t 3.15) on dollar volume of $5M or more and 0.49 (t 2.46) on $20M or more; the same names over windows moved 60, 40 and 20 sessions earlier 0.66, 0.68, 1.02, and later −0.14, 0.03, −0.14 [V]
+  - Alpaca's feed on 2026-11-15: 67 special cash-dividend rows not marked foreign, 47 with a future ex-date; 22 companies pass the shadow book's type filter with an ex-date three or more sessions ahead, 12 of them yielding 1% or more [V]
+  - none for the feed's lag after an announcement (every row was already listed when the reader first ran)
+- source: `results/ideas/special_dividends/explore.py` @ `77d6119`; `results/ideas/special_dividends/checks.py` @ `77d6119`; `scripts/research/stage_crsp_special_divs.py` @ `77d6119`; `shadow/signals/specdiv.py` @ `77d6119`; `shadow/fetch/specdivs.py` @ `77d6119`; `docs/REFERENCES.md` @ `77d6119` (§12sv)
+- supports: §4, §5
+- status: current. Gross, no costs, no borrow, dividend tax not modelled. The shadow book is SIMULATED, $1M, under the 2026-11-09 one-time approval (E-2026-11-09-03), and is a local commit: it does not run until the commit reaches the remote `shadow` branch. An independent review of the test was requested on 2026-11-15 and had not reported when this entry was written
