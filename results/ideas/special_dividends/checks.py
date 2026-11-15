@@ -112,7 +112,7 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__" and "--shifted" not in sys.argv:
+if __name__ == "__main__" and "--shifted" not in sys.argv and "--late" not in sys.argv:
     sys.exit(main())
 
 
@@ -139,4 +139,35 @@ def shifted_controls() -> dict:
 if __name__ == "__main__" and "--shifted" in sys.argv:
     j = json.loads((HERE / "checks.json").read_text())
     j["wait_window_moved"] = shifted_controls()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def late_start() -> dict:
+    """WAIT decided 1, 2 or 3 sessions later than D1, eligibility re-read at the later close
+    (added 2026-11-15, after edgar_dates.py showed the first 8-K naming the dividend arrives
+    0 to 4 days after CRSP's declaration date). The independent review ran this probe first
+    (0.93, 0.98, 0.89); this stores it so the card's figures have a reproducer."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    sd = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    P, A = prc.to_numpy(), adv.to_numpy()
+    cols = prc.columns.get_indexer(sd["permno"])
+    out = {}
+    for k in (1, 2, 3, 5):
+        e = sd.copy()
+        e["d1"] = e["d1"] + k
+        row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+        p, a = P[row, cols], A[row, cols]
+        e["ok_wait"] = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (a >= ex.MIN_ADV) & (e["amount"].to_numpy() / p >= ex.MIN_YIELD)
+        pnl, m = ex.run(e, "wait", sessions, R)
+        out[f"+{k}"] = {**explore.stats(pnl), "events_traded": m["events_traded"],
+                        "late_2023_on": explore.stats(pnl.loc["2023-01-01":])["sharpe"]}
+        print(f"  wait decided {k} session(s) later: SR {out[f'+{k}']['sharpe']:.2f} t {out[f'+{k}']['t']:.2f} events {m['events_traded']} | 2023 on {out[f'+{k}']['late_2023_on']:.2f}")
+    return out
+
+
+if __name__ == "__main__" and "--late" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["wait_late_start"] = late_start()
     (HERE / "checks.json").write_text(json.dumps(j, indent=1))
