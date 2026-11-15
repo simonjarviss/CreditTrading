@@ -1132,3 +1132,24 @@ def test_a_cache_without_the_activity_file_is_analysed_as_before_and_one_half_pr
     (tmp_path / "c" / LA.ACT_FILE).write_text("[]")
     with pytest.raises(LA.AttributionError, match="must come together"):
         LA.load_cache(tmp_path / "c", grp=dict(GRP))
+
+
+def test_one_split_listed_twice_by_the_feed_is_one_event():
+    """Review of the follow-up, 2026-11-14, finding 1 (ca_dup.py): the feed lists one split under
+    two ids (docs/REFERENCES.md §12pc: the MQY pairs twice, an exact QQQ duplicate), and each
+    record became its own event with the full phantom: four events and twice the phantom. Now one
+    event per (symbol, session), its id joining the records'. Fails on the parent bdf181e (four
+    events)."""
+    corp = CA_SPLIT + [dict(e, id=e["id"] + "-dup") for e in CA_SPLIT]
+    res = LA.attribute(_ca_inputs("H1", corp=corp), breaks=[])
+    assert sorted((c["symbol"], c["id"], c["phantom"]) for c in res.corp_events) == [
+        ("LNG", "ca-1+ca-1-dup", 8028), ("SHS", "ca-2+ca-2-dup", -9780)]
+
+
+def test_two_records_of_one_split_that_disagree_on_the_rates_raise_naming_both():
+    """The same: two records for one symbol and session with different rates cannot both be
+    true, so the rebuild raises naming both ids, never picking one. Fails on the parent bdf181e,
+    which booked two phantoms."""
+    other = dict(CA_SPLIT[0], id="ca-1-other", rates={"old_rate": F(4), "new_rate": F(1)})
+    with pytest.raises(LA.AttributionError, match=r"disagree on old_rate: 3 \(id ca-1\) and 4 \(id ca-1-other\)"):
+        LA.attribute(_ca_inputs("H1", corp=[CA_SPLIT[0], other]), breaks=[])

@@ -209,6 +209,11 @@ H1, so it is never done. The rule now:
     as fee-free position changes, `qty` signed at `price`, inside `fill`; CIL as cash, inside
     `fill` of its name-day; neither in the fee model or the traded notional). Never from the
     market feed. With no rows (paper today) the rebuild is the fills' alone, exactly as before.
+  * ONE EVENT PER NAME AND SESSION. The feed can list one split under two ids (§12pc: each MQY
+    pair twice; an exact QQQ duplicate), and each record became its own phantom (independent
+    review of the follow-up, 2026-11-14, finding 1). A split's records for one symbol and session
+    are one event, its id joining theirs; two that disagree on the type or a rate raise, naming
+    both (`_one_split_per_name`).
   * AN AFFECTED NAME-DAY keeps hold and the reconciliation, and its NAV/discount split is
     UNMEASURED, named (the hold mixes the two share bases). If the account has no activity
     row for the name that session and the event is a forward or reverse split, paper did not
@@ -917,6 +922,33 @@ def default_breaks(eod: list, sessions: list) -> tuple[list, str]:
     return [sessions[i + 1]], f"split after the EOD equity peak on {peak} (equity {float(eq[peak]):,.2f})"
 
 
+def _one_split_per_name(sym: str, d: dt.date, evs: list) -> list:
+    """[(event, role)] for `sym` on session `d`, with every split-type record merged into one
+    event (review of the follow-up, 2026-11-14, finding 1). The market feed can list one split
+    under two ids (docs/REFERENCES.md §12pc: each MQY pair twice, process dates 2026-02-23 and
+    -24; an exact QQQ duplicate 2022-09-19), and each became its own phantom, doubling it. The
+    merged event's id joins the records' ids, its rates are the records' agreed rates (a record
+    without rates states none, and does not disagree), and two records that disagree on the type
+    or on a rate raise, naming both. Other types pass through unmerged (they refuse, or the
+    account's rows settle them: no amount is booked per record)."""
+    splits = [(e, r) for e, r in evs if e["type"] in PHANTOM_TYPES]
+    if len(splits) <= 1:
+        return evs
+    first, role = splits[0]
+    rates: dict = {}
+    for e, _ in splits:
+        if e["type"] != first["type"]:
+            raise AttributionError(f"two market records for one split of {sym} on {d} disagree on the type: "
+                                   f"{first['type']} (id {first['id']}) and {e['type']} (id {e['id']})")
+        for k_, v in (e.get("rates") or {}).items():
+            if k_ in rates and rates[k_][0] != v:
+                raise AttributionError(f"two market records for one split of {sym} on {d} disagree on {k_}: "
+                                       f"{rates[k_][0]} (id {rates[k_][1]}) and {v} (id {e['id']})")
+            rates.setdefault(k_, (v, e["id"]))
+    merged = dict(first, id="+".join(e["id"] for e, _ in splits), rates={k_: v for k_, (v, _) in rates.items()})
+    return [(merged, role)] + [(e, r) for e, r in evs if e["type"] not in PHANTOM_TYPES]
+
+
 def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = None,
               nav_missing: str = "raise") -> Result:
     """The decomposition in the module docstring, for every session after the first
@@ -1107,6 +1139,9 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             for sym, role in e["parties"]:
                 if role in COUNT_ROLES and q[sym]:
                     affected.setdefault(sym, []).append((e, role))
+        # One event per (symbol, session) for a split, whatever number of market records list it
+        # (review of the follow-up, 2026-11-14, finding 1: the feed lists one action under two ids).
+        affected = {sym: _one_split_per_name(sym, d, evs) for sym, evs in affected.items()}
         for sym, evs in sorted(affected.items()):
             for e, role in evs:
                 what = f"{e['type']} {e['date']} {sym} ({role}, id {e['id']}), {q[sym]} share(s) held into {d}"
