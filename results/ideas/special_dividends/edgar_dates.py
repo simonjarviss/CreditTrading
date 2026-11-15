@@ -23,7 +23,9 @@ WHAT IT DOES
               lookahead; each C is listed for reading;
            N  no 8-K in the window mentions it.
 Every request goes through the repo's EDGAR client (rate limit, cache, the desk's declared
-contact). Writes edgar_dates.json: tickers, dates and classes, all public facts.
+contact). Writes the full table (with CRSP's dates, licensed) to
+`~/quantt_research/specdiv_edgar_dates.json`, and edgar_dates.json here with the counts and,
+per event, the ticker, the 8-K's accession number and acceptance time, and the class.
 """
 from __future__ import annotations
 
@@ -106,7 +108,11 @@ def main(argv=None) -> int:
     counts.update(sampled=len(rows), classes=c, days_mention_minus_declared=lag.value_counts().sort_index().to_dict(),
                   read_on=dt.date.today().isoformat(), requests=client.n_requests)
     print(json.dumps(counts, indent=1, default=str))
-    (HERE / "edgar_dates.json").write_text(json.dumps({"summary": counts, "events": rows}, indent=1, default=str))
+    # CRSP's dates per ticker are licensed rows: the full table goes outside the repository.
+    # The repository keeps the counts and, per event, only what EDGAR itself publishes.
+    (ex.RES / "specdiv_edgar_dates.json").write_text(json.dumps({"summary": counts, "events": rows}, indent=1, default=str))
+    public = [{k: x[k] for k in ("ticker", "cik", "accession", "first_mention_accepted_ny", "class")} for x in rows]
+    (HERE / "edgar_dates.json").write_text(json.dumps({"summary": counts, "events": public}, indent=1, default=str))
     return 0
 
 

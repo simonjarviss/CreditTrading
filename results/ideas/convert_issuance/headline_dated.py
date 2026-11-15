@@ -49,7 +49,7 @@ def main() -> int:
     ev, ret, prc, dv, iwm, sessions = cv.load()
     adv = dv.rolling(21, min_periods=10).mean()
     R = ret.copy(); R["IWM"] = iwm
-    news = pd.concat([pd.DataFrame(json.loads(f.read_text())["events"]) for f in sorted((HERE / "news").glob("news_dating_*.json"))])
+    news = pd.concat([pd.DataFrame(json.loads(f.read_text())["events"]) for f in sorted((fo.RES / "convert_news").glob("news_dating_*.json"))])
     news = news[news["first_ny"].notna()].copy()
     news["issue_date"] = pd.to_datetime(news["issue_date"])
     t = pd.to_datetime(news["first_ny"], utc=True).dt.tz_convert("America/New_York")

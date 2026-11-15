@@ -15,9 +15,9 @@ WHAT IT READS (read-only; the core account's key, as the shadow books do):
   GET /v1beta1/news for each ticker from D-7 to D+3 calendar days; headlines matching
   "convertible" (case-insensitive). The first such headline's New York time is compared
   with 16:00 on D-1, D and D+1.
-Writes news/news_dating_<year>.json: tickers, dates and headline times (public facts). The ticker list is
-from licensed rows only in the sense of which issuers SDC names; no SDC or CRSP field is stored
-beyond ticker and issue date.
+Writes `~/quantt_research/convert_news/news_dating_<year>.json` and prints the counts. The file
+pairs each ticker with SDC's issue date and market, which are licensed rows: it stays outside
+the repository (corrected 2026-11-15: the first version wrote it beside this script).
 """
 from __future__ import annotations
 
@@ -35,6 +35,7 @@ REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO))
 HERE = Path(__file__).resolve().parent
 RES = Path.home() / "quantt_research"
+OUT = RES / "convert_news"      # outside the repository: each row pairs a ticker with SDC's issue date
 NY = ZoneInfo("America/New_York")
 PAT = re.compile(r"convertible", re.I)
 
@@ -89,8 +90,8 @@ def main(argv=None) -> int:
                "first_headline_bucket (calendar days)": df["bucket"].value_counts().to_dict() if "bucket" in df else {},
                "by_market": {m: {"events": int(len(g)), "with_headline": int((g["headlines"] > 0).sum())} for m, g in df.groupby("market")}}
     print(json.dumps(summary, indent=1))
-    (HERE / "news").mkdir(exist_ok=True)
-    (HERE / "news" / f"news_dating_{a.year}.json").write_text(json.dumps({"summary": summary, "events": rows}, indent=1))
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / f"news_dating_{a.year}.json").write_text(json.dumps({"summary": summary, "events": rows}, indent=1))
     return 0
 
 

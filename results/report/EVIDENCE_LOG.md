@@ -4453,7 +4453,7 @@ that adds it does not exist when it is written.
   - of the 12 later ones, 10 were public before the book's fill and 2 were not (THG, NREF): 2 of 34 checked events [V]
   - the book decided 1, 2 and 3 sessions later, eligibility re-read: gross Sharpe 0.93 (t 4.71), 0.98 (t 4.96), 0.89 (t 4.50) against 1.10 as first reported [V]
   - by era, decided at D1 / one / two / three sessions later: 2000–07 0.42 / 0.52 / 0.62 / 0.47; 2008–12 1.18 / 1.07 / 0.99 / 1.02; 2013–17 1.69 / 1.74 / 1.69 / 1.79; 2018–22 1.95 / 1.66 / 1.71 / 1.36; 2023–25 0.64 / −0.13 / 0.05 / 0.26 [V]
-- source: `results/ideas/special_dividends/edgar_dates.py` @ `7a23106`; `results/ideas/special_dividends/checks.py` @ `7a23106`; `results/ideas/2026-11-15_special_dividends.md` @ `7a23106`
+- source: `results/ideas/special_dividends/edgar_dates.py` @ `f8f26c0`; `results/ideas/special_dividends/checks.py` @ `f8f26c0`; `results/ideas/2026-11-15_special_dividends.md` @ `f8f26c0`
 - supports: §4
 - status: current. Corrects the headline of E-2026-11-15-02 (1.10, and 0.64 in 2023–25). An 8-K can follow a press release, so the count of late events is an upper bound; foreign filers and REITs in the sample were not checked. The shadow book enters on the feed's first listing and is unaffected
 
@@ -4466,7 +4466,7 @@ that adds it does not exist when it is written.
   - pre-specified long (D1+3 to D1+62 against IWM, 10% a name): gross Sharpe 0.31 (t 1.57); halves 0.54 / 0.08; eras 0.49, 0.34, −0.19, 0.77, −0.31 [V]
   - controls: the same events 120 sessions later 0.36 (t 1.82); 60 sessions earlier 1.45 (t 7.34) [V]
   - per event against IWM: +1.34% in the ten sessions before D1, +1.66% in the ten from D1, then 0.2% to 0.4% a block [V]
-- source: `results/ideas/div_initiations/explore.py` @ `819c4ec`; `scripts/research/stage_crsp_div_initiations.py` @ `819c4ec`
+- source: `results/ideas/div_initiations/explore.py` @ `ee428e5`; `scripts/research/stage_crsp_div_initiations.py` @ `ee428e5`
 - supports: §4
 - status: current. Gross, no costs. Set aside: the later-window control equals the book. Not independently reviewed
 
@@ -4479,7 +4479,7 @@ that adds it does not exist when it is written.
   - the follow-on rule unchanged (long D+3 to D+7 against IWM, 10% a name): gross Sharpe 0.67 (t 3.39); halves 0.77 / 0.59; eras 0.81, 0.24, 1.04, 0.36, 0.62; the window 30 sessions later −0.10; 0.68 on names trading $5M a day and 0.49 on $20M [V]
   - issued 2011–22 (seen by E2 in October) 0.33; issued outside those years 0.59 (t 3.0) [V]
   - not pre-specified: alpha 4.5% a year (t 3.30); per event +0.44% mean and +0.26% median; 0.42 without the ten best events; the hold begun one and two sessions later 0.45 and 0.56 [V]
-- source: `results/ideas/convert_issuance/explore.py` @ `b54498e`; `results/ideas/convert_issuance/checks.py` @ `b54498e`; `scripts/research/stage_sdc_convertibles.py` @ `b54498e`; `results/ideas/follow_ons/explore.py` @ `b54498e`
+- source: `results/ideas/convert_issuance/explore.py` @ `40d1c60`; `results/ideas/convert_issuance/checks.py` @ `40d1c60`; `scripts/research/stage_sdc_convertibles.py` @ `40d1c60`; `results/ideas/follow_ons/explore.py` @ `40d1c60`
 - supports: §4
 - status: current. Gross, no costs. A re-run of E2 on a longer, differently dated list. Not on shadow: no live list of pricings. Not independently reviewed
 
@@ -4491,7 +4491,7 @@ that adds it does not exist when it is written.
   - a headline containing "convertible" exists on Alpaca's news feed for 430 of 1,286 SDC issues of 2015–2025: 8% to 30% a year through 2022, 46% in 2023, 69% in 2024, 73% in 2025; 118 of 119 first headlines in 2025 came outside trading hours [V]
   - the first session opening after the headline equals SDC's issue date for 218 events, is one session later for 110 and one earlier for 64 [V]
   - long from two sessions after that session, five sessions, against IWM: gross Sharpe 0.29 (t 0.96) on 392 events; −0.30 in 2015–22 and 1.02 in 2023–25; filled at that session's own close 0.20 (t 0.67) [V]
-- source: `results/ideas/convert_issuance/news_dating.py` @ `096a7c3`; `results/ideas/convert_issuance/headline_dated.py` @ `096a7c3`; `results/ideas/2026-11-15_convert_issuance.md` @ `096a7c3`
+- source: `results/ideas/convert_issuance/news_dating.py` @ `0b47e1d`; `results/ideas/convert_issuance/headline_dated.py` @ `0b47e1d`; `results/ideas/2026-11-15_convert_issuance.md` @ `0b47e1d`
 - supports: §4
 - status: current. A second look at the events of E-2026-11-15-08 with other dates, not a new sample; the headline-covered events are a non-random third. Gross, no costs. Not independently reviewed
 
