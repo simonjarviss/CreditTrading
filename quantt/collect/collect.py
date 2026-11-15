@@ -872,8 +872,9 @@ def step_eod_equity(ctx: Ctx, day: dt.date, clk: dict, status: dict) -> dict:
     to the data day D; the client leaves out any later, unfinished session.
     A point whose own stamp is after this run's Alpaca clock is not written:
     its day's window has not closed. Alpaca stamped the 2026-10-16 close
-    2026-10-17T00:00Z, 20:00 ET, and documents neither when a point first
-    appears nor whether it can change (§12an). Such a point is written on the
+    2026-10-17T00:00Z, 20:00 ET (a half day is stamped 17:00 ET, its 13:00
+    close + 4 hours: read 2026-11-14, client docstring), and documents neither
+    when a point first appears nor whether it can change (§12an). Such a point is written on the
     first run after its stamp has passed.
 
     WHEN IT READS: EVERY SLOT UNTIL D's POINT IS WRITTEN, THEN ONCE A DATA DAY.
