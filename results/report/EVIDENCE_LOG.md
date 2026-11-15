@@ -4247,3 +4247,34 @@ that adds it does not exist when it is written.
 - source: `scripts/ops/pnl_report.py` @ `d2f3e19`; `scripts/ops/risk_daily.py` @ `bf98dec`; `scripts/cef/exposure_readout.py` @ `d2f3e19`
 - supports: §5
 - status: current
+
+### E-2026-11-14-50 · Result: Alpaca stamps a half day's end-of-day point four hours after its 13:00 close, at 17:00 New York, and the core paper account has never recorded a corporate-action activity row
+- kind: result
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - cef paper, `period=3A`, 754 points: all 747 sessions with a 16:00 calendar close stamped 20:00:00 New York; all 7 with a 13:00 close stamped 17:00:00 (2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; the last two funded) [V]
+  - cef paper account activities, read 2026-11-14: each of the nine types SPLIT, CIL, MA, NC, SC, SPIN, REO, REORG and JNLS returned 0 rows; SSP and SSO answered HTTP 422 [S]
+- source: `scripts/ops/alpaca_read.py` @ `fa84045` (the half-day stamps); `scripts/ops/alpaca_read.py` @ `8dfe3eb` (the activity types)
+- supports: §4, §5
+- status: current
+
+### E-2026-11-14-51 · Rulings: splits leave a fund out of the factor block, named; corporate actions are narrowed and handled from the account's own records; the half-day stamp is fixed in the runner's client by its owner and in the report's reader here
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - none (rulings, 2026-11-14: a fund that split is left out and named on the dates the split can touch, with the PARTIAL rules (option A); the attribution's corporate-action refusal is narrowed to a fund held into an event that changes the holder's share count, never an acquirer, with the rebuild from the account's own activity rows, never the market feed, and an unprocessed paper split shown on its own labelled phantom line beside the official P&L; an unreconciled held night keeps its factor figures, labelled UNRECONCILED; the runner owner fixes AlpacaClient's half-day stamp rule in its own PR before 2026-11-27, and the report's reader copies its rule exactly; the report's follow-up PR is reviewed and merged before any install)
+- source: `scripts/cef/live_attribution.py` @ `8dfe3eb`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`
+- supports: §4, §5
+- status: current
+
+### E-2026-11-14-52 · Method: the report job's follow-up is built: account cross-checks on every factor reading, no stale reading shown as current, the flat-entry session counted in factor P&L, splits scoped, half-day stamps read, corporate actions narrowed and handled
+- kind: method
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before)
+- source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed
