@@ -75,7 +75,7 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__" and "--gap" not in sys.argv:
+if __name__ == "__main__" and not {"--gap", "--small"} & set(sys.argv):
     sys.exit(main())
 
 
@@ -102,4 +102,50 @@ def by_gap() -> dict:
 if __name__ == "__main__" and "--gap" in sys.argv:
     j = json.loads((HERE / "checks.json").read_text())
     j["rebound_by_sessions_from_launch_to_issue"] = by_gap()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def small_names() -> dict:
+    """REBOUND by the issuer's 21-session dollar volume at the decision, the floor lowered to
+    $100,000 for the smallest band (added 2026-11-15 after the team lead asked for ideas a
+    small book can exploit; not pre-specified). Each band is its own book. Also the same
+    bands one session later (D+4..D+8), and per event."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    e = ex.place(ev, sessions, prc, adv)
+    cols = prc.columns.get_indexer(e["permno"])
+    P = prc.to_numpy()[e["d"].to_numpy() + 1, cols]
+    rn, im = ret.to_numpy(), iwm.to_numpy()
+    out = {}
+    base = ex.BOOKS["rebound"]
+    for label, lo, hi in (("$100k to $1M a day", 1e5, 1e6), ("$1M to $5M", 1e6, 5e6), ("$100k to $5M", 1e5, 5e6), ("$5M and over", 5e6, np.inf)):
+        x = e.copy()
+        x["ok"] = (P >= ex.MIN_PRICE) & (x["adv_dec"] >= lo) & (x["adv_dec"] < hi)
+        p, m = ex.run(x, "rebound", sessions, R)
+        ex.BOOKS["rebound"] = (4, 8, 1.0)
+        try:
+            late = ex.run(x, "rebound", sessions, R)[0]
+        finally:
+            ex.BOOKS["rebound"] = base
+        el = x[x["ok"] & (x["d"] + 7 < len(sessions))]
+        cp = ret.columns.get_indexer(el["permno"])
+        ep = pd.Series([float(np.nansum(rn[d + 3:d + 8, c] - im[d + 3:d + 8])) for d, c in zip(el["d"].to_numpy(), cp)], index=el.index)
+        yr = pd.Series(sessions[el["d"].to_numpy()].year, index=el.index)
+        out[label] = {**explore.stats(p), "events_traded": m["events_traded"], "share_of_days_invested": m["share_of_days_invested"],
+                      "by_era": {a: explore.stats(p.loc[s:t])["sharpe"] for a, (s, t) in ex.ERAS.items()},
+                      "one_session_later": explore.stats(late)["sharpe"],
+                      "one_session_later_by_era": {a: explore.stats(late.loc[s:t])["sharpe"] for a, (s, t) in ex.ERAS.items()},
+                      "per_event_mean_pct": float(ep.mean() * 100), "per_event_median_pct": float(ep.median() * 100),
+                      "per_event_median_by_era": {a: float(ep[(yr >= int(s)) & (yr <= int(t))].median() * 100) for a, (s, t) in ex.ERAS.items()}}
+        o = out[label]
+        print(f"  {label}: SR {o['sharpe']:.2f} t {o['t']:.2f} n {o['events_traded']} | " + " ".join(f"{a}:{v:.2f}" for a, v in o["by_era"].items()) +
+              f" | late {o['one_session_later']:.2f} [" + " ".join(f"{v:.2f}" for v in o["one_session_later_by_era"].values()) + f"] | per event {o['per_event_mean_pct']:+.2f}% (median {o['per_event_median_pct']:+.2f}%; by era " +
+              " ".join(f"{v:+.2f}" for v in o["per_event_median_by_era"].values()) + ")")
+    return out
+
+
+if __name__ == "__main__" and "--small" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["rebound_by_size"] = small_names()
     (HERE / "checks.json").write_text(json.dumps(j, indent=1))

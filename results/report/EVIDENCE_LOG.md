@@ -4520,3 +4520,14 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Gross, no costs, no borrow. Not promoted: the leg that needs no borrow has earned nothing since 2013. Not independently reviewed
 
+### E-2026-11-15-12 · Result: the follow-on rebound held in small issuers through 2022 (1.00 gross on $100k–$5M a day) after stopping in large ones in 2013; 2023–25 is unclear
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - the pre-specified rebound book by 21-session dollar volume at the decision: $100k–$5M 1.00 (t 5.03, 3,285 events), eras 1.50, 1.02, 1.58, 1.53, 0.59; begun one session later 0.94; $5M and over 0.15 with −0.07, −0.88, −0.24 in the three eras since 2013 [V]
+  - median event in the $100k–$5M band by era: +0.37%, +0.21%, +0.52%, +1.11%, −0.53% [V]
+- source: `results/ideas/follow_ons/checks.py` @ `PENDING`; `results/ideas/2026-11-15_follow_ons.md` @ `PENDING`
+- supports: §4
+- status: current. Not pre-specified (a size cut made after E-2026-11-15-05). Gross, closing prices, spread unmeasured. No shadow book: no live list of offerings
+

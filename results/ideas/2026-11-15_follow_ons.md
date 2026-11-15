@@ -3,8 +3,8 @@
 **Slug:** `follow_on_rebound`, `follow_on_drift` · **Written:** 2026-11-15 ·
 **Status:** EXPLORE, not promoted. The pre-specified long is 0.71 gross over 2000–2025 and
 0.26 since 2013; the short over the following forty sessions shows nothing ·
-**Reproducer:** `python3 results/ideas/follow_ons/explore.py`, then `checks.py`, then
-`checks.py --gap` ·
+**Reproducer:** `python3 results/ideas/follow_ons/explore.py`, then `checks.py`,
+`checks.py --gap` and `checks.py --small` ·
 **Panels:** SDC new issues and CRSP daily rows on R2 (`scripts/research/stage_sdc_follow_ons.py`),
 issue dates 2000-01-05 to 2025-12-31, prices to **2025-12-31**; IWM and SPY total returns
 from Yahoo (fetched 2026-11-10). SDC and CRSP rows are not in the repository.
@@ -89,12 +89,35 @@ Written after the table above showed the rebound only where the launch came befo
   −0.31 and are negative or flat in all five. I do not have an explanation for the
   difference, the cut was made after two earlier looks, and it is not evidence.
 
+## The small-name version (added 2026-11-15, `checks.py --small`) [V]
+
+Not pre-specified: the team lead asked for ideas a small book can exploit, so REBOUND was
+cut by the issuer's 21-session dollar volume at the decision, with the floor lowered to
+$100,000. Each band is its own book.
+
+| dollar volume a day | events | all | 2000–07 | 2008–12 | 2013–17 | 2018–22 | 2023–25 | begun a session later |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| $100k to $1M | 991 | 0.50 | 0.81 | 0.13 | 1.14 | 0.71 | 0.64 | 0.46 |
+| $1M to $5M | 2,294 | 1.00 | 1.30 | 1.22 | 1.14 | 1.45 | −0.09 | 0.97 |
+| **$100k to $5M** | 3,285 | **1.00** (t 5.03) | 1.50 | 1.02 | 1.58 | 1.53 | 0.59 | 0.94 |
+| $5M and over | 7,642 | 0.15 | 1.29 | 0.88 | −0.07 | −0.88 | −0.24 | 0.07 |
+
+- **The fade was in the large names.** In issuers trading $5M or more the rebound stopped
+  in 2013. In issuers under $5M it ran at 1.0 to 1.6 through 2022.
+- **2023–25 is not clean.** The small band's Sharpe is 0.59, but its median event lost
+  0.53% against IWM (medians by era: +0.37%, +0.21%, +0.52%, +1.11%, −0.53%). The recent
+  figure rests on a few large winners among small issuers, many of them selling shares to
+  stay alive.
+- Per event over the whole sample: +1.15% mean, +0.38% median.
+
 ## What I conclude
 
 1. The recovery after a follow-on was a real effect of about 0.7% in five sessions before
    2013 and has faded to about nothing for the typical deal.
 2. The later short is not there in this sample.
-3. Nothing here is promoted and no shadow book was built. A live book would also need a
+3. **Corrected 2026-11-15 by the size cut above:** the fade is in large issuers. In
+   issuers trading under $5M a day the effect held through 2022 and is unclear since.
+4. Nothing here is promoted and no shadow book was built. A live book would also need a
    dated list of offerings with launch and pricing times, which the desk does not have
    (EDGAR 424B5 filings carry the pricing; the launch is a press release).
 
