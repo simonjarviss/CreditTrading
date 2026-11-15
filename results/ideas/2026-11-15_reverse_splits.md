@@ -111,6 +111,10 @@ bars and count as not eligible. Flags are today's.
    recent losers (`st_reversal_wide` is the one on the list). A share within 21 sessions of
    a reverse split has lost a median 7.8% more than IWM. This is a filter to test inside
    that book, on that book's own universe; it is not tested here.
+   **Counted afterwards, 2026-11-15:** only 152 reverse splits in 26 years fall inside the
+   2,000-largest-stock panel that book draws on (about six a year, CRSP to 2025-12-31), so
+   the filter would change almost nothing there. Dropped as a use for that book [V: a join
+   of the two staged files, counts only].
 
 ## What would reopen it
 
