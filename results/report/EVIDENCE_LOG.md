@@ -4430,3 +4430,17 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Gross, no costs, no borrow fee. A revival of G1, closed 2026-10-15 on a borrow count with no return read; set aside again as a short at Alpaca, now with the return known and the borrow read on the names held. No shadow book built. Not independently reviewed
 
+### E-2026-11-15-05 · Result: the recovery after a follow-on share offering was about 0.7% in five sessions before 2013 and has faded; the later short shows nothing
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 13,491 US public follow-ons on SDC matched to a CRSP common share, issue dates 2000-01-05 to 2025-12-31, prices to 2025-12-31; 10,409 eligible at the close of the session after the issue date [V]
+  - pre-specified long (D+3 to D+7 against IWM, 10% a name): gross Sharpe 0.71 (t 3.57); halves 1.56 / 0.26; eras 1.34, 1.30, 0.17, 0.10, 0.15; the window 30 sessions later 0.04; 0.15 on names trading $5M a day [V]
+  - pre-specified short (D+8 to D+47): 0.07 (t 0.34); negative in four of five eras [V]
+  - named cut: launched before the issue date 1.00 (t 5.1), on it −0.30 (t −1.5) [V]
+  - not pre-specified: the launched-before book by era 2.09, 1.56, 1.02, 0.46, 1.00, with the median event at +0.69% in 2000–07 and 0.00% and +0.03% in 2018–22 and 2023–25; events launched one session before pricing 0.67 (t 3.37), positive in all five eras [V]
+- source: `results/ideas/follow_ons/explore.py` @ `c24c1fc`; `results/ideas/follow_ons/checks.py` @ `c24c1fc`; `scripts/research/stage_sdc_follow_ons.py` @ `c24c1fc`; `docs/REFERENCES.md` @ `c24c1fc` (§12fo)
+- supports: §4
+- status: current. Gross, no costs. The first return read on catalogue card K6. Not promoted; no shadow book. Not independently reviewed
+
