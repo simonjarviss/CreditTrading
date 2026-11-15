@@ -1362,8 +1362,9 @@ touched: an acquirer's merger (the core's MHD and MQY, 2026-02) and a flat name 
 Positions come from FILLs alone, never from the market feed and never from the account's own
 corporate-action activity rows (team lead, 2026-11-15: "simplify"). Paper has never written such
 a row and its REST format is undocumented, so the job still reads them strictly, and any row on
-or before the as-of, for any symbol, stops the attribution, naming each row's symbol, type, date
-and share count (exit 4): "the report stops until one has been seen and the handling is built
+or before the job's as-of (also on a night whose EOD point is not out yet), for any symbol, stops
+the attribution, naming every row's symbol, type, date and share count (exit 4): "the report
+stops until one has been seen and the handling is built
 against it". A row the parser cannot read stops it too. One split listed under two ids by the
 feed is one event; two records that disagree on its rates refuse, named, and a second record of
 a split already handled, within `live_attribution.CA_MATCH_SESSIONS` sessions with the same

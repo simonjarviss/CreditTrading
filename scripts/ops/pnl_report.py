@@ -107,9 +107,10 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     "narrow and handle it", and 2026-11-15: "simplify"; `live_attribution`, CORPORATE ACTIONS).
     An acquirer's merger, a flat name and an event outside the window touch nothing. The
     rebuild takes positions from FILLs alone, never the market feed and never the account's own
-    corporate-action activity rows: any such row on or before the as-of stops the attribution,
-    named (symbol, type, date, share count), exit 4, because its REST format has never been
-    measured. A forward or reverse split paper did not process is reconciled as the account
+    corporate-action activity rows: any such row on or before the job's as-of (not only the
+    session read, on a late-EOD night) stops the attribution, every row named (symbol, type,
+    date, share count), exit 4, because its REST format has never been measured. A forward or
+    reverse split paper did not process is reconciled as the account
     shows it, with a labelled phantom line per event, its accrual until the account first
     trades the name, its crystallisation at that trade (with the session's fee term), and a
     cumulative phantom line, what is still in the official P&L, beside the official P&L, which
@@ -463,6 +464,13 @@ def build_attribution(book: str, state: Path, asof: dt.date, reader, groups: dic
     LA.fetch(cache, since=since, asof=asof, client=reader, nav_fetcher=nav_fetcher,
              dist_check_fetcher=dist_check_fetcher, now=now_utc, book=book)
     inp = LA.load_cache(cache, grp=dict(groups))
+    # The account's own corporate-action rows stop the report at the JOB's as-of, not only at the
+    # session read (fourth review of the follow-up, finding 2): on a night Alpaca has no EOD point
+    # for the as-of yet, `attribute` reads the session before, and a row dated between the two
+    # would otherwise go unnamed (`live_attribution`, CORPORATE ACTIONS).
+    rows = [a for a in inp.corp_acts if a["date"] <= asof]
+    if rows:
+        raise LA.AttributionError(LA.account_rows_stop(rows, asof))
     eod_dates = [d for d, _ in inp.eod]
     eff = max(d for d in eod_dates if d <= asof)
     res = LA.attribute(inp, asof=eff, breaks=[], nav_missing="unmeasured")

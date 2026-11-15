@@ -1409,3 +1409,32 @@ def test_the_report_labels_an_approximate_phantom_and_names_the_reason_in_its_js
     assert out["corporate_actions"][0]["approximate"].startswith(want)
     assert out["phantom_approximate"][0].startswith(f"LNG ({want}")
     json.dumps(out)
+
+
+def test_a_row_dated_after_the_session_read_but_on_the_as_of_still_stops_the_report(tmp_path):
+    """Fourth review of the follow-up, finding 2 (its stop_probe case A): on a late night Alpaca
+    has no EOD point for the as-of yet, so the attribution reads the session before, and the stop
+    filtered rows by that session: a cash-in-lieu row dated the as-of went unread, exit 0. The job
+    now stops at its own as-of, naming the row, exit 4. Fails on the parent 3412d29 (exit 0)."""
+    class Late(_RowsReader):
+        def eod_equity_history(self, start, end):
+            return [p for p in super().eod_equity_history(start, end) if p.date != ASOF]
+    rep_, code = run(tmp_path, reader=Late([_act("cil1", "CIL", ASOF, "BBB", cash="4.40")]))
+    assert code == P.EXIT_INCOMPLETE and rep_["status"] == P.UNMEASURED
+    why = rep_["attribution"]["why"]
+    assert f"1 corporate-action activity row(s) of the account on or before {ASOF}: BBB CIL {ASOF} cash 4.40 (id cil1)" in why
+
+
+def test_the_stop_names_every_row_however_many(tmp_path):
+    """Fourth review, finding 3 (stop_probe case B): the stop named ten rows and then "...". The
+    ruling names each row, so twelve rows are all named, in the JSON and the markdown. Fails on
+    the parent 3412d29, which cut at ten."""
+    rows = [_act(f"r{i:02d}", "SPLIT", ASOF, "BBB", (-1) ** i * (i + 1), "20.20") for i in range(12)]
+    rep_, code = run(tmp_path, reader=_RowsReader(rows))
+    assert code == P.EXIT_INCOMPLETE
+    md = (tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text()
+    on_disk = json.loads((tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.json").read_text())
+    for r in rows:
+        named = f"BBB SPLIT {ASOF} qty {int(r['qty']):+d} (id {r['id']})"
+        assert named in rep_["attribution"]["why"] and named in on_disk["attribution"]["why"] and named in md, named
+    assert " ..." not in rep_["attribution"]["why"]

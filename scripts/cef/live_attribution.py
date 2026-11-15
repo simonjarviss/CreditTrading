@@ -219,10 +219,13 @@ H1, so it is never done. The rule now:
     (built 2026-11-14/15 against synthetic rows), so it was removed. The strict GET stays
     (`AlpacaReader.corporate_action_activities`, cached as corp_activities.json) so that a row
     is DETECTED: any row dated on or before the as-of, for any symbol, stops the attribution,
-    naming each row's symbol, type, date and share count (or cash), and a row the parser cannot
-    read stops it too. A cache from before 2026-11-14 has no such file and is analysed as
-    before, unless a corporate action touches a held name: whether paper processed that one
-    cannot be read, and it refuses (fetch again).
+    naming every row's symbol, type, date and share count (or cash), all of them however many
+    (fourth review of the follow-up, finding 3), and a row the parser cannot read stops it too.
+    The report job checks its own as-of as well as the session it reads (finding 2): on a night
+    Alpaca has no EOD point yet, a row dated after the session read is still named. A cache
+    from before 2026-11-14 has no such file and is analysed as before, unless a corporate action
+    touches a held name: whether paper processed that one cannot be read, and it refuses (fetch
+    again).
   * THE PHANTOM. A forward or reverse split held into its session is one paper did not
     process (it would have written a row): the old count is marked at the new-basis close, so
     hold and the official change both carry (q_prev - q_prev x k) x close_t on that session,
@@ -1027,14 +1030,16 @@ def corp_event_text(c: dict) -> str:
 
 
 def account_rows_stop(acts: list, asof: dt.date) -> str:
-    """The message `attribute` stops with when the account has corporate-action activity rows on
-    or before the as-of (module docstring, CORPORATE ACTIONS, THE ACCOUNT'S OWN ROWS STOP IT):
-    each row's symbol, type, date and share count (or cash), never applied."""
+    """The message `attribute` (and the report job, at its own as-of) stops with when the account
+    has corporate-action activity rows on or before the as-of (module docstring, CORPORATE
+    ACTIONS, THE ACCOUNT'S OWN ROWS STOP IT): every row's symbol, type, date and share count (or
+    cash), never applied. Every row, uncapped (fourth review of the follow-up, finding 3: a cap
+    at ten hid the rest): the stop is rare, and the ruling names each row."""
     def one(a):
         what = f"qty {a['qty']:+d}" if a["qty"] else f"cash {float(a['cash']):,.2f}"
         return f"{a['symbol']} {a['type']} {a['date']} {what} (id {a['id']})"
     return (f"{len(acts)} corporate-action activity row(s) of the account on or before {asof}: "
-            + ", ".join(one(a) for a in acts[:10]) + (" ..." if len(acts) > 10 else "")
+            + ", ".join(one(a) for a in acts)
             + ". The account recorded a corporate-action row; its REST format has never been measured; the "
             "report stops until one has been seen and the handling is built against it (team lead, 2026-11-15)")
 
