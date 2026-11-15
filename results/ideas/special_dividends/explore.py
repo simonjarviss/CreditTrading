@@ -32,8 +32,10 @@ leads had been looked at (3,626 events; median yield 2.1%; median lead 13 calend
 
 ALIGNMENT. `harness.evaluate` earns row t's weights on session t+2. A weight that should
 earn session s is therefore written on row s-2, and everything that decides it (the
-declaration, the price, the volume) is dated at or before row s-2. The script asserts that
-no weight sits on a row before the event's D1.
+declaration, the price, the volume) is dated at or before row s-2. An event whose first
+weight row would fall before its D1 is skipped (corrected 2026-11-15: this said "the script
+asserts", and the assert could not fail; an independent review confirmed that no weight
+lies outside D1 .. X-3 of an eligible event).
 
 NOT MODELLED: borrow on the AFTER short, dividend tax, and the due-bill rule for very large
 dividends (CRSP's ex-date is used as given).
@@ -118,11 +120,8 @@ def book(e: pd.DataFrame, which: str, sessions, columns, *, shift: int = 0) -> t
         lo, hi = first - L, min(last - L, len(sessions) - 1)
         if hi < lo:
             continue
-        if which != "after" and lo < d1:
-            continue                 # the news was not public by the decision row
-        assert lo >= d1 or which == "after", "a weight before the declaration was public"
-        if which == "after" and lo < d1:
-            continue
+        if lo < d1:
+            continue                 # the news was not public by the decision row: not traded
         W[lo:hi + 1, c] += side * UNIT
         n += 1
     side_sum = np.abs(W).sum(axis=1)
