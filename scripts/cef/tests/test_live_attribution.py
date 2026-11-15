@@ -1450,3 +1450,46 @@ def test_a_row_after_the_as_of_is_outside_the_window():
     plain.corp_acts = []
     res0 = LA.attribute(plain, asof=CA_S[4], breaks=[])
     assert res.daily.equals(res0.daily) and res.name_day.equals(res0.name_day)
+
+
+@pytest.mark.parametrize("case", ["clean_resize", "fills_on_both_sides", "fractional_count"])
+def test_the_phantom_is_labelled_approximate_where_its_exactness_conditions_fail(case):
+    """Team lead, 2026-11-15, on the third review of the follow-up: 891aea3's phantom equals
+    official minus a processed account only when q_prev x k is whole and the crystallising
+    session's fills in the name are on one side. The review's simulator put a two-sided session
+    off by $7.48 to $7.52 and a fractional count (901 x 1/3) off by cents. Where a condition
+    fails the event says "approximate: <reason>" in `corp_events`, the gaps and `report()`; the
+    runner's own re-size is clean and says nothing of the kind. Fails on the parent 82ff173,
+    which had no label."""
+    if case == "clean_resize":
+        fills, corp = CA_BASE_FILLS + CA_RESIZE["H1"], CA_SPLIT
+    elif case == "fills_on_both_sides":
+        fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "sell", 650, "13.49", CA_S[4]),
+                                 _ca_fill("x2", "LNG", "buy", 50, "13.52", CA_S[4])]
+        corp = CA_SPLIT[:1]
+    else:
+        fills = [_ca_fill("f1", "LNG", "buy", 901, "4.51", CA_S[1]), _ca_fill("x1", "LNG", "sell", 601, "13.49", CA_S[4])]
+        corp = CA_SPLIT[:1]
+    res = _ca_run(fills, _ca_account(fills), corp)
+    assert all(r == 0 for r in res.daily["residual"])          # the rebuild still reconciles to the cent
+    lng = next(c for c in res.corp_events if c["symbol"] == "LNG")
+    text = LA.report(res)
+    if case == "clean_resize":
+        assert all(c["approximate"] is None for c in res.corp_events) and "approximate" not in text
+        return
+    want = {"fills_on_both_sides": "fills on both sides of LNG on 2026-02-06 (bought 50, sold 650)",
+            "fractional_count": "q_prev x k = 901 x 1/3 = 300.3333 is not a whole number of shares"}[case]
+    assert lng["approximate"].startswith(want), lng["approximate"]
+    assert f"approximate: {want}" in text
+    assert any(f"approximate: {want}" in g for g in res.gaps)
+
+
+def test_the_crystallised_phantom_says_its_fee_term():
+    """Third review of the follow-up: the event text said "(plus that session's fee term)" without
+    the amount. It now gives it (-0.18 on 02-06 for the runner's re-size, one term for both names,
+    as `Result.phantom_fees` holds it), in the gaps and `report()`. Fails on the parent 82ff173,
+    which printed no amount."""
+    fills = CA_BASE_FILLS + CA_RESIZE["H1"]
+    res = _ca_run(fills, _ca_account(fills), CA_SPLIT)
+    assert [(t["session"], t["amount"]) for t in res.phantom_fees] == [(CA_S[4], F("-0.18"))]
+    assert "plus that session's fee term -0.18, that session's one term for LNG, SHS" in LA.report(res)

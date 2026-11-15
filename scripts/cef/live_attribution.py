@@ -257,7 +257,11 @@ H1, so it is never done. The rule now:
     on one side (the runner nets each symbol into one order), and its fees are the FEES
     schedule's. Two independent account simulators (the second and third reviews) confirm it to
     the cent with the runner's re-size, a full exit, a partial trade, a trade on the ex-date,
-    two trades on two sessions, shorts and forward splits.
+    two trades on two sessions, shorts and forward splits. Where (1) or (2) fails the phantom is
+    labelled "approximate: <reason>" instead (team lead, 2026-11-15, on the third review), in
+    `Result.corp_events` (`approximate`), the gaps, `report()` and the report job's lines and
+    JSON: the third review's simulator put a session with fills on both sides of the name off
+    by $7.48 to $7.52, and a fractional q_prev x k (most real reverse splits) off by cents.
   * If a session does not reconcile (H2, or a split pushed by hand with no row), the residual
     says so, and the report job names the session and the event.
 With no corporate action in the window, `analyse` output is byte-identical to before.
@@ -1009,13 +1013,17 @@ def corp_event_text(c: dict) -> str:
         out += ("; paper's extra shares then moved with the price: "
                 + ("UNMEASURED (a close is missing)" if any(a is None for a in acc) else
                    f"{float(sum(acc, Fraction(0))):+,.2f} over {len(acc)} session(s), inside hold"))
+    approx = f"; approximate: {c['approximate']}" if c.get("approximate") else ""
     if c["crystallised"] is not None:
         cr = c["crystallised"]
+        others = [x for x in cr["fee_term_symbols"] if x != c["symbol"]]
+        fee = ("UNMEASURED" if cr["fee_term"] is None else f"{float(cr['fee_term']):+,.2f}") + (
+            f", that session's one term for {', '.join(cr['fee_term_symbols'])}" if others else "")
         return out + (f"; crystallised by the trade on {cr['session']}: paper's extra {c['extra']} share(s) at the "
                       f"fill price {float(cr['price']):,.4f} against the close {float(cr['reference_close']):,.4f}: "
                       + (f"{float(cr['amount']):+,.2f}" if cr["amount"] is not None else "UNMEASURED")
-                      + " (plus that session's fee term); closed and constant from then")
-    return out + "; still open (the account has not traded the name since)"
+                      + f", plus that session's fee term {fee}; closed and constant from then") + approx
+    return out + "; still open (the account has not traded the name since)" + approx
 
 
 def account_rows_stop(acts: list, asof: dt.date) -> str:
@@ -1280,16 +1288,21 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                     k = phantom = extra = None
                     why = None
                     r = e.get("rates") or {}
+                    approx = []
                     if r.get("old_rate") and r.get("new_rate"):
                         k = r["new_rate"] / r["old_rate"]
                         extra = qp - qp * k
                         phantom = extra * c_t
+                        if (qp * k).denominator != 1:       # condition (1) of the module docstring fails
+                            approx.append(f"q_prev x k = {qp} x {k} = {float(qp * k):,.4f} is not a whole number of "
+                                          f"shares: an account that processed the split would hold {_trunc(qp * k)} "
+                                          "and the cash in lieu, not the fraction's value")
                     else:
                         why = "the market record carries no old_rate/new_rate, so k is unknown"
                     rec = {"id": e["id"], "type": e["type"], "date": e["date"], "session": d,
                            "symbol": s, "role": role, "q_prev": qp, "close": c_t, "k": k,
                            "phantom": phantom, "why": why, "extra": extra, "accruals": [],
-                           "crystallised": None, "open": True}
+                           "crystallised": None, "open": True, "approximate": "; ".join(approx) or None}
                     corp_events.append(rec)
                     if s in open_phantoms:
                         op = open_phantoms[s]
@@ -1341,6 +1354,12 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             c_ref = inp.closes.get((sym, d if op["session"] == d else p))
             amt = None if c_ref is None or op["extra"] is None else op["extra"] * (px_s - c_ref)
             op["crystallised"] = {"session": d, "amount": amt, "price": px_s, "reference_close": c_ref}
+            bought = sum(f.signed_qty for f in fs_s if f.signed_qty > 0)
+            sold = -sum(f.signed_qty for f in fs_s if f.signed_qty < 0)
+            if bought and sold:                  # condition (2) of the module docstring fails
+                why2 = (f"fills on both sides of {sym} on {d} (bought {bought}, sold {sold}): an account that "
+                        "processed the split would have sent one netted order, not filled at their average price")
+                op["approximate"] = why2 if op["approximate"] is None else f"{op['approximate']}; {why2}"
             op["open"] = False
             cryst.append((sym, op, px_s))
         for sym, op, _ in cryst:
@@ -1358,6 +1377,9 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                                        price=px_s))
             fee = None if cf_day is None else session_fees(day)[0] - session_fees(cf_day)[0]
             phantom_fees.append({"session": d, "amount": fee, "symbols": [c[0] for c in cryst]})
+            for sym, op, _ in cryst:
+                op["crystallised"]["fee_term"] = fee
+                op["crystallised"]["fee_term_symbols"] = [c[0] for c in cryst]
         # A phantom still open accrues: paper's extra shares move with the price (finding 3), so the
         # cumulative phantom stays what is still in the official P&L. Not on its own session (the
         # booking is its value there).

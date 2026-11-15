@@ -1372,7 +1372,10 @@ the account shows it; the report prints a labelled phantom line per event, (q_pr
 x close, then the phantom's accrual while it stays open (paper's extra shares move with the
 price) until the account first trades the name, its crystallisation at that trade (the extra
 shares at the fill price, plus the session's fee term), and the cumulative phantom line beside
-the official P&L, which stays the P&L of record: what is still in it. That name-day's
+the official P&L, which stays the P&L of record: what is still in it. Where the conditions for
+an exact phantom fail (fills on both sides of the name on the crystallising session, or q_prev
+x k not a whole number) the phantom is labelled "approximate: <reason>" in the report, its JSON
+(`approximate` on the event, `phantom_approximate`) and the attribution's gaps. That name-day's
 NAV/discount split is UNMEASURED, named. A session that does not reconcile (paper froze the
 position, or support pushed the split with no account row) is UNRECONCILED, exit 5, naming the
 session and the event (independent review of the follow-up, 2026-11-14). Any other

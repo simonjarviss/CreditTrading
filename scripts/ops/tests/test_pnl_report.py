@@ -1315,6 +1315,7 @@ def test_the_report_says_the_first_trade_crystallised_the_phantom(case):
     assert any(ln.startswith("Phantom fee term on 2026-02-06") for ln in lines)
     assert not any("still OPEN" in ln for ln in lines)
     assert "phantom_session" not in out                      # constant from the trade: nothing on the as-of
+    assert "phantom_approximate" not in out and not any("approximate" in ln for ln in lines)   # a clean case
     n = 2 if case == "resize" else 1
     assert lines[-1].startswith(f"Phantom from corporate actions paper did not process, still in the official P&L at "
                                 f"the as-of: {want:+,.2f} ({n} event(s), 0 still open, {n} crystallised by a trade)")
@@ -1381,3 +1382,30 @@ def test_an_account_row_the_parser_cannot_read_stops_the_report_loudly(tmp_path)
     rep_, code = run(tmp_path, reader=_RowsReader([_act("f1", "SPLIT", ASOF, "BBB", "0.5", "20.20")]))
     assert code == P.EXIT_INCOMPLETE and rep_["status"] == P.UNMEASURED
     assert "id='f1'" in rep_["attribution"]["why"] and "whole number" in rep_["attribution"]["why"]
+
+
+@pytest.mark.parametrize("case", ["fills_on_both_sides", "fractional_count"])
+def test_the_report_labels_an_approximate_phantom_and_names_the_reason_in_its_json(case):
+    """Team lead, 2026-11-15, on the third review: where the phantom's exactness conditions fail
+    the report's phantom line and cumulative line say "approximate: <reason>", and the JSON names
+    the reason (`approximate` on the event, `phantom_approximate`); a clean case has neither
+    (test_the_report_says_the_first_trade_crystallised_the_phantom). Fails on the parent 82ff173,
+    which claimed the figure without a label."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    if case == "fills_on_both_sides":
+        fills = TLA.CA_BASE_FILLS + [TLA._ca_fill("x1", "LNG", "sell", 650, "13.49", TLA.CA_S[4]),
+                                     TLA._ca_fill("x2", "LNG", "buy", 50, "13.52", TLA.CA_S[4])]
+        want = "fills on both sides of LNG on 2026-02-06"
+    else:
+        fills = [TLA._ca_fill("f1", "LNG", "buy", 901, "4.51", TLA.CA_S[1]),
+                 TLA._ca_fill("x1", "LNG", "sell", 601, "13.49", TLA.CA_S[4])]
+        want = "q_prev x k = 901 x 1/3 = 300.3333 is not a whole number of shares"
+    res = TLA._ca_run(fills, TLA._ca_account(fills), TLA.CA_SPLIT[:1])
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
+    phantom = [ln for ln in lines if ln.startswith("Phantom: paper did not process reverse_split LNG")]
+    assert len(phantom) == 1 and f"; approximate: {want}" in phantom[0]
+    assert lines[-1].startswith("Phantom from corporate actions paper did not process")
+    assert f"approximate: LNG ({want}" in lines[-1]
+    assert out["corporate_actions"][0]["approximate"].startswith(want)
+    assert out["phantom_approximate"][0].startswith(f"LNG ({want}")
+    json.dumps(out)

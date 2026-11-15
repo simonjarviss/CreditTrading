@@ -113,8 +113,9 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     shows it, with a labelled phantom line per event, its accrual until the account first
     trades the name, its crystallisation at that trade (with the session's fee term), and a
     cumulative phantom line, what is still in the official P&L, beside the official P&L, which
-    stays the P&L of record (`corporate_action_lines`). A session that does not reconcile (a
-    frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit 5, naming the
+    stays the P&L of record (`corporate_action_lines`); a phantom whose exactness conditions
+    fail is labelled "approximate: <reason>" (line and JSON). A session that does not reconcile
+    (a frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit 5, naming the
     session and the event (`reconciliation`). Any other count-changing type held into its date
     refuses the attribution, named (exit 4).
   * a book that holds nothing at the as-of close: the factor block is FLAT (independent
@@ -290,7 +291,8 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
                      f"session {c['session']}: (q_prev - q_prev x k) x close_t = "
                      + (f"{f(c['phantom']):+,.2f} (q_prev {c['q_prev']}, k {c['k']})" if c["phantom"] is not None
                         else f"UNMEASURED ({c['why']})")
-                     + ", inside hold and the official change; that name-day's NAV/discount split is UNMEASURED")
+                     + ", inside hold and the official change; that name-day's NAV/discount split is UNMEASURED"
+                     + (f"; approximate: {c['approximate']}" if c["approximate"] else ""))
         if c["accruals"]:
             acc = total([(d, f(a)) for d, a in c["accruals"]])
             lines.append(f"Phantom accrual: paper's extra {c['extra']} share(s) of {c['symbol']} moved with the price "
@@ -312,9 +314,11 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
     cum = total([m for c in evs for m in moves(c)] + fee_terms)
     ses = [m for c in evs for m in moves(c, eff)] + [m for m in fee_terms if m[0] == eff]
     n_open = sum(1 for c in evs if c["crystallised"] is None)
+    approx = [f"{c['symbol']} ({c['approximate']})" for c in evs if c["approximate"]]
     lines.append(f"Phantom from corporate actions paper did not process, still in the official P&L at the as-of: "
                  f"{_usd(cum)} ({len(evs)} event(s), {n_open} still open, {len(evs) - n_open} crystallised by a "
-                 "trade); the official P&L above includes it and stays the P&L of record")
+                 "trade); the official P&L above includes it and stays the P&L of record"
+                 + (f"; approximate: {'; '.join(approx)}" if approx else ""))
 
     def js(v):
         """dates as ISO, Fractions as floats, through lists and dicts (the event record's shape)."""
@@ -332,6 +336,8 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
            "phantom_cumulative": cum}
     if fee_terms:
         out["phantom_fee_terms"] = [[d.isoformat(), a] for d, a in fee_terms]
+    if approx:
+        out["phantom_approximate"] = approx
     if ses:
         out["phantom_session"] = total(ses)
     return lines, out
