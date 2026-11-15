@@ -343,6 +343,114 @@ def test_a_stamp_off_20_00_new_york_raises_in_both_either_side_of_dst(tmp_path, 
         client_for(server, tmp_path).eod_equity_history(*win)
 
 
+# The half days (team lead, 2026-11-14): the runner owner's read of the cef account, period=3A,
+# 754 points [V, 2026-11-14]: every 16:00-close session stamped 20:00:00 New York and every
+# 13:00-close session 17:00:00, the funded ones 2025-11-28 and 2025-12-24. The days around them
+# are full days (11-27 and 12-25 are holidays).
+HALF_DAYS = (D(2025, 11, 28), D(2025, 12, 24))
+AROUND_HALF = [D(2025, 11, 26), HALF_DAYS[0], D(2025, 12, 1), D(2025, 12, 23), HALF_DAYS[1], D(2025, 12, 26)]
+
+
+def _at(d: dt.date, hh: int) -> int:
+    return int(dt.datetime(d.year, d.month, d.day, hh, tzinfo=NY).timestamp())
+
+
+def _half_day_table(hours: dict, sessions=AROUND_HALF, extra_rows=()):
+    def cal(params):
+        lo, hi = D.fromisoformat(params["start"]), D.fromisoformat(params["end"])
+        rows = [{"date": d.isoformat(), "open": "09:30", "close": "13:00" if d in HALF_DAYS else "16:00"}
+                for d in sessions if lo <= d <= hi]
+        return rows + list(extra_rows)
+    n = len(sessions)
+    return {"/v2/calendar": cal,
+            "/v2/account/portfolio/history": {
+                "timestamp": [_at(d, hours[d]) for d in sessions], "equity": [str(100000.0 + i) for i in range(n)],
+                "profit_loss": [0.0] * n, "profit_loss_pct": [0.0] * n, "base_value": 100000.0, "timeframe": "1D"}}
+
+
+HALF_WIN = D(2025, 11, 1), D(2025, 12, 31)
+HALF_HOURS = {d: 17 if d in HALF_DAYS else 20 for d in AROUND_HALF}
+
+
+def test_a_half_days_stamp_four_hours_after_its_close_is_its_session():
+    """Team lead, 2026-11-14 (the owner's rule, branch eod-half-day): a 1D stamp's New York time
+    must be its date's calendar close + 4 hours, so 2025-11-28T22:00:00Z and 2025-12-24's 17:00
+    EST (each after a 13:00 close) are those days' points, and the full days around them keep
+    20:00. Fails on the parent 5984cd2, whose reader refused the whole history ("not 20:00:00
+    local")."""
+    got = reader_for(Server(_half_day_table(HALF_HOURS))).eod_equity_history(*HALF_WIN)
+    assert [p.date for p in got] == AROUND_HALF
+    assert [p.stamp.astimezone(NY).hour for p in got] == [20, 17, 20, 20, 17, 20]
+    assert got[1].stamp.isoformat() == "2025-11-28T22:00:00+00:00"
+
+
+@pytest.mark.parametrize("case", ["17:00_on_a_full_day", "20:00_on_a_half_day", "a_date_listed_twice"])
+def test_a_stamp_not_four_hours_after_its_own_close_raises(case):
+    """The refusal side, as the owner's AlpacaClient has it: 17:00 on a full day (a 16:00 close)
+    and 20:00 on a half day (a 13:00 close) are each not their day's close + 4 hours, and a date
+    the calendar lists twice has no known close. 17:00 on a full day was refused on the parent
+    5984cd2 too (a pin; its message named 20:00 only). The other two put every stamp at 20:00,
+    so the parent, which knew neither rule, accepted them: they fail there for that reason."""
+    hours, extra = dict(HALF_HOURS), ()
+    if case == "17:00_on_a_full_day":
+        hours[D(2025, 11, 26)] = 17
+        match = r"is 2025-11-26T17:00:00-05:00 in New York, not 20:00:00 local, which is 2025-11-26's 16:00 close"
+    elif case == "20:00_on_a_half_day":
+        hours = {d: 20 for d in AROUND_HALF}
+        match = r"is 2025-11-28T20:00:00-05:00 in New York, not 17:00:00 local, which is 2025-11-28's 13:00 close"
+    else:
+        hours = {d: 20 for d in AROUND_HALF}
+        extra = ({"date": "2025-11-26", "open": "09:30", "close": "13:00"},)
+        match = r"/v2/calendar lists 2025-11-26 twice \(closes 16:00 and 13:00\)"
+    with pytest.raises(AR.UnexpectedResponse, match=match):
+        reader_for(Server(_half_day_table(hours, extra_rows=extra))).eod_equity_history(*HALF_WIN)
+
+
+def test_the_reader_accepts_the_half_day_stamp_that_alpacaclient_refuses_pending_its_owners_fix(tmp_path):
+    """LABELLED DIFFERENCE, PENDING THE OWNER'S PR (team lead, 2026-11-14): the one place this
+    reader and AlpacaClient as of main part. The owner's fix (branch eod-half-day, 375ba5d, not
+    merged) holds the same rule as this reader, and the scratch comparison of the two on these
+    fixtures agreed. On main, AlpacaClient's every-stamp-is-20:00 rule refuses the half-day
+    history this reader reads. When the owner's PR lands this test fails, and becomes an
+    equality test like the others; on full days the two stay equal (the tests above)."""
+    server = Server(_half_day_table(HALF_HOURS))
+    assert [p.date for p in reader_for(server).eod_equity_history(*HALF_WIN)] == AROUND_HALF
+    with pytest.raises(AL.AlpacaError, match="20:00"):
+        client_for(server, tmp_path).eod_equity_history(*HALF_WIN)
+
+
+def test_the_reports_lookback_reads_through_a_funded_half_day():
+    """The report job reads `pnl_report.EOD_LOOKBACK_DAYS` of 1D history (since its as-of), so a
+    funded 17:00 half-day point inside that window refused the core's whole read on its first
+    night. On a fixture of every NYSE session in the window (ops/schedule/nyse_calendar), the
+    seven measured 13:00 closes stamped 17:00 and every other session 20:00, funded from
+    2025-10-01, the read returns every funded session, 2025-11-28 and 2025-12-24 at 17:00.
+    Fails on the parent 5984cd2 ("not 20:00:00 local")."""
+    from ops.schedule import nyse_calendar as NYSE
+    from scripts.ops import pnl_report as P
+    asof = D(2026, 11, 13)
+    lo = asof - dt.timedelta(days=P.EOD_LOOKBACK_DAYS)
+    half = {D(2023, 11, 24), D(2024, 7, 3), D(2024, 11, 29), D(2024, 12, 24), D(2025, 7, 3), *HALF_DAYS}
+    sess = [lo + dt.timedelta(days=i) for i in range((asof - lo).days + 1)]
+    sess = [d for d in sess if NYSE.is_trading_day(d)]
+    assert half <= set(sess)
+    funded = D(2025, 10, 1)
+
+    def cal(params):
+        a, b = D.fromisoformat(params["start"]), D.fromisoformat(params["end"])
+        return [{"date": d.isoformat(), "open": "09:30", "close": "13:00" if d in half else "16:00"}
+                for d in sess if a <= d <= b]
+    n = len(sess)
+    server = Server({"/v2/calendar": cal, "/v2/account/portfolio/history": {
+        "timestamp": [_at(d, 17 if d in half else 20) for d in sess],
+        "equity": ["0" if d < funded else str(100000.0 + i) for i, d in enumerate(sess)],
+        "profit_loss": [0.0] * n, "profit_loss_pct": [0.0] * n, "base_value": 100000.0, "timeframe": "1D"}})
+    got = reader_for(server).eod_equity_history(lo, asof)
+    assert [p.date for p in got] == [d for d in sess if d >= funded]
+    by = {p.date: p.stamp.astimezone(NY).hour for p in got}
+    assert by[HALF_DAYS[0]] == by[HALF_DAYS[1]] == 17 and set(by.values()) == {17, 20}
+
+
 def test_calendar_equals_the_clients(both):
     _, reader, client = both
     win = D(2026, 9, 28), D(2026, 10, 2)
@@ -606,7 +714,8 @@ def test_no_write_verb_appears_in_the_module():
 
 
 def test_public_surface_is_exactly_the_reads_attribution_needs():
-    public = {n for n in vars(AR.AlpacaReader) if not n.startswith("_") and n != "EOD_LISTS" and n != "FILL_FIELDS"}
+    public = {n for n in vars(AR.AlpacaReader) if not n.startswith("_")
+              and n not in ("EOD_LISTS", "FILL_FIELDS", "EOD_STAMP_AFTER_CLOSE_H")}
     assert public == {"from_environment", "calendar", "eod_equity_history", "activities_fills",
                       "fee_activities", "distributions", "corporate_actions"}
 

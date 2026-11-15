@@ -51,6 +51,21 @@ malformed shapes. That equality test is the licence for the copy: edit either si
 and it fails. The copied docstrings are shortened to the reason and a pointer to
 the original.
 
+ONE DIFFERENCE FROM MAIN, PENDING THE OWNER'S PR: THE HALF-DAY EOD STAMP (team lead,
+2026-11-14). AlpacaClient on main requires every 1D stamp to be 20:00 New York. A half day is
+stamped 17:00: read 2026-11-14 on the cef paper account, `period=3A`, 754 points [V: the
+runner owner's read-only GET], all 747 sessions with a 16:00 calendar close at 20:00:00 New
+York and all 7 with a 13:00 close at 17:00:00 (2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24,
+2025-07-03, 2025-11-28, 2025-12-24; the last two funded); the main session's own GET found
+2025-11-28T22:00:00Z the same day. The 20:00 rule refuses the whole history, and the report's
+lookback (`pnl_report.EOD_LOOKBACK_DAYS`) reaches back past 2025-11-28, so the core's report
+would fail on its first night. The runner's owner fixed AlpacaClient on its own branch
+(`eod-half-day`, 375ba5d, not merged): a stamp's New York time must be its date's /v2/calendar
+`close` + EOD_STAMP_AFTER_CLOSE_H hours, and a date the calendar lists twice raises. This
+reader copies that rule exactly (`eod_equity_history`); on a full day it is 20:00, the old
+rule. Until the owner's PR merges, the equality test runs on full days, and a labelled test
+pins that this reader accepts the half-day stamp main's AlpacaClient refuses.
+
 WHAT IT REFUSES (raises, naming what; never a default)
 -------------------------------------------------------
 Everything AlpacaClient refuses on these reads, and: a base URL that is not one of
@@ -425,12 +440,21 @@ class AlpacaReader:
         return out
 
     EOD_LISTS = ("timestamp", "equity", "profit_loss", "profit_loss_pct")
+    # A 1D point is stamped this many hours after its session's calendar close, New York
+    # wall-clock time: AlpacaClient.EOD_STAMP_AFTER_CLOSE_H on the owner's branch (module
+    # docstring, ONE DIFFERENCE FROM MAIN), the same constant under the same name.
+    EOD_STAMP_AFTER_CLOSE_H = 4
 
     def eod_equity_history(self, start: dt.date, end: dt.date) -> list[EODPoint]:
-        """AlpacaClient.eod_equity_history, read for read: every 1D stamp must be exactly
-        20:00:00 New York time on a trading day by /v2/calendar, or the call raises naming it
-        (a session filed under the wrong date is the failure this refuses); leading zeros
-        before funding are dropped by name; a zero after funding raises."""
+        """AlpacaClient.eod_equity_history as the owner's branch (375ba5d) has it, read for read
+        (module docstring, ONE DIFFERENCE FROM MAIN): every 1D stamp's New York date must be a
+        trading day by one /v2/calendar read, and its New York wall-clock time must equal that
+        day's calendar `close` + EOD_STAMP_AFTER_CLOSE_H hours exactly (20:00:00 on a 16:00
+        close, 17:00:00 on a 13:00 half day), or the call raises naming it (a session filed
+        under the wrong date is the failure this refuses). A date the calendar lists twice
+        raises (its close is not known), and so does a close 4 hours after which is not a time
+        on that date. The check runs after the calendar read, never inside the stamp loop.
+        Leading zeros before funding are dropped by name; a zero after funding raises."""
         start, end = _date_param(start, "start"), _date_param(end, "end")
         if end < start:
             raise ValueError(f"end {end} is before start {start}")
@@ -456,11 +480,6 @@ class AlpacaReader:
                 when = dt.datetime.fromtimestamp(ts, dt.timezone.utc)
             except (ValueError, OverflowError, OSError):
                 raise UnexpectedResponse(f"{w}: timestamp[{i}] = {ts} is outside the clock's range") from None
-            ny = when.astimezone(NY)
-            if (ny.hour, ny.minute, ny.second, ny.microsecond) != (20, 0, 0, 0):
-                raise UnexpectedResponse(
-                    f"{w}: stamp {when.isoformat()} is {ny.isoformat()} in New York, not 20:00:00 local; "
-                    f"every 1D stamp seen is 20:00 New York. Refused rather than placed on a session")
             x = _num({"equity": eq}, "equity", f"{w} [{i}]")
             if not math.isfinite(x):
                 raise UnexpectedResponse(f"{w}: equity[{i}] = {eq!r} is not finite")
@@ -472,12 +491,36 @@ class AlpacaReader:
             return []
 
         local = [s.astimezone(NY) for s in stamps]
-        cal = {row["date"] for row in self.calendar(local[0].date(), local[-1].date())}
+        # One /v2/calendar read gives each session's close (AlpacaClient, the owner's branch).
+        cal = {}
+        for row in self.calendar(local[0].date(), local[-1].date()):
+            # A date served twice with two closes would let the later row pick the accepted time.
+            if row["date"] in cal:
+                raise UnexpectedResponse(
+                    f"{w}: /v2/calendar lists {row['date']} twice (closes {cal[row['date']]} "
+                    f"and {row['close']}); the session's close is not known")
+            cal[row["date"]] = row["close"]
         for s, t in zip(stamps, local):
             if t.date() not in cal:
-                raise UnexpectedResponse(f"{w}: stamp {s.isoformat()} is {t.isoformat()} in New York, and "
-                                         f"{t.date()} is not a trading day by /v2/calendar; the point "
-                                         f"cannot be given a session")
+                raise UnexpectedResponse(
+                    f"{w}: stamp {s.isoformat()} is {t.isoformat()} in New York, and {t.date()} "
+                    f"is not a trading day by /v2/calendar; the point cannot be given a session")
+            close = cal[t.date()]
+            ch, cm = int(close[:2]), int(close[3:])
+            if ch + self.EOD_STAMP_AFTER_CLOSE_H > 23 or cm > 59:
+                raise UnexpectedResponse(
+                    f"{w}: /v2/calendar gives {t.date()} a {close} close; "
+                    f"{self.EOD_STAMP_AFTER_CLOSE_H} hours after it is not a time on that "
+                    f"date, and no such session has been seen. Refused rather than placed "
+                    f"on a session")
+            want = dt.time(ch + self.EOD_STAMP_AFTER_CLOSE_H, cm)
+            if t.time() != want:
+                raise UnexpectedResponse(
+                    f"{w}: stamp {s.isoformat()} is {t.isoformat()} in New York, not "
+                    f"{want.isoformat()} local, which is {t.date()}'s {close} close by "
+                    f"/v2/calendar plus {self.EOD_STAMP_AFTER_CLOSE_H} hours; every 1D stamp "
+                    f"seen is 20:00 New York on a full day and 17:00 on a 13:00 close (read "
+                    f"2026-11-14, 754 points). Refused rather than placed on a session")
 
         funded = next((i for i, x in enumerate(equities) if x != 0), len(equities))
         later_zero = [local[i].date().isoformat() for i in range(funded, len(equities)) if equities[i] == 0]
