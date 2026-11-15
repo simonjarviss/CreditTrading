@@ -406,19 +406,26 @@ def test_a_stamp_not_four_hours_after_its_own_close_raises(case):
         reader_for(Server(_half_day_table(hours, extra_rows=extra))).eod_equity_history(*HALF_WIN)
 
 
-def test_the_reader_accepts_the_half_day_stamp_that_alpacaclient_refuses_pending_its_owners_fix(tmp_path):
-    """LABELLED DIFFERENCE, PENDING THE OWNER'S PR (team lead, 2026-11-14): the one place this
-    reader and AlpacaClient as of main part. The owner's fix (branch eod-half-day, 375ba5d, not
-    merged) holds the same rule as this reader, and the scratch comparison of the two on these
-    fixtures agreed. On main, AlpacaClient's every-stamp-is-20:00 rule refuses the half-day
-    history this reader reads. WHICHEVER OF THE TWO PRS MERGES SECOND (this one or the owner's)
-    turns this test into an equality test: it fails on that merge, by design, and is rewritten
-    as an equality test like the others; on full days the two stay equal (the tests above).
-    (Independent review of the follow-up, 2026-11-14.)"""
+def test_the_reader_and_alpacaclient_are_equal_on_half_days_too(tmp_path):
+    """EQUAL ON HALF DAYS (team lead, 2026-11-14): the runner owner's PR #83 (cf3eac4) merged
+    first with the same rule as this reader, so the labelled difference this test held while
+    that PR was open is closed, as its docstring said it would be. On the half-day history both
+    return the same sessions, equities and stamps, and both refuse each wrong stamp with the
+    same message."""
     server = Server(_half_day_table(HALF_HOURS))
-    assert [p.date for p in reader_for(server).eod_equity_history(*HALF_WIN)] == AROUND_HALF
-    with pytest.raises(AL.AlpacaError, match="20:00"):
-        client_for(server, tmp_path).eod_equity_history(*HALF_WIN)
+    got = [(p.date, p.equity, p.stamp) for p in reader_for(server).eod_equity_history(*HALF_WIN)]
+    want = [(p.date, p.equity, p.stamp) for p in client_for(server, tmp_path).eod_equity_history(*HALF_WIN)]
+    assert got == want and [d for d, _, _ in got] == AROUND_HALF
+    for hours, extra in (({**HALF_HOURS, D(2025, 11, 26): 17}, ()),
+                         ({d: 20 for d in AROUND_HALF}, ()),
+                         ({d: 20 for d in AROUND_HALF},
+                          ({"date": "2025-11-26", "open": "09:30", "close": "13:00"},))):
+        s = Server(_half_day_table(hours, extra_rows=extra))
+        with pytest.raises(AR.UnexpectedResponse) as r_err:
+            reader_for(s).eod_equity_history(*HALF_WIN)
+        with pytest.raises(AL.AlpacaError) as c_err:
+            client_for(s, tmp_path).eod_equity_history(*HALF_WIN)
+        assert str(r_err.value) == str(c_err.value)
 
 
 def test_the_reports_lookback_reads_through_a_funded_half_day():

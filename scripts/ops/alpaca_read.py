@@ -51,22 +51,18 @@ malformed shapes. That equality test is the licence for the copy: edit either si
 and it fails. The copied docstrings are shortened to the reason and a pointer to
 the original.
 
-ONE DIFFERENCE FROM MAIN, PENDING THE OWNER'S PR: THE HALF-DAY EOD STAMP (team lead,
-2026-11-14). AlpacaClient on main requires every 1D stamp to be 20:00 New York. A half day is
-stamped 17:00: read 2026-11-14 on the cef paper account, `period=3A`, 754 points [V: the
+THE HALF-DAY EOD STAMP (team lead, 2026-11-14). A half day is stamped 17:00 New York, not the
+20:00 of a full day: read 2026-11-14 on the cef paper account, `period=3A`, 754 points [V: the
 runner owner's read-only GET], all 747 sessions with a 16:00 calendar close at 20:00:00 New
 York and all 7 with a 13:00 close at 17:00:00 (2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24,
 2025-07-03, 2025-11-28, 2025-12-24; the last two funded); the main session's own GET found
-2025-11-28T22:00:00Z the same day. The 20:00 rule refuses the whole history, and the report's
-lookback (`pnl_report.EOD_LOOKBACK_DAYS`) reaches back past 2025-11-28, so the core's report
-would fail on its first night. The runner's owner fixed AlpacaClient on its own branch
-(`eod-half-day`, 375ba5d, not merged): a stamp's New York time must be its date's /v2/calendar
-`close` + EOD_STAMP_AFTER_CLOSE_H hours, and a date the calendar lists twice raises. This
-reader copies that rule exactly (`eod_equity_history`); on a full day it is 20:00, the old
-rule. While only one of the two PRs is on main, the equality test runs on full days, and a
-labelled test pins that this reader accepts the half-day stamp main's AlpacaClient refuses;
-whichever of the two PRs merges second turns that test into an equality test (it fails then,
-by design, until it is rewritten as one).
+2025-11-28T22:00:00Z the same day. The old every-stamp-is-20:00 rule refused the whole history,
+and the report's lookback (`pnl_report.EOD_LOOKBACK_DAYS`) reaches back past 2025-11-28, so the
+core's report would have failed on its first night. The rule here is AlpacaClient's from the
+runner owner's PR #83 (cf3eac4, merged 2026-11-14): a stamp's New York time must be its date's
+/v2/calendar `close` + EOD_STAMP_AFTER_CLOSE_H hours, and a date the calendar lists twice
+raises. On a full day it is 20:00, the old rule. An equality test holds the two equal on half
+days as on full days.
 
 WHAT IT REFUSES (raises, naming what; never a default)
 -------------------------------------------------------
