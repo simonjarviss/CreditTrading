@@ -1278,3 +1278,20 @@ def test_a_cache_without_the_activity_file_is_analysed_as_before_and_one_half_pr
     (tmp_path / "c" / LA.ACT_FILE).write_text("[]")
     with pytest.raises(LA.AttributionError, match="must come together"):
         LA.load_cache(tmp_path / "c", grp=dict(GRP))
+
+
+# --- the second review of the follow-up (team lead, 2026-11-15) ----------------------------
+
+def test_a_session_with_corp_names_it_in_every_reconciliation_label(tmp_path):
+    """Second review, finding 5: with the account's rows in the window the reconciliation lines,
+    the report line and the summary name corp in the rebuild (hold + fill + corp + fees), the
+    distributions line includes it, and the markdown tables format the corp column as money.
+    A pin on the labels (a window without rows keeps the old ones, byte for byte)."""
+    res = LA.attribute(_ca_inputs("H3", acts=CA_LEGS), breaks=[])
+    assert all("hold+fill+corp+fees" in ln for ln in LA.reconcile_lines(res.daily) if not ln.startswith("WARN"))
+    assert "rebuilt (hold+fill+corp+fees)" in LA.report(res)
+    paths = LA.write_outputs(res, tmp_path / "out")
+    text = paths["summary"].read_text()
+    assert "| rebuilt: hold + fill + fees + corp |" in text and "| hold + fill + corp + fees + distributions |" in text
+    plain = LA.attribute(_ca_inputs("H1", corp=[], fills=CA_BASE_FILLS), breaks=[])
+    assert all("hold+fill+fees" in ln and "corp" not in ln for ln in LA.reconcile_lines(plain.daily))

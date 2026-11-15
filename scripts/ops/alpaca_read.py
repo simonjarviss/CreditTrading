@@ -466,13 +466,13 @@ class AlpacaReader:
 
     EOD_LISTS = ("timestamp", "equity", "profit_loss", "profit_loss_pct")
     # A 1D point is stamped this many hours after its session's calendar close, New York
-    # wall-clock time: AlpacaClient.EOD_STAMP_AFTER_CLOSE_H on the owner's branch (module
-    # docstring, ONE DIFFERENCE FROM MAIN), the same constant under the same name.
+    # wall-clock time: AlpacaClient.EOD_STAMP_AFTER_CLOSE_H since PR #83 (cf3eac4; module
+    # docstring, THE HALF-DAY EOD STAMP), the same constant under the same name.
     EOD_STAMP_AFTER_CLOSE_H = 4
 
     def eod_equity_history(self, start: dt.date, end: dt.date) -> list[EODPoint]:
-        """AlpacaClient.eod_equity_history as the owner's branch (375ba5d) has it, read for read
-        (module docstring, ONE DIFFERENCE FROM MAIN): every 1D stamp's New York date must be a
+        """AlpacaClient.eod_equity_history as PR #83 (cf3eac4) has it, read for read (module
+        docstring, THE HALF-DAY EOD STAMP): every 1D stamp's New York date must be a
         trading day by one /v2/calendar read, and its New York wall-clock time must equal that
         day's calendar `close` + EOD_STAMP_AFTER_CLOSE_H hours exactly (20:00:00 on a 16:00
         close, 17:00:00 on a 13:00 half day), or the call raises naming it (a session filed
@@ -516,7 +516,7 @@ class AlpacaReader:
             return []
 
         local = [s.astimezone(NY) for s in stamps]
-        # One /v2/calendar read gives each session's close (AlpacaClient, the owner's branch).
+        # One /v2/calendar read gives each session's close (AlpacaClient since PR #83, cf3eac4).
         cal = {}
         for row in self.calendar(local[0].date(), local[-1].date()):
             # A date served twice with two closes would let the later row pick the accepted time.

@@ -1503,9 +1503,10 @@ def group_table(nd: pd.DataFrame, keys) -> pd.DataFrame:
 
 def reconcile_lines(daily: pd.DataFrame) -> list[str]:
     lines = []
+    parts = "hold+fill+corp+fees" if "corp" in daily.columns else "hold+fill+fees"   # corp only with account rows
     for r in daily.itertuples():
         res = float(r.residual)
-        lines.append(f"  {r.date}  eod_change {float(r.eod_change):>10,.2f}  hold+fill+fees "
+        lines.append(f"  {r.date}  eod_change {float(r.eod_change):>10,.2f}  {parts} "
                      f"{float(r.rebuilt):>10,.2f}  (fees {float(r.fees):>6,.2f} on "
                      f"{float(r.sold_usd):>10,.2f} sold)  residual {res:>8,.2f}")
         if abs(res) > RESIDUAL_WARN_USD:
@@ -1616,7 +1617,7 @@ def corp_section(res: Result) -> list[str]:
 
 def summary_markdown(res: Result, tabs: dict) -> str:
     t = totals(res)
-    money = set(MONEY) | {"price_pnl", "with_dist", "fill_bp_of_traded", "eod_change", "rebuilt",
+    money = set(MONEY) | {"corp", "price_pnl", "with_dist", "fill_bp_of_traded", "eod_change", "rebuilt",
                           "residual", "eod_equity"}
     man = res.sources or {}
     kinds = list(res.dist_kinds)        # from the cache, never a default (review 2026-11-02)
@@ -1668,7 +1669,7 @@ def summary_markdown(res: Result, tabs: dict) -> str:
           f"| fill, bp of traded | {t['fill_bp_of_traded']:,.1f} |",
           f"| fill + fees, bp of traded | {t['execution_bp_of_traded']:,.1f} |",
           f"| distributions not credited by paper ({', '.join(kinds)}) | {_usd(t['dist'])} |",
-          f"| hold + fill + fees + distributions | {_usd(t['with_dist'])} |", "",
+          f"| hold + fill{' + corp' if 'corp' in t else ''} + fees + distributions | {_usd(t['with_dist'])} |", "",
           "On an ex-date the mechanical widening of the discount (price and NAV fall by the same "
           "dollars, so the discount is wider in percent) lands in disc_part; see the module "
           "docstring, EX-DATES.", ""]
@@ -1707,9 +1708,10 @@ def summary_markdown(res: Result, tabs: dict) -> str:
 
 def report(res: Result) -> str:
     t = totals(res)
+    parts = "hold+fill+corp+fees" if "corp" in t else "hold+fill+fees"     # corp only with account rows
     lines = [f"live attribution {res.first_session}..{res.asof}: {t['sessions']} sessions",
              *reconcile_lines(res.daily),
-             f"official (EOD change) {t['eod_change']:,.2f}   rebuilt (hold+fill+fees) {t['rebuilt']:,.2f}"
+             f"official (EOD change) {t['eod_change']:,.2f}   rebuilt ({parts}) {t['rebuilt']:,.2f}"
              f"   official-rebuilt {t['residual']:,.2f}   max |session residual| {t['max_abs_residual']:,.2f}",
              f"hold {t['hold']:,.2f} = nav_part {_usd(t['nav_part'])} + disc_part {_usd(t['disc_part'])}"
              f"   fill {t['fill']:,.2f} ({t['fill_bp_of_traded']:,.1f}bp of {t['traded_usd']:,.2f} traded)"
