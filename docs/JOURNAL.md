@@ -464,4 +464,4 @@ from a named source; [doc] copied from a named note.
 - **Lock-ups.** The textbook three-session short around an IPO lock-up expiry is 0.56 gross over 2000 to 2025 and about zero since 2016; the fall now comes in the four sessions before the date, a window found after looking. Not promoted [V: `results/ideas/2026-11-15_ipo_lockups.md`].
 - **Reverse splits.** Shorting a common share for 20 sessions after its reverse split, against IWM, is 1.02 gross (t 5.18) and positive in every era. Alpaca marks 4 of the 32 names such a book would hold today as shortable, so it is set aside as a short and no shadow book was built [V: `results/ideas/2026-11-15_reverse_splits.md`].
 - **Local only.** Both are local commits; pushes are stopped (team lead, 2026-11-15).
-
+- **Follow-on offerings** (E-2026-11-15-05). Buying an issuer three sessions after a follow-on is priced and holding five sessions is 0.71 gross over 2000 to 2025 and about 0.15 since 2016; the short over the next forty sessions is 0.07. Not promoted [V: `results/ideas/2026-11-15_follow_ons.md`].

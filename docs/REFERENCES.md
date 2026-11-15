@@ -2084,3 +2084,13 @@ books' own fills disagree with a page, both are given.
 | CRSP's declaration date for a reverse split is a median of one session before the ex-date (first session after the declaration to the ex-date), so it is not a usable announcement date | [V] 2026-11-15 | `results/ideas/reverse_splits/explore.py` (`sessions_d1_to_x_median`) |
 | Alpaca `GET /v1/corporate-actions?types=reverse_split` returned 1,189 rows with ex-dates in the 365 days to 2026-11-15, closed-end funds and ETFs included (IGR, MIN, MMT, ETHA among them) | [V] 2026-11-15 | `results/ideas/reverse_splits/borrow_now.py`, `borrow_now.json` |
 | Of the 32 rows with an ex-date in the 30 days to 2026-11-15, an ex-day close of $2 or more and 21-bar dollar volume of $500,000 or more, 4 were shortable at Alpaca on 2026-11-15 (all four easy to borrow); of the 8 trading $5M a day, none | [V] 2026-11-15, true on that date only | the same |
+
+## 12fo. SDC's follow-on offerings, as measured for the follow-on test (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| `tr_sdc_ni.wrds_ni_details` (R2) holds 16,070 distinct (6-digit CUSIP, issue date) US follow-ons (`ipo = 'No'`, market 'U.S. Public') dated 2000-01-05 to 2026-07-01; 13,491 match a CRSP common share on the issue date through 2025-12-31 | [V] 2026-11-15 | counts read in the session; `scripts/research/stage_sdc_follow_ons.py` printout |
+| `launch_date` is filled on every matched row; it is before the issue date on 8,044 and equal to it on 5,447; the share launched on the issue date rose from 1% (2000) to about 68% (2024–25) | [V] 2026-11-15 | the same |
+| SDC's issue date is not always the first session the offering is priced into the share: events launched on the issue date fall 2.9% against IWM on the session after it (t −18) and are flat on the date itself | [V] 2026-11-15 | `results/ideas/follow_ons/explore.py` (the overnight profile) |
+| `registration_status` is empty on every US follow-on row | [V] 2026-11-15 | counts read in the session |
+
