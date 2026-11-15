@@ -4425,7 +4425,7 @@ that adds it does not exist when it is written.
   - controls: forward splits on the same rule 0.47; the same reverse splits 60 sessions later 0.45 and earlier 0.63; the book less the mean of those two 0.50 (t 2.53, not pre-specified) [V]
   - per event over 20 sessions, short less IWM: mean +9.1%, median +7.8%, 64% positive; worst −714% of the position; Sharpe 0.80 without the ten best events [V]
   - the pre-specified wait book (declaration to ex-date) had 114 tradable events: 0.27 (t 1.37); CRSP's declaration date is a median of one session before the ex-date [V]
-  - borrow at Alpaca read 2026-11-15: of 32 feed rows with an ex-date in the last 30 days passing the same floors, 4 shortable (one a closed-end fund); of the 8 trading $5M a day, 0 [V, that date only]
+  - borrow at Alpaca read 2026-11-15: of 32 feed rows with an ex-date in the last 30 days passing the same floors, 4 shortable (one a closed-end fund); of the 8 trading $5M a day, 0; true on that date only [V]
 - source: `results/ideas/reverse_splits/explore.py` @ `21fceb3`; `results/ideas/reverse_splits/checks.py` @ `21fceb3`; `results/ideas/reverse_splits/borrow_now.py` @ `21fceb3`; `scripts/research/stage_crsp_reverse_splits.py` @ `21fceb3`; `docs/REFERENCES.md` @ `21fceb3` (§12rs)
 - supports: §4
 - status: current. Gross, no costs, no borrow fee. A revival of G1, closed 2026-10-15 on a borrow count with no return read; set aside again as a short at Alpaca, now with the return known and the borrow read on the names held. No shadow book built. Not independently reviewed
