@@ -1359,22 +1359,24 @@ after. A corporate action no longer stops the attribution by being in the window
 2026-11-14: "narrow and handle it"; `scripts/cef/live_attribution.py`, CORPORATE ACTIONS). Only
 a fund held into the event's session, in a role whose count or symbol the event changes, is
 touched: an acquirer's merger (the core's MHD and MQY, 2026-02) and a flat name are not.
-Positions come from FILLs plus the account's own corporate-action activity rows (none on paper
-today), never from the market feed. One split listed under two ids by the feed is one event;
-two records that disagree on its rates refuse, named. A name-day the account's rows move keeps
-hold on the post-event count and basis, carries the rebasing in its own `corp` component (never
-`fill`, never the traded notional) and reconciles to the cent. A split paper did not process
-reconciles as the account shows it; the report prints a labelled phantom line per event,
-(q_prev - q_prev x k) x close, then the phantom's accrual while it stays open (paper's extra
-shares move with the price) and, if the account's rows for the name post within
-`live_attribution.CA_MATCH_SESSIONS` sessions, a labelled reversal in `corp`; the cumulative
-phantom line beside the official P&L, which stays the P&L of record, is what is still in it
-(0 once reversed), and an open one past that window stays labelled open. That name-day's
-NAV/discount split is UNMEASURED, named. Rows for a name with no market record to tie them to
-refuse, named. A session that does not reconcile (paper froze the position, or support pushed
-the split with no account row) is UNRECONCILED, exit 5, naming the session and the event
-(independent review of the follow-up, 2026-11-14). Any other count-changing type held into its date with no
-account row still stops the attribution, named (exit 4). A
+Positions come from FILLs alone, never from the market feed and never from the account's own
+corporate-action activity rows (team lead, 2026-11-15: "simplify"). Paper has never written such
+a row and its REST format is undocumented, so the job still reads them strictly, and any row on
+or before the as-of, for any symbol, stops the attribution, naming each row's symbol, type, date
+and share count (exit 4): "the report stops until one has been seen and the handling is built
+against it". A row the parser cannot read stops it too. One split listed under two ids by the
+feed is one event; two records that disagree on its rates refuse, named, and a second record of
+a split already handled, within `live_attribution.CA_MATCH_SESSIONS` sessions with the same
+rates, refuses naming both ids. A forward or reverse split paper did not process reconciles as
+the account shows it; the report prints a labelled phantom line per event, (q_prev - q_prev x k)
+x close, then the phantom's accrual while it stays open (paper's extra shares move with the
+price) until the account first trades the name, its crystallisation at that trade (the extra
+shares at the fill price, plus the session's fee term), and the cumulative phantom line beside
+the official P&L, which stays the P&L of record: what is still in it. That name-day's
+NAV/discount split is UNMEASURED, named. A session that does not reconcile (paper froze the
+position, or support pushed the split with no account row) is UNRECONCILED, exit 5, naming the
+session and the event (independent review of the follow-up, 2026-11-14). Any other
+count-changing type held into its date stops the attribution, named (exit 4). A
 book that holds nothing at the as-of close has a FLAT factor block (the same review): it
 says the book is flat and reads no exposure, flag or PARTIAL for that close, never the
 previous close's reading; its history since the first trade is labelled with its dates;

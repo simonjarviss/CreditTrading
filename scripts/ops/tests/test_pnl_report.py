@@ -1294,50 +1294,6 @@ def test_an_acquirer_merger_changes_nothing_in_the_report(tmp_path):
     assert "phantom_cumulative" not in with_event["attribution"]
 
 
-def test_the_report_labels_a_late_reversal_and_nets_the_phantom_to_what_is_left():
-    """Review of the follow-up, 2026-11-14, findings 2 and 3, on the report's own lines: the
-    investigation's split, unprocessed on its ex-date, then ended by the account's rows two
-    sessions later. The report books the phantom, its accrual and its reversal (in corp, never
-    fill), and the cumulative phantom line says +0.00 is still in the official P&L; the session
-    line carries corp beside fill. Fails on the parent bdf181e, which said -1,752.00 was still in
-    the official P&L and put the reversal in that session's fill."""
-    from scripts.cef.tests import test_live_attribution as TLA
-    d_rows = TLA.CA_S[TLA.CA_S.index(TLA.CA_EX) + 2]
-    inp = TLA._ca_inputs("H1", acts=TLA._late_legs(d_rows), fills=TLA.CA_BASE_FILLS)
-    inp.eod = TLA._late_equity(d_rows)
-    res = LA.attribute(inp, breaks=[], nav_missing="unmeasured")
-    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], d_rows)
-    assert out["phantom_cumulative"] == pytest.approx(0.0, abs=1e-9)
-    assert any(ln.startswith("Phantom reversal: the account's rows for LNG on 2026-02-09 (2 session(s) after "
-                             "2026-02-05)") and ln.endswith("-8,100.00, in corp, never fill") for ln in lines)
-    assert any(ln.startswith("Phantom accrual: paper's extra 600 share(s) of LNG") and "+72.00" in ln for ln in lines)
-    assert lines[-1].startswith("Phantom from corporate actions paper did not process, still in the official P&L at "
-                                "the as-of: +0.00 (2 event(s), 0 still open, 2 ended by the account's rows)")
-    assert out["phantom_session"] == pytest.approx(-8100.0 + 9720.0)
-    sess = P.session_row(res, d_rows)
-    assert sess["fill"] == 0.0 and sess["corp"] == pytest.approx(1620.0)
-    text = P.attribution_lines(sess, P.cumulative(res, TLA.CA_S[1]), P.reconciliation(res, TLA.CA_S[1]),
-                               session_note=None)[0]
-    assert "fill +0.00; corp (the account's corporate-action rows, rebased; never fill) +1,620.00" in text
-
-
-def test_the_report_names_rows_on_a_records_other_symbol_and_rows_valued_at_the_close():
-    """Second review of the follow-up, finding 2a: a spin-off's new shares in the account's rows
-    (the source has none) are applied, not refused. The report says the source had no row and
-    its hold is as held, never a basis restated with k None, and names the session whose rows
-    are valued at the close. Fails on the parent f550da3, which refused the rows."""
-    from scripts.cef.tests import test_live_attribution as TLA
-    fills, eod, corp, rows = TLA._named_case("spin_off")
-    res = TLA._ca_run(fills, eod, corp, acts=rows, closes=TLA.CA_CLOSES2, grp=TLA.CA_GRP2)
-    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
-    assert any(ln.startswith("Corporate action spin_off LNG ex 2026-02-05 (id sp-1), session 2026-02-05: the "
-                             "account's rows on the record's other symbol(s) moved the book; LNG had no row") for ln in lines)
-    assert not any("k None" in ln for ln in lines)
-    assert any(ln.startswith("The account's rows on 2026-02-05 (SPN) are not value-neutral at their own prices (sum "
-                             "of qty x price +450.00): each is valued at the close") for ln in lines)
-    json.dumps(out)
-
-
 @pytest.mark.parametrize("case", ["resize", "full_exit"])
 def test_the_report_says_the_first_trade_crystallised_the_phantom(case):
     """Second review of the follow-up, finding 1 (team lead, 2026-11-15): after the runner's
@@ -1361,26 +1317,67 @@ def test_the_report_says_the_first_trade_crystallised_the_phantom(case):
     assert "phantom_session" not in out                      # constant from the trade: nothing on the as-of
     n = 2 if case == "resize" else 1
     assert lines[-1].startswith(f"Phantom from corporate actions paper did not process, still in the official P&L at "
-                                f"the as-of: {want:+,.2f} ({n} event(s), 0 still open, {n} crystallised by a trade, 0 "
-                                "ended by the account's rows)")
+                                f"the as-of: {want:+,.2f} ({n} event(s), 0 still open, {n} crystallised by a trade)")
     json.dumps(out)                                          # the event records serialise
 
 
-def test_the_report_names_rows_after_a_crystallised_phantom_and_keeps_it_constant():
-    """Second review, finding 1 with the reviewer's C' shape: the runner's re-size crystallised
-    the phantoms on 02-06, then paper applied the split on 02-10 to the re-sized count. The report
-    books those rows in corp, names them as after the phantom closed, says the phantom then no
-    longer equals official minus a processed account, and keeps the cumulative phantom at the
-    crystallised -1,630.18. Fails on the parent f550da3, where the rows ended a phantom still
-    open (cumulative -1,131.96; -1,115.76 once such rows are valued at the close)."""
-    from scripts.cef.tests import test_live_attribution as TLA
-    fills, eod, rows, d = TLA._rows_on_the_resized_count()
-    res = TLA._ca_run(fills, eod, TLA.CA_SPLIT, acts=rows)
-    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], d)
-    assert out["phantom_cumulative"] == pytest.approx(-1630.18, abs=1e-9)
-    after = [ln for ln in lines if ln.startswith("The account's rows for ")]
-    assert [ln.split(" on ")[0] for ln in after] == ["The account's rows for LNG", "The account's rows for SHS"]
-    assert all("2026-02-10 came after the phantom of reverse_split" in ln and ln.endswith(
-        "the phantom no longer equals official minus a processed account (live_attribution, CRYSTALLISED)")
-        for ln in after)
-    json.dumps(out)
+# --- the account's own rows stop the report (team lead, 2026-11-15: "simplify") -------------
+
+class _RowsReader(FakeReader):
+    """The account's corporate-action activities serve `rows` in the shape the reader's GET
+    returns (`AlpacaReader.corporate_action_activities`); everything else is the fixture's."""
+    def __init__(self, rows, **kw):
+        super().__init__(**kw)
+        self.rows = rows
+
+    def corporate_action_activities(self):
+        return [dict(r) for r in self.rows]
+
+
+def _act(i, typ, d, sym, qty=None, price=None, cash=None):
+    r = {"id": i, "activity_type": typ, "date": d.isoformat(), "symbol": sym}
+    if qty is not None:
+        r.update(qty=str(qty), price=str(price))
+    if cash is not None:
+        r["net_amount"] = str(cash)
+    return r
+
+
+ROW_SHAPES = {
+    "split_legs_on_a_held_short": [_act("s1", "SPLIT", ASOF, "BBB", 2000, "20.20"),
+                                   _act("s2", "SPLIT", ASOF, "BBB", -1000, "40.40")],
+    "cash_in_lieu_alone": [_act("c1", "CIL", ASOF, "BBB", cash="4.40")],
+    "merger_leg_on_a_held_acquirer": [_act("m1", "MA", TRADED[1], "AAA", 120, "10.00")],
+    "name_change_to_a_new_symbol": [_act("n1", "NC", TRADED[1], "AAA", -5000, "10.00"),
+                                    _act("n2", "NC", TRADED[1], "AAAN", 5000, "10.00")],
+    "spin_off_shares_of_a_new_symbol": [_act("p1", "SPIN", ASOF, "SPN", 90, "5.00")],
+    "a_symbol_never_traded_before_the_window": [_act("z1", "SPLIT", FUNDED[0], "ZZZ", 10, "1.00")],
+}
+
+
+@pytest.mark.parametrize("shape", sorted(ROW_SHAPES))
+def test_any_account_corporate_action_row_stops_the_report_with_exit_4(tmp_path, shape):
+    """Team lead, 2026-11-15 ("simplify"), on the third review of the follow-up: any
+    corporate-action activity row of the account on or before the as-of stops the attribution,
+    named (each row's symbol, type, date and share count or cash), because its REST format has
+    never been measured; the unit fails with exit 4 and the file says why. Fails on the parent
+    09c452a, which applied rows like these (or tied, checked and refused them differently)."""
+    rows = ROW_SHAPES[shape]
+    rep_, code = run(tmp_path, reader=_RowsReader(rows))
+    assert code == P.EXIT_INCOMPLETE and rep_["status"] == P.UNMEASURED
+    why = rep_["attribution"]["why"]
+    assert f"{len(rows)} corporate-action activity row(s) of the account on or before {ASOF}" in why, why
+    for r in rows:
+        what = f"qty {int(r['qty']):+d}" if "qty" in r else f"cash {float(r['net_amount']):,.2f}"
+        assert f"{r['symbol']} {r['activity_type']} {r['date']} {what} (id {r['id']})" in why, why
+    assert ("The account recorded a corporate-action row; its REST format has never been measured; the report "
+            "stops until one has been seen and the handling is built against it (team lead, 2026-11-15)") in why
+    assert (tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.json").is_file()
+
+
+def test_an_account_row_the_parser_cannot_read_stops_the_report_loudly(tmp_path):
+    """A row the strict parser cannot read (a fractional share count here) stops the job before
+    anything is cached, naming the row: exit 4, never a skipped row. A pin of kept behaviour."""
+    rep_, code = run(tmp_path, reader=_RowsReader([_act("f1", "SPLIT", ASOF, "BBB", "0.5", "20.20")]))
+    assert code == P.EXIT_INCOMPLETE and rep_["status"] == P.UNMEASURED
+    assert "id='f1'" in rep_["attribution"]["why"] and "whole number" in rep_["attribution"]["why"]
