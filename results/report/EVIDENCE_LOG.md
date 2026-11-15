@@ -4495,3 +4495,28 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. A second look at the events of E-2026-11-15-08 with other dates, not a new sample; the headline-covered events are a non-random third. Gross, no costs. Not independently reviewed
 
+### E-2026-11-15-10 · Result: the special-dividend wait still works in small names (1.23 gross on $100k–$5M a day, 1.54 in 2023–25) and has stopped in large ones
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - the corrected book (decided one session late) by 21-session dollar volume at the decision: $100k–$1M 1.12 (478 events); $1M–$5M 0.58 (486); $5M and over 0.51 (967) with −0.35 in 2023–25; $100k–$5M 1.23 (t 6.22, 964 events), eras 0.92, 0.61, 1.53, 1.78, 1.54 [V]
+  - the $100k–$5M book two and three sessions late: 1.19 and 0.90; window moved 20, 40, 60 sessions later −0.18, 0.01, −0.13; without ten best events 0.99; beta to IWM −0.04 [V]
+  - ordinary dividends of the same companies in the same band: 1.00 on 17,606 events (0.32 in 2023–25); per session held 4bp against the special's 19bp [V]
+  - by yield inside the band: 0.37 (1–2%), 0.64 (2–5%), 1.04 (5% and over) [V]
+- source: `results/ideas/special_dividends/checks.py` @ `bfce4dc`; `results/ideas/2026-11-15_special_dividends.md` @ `bfce4dc`; `shadow/signals/specdiv.py` @ `bfce4dc`; `shadow/books/specdiv_wait_small.json` @ `bfce4dc`
+- supports: §4
+- status: current. Not pre-specified: the size cut was made after the result, at the team lead's request for small-capital ideas. Gross; closing prices; bid-ask spread in thin names unmeasured. A second shadow book, `specdiv_wait_small`, is the forward test
+
+### E-2026-11-15-11 · Result: short-term reversal is stronger in stocks ranked 1,501–4,000 (1.18 gross) than in the top 1,500 (0.96), and since 2013 all of it is on the short side
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - the `st_reversal_wide` rule unchanged on rank 1,501–4,000, price ≥ $5, $500k a day, CRSP to 2025-12-31: both sides gross Sharpe 1.18 (t 6.00), halves 2.09 / 0.93; signal 21 sessions stale 0.30; turnover 164 a year [V]
+  - long leg against IWM 0.52 (t 2.63), halves 1.13 / −0.02, −1.26 in 2023–25; short leg against IWM 0.90 (t 4.56), halves 1.05 / 0.99 [V]
+  - rank 1,501–2,500 1.19 and 2,501–4,000 1.24; median position 0.01% of a day's volume at $1M [V]
+- source: `results/ideas/st_reversal_small/explore.py` @ `bfce4dc`; `results/ideas/st_reversal_wide/explore.py` @ `bfce4dc`; `scripts/research/stage_crsp_equities.py` @ `bfce4dc`
+- supports: §4
+- status: current. Gross, no costs, no borrow. Not promoted: the leg that needs no borrow has earned nothing since 2013. Not independently reviewed
+
