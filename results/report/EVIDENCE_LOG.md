@@ -4470,3 +4470,16 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Gross, no costs. Set aside: the later-window control equals the book. Not independently reviewed
 
+### E-2026-11-15-08 · Result: buying the issuer three sessions after a convertible issue is 0.67 gross, positive in every era and on liquid names, and small per event
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 3,337 SDC convertible issues matched to a CRSP common share, issue dates 2000-01-13 to 2025-12-23, prices to 2025-12-31; 2,840 eligible [V]
+  - the follow-on rule unchanged (long D+3 to D+7 against IWM, 10% a name): gross Sharpe 0.67 (t 3.39); halves 0.77 / 0.59; eras 0.81, 0.24, 1.04, 0.36, 0.62; the window 30 sessions later −0.10; 0.68 on names trading $5M a day and 0.49 on $20M [V]
+  - issued 2011–22 (seen by E2 in October) 0.33; issued outside those years 0.59 (t 3.0) [V]
+  - not pre-specified: alpha 4.5% a year (t 3.30); per event +0.44% mean and +0.26% median; 0.42 without the ten best events; the hold begun one and two sessions later 0.45 and 0.56 [V]
+- source: `results/ideas/convert_issuance/explore.py` @ `b54498e`; `results/ideas/convert_issuance/checks.py` @ `b54498e`; `scripts/research/stage_sdc_convertibles.py` @ `b54498e`; `results/ideas/follow_ons/explore.py` @ `b54498e`
+- supports: §4
+- status: current. Gross, no costs. A re-run of E2 on a longer, differently dated list. Not on shadow: no live list of pricings. Not independently reviewed
+
