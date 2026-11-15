@@ -112,7 +112,7 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__" and not {"--shifted", "--late", "--small", "--small-controls"} & set(sys.argv):
+if __name__ == "__main__" and not {"--shifted", "--late", "--small", "--small-controls", "--spread"} & set(sys.argv):
     sys.exit(main())
 
 
@@ -271,4 +271,82 @@ def small_controls() -> dict:
 if __name__ == "__main__" and "--small-controls" in sys.argv:
     j = json.loads((HERE / "checks.json").read_text())
     j["small_band_controls"] = small_controls()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def small_spread() -> dict:
+    """The closing bid-ask spread of the small-name book's own trades (added 2026-11-15).
+
+    WHY: the $100k-$5M band's median event is about 1% and the card said the spread was
+    unmeasured. CRSP's daily file has a closing bid and ask. For each traded event of the
+    band (decided one session late) this reads the quoted spread at the entry close and at
+    the exit close, and re-scores the event on the worst terms a market order could get:
+    bought at the entry session's closing ASK, sold at the exit session's closing BID,
+    everything between at CRSP's returns (dividends and splits included), less IWM.
+    THIS IS A REAL-MONEY VIEW, kept apart from the gross figures: the desk does not model
+    costs in research (docs/MISSION.md), and a closing-auction order pays less than the
+    quoted spread. It is an upper bound on the cost of one round trip, not an estimate.
+    A quote is used only when bid > 0 and ask >= bid; events without both quotes are counted."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    px = pd.read_parquet(ex.RES / "crsp_specdiv_daily.parquet", columns=["permno", "date", "bid", "ask"])
+    px["date"] = pd.to_datetime(px["date"])
+    bid = px.pivot(index="date", columns="permno", values="bid").reindex(index=sessions, columns=prc.columns).to_numpy()
+    ask = px.pivot(index="date", columns="permno", values="ask").reindex(index=sessions, columns=prc.columns).to_numpy()
+    adv = dv.rolling(21, min_periods=10).mean()
+    P, A = prc.to_numpy(), adv.to_numpy()
+    rn, im = ret.fillna(0.0).to_numpy(), iwm.to_numpy()
+    L = harness.EXEC_LAG
+    e = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    e["d1"] = e["d1"] + 1
+    cols = prc.columns.get_indexer(e["permno"])
+    row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+    p, a = P[row, cols], A[row, cols]
+    ok = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (e["amount"].to_numpy() / np.where(p > 0, p, np.nan) >= ex.MIN_YIELD)
+    rows = []
+    for d1, x, c, good, av in zip(e["d1"].to_numpy(), e["x"].to_numpy(), cols, ok, a):
+        fill, last = d1 + 1, x - 1                 # filled at the close of d1+1; earns d1+2 .. x-1; sold at the close of x-1
+        if not good or not (1e5 <= av) or last < d1 + L:
+            continue
+        gross = float((rn[d1 + L:x, c] - im[d1 + L:x]).sum())
+        b0, a0, b1, a1 = bid[fill, c], ask[fill, c], bid[last, c], ask[last, c]
+        q0, q1 = (b0 > 0) and (a0 >= b0), (b1 > 0) and (a1 >= b1)
+        s0 = (a0 - b0) / ((a0 + b0) / 2) if q0 else np.nan
+        s1 = (a1 - b1) / ((a1 + b1) / 2) if q1 else np.nan
+        # worst terms: pay ask instead of the close at entry, receive bid instead of the close at exit
+        cost = (a0 / P[fill, c] - 1 if q0 else np.nan) + (1 - b1 / P[last, c] if q1 else np.nan)
+        rows.append((sessions[d1].year, av, gross, s0, s1, cost))
+    d = pd.DataFrame(rows, columns=["yr", "adv", "gross", "spread_in", "spread_out", "cost"])
+    d["net"] = d["gross"] - d["cost"]
+    d["band"] = pd.cut(d["adv"], [1e5, 1e6, 5e6, np.inf], labels=["$100k to $1M", "$1M to $5M", "$5M and over"], right=False)
+    d["era"] = pd.cut(d["yr"], [1999, 2007, 2012, 2017, 2022, 2025], labels=["2000-07", "2008-12", "2013-17", "2018-22", "2023-25"])
+    out = {"events": int(len(d)), "events_without_both_quotes": int(d["cost"].isna().sum())}
+
+    def summ(g):
+        q = g.dropna(subset=["cost"])
+        return {"n": int(len(g)), "n_quoted": int(len(q)), "median_spread_in_pct": float(q["spread_in"].median() * 100),
+                "mean_spread_in_pct": float(q["spread_in"].mean() * 100), "p90_spread_in_pct": float(q["spread_in"].quantile(.9) * 100),
+                "gross_mean_pct": float(q["gross"].mean() * 100), "gross_median_pct": float(q["gross"].median() * 100),
+                "round_trip_cost_mean_pct": float(q["cost"].mean() * 100), "round_trip_cost_median_pct": float(q["cost"].median() * 100),
+                "ask_to_bid_mean_pct": float(q["net"].mean() * 100), "ask_to_bid_median_pct": float(q["net"].median() * 100),
+                "ask_to_bid_share_positive": float((q["net"] > 0).mean())}
+
+    for k, g in d.groupby("band", observed=True):
+        out[str(k)] = summ(g)
+    small = d[d["adv"] < 5e6]
+    out["$100k to $5M"] = summ(small)
+    for k, g in small.groupby("era", observed=True):
+        out[f"$100k to $5M, {k}"] = summ(g)
+    for k, v in out.items():
+        if isinstance(v, dict):
+            print(f"  {k}: n {v['n_quoted']}/{v['n']} | spread at entry median {v['median_spread_in_pct']:.2f}% mean {v['mean_spread_in_pct']:.2f}% p90 {v['p90_spread_in_pct']:.2f}% | "
+                  f"gross {v['gross_mean_pct']:+.2f}% (median {v['gross_median_pct']:+.2f}%) | round trip {v['round_trip_cost_mean_pct']:.2f}% (median {v['round_trip_cost_median_pct']:.2f}%) | "
+                  f"ask-to-bid {v['ask_to_bid_mean_pct']:+.2f}% (median {v['ask_to_bid_median_pct']:+.2f}%, {v['ask_to_bid_share_positive']:.0%} positive)")
+        else:
+            print(f"  {k}: {v}")
+    return out
+
+
+if __name__ == "__main__" and "--spread" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["small_band_spread"] = small_spread()
     (HERE / "checks.json").write_text(json.dumps(j, indent=1))

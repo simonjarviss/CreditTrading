@@ -15,6 +15,8 @@ WHAT IT SELECTS, from CRSP's own codes, fixed before any return was read:
            ETFs pay year-end specials and belong to the fund books.
   controls every ordinary cash dividend (distype 'CD') of the same securities.
   panel    every daily row of those securities from --start, dead ones included.
+           It carries CRSP's closing bid and ask (added 2026-11-15) so the spread a small
+           book would pay in thin names can be measured rather than assumed.
 CRSP's declaration date is kept as given; 1.9% of events have none (counted 2026-11-15)
 and the test must leave those out rather than assume one.
 
@@ -73,7 +75,8 @@ def main(argv=None) -> int:
         copy (
           select permno, ticker, siccd, dlycaldt as date, cast(dlyret as double) as ret,
                  cast(dlyprc as double) as prc, cast(dlyprcvol as double) as dollar_volume,
-                 cast(dlycap as double) as cap, cast(dlyorddivamt as double) as div
+                 cast(dlycap as double) as cap, cast(dlyorddivamt as double) as div,
+                 cast(dlybid as double) as bid, cast(dlyask as double) as ask
           from read_parquet('{dsf}')
           where dlycaldt >= cast(? as date)
             and permno in (select distinct permno from read_parquet('{ev}'))

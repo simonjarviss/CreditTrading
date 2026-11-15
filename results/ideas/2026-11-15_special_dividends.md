@@ -14,7 +14,7 @@
 `shadow` branch by then (see Next); `specdiv_after` EXPLORE, weak; `specdiv_exday` SET ASIDE ·
 **Reproducer:** `python3 results/ideas/special_dividends/explore.py`, then
 `python3 results/ideas/special_dividends/checks.py`, `checks.py --shifted`, `--late`, `--small`,
-`--small-controls` and `edgar_dates.py` ·
+`--small-controls`, `--spread` and `edgar_dates.py` ·
 **Panels:** CRSP distributions and daily rows on R2 (`scripts/research/stage_crsp_special_divs.py`),
 special dividends with ex-dates 2000-01-04 to 2025-12-31, prices to **2025-12-31**; IWM and SPY
 total returns from Yahoo (fetched 2026-11-10). CRSP rows are not in the repository.
@@ -169,10 +169,23 @@ decision, lowering the floor to $100,000. Each band is its own book.
   At 10% a name, a $250,000 book holds $25,000 a name, which is a quarter of a day's volume
   in the thinnest name allowed and under 3% in a $1M-a-day name. This is a $250k to $1M
   trade.
-- **Not measured, and it matters here:** the bid-ask spread. These are CRSP closing prices.
-  A name trading $100,000 a day can have a spread of 1% or more, against a median event of
-  about 1%. Only fills will say; the shadow book marks at the closing print too, so it
-  will not say either.
+- **The spread, measured (`checks.py --spread`; a real-money view, kept apart from the
+  gross figures above).** CRSP's daily file has a closing bid and ask. For each traded
+  event I took the quoted spread at the entry close and re-scored the event on the worst
+  terms a market order could get: bought at the closing ask, sold at the closing bid.
+
+  | dollar volume a day | events quoted | spread at entry, median (90th pct) | gross per event, mean (median) | ask to bid, mean (median) |
+  |---|---:|---:|---:|---:|
+  | $100k to $1M | 476 | 0.58% (1.97%) | +2.57% (+1.26%) | +1.74% (+0.54%) |
+  | $1M to $5M | 483 | 0.14% (0.50%) | +0.88% (+0.65%) | +0.68% (+0.40%) |
+  | $5M and over | 956 | 0.05% (0.16%) | +0.67% (+0.39%) | +0.60% (+0.36%) |
+  | **$100k to $5M** | 959 | 0.27% (1.25%) | +1.72% (+0.97%) | **+1.21% (+0.48%)** |
+
+  By era the $100k–$5M band earns, ask to bid: +0.92%, +0.21%, +1.71%, +1.88% and +2.24%
+  per event (medians +0.19%, −0.41%, +1.40%, +1.03%, +1.00%). So paying the whole quoted
+  spread both ways takes about 0.5% of 1.7% and leaves the result standing, weakest in
+  2008–12. A closing-auction order should pay less than this. What is still unmeasured is
+  depth: whether $25,000 can be had at the closing quote in a name trading $100,000 a day.
 
 ## What it does not show
 
