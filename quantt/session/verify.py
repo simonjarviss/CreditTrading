@@ -88,7 +88,8 @@ Three figures, labelled, never blended (`quantt/session/score.py`):
 "official" is Alpaca's end-of-day portfolio history, EOD(D) - EOD(previous
 session): the P&L of record. It is PENDING when D's point has not been
 published by this read, or is stamped after it (Alpaca stamped the 2026-10-16
-point 20:00 ET, after a 17:30 verify), or the history could not be read. The
+point 20:00 ET, after a 17:30 verify; a half day's point is stamped 17:00 ET,
+read 2026-11-14), or the history could not be read. The
 snapshot is never put in its place. "snapshot" is the account's
 `equity - last_equity` as read now. Until 2026-10-19 the line called it
 "(official, gross)". HH:MM is this run's Alpaca clock read, seconds before the
