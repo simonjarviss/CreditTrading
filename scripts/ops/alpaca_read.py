@@ -63,8 +63,10 @@ would fail on its first night. The runner's owner fixed AlpacaClient on its own 
 (`eod-half-day`, 375ba5d, not merged): a stamp's New York time must be its date's /v2/calendar
 `close` + EOD_STAMP_AFTER_CLOSE_H hours, and a date the calendar lists twice raises. This
 reader copies that rule exactly (`eod_equity_history`); on a full day it is 20:00, the old
-rule. Until the owner's PR merges, the equality test runs on full days, and a labelled test
-pins that this reader accepts the half-day stamp main's AlpacaClient refuses.
+rule. While only one of the two PRs is on main, the equality test runs on full days, and a
+labelled test pins that this reader accepts the half-day stamp main's AlpacaClient refuses;
+whichever of the two PRs merges second turns that test into an equality test (it fails then,
+by design, until it is rewritten as one).
 
 WHAT IT REFUSES (raises, naming what; never a default)
 -------------------------------------------------------

@@ -411,8 +411,10 @@ def test_the_reader_accepts_the_half_day_stamp_that_alpacaclient_refuses_pending
     reader and AlpacaClient as of main part. The owner's fix (branch eod-half-day, 375ba5d, not
     merged) holds the same rule as this reader, and the scratch comparison of the two on these
     fixtures agreed. On main, AlpacaClient's every-stamp-is-20:00 rule refuses the half-day
-    history this reader reads. When the owner's PR lands this test fails, and becomes an
-    equality test like the others; on full days the two stay equal (the tests above)."""
+    history this reader reads. WHICHEVER OF THE TWO PRS MERGES SECOND (this one or the owner's)
+    turns this test into an equality test: it fails on that merge, by design, and is rewritten
+    as an equality test like the others; on full days the two stay equal (the tests above).
+    (Independent review of the follow-up, 2026-11-14.)"""
     server = Server(_half_day_table(HALF_HOURS))
     assert [p.date for p in reader_for(server).eod_equity_history(*HALF_WIN)] == AROUND_HALF
     with pytest.raises(AL.AlpacaError, match="20:00"):
