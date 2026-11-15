@@ -113,11 +113,13 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     reverse split paper did not process is reconciled as the account
     shows it, with a labelled phantom line per event, its accrual until the account first
     trades the name, its crystallisation at that trade (with the session's fee term), and a
-    cumulative phantom line, what is still in the official P&L, beside the official P&L, which
-    stays the P&L of record (`corporate_action_lines`); a phantom whose exactness conditions
-    fail is labelled "approximate: <reason>" (line and JSON). A session that does not reconcile
-    (a frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit 5, naming the
-    session and the event (`reconciliation`). Any other count-changing type held into its date
+    cumulative phantom line, an estimate of what paper's missing split put into the official
+    P&L, beside the official P&L, which stays the P&L of record (`corporate_action_lines`).
+    Every crystallised phantom is labelled "approximate: <reason>" (line and JSON; the live
+    sleeve's no-trade band, team lead, 2026-11-15), and so is any phantom whose other conditions
+    fail; an open one is labelled only for a fractional q_prev x k. A session that does not
+    reconcile (a frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit 5,
+    naming the session and the event (`reconciliation`). Any other count-changing type held into its date
     refuses the attribution, named (exit 4).
   * a book that holds nothing at the as-of close: the factor block is FLAT (independent
     review of PR #82, 2026-11-11). Nothing is held, so nothing is exposed; the block reads no
@@ -262,10 +264,13 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
     While it is open, paper's extra shares move with the price, and that accrual is phantom too
     (inside hold); the first trade in the name crystallises it (second review of the follow-up,
     2026-11-15, finding 1: the extra shares at the fill price against the last close, plus that
-    session's fee term), and it is constant from then. Each is shown per event, and the
-    cumulative phantom, the booking plus the accruals, the crystallisations and the fee terms,
-    is what is still in the official P&L at the as-of (live_attribution, CORPORATE ACTIONS, says
-    exactly when it equals official minus a processed account). It sits BESIDE the official
+    session's fee term), and it takes no further terms. Each is shown per event, and the
+    cumulative phantom (JSON `phantom_cumulative`), the booking plus the accruals, the
+    crystallisations and the fee terms, is an estimate of what paper's missing splits put into
+    the official P&L at the as-of: every crystallised one is labelled approximate (`approximate`,
+    `phantom_approximate`), because the live sleeve's no-trade band means an account that
+    processed the split need not have traded to the same position (live_attribution, CORPORATE
+    ACTIONS, WHAT THE FIGURE IS; team lead, 2026-11-15). It sits BESIDE the official
     change, which stays the P&L of record (docs/SYSTEM.md section 5); nothing is subtracted from
     any line. A term the market record or a close cannot give is UNMEASURED, and so is any sum
     that holds it."""
@@ -302,8 +307,8 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
             cr = c["crystallised"]
             lines.append(f"Phantom crystallised by the trade on {cr['session']}: paper's extra {c['extra']} share(s) of "
                          f"{c['symbol']} at the fill price {_px(cr['price'])} against the close {_px(cr['reference_close'])}: "
-                         f"{_usd(f(cr['amount']))}; the phantom of {c['type']} (id {c['id']}) is closed and constant "
-                         "from then (team lead, 2026-11-15)")
+                         f"{_usd(f(cr['amount']))}; the phantom of {c['type']} (id {c['id']}) takes no further terms "
+                         "after this trade (team lead, 2026-11-15)")
         else:
             lines.append(f"Phantom of {c['type']} {c['symbol']} (id {c['id']}) still OPEN at the as-of: the account has "
                          "not traded the name since")
@@ -316,7 +321,7 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
     ses = [m for c in evs for m in moves(c, eff)] + [m for m in fee_terms if m[0] == eff]
     n_open = sum(1 for c in evs if c["crystallised"] is None)
     approx = [f"{c['symbol']} ({c['approximate']})" for c in evs if c["approximate"]]
-    lines.append(f"Phantom from corporate actions paper did not process, still in the official P&L at the as-of: "
+    lines.append(f"Phantom from corporate actions paper did not process, estimated in the official P&L at the as-of: "
                  f"{_usd(cum)} ({len(evs)} event(s), {n_open} still open, {len(evs) - n_open} crystallised by a "
                  "trade); the official P&L above includes it and stays the P&L of record"
                  + (f"; approximate: {'; '.join(approx)}" if approx else ""))

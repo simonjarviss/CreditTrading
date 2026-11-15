@@ -1261,7 +1261,7 @@ def test_a_split_paper_did_not_process_is_reconciled_with_a_labelled_phantom(tmp
     assert att["phantom_cumulative"] == pytest.approx(-20400.0) and att["phantom_session"] == pytest.approx(-20400.0)
     line = [ln for ln in att["lines"] if ln.startswith("Phantom: paper did not process reverse_split BBB")]
     assert len(line) == 1 and "= -20,400.00 (q_prev -2000, k 1/2)" in line[0]
-    assert any(ln.startswith("Phantom from corporate actions paper did not process, still in the official P&L at the "
+    assert any(ln.startswith("Phantom from corporate actions paper did not process, estimated in the official P&L at the "
                              "as-of: -20,400.00 (1 event(s), 1 still open") for ln in att["lines"])
     eq = dict(equity_series())
     assert att["session"]["eod_change"] == pytest.approx(eq[TRADED[-1]] - eq[TRADED[-2]])   # official, untouched
@@ -1315,9 +1315,12 @@ def test_the_report_says_the_first_trade_crystallised_the_phantom(case):
     assert any(ln.startswith("Phantom fee term on 2026-02-06") for ln in lines)
     assert not any("still OPEN" in ln for ln in lines)
     assert "phantom_session" not in out                      # constant from the trade: nothing on the as-of
-    assert "phantom_approximate" not in out and not any("approximate" in ln for ln in lines)   # a clean case
     n = 2 if case == "resize" else 1
-    assert lines[-1].startswith(f"Phantom from corporate actions paper did not process, still in the official P&L at "
+    # every crystallised phantom is approximate, naming the band (team lead, 2026-11-15, fourth review)
+    assert [a.split(" (")[0] for a in out["phantom_approximate"]] == ["LNG", "SHS"][:n]
+    assert all(" (the account traded " in a and "no-trade band" in a for a in out["phantom_approximate"])
+    assert any("approximate: " in ln and "no-trade band" in ln for ln in lines if ln.startswith("Phantom: "))
+    assert lines[-1].startswith(f"Phantom from corporate actions paper did not process, estimated in the official P&L at "
                                 f"the as-of: {want:+,.2f} ({n} event(s), 0 still open, {n} crystallised by a trade)")
     json.dumps(out)                                          # the event records serialise
 
@@ -1403,11 +1406,11 @@ def test_the_report_labels_an_approximate_phantom_and_names_the_reason_in_its_js
     res = TLA._ca_run(fills, TLA._ca_account(fills), TLA.CA_SPLIT[:1])
     lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
     phantom = [ln for ln in lines if ln.startswith("Phantom: paper did not process reverse_split LNG")]
-    assert len(phantom) == 1 and f"; approximate: {want}" in phantom[0]
+    assert len(phantom) == 1 and "; approximate: " in phantom[0] and want in phantom[0]
     assert lines[-1].startswith("Phantom from corporate actions paper did not process")
-    assert f"approximate: LNG ({want}" in lines[-1]
-    assert out["corporate_actions"][0]["approximate"].startswith(want)
-    assert out["phantom_approximate"][0].startswith(f"LNG ({want}")
+    assert "approximate: LNG (" in lines[-1] and want in lines[-1]
+    assert want in out["corporate_actions"][0]["approximate"]
+    assert out["phantom_approximate"][0].startswith("LNG (") and want in out["phantom_approximate"][0]
     json.dumps(out)
 
 
@@ -1438,3 +1441,15 @@ def test_the_stop_names_every_row_however_many(tmp_path):
         named = f"BBB SPLIT {ASOF} qty {int(r['qty']):+d} (id {r['id']})"
         assert named in rep_["attribution"]["why"] and named in on_disk["attribution"]["why"] and named in md, named
     assert " ..." not in rep_["attribution"]["why"]
+
+
+def test_an_open_phantom_is_not_labelled_approximate_in_the_report():
+    """Team lead, 2026-11-15, on the fourth review: an open phantom (no trade in the name yet,
+    q_prev x k whole) is official minus a processed account and stays unlabelled; only the
+    crystallised ones say approximate. A pin of the ruling's other half (the parent 3412d29 left
+    it unlabelled too)."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    res = TLA._ca_run(TLA.CA_BASE_FILLS, TLA._ca_account(TLA.CA_BASE_FILLS), TLA.CA_SPLIT)
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
+    assert "phantom_approximate" not in out and not any("approximate" in ln for ln in lines)
+    assert all(c["approximate"] is None for c in out["corporate_actions"])

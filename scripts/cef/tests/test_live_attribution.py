@@ -1452,16 +1452,22 @@ def test_a_row_after_the_as_of_is_outside_the_window():
     assert res.daily.equals(res0.daily) and res.name_day.equals(res0.name_day)
 
 
-@pytest.mark.parametrize("case", ["clean_resize", "fills_on_both_sides", "fractional_count"])
+BAND = "the live sleeve trades a name only outside its no-trade band, to the band's edge"
+
+
+@pytest.mark.parametrize("case", ["open_phantom", "runner_resize", "fills_on_both_sides", "fractional_count"])
 def test_the_phantom_is_labelled_approximate_where_its_exactness_conditions_fail(case):
-    """Team lead, 2026-11-15, on the third review of the follow-up: 891aea3's phantom equals
-    official minus a processed account only when q_prev x k is whole and the crystallising
-    session's fills in the name are on one side. The review's simulator put a two-sided session
-    off by $7.48 to $7.52 and a fractional count (901 x 1/3) off by cents. Where a condition
-    fails the event says "approximate: <reason>" in `corp_events`, the gaps and `report()`; the
-    runner's own re-size is clean and says nothing of the kind. Fails on the parent 82ff173,
-    which had no label."""
-    if case == "clean_resize":
+    """Team lead, 2026-11-15, on the third and fourth reviews of the follow-up: an open phantom
+    (no trade in the name yet) is official minus a processed account when q_prev x k is whole,
+    and carries no label; EVERY crystallised one is labelled approximate, naming the live
+    sleeve's no-trade band (a processed account need not have traded to the same position),
+    with fills on both sides of the name (off by $7.48 to $7.52 on the third review's simulator)
+    or a fractional count (901 x 1/3, off by cents) where they also apply. The label is in
+    `corp_events`, the gaps and `report()`. Fails on the parent, which left the runner's re-size
+    unlabelled (and, on 82ff173, had no label at all)."""
+    if case == "open_phantom":
+        fills, corp = CA_BASE_FILLS, CA_SPLIT
+    elif case == "runner_resize":
         fills, corp = CA_BASE_FILLS + CA_RESIZE["H1"], CA_SPLIT
     elif case == "fills_on_both_sides":
         fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "sell", 650, "13.49", CA_S[4]),
@@ -1472,16 +1478,58 @@ def test_the_phantom_is_labelled_approximate_where_its_exactness_conditions_fail
         corp = CA_SPLIT[:1]
     res = _ca_run(fills, _ca_account(fills), corp)
     assert all(r == 0 for r in res.daily["residual"])          # the rebuild still reconciles to the cent
-    lng = next(c for c in res.corp_events if c["symbol"] == "LNG")
     text = LA.report(res)
-    if case == "clean_resize":
+    if case == "open_phantom":
         assert all(c["approximate"] is None for c in res.corp_events) and "approximate" not in text
         return
-    want = {"fills_on_both_sides": "fills on both sides of LNG on 2026-02-06 (bought 50, sold 650)",
-            "fractional_count": "q_prev x k = 901 x 1/3 = 300.3333 is not a whole number of shares"}[case]
-    assert lng["approximate"].startswith(want), lng["approximate"]
-    assert f"approximate: {want}" in text
-    assert any(f"approximate: {want}" in g for g in res.gaps)
+    want = {"runner_resize": [BAND],
+            "fills_on_both_sides": [BAND, "fills on both sides of LNG on 2026-02-06 (bought 50, sold 650)"],
+            "fractional_count": ["q_prev x k = 901 x 1/3 = 300.3333 is not a whole number of shares", BAND]}[case]
+    for c in res.corp_events:
+        for w in want:
+            assert w in c["approximate"], (c["symbol"], w, c["approximate"])
+        if case == "fractional_count":                   # the booking's reason first, then the trade's
+            assert c["approximate"].startswith(want[0])
+        assert f"approximate: {c['approximate']}" in text
+        assert any(f"approximate: {c['approximate']}" in g for g in res.gaps)
+    if case == "runner_resize":
+        assert all("fills on both sides" not in c["approximate"] for c in res.corp_events)
+
+
+def test_a_phantom_crystallised_by_a_trade_to_the_band_edge_is_labelled_and_its_figure_unchanged():
+    """The fourth review's band case, on this fixture: the live sleeve trades only outside its
+    no-trade band and only to the band's edge (src/deploy/sleeves/cef_discount.py, NO-TRADE
+    BAND), so paper sells 400 of its 900 to an edge while an account that processed the 1:3 split
+    holds its 300 and does not trade. Official minus that account then keeps moving after the
+    trade while the phantom does not: the phantom is an estimate, labelled approximate naming the
+    band; its figure is the same as before the ruling. Fails on the parent 3412d29, which left it
+    unlabelled."""
+    fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "sell", 400, "13.49", CA_S[4])]
+    eod, cf = _ca_account(fills), _ca_account(CA_BASE_FILLS, [(CA_EX, _ca_split_at(["LNG"]))])
+    res = _ca_run(fills, eod, CA_SPLIT[:1])
+    c = res.corp_events[0]
+    assert BAND in c["approximate"] and c["crystallised"]["session"] == CA_S[4]
+    gaps = [a - b for (d, a), (_, b) in zip(eod, cf) if d > CA_S[4]]
+    assert len(set(gaps)) > 1                                  # official minus processed keeps moving
+    assert _phantom_upto(res, CA_S[-1]) == _phantom_upto(res, CA_S[4])   # the phantom does not
+    assert _phantom_upto(res, CA_S[4]) == 600 * F("13.38") + 600 * (F("13.49") - F("13.38")) + c["crystallised"]["fee_term"]
+
+
+def test_a_fee_term_shared_with_a_two_sided_session_is_labelled_on_every_name():
+    """Fourth review of the follow-up, finding 6 (its case same_session_two_phantoms_one_two_sided):
+    two phantoms crystallise on one session, one of them with fills on both sides; the session's
+    single fee term rests on those fills, and the other event printed it with no word that it is
+    shared or approximate. Both events now say so. Fails on the parent 3412d29."""
+    fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "sell", 600, "13.49", CA_S[4]),
+                             _ca_fill("x2", "SHS", "buy", 450, "24.31", CA_S[4]),
+                             _ca_fill("x3", "SHS", "sell_short", 50, "24.33", CA_S[4])]
+    res = _ca_run(fills, _ca_account(fills), CA_SPLIT)
+    shared = "that session's fee term is one term for LNG, SHS, and SHS had fills on both sides that session"
+    ev = {c["symbol"]: c for c in res.corp_events}
+    assert shared in ev["LNG"]["approximate"] and shared in ev["SHS"]["approximate"]
+    assert "fills on both sides of SHS" in ev["SHS"]["approximate"]
+    assert "fills on both sides of LNG" not in ev["LNG"]["approximate"]
+    assert all(f"approximate: {c['approximate']}" in LA.report(res) for c in res.corp_events)
 
 
 def test_the_crystallised_phantom_says_its_fee_term():

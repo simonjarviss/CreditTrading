@@ -241,30 +241,33 @@ H1, so it is never done. The rule now:
     Before it, the accrual ran on every later session whatever the account held: after the
     runner re-sized the name the phantom read -1,440 against an independent -1,630.18, and after
     a full exit +8,280 "still OPEN" against +8,093.83. Now the first session the account trades
-    the name (any fill in it) ends the accruals. The runner trades each name to a target, so an
-    account that had processed the split would have traded e more shares (or e fewer) to the
-    same position, and from that session both hold the same shares: the gap between them is
-    then constant. So that session's phantom is e x (the name's average fill price that session
-    - the close the phantom was last valued at: the previous close, or the session's own close
-    when the trade is on the event's session), not e x the close's move, plus a fee term
-    (`Result.phantom_fees`): the session's modelled fees less those of the same fills with the
-    name's quantity moved by the whole extra shares, e = q_prev - trunc(q_prev x k), in one fill
-    at that average price. It is then closed, constant and labelled "crystallised by the trade
-    on <D>", with the fee term's amount.
-  * WHEN THE PHANTOM IS WHAT IS IN THE OFFICIAL P&L. The cumulative phantom, booking + accruals
-    + crystallisation + fee terms, equals the official equity less that of an account that
-    processed the split on its session and then traded to the same targets, exactly, on every
-    session from the event, when (1) q_prev x k is whole (with a fraction, that account would
-    hold the cash in lieu, not the fraction's value), and (2) that account's order fills at the
-    name's average fill price, the account's fills in the name on the crystallising session are
-    on one side (the runner nets each symbol into one order), and its fees are the FEES
-    schedule's. Two independent account simulators (the second and third reviews) confirm it to
-    the cent with the runner's re-size, a full exit, a partial trade, a trade on the ex-date,
-    two trades on two sessions, shorts and forward splits. Where (1) or (2) fails the phantom is
-    labelled "approximate: <reason>" instead (team lead, 2026-11-15, on the third review), in
-    `Result.corp_events` (`approximate`), the gaps, `report()` and the report job's lines and
-    JSON: the third review's simulator put a session with fills on both sides of the name off
-    by $7.48 to $7.52, and a fractional q_prev x k (most real reverse splits) off by cents.
+    the name (any fill in it) ends the accruals, and that trade adds the phantom's last term:
+    e x (the name's average fill price that session - the close the phantom was last valued at:
+    the previous close, or the session's own close when the trade is on the event's session),
+    not e x the close's move, plus a fee term (`Result.phantom_fees`): the session's modelled
+    fees less those of the same fills with the name's quantity moved by the whole extra shares,
+    e = q_prev - trunc(q_prev x k), in one fill at that average price. It then takes no further
+    terms, labelled "crystallised by the trade on <D>" with the fee term's amount.
+  * WHAT THE FIGURE IS. The cumulative phantom is the booking, the extra shares' moves until the
+    first trade in the name, and that trade's term against the last close, with the fee term: an
+    estimate of what paper's missing split put into the official P&L, which stays the P&L of
+    record. While the phantom is open (no trade in the name yet) it is the official equity less
+    that of an account that processed the split on its session, on every session, when q_prev x
+    k is whole (with a fraction, that account would hold the cash in lieu, not the fraction's
+    value); the second and third reviews' independent account simulators agree. After the first
+    trade it is that only if such an account had traded to the same position, at the name's
+    average fill price, on one side, with the FEES schedule's fees, and the live sleeve does not
+    trade that way: it trades a name only outside its no-trade band, to the band's edge against
+    what is held, sized on account equity, which carries the phantom (src/deploy/sleeves/
+    cef_discount.py, NO-TRADE BAND; docs/RUNBOOK.md 6.1 step 5). The fourth review's band case
+    had official minus a processed account move from +9,073.86 to +9,131.86 while the phantom
+    stayed +9,077.87. So EVERY crystallised phantom is labelled "approximate: <reason>" (team
+    lead, 2026-11-15, on the fourth review of the follow-up), naming the band, and also, where
+    they apply, fills on both sides of the name on the crystallising session (the third review's
+    simulator: off by $7.48 to $7.52), a fractional q_prev x k (off by cents) and a fee term
+    shared with another name's two-sided session. An open phantom is labelled only for a
+    fractional q_prev x k. The label is in `Result.corp_events` (`approximate`), the gaps,
+    `report()` and the report job's lines and JSON; the figure is the same either way.
   * If a session does not reconcile (H2, or a split pushed by hand with no row), the residual
     says so, and the report job names the session and the event.
 With no corporate action in the window, `analyse` output is byte-identical to before.
@@ -1025,7 +1028,7 @@ def corp_event_text(c: dict) -> str:
         return out + (f"; crystallised by the trade on {cr['session']}: paper's extra {c['extra']} share(s) at the "
                       f"fill price {float(cr['price']):,.4f} against the close {float(cr['reference_close']):,.4f}: "
                       + (f"{float(cr['amount']):+,.2f}" if cr["amount"] is not None else "UNMEASURED")
-                      + f", plus that session's fee term {fee}; closed and constant from then") + approx
+                      + f", plus that session's fee term {fee}; no further terms after it") + approx
     return out + "; still open (the account has not traded the name since)" + approx
 
 
@@ -1349,8 +1352,8 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
         # team lead 2026-11-15; module docstring, CRYSTALLISED): paper's extra shares are disposed of
         # at the fill price, so the phantom's last move is e x (fill price - the close it was last
         # valued at), not e x the close's move, plus the session's fees less those of the same trades
-        # without the extra shares; from then it is closed and constant.
-        cryst = []
+        # without the extra shares; it takes no further terms (an estimate from here: WHAT THE FIGURE IS).
+        cryst, two_sided = [], []
         for sym, op in sorted(open_phantoms.items()):
             fs_s = [f for f in day if f.symbol == sym]
             if not fs_s:
@@ -1359,12 +1362,20 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             c_ref = inp.closes.get((sym, d if op["session"] == d else p))
             amt = None if c_ref is None or op["extra"] is None else op["extra"] * (px_s - c_ref)
             op["crystallised"] = {"session": d, "amount": amt, "price": px_s, "reference_close": c_ref}
+            # Every crystallised phantom is approximate (team lead, 2026-11-15, on the fourth review
+            # of the follow-up; module docstring, WHAT THE FIGURE IS): after this trade it is official
+            # minus a processed account only if that account had traded to the same position.
+            why = [f"the account traded {sym} on {d}: from that trade the phantom equals official minus an "
+                   "account that processed the split only if that account had traded to the same position, and "
+                   "the live sleeve trades a name only outside its no-trade band, to the band's edge, sized on "
+                   "equity that carries the phantom (cef_discount.py NO-TRADE BAND; RUNBOOK 6.1 step 5)"]
             bought = sum(f.signed_qty for f in fs_s if f.signed_qty > 0)
             sold = -sum(f.signed_qty for f in fs_s if f.signed_qty < 0)
-            if bought and sold:                  # condition (2) of the module docstring fails
-                why2 = (f"fills on both sides of {sym} on {d} (bought {bought}, sold {sold}): an account that "
-                        "processed the split would have sent one netted order, not filled at their average price")
-                op["approximate"] = why2 if op["approximate"] is None else f"{op['approximate']}; {why2}"
+            if bought and sold:
+                why.append(f"fills on both sides of {sym} on {d} (bought {bought}, sold {sold}): an account that "
+                           "processed the split would have sent one netted order, not filled at their average price")
+                two_sided.append(sym)
+            op["approximate"] = "; ".join(([op["approximate"]] if op["approximate"] else []) + why)
             op["open"] = False
             cryst.append((sym, op, px_s))
         for sym, op, _ in cryst:
@@ -1385,9 +1396,15 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             for sym, op, _ in cryst:
                 op["crystallised"]["fee_term"] = fee
                 op["crystallised"]["fee_term_symbols"] = [c[0] for c in cryst]
+                # One fee term for the session: a name's two-sided fills make it approximate for every
+                # name sharing it (fourth review of the follow-up, finding 6).
+                if len(cryst) > 1 and two_sided:
+                    names = ", ".join(c[0] for c in cryst)
+                    op["approximate"] += (f"; that session's fee term is one term for {names}, and "
+                                          f"{', '.join(two_sided)} had fills on both sides that session")
         # A phantom still open accrues: paper's extra shares move with the price (finding 3), so the
-        # cumulative phantom stays what is still in the official P&L. Not on its own session (the
-        # booking is its value there).
+        # cumulative phantom follows what the missing split puts into the official P&L. Not on its
+        # own session (the booking is its value there).
         for sym, op in sorted(open_phantoms.items()):
             if op["session"] == d:
                 continue
