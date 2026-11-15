@@ -112,7 +112,7 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__" and "--shifted" not in sys.argv and "--late" not in sys.argv:
+if __name__ == "__main__" and not {"--shifted", "--late", "--small", "--small-controls"} & set(sys.argv):
     sys.exit(main())
 
 
@@ -170,4 +170,105 @@ def late_start() -> dict:
 if __name__ == "__main__" and "--late" in sys.argv:
     j = json.loads((HERE / "checks.json").read_text())
     j["wait_late_start"] = late_start()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def small_names(delay: int = 1) -> dict:
+    """WAIT by the size of the name, decided ONE session later than D1 (the corrected entry),
+    with the dollar-volume floor lowered to $100,000 for the smallest band (added 2026-11-15,
+    after the team lead asked for ideas a small book can exploit). Not pre-specified. Bands are
+    21-session average dollar volume at the decision close. Each band is its own book: 10% a
+    name against IWM, pro rata above 50%."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    sd = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    P, A = prc.to_numpy(), adv.to_numpy()
+    cols = prc.columns.get_indexer(sd["permno"])
+    e = sd.copy()
+    e["d1"] = e["d1"] + delay
+    row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+    p, a = P[row, cols], A[row, cols]
+    base = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (e["amount"].to_numpy() / np.where(p > 0, p, np.nan) >= ex.MIN_YIELD)
+    eras = {"2000-07": ("2000", "2007"), "2008-12": ("2008", "2012"), "2013-17": ("2013", "2017"), "2018-22": ("2018", "2022"), "2023-25": ("2023", "2025")}
+    out = {}
+    for label, lo, hi in (("$100k to $1M a day", 1e5, 1e6), ("$1M to $5M", 1e6, 5e6), ("$5M and over", 5e6, np.inf), ("$100k to $5M", 1e5, 5e6)):
+        x = e.copy()
+        x["ok_wait"] = base & (a >= lo) & (a < hi)
+        pnl, m = ex.run(x, "wait", sessions, R)
+        ep = event_pnl(x, "wait", sessions, R)
+        out[label] = {**explore.stats(pnl), "events_traded": m["events_traded"], "share_of_days_invested": m["share_of_days_invested"],
+                      "per_event_mean_pct": float(ep.mean() * 100), "per_event_median_pct": float(ep.median() * 100),
+                      "by_era": {k: explore.stats(pnl.loc[lo_:hi_])["sharpe"] for k, (lo_, hi_) in eras.items()}}
+        o = out[label]
+        print(f"  {label}: SR {o['sharpe']:.2f} t {o['t']:.2f} ret/yr {o['ann_ret']:.2%} events {o['events_traded']} invested {o['share_of_days_invested']:.0%} "
+              f"per event {o['per_event_mean_pct']:+.2f}% (median {o['per_event_median_pct']:+.2f}%) | " + " ".join(f"{k}:{v:.2f}" for k, v in o["by_era"].items()))
+    return out
+
+
+if __name__ == "__main__" and "--small" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["wait_one_session_late_by_size"] = small_names(1)
+    for k in (2, 3):
+        print(f"decided {k} sessions later:")
+        j[f"wait_{k}_sessions_late_by_size"] = small_names(k)
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def small_controls() -> dict:
+    """Controls for the $100k-$5M band, one session late (added 2026-11-15, not pre-specified):
+    (1) ORDINARY cash dividends of the same companies in the same band (yield floor 0, as in
+    explore.py's control): is this just what thin dividend payers earn before an ex-date?
+    (2) the special-dividend window moved 20, 40 and 60 sessions LATER, eligibility kept.
+    (3) the band without its ten best events, and its per-event tails.
+    (4) yield buckets inside the band."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    P, A = prc.to_numpy(), adv.to_numpy()
+
+    def band(kind, min_yield, lo=1e5, hi=5e6):
+        e = ex.place(ev[ev["distype"] == kind], sessions, prc, adv, min_yield=min_yield)
+        e["d1"] = e["d1"] + 1
+        cols = prc.columns.get_indexer(e["permno"])
+        row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+        p, a = P[row, cols], A[row, cols]
+        e["yield_dec"] = e["amount"].to_numpy() / np.where(p > 0, p, np.nan)
+        e["ok_wait"] = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (e["yield_dec"] >= min_yield) & (a >= lo) & (a < hi)
+        return e
+
+    sd, cd = band("SD", ex.MIN_YIELD), band("CD", 0.0)
+    out = {}
+    pnl, m = ex.run(sd, "wait", sessions, R)
+    out["special"] = {**explore.stats(pnl), "events_traded": m["events_traded"]}
+    pc, mc = ex.run(cd, "wait", sessions, R)
+    out["ordinary_same_band"] = {**explore.stats(pc), "events_traded": mc["events_traded"],
+                                 "by_era": {k: explore.stats(pc.loc[a:b])["sharpe"] for k, (a, b) in {"2000-12": ("2000", "2012"), "2013-22": ("2013", "2022"), "2023-25": ("2023", "2025")}.items()}}
+    for k in (20, 40, 60):
+        e = sd.copy(); e["d1"] += k; e["x"] += k
+        e = e[e["x"] < len(sessions) - 1]
+        out[f"moved_{k}_later"] = explore.stats(ex.run(e, "wait", sessions, R)[0])
+    ep = event_pnl(sd, "wait", sessions, R)
+    out["per_event_pct"] = {"n": int(len(ep)), "mean": float(ep.mean() * 100), "median": float(ep.median() * 100), "share_positive": float((ep > 0).mean()),
+                            "p5": float(ep.quantile(.05) * 100), "p95": float(ep.quantile(.95) * 100), "worst": float(ep.min() * 100), "best": float(ep.max() * 100)}
+    out["without_ten_best_events"] = explore.stats(ex.run(sd.drop(index=ep.nlargest(10).index), "wait", sessions, R)[0])
+    d = pd.concat([pnl.rename("y"), iwm.rename("IWM")], axis=1).dropna()
+    X = np.column_stack([np.ones(len(d)), d["IWM"].to_numpy()])
+    b, *_ = np.linalg.lstsq(X, d["y"].to_numpy(), rcond=None)
+    out["beta_IWM"] = float(b[1])
+    for label, (lo, hi) in ex.BUCKETS.items():
+        s = sd.copy(); s["ok_wait"] &= (s["yield_dec"] >= lo) & (s["yield_dec"] < hi)
+        p2, m2 = ex.run(s, "wait", sessions, R)
+        out[f"yield {label}"] = {**explore.stats(p2), "events_traded": m2["events_traded"]}
+    for k, v in out.items():
+        if isinstance(v, dict) and "sharpe" in v:
+            print(f"  {k}: SR {v['sharpe']:.2f} t {v['t']:.2f} ret/yr {v['ann_ret']:.2%} dd {v['max_drawdown']:.1%}" + (f" n {v['events_traded']}" if "events_traded" in v else "") + (f" {v['by_era']}" if "by_era" in v else ""))
+        else:
+            print(f"  {k}:", v if not isinstance(v, dict) else {a: round(x, 2) for a, x in v.items()})
+    return out
+
+
+if __name__ == "__main__" and "--small-controls" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["small_band_controls"] = small_controls()
     (HERE / "checks.json").write_text(json.dumps(j, indent=1))

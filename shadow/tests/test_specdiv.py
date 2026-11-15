@@ -135,3 +135,15 @@ def test_live_symbols_keeps_future_and_just_past_ex_dates():
             for k, d in (("OLD", DAYS[0]), ("NEAR", DAYS[12]), ("AHEAD", DAYS[25]), ("IWM", DAYS[25]))]
     panel = fetch.merge(None, rows, DAYS[3], describe)
     assert fetch.live_symbols(panel, DAYS[15]) == ["AHEAD", "NEAR"]
+
+
+def test_the_small_name_book_takes_100k_to_under_5m_a_day_and_nothing_else():
+    small = lambda **kw: sig.wait_small(SEEN, {"px": kw.get("px", _px())[lambda d: d["date"].dt.date <= SEEN], "specdivs": _ev()})  # noqa: E731
+    assert small(px=_px(close=50.0, volume=1_999)).empty          # $99,950 a day: under the floor
+    assert not small(px=_px(close=50.0, volume=2_000)).empty      # exactly $100,000
+    assert not small(px=_px(close=50.0, volume=99_999)).empty     # $4,999,950
+    assert small(px=_px(close=50.0, volume=100_000)).empty        # exactly $5,000,000: the large book's
+    w = small(px=_px(close=50.0, volume=2_000))
+    assert w["ACME"] == sig.SIZE and w[sig.HEDGE] == -sig.SIZE
+    # the research book is unchanged by the band: $100,000 a day is still too small for it
+    assert _w(SEEN, px=_px(close=50.0, volume=2_000)).empty

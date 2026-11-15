@@ -26,6 +26,17 @@ a close of $2 or more, a 21-session average dollar volume of $500,000 or more, a
 ex-date are added together. After E the name must still print a close ON D: a company that
 did not trade today is not bought tomorrow on yesterday's price.
 
+THE SMALL-NAME BOOK, `wait_small` (added 2026-11-15). The same rule on names whose dollar
+volume at E is from $100,000 to under $5,000,000. WHY: checked after the result, with the
+entry one session late, that band is where the trade still works: gross Sharpe 1.23, positive
+in all five eras, 1.54 in 2023-25, against 0.51 and -0.35 for names trading $5M or more
+(results/ideas/special_dividends/checks.py --small). The cut was made after looking, so this
+book is the test of it. Its capacity is small on purpose: 10% of a $250,000 book is $25,000,
+a quarter of a day's volume in the thinnest name it may hold. The shadow engine scores it in
+per cent like every other book; the notional in its file is the desk's standard $1M and is
+NOT a claim that $100,000 could be bought in such a name. The two books overlap on names
+trading $500,000 to $5M.
+
 WHAT COUNTS AS A COMPANY. The research used CRSP's common-share code, which no free live
 feed carries. Here: Alpaca's own `foreign` flag is already dropped by the reader; the asset
 record must name an exchange this desk can read a closing print for; the asset's name must
@@ -48,6 +59,7 @@ HEDGE = "IWM"
 SIZE, CAP = 0.10, 0.50
 MIN_PRICE, MIN_ADV, MIN_YIELD, ADV_WINDOW, MIN_ADV_DAYS = 2.0, 500_000.0, 0.01, 21, 10
 MIN_SESSIONS_TO_EX = 3
+SMALL_ADV = (100_000.0, 5_000_000.0)
 MARKABLE_EXCHANGES = frozenset({"NYSE", "NASDAQ", "AMEX", "ARCA", "TXSE"})
 NOT_A_COMPANY = re.compile(r"\bfund\b|\betf\b|\btrust\b|\bunits?\b|preferred|depositary|\badr\b|\bnotes?\b|warrant|"
                            r"\brights?\b|limited partnership|\bl\.?p\.?\b", re.I)
@@ -100,6 +112,16 @@ def candidates(events: pd.DataFrame, asof: dt.date) -> dict:
 
 
 def wait(asof: dt.date, panels: dict) -> pd.Series:
+    """The research book: 21-session dollar volume of $500,000 or more, no upper bound."""
+    return _wait(asof, panels, MIN_ADV, float("inf"))
+
+
+def wait_small(asof: dt.date, panels: dict) -> pd.Series:
+    """The small-name book: dollar volume from $100,000 to under $5,000,000 at first sight."""
+    return _wait(asof, panels, SMALL_ADV[0], SMALL_ADV[1])
+
+
+def _wait(asof: dt.date, panels: dict, adv_lo: float, adv_hi: float) -> pd.Series:
     px = panels[PX].copy()
     px["date"] = pd.to_datetime(px["date"]).dt.date
     px = px[px["date"] <= asof].dropna(subset=["close"]).sort_values("date")
@@ -118,7 +140,7 @@ def wait(asof: dt.date, panels: dict) -> pd.Series:
         tail = g[g["date"] <= e].tail(ADV_WINDOW)            # eligibility on prices through E only
         dv = (tail["close"] * tail["volume"]).dropna()
         close_e = tail["close"].iloc[-1]
-        if len(dv) >= MIN_ADV_DAYS and close_e >= MIN_PRICE and dv.mean() >= MIN_ADV and amount / close_e >= MIN_YIELD:
+        if len(dv) >= MIN_ADV_DAYS and close_e >= MIN_PRICE and adv_lo <= dv.mean() < adv_hi and amount / close_e >= MIN_YIELD:
             longs.append(sym)
     if not longs:
         return pd.Series(dtype=float)

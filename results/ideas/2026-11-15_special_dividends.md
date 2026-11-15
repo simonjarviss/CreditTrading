@@ -13,8 +13,8 @@
 **Status:** `specdiv_wait` SHADOW book built, starting 2026-11-17 if its commit reaches the
 `shadow` branch by then (see Next); `specdiv_after` EXPLORE, weak; `specdiv_exday` SET ASIDE ·
 **Reproducer:** `python3 results/ideas/special_dividends/explore.py`, then
-`python3 results/ideas/special_dividends/checks.py`, `checks.py --shifted`, `checks.py --late`
-and `edgar_dates.py` ·
+`python3 results/ideas/special_dividends/checks.py`, `checks.py --shifted`, `--late`, `--small`,
+`--small-controls` and `edgar_dates.py` ·
 **Panels:** CRSP distributions and daily rows on R2 (`scripts/research/stage_crsp_special_divs.py`),
 special dividends with ex-dates 2000-01-04 to 2025-12-31, prices to **2025-12-31**; IWM and SPY
 total returns from Yahoo (fetched 2026-11-10). CRSP rows are not in the repository.
@@ -140,6 +140,40 @@ window; 64 have no declaration date and are left out.
   - **What this does to the result:** the late-start rows above remove the exposure. 0.89 to
     0.98 is the figure to carry for 2000–2025, not 1.10, with nothing since 2023.
 
+## The small-name version (added 2026-11-15, `checks.py --small`, `--small-controls`) [V]
+
+Not pre-specified. The team lead asked for ideas a small book can exploit, so I cut the
+corrected book (decided one session late) by the name's 21-session dollar volume at the
+decision, lowering the floor to $100,000. Each band is its own book.
+
+| dollar volume a day | events | all | 2000–07 | 2008–12 | 2013–17 | 2018–22 | 2023–25 | per event mean (median) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| $100k to $1M | 478 | 1.12 | 0.88 | 0.91 | 1.05 | 1.51 | 1.62 | +2.59% (+1.27%) |
+| $1M to $5M | 486 | 0.58 | 0.29 | −0.19 | 1.31 | 1.03 | 0.57 | +0.89% (+0.68%) |
+| $5M and over | 967 | 0.51 | 0.36 | 0.84 | 0.74 | 1.03 | −0.35 | +0.65% (+0.39%) |
+| **$100k to $5M** | 964 | **1.23** (t 6.22) | 0.92 | 0.61 | 1.53 | 1.78 | 1.54 | +1.73% (+0.98%) |
+
+- **The recent weakness is in the large names.** Names trading $5M or more have earned
+  nothing since 2023; names under $5M have kept earning, 37 events a year.
+- **It survives a later entry:** the $100k–$5M book is 1.19 decided two sessions late and
+  0.90 three sessions late, with 2023–25 at 1.74 and 1.40.
+- **Controls in the same band:** the window moved 20, 40 and 60 sessions later gives −0.18,
+  0.01 and −0.13. Without its ten best events the book is 0.99. Beta to IWM −0.04. Worst
+  event −36%, best +94%; 60% positive.
+- **Part of it is not special.** The same book on ORDINARY dividends of the same companies
+  in the same band scores 1.00 on 17,606 events (1.31 in 2000–12, 0.79 in 2013–22, 0.32 in
+  2023–25). Thin dividend payers rise into any ex-date. Per session held the special earns
+  19bp against the ordinary dividend's 4bp, and since 2013 the gap is 27–31bp against 3bp.
+- **It grows with the dividend:** yield 1–2% 0.37, 2–5% 0.64, 5% and over 1.04.
+- **What it is worth in money:** 6.5% a year on a book that is invested 63% of sessions.
+  At 10% a name, a $250,000 book holds $25,000 a name, which is a quarter of a day's volume
+  in the thinnest name allowed and under 3% in a $1M-a-day name. This is a $250k to $1M
+  trade.
+- **Not measured, and it matters here:** the bid-ask spread. These are CRSP closing prices.
+  A name trading $100,000 a day can have a spread of 1% or more, against a median event of
+  about 1%. Only fills will say; the shadow book marks at the closing print too, so it
+  will not say either.
+
 ## What it does not show
 
 - **Capacity.** Sharpe falls from 1.10 to 0.62 to 0.49 as the volume floor rises. A $1M
@@ -163,6 +197,10 @@ window; 64 have no declaration date and are left out.
   in the sample. I did not count how often that happens.
 
 ## Next
+
+- **Second shadow book `specdiv_wait_small`** (`shadow/books/specdiv_wait_small.json`,
+  `shadow/signals/specdiv.py:wait_small`), added 2026-11-15: the same rule on names trading
+  $100,000 to under $5M a day at first sight. It is the forward test of the cut above.
 
 - **Shadow book `specdiv_wait`** (`shadow/books/specdiv_wait.json`, `shadow/signals/specdiv.py`,
   `shadow/fetch/specdivs.py`), simulated, $1M, under the 2026-11-09 one-time approval. Long
