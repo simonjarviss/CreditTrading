@@ -4372,3 +4372,17 @@ that adds it does not exist when it is written.
 - source: `shadow/signals/spinoff.py` @ `fcfccd3`; `shadow/fetch/spinoffs.py` @ `fcfccd3`; `shadow/books/spinoff_first_week.json` @ `fcfccd3`; `shadow/nightly.py` @ `fcfccd3`; `shadow/sources.py` @ `fcfccd3`; `docs/REFERENCES.md` @ `fcfccd3` (§12so)
 - supports: §4, §5
 - status: current. A shadow book under the 2026-11-09 one-time approval (E-2026-11-09-03); SIMULATED, $1M, no borrow modelled. The probe of the feed and the print-by-exchange check were run in the session and are not stored as scripts. The VM has been unreachable from the laptop since 2026-11-10, so no shadow run there has been read and the units books' sessions from 2026-11-11 until this commit reaches the VM are expected to be UNMEASURED
+
+### E-2026-11-15-01 · Live: the VM's shadow runner was read for the first time since 2026-11-10; every run since the 2026-11-12 evening ended non-zero because four units had no closing print, as expected, and one run stopped on an exchange name the map did not have
+- kind: live
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 6 runs from 2026-11-12 18:50 to 2026-11-14 07:20 ET, all on code `508bf6c`: five ended with exit 3 and one (2026-11-13 07:20) with exit 1 [V]
+  - the five books decided for 2026-11-12 and 2026-11-13 and were marked for both sessions; the marks step reported 12 (session, symbol) pairs with no primary print after 2026-11-12 and 16 after 2026-11-13 [V]
+  - the exit-1 run stopped with UnmappedExchange: Alpaca's asset record for ET named the exchange 'TXSE'; the same record read 'NYSE' on 2026-11-14 and 2026-11-15 from the laptop [V]
+  - 12 active assets carry exchange 'TXSE' on 2026-11-15; the 11 with a Yahoo price each have a closing print under the Texas Stock Exchange code on 2026-11-13 equal to Yahoo's close to the cent, and none under the NYSE or Nasdaq codes [V]
+  - none for the fix on the VM (the mapping commits `fcfccd3` and this one were pushed after the last run; the next run is 2026-11-16 18:50 ET)
+- source: `shadow/sources.py` @ `db57aa7`; `shadow/tests/test_sources_exchange.py` @ `db57aa7`
+- supports: §5
+- status: current. The log files were printed by the team lead's own command (the agent's read as the service user was refused by the permission check); the state directory, scoreboard and marks_gaps.csv on the VM have not been read. The venue check was run in the session and is not stored as a script
