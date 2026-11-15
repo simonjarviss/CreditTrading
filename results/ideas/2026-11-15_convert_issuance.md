@@ -3,7 +3,8 @@
 **Slug:** `convert_rebound` · **Written:** 2026-11-15 ·
 **Status:** EXPLORE. Positive in every era and on liquid names, but small: 0.67 gross as
 fixed, 0.42 to 0.56 under the checks. Not on shadow: there is no live list of issues yet ·
-**Reproducer:** `python3 results/ideas/convert_issuance/explore.py`, then `checks.py` ·
+**Reproducer:** `python3 results/ideas/convert_issuance/explore.py`, then `checks.py`; the
+headline look is `news_dating.py --year Y` for each year, then `headline_dated.py` ·
 **Panels:** SDC new issues and CRSP daily rows on R2 (`scripts/research/stage_sdc_convertibles.py`),
 issue dates 2000-01-13 to 2025-12-23, prices to **2025-12-31**; IWM and SPY total returns
 from Yahoo (fetched 2026-11-10). SDC and CRSP rows are not in the repository.
@@ -69,6 +70,29 @@ Only counts had been read: 3,337 SDC convertible issues matched to a CRSP common
   that learns of the pricing the same evening and fills at the next close would be on the
   D+2 row; one that reads a list a day late would be on the D+4 row.
 
+## A second look with headline dates (`news_dating.py`, `headline_dated.py`) [V, read 2026-11-15]
+
+Run after the tables above, on the same events: a re-dating, not a new sample.
+
+- **Alpaca's news feed names most recent deals.** For each SDC issue of 2015–2025 I read
+  the issuer's headlines from seven days before to three after the issue date. A headline
+  with "convertible" exists for 430 of 1,286: 8% to 30% a year through 2022, 46% in 2023,
+  69% in 2024 and 73% in 2025 (87% of 2025's 144A deals). In 2025, 118 of 119 first
+  headlines came outside trading hours (after 16:00 or before the open).
+- **SDC's date is the reaction session about half the time.** Taking S0 as the first
+  session that opens after the headline, S0 equals SDC's date for 218 events, is the
+  session after it for 110 and the session before it for 64.
+- **Dated from the headline, the result is not there in this sample:**
+
+  | 2015–2025, 392 events | gross Sharpe (t) | 2015–22 | 2023–25 | per event mean (median) |
+  |---|---:|---:|---:|---:|
+  | decided at the close of S0, earns S0+2 to S0+6 | 0.29 (0.96) | −0.30 | 1.02 | +0.61% (+0.12%) |
+  | filled at the close of S0, earns S0+1 to S0+5 | 0.20 (0.67) | −0.37 | 1.01 | +0.43% (+0.07%) |
+
+  The events with a headline are a third of the list and not a random third (159 of them
+  before 2023), so this is weak evidence either way. It does not confirm the SDC-dated
+  result, and better dates did not make it larger.
+
 ## What it does not show
 
 - **SDC's issue date is not checked against filings.** The special-dividend check
@@ -80,10 +104,10 @@ Only counts had been read: 3,337 SDC convertible issues matched to a CRSP common
 
 ## Next
 
-- A live list. The pricing of a convertible is an 8-K and a press release the same evening.
-  Alpaca's news feed carries the headlines; E2's draft pre-registration
-  (`results/events/PREREG_E2_CONVERT_REVERSAL_2026-10-13.md`) already specifies a headline
-  read. A shadow book needs that reader built and its dating measured first.
-- Not promoted until then.
+- A live list exists in principle: Alpaca's news feed, from 2024 on, with the launch timed
+  to the minute. A reader would have to tell a new offering from a repurchase or a price
+  move ("Plunges after convertible offering"), which the one-word match here does not.
+- Not promoted. The SDC-dated result is small and the headline-dated one does not confirm
+  it. A shadow book would be a way to collect clean events, not a bet on 0.67.
 
 **Not independently reviewed.**
