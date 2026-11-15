@@ -4457,3 +4457,16 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Corrects the headline of E-2026-11-15-02 (1.10, and 0.64 in 2023–25). An 8-K can follow a press release, so the count of late events is an upper bound; foreign filers and REITs in the sample were not checked. The shadow book enters on the feed's first listing and is unaffected
 
+### E-2026-11-15-07 · Result: no drift after a dividend initiation or resumption once the news is two sessions old
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 1,625 initiations and resumptions on CRSP common shares (no cash dividend in the prior 730 days), ex-dates 2000-01-27 to 2025-12-30, prices to 2025-12-31; 1,123 eligible [V]
+  - pre-specified long (D1+3 to D1+62 against IWM, 10% a name): gross Sharpe 0.31 (t 1.57); halves 0.54 / 0.08; eras 0.49, 0.34, −0.19, 0.77, −0.31 [V]
+  - controls: the same events 120 sessions later 0.36 (t 1.82); 60 sessions earlier 1.45 (t 7.34) [V]
+  - per event against IWM: +1.34% in the ten sessions before D1, +1.66% in the ten from D1, then 0.2% to 0.4% a block [V]
+- source: `results/ideas/div_initiations/explore.py` @ `819c4ec`; `scripts/research/stage_crsp_div_initiations.py` @ `819c4ec`
+- supports: §4
+- status: current. Gross, no costs. Set aside: the later-window control equals the book. Not independently reviewed
+
