@@ -4248,7 +4248,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-14-50 · Result: Alpaca stamps a half day's end-of-day point four hours after its 13:00 close, at 17:00 New York, and the core paper account has never recorded a corporate-action activity row
+### E-2026-11-14-50 · Result: Alpaca stamps a half day's end-of-day point four hours after its 13:00 close, at 17:00 New York, and the core paper account holds no row of any of the nine corporate-action activity types paper accepts
 - kind: result
 - era: ALPACA
 - date: 2026-11-14
@@ -4274,7 +4274,17 @@ that adds it does not exist when it is written.
 - era: ALPACA
 - date: 2026-11-14
 - figures:
-  - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before)
+  - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before except the factor P&L rows the flat-entry fix adds on sessions where the book goes flat)
 - source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed
+
+### E-2026-11-15-50 · Ruling and method: the corporate-action handling is fixed properly after its review: one phantom per split, the account's own rows rebased in a corp line of their own, and late rows closing the open phantom
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a review of the report follow-up found three ways the new corporate-action handling could show confidently wrong side figures while still reconciling; none runs today, the account having no such rows. The team lead ruled on 2026-11-14 to fix all three properly rather than refuse: a split the feed lists twice is one event, and records disagreeing on the ratio raise; a position the account's rows move is rebased in its own corp component, so hold and fill stay true and every session still reconciles to the cent; rows posting within ten sessions after the event close the open phantom with a labelled reversal, and the cumulative phantom carries the later moves on the extra shares, so it equals what is still inside the official P&L (ruled 2026-11-15). The risk check also refuses a held reading whose two session fields disagree. With no corporate action, the attribution's output is byte-identical to before)
+- source: `scripts/cef/live_attribution.py` @ `adf42b2`; `scripts/cef/live_attribution.py` @ `813676a`; `scripts/ops/risk_daily.py` @ `5d9bcdf`
 - supports: §4, §5
 - status: built on branch reports-followup, under review; not installed
