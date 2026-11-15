@@ -4414,3 +4414,19 @@ that adds it does not exist when it is written.
 - source: `results/ideas/ipo_lockups/explore.py` @ `b94c91f`; `results/ideas/ipo_lockups/checks.py` @ `b94c91f`; `scripts/research/stage_sdc_ipo_lockups.py` @ `b94c91f`; `docs/REFERENCES.md` @ `b94c91f` (§12lk)
 - supports: §4
 - status: current. Gross, no costs, no borrow; a revival of K5, dropped 2026-10-19 on a borrow count. Not promoted: the earlier window was chosen on this sample. Not independently reviewed
+
+### E-2026-11-15-04 · Result: a reverse-split share keeps falling for a month (gross short Sharpe 1.02), and Alpaca lends 4 of the 32 names the book would hold today
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 3,375 reverse splits on common shares on CRSP, ex-dates 2000-01-03 to 2025-12-31, prices to 2025-12-31; 1,260 eligible at the close of the ex-date (price ≥ $2, 21-session dollar volume ≥ $500,000) [V]
+  - pre-specified book (short X+2 to X+21 against IWM, 10% a name): gross Sharpe 1.02 (t 5.18), 25.1% a year on 24.5% volatility, worst drawdown −49%; halves 0.76 / 1.28; eras 1.08, 0.97, 1.81, 0.51, 1.55; 0.95 (t 4.79) on names trading $5M a day [V]
+  - controls: forward splits on the same rule 0.47; the same reverse splits 60 sessions later 0.45 and earlier 0.63; the book less the mean of those two 0.50 (t 2.53, not pre-specified) [V]
+  - per event over 20 sessions, short less IWM: mean +9.1%, median +7.8%, 64% positive; worst −714% of the position; Sharpe 0.80 without the ten best events [V]
+  - the pre-specified wait book (declaration to ex-date) had 114 tradable events: 0.27 (t 1.37); CRSP's declaration date is a median of one session before the ex-date [V]
+  - borrow at Alpaca read 2026-11-15: of 32 feed rows with an ex-date in the last 30 days passing the same floors, 4 shortable (one a closed-end fund); of the 8 trading $5M a day, 0 [V, that date only]
+- source: `results/ideas/reverse_splits/explore.py` @ `21fceb3`; `results/ideas/reverse_splits/checks.py` @ `21fceb3`; `results/ideas/reverse_splits/borrow_now.py` @ `21fceb3`; `scripts/research/stage_crsp_reverse_splits.py` @ `21fceb3`; `docs/REFERENCES.md` @ `21fceb3` (§12rs)
+- supports: §4
+- status: current. Gross, no costs, no borrow fee. A revival of G1, closed 2026-10-15 on a borrow count with no return read; set aside again as a short at Alpaca, now with the return known and the borrow read on the names held. No shadow book built. Not independently reviewed
+
