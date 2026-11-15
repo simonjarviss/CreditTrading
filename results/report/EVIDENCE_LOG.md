@@ -4444,3 +4444,16 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Gross, no costs. The first return read on catalogue card K6. Not promoted; no shadow book. Not independently reviewed
 
+### E-2026-11-15-06 · Correction to E-2026-11-15-02: the special-dividend wait book is 0.89 to 0.98 once a dating exposure is removed, and about zero in 2023–25
+- kind: correction
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 60 sampled events from 2019 on, checked against 8-K acceptance times on EDGAR: first 8-K naming the dividend by the close of CRSP's declaration date 7, by the close of the next session 15, later 12, none found 26; none before CRSP's date [V]
+  - of the 12 later ones, 10 were public before the book's fill and 2 were not (THG, NREF): 2 of 34 checked events [V]
+  - the book decided 1, 2 and 3 sessions later, eligibility re-read: gross Sharpe 0.93 (t 4.71), 0.98 (t 4.96), 0.89 (t 4.50) against 1.10 as first reported [V]
+  - by era, decided at D1 / one / two / three sessions later: 2000–07 0.42 / 0.52 / 0.62 / 0.47; 2008–12 1.18 / 1.07 / 0.99 / 1.02; 2013–17 1.69 / 1.74 / 1.69 / 1.79; 2018–22 1.95 / 1.66 / 1.71 / 1.36; 2023–25 0.64 / −0.13 / 0.05 / 0.26 [V]
+- source: `results/ideas/special_dividends/edgar_dates.py` @ `7a23106`; `results/ideas/special_dividends/checks.py` @ `7a23106`; `results/ideas/2026-11-15_special_dividends.md` @ `7a23106`
+- supports: §4
+- status: current. Corrects the headline of E-2026-11-15-02 (1.10, and 0.64 in 2023–25). An 8-K can follow a press release, so the count of late events is an upper bound; foreign filers and REITs in the sample were not checked. The shadow book enters on the feed's first listing and is unaffected
+
