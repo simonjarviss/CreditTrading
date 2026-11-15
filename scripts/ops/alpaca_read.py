@@ -77,6 +77,7 @@ This module is stdlib plus pandas (`fetch_bars` returns a frame, as
 """
 from __future__ import annotations
 
+import copy
 import datetime as dt
 import http.client
 import json
@@ -174,6 +175,18 @@ def _bool(obj: dict, field: str, where: str) -> bool:
     return v
 
 
+def _decimal(v, where: str) -> Decimal | None:
+    """A finite Decimal from a decimal string, or None (the caller names the field). A number
+    that is not a string is refused: the account's money fields are strings."""
+    if not isinstance(v, str):
+        return None
+    try:
+        d = Decimal(v)
+    except InvalidOperation:
+        return None
+    return d if d.is_finite() else None
+
+
 def _date_param(v, name: str) -> dt.date:
     if isinstance(v, dt.datetime) or not isinstance(v, dt.date):
         raise ValueError(f"{name}={v!r} must be a datetime.date")
@@ -216,6 +229,14 @@ CORPORATE_ACTION_TYPES = {
     "reorganization": ("reorganizations", "effective_date", (("symbol", "subject", True),)),
     "partial_call": ("partial_calls", "process_date", (("symbol", "subject", True),)),
 }
+# The account's own corporate-action activity types (GET /v2/account/activities): the
+# non-FILL types paper accepts in `activity_types`. Read-only on the cef account, 2026-11-14 (the
+# team lead's investigation): each of these nine returned 0 rows; SSP and SSO answered HTTP 422,
+# so they are not sent. `corporate_action_activities` reads them; the attribution rebuilds from
+# FILLs plus these rows, never from the market feed (`live_attribution`, CORPORATE ACTIONS).
+CORPORATE_ACTION_ACTIVITY_TYPES = ("SPLIT", "CIL", "MA", "NC", "SC", "SPIN", "REO", "REORG", "JNLS")
+CA_CASH_ACTIVITY_TYPES = ("CIL",)          # cash in lieu: a cash amount, no position change
+
 CORPORATE_ACTION_RESPONSE_KEYS = frozenset(
     [k for k, _, _ in CORPORATE_ACTION_TYPES.values()]
     + ["cash_dividends", "capital_gains_distributions", "rights_distributions"])
@@ -262,9 +283,13 @@ def _ca_parties(r, kind: str, fields, where: str) -> tuple[list[tuple[str, str]]
     return out, unread
 
 
-def _ca_strict(r: dict, kind: str, date_field: str, parties, where: str, seen: dict, out: list) -> None:
+def _ca_strict(r: dict, kind: str, date_field: str, parties, where: str, seen: dict, out: list,
+               raw_rows: dict | None = None) -> None:
     """A row naming one of `symbols`, read strictly: alpaca.py `_ca_strict` (a bad id or
-    date, or one id with two different events, raises; an identical repeat is dropped)."""
+    date, or one id with two different events, raises; an identical repeat is dropped).
+    `raw_rows` (AlpacaClient's, read for read): each kept row's raw object, by id, so a caller
+    can read a field the event dict does not carry (the attribution reads a split's
+    old_rate/new_rate, `live_attribution.fetch`)."""
     _require(r, ("id", date_field, "process_date"), where)
     rid = r["id"]
     if not isinstance(rid, str) or not rid.strip():
@@ -279,6 +304,8 @@ def _ca_strict(r: dict, kind: str, date_field: str, parties, where: str, seen: d
         dates[f] = dt.date.fromisoformat(r[f])
     ev = {"id": rid, "type": kind, "date": dates[date_field], "date_field": date_field,
           "process_date": dates["process_date"], "parties": [[s, role] for s, role in parties]}
+    if raw_rows is not None:
+        raw_rows.setdefault(rid, []).append(copy.deepcopy(r))
     if rid in seen:
         if seen[rid] != ev:
             raise UnexpectedResponse(f"{where}: id {rid!r} repeats with a different event: "
@@ -601,6 +628,71 @@ class AlpacaReader:
             token = nxt
         raise UnexpectedResponse(f"GET /v2/account/activities/FEE: more than {MAX_PAGES} pages")
 
+    def corporate_action_activities(self) -> list[dict]:
+        """GET /v2/account/activities?activity_types=<CORPORATE_ACTION_ACTIVITY_TYPES>, every
+        page, oldest first: the account's own corporate-action rows, each read strictly.
+
+        WHY (team lead, 2026-11-14, on the corporate-action investigation). Alpaca paper does not
+        process corporate actions (docs/REFERENCES.md §12pc), and when support pushes one by
+        hand the account's activities are the only record of what moved: the attribution
+        rebuilds positions from FILLs plus these rows, never from the market feed, whose rebase
+        gives the wrong sign when paper kept the old count. The cef account had 0 such rows
+        (2026-11-14), so this reads nothing today.
+
+        STRICT, BECAUSE THE REST SHAPE OF THESE ROWS IS UNDOCUMENTED. Alpaca documents a SPLIT
+        only in the Activity SSE (two legs per split: the old count out at the old price, the new
+        count in at the new price, `qty` signed, `price` per share). This read accepts a row only
+        if it has: `id` (a non-empty string), `activity_type` (one of the types asked for),
+        `date` (YYYY-MM-DD) and `symbol` (an upper-case equity symbol); and, for a cash-in-lieu
+        row (CA_CASH_ACTIVITY_TYPES), `net_amount`, a finite decimal string; for every other
+        type, `qty`, a non-zero whole number of shares as a decimal string (signed: the
+        position's change), and `price`, a positive decimal string. Anything else raises,
+        naming the row and the field: a row this read cannot place is never skipped. Paging is
+        `fee_activities`'s; unbounded on purpose, as there (the caller filters by date)."""
+        types = ",".join(CORPORATE_ACTION_ACTIVITY_TYPES)
+        w0 = "GET /v2/account/activities?activity_types=" + types
+        out, seen, token = [], set(), None
+        for _ in range(MAX_PAGES):
+            params = {"activity_types": types, "direction": "asc", "page_size": FILL_PAGE_SIZE}
+            if token is not None:
+                params["page_token"] = token
+            page = self._get(PAPER_BASE, "/v2/account/activities", params)
+            if not isinstance(page, list):
+                raise UnexpectedResponse(f"{w0}: expected a list, got {type(page).__name__}")
+            for i, a in enumerate(page):
+                w = f"{w0} [{i}]"
+                _require(a, ("id", "activity_type", "date", "symbol"), w)
+                if not isinstance(a["id"], str) or not a["id"].strip():
+                    raise UnexpectedResponse(f"{w}: id {a['id']!r} is not a non-empty string")
+                if a["activity_type"] not in CORPORATE_ACTION_ACTIVITY_TYPES:
+                    raise UnexpectedResponse(f"{w}: activity_type {a['activity_type']!r} was not asked for")
+                if not (isinstance(a["date"], str) and _DATE_RE.match(a["date"])):
+                    raise UnexpectedResponse(f"{w}: date {a['date']!r} is not YYYY-MM-DD")
+                if not (isinstance(a["symbol"], str) and _SYMBOL_RE.match(a["symbol"])):
+                    raise UnexpectedResponse(f"{w}: symbol {a['symbol']!r} is not an upper-case equity symbol")
+                if a["activity_type"] in CA_CASH_ACTIVITY_TYPES:
+                    _require(a, ("net_amount",), w)
+                    if _decimal(a["net_amount"], f"{w} net_amount") is None:
+                        raise UnexpectedResponse(f"{w}: net_amount {a['net_amount']!r} is not a finite decimal string")
+                else:
+                    _require(a, ("qty", "price"), w)
+                    q = _decimal(a["qty"], f"{w} qty")
+                    if q is None or q == 0 or q != q.to_integral_value():
+                        raise UnexpectedResponse(f"{w}: qty {a['qty']!r} is not a non-zero whole number of shares")
+                    px = _decimal(a["price"], f"{w} price")
+                    if px is None or px <= 0:
+                        raise UnexpectedResponse(f"{w}: price {a['price']!r} is not a positive decimal string")
+                if a["id"] not in seen:
+                    seen.add(a["id"])
+                    out.append(a)
+            if len(page) < FILL_PAGE_SIZE:
+                return out
+            nxt = page[-1]["id"]
+            if nxt == token:
+                raise UnexpectedResponse(f"{w0}: page_token did not advance")
+            token = nxt
+        raise UnexpectedResponse(f"{w0}: more than {MAX_PAGES} pages")
+
     def distributions(self, symbols, start: dt.date, end: dt.date) -> list[dict]:
         """Cash dividends and capital-gains distributions for `symbols` from the data API,
         every page: AlpacaClient.distributions, read for read (`amount` is the cash per
@@ -675,13 +767,15 @@ class AlpacaReader:
             raise UnexpectedResponse(f"{w}: more than {MAX_PAGES} pages")
         return sorted(out, key=lambda e: (e["symbol"], e["ex_date"], e["kind"], e["id"]))
 
-    def corporate_actions(self, symbols, start: dt.date, end: dt.date) -> list[dict]:
+    def corporate_actions(self, symbols, start: dt.date, end: dt.date, *, rows: dict | None = None) -> list[dict]:
         """Every non-dividend corporate action naming one of `symbols`, in any role: the
-        strict read of AlpacaClient.corporate_actions (no `skipped` record), read for read.
+        strict read of AlpacaClient.corporate_actions (no `skipped` record), read for read;
+        `rows` collects each kept row's raw object by id, as AlpacaClient's `rows` does.
         No `symbols` filter is sent; `data_quality=all`; the window filters on process date,
         which the caller pads; an empty answer is what the feed holds now, not a measured
-        zero. The attribution reads this to refuse a share-count event on a traded symbol
-        (`live_attribution`, the corporate-action refusal)."""
+        zero. The attribution reads the events and, through `rows`, a split's old_rate/new_rate
+        (`live_attribution`, CORPORATE ACTIONS)."""
+        raw_rows = rows                          # the loop below reuses the name `rows` for a page's list
         start = _date_param(start, "start")
         end = _date_param(end, "end")
         if end < start:
@@ -724,7 +818,7 @@ class AlpacaReader:
                     if unread:
                         raise UnexpectedResponse(unread[0]["error"])
                     if any(s in wanted for s, _ in parties):
-                        _ca_strict(r, kind, date_field, parties, where, seen, out)
+                        _ca_strict(r, kind, date_field, parties, where, seen, out, raw_rows)
             nxt = body["next_page_token"]
             if nxt is None or nxt == "":
                 break

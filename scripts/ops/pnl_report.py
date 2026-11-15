@@ -102,9 +102,17 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     core, with the ex-date in its beta window (team lead, 2026-11-14, option A of the third
     review of PR #82; `exposure_readout._split_scope`); PARTIAL at the as-of close, a history
     note earlier, as above. Before that ruling one split in a fund ever held made the block
-    UNMEASURED every night after. A share-count corporate action Alpaca reports on a traded
-    fund still refuses the attribution itself (`live_attribution`), so the report is
-    UNMEASURED and the unit exits 4, until the team lead rules on that refusal.
+    UNMEASURED every night after.
+  * a corporate action on a fund the book held into its date (team lead, 2026-11-14:
+    "narrow and handle it"; `live_attribution`, CORPORATE ACTIONS). An acquirer's merger, a
+    flat name and an event outside the window touch nothing. The rebuild takes positions from
+    FILLs plus the account's own corporate-action activity rows, never the market feed. A
+    split paper did not process (no account row) is reconciled as the account shows it, with
+    a labelled phantom line per event and a cumulative phantom line beside the official P&L,
+    which stays the P&L of record (`corporate_action_lines`); a session that does not
+    reconcile (a frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit 5,
+    naming the session and the event (`reconciliation`). Any other count-changing type held
+    into its date with no account row still refuses the attribution, named (exit 4).
   * a book that holds nothing at the as-of close: the factor block is FLAT (independent
     review of PR #82, 2026-11-11). Nothing is held, so nothing is exposed; the block reads no
     exposure, no flag and no PARTIAL for that close, and never shows an earlier close's
@@ -208,7 +216,12 @@ def cumulative(res, first: dt.date) -> dict:
 
 def reconciliation(res, first: dt.date) -> dict:
     """Every session's residual against the official change, to the cent. An unreconciled
-    session is named; the attribution is still shown for diagnosis, labelled."""
+    session is named; the attribution is still shown for diagnosis, labelled.
+
+    A failure on or after a corporate action on a held name names the event too (team lead,
+    2026-11-14; `live_attribution`, CORPORATE ACTIONS): paper may have frozen the position (H2),
+    or support may have pushed the action by hand with no account row (H3), and the rebuild
+    from fills cannot follow either, so the line says which event the residual follows."""
     bad = []
     for r in res.daily[res.daily["date"] >= first].itertuples():
         if abs(Fraction(r.residual)) > RESIDUAL_CENT:
@@ -216,12 +229,60 @@ def reconciliation(res, first: dt.date) -> dict:
     max_res = max((abs(float(r)) for r in res.daily[res.daily["date"] >= first]["residual"]), default=0.0)
     lines = []
     if bad:
+        events = [c for c in getattr(res, "corp_events", []) if c["session"].isoformat() <= bad[-1][0]]
         lines.append(f"RECONCILIATION FAILED on {len(bad)} session(s): " +
                      ", ".join(f"{d} residual {v:+.2f}" for d, v in bad[:10]) +
                      (" ..." if len(bad) > 10 else "") +
                      ". The rebuild (hold + fill + fees) does not equal Alpaca's EOD change to the cent; "
-                     "the figures below are unreconciled for those sessions.")
+                     "the figures below are unreconciled for those sessions."
+                     + (" Corporate action(s) on a held name on or before a failed session, which paper may "
+                        "have frozen or processed without an account row the rebuild could follow: "
+                        + "; ".join(f"{c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), session {c['session']}"
+                                    for c in events) if events else ""))
     return {"reconciled": not bad, "failed_sessions": bad, "max_abs_residual": max_res, "lines": lines}
+
+
+def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str], dict]:
+    """The labelled phantom lines and JSON fields (team lead, 2026-11-14; `live_attribution`,
+    CORPORATE ACTIONS), or nothing when no corporate action touched a held name since the first
+    trade, so such a report is the one it always was.
+
+    A split paper did not process leaves the old count marked at the new-basis close: hold and
+    the official EOD change both carry (q_prev - q_prev x k) x close_t, a phantom. It is shown,
+    per event and summed from the first trade, BESIDE the official change, which stays the P&L
+    of record (docs/SYSTEM.md section 5); nothing is subtracted from any line. A phantom the
+    market record gives no rates for is UNMEASURED, and so is any sum that holds it."""
+    evs = [c for c in getattr(res, "corp_events", []) if c["session"] >= first]
+    if not evs:
+        return [], {}
+    def amt(c):
+        return None if c["phantom"] is None else float(c["phantom"])
+    lines = []
+    for c in evs:
+        if c["processed"]:
+            lines.append(f"Corporate action {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), session "
+                         f"{c['session']}: the account's own activity rows moved the position (fee-free, inside "
+                         f"fill); that name-day's NAV/discount split is UNMEASURED")
+        else:
+            lines.append(f"Phantom: paper did not process {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), "
+                         f"session {c['session']}: (q_prev - q_prev x k) x close_t = "
+                         + (f"{amt(c):+,.2f} (q_prev {c['q_prev']}, k {c['k']})" if amt(c) is not None
+                            else f"UNMEASURED ({c['why']})")
+                         + ", inside hold and the official change; that name-day's NAV/discount split is UNMEASURED")
+    unproc = [c for c in evs if not c["processed"]]
+    total = None if any(amt(c) is None for c in unproc) else sum((amt(c) for c in unproc), 0.0)
+    session = [c for c in unproc if c["session"] == eff]
+    s_total = None if any(amt(c) is None for c in session) else sum((amt(c) for c in session), 0.0)
+    if unproc:
+        lines.append(f"Phantom from corporate actions paper did not process, from the first trade: {_usd(total)} "
+                     f"({len(unproc)} event(s)); the official P&L above includes it and stays the P&L of record")
+    out = {"corporate_actions": [{k: (v.isoformat() if isinstance(v, dt.date) else
+                                      float(v) if isinstance(v, Fraction) else v) for k, v in c.items()}
+                                 for c in evs],
+           "phantom_cumulative": total}
+    if session:
+        out["phantom_session"] = s_total
+    return lines, out
 
 
 def fee_check(res, reader, first: dt.date) -> list[str]:
@@ -358,11 +419,14 @@ def build_attribution(book: str, state: Path, asof: dt.date, reader, groups: dic
         note = (f"Session {asof}: Alpaca's EOD history has no point for it yet (latest {eff}); "
                 f"the session section below is {eff}'s, not {asof}'s.")
     fees = fee_check(res, reader, first)
-    lines = attribution_lines(sess, cum, recon, session_note=note) + fees
-    return {"status": "OK", "session": sess, "cumulative": cum, "reconciled": recon["reconciled"],
-            "reconciliation": recon, "fee_check": fees, "lines": lines, "first_trade": first.isoformat(),
-            "effective_session": eff.isoformat(), "gaps": list(res.gaps),
-            "_res": res, "_inp": inp}
+    ca_lines, ca_out = corporate_action_lines(res, first, eff)
+    lines = attribution_lines(sess, cum, recon, session_note=note) + ca_lines + fees
+    out = {"status": "OK", "session": sess, "cumulative": cum, "reconciled": recon["reconciled"],
+           "reconciliation": recon, "fee_check": fees, "lines": lines, "first_trade": first.isoformat(),
+           "effective_session": eff.isoformat(), "gaps": list(res.gaps),
+           "_res": res, "_inp": inp}
+    out.update(ca_out)                           # only when a corporate action touched a held name
+    return out
 
 
 # ---------------------------------------------------------------- the factor readout

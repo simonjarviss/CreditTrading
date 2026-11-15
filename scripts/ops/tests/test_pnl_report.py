@@ -97,8 +97,11 @@ class FakeReader:
     def distributions(self, symbols, start, end):
         return []
 
-    def corporate_actions(self, symbols, start, end):
+    def corporate_actions(self, symbols, start, end, *, rows=None):
         return []
+
+    def corporate_action_activities(self):
+        return []                                   # the cef account had none (2026-11-14)
 
     def fee_activities(self):
         if self.fee_error:
@@ -1221,3 +1224,71 @@ def test_a_split_the_reading_cannot_see_leaves_the_as_of_reading_as_it_was(tmp_p
     assert with_split["factor"]["status"] == "OK", with_split["factor"]["lines"]
     for k in ("factors", "gross_usd", "net_usd", "total_of_target"):
         assert with_split["factor"][k] == without["factor"][k], k
+
+
+# --- a corporate action on a held fund (team lead, 2026-11-14: "narrow and handle it") ---
+
+class _CorpReader(FakeReader):
+    """The market feed lists one corporate action (`event`, with its raw row's rates); the
+    account's own corporate-action activities are empty, as on paper today."""
+    def __init__(self, event, rates=None, **kw):
+        super().__init__(**kw)
+        self.event, self.rates = event, rates or {}
+
+    def corporate_actions(self, symbols, start, end, *, rows=None):
+        e = self.event
+        if not start <= e["date"] <= end:
+            return []
+        if rows is not None:
+            rows.setdefault(e["id"], []).append(dict(self.rates, id=e["id"]))
+        return [dict(e, date_field="ex_date", process_date=e["date"])]
+
+
+BBB_SPLIT = {"id": "rs-x", "type": "reverse_split", "date": ASOF, "parties": [["BBB", "subject"]]}
+
+
+def test_a_split_paper_did_not_process_is_reconciled_with_a_labelled_phantom(tmp_path):
+    """H1 on the job (team lead, 2026-11-14): a 1:2 reverse split of BBB (short 2,000 into
+    01-22) that paper did not process. The report is no longer refused: it reconciles, its
+    session section carries "Phantom: paper did not process reverse_split BBB ..." =
+    (q_prev - q_prev x k) x close_t = (-2,000 + 1,000) x 20.40 = -20,400, the cumulative phantom
+    line sits beside the official P&L (unchanged, the P&L of record), and the session's NAV and
+    discount parts are UNMEASURED, named. Fails on the parent fa84045, where the attribution
+    refused ("share-count corporate action(s) in the window", exit 4)."""
+    rep, code = run(tmp_path, reader=_CorpReader(BBB_SPLIT, rates={"old_rate": 2, "new_rate": 1}))
+    att = rep["attribution"]
+    assert code == P.EXIT_OK and att["status"] == "OK" and att["reconciled"] is True, att["lines"]
+    assert att["phantom_cumulative"] == pytest.approx(-20400.0) and att["phantom_session"] == pytest.approx(-20400.0)
+    line = [ln for ln in att["lines"] if ln.startswith("Phantom: paper did not process reverse_split BBB")]
+    assert len(line) == 1 and "= -20,400.00 (q_prev -2000, k 1/2)" in line[0]
+    assert any(ln.startswith("Phantom from corporate actions paper did not process, from the first trade: -20,400.00")
+               for ln in att["lines"])
+    eq = dict(equity_series())
+    assert att["session"]["eod_change"] == pytest.approx(eq[TRADED[-1]] - eq[TRADED[-2]])   # official, untouched
+    assert att["session"]["nav_part"] is None and att["session"]["disc_part"] is None
+    assert any("NAV/discount split is UNMEASURED" in g and "BBB" in g for g in rep["gaps"])
+
+
+def test_an_unreconciled_session_after_a_corporate_action_names_the_event(tmp_path):
+    """H2 on the job: paper froze the position (the equity misses the rebuild on 01-22). The
+    existing UNRECONCILED path, exit 5, now names the event the residual follows. Fails on the
+    parent fa84045, where the attribution refused (exit 4) and named no session."""
+    reader = _CorpReader(BBB_SPLIT, rates={"old_rate": 2, "new_rate": 1}, tamper={ASOF: 1800.0})
+    rep, code = run(tmp_path, reader=reader)
+    assert code == P.EXIT_UNRECONCILED and rep["status"] == P.UNRECONCILED
+    fail = rep["attribution"]["reconciliation"]["lines"][0]
+    assert fail.startswith(f"RECONCILIATION FAILED on 1 session(s): {ASOF} residual")
+    assert f"reverse_split BBB ex {ASOF} (id rs-x), session {ASOF}" in fail
+
+
+def test_an_acquirer_merger_changes_nothing_in_the_report(tmp_path):
+    """A merger in which a held fund is the ACQUIRER (the core's MHD and MQY, 2026-02; docs/
+    REFERENCES.md §12pc): the report is the one with no event at all, figure for figure. Fails on
+    the parent fa84045, where it refused the attribution."""
+    merger = {"id": "m-1", "type": "stock_merger", "date": ASOF, "parties": [["XYZ", "acquiree"], ["AAA", "acquirer"]]}
+    with_event, code = run(tmp_path / "m", reader=_CorpReader(merger))
+    plain, _ = run(tmp_path / "p")
+    assert code == P.EXIT_OK
+    assert with_event["attribution"]["session"] == plain["attribution"]["session"]
+    assert with_event["attribution"]["cumulative"] == plain["attribution"]["cumulative"]
+    assert "phantom_cumulative" not in with_event["attribution"]

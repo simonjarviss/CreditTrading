@@ -499,6 +499,59 @@ def test_corporate_actions_equal_the_clients_and_keep_parties(both):
     assert ro["parties"] == [["CCC", "subject"], ["AAA", "allocated"]]
 
 
+def test_corporate_actions_keep_each_rows_raw_object_as_alpacaclient_does(both):
+    """`rows=` (team lead, 2026-11-14): the attribution reads a split's old_rate/new_rate from
+    the market record, which the event dict does not carry, so the reader keeps each kept row's
+    raw object by id, read for read with AlpacaClient's own `rows=`. Fails on the parent fa84045,
+    whose reader took no `rows`."""
+    _, reader, client = both
+    win = D(2026, 1, 1), D(2026, 12, 31)
+    got_rows, want_rows = {}, {}
+    got = reader.corporate_actions(["AAA", "BBB"], *win, rows=got_rows)
+    assert got == client.corporate_actions(["AAA", "BBB"], *win, rows=want_rows)
+    assert got_rows == want_rows and set(got_rows) == {e["id"] for e in got}
+    assert got_rows["rs-1"][0]["old_rate"] == 4 and got_rows["rs-1"][0]["new_rate"] == 1
+
+
+CA_ACT_ROWS = [
+    {"id": "ca-a1", "activity_type": "SPLIT", "date": "2026-02-05", "symbol": "LNG", "qty": "-900", "price": "4.48"},
+    {"id": "ca-a2", "activity_type": "SPLIT", "date": "2026-02-05", "symbol": "LNG", "qty": "300", "price": "13.44"},
+    {"id": "ca-a3", "activity_type": "CIL", "date": "2026-02-05", "symbol": "LNG", "net_amount": "4.48"}]
+
+
+def _act_server(rows):
+    def acts(params):
+        assert params["activity_types"] == ",".join(AR.CORPORATE_ACTION_ACTIVITY_TYPES)
+        start = 0
+        if "page_token" in params:
+            start = [r["id"] for r in rows].index(params["page_token"]) + 1
+        return rows[start:start + int(params["page_size"])]
+    return Server({"/v2/account/activities": acts})
+
+
+def test_the_accounts_corporate_action_activities_are_read_strictly():
+    """The account's own corporate-action rows (team lead, 2026-11-14), the nine types paper
+    accepts, every page: a position row needs a non-zero whole `qty` and a positive `price`, a
+    cash-in-lieu row a `net_amount`; anything else raises, naming the row and the field. Fails on
+    the parent fa84045, which had no such read."""
+    assert AR.CORPORATE_ACTION_ACTIVITY_TYPES == ("SPLIT", "CIL", "MA", "NC", "SC", "SPIN", "REO", "REORG", "JNLS")
+    assert reader_for(_act_server(CA_ACT_ROWS)).corporate_action_activities() == CA_ACT_ROWS
+    assert reader_for(_act_server([])).corporate_action_activities() == []
+    for bad, why in ((dict(CA_ACT_ROWS[0], qty="-0.5"), "not a non-zero whole number"),
+                     (dict(CA_ACT_ROWS[0], qty="0"), "not a non-zero whole number"),
+                     (dict(CA_ACT_ROWS[0], qty=-900), "not a non-zero whole number"),
+                     (dict(CA_ACT_ROWS[0], price="0"), "not a positive decimal"),
+                     ({k: v for k, v in CA_ACT_ROWS[0].items() if k != "price"}, "price"),
+                     ({k: v for k, v in CA_ACT_ROWS[2].items() if k != "net_amount"}, "net_amount"),
+                     (dict(CA_ACT_ROWS[0], activity_type="DIV"), "was not asked for"),
+                     (dict(CA_ACT_ROWS[0], date="2026-2-5"), "not YYYY-MM-DD"),
+                     (dict(CA_ACT_ROWS[0], symbol="lng"), "not an upper-case equity symbol")):
+        with pytest.raises(AR.UnexpectedResponse, match=why):
+            reader_for(_act_server([bad])).corporate_action_activities()
+    many = [dict(CA_ACT_ROWS[0], id=f"p-{i:03d}") for i in range(AR.FILL_PAGE_SIZE + 5)]
+    assert len(reader_for(_act_server(many)).corporate_action_activities()) == AR.FILL_PAGE_SIZE + 5
+
+
 def test_rows_that_name_nobody_of_ours_are_not_read_further(tmp_path):
     t = table()
     bad = json.loads(json.dumps(CA_PAGE_2))
@@ -717,7 +770,8 @@ def test_public_surface_is_exactly_the_reads_attribution_needs():
     public = {n for n in vars(AR.AlpacaReader) if not n.startswith("_")
               and n not in ("EOD_LISTS", "FILL_FIELDS", "EOD_STAMP_AFTER_CLOSE_H")}
     assert public == {"from_environment", "calendar", "eod_equity_history", "activities_fills",
-                      "fee_activities", "distributions", "corporate_actions"}
+                      "fee_activities", "distributions", "corporate_actions",
+                      "corporate_action_activities"}            # the account's own rows (2026-11-14)
 
 
 def test_the_reader_refuses_any_other_host_and_a_relative_path():

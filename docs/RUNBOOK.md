@@ -1355,10 +1355,18 @@ third review of PR #82): the dates it was held before the ex-date (its close may
 post-split basis) and, for the core, the dates whose beta window (the spec's z_window sessions)
 holds the ex-date; at the as-of close that is PARTIAL, only earlier a history note, and every
 other reading is unchanged. Before that ruling one split made the block UNMEASURED every night
-after. A share-count corporate action that Alpaca reports on a fund the book has traded still
-stops the attribution itself every night (`live_attribution`'s refusal: the report is
-UNMEASURED and the unit exits 4) until the team lead rules on that refusal (a separate
-investigation, 2026-11-14). A
+after. A corporate action no longer stops the attribution by being in the window (team lead,
+2026-11-14: "narrow and handle it"; `scripts/cef/live_attribution.py`, CORPORATE ACTIONS). Only
+a fund held into the event's session, in a role whose count or symbol the event changes, is
+touched: an acquirer's merger (the core's MHD and MQY, 2026-02) and a flat name are not.
+Positions come from FILLs plus the account's own corporate-action activity rows (none on paper
+today), never from the market feed. A split paper did not process reconciles as the account
+shows it; the report prints a labelled phantom line per event, (q_prev - q_prev x k) x close,
+and a cumulative phantom line beside the official P&L, which stays the P&L of record; that
+name-day's NAV/discount split is UNMEASURED, named. A session that does not reconcile (paper
+froze the position, or support pushed the split with no account row) is UNRECONCILED, exit 5,
+naming the session and the event. Any other count-changing type held into its date with no
+account row still stops the attribution, named (exit 4). A
 book that holds nothing at the as-of close has a FLAT factor block (the same review): it
 says the book is flat and reads no exposure, flag or PARTIAL for that close, never the
 previous close's reading; its history since the first trade is labelled with its dates;

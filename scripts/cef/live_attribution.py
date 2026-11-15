@@ -165,9 +165,10 @@ WHAT IT REFUSES (raises, naming what is missing; never a default)
   * a fill on a day with no bar for its symbol, or on a day that is not a
     session of the EOD history;
   * duplicate FILL activity ids, which would count a fill twice;
-  * a split, or any other share-count corporate action, naming a traded symbol
-    in the window. Paper processes no corporate actions [V: docs/REFERENCES.md
-    §12pc], so the account's share count would no longer match the price;
+  * a share-count corporate action on a name held into its date that the rebuild does not
+    handle (CORPORATE ACTIONS, below): one of a type other than a forward or reverse split
+    with no account activity row for it, or any one when the cache did not read the
+    account's corporate-action activities;
   * a cache that cannot show the account was flat when the rebuild starts
     (`check_flat_start`), or that did not query splits;
   * a fill on or before the first EOD point (it cannot be reconciled), a bar on
@@ -182,6 +183,42 @@ WHAT IT REFUSES (raises, naming what is missing; never a default)
 No fillna on any price or NAV. A NAV or close that is present but not a finite
 positive number counts as missing, and the error says so. A distribution that
 cannot be resolved is UNMEASURED, never zero.
+
+CORPORATE ACTIONS (team lead, 2026-11-14: "narrow and handle it")
+------------------------------------------------------------------
+Until this ruling the rebuild refused any of the thirteen non-dividend action types naming
+any symbol ever traded, in any role, anywhere in the EOD window: a merger in which our fund
+was the ACQUIRER (its holder's count unchanged) refused the whole attribution every night
+after, and the core's muni shorts MHD and MQY had such mergers effective 2026-02-09 and
+2026-02-23 (docs/REFERENCES.md §12pc). The investigation that preceded the ruling read the
+cef account: 0 corporate-action activity rows; paper does not process corporate actions
+(§12pc); users report that paper either keeps the old count with the price moving to the new
+basis (H1, a phantom equity jump) or freezes the old position (H2), and support can push a
+split by hand (H3). On its synthetic fixture the rebuild from fills reconciles to the cent
+under H1, the phantom landing silently in nav_part or disc_part, and fails to reconcile
+under H2 and H3; rebasing the rebuild from the market feed gives wrong-sign positions under
+H1, so it is never done. The rule now:
+  * WHICH EVENT. Only a party whose count or symbol the event changes (role subject, source,
+    acquiree or old: a split's or stock dividend's subject, a spin-off's source, a merger's
+    acquiree, a name change's or unit split's old symbol; never an acquirer, a new or an
+    alternate symbol), and only a name HELD INTO the event's session (shares at the previous
+    close not zero). The event's session is the first session on or after its market date.
+    A flat name, an acquirer and an event outside the window are not touched.
+  * POSITIONS. From FILLs plus the account's own corporate-action activity rows
+    (`AlpacaReader.corporate_action_activities`: SPLIT, MA, NC, SC, SPIN, REO, REORG and JNLS
+    as fee-free position changes, `qty` signed at `price`, inside `fill`; CIL as cash, inside
+    `fill` of its name-day; neither in the fee model or the traded notional). Never from the
+    market feed. With no rows (paper today) the rebuild is the fills' alone, exactly as before.
+  * AN AFFECTED NAME-DAY keeps hold and the reconciliation, and its NAV/discount split is
+    UNMEASURED, named (the hold mixes the two share bases). If the account has no activity
+    row for the name that session and the event is a forward or reverse split, paper did not
+    process it: `Result.corp_events` carries the labelled phantom, (q_prev - q_prev x k) x
+    close_t with k = new_rate / old_rate from the market record (UNMEASURED, named, if the
+    record carries no rates), which sits inside hold and the official change; the official
+    change stays the P&L of record. Any other type with no row still refuses, named. If the
+    session does not reconcile (H2, or a split pushed by hand with no row), the residual says
+    so, and the report job names the session and the event.
+With no corporate action in the window, `analyse` output is byte-identical to before.
 
 USAGE
 -----
@@ -303,6 +340,11 @@ CAT_FEE_PER_SHARE = Fraction("0.000003")         # buys and sells
 SIDE_SIGN = {"buy": 1, "sell": -1, "sell_short": -1}
 
 SPLIT_TYPES = ("forward_split", "reverse_split", "unit_split")
+# CORPORATE ACTIONS (module docstring; team lead, 2026-11-14): the roles whose holder's count
+# or symbol an event changes, and the types whose phantom the rebuild can measure.
+COUNT_ROLES = ("subject", "source", "acquiree", "old")
+PHANTOM_TYPES = ("forward_split", "reverse_split")
+ACT_FILE = "corp_activities.json"           # optional: a cache from before 2026-11-14 has none
 DIST_KINDS = ("cash_dividend", "capital_gains_distribution")
 
 # Query windows (fetch). Alpaca filters corporate actions on PROCESS date, which
@@ -544,9 +586,51 @@ def parse_corp_actions(raw: list) -> list[dict]:
             if not isinstance(e, dict) or e.get(f) in (None, ""):
                 raise AttributionError(f"{w}: field {f!r} is missing")
         parties = [(str(p[0]), str(p[1])) for p in e["parties"]]
+        raw_rates = e.get("rates") or {}
+        if not isinstance(raw_rates, dict):
+            raise AttributionError(f"{w}: rates is not an object")
+        rates = {k: _frac(raw_rates[k], f"{w} {k}", positive=True)
+                 for k in ("old_rate", "new_rate") if raw_rates.get(k) is not None}
         out.append({"id": str(e["id"]), "type": str(e["type"]),
-                    "date": _date(e["date"], f"{w} date"), "parties": parties})
+                    "date": _date(e["date"], f"{w} date"), "parties": parties, "rates": rates})
     return out
+
+
+def parse_corp_activities(raw: list) -> list[dict]:
+    """The account's own corporate-action activity rows (`AlpacaReader.corporate_action_
+    activities`) -> [{id, type, date, symbol, qty, price, cash}]: a position change of `qty`
+    signed whole shares at `price`, or, for cash in lieu, `cash` and no position change.
+    Strict: a duplicate id, a missing field, a fractional or zero quantity, or a non-positive
+    price raises (module docstring, CORPORATE ACTIONS)."""
+    if not isinstance(raw, list):
+        raise AttributionError(f"corporate-action activities: expected a list, got {type(raw).__name__}")
+    out, seen = [], set()
+    for i, a in enumerate(raw):
+        w = f"corporate-action activity[{i}]"
+        if not isinstance(a, dict):
+            raise AttributionError(f"{w}: not an object")
+        w = f"{w} id={a.get('id')!r}"
+        for f in ("id", "activity_type", "date", "symbol"):
+            if a.get(f) in (None, ""):
+                raise AttributionError(f"{w}: field {f!r} is missing")
+        if a["id"] in seen:
+            raise AttributionError(f"{w}: duplicate id (a position change would count twice)")
+        seen.add(a["id"])
+        kind = str(a["activity_type"])
+        if kind not in AR.CORPORATE_ACTION_ACTIVITY_TYPES:
+            raise AttributionError(f"{w}: activity_type {kind!r} is not a corporate-action type read")
+        rec = {"id": str(a["id"]), "type": kind, "date": _date(a["date"], f"{w} date"),
+               "symbol": str(a["symbol"]), "qty": 0, "price": None, "cash": Fraction(0)}
+        if kind in AR.CA_CASH_ACTIVITY_TYPES:
+            rec["cash"] = _frac(a.get("net_amount"), f"{w} net_amount")
+        else:
+            q = _frac(a.get("qty"), f"{w} qty")
+            if q == 0 or q.denominator != 1:
+                raise AttributionError(f"{w}: qty {a.get('qty')!r} is not a non-zero whole number of shares")
+            rec["qty"] = int(q)
+            rec["price"] = _frac(a.get("price"), f"{w} price", positive=True)
+        out.append(rec)
+    return sorted(out, key=lambda r: (r["date"], r["id"]))
 
 
 # --------------------------------------------------------------- inputs
@@ -565,6 +649,8 @@ class Inputs:
     flat_start: dt.date               # the account held nothing at the start of this session
     fills_from: dt.date               # the fills in the cache cover every day from here
     corp_types: tuple = ()            # corporate-action types the cache's source was asked for
+    corp_acts: list = field(default_factory=list)   # the account's own corporate-action rows
+    corp_act_types: tuple = ()        # their types the cache asked for; () = not read
     dist_kinds: tuple = DIST_KINDS    # distribution kinds the cache's source was asked for
     # The second distribution source (parse_dist_check rows), when it was fetched
     # (tz-aware), and the session after the last EOD point. None means absent:
@@ -697,6 +783,18 @@ def load_cache(cache_dir: Path, grp: dict | None = None) -> Inputs:
     closes, bad_closes = _value_map(bars, "close", "bars")
     navs, bad_navs = _value_map(nav, "nav", "nav")
     book = str(man.get("book") or BOOK)
+    # The account's corporate-action activities (2026-11-14): a cache from before then has
+    # neither the file nor its manifest section, and reads as "not read" (attribute refuses
+    # only an event that needs them); one without the other is a broken cache.
+    sec = man.get("corporate_action_activities")
+    has_file = (cache_dir / ACT_FILE).is_file()
+    if has_file != (sec is not None):
+        raise AttributionError(f"cache {cache_dir}: {ACT_FILE} and the manifest's corporate_action_activities "
+                               "section must come together")
+    acts = parse_corp_activities(json.loads((cache_dir / ACT_FILE).read_text())) if has_file else []
+    act_types = tuple((sec or {}).get("types") or ())
+    if has_file and not act_types:
+        raise AttributionError("cache manifest: corporate_action_activities.types is missing")
     return Inputs(
         fills=parse_fills(json.loads((cache_dir / FILES["fills"]).read_text())),
         eod=parse_eod(list(zip(eod["date"], eod["equity"]))),
@@ -707,6 +805,7 @@ def load_cache(cache_dir: Path, grp: dict | None = None) -> Inputs:
         flat_start=_date(fs["date"], "manifest flat_start.date"),
         fills_from=_date(man["fills"]["requested_start"], "manifest fills.requested_start"),
         corp_types=tuple(man["corporate_actions"].get("types") or ()),
+        corp_acts=acts, corp_act_types=act_types,
         dist_kinds=tuple(man["distributions"].get("kinds") or ()),
         dist_check=parse_dist_check(check), dist_check_at=check_at,
         next_session=_date(man["eod"]["next_session"], "manifest eod.next_session"),
@@ -732,6 +831,8 @@ class Result:
     dist_unmeasured: list = field(default_factory=list)   # [(date, symbol, q_prev, reason)]
     book: str = "cef"
     nav_unmeasured: list = field(default_factory=list)    # [(date, symbol, missing)] nav_missing="unmeasured"
+    corp_events: list = field(default_factory=list)       # affected corporate actions (CORPORATE ACTIONS)
+    corp_activities: list = field(default_factory=list)   # the account's own rows applied
 
 
 def _ceil_cent(x: Fraction) -> Fraction:
@@ -863,7 +964,19 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             held = inp.bad_closes.get((f.symbol, f.date), "no row")
             raise AttributionError(f"fill {f.id} in {f.symbol} on {f.date}: no bar for that day "
                                    f"(bars hold {held!r})")
-    symbols = sorted({f.symbol for f in used})
+    # The account's own corporate-action rows in the window are position changes like fills
+    # (module docstring, CORPORATE ACTIONS); with none, everything below is as before.
+    acts = [a for a in inp.corp_acts if a["date"] <= asof]
+    early = [a for a in acts if a["date"] <= s0]
+    if early:
+        raise AttributionError(f"{len(early)} corporate-action activity row(s) on or before the first EOD point {s0} "
+                               f"(first: {early[0]['type']} {early[0]['symbol']} {early[0]['date']}): no earlier "
+                               "equity exists to reconcile them against")
+    acts_off = sorted({(a["symbol"], a["date"]) for a in acts if a["date"] not in in_window})
+    if acts_off:
+        raise AttributionError(f"corporate-action activity row(s) on a day that is not a session of the EOD "
+                               f"history: {acts_off[:5]}")
+    symbols = sorted({f.symbol for f in used} | {a["symbol"] for a in acts})
     no_grp = [s for s in symbols if s not in inp.grp]
     if no_grp:
         raise AttributionError(f"traded symbol(s) {no_grp} have no grp in the universe table")
@@ -876,16 +989,18 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
     if stray:
         raise AttributionError(f"bars dated {stray[:5]} fall on no session of the EOD history")
 
-    # Paper processes no corporate actions (docs/REFERENCES.md §12pc), so a split,
-    # merger or name change in a traded symbol leaves the account's share count on
-    # the old basis while the price moves to the new one. Nothing here can rebase it.
-    hits = [e for e in inp.corp if s0 <= e["date"] <= asof
-            and any(p in symbols for p, _ in e["parties"])]
-    if hits:
-        raise AttributionError(
-            "share-count corporate action(s) in the window on a traded symbol: "
-            + "; ".join(f"{e['type']} {e['date']} {[p for p, _ in e['parties']]} (id {e['id']})"
-                        for e in hits[:5]))
+    # Corporate actions (module docstring, CORPORATE ACTIONS; team lead, 2026-11-14): each
+    # event goes to its session, the first session on or after its market date; whether it
+    # touches the book is decided in the session loop, from the positions held into it.
+    pending = defaultdict(list)
+    for e in inp.corp:
+        if s0 < e["date"] <= asof:
+            ses = next((d for d in window if d >= e["date"]), None)
+            if ses is not None:
+                pending[ses].append(e)
+    acts_by_day = defaultdict(list)
+    for a in acts:
+        acts_by_day[a["date"]].append(a)
 
     ev = defaultdict(list)
     for e in inp.dists:
@@ -977,12 +1092,36 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
     q_prev_at: dict = {}
     dist_status: dict = {}              # (symbol, date) -> how its dist was resolved
     unmeasured_all = []
+    corp_events: list = []
     rows = []
     zero = Fraction(0)
     for i, d in enumerate(sessions[1:], start=1):
         p = sessions[i - 1]
         day = by_day.get(d, [])
-        names = sorted({s for s, x in q.items() if x} | {f.symbol for f in day})
+        legs = acts_by_day.get(d, [])
+        names = sorted({s for s, x in q.items() if x} | {f.symbol for f in day} | {a["symbol"] for a in legs})
+        # The events that touch the book this session: a party whose count or symbol changes,
+        # held into it (module docstring, CORPORATE ACTIONS).
+        affected: dict = {}
+        for e in pending.get(d, []):
+            for sym, role in e["parties"]:
+                if role in COUNT_ROLES and q[sym]:
+                    affected.setdefault(sym, []).append((e, role))
+        for sym, evs in sorted(affected.items()):
+            for e, role in evs:
+                what = f"{e['type']} {e['date']} {sym} ({role}, id {e['id']}), {q[sym]} share(s) held into {d}"
+                if any(a["symbol"] == sym for a in legs):
+                    continue                     # the account's own rows move it (below)
+                if not inp.corp_act_types:
+                    raise AttributionError(
+                        f"share-count corporate action on a name held into its date: {what}; the cache did not "
+                        "read the account's corporate-action activities, so whether paper processed it cannot "
+                        "be read (fetch again)")
+                if e["type"] not in PHANTOM_TYPES:
+                    raise AttributionError(
+                        f"share-count corporate action on a name held into its date, of a type the rebuild "
+                        f"handles only through the account's own activity rows, and the account has none for it "
+                        f"that session: {what}")
         # Entitlement (dist_score.py): the holder at p's close, q_prev, gets the
         # distribution with ex-date d. Resolution: dist_score.resolve, for exactly
         # the names held into d (module docstring, DISTRIBUTIONS).
@@ -994,6 +1133,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             qp = q[s]
             q_prev_at[(s, d)] = qp
             fs = [f for f in day if f.symbol == s]
+            ls = [a for a in legs if a["symbol"] == s]
             c_t = need(inp.closes, inp.bad_closes, s, d, "close", "held or traded")
             if qp:
                 c_p = need(inp.closes, inp.bad_closes, s, p, "close", f"held into {d}")
@@ -1011,7 +1151,26 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             else:
                 c_p = n_t = n_p = None
                 hold = nav_part = zero
-            if nav_part is None:
+            if s in affected:                    # two share bases in one hold: not split (CORPORATE ACTIONS)
+                nav_part = None
+                rows_s = "the account's own activity row(s) moved it" if ls else "paper did not process it"
+                ev_s = "; ".join(f"{e['type']} {e['date']} (id {e['id']})" for e, _ in affected[s])
+                nav_gaps.append((d, s, f"a corporate action on the name that session, {ev_s}: {rows_s}"))
+                disc = None
+                for e, role in affected[s]:
+                    k = phantom = None
+                    why = None
+                    if not ls:
+                        r = e.get("rates") or {}
+                        if r.get("old_rate") and r.get("new_rate"):
+                            k = r["new_rate"] / r["old_rate"]
+                            phantom = (qp - qp * k) * c_t
+                        else:
+                            why = "the market record carries no old_rate/new_rate, so k is unknown"
+                    corp_events.append({"id": e["id"], "type": e["type"], "date": e["date"], "session": d,
+                                        "symbol": s, "role": role, "q_prev": qp, "close": c_t, "k": k,
+                                        "processed": bool(ls), "phantom": phantom, "why": why})
+            elif nav_part is None:
                 disc = None
                 missing = [x for x, v in (("NAV on " + str(d), n_t), ("NAV on " + str(p), n_p)) if v is None]
                 nav_gaps.append((d, s, " and ".join(missing)))
@@ -1020,6 +1179,9 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                 if nav_part + disc != hold:      # exact in Fraction; a float here would be a bug
                     raise AttributionError(f"{s} {d}: nav_part + disc_part != hold")
             fill = sum((f.signed_qty * (c_t - f.price) for f in fs), zero)
+            if ls:                               # fee-free position changes and cash in lieu (CORPORATE ACTIONS)
+                fill += sum((a["qty"] * (c_t - a["price"]) for a in ls if a["price"] is not None), zero)
+                fill += sum((a["cash"] for a in ls), zero)
             traded = sum((abs(f.signed_qty) * f.price for f in fs), zero)
             if not qp:
                 dist, status = zero, "not held at the previous close: not entitled"
@@ -1030,7 +1192,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                 status = (f"Alpaca's record: {notes[s]}" if ev.get((s, d)) else
                           "none: both sources silent, the second current and covering the name")
             dist_status[(s, d)] = status
-            q_end = qp + sum(f.signed_qty for f in fs)
+            q_end = qp + sum(f.signed_qty for f in fs) + sum(a["qty"] for a in ls)
             side = ("long" if qp > 0 else "short" if qp < 0 else
                     "long" if q_end > 0 else "short" if q_end < 0 else "flat")
             rows.append({"date": d, "prev_date": p, "period": period_of(d), "symbol": s,
@@ -1083,6 +1245,18 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
         gaps.append(f"the NAV/discount split is UNMEASURED on {len(nav_gaps)} held name-day(s): "
                     + ", ".join(f"{s} {d} ({w})" for d, s, w in nav_gaps[:10])
                     + (" ..." if len(nav_gaps) > 10 else ""))
+    for c in corp_events:
+        gaps.append(f"corporate action on a held name: {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), "
+                    f"{c['q_prev']} share(s) held into {c['session']}; "
+                    + ("the account's own activity rows moved the position" if c["processed"] else
+                       (f"paper did not process it: phantom (q_prev - q_prev x k) x close = "
+                        f"{float(c['phantom']):+,.2f} (k {c['k']}), inside hold and the official change"
+                        if c["phantom"] is not None else f"paper did not process it: phantom UNMEASURED ({c['why']})"))
+                    + "; that name-day's NAV/discount split is UNMEASURED")
+    if acts:
+        gaps.append(f"{len(acts)} corporate-action activity row(s) of the account applied as fee-free position "
+                    f"changes or cash, inside fill: " + ", ".join(f"{a['type']} {a['symbol']} {a['date']} "
+                                                                  f"(id {a['id']})" for a in acts[:10]))
     if "capital_gains_distribution" not in inp.dist_kinds:
         gaps.append("capital-gains distributions were NOT queried by the cache's source: the "
                     "distribution line covers cash dividends only")
@@ -1097,7 +1271,8 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                   periods=periods, period_rule=rule, gaps=gaps, excluded_after_asof=later,
                   asof=asof, first_session=window[0], sources=inp.sources,
                   dist_kinds=tuple(inp.dist_kinds), dist_unmeasured=unmeasured_all,
-                  book=inp.book, nav_unmeasured=nav_gaps)
+                  book=inp.book, nav_unmeasured=nav_gaps, corp_events=corp_events,
+                  corp_activities=acts)
 
 
 # --------------------------------------------------------------- reporting
@@ -1123,6 +1298,9 @@ def group_table(nd: pd.DataFrame, keys) -> pd.DataFrame:
     f = _float_frame(nd[list(keys) + list(MONEY)])
     plain = [k for k in MONEY if k != "dist"]
     g = f.groupby(list(keys), sort=True)[plain].sum()
+    for k in ("nav_part", "disc_part"):          # a sum with a missing term is not the sum (CORPORATE ACTIONS)
+        if f[k].isna().any():
+            g[k] = g[k].where(~f.groupby(list(keys), sort=True)[k].apply(lambda x: x.isna().any()))
     g["dist"] = f.groupby(list(keys), sort=True)["dist"].agg(_sum_or_unmeasured)
     g = g[list(MONEY)]
     g["price_pnl"] = g["hold"] + g["fill"]
@@ -1176,7 +1354,7 @@ def _md_table(df: pd.DataFrame, money_cols) -> str:
         cells = []
         for c, v in zip(cols, r):
             missing = v is None or (isinstance(v, float) and math.isnan(v))
-            if c in ("dist", "with_dist") and missing:
+            if c in ("dist", "with_dist", "nav_part", "disc_part") and missing:
                 cells.append("UNMEASURED")
             elif c in money_cols and not missing:
                 cells.append(f"{v:,.2f}" if c != "fill_bp_of_traded" else f"{v:,.1f}")
@@ -1216,10 +1394,38 @@ def write_outputs(res: Result, out_dir: Path) -> dict:
         p = out_dir / f"{k}.csv"
         df.to_csv(p, index=False)
         paths[k] = p
+    if res.corp_events:                          # only with a corporate action on a held name (CORPORATE ACTIONS)
+        p = out_dir / "corp_events.csv"
+        _refuse_git_visible(out_dir, ["corp_events.csv"])
+        _float_frame(pd.DataFrame(res.corp_events)).to_csv(p, index=False)
+        paths["corp_events"] = p
     p = out_dir / "summary.md"
     p.write_text(summary_markdown(res, tabs))
     paths["summary"] = p
     return paths
+
+
+def corp_section(res: Result) -> list[str]:
+    """The summary's section on corporate actions on held names and the account's own rows
+    (module docstring, CORPORATE ACTIONS); none when there are neither, so a window with no
+    corporate action writes the summary it always did."""
+    if not res.corp_events and not res.corp_activities:
+        return []
+    L = ["## Corporate actions on held names (team lead, 2026-11-14)", ""]
+    for c in res.corp_events:
+        L.append(f"- {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}, {c['role']}), {c['q_prev']} share(s) "
+                 f"held into {c['session']}: "
+                 + ("the account's own activity rows moved the position (inside fill)" if c["processed"] else
+                    (f"phantom: paper did not process {c['type']}: (q_prev - q_prev x k) x close_t = "
+                     f"{float(c['phantom']):,.2f} (k {c['k']}, close {float(c['close']):,.4f}), inside hold and the "
+                     "official change, which stays the P&L of record" if c["phantom"] is not None else
+                     f"phantom UNMEASURED: {c['why']}"))
+                 + "; that name-day's NAV/discount split is UNMEASURED")
+    for a in res.corp_activities:
+        L.append(f"- account activity {a['type']} {a['symbol']} {a['date']} (id {a['id']}): "
+                 + (f"cash {float(a['cash']):,.2f}" if a["price"] is None else
+                    f"{a['qty']:+d} share(s) at {float(a['price']):,.4f}") + ", fee-free, inside fill")
+    return L + [""]
 
 
 def summary_markdown(res: Result, tabs: dict) -> str:
@@ -1264,8 +1470,8 @@ def summary_markdown(res: Result, tabs: dict) -> str:
     L += ["", "## Components", "",
           "| component | USD |", "|---|---|",
           f"| hold (q_prev x close change) | {t['hold']:,.2f} |",
-          f"| of which nav_part (q_prev x close_prev x NAV return) | {t['nav_part']:,.2f} |",
-          f"| of which disc_part (hold - nav_part) | {t['disc_part']:,.2f} |",
+          f"| of which nav_part (q_prev x close_prev x NAV return) | {_usd(t['nav_part'])} |",
+          f"| of which disc_part (hold - nav_part) | {_usd(t['disc_part'])} |",
           f"| fill (fills against that day's close) | {t['fill']:,.2f} |",
           f"| fees (modelled: SEC on {t['sold_usd']:,.2f} sold, CAT on {t['shares_traded']:,.0f} "
           f"shares; per session, rounded up) | {t['fees']:,.2f} |",
@@ -1293,6 +1499,7 @@ def summary_markdown(res: Result, tabs: dict) -> str:
           "## Distribution events in the window", "",
           (_md_table(tabs["dist_events"], {"dist"}) if len(tabs["dist_events"])
            else "None in the cache's source for the traded symbols."), "",
+          *corp_section(res),
           "## Every session's reconciliation", "", "```", *reconcile_lines(res.daily), "```", "",
           "## Gaps and caveats", ""]
     L += [f"- GAP: {g}" for g in res.gaps]
@@ -1316,7 +1523,7 @@ def report(res: Result) -> str:
              *reconcile_lines(res.daily),
              f"official (EOD change) {t['eod_change']:,.2f}   rebuilt (hold+fill+fees) {t['rebuilt']:,.2f}"
              f"   official-rebuilt {t['residual']:,.2f}   max |session residual| {t['max_abs_residual']:,.2f}",
-             f"hold {t['hold']:,.2f} = nav_part {t['nav_part']:,.2f} + disc_part {t['disc_part']:,.2f}"
+             f"hold {t['hold']:,.2f} = nav_part {_usd(t['nav_part'])} + disc_part {_usd(t['disc_part'])}"
              f"   fill {t['fill']:,.2f} ({t['fill_bp_of_traded']:,.1f}bp of {t['traded_usd']:,.2f} traded)"
              f"   fees (modelled) {t['fees']:,.2f} on {t['sold_usd']:,.2f} sold"
              f"   fill+fees {t['execution']:,.2f} ({t['execution_bp_of_traded']:,.1f}bp)"
@@ -1415,6 +1622,19 @@ def yf_navs(symbols, start: dt.date, end: dt.date, *, book: str = BOOK) -> tuple
     return pd.DataFrame(rows, columns=["date", "ticker", "nav"]), empty
 
 
+def _rates_of(eid: str, raw_rows: list) -> dict:
+    """A market record's old_rate/new_rate as written (strings), from the raw row(s)
+    `corporate_actions(rows=...)` kept for its id; two rows for one id that disagree raise."""
+    out: dict = {}
+    for r in raw_rows:
+        for k in ("old_rate", "new_rate"):
+            if isinstance(r, dict) and r.get(k) is not None:
+                v = str(r[k])
+                if out.setdefault(k, v) != v:
+                    raise AttributionError(f"corporate action {eid}: two rows give {k} {out[k]!r} and {v!r}")
+    return out
+
+
 def fetch(cache_dir: Path, *, since: dt.date, asof: dt.date | None = None, client=None,
           nav_fetcher=None, dist_check_fetcher=None, now: dt.datetime | None = None,
           book: str = BOOK) -> dict:
@@ -1435,7 +1655,7 @@ def fetch(cache_dir: Path, *, since: dt.date, asof: dt.date | None = None, clien
     close of the session following D" can only be judged false too often.
     """
     _refuse_data_dir(cache_dir)
-    _refuse_git_visible(Path(cache_dir), list(FILES.values()))
+    _refuse_git_visible(Path(cache_dir), list(FILES.values()) + [ACT_FILE])
     client = AR.AlpacaReader.from_environment(book) if client is None else client
     nav_fetcher = partial(yf_navs, book=book) if nav_fetcher is None else nav_fetcher
     dist_check_fetcher = yf_dividends if dist_check_fetcher is None else dist_check_fetcher
@@ -1467,6 +1687,11 @@ def fetch(cache_dir: Path, *, since: dt.date, asof: dt.date | None = None, clien
     syms = sorted({a["symbol"] for a in fills})
     if not syms:
         raise AttributionError(f"no FILL activity in {since}..{last}")
+    # The account's own corporate-action rows (module docstring, CORPORATE ACTIONS): their
+    # symbols need bars like a fill's. None today, so `syms` is the fills' own.
+    acts = client.corporate_action_activities()
+    parse_corp_activities(acts)                         # raises on a bad row before writing
+    syms = sorted(set(syms) | {a["symbol"] for a in acts if since <= dt.date.fromisoformat(a["date"]) <= last})
 
     if since < first:
         before = [r["date"] for r in client.calendar(since, first - dt.timedelta(days=1))]
@@ -1488,9 +1713,11 @@ def fetch(cache_dir: Path, *, since: dt.date, asof: dt.date | None = None, clien
     dists = [dict(e, ex_date=e["ex_date"].isoformat()) for e in client.distributions(syms, d_lo, d_hi)]
     c_lo = first - dt.timedelta(days=CA_QUERY_PAD_BEFORE_DAYS)
     c_hi = last + dt.timedelta(days=CA_QUERY_PAD_AFTER_DAYS)
+    raw_corp: dict = {}
     corp = [{"id": e["id"], "type": e["type"], "date": e["date"].isoformat(),
-             "process_date": e["process_date"].isoformat(), "parties": e["parties"]}
-            for e in client.corporate_actions(syms, c_lo, c_hi)]
+             "process_date": e["process_date"].isoformat(), "parties": e["parties"],
+             "rates": _rates_of(e["id"], raw_corp.get(e["id"], []))}
+            for e in client.corporate_actions(syms, c_lo, c_hi, rows=raw_corp)]
     nav, nav_empty = nav_fetcher(syms, first - dt.timedelta(days=NAV_LOOKBACK_DAYS), last)
     check, check_empty = dist_check_fetcher(syms)
     parse_dist_check(check)                             # raises on a bad row before writing
@@ -1504,6 +1731,7 @@ def fetch(cache_dir: Path, *, since: dt.date, asof: dt.date | None = None, clien
     b.to_csv(cache_dir / FILES["bars"], index=False)
     (cache_dir / FILES["dists"]).write_text(json.dumps(dists, indent=1, default=str))
     (cache_dir / FILES["corp"]).write_text(json.dumps(corp, indent=1))
+    (cache_dir / ACT_FILE).write_text(json.dumps(acts, indent=1))
     nav.to_csv(cache_dir / FILES["nav"], index=False)
     check.to_csv(cache_dir / FILES["dists_check"], index=False)
     man = {
@@ -1528,6 +1756,9 @@ def fetch(cache_dir: Path, *, since: dt.date, asof: dt.date | None = None, clien
                                         "filter, data_quality=all (AlpacaReader.corporate_actions)",
                               "types": sorted(AR.CORPORATE_ACTION_TYPES),
                               "query": [c_lo.isoformat(), c_hi.isoformat()]},
+        "corporate_action_activities": {"source": "GET /v2/account/activities?activity_types=... (AlpacaReader."
+                                                  "corporate_action_activities): the account's own rows",
+                                        "types": list(AR.CORPORATE_ACTION_ACTIVITY_TYPES), "n": len(acts)},
         "distributions_check": {"source": "yfinance Ticker.dividends, keyless, every row (the "
                                           "vendor of data/cef/cef_distributions.parquet, prod's "
                                           "second source in quantt/session/dist_score.py)",
