@@ -4556,3 +4556,18 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. The band was fixed before its returns were read. Gross, no costs; spread not staged. Set aside
 
+### E-2026-11-15-15 · Result: earnings drift in stocks ranked 1,501–4,000 is 1.27 gross on the long side alone against IWM, positive in every era; independently re-derived
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - universe and rule fixed before any return was read: rank 1,501–4,000, price ≥ $5, $500k a day; the `pead_wide` rule on the IBES surprise score, 40 sessions, shift(2); CRSP to 2025-12-31, 291,872 releases [V]
+  - both sides gross Sharpe 1.30 (t 6.60), halves 1.29 / 1.33, signal 126 sessions late 0.41 [V]
+  - long leg against IWM 1.27 (t 6.42), 12.8% a year on 10.1% volatility, halves 1.45 / 1.06, eras 1.65, 1.18, 1.40, 0.54, 1.50, late control 0.27; short leg 0.33 (t 1.68) [V]
+  - the announcement-move sort, pre-specified as the second sort: 0.59, −0.06 since 2013, late control 0.68 [V]
+  - independent review: long leg re-derived at 1.26 (t 6.39), identical on 6,435 of 6,437 days; no lookahead found; delay 1, 2, 5, 10, 20 sessions gives 1.12, 0.99, 0.77, 0.59, 0.36 [S]
+  - stored checks, not pre-specified: 1.37 less its own universe; 1.12 with every release known the session after its date; 0.68 (t 3.41) sorted on surprise over consensus with that timing; stock-side cost of 5 / 15 / 30bp per unit traded gives 1.06 / 0.65 / 0.03 [V]
+- source: `results/ideas/pead_small/explore.py` @ `PENDING`; `results/ideas/pead_small/checks.py` @ `PENDING`; `results/ideas/pead_wide/explore.py` @ `PENDING`; `scripts/research/stage_ibes_surprises.py` @ `PENDING`; `results/ideas/2026-11-15_pead_small.md` @ `PENDING`
+- supports: §4
+- status: current. Gross; the cost figures are a labelled real-money view. The IBES consensus construction and CRSP's delisting row could not be checked at source by the reviewer. Not on shadow
+
