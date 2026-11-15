@@ -172,6 +172,54 @@ class ReadOnlyData:
                 return rows, bad
         raise RuntimeError("corporate-actions: more than 50 pages of spin-offs; refusing to continue")
 
+    def special_dividends(self, first: dt.date, last: dt.date) -> tuple[list, int]:
+        """Every cash-dividend row Alpaca marks `special` and not `foreign`, with a process
+        date in [first, last], for the whole market: ([{id, symbol, ex_date, amount,
+        process_date}], number of special rows left out as unreadable).
+
+        The request is the spin-off reader's with one type changed (see `spin_offs` for why
+        it goes through the client's private GET and asks for `data_quality=all`). The window
+        filters on process date, which was the pay date on every row read on 2026-11-15
+        (docs/REFERENCES.md 12sv), so a caller looking for FUTURE ex-dates must ask well
+        ahead. `foreign` rows are depositary receipts and over-the-counter foreign lines
+        (35 of 105 special rows in the 2026-11-15 read): the research was on US common
+        shares, so they are dropped here by the feed's own flag, never by a guess.
+        A row is unreadable when its id, symbol, ex-date or rate is missing or malformed, or
+        its rate is not positive; it is counted and left out."""
+        c = self.__client
+        rows, bad, token = [], 0, None
+        for _ in range(200):
+            params = {"types": "cash_dividend", "start": first.isoformat(), "end": last.isoformat(),
+                      "limit": 1000, "data_quality": "all"}
+            if token:
+                params["page_token"] = token
+            body = c._get(c._data, "/v1/corporate-actions", params)
+            if not isinstance(body, dict) or "corporate_actions" not in body:
+                raise RuntimeError("corporate-actions: the response has no corporate_actions object")
+            got = (body["corporate_actions"] or {}).get("cash_dividends") or []
+            if not isinstance(got, list):
+                raise RuntimeError("corporate-actions: cash_dividends is not a list")
+            for r in got:
+                if not isinstance(r, dict) or r.get("special") is not True or r.get("foreign") is not False:
+                    continue
+                try:
+                    amount = float(r["rate"])
+                    ok = (isinstance(r["id"], str) and r["id"] and isinstance(r["symbol"], str)
+                          and r["symbol"] and amount > 0 and amount == amount)
+                    row = {"id": r["id"], "symbol": r["symbol"], "amount": amount,
+                           "ex_date": dt.date.fromisoformat(r["ex_date"]),
+                           "process_date": dt.date.fromisoformat(r["process_date"])} if ok else None
+                except (KeyError, TypeError, ValueError):
+                    row = None
+                if row is None:
+                    bad += 1
+                else:
+                    rows.append(row)
+            token = body.get("next_page_token")
+            if not token:
+                return rows, bad
+        raise RuntimeError("corporate-actions: more than 200 pages of cash dividends; refusing to continue")
+
     def sessions(self, first: dt.date, last: dt.date) -> list:
         """Trading days from the exchange calendar Alpaca serves."""
         return [dt.date.fromisoformat(str(r["date"])[:10]) for r in self.__client.calendar(first, last)]
