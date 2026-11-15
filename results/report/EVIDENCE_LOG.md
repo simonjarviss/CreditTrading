@@ -4540,7 +4540,7 @@ that adds it does not exist when it is written.
   - per event against IWM, bought at the closing ask and sold at the closing bid: mean +1.21%, median +0.48%, 55% positive, against +1.72% and +0.97% at closing prices [V]
   - the same by era: +0.92%, +0.21%, +1.71%, +1.88%, +2.24% (medians +0.19%, −0.41%, +1.40%, +1.03%, +1.00%) [V]
   - by band: $100k–$1M spread median 0.58%, ask-to-bid +1.74% (median +0.54%); $1M–$5M 0.14%, +0.68% (+0.40%); $5M and over 0.05%, +0.60% (+0.36%) [V]
-- source: `results/ideas/special_dividends/checks.py` @ `PENDING`; `scripts/research/stage_crsp_special_divs.py` @ `PENDING`; `results/ideas/2026-11-15_special_dividends.md` @ `PENDING`
+- source: `results/ideas/special_dividends/checks.py` @ `d03e025`; `scripts/research/stage_crsp_special_divs.py` @ `d03e025`; `results/ideas/2026-11-15_special_dividends.md` @ `d03e025`
 - supports: §4
 - status: current. A real-money view, labelled and kept apart from the gross result; an upper bound on one round trip's quoted cost, not an estimate of fills. Depth at the quote is unmeasured
 
