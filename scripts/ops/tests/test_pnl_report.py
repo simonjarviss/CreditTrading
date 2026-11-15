@@ -1391,8 +1391,9 @@ def test_an_account_row_the_parser_cannot_read_stops_the_report_loudly(tmp_path)
 def test_the_report_labels_an_approximate_phantom_and_names_the_reason_in_its_json(case):
     """Team lead, 2026-11-15, on the third review: where the phantom's exactness conditions fail
     the report's phantom line and cumulative line say "approximate: <reason>", and the JSON names
-    the reason (`approximate` on the event, `phantom_approximate`); a clean case has neither
-    (test_the_report_says_the_first_trade_crystallised_the_phantom). Fails on the parent 82ff173,
+    the reason (`approximate` on the event, `phantom_approximate`). Since the ruling that every
+    crystallised phantom is approximate (team lead, 2026-11-15, the no-trade band), only an open
+    phantom with a whole q_prev x k is unlabelled (the open-phantom tests). Fails on the parent 82ff173,
     which claimed the figure without a label."""
     from scripts.cef.tests import test_live_attribution as TLA
     if case == "fills_on_both_sides":

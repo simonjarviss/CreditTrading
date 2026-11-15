@@ -270,7 +270,9 @@ H1, so it is never done. The rule now:
     `report()` and the report job's lines and JSON; the figure is the same either way.
   * If a session does not reconcile (H2, or a split pushed by hand with no row), the residual
     says so, and the report job names the session and the event.
-With no corporate action in the window, `analyse` output is byte-identical to before.
+With no corporate action in the window, `analyse` output is byte-identical to before, except one
+gap line on a cache without corp_activities.json, saying the account's rows were not read and
+the stop on them did not run.
 
 USAGE
 -----

@@ -4291,7 +4291,7 @@ that adds it does not exist when it is written.
   - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before except the factor P&L rows the flat-entry fix adds on sessions where the book goes flat)
 - source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
 - supports: §4, §5
-- status: superseded in part by E-2026-11-15-53 (2026-11-15): corporate actions are narrowed, and an account corporate-action row stops the report rather than being handled
+- status: built on branch reports-followup, under review; not installed; superseded in part by E-2026-11-15-53 (2026-11-15): corporate actions are narrowed, and an account corporate-action row stops the report rather than being handled
 
 ### E-2026-11-15-50 · Ruling and method: the corporate-action handling is fixed properly after its review: one phantom per split, the account's own rows rebased in a corp line of their own, and late rows closing the open phantom
 - kind: method
@@ -4308,10 +4308,10 @@ that adds it does not exist when it is written.
 - era: ALPACA
 - date: 2026-11-15
 - figures:
-  - none (a second review of the report follow-up found the phantom kept adding the extra shares' daily moves after the runner had traded them away, so it drifted from what is in the official P&L. The team lead ruled on 2026-11-15: it freezes on the first session the account trades the fund, labelled crystallised; it then equals an independent simulation of a processed account exactly in the six tested cases, with one named gap, when paper applies the split late to an already re-sized count. Also ruled: the account's rows are applied for any fund a corporate-action record names, in any role, with late cash in lieu tied to its split; a new share count that contradicts the split ratio stops the attribution, named (rounded toward zero, which for a short is unverified); a second record of an already-handled split stops it, naming both. A method choice beyond the brief: a session whose account rows do not net to zero at their own prices values every row at the close, which two of the tested cases need to reconcile. With no corporate action the attribution's output is byte-identical to before)
+  - none (a second review of the report follow-up found the phantom kept adding the extra shares' daily moves after the runner had traded them away, so it drifted from what is in the official P&L. The team lead ruled on 2026-11-15: it freezes on the first session the account trades the fund, labelled crystallised; it then equals an independent simulation of a processed account exactly in the six tested cases, with one named gap, when paper applies the split late to an already re-sized count. Also ruled: the account's rows are applied for any fund a corporate-action record names, in any role, with late cash in lieu tied to its split; a new share count that contradicts the split ratio stops the attribution, named (rounded toward zero, which for a short is unverified); a second record of an already-handled split stops it, naming both. A method choice beyond the brief: a session whose account rows do not net to zero at their own prices values every row at the close, which two of the tested cases need to reconcile. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
 - source: `scripts/cef/live_attribution.py` @ `891aea3`; `scripts/cef/live_attribution.py` @ `1a7a1a9`; `scripts/cef/live_attribution.py` @ `6b68fe9`
 - supports: §4, §5
-- status: superseded in part by E-2026-11-15-53 (2026-11-15): the account-row handling it describes was removed; the phantom's freeze at the first trade stands
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the account-row handling it describes was removed; the phantom's freeze at the first trade stands; and superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
 
 ### E-2026-11-15-52 · Method: the report job's reader reads the half-day end-of-day stamp by the same rule as the runner's client, held equal by test
 - kind: method
@@ -4328,10 +4328,10 @@ that adds it does not exist when it is written.
 - era: ALPACA
 - date: 2026-11-15
 - figures:
-  - none (a third review found four more defects in the code that applied the account's own corporate-action rows, a path paper has never exercised and whose row format is undocumented; each review round had fixed the last and found new ones. The team lead ruled on 2026-11-15 to simplify: any such row on or before the as-of stops the attribution, naming each row, and the job exits 4; no code applies one. Kept: the narrowed trigger, the paper-split phantom with its freeze at the first trade, one event per split, and the refusal of a second record of a handled split. The phantom is labelled approximate, with the reason, when the crystallising session has fills on both sides or the split leaves a fraction of a share. With no corporate action the attribution's output is byte-identical to before)
+  - none (a third review found four more defects in the code that applied the account's own corporate-action rows, a path paper has never exercised and whose row format is undocumented; each review round had fixed the last and found new ones. The team lead ruled on 2026-11-15 to simplify: any such row on or before the as-of stops the attribution, naming each row, and the job exits 4; no code applies one. Kept: the narrowed trigger, the paper-split phantom with its freeze at the first trade, one event per split, and the refusal of a second record of a handled split. The phantom is labelled approximate, with the reason, when the crystallising session has fills on both sides or the split leaves a fraction of a share. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
 - source: `scripts/cef/live_attribution.py` @ `82ff173`; `scripts/cef/live_attribution.py` @ `bcc3446`; `scripts/ops/pnl_report.py` @ `bcc3446`
 - supports: §4, §5
-- status: built on branch reports-followup, under review; not installed; supersedes the account-row parts of E-2026-11-15-50 and E-2026-11-15-51
+- status: built on branch reports-followup, under review; not installed; supersedes the account-row parts of E-2026-11-15-50 and E-2026-11-15-51; superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
 
 ### E-2026-11-15-54 · Ruling: a paper split's phantom, once frozen by a trade, is always labelled approximate, because the runner's no-trade band means a correctly processed account need not have traded to the same position
 - kind: ruling
@@ -4339,6 +4339,6 @@ that adds it does not exist when it is written.
 - date: 2026-11-15
 - figures:
   - none (a review found the frozen phantom's claim to equal official equity minus a processed account rested on both ending at the same position after the trade; the live sleeve trades only outside its no-trade band and only to the band's edge, sizing on equity that carries the phantom, so the true gap keeps moving after the trade. The team lead ruled on 2026-11-15: every frozen phantom is labelled approximate, naming the band, and nothing calls it exact; the figure is unchanged. An open phantom, before any trade, stays unlabelled unless the split leaves a fraction of a share. Also fixed in the same round: the stop checks the job's own as-of and names every row, and a research run on data cached before the stop existed says it did not run)
-- source: `scripts/cef/live_attribution.py` @ `aead2da`; `scripts/ops/pnl_report.py` @ `fa0c2a0`; `scripts/cef/live_attribution.py` @ `e14f79b`
+- source: `scripts/cef/live_attribution.py` @ `aead2da`; `scripts/ops/pnl_report.py` @ `aead2da`; `scripts/cef/live_attribution.py` @ `fa0c2a0`; `scripts/ops/pnl_report.py` @ `fa0c2a0`; `scripts/cef/live_attribution.py` @ `e14f79b`
 - supports: §4, §5
 - status: built on branch reports-followup, under review; not installed

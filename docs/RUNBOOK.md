@@ -1376,7 +1376,8 @@ shares at the fill price, plus the session's fee term), and the cumulative phant
 the official P&L, which stays the P&L of record: an estimate of what paper's missing split put
 into it. Every crystallised phantom is labelled "approximate: <reason>" (team lead, 2026-11-15):
 the live sleeve trades a name only outside its no-trade band, to the band's edge, so an account
-that had processed the split need not have traded to the same position (section 6.1 step 5).
+that had processed the split need not have traded to the same position (src/deploy/sleeves/
+cef_discount.py, NO-TRADE BAND; it sizes on equity that carries the phantom, section 6.1 step 5).
 The label also names fills on both sides of the name on the crystallising session, a q_prev x k
 that is not a whole number, and a fee term shared with such a session, where they apply; an
 open phantom (no trade in the name yet) is labelled only for a fractional q_prev x k. The label
