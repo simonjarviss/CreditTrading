@@ -4544,3 +4544,15 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. A real-money view, labelled and kept apart from the gross result; an upper bound on one round trip's quoted cost, not an estimate of fills. Depth at the quote is unmeasured
 
+### E-2026-11-15-14 · Result: merger targets too small for arbitrage funds pay a wider spread per deal and make a worse book (0.32 over bills)
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - friendly all-cash deals, target priced $2+ and trading $100k to under $1M a day, CRSP to 2025-12-31: 541 deals (21 a year), 14.4% withdrawn; per deal +3.84% mean and +2.53% median over a median 60 sessions; 5th percentile −13.4% [V]
+  - the book (equal weights, flat under five live deals): Sharpe over bills 0.32 (t 1.65), halves 0.82 / −0.15, −0.52 in 2023–25, flat on 52% of sessions [V]
+  - the same rules on $5 and $1M or more: 1,865 deals, 6.5% withdrawn, +1.77% mean and +1.48% median per deal, 0.71 over bills (t 3.61); on $2 and $1M–$5M: 542 deals, 0.58 [V]
+- source: `results/ideas/merger_arb/micro.py` @ `45148ea`; `results/ideas/merger_arb/explore.py` @ `45148ea`; `results/ideas/2026-11-12_merger_arb.md` @ `45148ea`
+- supports: §4
+- status: current. The band was fixed before its returns were read. Gross, no costs; spread not staged. Set aside
+
