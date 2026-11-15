@@ -34,9 +34,15 @@ DIST_WINDOW_PAD_DAYS = 75
 #   ARCA -> "NYSE Arca" (SIP code P). [V 2026-11-09: /v2/assets/SPY says ARCA;
 #   /v2/stocks/meta/exchanges names P "NYSE Arca"; SPY's 2026-11-06 closing prints carry
 #   (P, condition M) = the official close.]
+#   TXSE -> "Texas Stock Exchange" (SIP code F). [V 2026-11-15: all 11 active TXSE assets
+#   priced by Yahoo (CECO, CFR, FIFT, IBOC, ICOM, ILS, OBK, PWRX, THRU, TXS, WTAL) have a
+#   condition-M print under F on 2026-11-13 equal to Yahoo's close to the cent, and none
+#   under N or Q. Each also has an M print under P at the same price, which is not used.]
+#   Added because Alpaca's record for ET read 'TXSE' on the VM's 2026-11-13 07:20 run and
+#   'NYSE' on every read before and after: the run stopped with UnmappedExchange.
 # A listing on any other exchange (Cboe BZX, IEX) raises, naming it, until someone
 # measures its row and adds it here.
-EXTRA_EXCHANGE_SIP_NAME = {"ARCA": "NYSE Arca"}
+EXTRA_EXCHANGE_SIP_NAME = {"ARCA": "NYSE Arca", "TXSE": "Texas Stock Exchange"}
 
 # Symbols whose official close is NOT on the exchange Alpaca's asset record names. Each is
 # measured, never assumed, and an entry is the only way a print from another venue is used.
