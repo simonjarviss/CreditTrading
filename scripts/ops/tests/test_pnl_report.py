@@ -1319,3 +1319,21 @@ def test_the_report_labels_a_late_reversal_and_nets_the_phantom_to_what_is_left(
     text = P.attribution_lines(sess, P.cumulative(res, TLA.CA_S[1]), P.reconciliation(res, TLA.CA_S[1]),
                                session_note=None)[0]
     assert "fill +0.00; corp (the account's corporate-action rows, rebased; never fill) +1,620.00" in text
+
+
+def test_the_report_names_rows_on_a_records_other_symbol_and_rows_valued_at_the_close():
+    """Second review of the follow-up, finding 2a: a spin-off's new shares in the account's rows
+    (the source has none) are applied, not refused. The report says the source had no row and
+    its hold is as held, never a basis restated with k None, and names the session whose rows
+    are valued at the close. Fails on the parent f550da3, which refused the rows."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    fills, eod, corp, rows = TLA._named_case("spin_off")
+    res = TLA._ca_run(fills, eod, corp, acts=rows, closes=TLA.CA_CLOSES2, grp=TLA.CA_GRP2)
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
+    assert any(ln.startswith("Corporate action spin_off LNG ex 2026-02-05 (id sp-1), session 2026-02-05: the "
+                             "account's rows on the record's other symbol(s) moved the book; LNG had no row") for ln in lines)
+    assert not any("k None" in ln for ln in lines)
+    assert any(ln.startswith("The account's rows on 2026-02-05 (SPN) are not value-neutral at their own prices (sum "
+                             "of qty x price +450.00): each is valued at the close") for ln in lines)
+    json.dumps(out)
+

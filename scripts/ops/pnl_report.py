@@ -282,6 +282,12 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
 
     lines = []
     for c in evs:
+        if c["processed"] and c["k"] is None and c["k_source"] == "the account's rows on the record's other symbols":
+            lines.append(f"Corporate action {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), session "
+                         f"{c['session']}: the account's rows on the record's other symbol(s) moved the book; "
+                         f"{c['symbol']} had no row, so its hold is as held and the other symbols' rows are in their "
+                         "corp, never fill; that name-day's NAV/discount split is UNMEASURED")
+            continue
         if c["processed"]:
             lines.append(f"Corporate action {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), session "
                          f"{c['session']}: the account's own activity rows moved the position; hold is on the "
@@ -305,6 +311,11 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
         else:
             lines.append(f"Phantom of {c['type']} {c['symbol']} (id {c['id']}) still OPEN at the as-of: no account row "
                          f"yet (rows are tied back within {CA_MATCH_SESSIONS_TEXT}; past that it stays open)")
+    for r in getattr(res, "rows_at_close", []):
+        if r["session"] >= first:
+            lines.append(f"The account's rows on {r['session']} ({', '.join(r['symbols'])}) are not value-neutral at their "
+                         f"own prices (sum of qty x price {_usd(f(r['remainder']))}): each is valued at the close, "
+                         "qty x close_t, in corp")
     unproc = [c for c in evs if not c["processed"]]
     cum = total([m for c in unproc for m in moves(c)])
     ses = [m for c in unproc for m in moves(c, eff)]

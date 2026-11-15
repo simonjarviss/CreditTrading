@@ -208,42 +208,54 @@ H1, so it is never done. The rule now:
     pair twice; an exact QQQ duplicate), and each record became its own phantom (independent
     review of the follow-up, 2026-11-14, finding 1). A split's records for one symbol and session
     are one event, its id joining theirs; two that disagree on the type or a rate raise, naming
-    both (`_one_split_per_name`).
+    both (`_one_split_per_name`). A record of the same symbol, type and rates within
+    CA_MATCH_SESSIONS sessions of a split already handled stops the attribution, naming both
+    ids (second review, 2026-11-15, finding 3c): it may be the first listed again under a later
+    date or a second split, a shape never seen, so nothing is merged.
   * POSITIONS. From FILLs plus the account's own corporate-action activity rows
     (`AlpacaReader.corporate_action_activities`: SPLIT, MA, NC, SC, SPIN, REO, REORG and JNLS as
     fee-free position changes, `qty` signed at `price`; CIL as cash). Never from the market
-    feed. With no rows (paper today) the rebuild is the fills' alone, exactly as before.
+    feed. With no rows (paper today) the rebuild is the fills' alone, exactly as before. A
+    row ties to a record that names its symbol in any role (subject, source, acquiree, old,
+    acquirer, new, alternate) on its session or in the CA_MATCH_SESSIONS before it (second
+    review, finding 2a: an acquirer's MA leg, a new ticker's rows, a cash in lieu posted after
+    the split's legs); a row no record names refuses, named. An event whose record's other
+    symbols carry the account's rows that session (a spin-off's new shares, a merger's
+    acquirer leg) is processed by the account, not refused.
   * THE DECOMPOSITION ON A NAME-DAY THE ACCOUNT'S ROWS MOVE (finding 2, `_rebased`). Before the
     review the legs went into `fill` and hold stayed on two share bases (the investigation's H3
     ex-date read hold -1,785 and fill +1,752 against a true -33 and 0). Now, with q' = q_prev +
-    the rows' quantities: hold = q' x (close_t - close_p / k_p), the position held into t on the
-    post-event count and basis, k_p the split's k when the event is on this session (from its
-    record's rates, else from the rows, q' / q_prev) and 1 when the rows end a phantom opened on
-    an earlier session (the basis moved then); corp = what the rows add on top, exactly
-    q_prev x (close_t - close_p) + sum(qty x (close_t - price)) + cash in lieu - hold; and fill
-    and the traded notional are the trades' alone, so they read what a session without the
-    event would. hold + corp + fill is the name-day's rebuild as before, so the session
-    reconciles to the cent, and no other component takes the basis jump. Value-neutral legs
-    (sum(qty x price) = 0, the documented SPLIT shape) and q' = q_prev x k make corp 0 on the
-    event's session; cash in lieu leaves corp at the cash against the fraction's value at the
-    restated close. `corp` is a column of name_day and daily, and part of `rebuilt`, only when
-    the account posted rows in the window.
+    the rows' quantities, for the subject of the record (or the name whose open phantom the rows
+    end): hold = q' x (close_t - close_p / k_p), the position held into t on the post-event
+    count and basis, k_p the split's k when the event is on this session (from its record's
+    rates, else from the rows, q' / q_prev) and 1 when the rows end a phantom opened on an
+    earlier session (the basis moved then); corp = what the rows add on top, exactly
+    q_prev x (close_t - close_p) + sum(qty x (close_t - price)) + cash in lieu - hold. For any
+    other symbol the rows touch (another party of the record, or a cash in lieu after the
+    legs), hold is as held and corp is the rows' own P&L against the close plus the cash. In
+    every case fill and the traded notional are the trades' alone, so they read what a session
+    without the event would; hold + corp + fill is the name-day's rebuild as before, so the
+    session reconciles to the cent, and no other component takes the basis jump. A split's
+    rows must give its record's count (second review, finding 3b): q' (with the new ticker's
+    rows, if the split changes it) = trunc(q_prev x k) toward zero, any fraction as cash in
+    lieu; anything else stops the attribution, naming the symbol, the record, q_prev, the
+    expected and the actual count. Value-neutral legs (sum(qty x price) = 0, the documented
+    SPLIT shape) and q' = q_prev x k make corp 0 on the event's session; cash in lieu leaves
+    corp at the cash against the fraction's value at the restated close. `corp` is a column of
+    name_day and daily, and part of `rebuilt`, only when the account posted rows in the window.
   * AN AFFECTED NAME-DAY's NAV/discount split is UNMEASURED, named (the hold mixes two share
-    bases, or the rows rebase it). If the account has no row for the name that session and the
-    event is a forward or reverse split, paper did not process it: `Result.corp_events` carries
-    the labelled phantom, (q_prev - q_prev x k) x close_t with k = new_rate / old_rate from the
-    market record (UNMEASURED, named, if it carries no rates), which sits inside hold and the
-    official change; the official change stays the P&L of record. Any other type with no row
-    on its session still refuses, named.
-  * LATE ROWS (finding 3). The event stays OPEN while the account has no row for the name: paper's
-    extra shares, e = q_prev - q_prev x k, keep moving with the price, and each later session's
-    e x (close_t - close_p) is an accrual of the phantom (inside hold). The account's rows for the
-    name within CA_MATCH_SESSIONS sessions of the event tie back to it: that session's rebasing
-    (`corp`, k_p = 1) is the phantom's reversal, about -e x close_p, and the event closes, so the
-    booking plus the accruals plus the reversal is what is still in the official P&L (0 once
-    every phantom has been reversed exactly). Past CA_MATCH_SESSIONS the phantom stays open and
-    labelled; rows of a name with no event on their session and no open phantom within the
-    window have no market record to tie to, and refuse, named.
+    bases, or the rows rebase it). If the account has no row for the event's symbols that
+    session and the event is a forward or reverse split, paper did not process it:
+    `Result.corp_events` carries the labelled phantom, (q_prev - q_prev x k) x close_t with
+    k = new_rate / old_rate from the market record (UNMEASURED, named, if it carries no rates),
+    which sits inside hold and the official change; the official change stays the P&L of
+    record. Any other type with no row on its session still refuses, named.
+  * LATE ROWS (finding 3). The event stays OPEN while the account has no row for the name:
+    paper's extra shares, e = q_prev - q_prev x k, keep moving with the price, and each later
+    session's e x (close_t - close_p) is an accrual of the phantom (inside hold). The account's rows for the name within CA_MATCH_SESSIONS sessions of the
+    event tie back to it: that session's rebasing (`corp`, k_p = 1) is the phantom's reversal,
+    about -e x close_p, and the event closes. Past CA_MATCH_SESSIONS the phantom stays open and
+    labelled.
   * If a session does not reconcile (H2, or a split pushed by hand with no row), the residual
     says so, and the report job names the session and the event.
 With no corporate action in the window, `analyse` output is byte-identical to before.
@@ -372,11 +384,14 @@ SPLIT_TYPES = ("forward_split", "reverse_split", "unit_split")
 # or symbol an event changes, and the types whose phantom the rebuild can measure.
 COUNT_ROLES = ("subject", "source", "acquiree", "old")
 PHANTOM_TYPES = ("forward_split", "reverse_split")
-# How many sessions after an unprocessed split's session the account's own rows for that name are
-# still tied back to it (module docstring, CORPORATE ACTIONS, LATE ROWS). A declared bound, not a
-# measurement: it covers a settle-date posting (Alpaca posts merger activities on the settle date,
-# docs/REFERENCES.md §12pc) and a split support pushes by hand within two weeks. Past it the
-# phantom stays labelled open, and a row for the name has no market record to tie to (refused).
+# How many sessions after a corporate-action record's session the account's own rows of a symbol
+# the record names (in any role: a subject, an acquirer, a new or an alternate symbol) are still
+# tied to it, and how far apart two records of one split must be not to be one split listed twice
+# (module docstring, CORPORATE ACTIONS). A declared bound, not a measurement: it covers a settle-
+# date posting (Alpaca posts merger activities on the settle date, docs/REFERENCES.md §12pc), a
+# cash in lieu posted after the split's legs, and a split support pushes by hand within two
+# weeks; only a split's rows can end an open phantom (merger rows never open one). A row past it
+# that no record names is refused, named; a phantom past it stays labelled open.
 CA_MATCH_SESSIONS = 10
 ACT_FILE = "corp_activities.json"           # optional: a cache from before 2026-11-14 has none
 DIST_KINDS = ("cash_dividend", "capital_gains_distribution")
@@ -867,6 +882,7 @@ class Result:
     nav_unmeasured: list = field(default_factory=list)    # [(date, symbol, missing)] nav_missing="unmeasured"
     corp_events: list = field(default_factory=list)       # affected corporate actions (CORPORATE ACTIONS)
     corp_activities: list = field(default_factory=list)   # the account's own rows applied
+    rows_at_close: list = field(default_factory=list)     # [{session, remainder, symbols}] (`_rebased`)
 
 
 def _ceil_cent(x: Fraction) -> Fraction:
@@ -978,7 +994,7 @@ def _one_split_per_name(sym: str, d: dt.date, evs: list) -> list:
     return [(merged, role)] + [(e, r) for e, r in evs if e["type"] not in PHANTOM_TYPES]
 
 
-def _rebased(s, d, qp, c_t, c_p, ls, tie, affected, inp, hold0, p):
+def _rebased(s, d, qp, c_t, c_p, ls, tie, affected, inp, hold0, p, at_close=False):
     """(hold, corp, k, k_source) for a name-day the account's own corporate-action rows move
     (review of the follow-up, 2026-11-14, findings 2 and 3; module docstring, CORPORATE ACTIONS,
     THE DECOMPOSITION). q' = q_prev + the rows' quantities is the count held into t after the
@@ -989,10 +1005,26 @@ def _rebased(s, d, qp, c_t, c_p, ls, tie, affected, inp, hold0, p):
     formulas booked: hold0 + sum(qty x (close_t - price)) + cash in lieu - hold, exactly, so
     hold + corp + the trades' fill is the name-day's rebuild as before and the session still
     reconciles to the cent. Value-neutral legs and an exact q' = q_prev x k make corp 0 on the
-    event's session; a phantom ended later makes it -(paper's extra shares) x close_p."""
+    event's session; a phantom ended later makes it -(paper's extra shares) x close_p.
+
+    at_close (second review of the follow-up, 2026-11-15): when the session's rows are not
+    value-neutral at their own prices (sum(qty x price) over them is not 0, or a row that moves a
+    count has no price), the prices are not a transfer that nets out, and pricing the rows like
+    trades would book cash that never moved (a spin-off's new shares, a fraction dropped with no
+    cash in lieu). Each row is then valued at the close, qty x close_t, the account's equity
+    identity (rows change shares, not cash), so the session still reconciles to the cent."""
     zero = Fraction(0)
     qh = qp + sum(a["qty"] for a in ls)
     kind, _op = tie
+    if at_close:
+        legs_value = sum((a["qty"] * c_t for a in ls), zero)
+    else:
+        legs_value = sum((a["qty"] * (c_t - a["price"]) for a in ls if a["price"] is not None), zero)
+    cash = sum((a["cash"] for a in ls), zero)
+    if kind == "named":                          # another party of the record, or a late cash in lieu
+        e, role, ses = _op
+        return hold0, legs_value + cash, None, (f"none: {e['type']} (id {e['id']}, {ses}) names {s} as {role}; "
+                                                "hold is as held, the rows' own P&L is corp")
     if kind == "event":
         ev = [e for e, _ in affected[s] if e["type"] in PHANTOM_TYPES]
         r = (ev[0].get("rates") or {}) if ev else {}
@@ -1012,13 +1044,20 @@ def _rebased(s, d, qp, c_t, c_p, ls, tie, affected, inp, hold0, p):
         hold = qh * (c_t - cp / k)
     else:
         hold = zero
-    legs_value = sum((a["qty"] * (c_t - a["price"]) for a in ls if a["price"] is not None), zero)
-    corp = hold0 + legs_value + sum((a["cash"] for a in ls), zero) - hold
+    corp = hold0 + legs_value + cash - hold
     return hold, corp, k, src
+
+
+def _trunc(x: Fraction) -> int:
+    """x toward zero: a split's whole shares, the fraction paid as cash in lieu."""
+    return int(x) if x >= 0 else -int(-x)
 
 
 def corp_event_text(c: dict) -> str:
     """What one corporate-action record says, for the gaps, the summary and the report job."""
+    if c["processed"] and c["k"] is None and c["k_source"] == "the account's rows on the record's other symbols":
+        return ("the account's rows on the record's other symbol(s) moved the book on its session; this name had "
+                "no row, so its hold is as held (its price move inside) and the other symbols' rows are in their corp")
     if c["processed"]:
         return (f"the account's own activity rows moved the position on its session (k {c['k']} from "
                 f"{c['k_source']}); hold is on the post-event basis and the rebasing is in corp "
@@ -1118,11 +1157,14 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
     # event goes to its session, the first session on or after its market date; whether it
     # touches the book is decided in the session loop, from the positions held into it.
     pending = defaultdict(list)
+    named_at: dict = defaultdict(list)          # symbol -> [(session index, record, role)] (finding 2a)
     for e in inp.corp:
         if s0 < e["date"] <= asof:
             ses = next((d for d in window if d >= e["date"]), None)
             if ses is not None:
                 pending[ses].append(e)
+                for sym, role in e["parties"]:
+                    named_at[sym].append((sessions.index(ses), e, role))
     acts_by_day = defaultdict(list)
     for a in acts:
         acts_by_day[a["date"]].append(a)
@@ -1219,6 +1261,8 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
     unmeasured_all = []
     corp_events: list = []
     open_phantoms: dict = {}            # symbol -> its unprocessed split's record, while still open
+    handled_splits: dict = {}           # symbol -> [(session index, record)] of splits already handled
+    rows_valued_at_close: list = []     # sessions whose rows are not value-neutral (`_rebased`, at_close)
     rows = []
     zero = Fraction(0)
     for i, d in enumerate(sessions[1:], start=1):
@@ -1241,24 +1285,78 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
         ties: dict = {}
         for sym in sorted({a["symbol"] for a in legs}):
             op = open_phantoms.get(sym)
+            moves_count = any(a["qty"] for a in legs if a["symbol"] == sym)
             if sym in affected and op is not None:
                 raise AttributionError(
                     f"the account's corporate-action row(s) for {sym} on {d} could settle either the event of that "
                     f"session or the phantom of {op['type']} {op['date']} (id {op['id']}) still open: which cannot be told")
+            near = [(j, e, r) for j, e, r in named_at.get(sym, []) if 0 <= i - j <= CA_MATCH_SESSIONS]
             if sym in affected:
                 ties[sym] = ("event", None)
-            elif op is not None and i - op["_opened_at"] <= CA_MATCH_SESSIONS:
+            elif op is not None and moves_count and i - op["_opened_at"] <= CA_MATCH_SESSIONS:
                 ties[sym] = ("open", op)
+            elif near:                           # a record names it, in any role (second review, finding 2a)
+                j, e, r = near[-1]
+                ties[sym] = ("named", (e, r, sessions[j]))
             else:
                 ids = ", ".join(f"{a['type']} id {a['id']}" for a in legs if a["symbol"] == sym)
                 raise AttributionError(
-                    f"the account posted corporate-action row(s) for {sym} on {d} ({ids}) with no market record to tie "
-                    f"them to: none on that session for a name held into it, and no phantom of {sym} still open within "
-                    f"{CA_MATCH_SESSIONS} session(s) (module docstring, CORPORATE ACTIONS)")
+                    f"the account posted corporate-action row(s) for {sym} on {d} ({ids}) that no corporate-action "
+                    f"record names, in any role, on that session or in the {CA_MATCH_SESSIONS} session(s) before it "
+                    f"(module docstring, CORPORATE ACTIONS)")
+        # Rows whose own prices do not net to zero are valued at the close (`_rebased`, at_close).
+        remainder = sum((a["qty"] * a["price"] for a in legs if a["qty"] and a["price"] is not None), zero)
+        rows_at_close = bool(legs) and (remainder != 0 or any(a["qty"] and a["price"] is None for a in legs))
+        if rows_at_close:
+            rows_valued_at_close.append({"session": d, "remainder": remainder,
+                                         "symbols": sorted({a["symbol"] for a in legs})})
+        # A share count the rows give must be the one the split's record gives (second review,
+        # finding 3b): q' = trunc(q_prev x k) toward zero, any fraction paid as cash in lieu. The
+        # new ticker's rows of a split that changes it count toward the subject's q'.
+        for sym in sorted(ties):
+            kind, ref = ties[sym]
+            if kind == "event":
+                recs = [(e, r) for e, r in affected[sym] if e["type"] in PHANTOM_TYPES]
+            elif kind == "open":
+                recs = [(ref["_event"], ref["role"])]
+            elif any(a["qty"] for a in legs if a["symbol"] == sym) and ref[0]["type"] in PHANTOM_TYPES:
+                recs = [(ref[0], ref[1])]        # a split's late rows on the count held now
+            else:
+                continue
+            for e, role in recs:
+                r = e.get("rates") or {}
+                if role != "subject" or not (r.get("old_rate") and r.get("new_rate")):
+                    continue
+                k = r["new_rate"] / r["old_rate"]
+                newsyms = [ps for ps, pr in e["parties"] if pr == "new"]
+                actual = q[sym] + sum(a["qty"] for a in legs if a["symbol"] in [sym, *newsyms])
+                x = q[sym] * k
+                expected = int(x) if x >= 0 else -int(-x)
+                if actual != expected:
+                    raise AttributionError(
+                        f"the account's corporate-action rows for {sym} on {d} give {actual} share(s) from {q[sym]}, but "
+                        f"{e['type']} (id {e['id']}, old_rate {r['old_rate']}, new_rate {r['new_rate']}) gives "
+                        f"trunc({q[sym]} x {k}) = {expected}, any fraction as cash in lieu: the rows contradict the "
+                        "record (second review of the follow-up, finding 3b)")
+        for sym, evs in sorted(affected.items()):
+            for e, role in evs:
+                if e["type"] not in PHANTOM_TYPES:
+                    continue
+                for j, e0 in handled_splits.get(sym, []):
+                    if (0 < i - j <= CA_MATCH_SESSIONS and e0["type"] == e["type"]
+                            and (e0.get("rates") or {}) == (e.get("rates") or {})):
+                        raise AttributionError(
+                            f"two market records of one {e['type']} of {sym} with the same rates, {sessions[j]} (id "
+                            f"{e0['id']}) and {d} (id {e['id']}), {i - j} session(s) apart: the second may be the "
+                            "first listed again or a second split, which cannot be told; nothing is merged (second "
+                            "review of the follow-up, finding 3c)")
+                handled_splits.setdefault(sym, []).append((i, e))
+        processed_by_party = {sym: any(a["symbol"] in {ps for ps, _ in e["parties"]} for e, _ in evs for a in legs)
+                              for sym, evs in affected.items()}
         for sym, evs in sorted(affected.items()):
             for e, role in evs:
                 what = f"{e['type']} {e['date']} {sym} ({role}, id {e['id']}), {q[sym]} share(s) held into {d}"
-                if sym in ties:
+                if sym in ties or processed_by_party[sym]:
                     continue                     # the account's own rows move it (below)
                 if not inp.corp_act_types:
                     raise AttributionError(
@@ -1302,11 +1400,13 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             # The account's own rows (findings 2 and 3): the position is rebased, and hold is
             # valued on the post-event share count and basis; the rebasing is its own component.
             hold0, corp = hold, zero
+            k_used = k_src = None
             if ls:
                 hold, corp, k_used, k_src = _rebased(s, d, qp, c_t, c_p if qp else None, ls, ties[s], affected,
-                                                     inp, hold0, p)
+                                                     inp, hold0, p, at_close=rows_at_close)
             tie = ties.get(s)
-            if s in affected or tie is not None:     # two share bases in one name-day: no NAV split
+            named = tie is not None and tie[0] == "named"   # another party's rows, or a late cash in lieu: hold as is
+            if (s in affected or tie is not None) and not named:   # two share bases in one name-day: no NAV split
                 nav_part = None
                 if s in affected:
                     rows_s = "the account's own activity row(s) moved it" if ls else "paper did not process it"
@@ -1317,10 +1417,11 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                     ev_s = f"{op['type']} {op['date']} (id {op['id']}), still open from {op['session']}"
                 nav_gaps.append((d, s, f"a corporate action on the name that session, {ev_s}: {rows_s}"))
                 disc = None
+                done = bool(ls) or processed_by_party.get(s, False)
                 for e, role in affected.get(s, []):
                     k = phantom = extra = None
                     why = None
-                    if not ls:
+                    if not done:
                         r = e.get("rates") or {}
                         if r.get("old_rate") and r.get("new_rate"):
                             k = r["new_rate"] / r["old_rate"]
@@ -1330,10 +1431,13 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                             why = "the market record carries no old_rate/new_rate, so k is unknown"
                     rec = {"id": e["id"], "type": e["type"], "date": e["date"], "session": d,
                            "symbol": s, "role": role, "q_prev": qp, "close": c_t,
-                           "k": k if not ls else k_used, "processed": bool(ls), "phantom": phantom, "why": why,
+                           "k": k if not done else k_used, "processed": done, "phantom": phantom, "why": why,
                            "extra": extra, "accruals": [], "reversal": None,
-                           "open": bool(not ls and e["type"] in PHANTOM_TYPES),
-                           "corp": corp if ls else None, "k_source": k_src if ls else None}
+                           "open": bool(not done and e["type"] in PHANTOM_TYPES),
+                           "corp": corp if done else None,
+                           "k_source": (k_src if ls else "the account's rows on the record's other symbols")
+                           if done else None,
+                           "_event": e}
                     corp_events.append(rec)
                     if rec["open"]:
                         rec["_opened_at"] = i
@@ -1463,7 +1567,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                   asof=asof, first_session=window[0], sources=inp.sources,
                   dist_kinds=tuple(inp.dist_kinds), dist_unmeasured=unmeasured_all,
                   book=inp.book, nav_unmeasured=nav_gaps, corp_events=corp_events,
-                  corp_activities=acts)
+                  corp_activities=acts, rows_at_close=rows_valued_at_close)
 
 
 # --------------------------------------------------------------- reporting
@@ -1604,7 +1708,7 @@ def corp_section(res: Result) -> list[str]:
     corporate action writes the summary it always did."""
     if not res.corp_events and not res.corp_activities:
         return []
-    L = ["## Corporate actions on held names (team lead, 2026-11-14)", ""]
+    L = ["## Corporate actions on held names (team lead, 2026-11-14)", ""]   # rows_at_close needs rows
     for c in res.corp_events:
         L.append(f"- {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}, {c['role']}), {c['q_prev']} share(s) "
                  f"held into {c['session']}: {corp_event_text(c)}; that name-day's NAV/discount split is UNMEASURED")
@@ -1612,6 +1716,9 @@ def corp_section(res: Result) -> list[str]:
         L.append(f"- account activity {a['type']} {a['symbol']} {a['date']} (id {a['id']}): "
                  + (f"cash {float(a['cash']):,.2f}" if a["price"] is None else
                     f"{a['qty']:+d} share(s) at {float(a['price']):,.4f}") + ", fee-free, in corp (never fill)")
+    for r in res.rows_at_close:
+        L.append(f"- the account's rows on {r['session']} ({', '.join(r['symbols'])}) are not value-neutral at their own "
+                 f"prices (sum of qty x price {float(r['remainder']):+,.2f}): each is valued at the close, qty x close_t")
     return L + [""]
 
 

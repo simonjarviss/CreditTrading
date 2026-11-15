@@ -1179,13 +1179,15 @@ def test_rows_posted_after_the_ex_date_end_the_open_phantom_with_a_labelled_reve
 
 
 def test_rows_with_no_market_record_to_tie_to_refuse_named():
-    """The account's rows for a name with no market record on their session and no open phantom
-    of it within CA_MATCH_SESSIONS refuse, named; so do rows past that window (the phantom then
-    stays open, labelled). Fails on the parent bdf181e, which applied them without a record."""
+    """The account's rows for a symbol no corporate-action record names, in any role, on their
+    session or in the CA_MATCH_SESSIONS before it refuse, named (second review of the follow-up,
+    2026-11-15, finding 2a: the message says exactly that). Fails on the parent bdf181e, which
+    applied them without a record."""
     legs = _late_legs(CA_S[4])
     with pytest.raises(LA.AttributionError, match=r"the account posted corporate-action row\(s\) for LNG on 2026-02-06 "
-                                                  r"\(SPLIT id LNG-rm-2026-02-06, SPLIT id LNG-al-2026-02-06\) with no "
-                                                  r"market record to tie them to"):
+                                                  r"\(SPLIT id LNG-rm-2026-02-06, SPLIT id LNG-al-2026-02-06\) that no "
+                                                  r"corporate-action record names, in any role, on that session or in the "
+                                                  r"10 session\(s\) before it"):
         LA.attribute(_ca_inputs("H1", corp=[], acts=legs, fills=CA_BASE_FILLS), breaks=[])
 
 
@@ -1196,7 +1198,7 @@ def test_rows_past_the_matching_window_leave_the_phantom_open_and_refuse(monkeyp
     d_rows = CA_S[CA_S.index(CA_EX) + 2]
     inp = _ca_inputs("H1", acts=_late_legs(d_rows), fills=CA_BASE_FILLS)
     inp.eod = _late_equity(d_rows)
-    with pytest.raises(LA.AttributionError, match=r"no phantom of LNG still open within 1 session\(s\)"):
+    with pytest.raises(LA.AttributionError, match=r"on that session or in the 1 session\(s\) before it"):
         LA.attribute(inp, breaks=[])
 
 
@@ -1280,7 +1282,177 @@ def test_a_cache_without_the_activity_file_is_analysed_as_before_and_one_half_pr
         LA.load_cache(tmp_path / "c", grp=dict(GRP))
 
 
+
 # --- the second review of the follow-up (team lead, 2026-11-15) ----------------------------
+
+def _ca_account(fills_raw, events=(), closes=None):
+    """An account's EOD equity from cash and positions only, independent of `attribute`
+    (fx.py's construction, the second review's judge): `events` [(session, fn)], fn(q, cash) ->
+    (q, cash) applied at the start of that session, before its fills."""
+    closes = CA_CLOSES if closes is None else closes
+    parsed = LA.parse_fills(fills_raw)
+    cash, q, out = F(100000), {}, []
+    ev: dict = {}
+    for d, fn in events:
+        ev.setdefault(d, []).append(fn)
+    for d in CA_S:
+        for fn in ev.get(d, []):
+            q, cash = fn(dict(q), cash)
+        day = [f for f in parsed if f.date == d]
+        for f in day:
+            cash -= f.signed_qty * f.price
+            q[f.symbol] = q.get(f.symbol, 0) + f.signed_qty
+        cash += LA.session_fees(day)[0]
+        out.append((d, cash + sum(x * closes[(s, d)] for s, x in q.items() if x)))
+    return out
+
+
+def _ca_split_at(syms, k=CA_K):
+    def fn(q, cash):
+        for s_ in syms:
+            if q.get(s_):
+                q[s_] = int(q[s_] * k) if q[s_] > 0 else -int(-q[s_] * k)
+        return q, cash
+    return fn
+
+
+def _ca_run(fills, eod, corp, acts=(), closes=None, grp=None):
+    inp = _ca_inputs("H1", corp=corp, acts=acts, fills=fills)
+    inp.eod = eod
+    if closes is not None:
+        inp.closes = dict(closes)
+        inp.navs = {k_: v * F(103, 100) for k_, v in closes.items()}
+    if grp is not None:
+        inp.grp = dict(grp)
+    return LA.attribute(inp, breaks=[])
+
+
+# closes for the extra symbols the second review's cases need (each the LNG series, or a flat one)
+CA_CLOSES2 = dict(CA_CLOSES)
+for _sym in ("LNGN", "NEW", "NEWU", "ALT", "SPN"):
+    for _d, _v in zip(CA_S, CA_RAW["LNG"] if _sym in ("LNGN", "NEW", "NEWU") else ["5.00"] * len(CA_S)):
+        CA_CLOSES2[(_sym, _d)] = F(_v)
+CA_GRP2 = dict(CA_GRP, **{s_: "equity_sector" for s_ in ("LNGN", "NEW", "NEWU", "ALT", "SPN")})
+
+
+def _rows(*legs_):
+    return [{"id": i, "type": t, "date": d, "symbol": sy, "qty": q_, "price": None if px is None else F(px),
+             "cash": F(0) if cash is None else F(cash)} for i, t, d, sy, q_, px, cash in legs_]
+
+
+NAMED_CASES = ["acquirer_MA_leg", "split_to_a_new_ticker", "name_change", "unit_split", "spin_off",
+               "cil_one_session_later", "cil_three_sessions_later"]
+
+
+def _named_case(case):
+    """(fills, eod, corp, rows) for one of the second review's finding-2a shapes: the account's
+    rows on a symbol a record names in a role other than a held count party, or a cash in lieu
+    after the split's legs; eod from `_ca_account` (rows change shares, CIL changes cash)."""
+    po = CA_CLOSES[("LNG", CA_PREV)]
+    lng_only = [_ca_fill("f1", "LNG", "buy", 900, "4.51", CA_S[1]), _ca_fill("f3", "OTH", "buy", 100, "20.08", CA_S[1])]
+    ex = CA_EX
+    def swap(new_sym, n):
+        def fn(q, cash):
+            q["LNG"] = 0
+            q[new_sym] = q.get(new_sym, 0) + n
+            return q, cash
+        return fn
+    if case == "acquirer_MA_leg":
+        corp = [{"id": "m-1", "type": "stock_merger", "date": ex, "parties": [("LNG", "acquiree"), ("OTH", "acquirer")],
+                 "rates": {}}]
+        rows = _rows(("m1", "MA", ex, "LNG", -900, po, None), ("m2", "MA", ex, "OTH", 200, 900 * po / 200, None))
+        events = [(ex, swap("OTH", 200))]
+    elif case == "split_to_a_new_ticker":
+        corp = [dict(CA_SPLIT[0], parties=[("LNG", "subject"), ("LNGN", "new")])]
+        rows = _rows(("n1", "SPLIT", ex, "LNG", -900, po, None), ("n2", "SPLIT", ex, "LNGN", 300, po * 3, None))
+        events = [(ex, swap("LNGN", 300))]
+    elif case == "name_change":
+        corp = [{"id": "nc-1", "type": "name_change", "date": ex, "parties": [("LNG", "old"), ("NEW", "new")], "rates": {}}]
+        rows = _rows(("c1", "NC", ex, "LNG", -900, po, None), ("c2", "NC", ex, "NEW", 900, po, None))
+        events = [(ex, swap("NEW", 900))]
+    elif case == "unit_split":
+        corp = [{"id": "u-1", "type": "unit_split", "date": ex,
+                 "parties": [("LNG", "old"), ("NEWU", "new"), ("ALT", "alternate")], "rates": {}}]
+        rows = _rows(("u1", "SPLIT", ex, "LNG", -900, po, None), ("u2", "SPLIT", ex, "NEWU", 300, po * 3 - 1, None),
+                     ("u3", "SPLIT", ex, "ALT", 60, 5, None))
+        def fn(q, cash):
+            q["LNG"] = 0; q["NEWU"] = 300; q["ALT"] = 60
+            return q, cash
+        events = [(ex, fn)]
+    elif case == "spin_off":
+        corp = [{"id": "sp-1", "type": "spin_off", "date": ex, "parties": [("LNG", "source"), ("SPN", "new")], "rates": {}}]
+        rows = _rows(("s1", "SPIN", ex, "SPN", 90, 5, None))
+        def fn(q, cash):
+            q["SPN"] = 90
+            return q, cash
+        events = [(ex, fn)]
+    else:
+        lag = 1 if case == "cil_one_session_later" else 3
+        dcil = CA_S[CA_S.index(ex) + lag]
+        lng_only = [_ca_fill("f1", "LNG", "buy", 901, "4.51", CA_S[1]), _ca_fill("f3", "OTH", "buy", 100, "20.08", CA_S[1])]
+        corp = CA_SPLIT[:1]
+        rows = _rows(("l1", "SPLIT", ex, "LNG", -901, po, None), ("l2", "SPLIT", ex, "LNG", 300, 901 * po / 300, None),
+                     ("l3", "CIL", dcil, "LNG", 0, None, "4.40"))
+        def split(q, cash):
+            q["LNG"] = 300
+            return q, cash
+        def pay(q, cash):
+            return q, cash + F("4.40")
+        events = [(ex, split), (dcil, pay)]
+    return lng_only, _ca_account(lng_only, events, CA_CLOSES2), corp, rows
+
+
+@pytest.mark.parametrize("case", NAMED_CASES)
+def test_rows_of_any_symbol_a_record_names_are_corp_and_reconcile_to_the_cent(case):
+    """Second review of the follow-up (2026-11-15), finding 2a: the tie-back refused the account's
+    rows for any symbol that was not a held party of a same-session event or an open phantom.
+    Now rows of any symbol a record names (an acquirer, a new ticker, a name change's or unit
+    split's new symbols, a spin-off's new shares, a cash in lieu after the split's legs) on its
+    session or within CA_MATCH_SESSIONS are applied in corp, and every session reconciles to the
+    cent (Fraction) against an account built from cash and shares alone. The spin-off's row is
+    not value-neutral at its own price (its shares arrive for nothing), so it is valued at the
+    close. Fails on the parent f550da3, which refused each."""
+    fills, eod, corp, rows = _named_case(case)
+    res = _ca_run(fills, eod, corp, acts=rows, closes=CA_CLOSES2, grp=CA_GRP2)
+    assert all(r == 0 for r in res.daily["residual"]), [float(x) for x in res.daily["residual"]]
+    assert not [c for c in res.corp_events if c["phantom"] is not None]
+    assert all(x == 0 for x in res.name_day["fill"][res.name_day["date"] != CA_S[1]])   # the rows never sit in fill
+    assert [r["session"] for r in res.rows_at_close] == ([CA_EX] if case == "spin_off" else [])
+
+
+def test_a_split_whose_rows_contradict_its_record_stops_the_attribution():
+    """Second review, finding 3b: rows that take 900 shares to 450 against a 1:3 record gave corp
+    +2,016 and "processed". q' must be trunc(q_prev x k), any fraction as cash in lieu; 901 ->
+    300 with a cash in lieu passes
+    (test_the_decomposition_is_exact_when_the_rows_leave_a_fraction_for_cash_in_lieu). Fails on
+    the parent f550da3, which accepted the 450."""
+    po = CA_CLOSES[("LNG", CA_PREV)]
+    rows = _rows(("l1", "SPLIT", CA_EX, "LNG", -900, po, None), ("l2", "SPLIT", CA_EX, "LNG", 450, 900 * po / 450, None))
+    def fn(q, cash):
+        q["LNG"] = 450
+        return q, cash
+    fills = [_ca_fill("f1", "LNG", "buy", 900, "4.51", CA_S[1])]
+    with pytest.raises(LA.AttributionError, match=r"for LNG on 2026-02-05 give 450 share\(s\) from 900, but reverse_split "
+                                                  r"\(id ca-1, old_rate 3, new_rate 1\) gives trunc\(900 x 1/3\) = 300"):
+        _ca_run(fills, _ca_account(fills, [(CA_EX, fn)]), CA_SPLIT[:1], acts=rows)
+
+
+def test_a_second_record_of_a_handled_split_one_session_later_stops_the_attribution():
+    """Second review, finding 3c: the split processed on its own ex-date, and the feed listing it
+    again under an ex-date one session later, booked a false phantom (+2,700). A record of the same
+    symbol, type and rates within CA_MATCH_SESSIONS of a split already handled stops the
+    attribution, naming both ids; nothing is merged. (Unprocessed, the second record already
+    refused on the parent, as a second split while a phantom is open.) Fails on the parent
+    f550da3, which booked the second record's phantom."""
+    fills = [_ca_fill("f1", "LNG", "buy", 900, "4.51", CA_S[1])]
+    dup = dict(CA_SPLIT[0], id="ca-1-again", date=CA_S[CA_S.index(CA_EX) + 1])
+    po = CA_CLOSES[("LNG", CA_PREV)]
+    rows = _rows(("l1", "SPLIT", CA_EX, "LNG", -900, po, None), ("l2", "SPLIT", CA_EX, "LNG", 300, po * 3, None))
+    eod = _ca_account(fills, [(CA_EX, _ca_split_at(["LNG"]))])
+    with pytest.raises(LA.AttributionError, match=r"two market records of one reverse_split of LNG with the same rates, "
+                                                  r"2026-02-05 \(id ca-1\) and 2026-02-06 \(id ca-1-again\)"):
+        _ca_run(fills, eod, [CA_SPLIT[0], dup], acts=rows)
+
 
 def test_a_session_with_corp_names_it_in_every_reconciliation_label(tmp_path):
     """Second review, finding 5: with the account's rows in the window the reconciliation lines,
@@ -1295,3 +1467,32 @@ def test_a_session_with_corp_names_it_in_every_reconciliation_label(tmp_path):
     assert "| rebuilt: hold + fill + fees + corp |" in text and "| hold + fill + corp + fees + distributions |" in text
     plain = LA.attribute(_ca_inputs("H1", corp=[], fills=CA_BASE_FILLS), breaks=[])
     assert all("hold+fill+fees" in ln and "corp" not in ln for ln in LA.reconcile_lines(plain.daily))
+
+
+def _rows_on_the_resized_count():
+    """The reviewer's C' shape: the runner re-sized on 02-06 (CA_RESIZE), then paper applied the
+    1:3 split on 02-10 to the re-sized 300 / -200, giving 100 / -66, the fraction dropped with no
+    cash in lieu. (fills, eod, rows, the rows' session)."""
+    fills = CA_BASE_FILLS + CA_RESIZE["H1"]
+    d, p = CA_S[-1], CA_S[-2]
+    rows = _rows(("a1", "SPLIT", d, "LNG", -300, CA_CLOSES[("LNG", p)], None),
+                 ("a2", "SPLIT", d, "LNG", 100, 3 * CA_CLOSES[("LNG", p)], None),
+                 ("a3", "SPLIT", d, "SHS", 200, "8.10", None), ("a4", "SPLIT", d, "SHS", -66, "24.30", None))
+    def late(q, cash):
+        q["LNG"], q["SHS"] = 100, -66
+        return q, cash
+    return fills, _ca_account(fills, [(d, late)]), rows, d
+
+
+def test_rows_not_value_neutral_at_their_own_prices_are_valued_at_the_close():
+    """Second review of the follow-up, finding 2a with the reviewer's C' shape (a residual of
+    48.72 there): rows whose own prices do not net to zero (SHS: 200 x 8.10 = 1,620.00 out
+    against 66 x 24.30 = 1,603.80 in) booked, priced like trades, cash that never moved, and
+    the session did not reconcile. They are now valued at the close (rows change shares, not
+    cash), the session reconciles to the cent, and the session is named. Fails on the parent
+    f550da3, which left a residual of +16.20."""
+    fills, eod, rows, d = _rows_on_the_resized_count()
+    res = _ca_run(fills, eod, CA_SPLIT, acts=rows)
+    assert all(r == 0 for r in res.daily["residual"]), [float(x) for x in res.daily["residual"]]
+    assert [(r["session"], r["remainder"]) for r in res.rows_at_close] == [(d, F("16.20"))]
+
