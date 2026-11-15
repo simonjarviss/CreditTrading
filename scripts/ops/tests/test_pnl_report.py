@@ -1261,8 +1261,8 @@ def test_a_split_paper_did_not_process_is_reconciled_with_a_labelled_phantom(tmp
     assert att["phantom_cumulative"] == pytest.approx(-20400.0) and att["phantom_session"] == pytest.approx(-20400.0)
     line = [ln for ln in att["lines"] if ln.startswith("Phantom: paper did not process reverse_split BBB")]
     assert len(line) == 1 and "= -20,400.00 (q_prev -2000, k 1/2)" in line[0]
-    assert any(ln.startswith("Phantom from corporate actions paper did not process, from the first trade: -20,400.00")
-               for ln in att["lines"])
+    assert any(ln.startswith("Phantom from corporate actions paper did not process, still in the official P&L at the "
+                             "as-of: -20,400.00 (1 event(s), 1 still open") for ln in att["lines"])
     eq = dict(equity_series())
     assert att["session"]["eod_change"] == pytest.approx(eq[TRADED[-1]] - eq[TRADED[-2]])   # official, untouched
     assert att["session"]["nav_part"] is None and att["session"]["disc_part"] is None
@@ -1292,3 +1292,30 @@ def test_an_acquirer_merger_changes_nothing_in_the_report(tmp_path):
     assert with_event["attribution"]["session"] == plain["attribution"]["session"]
     assert with_event["attribution"]["cumulative"] == plain["attribution"]["cumulative"]
     assert "phantom_cumulative" not in with_event["attribution"]
+
+
+def test_the_report_labels_a_late_reversal_and_nets_the_phantom_to_what_is_left():
+    """Review of the follow-up, 2026-11-14, findings 2 and 3, on the report's own lines: the
+    investigation's split, unprocessed on its ex-date, then ended by the account's rows two
+    sessions later. The report books the phantom, its accrual and its reversal (in corp, never
+    fill), and the cumulative phantom line says +0.00 is still in the official P&L; the session
+    line carries corp beside fill. Fails on the parent bdf181e, which said -1,752.00 was still in
+    the official P&L and put the reversal in that session's fill."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    d_rows = TLA.CA_S[TLA.CA_S.index(TLA.CA_EX) + 2]
+    inp = TLA._ca_inputs("H1", acts=TLA._late_legs(d_rows), fills=TLA.CA_BASE_FILLS)
+    inp.eod = TLA._late_equity(d_rows)
+    res = LA.attribute(inp, breaks=[], nav_missing="unmeasured")
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], d_rows)
+    assert out["phantom_cumulative"] == pytest.approx(0.0, abs=1e-9)
+    assert any(ln.startswith("Phantom reversal: the account's rows for LNG on 2026-02-09 (2 session(s) after "
+                             "2026-02-05)") and ln.endswith("-8,100.00, in corp, never fill") for ln in lines)
+    assert any(ln.startswith("Phantom accrual: paper's extra 600 share(s) of LNG") and "+72.00" in ln for ln in lines)
+    assert lines[-1].startswith("Phantom from corporate actions paper did not process, still in the official P&L at "
+                                "the as-of: +0.00 (2 event(s), 0 still open, 2 ended by the account's rows)")
+    assert out["phantom_session"] == pytest.approx(-8100.0 + 9720.0)
+    sess = P.session_row(res, d_rows)
+    assert sess["fill"] == 0.0 and sess["corp"] == pytest.approx(1620.0)
+    text = P.attribution_lines(sess, P.cumulative(res, TLA.CA_S[1]), P.reconciliation(res, TLA.CA_S[1]),
+                               session_note=None)[0]
+    assert "fill +0.00; corp (the account's corporate-action rows, rebased; never fill) +1,620.00" in text

@@ -204,25 +204,48 @@ H1, so it is never done. The rule now:
     alternate symbol), and only a name HELD INTO the event's session (shares at the previous
     close not zero). The event's session is the first session on or after its market date.
     A flat name, an acquirer and an event outside the window are not touched.
-  * POSITIONS. From FILLs plus the account's own corporate-action activity rows
-    (`AlpacaReader.corporate_action_activities`: SPLIT, MA, NC, SC, SPIN, REO, REORG and JNLS
-    as fee-free position changes, `qty` signed at `price`, inside `fill`; CIL as cash, inside
-    `fill` of its name-day; neither in the fee model or the traded notional). Never from the
-    market feed. With no rows (paper today) the rebuild is the fills' alone, exactly as before.
   * ONE EVENT PER NAME AND SESSION. The feed can list one split under two ids (§12pc: each MQY
     pair twice; an exact QQQ duplicate), and each record became its own phantom (independent
     review of the follow-up, 2026-11-14, finding 1). A split's records for one symbol and session
     are one event, its id joining theirs; two that disagree on the type or a rate raise, naming
     both (`_one_split_per_name`).
-  * AN AFFECTED NAME-DAY keeps hold and the reconciliation, and its NAV/discount split is
-    UNMEASURED, named (the hold mixes the two share bases). If the account has no activity
-    row for the name that session and the event is a forward or reverse split, paper did not
-    process it: `Result.corp_events` carries the labelled phantom, (q_prev - q_prev x k) x
-    close_t with k = new_rate / old_rate from the market record (UNMEASURED, named, if the
-    record carries no rates), which sits inside hold and the official change; the official
-    change stays the P&L of record. Any other type with no row still refuses, named. If the
-    session does not reconcile (H2, or a split pushed by hand with no row), the residual says
-    so, and the report job names the session and the event.
+  * POSITIONS. From FILLs plus the account's own corporate-action activity rows
+    (`AlpacaReader.corporate_action_activities`: SPLIT, MA, NC, SC, SPIN, REO, REORG and JNLS as
+    fee-free position changes, `qty` signed at `price`; CIL as cash). Never from the market
+    feed. With no rows (paper today) the rebuild is the fills' alone, exactly as before.
+  * THE DECOMPOSITION ON A NAME-DAY THE ACCOUNT'S ROWS MOVE (finding 2, `_rebased`). Before the
+    review the legs went into `fill` and hold stayed on two share bases (the investigation's H3
+    ex-date read hold -1,785 and fill +1,752 against a true -33 and 0). Now, with q' = q_prev +
+    the rows' quantities: hold = q' x (close_t - close_p / k_p), the position held into t on the
+    post-event count and basis, k_p the split's k when the event is on this session (from its
+    record's rates, else from the rows, q' / q_prev) and 1 when the rows end a phantom opened on
+    an earlier session (the basis moved then); corp = what the rows add on top, exactly
+    q_prev x (close_t - close_p) + sum(qty x (close_t - price)) + cash in lieu - hold; and fill
+    and the traded notional are the trades' alone, so they read what a session without the
+    event would. hold + corp + fill is the name-day's rebuild as before, so the session
+    reconciles to the cent, and no other component takes the basis jump. Value-neutral legs
+    (sum(qty x price) = 0, the documented SPLIT shape) and q' = q_prev x k make corp 0 on the
+    event's session; cash in lieu leaves corp at the cash against the fraction's value at the
+    restated close. `corp` is a column of name_day and daily, and part of `rebuilt`, only when
+    the account posted rows in the window.
+  * AN AFFECTED NAME-DAY's NAV/discount split is UNMEASURED, named (the hold mixes two share
+    bases, or the rows rebase it). If the account has no row for the name that session and the
+    event is a forward or reverse split, paper did not process it: `Result.corp_events` carries
+    the labelled phantom, (q_prev - q_prev x k) x close_t with k = new_rate / old_rate from the
+    market record (UNMEASURED, named, if it carries no rates), which sits inside hold and the
+    official change; the official change stays the P&L of record. Any other type with no row
+    on its session still refuses, named.
+  * LATE ROWS (finding 3). The event stays OPEN while the account has no row for the name: paper's
+    extra shares, e = q_prev - q_prev x k, keep moving with the price, and each later session's
+    e x (close_t - close_p) is an accrual of the phantom (inside hold). The account's rows for the
+    name within CA_MATCH_SESSIONS sessions of the event tie back to it: that session's rebasing
+    (`corp`, k_p = 1) is the phantom's reversal, about -e x close_p, and the event closes, so the
+    booking plus the accruals plus the reversal is what is still in the official P&L (0 once
+    every phantom has been reversed exactly). Past CA_MATCH_SESSIONS the phantom stays open and
+    labelled; rows of a name with no event on their session and no open phantom within the
+    window have no market record to tie to, and refuse, named.
+  * If a session does not reconcile (H2, or a split pushed by hand with no row), the residual
+    says so, and the report job names the session and the event.
 With no corporate action in the window, `analyse` output is byte-identical to before.
 
 USAGE
@@ -349,6 +372,12 @@ SPLIT_TYPES = ("forward_split", "reverse_split", "unit_split")
 # or symbol an event changes, and the types whose phantom the rebuild can measure.
 COUNT_ROLES = ("subject", "source", "acquiree", "old")
 PHANTOM_TYPES = ("forward_split", "reverse_split")
+# How many sessions after an unprocessed split's session the account's own rows for that name are
+# still tied back to it (module docstring, CORPORATE ACTIONS, LATE ROWS). A declared bound, not a
+# measurement: it covers a settle-date posting (Alpaca posts merger activities on the settle date,
+# docs/REFERENCES.md §12pc) and a split support pushes by hand within two weeks. Past it the
+# phantom stays labelled open, and a row for the name has no market record to tie to (refused).
+CA_MATCH_SESSIONS = 10
 ACT_FILE = "corp_activities.json"           # optional: a cache from before 2026-11-14 has none
 DIST_KINDS = ("cash_dividend", "capital_gains_distribution")
 
@@ -949,6 +978,70 @@ def _one_split_per_name(sym: str, d: dt.date, evs: list) -> list:
     return [(merged, role)] + [(e, r) for e, r in evs if e["type"] not in PHANTOM_TYPES]
 
 
+def _rebased(s, d, qp, c_t, c_p, ls, tie, affected, inp, hold0, p):
+    """(hold, corp, k, k_source) for a name-day the account's own corporate-action rows move
+    (review of the follow-up, 2026-11-14, findings 2 and 3; module docstring, CORPORATE ACTIONS,
+    THE DECOMPOSITION). q' = q_prev + the rows' quantities is the count held into t after the
+    rows. Hold is q' x (close_t - close_p*), close_p* = close_p / k_p the previous close restated
+    to the post-event basis: k_p is the split's k when the event is on this session (from its
+    rates, or else from the rows, q' / q_prev), and 1 when the rows end a phantom opened on an
+    earlier session (the price basis jumped then, not now). corp is the rest of what the old
+    formulas booked: hold0 + sum(qty x (close_t - price)) + cash in lieu - hold, exactly, so
+    hold + corp + the trades' fill is the name-day's rebuild as before and the session still
+    reconciles to the cent. Value-neutral legs and an exact q' = q_prev x k make corp 0 on the
+    event's session; a phantom ended later makes it -(paper's extra shares) x close_p."""
+    zero = Fraction(0)
+    qh = qp + sum(a["qty"] for a in ls)
+    kind, _op = tie
+    if kind == "event":
+        ev = [e for e, _ in affected[s] if e["type"] in PHANTOM_TYPES]
+        r = (ev[0].get("rates") or {}) if ev else {}
+        if r.get("old_rate") and r.get("new_rate"):
+            k, src = r["new_rate"] / r["old_rate"], "the market record's rates"
+        elif qp and qh:
+            k, src = Fraction(qh, qp), "the account's rows (q' / q_prev)"
+        else:
+            k, src = None, "none: the rows leave no shares, so no basis is restated"
+    else:
+        k, src = Fraction(1), "1: the price basis moved on the event's session, before these rows"
+    if qh and k:
+        cp = c_p if c_p is not None else inp.closes.get((s, p))
+        if cp is None:
+            raise AttributionError(f"missing close for {s} on {p} (rebasing the account's corporate-action rows "
+                                   f"of {d}); nothing is filled")
+        hold = qh * (c_t - cp / k)
+    else:
+        hold = zero
+    legs_value = sum((a["qty"] * (c_t - a["price"]) for a in ls if a["price"] is not None), zero)
+    corp = hold0 + legs_value + sum((a["cash"] for a in ls), zero) - hold
+    return hold, corp, k, src
+
+
+def corp_event_text(c: dict) -> str:
+    """What one corporate-action record says, for the gaps, the summary and the report job."""
+    if c["processed"]:
+        return (f"the account's own activity rows moved the position on its session (k {c['k']} from "
+                f"{c['k_source']}); hold is on the post-event basis and the rebasing is in corp "
+                f"({float(c['corp']):+,.2f}), never fill")
+    if c["phantom"] is None:
+        return f"paper did not process it: phantom UNMEASURED ({c['why']})"
+    out = (f"paper did not process it: phantom (q_prev - q_prev x k) x close = {float(c['phantom']):+,.2f} "
+           f"(k {c['k']}), inside hold and the official change")
+    acc = [a for _, a in c["accruals"]]
+    if acc:
+        out += ("; paper's extra shares then moved with the price: "
+                + ("UNMEASURED (a close is missing)" if any(a is None for a in acc) else
+                   f"{float(sum(acc, Fraction(0))):+,.2f} over {len(acc)} session(s), inside hold"))
+    if c["reversal"] is not None:
+        rv = c["reversal"]
+        out += (f"; the account's rows of {rv['session']} ({rv['sessions_after']} session(s) later) ended it: "
+                f"reversal {float(rv['amount']):+,.2f} in corp")
+    else:
+        out += (f"; still open (the account's rows are tied back within {CA_MATCH_SESSIONS} session(s); "
+                "past that it stays open)")
+    return out
+
+
 def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = None,
               nav_missing: str = "raise") -> Result:
     """The decomposition in the module docstring, for every session after the first
@@ -1125,6 +1218,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
     dist_status: dict = {}              # (symbol, date) -> how its dist was resolved
     unmeasured_all = []
     corp_events: list = []
+    open_phantoms: dict = {}            # symbol -> its unprocessed split's record, while still open
     rows = []
     zero = Fraction(0)
     for i, d in enumerate(sessions[1:], start=1):
@@ -1142,10 +1236,29 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
         # One event per (symbol, session) for a split, whatever number of market records list it
         # (review of the follow-up, 2026-11-14, finding 1: the feed lists one action under two ids).
         affected = {sym: _one_split_per_name(sym, d, evs) for sym, evs in affected.items()}
+        # The account's own rows of a name tie to an event on this session, or to a phantom still
+        # open from an earlier session within CA_MATCH_SESSIONS (finding 3), or to nothing (refused).
+        ties: dict = {}
+        for sym in sorted({a["symbol"] for a in legs}):
+            op = open_phantoms.get(sym)
+            if sym in affected and op is not None:
+                raise AttributionError(
+                    f"the account's corporate-action row(s) for {sym} on {d} could settle either the event of that "
+                    f"session or the phantom of {op['type']} {op['date']} (id {op['id']}) still open: which cannot be told")
+            if sym in affected:
+                ties[sym] = ("event", None)
+            elif op is not None and i - op["_opened_at"] <= CA_MATCH_SESSIONS:
+                ties[sym] = ("open", op)
+            else:
+                ids = ", ".join(f"{a['type']} id {a['id']}" for a in legs if a["symbol"] == sym)
+                raise AttributionError(
+                    f"the account posted corporate-action row(s) for {sym} on {d} ({ids}) with no market record to tie "
+                    f"them to: none on that session for a name held into it, and no phantom of {sym} still open within "
+                    f"{CA_MATCH_SESSIONS} session(s) (module docstring, CORPORATE ACTIONS)")
         for sym, evs in sorted(affected.items()):
             for e, role in evs:
                 what = f"{e['type']} {e['date']} {sym} ({role}, id {e['id']}), {q[sym]} share(s) held into {d}"
-                if any(a["symbol"] == sym for a in legs):
+                if sym in ties:
                     continue                     # the account's own rows move it (below)
                 if not inp.corp_act_types:
                     raise AttributionError(
@@ -1186,25 +1299,56 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
             else:
                 c_p = n_t = n_p = None
                 hold = nav_part = zero
-            if s in affected:                    # two share bases in one hold: not split (CORPORATE ACTIONS)
+            # The account's own rows (findings 2 and 3): the position is rebased, and hold is
+            # valued on the post-event share count and basis; the rebasing is its own component.
+            hold0, corp = hold, zero
+            if ls:
+                hold, corp, k_used, k_src = _rebased(s, d, qp, c_t, c_p if qp else None, ls, ties[s], affected,
+                                                     inp, hold0, p)
+            tie = ties.get(s)
+            if s in affected or tie is not None:     # two share bases in one name-day: no NAV split
                 nav_part = None
-                rows_s = "the account's own activity row(s) moved it" if ls else "paper did not process it"
-                ev_s = "; ".join(f"{e['type']} {e['date']} (id {e['id']})" for e, _ in affected[s])
+                if s in affected:
+                    rows_s = "the account's own activity row(s) moved it" if ls else "paper did not process it"
+                    ev_s = "; ".join(f"{e['type']} {e['date']} (id {e['id']})" for e, _ in affected[s])
+                else:
+                    op = tie[1]
+                    rows_s = "the account's own activity row(s) ended its phantom"
+                    ev_s = f"{op['type']} {op['date']} (id {op['id']}), still open from {op['session']}"
                 nav_gaps.append((d, s, f"a corporate action on the name that session, {ev_s}: {rows_s}"))
                 disc = None
-                for e, role in affected[s]:
-                    k = phantom = None
+                for e, role in affected.get(s, []):
+                    k = phantom = extra = None
                     why = None
                     if not ls:
                         r = e.get("rates") or {}
                         if r.get("old_rate") and r.get("new_rate"):
                             k = r["new_rate"] / r["old_rate"]
-                            phantom = (qp - qp * k) * c_t
+                            extra = qp - qp * k
+                            phantom = extra * c_t
                         else:
                             why = "the market record carries no old_rate/new_rate, so k is unknown"
-                    corp_events.append({"id": e["id"], "type": e["type"], "date": e["date"], "session": d,
-                                        "symbol": s, "role": role, "q_prev": qp, "close": c_t, "k": k,
-                                        "processed": bool(ls), "phantom": phantom, "why": why})
+                    rec = {"id": e["id"], "type": e["type"], "date": e["date"], "session": d,
+                           "symbol": s, "role": role, "q_prev": qp, "close": c_t,
+                           "k": k if not ls else k_used, "processed": bool(ls), "phantom": phantom, "why": why,
+                           "extra": extra, "accruals": [], "reversal": None,
+                           "open": bool(not ls and e["type"] in PHANTOM_TYPES),
+                           "corp": corp if ls else None, "k_source": k_src if ls else None}
+                    corp_events.append(rec)
+                    if rec["open"]:
+                        rec["_opened_at"] = i
+                        if s in open_phantoms:
+                            op = open_phantoms[s]
+                            raise AttributionError(
+                                f"a second unprocessed split of {s} on {d} (id {e['id']}) while the phantom of "
+                                f"{op['type']} {op['date']} (id {op['id']}) is still open: the account's later rows "
+                                "could not be told apart")
+                        open_phantoms[s] = rec
+                if tie is not None and tie[0] == "open":
+                    op = tie[1]
+                    op["reversal"] = {"session": d, "amount": corp, "sessions_after": i - op["_opened_at"]}
+                    op["open"] = False
+                    del open_phantoms[s]
             elif nav_part is None:
                 disc = None
                 missing = [x for x, v in (("NAV on " + str(d), n_t), ("NAV on " + str(p), n_p)) if v is None]
@@ -1213,10 +1357,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                 disc = hold - nav_part
                 if nav_part + disc != hold:      # exact in Fraction; a float here would be a bug
                     raise AttributionError(f"{s} {d}: nav_part + disc_part != hold")
-            fill = sum((f.signed_qty * (c_t - f.price) for f in fs), zero)
-            if ls:                               # fee-free position changes and cash in lieu (CORPORATE ACTIONS)
-                fill += sum((a["qty"] * (c_t - a["price"]) for a in ls if a["price"] is not None), zero)
-                fill += sum((a["cash"] for a in ls), zero)
+            fill = sum((f.signed_qty * (c_t - f.price) for f in fs), zero)     # the trades alone, always
             traded = sum((abs(f.signed_qty) * f.price for f in fs), zero)
             if not qp:
                 dist, status = zero, "not held at the previous close: not entitled"
@@ -1235,11 +1376,26 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                          "n_fills": len(fs), "close_prev": c_p, "close": c_t,
                          "nav_prev": n_p, "nav": n_t, "hold": hold, "fill": fill,
                          "nav_part": nav_part, "disc_part": disc, "dist": dist,
-                         "traded_usd": traded, "dist_status": status})
+                         "traded_usd": traded, "dist_status": status, "corp": corp})
             q[s] = q_end
+        # A phantom still open accrues: paper's extra shares move with the price (finding 3), so the
+        # cumulative phantom stays what is still in the official P&L. Not on its own session (the
+        # booking is its value there) nor on the session the account's rows end it (the reversal).
+        for sym, op in sorted(open_phantoms.items()):
+            if op["session"] == d:
+                continue
+            c_t_s, c_p_s = inp.closes.get((sym, d)), inp.closes.get((sym, p))
+            amt = (None if c_t_s is None or c_p_s is None or op["extra"] is None
+                   else op["extra"] * (c_t_s - c_p_s))
+            op["accruals"].append((d, amt))
+    # `corp` is a column only when the account posted corporate-action rows in the window, so a
+    # window without one writes the tables it always did (module docstring, CORPORATE ACTIONS).
+    has_corp = bool(acts)
     nd = pd.DataFrame(rows, columns=["date", "prev_date", "period", "symbol", "grp", "side",
                                      "q_prev", "q_end", "n_fills", "close_prev", "close",
-                                     "nav_prev", "nav", *MONEY, "dist_status"])
+                                     "nav_prev", "nav", *MONEY, "dist_status", "corp"])
+    if not has_corp:
+        nd = nd.drop(columns=["corp"])
 
     daily = []
     for i, d in enumerate(sessions[1:], start=1):
@@ -1250,9 +1406,11 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
         # A sum with a missing term is not the sum (dist_score, score.py).
         sums["dist"] = None if any(x is None for x in sub["dist"]) else sum(sub["dist"], zero)
         fees, sold, shares = session_fees(by_day.get(d, []))
-        rebuilt = sums["hold"] + sums["fill"] + fees
+        corp_d = sum(sub["corp"], zero) if has_corp else zero
+        rebuilt = sums["hold"] + sums["fill"] + fees + corp_d
         change = eq[d] - eq[p]
         daily.append({"date": d, "period": period_of(d), **{k: sums[k] for k in MONEY},
+                      **({"corp": corp_d} if has_corp else {}),
                       "fees": fees, "sold_usd": sold, "shares_traded": shares,
                       "rebuilt": rebuilt, "eod_equity": eq[d], "eod_change": change,
                       "residual": change - rebuilt})
@@ -1281,17 +1439,15 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                     + ", ".join(f"{s} {d} ({w})" for d, s, w in nav_gaps[:10])
                     + (" ..." if len(nav_gaps) > 10 else ""))
     for c in corp_events:
+        for k_ in [k_ for k_ in c if k_.startswith("_")]:
+            del c[k_]
         gaps.append(f"corporate action on a held name: {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), "
-                    f"{c['q_prev']} share(s) held into {c['session']}; "
-                    + ("the account's own activity rows moved the position" if c["processed"] else
-                       (f"paper did not process it: phantom (q_prev - q_prev x k) x close = "
-                        f"{float(c['phantom']):+,.2f} (k {c['k']}), inside hold and the official change"
-                        if c["phantom"] is not None else f"paper did not process it: phantom UNMEASURED ({c['why']})"))
-                    + "; that name-day's NAV/discount split is UNMEASURED")
+                    f"{c['q_prev']} share(s) held into {c['session']}; {corp_event_text(c)}"
+                    "; that name-day's NAV/discount split is UNMEASURED")
     if acts:
         gaps.append(f"{len(acts)} corporate-action activity row(s) of the account applied as fee-free position "
-                    f"changes or cash, inside fill: " + ", ".join(f"{a['type']} {a['symbol']} {a['date']} "
-                                                                  f"(id {a['id']})" for a in acts[:10]))
+                    f"changes or cash, in corp (never fill): " + ", ".join(f"{a['type']} {a['symbol']} {a['date']} "
+                                                                          f"(id {a['id']})" for a in acts[:10]))
     if "capital_gains_distribution" not in inp.dist_kinds:
         gaps.append("capital-gains distributions were NOT queried by the cache's source: the "
                     "distribution line covers cash dividends only")
@@ -1330,15 +1486,16 @@ def group_table(nd: pd.DataFrame, keys) -> pd.DataFrame:
     """Money columns summed by `keys`, plus price P&L (hold + fill), the
     distribution-adjusted total, and the fill in bp of traded notional. The
     session-level fees are not here: they have no per-name value."""
-    f = _float_frame(nd[list(keys) + list(MONEY)])
-    plain = [k for k in MONEY if k != "dist"]
+    money = list(MONEY) + (["corp"] if "corp" in nd.columns else [])
+    f = _float_frame(nd[list(keys) + money])
+    plain = [k for k in money if k != "dist"]
     g = f.groupby(list(keys), sort=True)[plain].sum()
     for k in ("nav_part", "disc_part"):          # a sum with a missing term is not the sum (CORPORATE ACTIONS)
         if f[k].isna().any():
             g[k] = g[k].where(~f.groupby(list(keys), sort=True)[k].apply(lambda x: x.isna().any()))
     g["dist"] = f.groupby(list(keys), sort=True)["dist"].agg(_sum_or_unmeasured)
-    g = g[list(MONEY)]
-    g["price_pnl"] = g["hold"] + g["fill"]
+    g = g[money]
+    g["price_pnl"] = g["hold"] + g["fill"] + (g["corp"] if "corp" in g.columns else 0.0)
     g["with_dist"] = g["price_pnl"] + g["dist"]           # NaN stays NaN: UNMEASURED
     g["fill_bp_of_traded"] = (g["fill"] / g["traded_usd"] * 1e4).where(g["traded_usd"] > 0)
     return g.reset_index()
@@ -1364,9 +1521,9 @@ def totals(res: Result) -> dict:
     d = res.daily
     t = {k: (None if any(x is None for x in d[k]) else float(sum(d[k], Fraction(0))))
          for k in (*[m for m in MONEY if m != "dist"], *SESSION_MONEY, "rebuilt", "eod_change",
-                   "residual")}
+                   "residual", *(["corp"] if "corp" in d.columns else []))}
     t["dist"] = None if any(x is None for x in d["dist"]) else float(sum(d["dist"], Fraction(0)))
-    t["price_pnl"] = t["hold"] + t["fill"]
+    t["price_pnl"] = t["hold"] + t["fill"] + t.get("corp", 0.0)
     t["execution"] = t["fill"] + t["fees"]
     bp = (lambda x: x / t["traded_usd"] * 1e4) if t["traded_usd"] else (lambda x: float("nan"))
     t["fill_bp_of_traded"] = bp(t["fill"])
@@ -1449,17 +1606,11 @@ def corp_section(res: Result) -> list[str]:
     L = ["## Corporate actions on held names (team lead, 2026-11-14)", ""]
     for c in res.corp_events:
         L.append(f"- {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}, {c['role']}), {c['q_prev']} share(s) "
-                 f"held into {c['session']}: "
-                 + ("the account's own activity rows moved the position (inside fill)" if c["processed"] else
-                    (f"phantom: paper did not process {c['type']}: (q_prev - q_prev x k) x close_t = "
-                     f"{float(c['phantom']):,.2f} (k {c['k']}, close {float(c['close']):,.4f}), inside hold and the "
-                     "official change, which stays the P&L of record" if c["phantom"] is not None else
-                     f"phantom UNMEASURED: {c['why']}"))
-                 + "; that name-day's NAV/discount split is UNMEASURED")
+                 f"held into {c['session']}: {corp_event_text(c)}; that name-day's NAV/discount split is UNMEASURED")
     for a in res.corp_activities:
         L.append(f"- account activity {a['type']} {a['symbol']} {a['date']} (id {a['id']}): "
                  + (f"cash {float(a['cash']):,.2f}" if a["price"] is None else
-                    f"{a['qty']:+d} share(s) at {float(a['price']):,.4f}") + ", fee-free, inside fill")
+                    f"{a['qty']:+d} share(s) at {float(a['price']):,.4f}") + ", fee-free, in corp (never fill)")
     return L + [""]
 
 
@@ -1493,7 +1644,7 @@ def summary_markdown(res: Result, tabs: dict) -> str:
          "## Reconciliation against Alpaca's EOD history (the P&L of record)", "",
          "| line | USD |", "|---|---|",
          f"| official: EOD equity change, {res.first_session}..{res.asof} | {t['eod_change']:,.2f} |",
-         f"| rebuilt: hold + fill + fees | {t['rebuilt']:,.2f} |",
+         f"| rebuilt: hold + fill + fees{' + corp' if 'corp' in t else ''} | {t['rebuilt']:,.2f} |",
          f"| official - rebuilt (residual) | {t['residual']:,.2f} |",
          f"| largest single-session residual (abs) | {t['max_abs_residual']:,.2f} |",
          f"| residual per $1M sold | {t['residual_per_musd_sold']:,.2f} |", "",
@@ -1508,6 +1659,8 @@ def summary_markdown(res: Result, tabs: dict) -> str:
           f"| of which nav_part (q_prev x close_prev x NAV return) | {_usd(t['nav_part'])} |",
           f"| of which disc_part (hold - nav_part) | {_usd(t['disc_part'])} |",
           f"| fill (fills against that day's close) | {t['fill']:,.2f} |",
+          *([f"| corp (the account's corporate-action rows, rebased; never fill) | {t['corp']:,.2f} |"]
+            if "corp" in t else []),
           f"| fees (modelled: SEC on {t['sold_usd']:,.2f} sold, CAT on {t['shares_traded']:,.0f} "
           f"shares; per session, rounded up) | {t['fees']:,.2f} |",
           f"| execution cost on paper: fill + fees | {t['execution']:,.2f} |",

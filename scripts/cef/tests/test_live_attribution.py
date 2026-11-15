@@ -1040,18 +1040,164 @@ def test_h2_and_an_unrecorded_h3_do_not_reconcile_on_the_ex_date(hyp):
     assert {c["symbol"] for c in res.corp_events} == {"LNG", "SHS"}
 
 
-def test_h3_with_the_accounts_split_rows_reconciles_with_no_phantom():
-    """H3 with the account's own SPLIT rows (the documented two legs, fee-free): positions follow
-    the rows, the rebuild reconciles, no phantom is claimed (the account processed it), and the
-    legs sit in fill, outside the fee model and the traded notional; the ex-date's NAV/discount
-    split is UNMEASURED. Fails on the parent fa84045, which refused."""
+def test_h3_with_the_accounts_split_rows_keeps_hold_and_fill_true():
+    """H3 with the account's own SPLIT rows on the ex-date (the documented two legs, fee-free).
+    Review of the follow-up, 2026-11-14, finding 2: the legs went into fill and hold stayed on
+    two share bases, so the ex-date showed hold -1,785 and fill +1,752 against a true -33 and 0,
+    and the cumulative fill bp of traded read +1,613 against +4.6. Now hold is valued on the post-
+    event count and basis (q' x (close_t - close_p / k): LNG 300 x (13.38 - 13.44) = -18, SHS
+    -200 x (24.45 - 24.30) = -30, OTH +15), the rebasing is its own column `corp` (0 here: the legs
+    are value-neutral at the previous close), fill and traded notional are the trades' alone, the
+    session reconciles to the cent, and no phantom is claimed. Fails on the parent bdf181e, which
+    pinned fill == 1752."""
     res = LA.attribute(_ca_inputs("H3", acts=CA_LEGS), breaks=[])
     assert all(r == 0 for r in res.daily["residual"])
     assert all(c["processed"] and c["phantom"] is None for c in res.corp_events)
     assert (_ca_row(res, "LNG", CA_EX)["q_end"], _ca_row(res, "SHS", CA_EX)["q_end"]) == (300, -200)
+    assert _ca_row(res, "LNG", CA_EX)["hold"] == 300 * (F("13.38") - F("4.48") * 3) == -18
+    assert _ca_row(res, "SHS", CA_EX)["hold"] == -200 * (F("24.45") - F("8.10") * 3) == -30
     day = res.daily.set_index("date").loc[CA_EX]
-    assert day["fees"] == 0 and day["traded_usd"] == 0 and day["fill"] == 1752
+    assert (day["hold"], day["fill"], day["corp"], day["fees"], day["traded_usd"]) == (-33, 0, 0, 0, 0)
+    assert day["eod_change"] == -33
+    plain = LA.attribute(_ca_inputs("H1", corp=[], fills=CA_BASE_FILLS), breaks=[])
+    t, t0 = LA.totals(res), LA.totals(plain)
+    assert t["fill"] == t0["fill"] and t["fill_bp_of_traded"] == t0["fill_bp_of_traded"] and t["traded_usd"] == t0["traded_usd"]
     assert [a["id"] for a in res.corp_activities] == [a["id"] for a in CA_LEGS]
+
+
+def test_the_decomposition_is_exact_when_the_rows_leave_a_fraction_for_cash_in_lieu():
+    """A 1:3 reverse split of 901 shares: the account's rows remove 901 and add 300 at the same
+    total value (the documented legs are value-neutral, sum(qty x price) = 0), and pay the third
+    share as cash in lieu. hold is 300 x (close_t - close_p x 3), and corp is the rest: the cash
+    in lieu against the fraction's value at the restated close, 4.40 - 13.44 / 3 = -0.08; hold +
+    corp + fill is the name-day's rebuild, so the session reconciles to the cent. Fails on the
+    parent bdf181e, where the legs and the cash sat in fill."""
+    fills = [_ca_fill("f1", "LNG", "buy", 901, "4.51", CA_S[1]), _ca_fill("f3", "OTH", "buy", 100, "20.08", CA_S[1])]
+    cil = F("4.40")
+    legs = [{"id": "l1", "type": "SPLIT", "date": CA_EX, "symbol": "LNG", "qty": -901, "price": F("4.48"), "cash": F(0)},
+            {"id": "l2", "type": "SPLIT", "date": CA_EX, "symbol": "LNG", "qty": 300, "price": 901 * F("4.48") / 300,
+             "cash": F(0)},
+            {"id": "l3", "type": "CIL", "date": CA_EX, "symbol": "LNG", "qty": 0, "price": None, "cash": cil}]
+    inp = _ca_inputs("H3", acts=legs, fills=fills, corp=CA_SPLIT[:1])
+    parsed = LA.parse_fills(fills)                        # the account: 300 shares after the split, plus the cash
+    eq = []
+    cash, q = F(100000), {}
+    for d in CA_S:
+        if d == CA_EX:
+            q["LNG"] = 300
+            cash += cil
+        for f in [f for f in parsed if f.date == d]:
+            cash -= f.signed_qty * f.price
+            q[f.symbol] = q.get(f.symbol, 0) + f.signed_qty
+        cash += LA.session_fees([f for f in parsed if f.date == d])[0]
+        eq.append((d, cash + sum(x * CA_CLOSES[(s, d)] for s, x in q.items() if x)))
+    inp.eod = eq
+    res = LA.attribute(inp, breaks=[])
+    assert all(r == 0 for r in res.daily["residual"])
+    r = _ca_row(res, "LNG", CA_EX)
+    assert r["hold"] == 300 * (F("13.38") - F("4.48") * 3)
+    assert r["corp"] == cil - F("13.44") / 3 == F("-0.08")
+    assert r["fill"] == 0 and r["traded_usd"] == 0
+
+
+def test_one_split_listed_twice_by_the_feed_is_one_event():
+    """Review of the follow-up, 2026-11-14, finding 1 (ca_dup.py): the feed lists one split under
+    two ids (docs/REFERENCES.md §12pc: the MQY pairs twice, an exact QQQ duplicate), and each
+    record became its own event with the full phantom: four events and twice the phantom. Now one
+    event per (symbol, session), its id joining the records'. Fails on the parent bdf181e (four
+    events)."""
+    corp = CA_SPLIT + [dict(e, id=e["id"] + "-dup") for e in CA_SPLIT]
+    res = LA.attribute(_ca_inputs("H1", corp=corp), breaks=[])
+    assert sorted((c["symbol"], c["id"], c["phantom"]) for c in res.corp_events) == [
+        ("LNG", "ca-1+ca-1-dup", 8028), ("SHS", "ca-2+ca-2-dup", -9780)]
+
+
+def test_two_records_of_one_split_that_disagree_on_the_rates_raise_naming_both():
+    """The same: two records for one symbol and session with different rates cannot both be
+    true, so the rebuild raises naming both ids, never picking one. Fails on the parent bdf181e,
+    which booked two phantoms."""
+    other = dict(CA_SPLIT[0], id="ca-1-other", rates={"old_rate": F(4), "new_rate": F(1)})
+    with pytest.raises(LA.AttributionError, match=r"disagree on old_rate: 3 \(id ca-1\) and 4 \(id ca-1-other\)"):
+        LA.attribute(_ca_inputs("H1", corp=[CA_SPLIT[0], other]), breaks=[])
+
+
+def _late_legs(d):
+    """The account's rows for a split support pushes by hand on session d, after the ex-date:
+    paper's count goes 900 -> 300 and -600 -> -200 at value-neutral prices against d's previous
+    close, which is already on the post-split basis."""
+    prev = CA_S[CA_S.index(d) - 1]
+    out = []
+    for s, q in (("LNG", 900), ("SHS", -600)):
+        po = CA_CLOSES[(s, prev)]
+        out += [{"id": f"{s}-rm-{d}", "type": "SPLIT", "date": d, "symbol": s, "qty": -q, "price": po, "cash": F(0)},
+                {"id": f"{s}-al-{d}", "type": "SPLIT", "date": d, "symbol": s, "qty": int(q * CA_K), "price": po * 3,
+                 "cash": F(0)}]
+    return out
+
+
+def _late_equity(d_rows):
+    """H1 until the rows' session, then the account holds the post-split count (case C)."""
+    parsed = LA.parse_fills(CA_BASE_FILLS)
+    cash, q, out = F(100000), {}, []
+    for d in CA_S:
+        if d == d_rows:
+            for s in ("LNG", "SHS"):
+                q[s] = q[s] * CA_K
+        for f in [f for f in parsed if f.date == d]:
+            cash -= f.signed_qty * f.price
+            q[f.symbol] = q.get(f.symbol, 0) + f.signed_qty
+        cash += LA.session_fees([f for f in parsed if f.date == d])[0]
+        out.append((d, cash + sum(x * CA_CLOSES[(s, d)] for s, x in q.items() if x)))
+    return out
+
+
+@pytest.mark.parametrize("later", [1, 2], ids=["next_session", "two_sessions_later"])
+def test_rows_posted_after_the_ex_date_end_the_open_phantom_with_a_labelled_reversal(later):
+    """Review of the follow-up, 2026-11-14, finding 3 (ca_driver case C): paper did not process
+    the split on its ex-date (the phantom is booked), and the account's rows post `later`
+    sessions after it. They tie back to the open event: the phantom accrues on paper's extra
+    shares until then (inside hold), the rows' session books the reversal in `corp` (never
+    fill), every session reconciles, and booking + accruals + reversal is 0: nothing phantom is
+    left in the official P&L. Fails on the parent bdf181e, where the reversal sat unlabelled in
+    that session's fill and the phantom was reported as still in the official P&L."""
+    d_rows = CA_S[CA_S.index(CA_EX) + later]
+    inp = _ca_inputs("H1", acts=_late_legs(d_rows), fills=CA_BASE_FILLS)
+    inp.eod = _late_equity(d_rows)
+    res = LA.attribute(inp, breaks=[])
+    assert all(r == 0 for r in res.daily["residual"])
+    day = res.daily.set_index("date").loc[d_rows]
+    assert day["fill"] == 0 and day["traded_usd"] == 0
+    for c in res.corp_events:
+        assert c["reversal"] is not None and c["reversal"]["session"] == d_rows and not c["open"]
+        assert len(c["accruals"]) == later - 1
+        net = c["phantom"] + sum((a for _, a in c["accruals"]), F(0)) + c["reversal"]["amount"]
+        assert net == 0, (c["symbol"], net)
+        prev = CA_S[CA_S.index(d_rows) - 1]
+        assert c["reversal"]["amount"] == -c["extra"] * CA_CLOSES[(c["symbol"], prev)]
+    assert day["corp"] == sum(c["reversal"]["amount"] for c in res.corp_events)
+    assert dict(zip(res.positions_end["symbol"], res.positions_end["qty"])) == {"LNG": 300, "OTH": 100, "SHS": -200}
+
+
+def test_rows_with_no_market_record_to_tie_to_refuse_named():
+    """The account's rows for a name with no market record on their session and no open phantom
+    of it within CA_MATCH_SESSIONS refuse, named; so do rows past that window (the phantom then
+    stays open, labelled). Fails on the parent bdf181e, which applied them without a record."""
+    legs = _late_legs(CA_S[4])
+    with pytest.raises(LA.AttributionError, match=r"the account posted corporate-action row\(s\) for LNG on 2026-02-06 "
+                                                  r"\(SPLIT id LNG-rm-2026-02-06, SPLIT id LNG-al-2026-02-06\) with no "
+                                                  r"market record to tie them to"):
+        LA.attribute(_ca_inputs("H1", corp=[], acts=legs, fills=CA_BASE_FILLS), breaks=[])
+
+
+def test_rows_past_the_matching_window_leave_the_phantom_open_and_refuse(monkeypatch):
+    """CA_MATCH_SESSIONS bounds the tie-back: with it at 1, rows two sessions after the ex-date
+    tie to nothing and refuse, naming the window. A pin on the bound (the parent had none)."""
+    monkeypatch.setattr(LA, "CA_MATCH_SESSIONS", 1)
+    d_rows = CA_S[CA_S.index(CA_EX) + 2]
+    inp = _ca_inputs("H1", acts=_late_legs(d_rows), fills=CA_BASE_FILLS)
+    inp.eod = _late_equity(d_rows)
+    with pytest.raises(LA.AttributionError, match=r"no phantom of LNG still open within 1 session\(s\)"):
+        LA.attribute(inp, breaks=[])
 
 
 def test_an_acquirer_merger_is_neither_refused_nor_a_phantom():
@@ -1132,24 +1278,3 @@ def test_a_cache_without_the_activity_file_is_analysed_as_before_and_one_half_pr
     (tmp_path / "c" / LA.ACT_FILE).write_text("[]")
     with pytest.raises(LA.AttributionError, match="must come together"):
         LA.load_cache(tmp_path / "c", grp=dict(GRP))
-
-
-def test_one_split_listed_twice_by_the_feed_is_one_event():
-    """Review of the follow-up, 2026-11-14, finding 1 (ca_dup.py): the feed lists one split under
-    two ids (docs/REFERENCES.md §12pc: the MQY pairs twice, an exact QQQ duplicate), and each
-    record became its own event with the full phantom: four events and twice the phantom. Now one
-    event per (symbol, session), its id joining the records'. Fails on the parent bdf181e (four
-    events)."""
-    corp = CA_SPLIT + [dict(e, id=e["id"] + "-dup") for e in CA_SPLIT]
-    res = LA.attribute(_ca_inputs("H1", corp=corp), breaks=[])
-    assert sorted((c["symbol"], c["id"], c["phantom"]) for c in res.corp_events) == [
-        ("LNG", "ca-1+ca-1-dup", 8028), ("SHS", "ca-2+ca-2-dup", -9780)]
-
-
-def test_two_records_of_one_split_that_disagree_on_the_rates_raise_naming_both():
-    """The same: two records for one symbol and session with different rates cannot both be
-    true, so the rebuild raises naming both ids, never picking one. Fails on the parent bdf181e,
-    which booked two phantoms."""
-    other = dict(CA_SPLIT[0], id="ca-1-other", rates={"old_rate": F(4), "new_rate": F(1)})
-    with pytest.raises(LA.AttributionError, match=r"disagree on old_rate: 3 \(id ca-1\) and 4 \(id ca-1-other\)"):
-        LA.attribute(_ca_inputs("H1", corp=[CA_SPLIT[0], other]), breaks=[])

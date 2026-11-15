@@ -106,12 +106,15 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
   * a corporate action on a fund the book held into its date (team lead, 2026-11-14:
     "narrow and handle it"; `live_attribution`, CORPORATE ACTIONS). An acquirer's merger, a
     flat name and an event outside the window touch nothing. The rebuild takes positions from
-    FILLs plus the account's own corporate-action activity rows, never the market feed. A
-    split paper did not process (no account row) is reconciled as the account shows it, with
-    a labelled phantom line per event and a cumulative phantom line beside the official P&L,
-    which stays the P&L of record (`corporate_action_lines`); a session that does not
-    reconcile (a frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit 5,
-    naming the session and the event (`reconciliation`). Any other count-changing type held
+    FILLs plus the account's own corporate-action activity rows, never the market feed; a
+    name-day those rows move carries the rebasing in `corp`, beside hold (on the post-event
+    basis), fill, fees and distributions (independent review of the follow-up, 2026-11-14). A
+    split paper did not process (no account row) is reconciled as the account shows it, with a
+    labelled phantom line per event, its accrual while open, a reversal when the account's rows
+    later end it, and a cumulative phantom line, what is still in the official P&L, beside the
+    official P&L, which stays the P&L of record (`corporate_action_lines`); a session that does
+    not reconcile (a frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit
+    5, naming the session and the event (`reconciliation`). Any other count-changing type held
     into its date with no account row still refuses the attribution, named (exit 4).
   * a book that holds nothing at the as-of close: the factor block is FLAT (independent
     review of PR #82, 2026-11-11). Nothing is held, so nothing is exposed; the block reads no
@@ -164,6 +167,8 @@ from scripts.cef import live_attribution as LA           # noqa: E402  (no order
 from scripts.ops import alpaca_read as AR                # noqa: E402  (GET only)
 from scripts.ops.data_qa import ET, expected_day, write_atomic  # noqa: E402
 
+CA_MATCH_SESSIONS_TEXT = f"{LA.CA_MATCH_SESSIONS} session(s) of the event (live_attribution.CA_MATCH_SESSIONS)"
+
 BOOKS = ("cef", "c4")
 EXIT_OK = 0
 EXIT_REFUSED = 2                   # refused before reading or writing anything (main)
@@ -188,7 +193,7 @@ def session_row(res, d: dt.date) -> dict:
     r = res.daily[res.daily["date"] == d].iloc[0]
     out = {"date": d.isoformat()}
     for k in ("eod_change", "hold", "nav_part", "disc_part", "fill", "fees", "dist", "traded_usd", "sold_usd",
-              "rebuilt", "residual", "eod_equity"):
+              "rebuilt", "residual", "eod_equity", *(["corp"] if "corp" in res.daily.columns else [])):
         out[k] = None if r[k] is None else float(r[k])
     return out
 
@@ -204,7 +209,8 @@ def cumulative(res, first: dt.date) -> dict:
         return (float(sum(known, Fraction(0))) if known else None,
                 [dd.isoformat() for dd, v in zip(d["date"], vals) if v is None])
     out: dict = {"first_trade": first.isoformat(), "sessions": int(len(d)), "unmeasured": {}}
-    for k in ("eod_change", "hold", "fill", "fees", "rebuilt", "residual", "traded_usd", "sold_usd"):
+    for k in ("eod_change", "hold", "fill", "fees", "rebuilt", "residual", "traded_usd", "sold_usd",
+              *(["corp"] if "corp" in d.columns else [])):
         out[k] = total(k)[0]
     for k in ("nav_part", "disc_part", "dist"):
         v, miss = total(k)
@@ -243,45 +249,81 @@ def reconciliation(res, first: dt.date) -> dict:
 
 
 def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str], dict]:
-    """The labelled phantom lines and JSON fields (team lead, 2026-11-14; `live_attribution`,
-    CORPORATE ACTIONS), or nothing when no corporate action touched a held name since the first
-    trade, so such a report is the one it always was.
+    """The labelled corporate-action lines and JSON fields (team lead, 2026-11-14;
+    `live_attribution`, CORPORATE ACTIONS), or nothing when no corporate action touched a held
+    name since the first trade, so such a report is the one it always was.
 
     A split paper did not process leaves the old count marked at the new-basis close: hold and
-    the official EOD change both carry (q_prev - q_prev x k) x close_t, a phantom. It is shown,
-    per event and summed from the first trade, BESIDE the official change, which stays the P&L
-    of record (docs/SYSTEM.md section 5); nothing is subtracted from any line. A phantom the
-    market record gives no rates for is UNMEASURED, and so is any sum that holds it."""
+    the official EOD change both carry (q_prev - q_prev x k) x close_t on its session, a phantom.
+    While it is open, paper's extra shares move with the price, and that accrual is phantom too
+    (inside hold); when the account's own rows end it (tied back within CA_MATCH_SESSIONS, review
+    of the follow-up, 2026-11-14, finding 3), the reversal is in `corp`. Each is shown per event,
+    and the cumulative phantom, the booking plus the accruals plus the reversals, is what is still
+    in the official P&L at the as-of: 0 once the account's rows have ended every phantom. It sits
+    BESIDE the official change, which stays the P&L of record (docs/SYSTEM.md section 5); nothing
+    is subtracted from any line. A term the market record or a close cannot give is UNMEASURED,
+    and so is any sum that holds it."""
     evs = [c for c in getattr(res, "corp_events", []) if c["session"] >= first]
     if not evs:
         return [], {}
-    def amt(c):
-        return None if c["phantom"] is None else float(c["phantom"])
+
+    def f(x):
+        return None if x is None else float(x)
+
+    def moves(c, upto=None):
+        """[(session, amount)] of one unprocessed event's phantom: booking, accruals, reversal."""
+        out = [(c["session"], f(c["phantom"]))] + [(d, f(a)) for d, a in c["accruals"]]
+        if c["reversal"] is not None:
+            out.append((c["reversal"]["session"], f(c["reversal"]["amount"])))
+        return [(d, a) for d, a in out if upto is None or d == upto]
+
+    def total(pairs):
+        return None if any(a is None for _, a in pairs) else sum((a for _, a in pairs), 0.0)
+
     lines = []
     for c in evs:
         if c["processed"]:
             lines.append(f"Corporate action {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), session "
-                         f"{c['session']}: the account's own activity rows moved the position (fee-free, inside "
-                         f"fill); that name-day's NAV/discount split is UNMEASURED")
+                         f"{c['session']}: the account's own activity rows moved the position; hold is on the "
+                         f"post-event basis (k {c['k']} from {c['k_source']}) and the rebasing is corp "
+                         f"{_usd(f(c['corp']))}, never fill; that name-day's NAV/discount split is UNMEASURED")
+            continue
+        lines.append(f"Phantom: paper did not process {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), "
+                     f"session {c['session']}: (q_prev - q_prev x k) x close_t = "
+                     + (f"{f(c['phantom']):+,.2f} (q_prev {c['q_prev']}, k {c['k']})" if c["phantom"] is not None
+                        else f"UNMEASURED ({c['why']})")
+                     + ", inside hold and the official change; that name-day's NAV/discount split is UNMEASURED")
+        if c["accruals"]:
+            acc = total([(d, f(a)) for d, a in c["accruals"]])
+            lines.append(f"Phantom accrual: paper's extra {c['extra']} share(s) of {c['symbol']} moved with the price "
+                         f"on {len(c['accruals'])} session(s) after {c['session']}: {_usd(acc)}, inside hold")
+        if c["reversal"] is not None:
+            rv = c["reversal"]
+            lines.append(f"Phantom reversal: the account's rows for {c['symbol']} on {rv['session']} "
+                         f"({rv['sessions_after']} session(s) after {c['session']}) ended the phantom of {c['type']} "
+                         f"(id {c['id']}): {_usd(f(rv['amount']))}, in corp, never fill")
         else:
-            lines.append(f"Phantom: paper did not process {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), "
-                         f"session {c['session']}: (q_prev - q_prev x k) x close_t = "
-                         + (f"{amt(c):+,.2f} (q_prev {c['q_prev']}, k {c['k']})" if amt(c) is not None
-                            else f"UNMEASURED ({c['why']})")
-                         + ", inside hold and the official change; that name-day's NAV/discount split is UNMEASURED")
+            lines.append(f"Phantom of {c['type']} {c['symbol']} (id {c['id']}) still OPEN at the as-of: no account row "
+                         f"yet (rows are tied back within {CA_MATCH_SESSIONS_TEXT}; past that it stays open)")
     unproc = [c for c in evs if not c["processed"]]
-    total = None if any(amt(c) is None for c in unproc) else sum((amt(c) for c in unproc), 0.0)
-    session = [c for c in unproc if c["session"] == eff]
-    s_total = None if any(amt(c) is None for c in session) else sum((amt(c) for c in session), 0.0)
+    cum = total([m for c in unproc for m in moves(c)])
+    ses = [m for c in unproc for m in moves(c, eff)]
+    n_open = sum(1 for c in unproc if c["reversal"] is None)
     if unproc:
-        lines.append(f"Phantom from corporate actions paper did not process, from the first trade: {_usd(total)} "
-                     f"({len(unproc)} event(s)); the official P&L above includes it and stays the P&L of record")
+        lines.append(f"Phantom from corporate actions paper did not process, still in the official P&L at the as-of: "
+                     f"{_usd(cum)} ({len(unproc)} event(s), {n_open} still open, {len(unproc) - n_open} ended by the "
+                     f"account's rows); the official P&L above includes it and stays the P&L of record")
     out = {"corporate_actions": [{k: (v.isoformat() if isinstance(v, dt.date) else
-                                      float(v) if isinstance(v, Fraction) else v) for k, v in c.items()}
+                                      float(v) if isinstance(v, Fraction) else
+                                      [[x.isoformat(), None if y is None else float(y)] for x, y in v]
+                                      if k == "accruals" else
+                                      {kk: (vv.isoformat() if isinstance(vv, dt.date) else
+                                            float(vv) if isinstance(vv, Fraction) else vv) for kk, vv in v.items()}
+                                      if isinstance(v, dict) else v) for k, v in c.items()}
                                  for c in evs],
-           "phantom_cumulative": total}
-    if session:
-        out["phantom_session"] = s_total
+           "phantom_cumulative": cum}
+    if ses:
+        out["phantom_session"] = total(ses)
     return lines, out
 
 
@@ -371,12 +413,15 @@ def attribution_lines(sess: dict, cum: dict, recon: dict, *, session_note: str |
     if session_note:
         L.append(session_note)
     sp = lambda k: _usd(sess.get(k))
+    corp_s = (f"; corp (the account's corporate-action rows, rebased; never fill) {sp('corp')}"
+              if "corp" in sess else "")
+    corp_c = f"; corp {_usd(cum['corp'])}" if "corp" in cum else ""
     L += [f"Session {sess['date']}: official (Alpaca EOD change) {sp('eod_change')}; "
           f"hold {sp('hold')} = NAV part {sp('nav_part')} + discount part {sp('disc_part')}; "
-          f"fill {sp('fill')}; fees (modelled) {sp('fees')}; distributions not credited by paper "
+          f"fill {sp('fill')}{corp_s}; fees (modelled) {sp('fees')}; distributions not credited by paper "
           f"{sp('dist')}; rebuild vs official residual {sp('residual')}",
           f"Cumulative from the first trade ({cum['first_trade']}, {cum['sessions']} sessions): official "
-          f"{_usd(cum['eod_change'])}; hold {_usd(cum['hold'])}; fill {_usd(cum['fill'])}; "
+          f"{_usd(cum['eod_change'])}; hold {_usd(cum['hold'])}; fill {_usd(cum['fill'])}{corp_c}; "
           f"fees {_usd(cum['fees'])}"]
     for k, label in (("nav_part", "NAV part"), ("disc_part", "discount part")):
         miss = cum["unmeasured"][k]

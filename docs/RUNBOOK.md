@@ -1360,12 +1360,20 @@ after. A corporate action no longer stops the attribution by being in the window
 a fund held into the event's session, in a role whose count or symbol the event changes, is
 touched: an acquirer's merger (the core's MHD and MQY, 2026-02) and a flat name are not.
 Positions come from FILLs plus the account's own corporate-action activity rows (none on paper
-today), never from the market feed. A split paper did not process reconciles as the account
-shows it; the report prints a labelled phantom line per event, (q_prev - q_prev x k) x close,
-and a cumulative phantom line beside the official P&L, which stays the P&L of record; that
-name-day's NAV/discount split is UNMEASURED, named. A session that does not reconcile (paper
-froze the position, or support pushed the split with no account row) is UNRECONCILED, exit 5,
-naming the session and the event. Any other count-changing type held into its date with no
+today), never from the market feed. One split listed under two ids by the feed is one event;
+two records that disagree on its rates refuse, named. A name-day the account's rows move keeps
+hold on the post-event count and basis, carries the rebasing in its own `corp` component (never
+`fill`, never the traded notional) and reconciles to the cent. A split paper did not process
+reconciles as the account shows it; the report prints a labelled phantom line per event,
+(q_prev - q_prev x k) x close, then the phantom's accrual while it stays open (paper's extra
+shares move with the price) and, if the account's rows for the name post within
+`live_attribution.CA_MATCH_SESSIONS` sessions, a labelled reversal in `corp`; the cumulative
+phantom line beside the official P&L, which stays the P&L of record, is what is still in it
+(0 once reversed), and an open one past that window stays labelled open. That name-day's
+NAV/discount split is UNMEASURED, named. Rows for a name with no market record to tie them to
+refuse, named. A session that does not reconcile (paper froze the position, or support pushed
+the split with no account row) is UNRECONCILED, exit 5, naming the session and the event
+(independent review of the follow-up, 2026-11-14). Any other count-changing type held into its date with no
 account row still stops the attribution, named (exit 4). A
 book that holds nothing at the as-of close has a FLAT factor block (the same review): it
 says the book is flat and reads no exposure, flag or PARTIAL for that close, never the
