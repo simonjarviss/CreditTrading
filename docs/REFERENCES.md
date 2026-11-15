@@ -2066,3 +2066,12 @@ books' own fills disagree with a page, both are given.
 | Alpaca's `/v1/corporate-actions` `cash_dividend` rows carry `special` (boolean) and `foreign`; the request window filters on process date, which equals the pay date on every row printed | [V] 2026-11-15 | read through the client's GET with the cef key: 15,146 rows with process dates 2026-08-01 to 2026-11-14, 105 special; 2,895 rows from 2026-11-16 to 2027-02-28, 73 special, ex-dates out to 2027-02-17 |
 | How long after a company's announcement Alpaca lists a special dividend | [U] | not measurable from one read; a first-seen reader would measure it going forward |
 | Costco's special dividends on CRSP: declared 2012-11-28, 2015-01-30, 2017-04-25, 2020-11-16, 2023-12-14; ex 2012-12-06, 2015-02-05, 2017-05-08, 2020-12-01, 2023-12-27 | [V] as CRSP rows; [U] against the company's filings, which were not fetched | the staged events file |
+
+## 12lk. SDC's IPO lock-up fields, as measured for the lock-up test (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| `tr_sdc_ni.wrds_ni_details` (R2) flags IPOs with `ipo = 'Yes'` (114,862 rows of all nations; 10,683 US rows dated 2000 on) and carries `min_lock_date` as a date on 47.9% of the US rows | [V] 2026-11-15 | counts read in the session; `scripts/research/stage_sdc_ipo_lockups.py` |
+| `max_lock_date` is stored as a number of days since 1960-01-01, and `min_lockup_days` / `max_lockup_days` as dates counted from 1960-01-01 (1960-06-29 is 180 days): the staging uses `min_lock_date` only | [V] 2026-11-15 | the same read |
+| `min_lock_date` is the deal date plus 180 days on 4,529 of 5,121 dated US rows (90 days on 185, 150 on 147): the contract's date, not an observed release | [V] 2026-11-15 | the same read |
+| 2,823 of 4,995 dated US IPOs match a CRSP common share (same 6-digit CUSIP, first daily row on the IPO date or within 7 days after) | [V] 2026-11-15 | the staging script's printout |
