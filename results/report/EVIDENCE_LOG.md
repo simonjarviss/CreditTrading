@@ -4281,7 +4281,7 @@ that adds it does not exist when it is written.
   - none (rulings, 2026-11-14: a fund that split is left out and named on the dates the split can touch, with the PARTIAL rules (option A); the attribution's corporate-action refusal is narrowed to a fund held into an event that changes the holder's share count, never an acquirer, with the rebuild from the account's own activity rows, never the market feed, and an unprocessed paper split shown on its own labelled phantom line beside the official P&L; an unreconciled held night keeps its factor figures, labelled UNRECONCILED; the runner owner fixes AlpacaClient's half-day stamp rule in its own PR before 2026-11-27, and the report's reader copies its rule exactly; the report's follow-up PR is reviewed and merged before any install)
 - source: `scripts/cef/live_attribution.py` @ `8dfe3eb`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`
 - supports: §4, §5
-- status: current
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the rebuild from the account's own activity rows was not kept; any such row now stops the report, named
 
 ### E-2026-11-14-52 · Method: the report job's follow-up is built: account cross-checks on every factor reading, no stale reading shown as current, the flat-entry session counted in factor P&L, splits scoped, half-day stamps read, corporate actions narrowed and handled
 - kind: method
@@ -4291,7 +4291,7 @@ that adds it does not exist when it is written.
   - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before except the factor P&L rows the flat-entry fix adds on sessions where the book goes flat)
 - source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
 - supports: §4, §5
-- status: built on branch reports-followup, under review; not installed
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): corporate actions are narrowed, and an account corporate-action row stops the report rather than being handled
 
 ### E-2026-11-15-50 · Ruling and method: the corporate-action handling is fixed properly after its review: one phantom per split, the account's own rows rebased in a corp line of their own, and late rows closing the open phantom
 - kind: method
@@ -4332,3 +4332,13 @@ that adds it does not exist when it is written.
 - source: `scripts/cef/live_attribution.py` @ `82ff173`; `scripts/cef/live_attribution.py` @ `bcc3446`; `scripts/ops/pnl_report.py` @ `bcc3446`
 - supports: §4, §5
 - status: built on branch reports-followup, under review; not installed; supersedes the account-row parts of E-2026-11-15-50 and E-2026-11-15-51
+
+### E-2026-11-15-54 · Ruling: a paper split's phantom, once frozen by a trade, is always labelled approximate, because the runner's no-trade band means a correctly processed account need not have traded to the same position
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a review found the frozen phantom's claim to equal official equity minus a processed account rested on both ending at the same position after the trade; the live sleeve trades only outside its no-trade band and only to the band's edge, sizing on equity that carries the phantom, so the true gap keeps moving after the trade. The team lead ruled on 2026-11-15: every frozen phantom is labelled approximate, naming the band, and nothing calls it exact; the figure is unchanged. An open phantom, before any trade, stays unlabelled unless the split leaves a fraction of a share. Also fixed in the same round: the stop checks the job's own as-of and names every row, and a research run on data cached before the stop existed says it did not run)
+- source: `scripts/cef/live_attribution.py` @ `aead2da`; `scripts/ops/pnl_report.py` @ `fa0c2a0`; `scripts/cef/live_attribution.py` @ `e14f79b`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed
