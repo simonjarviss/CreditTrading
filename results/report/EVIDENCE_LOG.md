@@ -4483,3 +4483,15 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Gross, no costs. A re-run of E2 on a longer, differently dated list. Not on shadow: no live list of pricings. Not independently reviewed
 
+### E-2026-11-15-09 · Result: dated from the first news headline, the convertible rebound is not confirmed (0.29, t 0.96, 392 events); Alpaca's news feed names 73% of 2025's issues
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - a headline containing "convertible" exists on Alpaca's news feed for 430 of 1,286 SDC issues of 2015–2025: 8% to 30% a year through 2022, 46% in 2023, 69% in 2024, 73% in 2025; 118 of 119 first headlines in 2025 came outside trading hours [V]
+  - the first session opening after the headline equals SDC's issue date for 218 events, is one session later for 110 and one earlier for 64 [V]
+  - long from two sessions after that session, five sessions, against IWM: gross Sharpe 0.29 (t 0.96) on 392 events; −0.30 in 2015–22 and 1.02 in 2023–25; filled at that session's own close 0.20 (t 0.67) [V]
+- source: `results/ideas/convert_issuance/news_dating.py` @ `096a7c3`; `results/ideas/convert_issuance/headline_dated.py` @ `096a7c3`; `results/ideas/2026-11-15_convert_issuance.md` @ `096a7c3`
+- supports: §4
+- status: current. A second look at the events of E-2026-11-15-08 with other dates, not a new sample; the headline-covered events are a non-random third. Gross, no costs. Not independently reviewed
+
