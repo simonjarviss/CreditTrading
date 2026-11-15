@@ -459,3 +459,9 @@ from a named source; [doc] copied from a named note.
 - **Shadow.** `specdiv_wait` is built with a first-seen reader of Alpaca's dividend feed and tested on the real feed. It is a local commit only: the team lead stopped pushes on 2026-11-15, so it is not on the VM.
 - **Read.** The VM's shadow log, for the first time since 2026-11-10: the books decided and were marked on 2026-11-12 and 11-13; every run ended non-zero because four units had no closing print (fixed 2026-11-14, on the `shadow` branch) and one run stopped when Alpaca's record for ET named the exchange `TXSE` (mapped 2026-11-15 after measuring 11 listings).
 - **Fixed, merged as #83.** Alpaca stamps a half day's end-of-day point at 17:00 New York; the client required 20:00 and would have stopped the official P&L record from 2026-11-27. Not released yet.
+
+**IPO lock-ups and reverse splits, 2026-11-15** (`results/report/EVIDENCE_LOG.md` E-2026-11-15-03, E-2026-11-15-04).
+- **Lock-ups.** The textbook three-session short around an IPO lock-up expiry is 0.56 gross over 2000 to 2025 and about zero since 2016; the fall now comes in the four sessions before the date, a window found after looking. Not promoted [V: `results/ideas/2026-11-15_ipo_lockups.md`].
+- **Reverse splits.** Shorting a common share for 20 sessions after its reverse split, against IWM, is 1.02 gross (t 5.18) and positive in every era. Alpaca marks 4 of the 32 names such a book would hold today as shortable, so it is set aside as a short and no shadow book was built [V: `results/ideas/2026-11-15_reverse_splits.md`].
+- **Local only.** Both are local commits; pushes are stopped (team lead, 2026-11-15).
+

@@ -2075,3 +2075,12 @@ books' own fills disagree with a page, both are given.
 | `max_lock_date` is stored as a number of days since 1960-01-01, and `min_lockup_days` / `max_lockup_days` as dates counted from 1960-01-01 (1960-06-29 is 180 days): the staging uses `min_lock_date` only | [V] 2026-11-15 | the same read |
 | `min_lock_date` is the deal date plus 180 days on 4,529 of 5,121 dated US rows (90 days on 185, 150 on 147): the contract's date, not an observed release | [V] 2026-11-15 | the same read |
 | 2,823 of 4,995 dated US IPOs match a CRSP common share (same 6-digit CUSIP, first daily row on the IPO date or within 7 days after) | [V] 2026-11-15 | the staging script's printout |
+
+## 12rs. Reverse splits on CRSP and on Alpaca's feed, as measured for the reverse-split test (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| CRSP `stkdistributions` holds 3,375 reverse splits (distype FRS or SP, price factor between −1 and 0) on shares typed common on the ex-date, ex-dates 2000-01-03 to 2025-12-31; 165 have no declaration date; 5,127 forward splits on the same test | [V] 2026-11-15 | `scripts/research/stage_crsp_reverse_splits.py` printout |
+| CRSP's declaration date for a reverse split is a median of one session before the ex-date (first session after the declaration to the ex-date), so it is not a usable announcement date | [V] 2026-11-15 | `results/ideas/reverse_splits/explore.py` (`sessions_d1_to_x_median`) |
+| Alpaca `GET /v1/corporate-actions?types=reverse_split` returned 1,189 rows with ex-dates in the 365 days to 2026-11-15, closed-end funds and ETFs included (IGR, MIN, MMT, ETHA among them) | [V] 2026-11-15 | `results/ideas/reverse_splits/borrow_now.py`, `borrow_now.json` |
+| Of the 32 rows with an ex-date in the 30 days to 2026-11-15, an ex-day close of $2 or more and 21-bar dollar volume of $500,000 or more, 4 were shortable at Alpaca on 2026-11-15 (all four easy to borrow); of the 8 trading $5M a day, none | [V] 2026-11-15, true on that date only | the same |
