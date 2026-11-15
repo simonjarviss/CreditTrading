@@ -2094,4 +2094,4 @@ books' own fills disagree with a page, both are given.
 | `launch_date` is filled on every matched row; it is before the issue date on 8,044 and equal to it on 5,447; the share launched on the issue date rose from 1% (2000) to about 68% (2024–25) | [V] 2026-11-15 | the same |
 | SDC's issue date is not always the first session the offering is priced into the share: events launched on the issue date fall 2.9% against IWM on the session after it (t −18) and are flat on the date itself | [V] 2026-11-15 | `results/ideas/follow_ons/explore.py` (the overnight profile) |
 | `registration_status` is empty on every US follow-on row | [V] 2026-11-15 | counts read in the session |
-
+| `tr_sdc_ni.wrds_ni_details` holds 3,337 US convertible issues (a conversion price, or a security name containing 'conv' or 'cvt') dated 2000-01-13 to 2025-12-23 that match a CRSP common share on the issue date; 1,403 are in a public market; 2,786 have no `launch_date`. The issuer's share falls 2.54% against IWM on the issue date and 0.56% the session after | [V] 2026-11-15 | `scripts/research/stage_sdc_convertibles.py` printout; `results/ideas/convert_issuance/explore.py` |
