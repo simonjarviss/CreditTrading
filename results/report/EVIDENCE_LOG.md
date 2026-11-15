@@ -4401,3 +4401,16 @@ that adds it does not exist when it is written.
 - source: `results/ideas/special_dividends/explore.py` @ `77d6119`; `results/ideas/special_dividends/checks.py` @ `77d6119`; `scripts/research/stage_crsp_special_divs.py` @ `77d6119`; `shadow/signals/specdiv.py` @ `77d6119`; `shadow/fetch/specdivs.py` @ `77d6119`; `docs/REFERENCES.md` @ `77d6119` (§12sv)
 - supports: §4, §5
 - status: current. Gross, no costs, no borrow, dividend tax not modelled. The shadow book is SIMULATED, $1M, under the 2026-11-09 one-time approval (E-2026-11-09-03), and is a local commit: it does not run until the commit reaches the remote `shadow` branch. An independent review on 2026-11-15 re-derived WAIT at 1.10 (t 5.57) from its own code and found no lookahead; it corrected two readings in the card: the windows moved earlier are 0.63, 0.57 and 0.69 once announcement sessions are removed (not 0.66, 0.68, 1.02), and a start 1 to 3 sessions late gives 0.89 to 0.98. Those figures are the reviewer's and are not stored as a script. AFTER and EXDAY were not re-derived
+
+### E-2026-11-15-03 · Result: the fall at an IPO lock-up expiry is in the data but the textbook three-session short has earned nothing since 2016; the selling now comes in the four sessions before the date
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 2,823 US IPOs with a lock-up date on SDC matched to a CRSP common share, IPO dates 2000-01-24 to 2025-12-16, prices to 2025-12-31; 1,670 eligible events [V]
+  - pre-specified book (short L−1 to L+1 against IWM, 10% a name): gross Sharpe 0.56 (t 2.82); halves 1.29 / 0.19; eras 1.04, 0.85, −0.04, 0.37, −0.21; the window moved 30 sessions earlier −0.00 and later −0.16 [V]
+  - event-time profile against IWM: −32bp on L−4, −24bp on L−2, −32bp on L−1, −37bp on L, +3bp on L+1 [V]
+  - per event, not pre-specified: L−1 to L+1 −1.40% in 2000–08, −0.61% in 2009–15, then +0.09%, −0.18%, +0.33%; L−4 to L −1.21% over the whole sample (t −4.4 by month) and −1.59%, −0.94%, −1.98%, −0.43%, −1.31% by era [V]
+- source: `results/ideas/ipo_lockups/explore.py` @ `b94c91f`; `results/ideas/ipo_lockups/checks.py` @ `b94c91f`; `scripts/research/stage_sdc_ipo_lockups.py` @ `b94c91f`; `docs/REFERENCES.md` @ `b94c91f` (§12lk)
+- supports: §4
+- status: current. Gross, no costs, no borrow; a revival of K5, dropped 2026-10-19 on a borrow count. Not promoted: the earlier window was chosen on this sample. Not independently reviewed
