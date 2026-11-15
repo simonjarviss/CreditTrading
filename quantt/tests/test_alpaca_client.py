@@ -1546,16 +1546,100 @@ def ny20(d):
     return int(dt.datetime.combine(d, dt.time(20), tzinfo=al.NY).timestamp())
 
 
+def ny_at(d, hour):
+    """`hour`:00 New York on session date `d`, as epoch seconds."""
+    return int(dt.datetime.combine(d, dt.time(hour), tzinfo=al.NY).timestamp())
+
+
+HALF_2025 = (dt.date(2025, 11, 28), dt.date(2025, 12, 24))      # 13:00 closes, EST
+HALF_2025_EDT = dt.date(2025, 7, 3)                             # 13:00 close, EDT
+
+
+def test_eod_a_half_day_is_stamped_1700_new_york_and_is_accepted(env_file, sleeps):
+    """The points read on 2026-11-14 (cef paper, period=3A): a 13:00 close is
+    stamped 17:00 New York, its close + 4 hours, on EST (2025-11-28T22:00Z,
+    2025-12-24T22:00Z) and on EDT (2025-07-03T21:00Z); full days either side
+    stay at 20:00. FAILS on 8eb9ce1, which raised "not 20:00:00 local" for the
+    first half day in any response."""
+    full = [dt.date(2025, 7, 2), dt.date(2025, 11, 26), dt.date(2025, 12, 1), dt.date(2025, 12, 26)]
+    half = [HALF_2025_EDT, *HALF_2025]
+    sessions = sorted(full + half)
+    stamps = [ny_at(d, 17 if d in half else 20) for d in sessions]
+    assert at_utc(2025, 11, 28, 22) in stamps and at_utc(2025, 7, 3, 21) in stamps
+    c, _ = eod_client(env_file, sleeps, history(stamps, [1.0 + i for i in range(len(sessions))]),
+                      early=set(half))
+    out = c.eod_equity_history(dt.date(2025, 7, 1), dt.date(2025, 12, 31))
+    assert [p.date for p in out] == sessions
+    assert {p.date: p.stamp.astimezone(al.NY).hour for p in out if p.date in half} == \
+        {d: 17 for d in half}
+
+
+def test_eod_a_half_day_point_outside_the_window_no_longer_stops_the_read(env_file, sleeps):
+    """Every point is checked before the window is applied, so one half day
+    anywhere in the months asked for used to refuse the whole read: the
+    collector's window starts at funding and only grows. FAILS on 8eb9ce1."""
+    sessions = [dt.date(2025, 11, 28), dt.date(2025, 12, 1), dt.date(2025, 12, 2)]
+    stamps = [ny_at(sessions[0], 17), ny20(sessions[1]), ny20(sessions[2])]
+    c, _ = eod_client(env_file, sleeps, history(stamps, [1.0, 2.0, 3.0]), early={sessions[0]})
+    out = c.eod_equity_history(dt.date(2025, 12, 1), dt.date(2025, 12, 2))
+    assert [(p.date, p.equity) for p in out] == [(sessions[1], 2.0), (sessions[2], 3.0)]
+
+
+def test_eod_a_1700_stamp_on_a_full_day_raises(env_file, sleeps):
+    """17:00 is right only after a 13:00 close. On a full day it could be an
+    intraday reading."""
+    d = dt.date(2025, 12, 1)
+    c, _ = eod_client(env_file, sleeps, history([ny_at(d, 17)], [1.0]), early=set(HALF_2025))
+    with pytest.raises(al.UnexpectedResponse, match="not 20:00:00 local.*16:00 close"):
+        c.eod_equity_history(d, d)
+
+
+def test_eod_a_2000_stamp_on_a_half_day_raises(env_file, sleeps):
+    """Alpaca stamps a half day at 17:00. A 20:00 stamp there is a convention
+    not seen, so it is refused, naming the time expected."""
+    d = dt.date(2025, 11, 28)
+    c, _ = eod_client(env_file, sleeps, history([ny20(d)], [1.0]), early=set(HALF_2025))
+    with pytest.raises(al.UnexpectedResponse, match="not 17:00:00 local.*13:00 close"):
+        c.eod_equity_history(d, d)
+
+
+def test_eod_a_calendar_date_listed_twice_raises(env_file, sleeps):
+    """Review 2026-11-14: with one date served as 16:00 then 13:00, the later
+    row used to decide, and a 17:00 stamp on a full day was accepted."""
+    d = dt.date(2025, 12, 1)
+    cal = lambda params: FakeResp(200, [{"date": d.isoformat(), "open": "09:30", "close": x}
+                                        for x in ("16:00", "13:00")])
+    c, _ = client(env_file, sleeps, route({
+        "/v2/account/portfolio/history": FakeResp(200, history([ny_at(d, 17)], [1.0])),
+        "/v2/calendar": cal}))
+    with pytest.raises(al.UnexpectedResponse, match="2025-12-01 twice"):
+        c.eod_equity_history(d, d)
+
+
+@pytest.mark.parametrize("close", ["20:00", "23:30", "13:75"])
+def test_eod_a_calendar_close_with_no_time_four_hours_later_raises(env_file, sleeps, close):
+    """A close whose + 4 hours is not a time on the same date has never been
+    served. It raises UnexpectedResponse, not a bare ValueError from dt.time."""
+    d = dt.date(2025, 12, 1)
+    cal = lambda params: FakeResp(200, [{"date": d.isoformat(), "open": "09:30", "close": close}])
+    c, _ = client(env_file, sleeps, route({
+        "/v2/account/portfolio/history": FakeResp(200, history([ny20(d)], [1.0])),
+        "/v2/calendar": cal}))
+    with pytest.raises(al.UnexpectedResponse, match=f"{close} close"):
+        c.eod_equity_history(d, d)
+
+
 def test_eod_stamps_map_to_the_new_york_session_either_side_of_the_dst_change(env_file, sleeps):
     """20:00 New York on each session: 00:00Z on EDT, 01:00Z on EST (after
     2026-11-01). The session date is the New York date, and an early close is
-    honoured. (Corrected 2026-11-02: this test had EST sessions at 00:00Z,
+    stamped 17:00 (corrected 2026-11-14: this test had the half day at 20:00,
+    which Alpaca does not serve). (Corrected 2026-11-02: this test had EST sessions at 00:00Z,
     19:00 EST, which Alpaca does not serve.) FAILS on 3478159, which refused
     every 01:00Z point."""
     sessions = [dt.date(2026, 10, 29), dt.date(2026, 10, 30),     # EDT
                 dt.date(2026, 11, 2), dt.date(2026, 11, 3),        # EST, after 2026-11-01
                 dt.date(2026, 11, 25), dt.date(2026, 11, 27)]      # 11-27 closes at 13:00
-    stamps = [ny20(d) for d in sessions]
+    stamps = [ny20(d) for d in sessions[:-1]] + [ny_at(sessions[-1], 17)]   # half day: 17:00
     eq = [100000.0 + i for i in range(len(sessions))]
     c, _ = eod_client(env_file, sleeps, history(stamps, eq), early={dt.date(2026, 11, 27)})
     out = c.eod_equity_history(dt.date(2026, 10, 29), dt.date(2026, 11, 27))
