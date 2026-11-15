@@ -623,3 +623,22 @@ def test_a_json_that_cannot_show_its_reading_is_the_as_ofs_is_unmeasured(state, 
     if case == "other_asof":
         f = r.factor_block("cef", state, ASOF)
         assert f["status"] == r.UNMEASURED and "is for as-of '2026-11-04', not 2026-11-05" in f["lines"][0]
+
+
+def test_a_held_block_whose_positions_are_of_another_close_is_unmeasured(state):
+    """Independent review of the follow-up (2026-11-14), rd_probe.py: a held block read at the
+    as-of with rebuild positions for the session before it is a JSON that contradicts itself;
+    the cross-check read the earlier session's record and passed the block as INFO. Now any
+    disagreement between the block's close and its positions' session is UNMEASURED, named, as
+    the FLAT path already was. Fails on the parent bdf181e, where it was INFO."""
+    _pnl(state)
+    p = state / "reports" / "pnl" / f"{ASOF.isoformat()}.json"
+    rep = json.loads(p.read_text())
+    prev = (ASOF - dt.timedelta(days=1)).isoformat()
+    rep["factor"]["rebuild_positions"]["session"] = prev
+    p.write_text(json.dumps(rep))
+    _record(state, ASOF - dt.timedelta(days=1), dict(REBUILD))
+    b = r.factor_block("cef", state, ASOF)
+    assert b["status"] == r.UNMEASURED, b["lines"][0]
+    assert (f"the P&L job's factor block is read at '{ASOF.isoformat()}' but its rebuild positions are for "
+            f"'{prev}'") in b["lines"][0]

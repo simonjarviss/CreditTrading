@@ -591,6 +591,12 @@ def _positions_cross_check(state: Path, fac: dict) -> tuple[str, str, dict]:
         elif flat and (reb or d != fac.get("asof")):
             rb_why = (f"the P&L job's FLAT block at {fac.get('asof')!r} carries rebuild positions for {d!r} holding "
                       f"{len(reb)} name(s): the JSON contradicts itself")
+        elif _iso_session(d) and fac.get("asof") is not None and d != fac.get("asof"):
+            # A held block's reading and its positions must be of one close, as a FLAT block's are
+            # (independent review of the follow-up, 2026-11-14): with the block at D and the positions
+            # at D-1 the cross-check read D-1's record and passed D's reading as INFO.
+            rb_why = (f"the P&L job's factor block is read at {fac.get('asof')!r} but its rebuild positions are for "
+                      f"{d!r}: the JSON contradicts itself, so which close to cross-check is unknown")
     else:
         d, reb = None, None
         rb_why = ("the P&L job's JSON carries no rebuild positions for its factor block"
