@@ -1166,7 +1166,8 @@ def test_a_cache_without_the_activity_file_is_analysed_as_before_and_one_half_pr
     (tmp_path / "c" / "manifest.json").write_text(json.dumps(man))
     inp = LA.load_cache(tmp_path / "c", grp=dict(GRP))
     assert inp.corp_acts == [] and inp.corp_act_types == ()
-    LA.attribute(inp)
+    res = LA.attribute(inp)
+    assert any("so the stop on them did not run" in g for g in res.gaps)
     (tmp_path / "c" / LA.ACT_FILE).write_text("[]")
     with pytest.raises(LA.AttributionError, match="must come together"):
         LA.load_cache(tmp_path / "c", grp=dict(GRP))
@@ -1328,10 +1329,12 @@ def test_the_first_trade_crystallises_the_phantom_at_official_minus_a_processed_
     booked e x the close's move on every later session whatever the account held, so after the
     runner re-sized (CA_RESIZE) the phantom read -1,440 against an independent -1,630.18, and on a
     full exit +8,280 "still OPEN" against a constant +8,093.83. Now the first trade crystallises
-    it: e x (the fill price - the last close) plus the session's fee term, then constant. On every
-    session from the ex-date the cumulative phantom equals the official equity less that of an
-    account that processed the split on its ex-date and traded to the same targets, exactly
-    (Fraction). Fails on the parent f550da3, which kept accruing."""
+    it: e x (the fill price - the last close) plus the session's fee term, and no further terms.
+    Here an account that processed the split on its ex-date trades to the same targets, the one
+    case in which the phantom is that account's gap; on every session from the ex-date they agree
+    (Fraction). The live sleeve's no-trade band need not trade that way, so the event is still
+    labelled approximate (team lead, 2026-11-15, fourth review). Fails on the parent f550da3,
+    which kept accruing."""
     lng = [("LNG", "subject")]
     if case == "resize":                     # the runner's own re-size, both names (CA_RESIZE)
         fills, cf_fills, corp, syms = CA_BASE_FILLS + CA_RESIZE["H1"], CA_BASE_FILLS, CA_SPLIT, ["LNG", "SHS"]
@@ -1351,7 +1354,8 @@ def test_the_first_trade_crystallises_the_phantom_at_official_minus_a_processed_
         if d >= CA_EX:
             assert _phantom_upto(res, d) == e_paper - e_cf, (case, d, float(_phantom_upto(res, d)), float(e_paper - e_cf))
     for c in res.corp_events:
-        assert c["crystallised"]["session"] == CA_S[4] and not c["open"] and c["accruals"] == []
+        assert c["crystallised"]["session"] == CA_S[4] and c["accruals"] == []
+        assert "open" not in c                     # crystallised is None says it (fourth review, finding 4)
     assert "crystallised by the trade on 2026-02-06" in LA.report(res)
 
 
@@ -1541,3 +1545,21 @@ def test_the_crystallised_phantom_says_its_fee_term():
     res = _ca_run(fills, _ca_account(fills), CA_SPLIT)
     assert [(t["session"], t["amount"]) for t in res.phantom_fees] == [(CA_S[4], F("-0.18"))]
     assert "plus that session's fee term -0.18, that session's one term for LNG, SHS" in LA.report(res)
+
+
+def test_a_cache_that_never_read_the_accounts_rows_says_the_stop_did_not_run(tmp_path):
+    """Fourth review of the follow-up, finding 5: `analyse` on a cache from before 2026-11-14 (no
+    corp_activities.json) cannot run the stop on the account's corporate-action rows, and said
+    nothing. Its gaps now say so, in the summary and `report()`; a cache that read them (even
+    none) does not. Fails on the parent 3412d29, which was silent."""
+    _fetch(tmp_path / "c")
+    res_read = LA.attribute(LA.load_cache(tmp_path / "c", grp=dict(GRP)))
+    (tmp_path / "c" / LA.ACT_FILE).unlink()
+    man = json.loads((tmp_path / "c" / "manifest.json").read_text())
+    man.pop("corporate_action_activities")
+    (tmp_path / "c" / "manifest.json").write_text(json.dumps(man))
+    res, paths = LA.analyse(tmp_path / "c", tmp_path / "out", grp=dict(GRP))
+    want = (f"the account's corporate-action activity rows were not read (the cache has no {LA.ACT_FILE}: one "
+            "from before 2026-11-14), so the stop on them did not run")
+    assert want in res.gaps and f"GAP: {want}" in LA.report(res) and want in paths["summary"].read_text()
+    assert not any("did not run" in g for g in res_read.gaps)

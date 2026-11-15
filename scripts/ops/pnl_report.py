@@ -244,7 +244,7 @@ def reconciliation(res, first: dt.date) -> dict:
                      ". The rebuild (hold + fill + fees) does not equal Alpaca's EOD change to the cent; "
                      "the figures below are unreconciled for those sessions."
                      + (" Corporate action(s) on a held name on or before a failed session, which paper may "
-                        "have frozen or processed without an account row the rebuild could follow: "
+                        "have frozen, or support may have pushed by hand with no account row: "
                         + "; ".join(f"{c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), session {c['session']}"
                                     for c in events) if events else ""))
     return {"reconciled": not bad, "failed_sessions": bad, "max_abs_residual": max_res, "lines": lines}

@@ -230,8 +230,9 @@ CORPORATE_ACTION_TYPES = {
 # The account's own corporate-action activity types (GET /v2/account/activities): the
 # non-FILL types paper accepts in `activity_types`. Read-only on the cef account, 2026-11-14 (the
 # team lead's investigation): each of these nine returned 0 rows; SSP and SSO answered HTTP 422,
-# so they are not sent. `corporate_action_activities` reads them; the attribution rebuilds from
-# FILLs plus these rows, never from the market feed (`live_attribution`, CORPORATE ACTIONS).
+# so they are not sent. `corporate_action_activities` reads them so the attribution can stop on
+# any of them, named: it rebuilds from FILLs alone and never applies one (team lead, 2026-11-15;
+# `live_attribution`, CORPORATE ACTIONS).
 CORPORATE_ACTION_ACTIVITY_TYPES = ("SPLIT", "CIL", "MA", "NC", "SC", "SPIN", "REO", "REORG", "JNLS")
 CA_CASH_ACTIVITY_TYPES = ("CIL",)          # cash in lieu: a cash amount, no position change
 
@@ -632,10 +633,12 @@ class AlpacaReader:
 
         WHY (team lead, 2026-11-14, on the corporate-action investigation). Alpaca paper does not
         process corporate actions (docs/REFERENCES.md §12pc), and when support pushes one by
-        hand the account's activities are the only record of what moved: the attribution
-        rebuilds positions from FILLs plus these rows, never from the market feed, whose rebase
-        gives the wrong sign when paper kept the old count. The cef account had 0 such rows
-        (2026-11-14), so this reads nothing today.
+        hand the account's activities are the only record of what moved. The attribution never
+        applies them (team lead, 2026-11-15: their REST format has never been measured): it
+        rebuilds positions from FILLs alone, and any row this read returns on or before the
+        report's as-of stops it, named (`live_attribution`, CORPORATE ACTIONS). The market feed
+        is never used to rebase either: its rebase gives the wrong sign when paper kept the old
+        count. The cef account had 0 such rows (2026-11-14), so this reads nothing today.
 
         STRICT, BECAUSE THE REST SHAPE OF THESE ROWS IS UNDOCUMENTED. Alpaca documents a SPLIT
         only in the Activity SSE (two legs per split: the old count out at the old price, the new

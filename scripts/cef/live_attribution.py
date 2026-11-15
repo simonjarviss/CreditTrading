@@ -223,9 +223,9 @@ H1, so it is never done. The rule now:
     (fourth review of the follow-up, finding 3), and a row the parser cannot read stops it too.
     The report job checks its own as-of as well as the session it reads (finding 2): on a night
     Alpaca has no EOD point yet, a row dated after the session read is still named. A cache
-    from before 2026-11-14 has no such file and is analysed as before, unless a corporate action
-    touches a held name: whether paper processed that one cannot be read, and it refuses (fetch
-    again).
+    from before 2026-11-14 has no such file and is analysed as before, with a gap saying the
+    stop did not run (fourth review, finding 5), unless a corporate action touches a held name:
+    whether paper processed that one cannot be read, and it refuses (fetch again).
   * THE PHANTOM. A forward or reverse split held into its session is one paper did not
     process (it would have written a row): the old count is marked at the new-basis close, so
     hold and the official change both carry (q_prev - q_prev x k) x close_t on that session,
@@ -983,8 +983,8 @@ def _one_split_per_name(sym: str, d: dt.date, evs: list) -> list:
     -24; an exact QQQ duplicate 2022-09-19), and each became its own phantom, doubling it. The
     merged event's id joins the records' ids, its rates are the records' agreed rates (a record
     without rates states none, and does not disagree), and two records that disagree on the type
-    or on a rate raise, naming both. Other types pass through unmerged (they refuse, or the
-    account's rows settle them: no amount is booked per record)."""
+    or on a rate raise, naming both. Other types pass through unmerged (they refuse, named: no
+    amount is booked per record)."""
     splits = [(e, r) for e, r in evs if e["type"] in PHANTOM_TYPES]
     if len(splits) <= 1:
         return evs
@@ -1310,7 +1310,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                     rec = {"id": e["id"], "type": e["type"], "date": e["date"], "session": d,
                            "symbol": s, "role": role, "q_prev": qp, "close": c_t, "k": k,
                            "phantom": phantom, "why": why, "extra": extra, "accruals": [],
-                           "crystallised": None, "open": True, "approximate": "; ".join(approx) or None}
+                           "crystallised": None, "approximate": "; ".join(approx) or None}
                     corp_events.append(rec)
                     if s in open_phantoms:
                         op = open_phantoms[s]
@@ -1376,7 +1376,6 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                            "processed the split would have sent one netted order, not filled at their average price")
                 two_sided.append(sym)
             op["approximate"] = "; ".join(([op["approximate"]] if op["approximate"] else []) + why)
-            op["open"] = False
             cryst.append((sym, op, px_s))
         for sym, op, _ in cryst:
             del open_phantoms[sym]
@@ -1456,8 +1455,6 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                     + ", ".join(f"{s} {d} ({w})" for d, s, w in nav_gaps[:10])
                     + (" ..." if len(nav_gaps) > 10 else ""))
     for c in corp_events:
-        for k_ in [k_ for k_ in c if k_.startswith("_")]:
-            del c[k_]
         gaps.append(f"corporate action on a held name: {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), "
                     f"{c['q_prev']} share(s) held into {c['session']}; {corp_event_text(c)}"
                     "; that name-day's NAV/discount split is UNMEASURED")
@@ -1471,6 +1468,12 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                  for d, s, qp, why in unmeasured_all[:10]]
         if len(unmeasured_all) > 10:
             gaps.append(f"... and {len(unmeasured_all) - 10} more UNMEASURED name-day(s)")
+    if not inp.corp_act_types:
+        # A cache from before 2026-11-14 never read the account's corporate-action rows, so the
+        # stop on them (module docstring, CORPORATE ACTIONS) could not run; say so (fourth review
+        # of the follow-up, finding 5). The nightly job always reads them; this is the CLI's case.
+        gaps.append("the account's corporate-action activity rows were not read (the cache has no "
+                    f"{ACT_FILE}: one from before 2026-11-14), so the stop on them did not run")
     return Result(name_day=nd, daily=daily, events=events, positions_end=positions_end,
                   periods=periods, period_rule=rule, gaps=gaps, excluded_after_asof=later,
                   asof=asof, first_session=window[0], sources=inp.sources,
