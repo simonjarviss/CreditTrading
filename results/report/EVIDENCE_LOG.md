@@ -4373,8 +4373,8 @@ that adds it does not exist when it is written.
 - supports: §4, §5
 - status: current. A shadow book under the 2026-11-09 one-time approval (E-2026-11-09-03); SIMULATED, $1M, no borrow modelled. The probe of the feed and the print-by-exchange check were run in the session and are not stored as scripts. The VM has been unreachable from the laptop since 2026-11-10, so no shadow run there has been read and the units books' sessions from 2026-11-11 until this commit reaches the VM are expected to be UNMEASURED
 
-### E-2026-11-15-01 · Live: the VM's shadow runner was read for the first time since 2026-11-10; every run since the 2026-11-12 evening ended non-zero because four units had no closing print, as expected, and one run stopped on an exchange name the map did not have
-- kind: live
+### E-2026-11-15-01 · Incident: the VM's shadow runner was read for the first time since 2026-11-10; every run since the 2026-11-12 evening ended non-zero because four units had no closing print, as expected, and one run stopped on an exchange name the map did not have
+- kind: incident
 - era: ALPACA
 - date: 2026-11-15
 - figures:
