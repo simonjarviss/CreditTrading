@@ -1603,6 +1603,19 @@ def test_eod_a_2000_stamp_on_a_half_day_raises(env_file, sleeps):
         c.eod_equity_history(d, d)
 
 
+def test_eod_a_calendar_date_listed_twice_raises(env_file, sleeps):
+    """Review 2026-11-14: with one date served as 16:00 then 13:00, the later
+    row used to decide, and a 17:00 stamp on a full day was accepted."""
+    d = dt.date(2025, 12, 1)
+    cal = lambda params: FakeResp(200, [{"date": d.isoformat(), "open": "09:30", "close": x}
+                                        for x in ("16:00", "13:00")])
+    c, _ = client(env_file, sleeps, route({
+        "/v2/account/portfolio/history": FakeResp(200, history([ny_at(d, 17)], [1.0])),
+        "/v2/calendar": cal}))
+    with pytest.raises(al.UnexpectedResponse, match="2025-12-01 twice"):
+        c.eod_equity_history(d, d)
+
+
 @pytest.mark.parametrize("close", ["20:00", "23:30", "13:75"])
 def test_eod_a_calendar_close_with_no_time_four_hours_later_raises(env_file, sleeps, close):
     """A close whose + 4 hours is not a time on the same date has never been

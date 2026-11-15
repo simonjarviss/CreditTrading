@@ -912,6 +912,13 @@ class AlpacaClient:
         run from that evening. No close other than 16:00 and 13:00 has been
         seen; another one is held to the same close + 4 hours and raises if
         Alpaca stamps it differently [U].
+        NOT MEASURED: whether a half day's point is final at its 17:00 stamp.
+        Both funded half-day points were read about a year later. A caller
+        that treats "stamp has passed" as finished (the collector's EOD step,
+        verify's official line) will take a half day's point from 17:00 ET, so
+        a 17:30 verify can print it the same evening, where a full day's is
+        PENDING until 20:00. The collector re-reads the whole history each data
+        day and logs EOD_REVISED if it moved; 2026-11-27 is the first live case.
         This also reads `calendar`'s `close` as New York wall-clock time, which
         the calendar docs do not state; the 754 points agree with that reading.
         Each rule catches a change that would otherwise file sessions under the
@@ -996,8 +1003,16 @@ class AlpacaClient:
         # New York wall-clock time (docstring: 20:00 full day, 17:00 half day).
         # Each date has exactly one accepted time, and the stamps are strictly
         # increasing, so no two points can share a session.
-        cal = {row["date"]: row["close"]
-               for row in self.calendar(local[0].date(), local[-1].date())}
+        cal = {}
+        for row in self.calendar(local[0].date(), local[-1].date()):
+            # A date served twice with two closes would let the later row pick
+            # the accepted time (review 2026-11-14): a 17:00 stamp on a full day
+            # would pass if a second row said 13:00.
+            if row["date"] in cal:
+                raise UnexpectedResponse(
+                    f"{w}: /v2/calendar lists {row['date']} twice (closes {cal[row['date']]} "
+                    f"and {row['close']}); the session's close is not known")
+            cal[row["date"]] = row["close"]
         for s, t in zip(stamps, local):
             if t.date() not in cal:
                 raise UnexpectedResponse(
