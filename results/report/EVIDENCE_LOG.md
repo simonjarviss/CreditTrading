@@ -4247,3 +4247,17 @@ that adds it does not exist when it is written.
 - source: `scripts/ops/pnl_report.py` @ `d2f3e19`; `scripts/ops/risk_daily.py` @ `bf98dec`; `scripts/cef/exposure_readout.py` @ `d2f3e19`
 - supports: §5
 - status: current
+
+### E-2026-11-14-02 · Method: Alpaca stamps a half day's end-of-day point at 17:00 New York, and the client's fixed 20:00 rule would have stopped the official P&L from 2026-11-27; the rule is now the session's close plus four hours
+- kind: method
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - 754 daily points read on the cef paper account (`period=3A`, last 2026-11-13): 747 sessions with a 16:00 calendar close, all stamped 20:00:00 New York; 7 sessions with a 13:00 close, all stamped 17:00:00 [V]
+  - the 7 half days: 2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; the first five are before funding (equity 0), the last two carry equity [V]
+  - with the new rule the client reads 2023-11-13 to 2026-11-13 on the live endpoint: 292 funded points, 2025-09-18 to 2026-11-13, two of them at 17:00 [V]
+  - eight of the new and changed tests fail on `8eb9ce1`, the old rule; the half-day stamp was found by a peer session's read-only GET on 2026-11-14 and re-measured here [V]
+  - none for the effect on 2026-11-27 (from the code, not run: every point is checked before the window is applied, so the collector's EOD step would raise on each run once the half-day point is served, and verify would show the official P&L as PENDING)
+- source: `quantt/broker/alpaca.py` @ `6814c2e`; `quantt/tests/test_alpaca_client.py` @ `6814c2e`; `docs/REFERENCES.md` @ `6814c2e`
+- supports: §5
+- status: current (an independent review found no material defect; its one low finding, a calendar date served twice, now raises. Not measured: whether a half day's point is final at 17:00, so the 2026-11-27 evening figure should be compared with the next day's re-read. Not released: prod runs the old rule until the team lead installs a release with this change; the report job's reader `scripts/ops/alpaca_read.py` still has the 20:00 rule and is the peer's follow-up PR)
