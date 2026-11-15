@@ -151,3 +151,28 @@ hindsight. Its size on the result is unmeasured.
 
 ![premium over bills](merger_arb/premium/equity.png)
 ![event-time book](merger_arb/hazard/equity.png)
+
+## Targets too small for arbitrage funds (added 2026-11-15, `micro.py`) [V]
+
+The team lead asked for ideas a small book can exploit. Fixed before any return in the band
+was read: the friendly all-cash book above, on targets priced $2 or more and trading
+$100,000 to under $1M a day at the first close after the announcement (the book above
+needs $5 and $1M). One-step deals and tender offers together; equal weights; flat under
+five live deals.
+
+| band (friendly, all-cash) | deals (a year) | live a day | flat | withdrawn | per deal, mean (median) | Sharpe over bills (t) | halves | 2023–25 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| $2, $100k to $1M a day | 541 (21) | 4 | 52% | 14.4% | +3.84% (+2.53%) | 0.32 (1.65) | 0.82 / −0.15 | −0.52 |
+| $2, $1M to $5M | 542 (21) | 5 | 45% | 8.7% | +2.14% (+1.84%) | 0.58 (2.96) | 0.72 / 0.45 | 1.01 |
+| $5, $1M and over (the book above, both forms) | 1,865 (72) | 21 | 4% | 6.5% | +1.77% (+1.48%) | 0.71 (3.61) | 0.85 / 0.56 | 0.57 |
+
+- **The spread is wider in small targets and it is payment for breaks.** The median small
+  deal earns 2.5% over about 60 sessions against 1.5% for a large one, but 14% are
+  withdrawn against 6.5%, the 5th-percentile deal loses 13% against 4%, and the worst lost
+  91%.
+- **As a book it is worse, not better:** 0.32 over bills, negative in the second half, with
+  four deals live on a typical day and nothing held on half of all sessions.
+- **Nothing here for a small account that the larger-target book does not do better.**
+  Not promoted. The spread these names trade at was not staged, so a real-money view is
+  not available.
+
