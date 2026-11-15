@@ -248,6 +248,10 @@ def reconciliation(res, first: dt.date) -> dict:
     return {"reconciled": not bad, "failed_sessions": bad, "max_abs_residual": max_res, "lines": lines}
 
 
+def _px(x) -> str:
+    return "UNMEASURED" if x is None else f"{float(x):,.4f}"
+
+
 def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str], dict]:
     """The labelled corporate-action lines and JSON fields (team lead, 2026-11-14;
     `live_attribution`, CORPORATE ACTIONS), or nothing when no corporate action touched a held
@@ -257,9 +261,14 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
     the official EOD change both carry (q_prev - q_prev x k) x close_t on its session, a phantom.
     While it is open, paper's extra shares move with the price, and that accrual is phantom too
     (inside hold); when the account's own rows end it (tied back within CA_MATCH_SESSIONS, review
-    of the follow-up, 2026-11-14, finding 3), the reversal is in `corp`. Each is shown per event,
-    and the cumulative phantom, the booking plus the accruals plus the reversals, is what is still
-    in the official P&L at the as-of: 0 once the account's rows have ended every phantom. It sits
+    of the follow-up, 2026-11-14, finding 3), the reversal is in `corp`; the first trade in the
+    name crystallises it (second review, 2026-11-15, finding 1: the extra shares at the fill price
+    against the last close, plus that session's fee term), and it is constant from then. Each is
+    shown per event, and the cumulative phantom, the booking plus the accruals plus the
+    crystallisations, the fee terms and the reversals, is what is still in the official P&L at the
+    as-of (live_attribution, CRYSTALLISED, says exactly when it equals official minus a processed
+    account): 0 once the account's rows have ended every phantom. Rows that come after a phantom
+    closed are named, in corp, never phantom. It sits
     BESIDE the official change, which stays the P&L of record (docs/SYSTEM.md section 5); nothing
     is subtracted from any line. A term the market record or a close cannot give is UNMEASURED,
     and so is any sum that holds it."""
@@ -273,6 +282,8 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
     def moves(c, upto=None):
         """[(session, amount)] of one unprocessed event's phantom: booking, accruals, reversal."""
         out = [(c["session"], f(c["phantom"]))] + [(d, f(a)) for d, a in c["accruals"]]
+        if c.get("crystallised") is not None:
+            out.append((c["crystallised"]["session"], f(c["crystallised"]["amount"])))
         if c["reversal"] is not None:
             out.append((c["reversal"]["session"], f(c["reversal"]["amount"])))
         return [(d, a) for d, a in out if upto is None or d == upto]
@@ -303,7 +314,13 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
             acc = total([(d, f(a)) for d, a in c["accruals"]])
             lines.append(f"Phantom accrual: paper's extra {c['extra']} share(s) of {c['symbol']} moved with the price "
                          f"on {len(c['accruals'])} session(s) after {c['session']}: {_usd(acc)}, inside hold")
-        if c["reversal"] is not None:
+        if c.get("crystallised") is not None:
+            cr = c["crystallised"]
+            lines.append(f"Phantom crystallised by the trade on {cr['session']}: paper's extra {c['extra']} share(s) of "
+                         f"{c['symbol']} at the fill price {_px(cr['price'])} against the close {_px(cr['reference_close'])}: "
+                         f"{_usd(f(cr['amount']))}; the phantom of {c['type']} (id {c['id']}) is closed and constant "
+                         "from then (team lead, 2026-11-15)")
+        elif c["reversal"] is not None:
             rv = c["reversal"]
             lines.append(f"Phantom reversal: the account's rows for {c['symbol']} on {rv['session']} "
                          f"({rv['sessions_after']} session(s) after {c['session']}) ended the phantom of {c['type']} "
@@ -311,28 +328,49 @@ def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str]
         else:
             lines.append(f"Phantom of {c['type']} {c['symbol']} (id {c['id']}) still OPEN at the as-of: no account row "
                          f"yet (rows are tied back within {CA_MATCH_SESSIONS_TEXT}; past that it stays open)")
+        for r in c.get("rows_after", []):
+            lines.append(f"The account's rows for {c['symbol']} on {r['session']} came after the phantom of {c['type']} "
+                         f"(id {c['id']}) closed: {_usd(f(r['corp']))}, in corp, not phantom"
+                         + ("; if they moved the count the trade had set, the phantom no longer equals official minus "
+                            "a processed account (live_attribution, CRYSTALLISED)" if c.get("crystallised") else ""))
+    unproc = [c for c in evs if not c["processed"]]
+    fee_terms = [(t["session"], f(t["amount"])) for t in getattr(res, "phantom_fees", []) if t["session"] >= first]
     for r in getattr(res, "rows_at_close", []):
         if r["session"] >= first:
             lines.append(f"The account's rows on {r['session']} ({', '.join(r['symbols'])}) are not value-neutral at their "
                          f"own prices (sum of qty x price {_usd(f(r['remainder']))}): each is valued at the close, "
                          "qty x close_t, in corp")
-    unproc = [c for c in evs if not c["processed"]]
-    cum = total([m for c in unproc for m in moves(c)])
-    ses = [m for c in unproc for m in moves(c, eff)]
-    n_open = sum(1 for c in unproc if c["reversal"] is None)
+    for t in getattr(res, "phantom_fees", []):
+        if t["session"] >= first:
+            lines.append(f"Phantom fee term on {t['session']}: that session's modelled fees less those of the same trades "
+                         f"without paper's extra shares of {', '.join(t['symbols'])}: {_usd(f(t['amount']))}")
+    cum = total([m for c in unproc for m in moves(c)] + fee_terms)
+    ses = [m for c in unproc for m in moves(c, eff)] + [m for m in fee_terms if m[0] == eff]
+    n_open = sum(1 for c in unproc if c["reversal"] is None and c.get("crystallised") is None)
+    n_cryst = sum(1 for c in unproc if c.get("crystallised") is not None)
     if unproc:
         lines.append(f"Phantom from corporate actions paper did not process, still in the official P&L at the as-of: "
-                     f"{_usd(cum)} ({len(unproc)} event(s), {n_open} still open, {len(unproc) - n_open} ended by the "
-                     f"account's rows); the official P&L above includes it and stays the P&L of record")
-    out = {"corporate_actions": [{k: (v.isoformat() if isinstance(v, dt.date) else
-                                      float(v) if isinstance(v, Fraction) else
-                                      [[x.isoformat(), None if y is None else float(y)] for x, y in v]
-                                      if k == "accruals" else
-                                      {kk: (vv.isoformat() if isinstance(vv, dt.date) else
-                                            float(vv) if isinstance(vv, Fraction) else vv) for kk, vv in v.items()}
-                                      if isinstance(v, dict) else v) for k, v in c.items()}
-                                 for c in evs],
+                     f"{_usd(cum)} ({len(unproc)} event(s), {n_open} still open, "
+                     + (f"{n_cryst} crystallised by a trade, " if n_cryst else "")
+                     + f"{len(unproc) - n_open - n_cryst} ended by the account's rows); the official P&L above includes "
+                     "it and stays the P&L of record")
+
+    def js(v):
+        """dates as ISO, Fractions as floats, through lists and dicts (the event record's shape)."""
+        if isinstance(v, dt.date):
+            return v.isoformat()
+        if isinstance(v, Fraction):
+            return float(v)
+        if isinstance(v, dict):
+            return {kk: js(vv) for kk, vv in v.items()}
+        if isinstance(v, (list, tuple)):
+            return [js(x) for x in v]
+        return v
+
+    out = {"corporate_actions": [{k: js(v) for k, v in c.items()} for c in evs],
            "phantom_cumulative": cum}
+    if fee_terms:
+        out["phantom_fee_terms"] = [[d.isoformat(), a] for d, a in fee_terms]
     if ses:
         out["phantom_session"] = total(ses)
     return lines, out

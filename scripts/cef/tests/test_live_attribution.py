@@ -1469,6 +1469,55 @@ def test_a_session_with_corp_names_it_in_every_reconciliation_label(tmp_path):
     assert all("hold+fill+fees" in ln and "corp" not in ln for ln in LA.reconcile_lines(plain.daily))
 
 
+def _phantom_upto(res, d):
+    """The cumulative phantom as of session d, exactly: each unprocessed split's booking, its
+    accruals, its crystallisation or reversal, and the crystallising sessions' fee terms."""
+    tot = F(0)
+    for c in res.corp_events:
+        if c["processed"]:
+            continue
+        moves = [(c["session"], c["phantom"])] + list(c["accruals"])
+        if c.get("crystallised") is not None:
+            moves.append((c["crystallised"]["session"], c["crystallised"]["amount"]))
+        if c["reversal"] is not None:
+            moves.append((c["reversal"]["session"], c["reversal"]["amount"]))
+        tot += sum((a for x, a in moves if x <= d), F(0))
+    return tot + sum((t["amount"] for t in getattr(res, "phantom_fees", []) if t["session"] <= d), F(0))
+
+
+@pytest.mark.parametrize("case", ["resize", "full_exit", "partial"])
+def test_the_first_trade_crystallises_the_phantom_at_official_minus_a_processed_account(case):
+    """Second review of the follow-up, finding 1; the team lead's ruling, 2026-11-15: the accrual
+    booked e x the close's move on every later session whatever the account held, so after the
+    runner re-sized (CA_RESIZE) the phantom read -1,440 against an independent -1,630.18, and on a
+    full exit +8,280 "still OPEN" against a constant +8,093.83. Now the first trade crystallises
+    it: e x (the fill price - the last close) plus the session's fee term, then constant. On every
+    session from the ex-date the cumulative phantom equals the official equity less that of an
+    account that processed the split on its ex-date and traded to the same targets, exactly
+    (Fraction). Fails on the parent f550da3, which kept accruing."""
+    lng = [("LNG", "subject")]
+    if case == "resize":                     # the runner's own re-size, both names (CA_RESIZE)
+        fills, cf_fills, corp, syms = CA_BASE_FILLS + CA_RESIZE["H1"], CA_BASE_FILLS, CA_SPLIT, ["LNG", "SHS"]
+    elif case == "full_exit":                # sells all 900; the processed account sells its 300
+        fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "sell", 900, "13.49", CA_S[4])]
+        cf_fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "sell", 300, "13.49", CA_S[4])]
+        corp, syms = CA_SPLIT[:1], ["LNG"]
+    else:                                    # sells 300 to a target of 600; the processed account buys 300
+        fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "sell", 300, "13.49", CA_S[4])]
+        cf_fills = CA_BASE_FILLS + [_ca_fill("x1", "LNG", "buy", 300, "13.49", CA_S[4])]
+        corp, syms = CA_SPLIT[:1], ["LNG"]
+    assert corp[0]["parties"] == lng
+    eod, cf = _ca_account(fills), _ca_account(cf_fills, [(CA_EX, _ca_split_at(syms))])
+    res = _ca_run(fills, eod, corp)
+    assert all(r == 0 for r in res.daily["residual"])
+    for (d, e_paper), (_, e_cf) in zip(eod, cf):
+        if d >= CA_EX:
+            assert _phantom_upto(res, d) == e_paper - e_cf, (case, d, float(_phantom_upto(res, d)), float(e_paper - e_cf))
+    for c in res.corp_events:
+        assert c["crystallised"]["session"] == CA_S[4] and not c["open"] and c["accruals"] == []
+    assert "crystallised by the trade on 2026-02-06" in LA.report(res)
+
+
 def _rows_on_the_resized_count():
     """The reviewer's C' shape: the runner re-sized on 02-06 (CA_RESIZE), then paper applied the
     1:3 split on 02-10 to the re-sized 300 / -200, giving 100 / -66, the fraction dropped with no
@@ -1496,3 +1545,18 @@ def test_rows_not_value_neutral_at_their_own_prices_are_valued_at_the_close():
     assert all(r == 0 for r in res.daily["residual"]), [float(x) for x in res.daily["residual"]]
     assert [(r["session"], r["remainder"]) for r in res.rows_at_close] == [(d, F("16.20"))]
 
+
+def test_rows_after_the_phantom_crystallised_are_named_not_phantom():
+    """Second review of the follow-up, finding 1 with the reviewer's C' shape: the trade on 02-06
+    crystallised the phantom, and the rows of 02-10 on the re-sized count come after it closed.
+    They are booked in corp and named as such; the phantom stays constant (it no longer equals
+    official minus a processed account, which never held 100 / -66: the module docstring,
+    CRYSTALLISED, says when it does). Fails on the parent f550da3, where the rows ended a phantom
+    still open."""
+    fills, eod, rows, d = _rows_on_the_resized_count()
+    res = _ca_run(fills, eod, CA_SPLIT, acts=rows)
+    for c in res.corp_events:
+        assert (c.get("crystallised") or {}).get("session") == CA_S[4], c["symbol"]
+        assert [r["session"] for r in c.get("rows_after", [])] == [d] and c["reversal"] is None
+    assert _phantom_upto(res, d) == _phantom_upto(res, CA_S[4])
+    assert "came after the phantom closed" in LA.report(res)

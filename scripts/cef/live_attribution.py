@@ -250,12 +250,44 @@ H1, so it is never done. The rule now:
     k = new_rate / old_rate from the market record (UNMEASURED, named, if it carries no rates),
     which sits inside hold and the official change; the official change stays the P&L of
     record. Any other type with no row on its session still refuses, named.
-  * LATE ROWS (finding 3). The event stays OPEN while the account has no row for the name:
-    paper's extra shares, e = q_prev - q_prev x k, keep moving with the price, and each later
-    session's e x (close_t - close_p) is an accrual of the phantom (inside hold). The account's rows for the name within CA_MATCH_SESSIONS sessions of the
+  * LATE ROWS (finding 3). The event stays OPEN until the account trades the name (CRYSTALLISED,
+    below) or posts a row for it: paper's extra shares, e = q_prev - q_prev x k, keep moving
+    with the price, and each later session's e x (close_t - close_p) is an accrual of the
+    phantom (inside hold). The account's rows for the name within CA_MATCH_SESSIONS sessions of the
     event tie back to it: that session's rebasing (`corp`, k_p = 1) is the phantom's reversal,
     about -e x close_p, and the event closes. Past CA_MATCH_SESSIONS the phantom stays open and
     labelled.
+  * CRYSTALLISED (second review of the follow-up, 2026-11-15, finding 1; the team lead's ruling).
+    Before it, the accrual ran on every later session whatever the account held: after the
+    runner re-sized the name the phantom read -1,440 against an independent -1,630.18, and after
+    a full exit +8,280 "still OPEN" against +8,093.83. Now the first session the account trades
+    the name (any fill in it) ends the accruals. The runner trades each name to a target, so an
+    account that had processed the split would have traded e more shares (or e fewer) to the
+    same position, and from that session both hold the same shares: the gap between them is
+    then constant. So that session's phantom is e x (the name's average fill price that session
+    - the close the phantom was last valued at: the previous close, or the session's own close
+    when the trade is on the event's session), not e x the close's move, plus a fee term
+    (`Result.phantom_fees`): the session's modelled fees less those of the same fills with the
+    name's quantity moved by the whole extra shares, e = q_prev - trunc(q_prev x k), in one fill
+    at that average price. It is then closed, constant and labelled "crystallised by the trade
+    on <D>"; the account's rows for the name after that are booked in corp and named as after
+    the phantom closed (`rows_after`), never phantom.
+    WHEN THE PHANTOM IS WHAT IS IN THE OFFICIAL P&L. The cumulative phantom, booking + accruals +
+    crystallisation or reversal + fee terms, equals the official equity less that of an account
+    that processed the split on its session and then traded to the same targets, exactly, on
+    every session from the event, when (1) q_prev x k is whole (with a fraction, that account
+    would hold the cash in lieu, not the fraction's value); (2) that account's order fills at
+    the name's average fill price, and the account's fills in the name that session are on one
+    side (the runner nets each symbol into one order), and its fees are the FEES schedule's; and
+    (3) no row of the account moves the name after the phantom closed (the reviewer's C' case:
+    paper applying the split late to the re-sized count, which that account never held; such
+    rows are named). Rows that end an open phantom before any trade bring the account to the
+    processed count, and the cumulative phantom is then 0, as that account's gap. On the second
+    review's independent account simulator the cumulative phantom matches to the cent with the
+    runner's re-size, a full exit, a partial trade, a trade on the ex-date and two trades on two
+    sessions; in the C' case it stays at the crystallised -1,630.18 against the simulator's
+    -1,133.98, the rows' own corp and the later moves of the shares they took being the
+    difference, named.
   * If a session does not reconcile (H2, or a split pushed by hand with no row), the residual
     says so, and the report job names the session and the event.
 With no corporate action in the window, `analyse` output is byte-identical to before.
@@ -882,6 +914,7 @@ class Result:
     nav_unmeasured: list = field(default_factory=list)    # [(date, symbol, missing)] nav_missing="unmeasured"
     corp_events: list = field(default_factory=list)       # affected corporate actions (CORPORATE ACTIONS)
     corp_activities: list = field(default_factory=list)   # the account's own rows applied
+    phantom_fees: list = field(default_factory=list)      # [{session, amount, symbols}] (CRYSTALLISED)
     rows_at_close: list = field(default_factory=list)     # [{session, remainder, symbols}] (`_rebased`)
 
 
@@ -1071,6 +1104,14 @@ def corp_event_text(c: dict) -> str:
         out += ("; paper's extra shares then moved with the price: "
                 + ("UNMEASURED (a close is missing)" if any(a is None for a in acc) else
                    f"{float(sum(acc, Fraction(0))):+,.2f} over {len(acc)} session(s), inside hold"))
+    after = "".join(f"; the account's rows for {c['symbol']} on {r['session']} came after the phantom closed: "
+                    f"{float(r['corp']):+,.2f} in corp, not phantom" for r in c.get("rows_after", []))
+    if c.get("crystallised") is not None:
+        cr = c["crystallised"]
+        return out + (f"; crystallised by the trade on {cr['session']}: paper's extra {c['extra']} share(s) at the "
+                      f"fill price {float(cr['price']):,.4f} against the close {float(cr['reference_close']):,.4f}: "
+                      + (f"{float(cr['amount']):+,.2f}" if cr["amount"] is not None else "UNMEASURED")
+                      + " (plus that session's fee term); closed and constant from then") + after
     if c["reversal"] is not None:
         rv = c["reversal"]
         out += (f"; the account's rows of {rv['session']} ({rv['sessions_after']} session(s) later) ended it: "
@@ -1262,6 +1303,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
     corp_events: list = []
     open_phantoms: dict = {}            # symbol -> its unprocessed split's record, while still open
     handled_splits: dict = {}           # symbol -> [(session index, record)] of splits already handled
+    phantom_fees: list = []             # the crystallising sessions' fee terms (CRYSTALLISED)
     rows_valued_at_close: list = []     # sessions whose rows are not value-neutral (`_rebased`, at_close)
     rows = []
     zero = Fraction(0)
@@ -1406,6 +1448,10 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                                                      inp, hold0, p, at_close=rows_at_close)
             tie = ties.get(s)
             named = tie is not None and tie[0] == "named"   # another party's rows, or a late cash in lieu: hold as is
+            if named:                                       # rows after this name's phantom closed: said, not phantom
+                for c in corp_events:
+                    if c["_event"] is tie[1][0] and c["symbol"] == s and not c["processed"] and not c["open"]:
+                        c.setdefault("rows_after", []).append({"session": d, "corp": corp})
             if (s in affected or tie is not None) and not named:   # two share bases in one name-day: no NAV split
                 nav_part = None
                 if s in affected:
@@ -1432,7 +1478,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                     rec = {"id": e["id"], "type": e["type"], "date": e["date"], "session": d,
                            "symbol": s, "role": role, "q_prev": qp, "close": c_t,
                            "k": k if not done else k_used, "processed": done, "phantom": phantom, "why": why,
-                           "extra": extra, "accruals": [], "reversal": None,
+                           "extra": extra, "accruals": [], "reversal": None, "crystallised": None,
                            "open": bool(not done and e["type"] in PHANTOM_TYPES),
                            "corp": corp if done else None,
                            "k_source": (k_src if ls else "the account's rows on the record's other symbols")
@@ -1482,6 +1528,37 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                          "nav_part": nav_part, "disc_part": disc, "dist": dist,
                          "traded_usd": traded, "dist_status": status, "corp": corp})
             q[s] = q_end
+        # The first trade in the name crystallises an open phantom (second review of the follow-up,
+        # team lead 2026-11-15; module docstring, CRYSTALLISED): paper's extra shares are disposed of
+        # at the fill price, so the phantom's last move is e x (fill price - the close it was last
+        # valued at), not e x the close's move, plus the session's fees less those of the same trades
+        # without the extra shares; from then it is closed and constant.
+        cryst = []
+        for sym, op in sorted(open_phantoms.items()):
+            fs_s = [f for f in day if f.symbol == sym]
+            if not fs_s:
+                continue
+            px_s = sum((abs(f.signed_qty) * f.price for f in fs_s), zero) / sum(abs(f.signed_qty) for f in fs_s)
+            c_ref = inp.closes.get((sym, d if op["session"] == d else p))
+            amt = None if c_ref is None or op["extra"] is None else op["extra"] * (px_s - c_ref)
+            op["crystallised"] = {"session": d, "amount": amt, "price": px_s, "reference_close": c_ref}
+            op["open"] = False
+            cryst.append((sym, op, px_s))
+        for sym, op, _ in cryst:
+            del open_phantoms[sym]
+        if cryst:
+            cf_day = [f for f in day if f.symbol not in {c[0] for c in cryst}]
+            for sym, op, px_s in cryst:
+                e_int = op["q_prev"] - _trunc(op["q_prev"] * op["k"]) if op["k"] is not None else None
+                if e_int is None:
+                    cf_day = None
+                    break
+                q_cf = sum(f.signed_qty for f in day if f.symbol == sym) + e_int
+                if q_cf:
+                    cf_day.append(Fill(id=f"cf:{sym}:{d}", symbol=sym, date=d, time="", signed_qty=int(q_cf),
+                                       price=px_s))
+            fee = None if cf_day is None else session_fees(day)[0] - session_fees(cf_day)[0]
+            phantom_fees.append({"session": d, "amount": fee, "symbols": [c[0] for c in cryst]})
         # A phantom still open accrues: paper's extra shares move with the price (finding 3), so the
         # cumulative phantom stays what is still in the official P&L. Not on its own session (the
         # booking is its value there) nor on the session the account's rows end it (the reversal).
@@ -1567,7 +1644,7 @@ def attribute(inp: Inputs, asof: dt.date | None = None, breaks: list | None = No
                   asof=asof, first_session=window[0], sources=inp.sources,
                   dist_kinds=tuple(inp.dist_kinds), dist_unmeasured=unmeasured_all,
                   book=inp.book, nav_unmeasured=nav_gaps, corp_events=corp_events,
-                  corp_activities=acts, rows_at_close=rows_valued_at_close)
+                  corp_activities=acts, phantom_fees=phantom_fees, rows_at_close=rows_valued_at_close)
 
 
 # --------------------------------------------------------------- reporting

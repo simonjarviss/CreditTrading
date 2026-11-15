@@ -1337,3 +1337,50 @@ def test_the_report_names_rows_on_a_records_other_symbol_and_rows_valued_at_the_
                              "of qty x price +450.00): each is valued at the close") for ln in lines)
     json.dumps(out)
 
+
+@pytest.mark.parametrize("case", ["resize", "full_exit"])
+def test_the_report_says_the_first_trade_crystallised_the_phantom(case):
+    """Second review of the follow-up, finding 1 (team lead, 2026-11-15): after the runner's
+    re-size (CA_RESIZE) the report said -1,440.00 was still in the official P&L, and after a full
+    exit +8,280.00 "still OPEN"; an independent account simulator gives -1,630.18 and +8,093.83,
+    constant from the trade. The report now names the crystallisation, the fee term and the
+    cumulative phantom at those figures. Fails on the parent f550da3, which kept accruing."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    if case == "resize":
+        fills, corp = TLA.CA_BASE_FILLS + TLA.CA_RESIZE["H1"], TLA.CA_SPLIT
+    else:
+        fills, corp = TLA.CA_BASE_FILLS + [TLA._ca_fill("x1", "LNG", "sell", 900, "13.49", TLA.CA_S[4])], TLA.CA_SPLIT[:1]
+    res = TLA._ca_run(fills, TLA._ca_account(fills), corp)
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
+    want = {"resize": -1630.18, "full_exit": 8093.83}[case]
+    assert out["phantom_cumulative"] == pytest.approx(want, abs=1e-9)
+    assert any(ln.startswith("Phantom crystallised by the trade on 2026-02-06: paper's extra 600 share(s) of LNG at "
+                             "the fill price 13.4900 against the close 13.3800: +66.00") for ln in lines)
+    assert any(ln.startswith("Phantom fee term on 2026-02-06") for ln in lines)
+    assert not any("still OPEN" in ln for ln in lines)
+    assert "phantom_session" not in out                      # constant from the trade: nothing on the as-of
+    n = 2 if case == "resize" else 1
+    assert lines[-1].startswith(f"Phantom from corporate actions paper did not process, still in the official P&L at "
+                                f"the as-of: {want:+,.2f} ({n} event(s), 0 still open, {n} crystallised by a trade, 0 "
+                                "ended by the account's rows)")
+    json.dumps(out)                                          # the event records serialise
+
+
+def test_the_report_names_rows_after_a_crystallised_phantom_and_keeps_it_constant():
+    """Second review, finding 1 with the reviewer's C' shape: the runner's re-size crystallised
+    the phantoms on 02-06, then paper applied the split on 02-10 to the re-sized count. The report
+    books those rows in corp, names them as after the phantom closed, says the phantom then no
+    longer equals official minus a processed account, and keeps the cumulative phantom at the
+    crystallised -1,630.18. Fails on the parent f550da3, where the rows ended a phantom still
+    open (cumulative -1,131.96; -1,115.76 once such rows are valued at the close)."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    fills, eod, rows, d = TLA._rows_on_the_resized_count()
+    res = TLA._ca_run(fills, eod, TLA.CA_SPLIT, acts=rows)
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], d)
+    assert out["phantom_cumulative"] == pytest.approx(-1630.18, abs=1e-9)
+    after = [ln for ln in lines if ln.startswith("The account's rows for ")]
+    assert [ln.split(" on ")[0] for ln in after] == ["The account's rows for LNG", "The account's rows for SHS"]
+    assert all("2026-02-10 came after the phantom of reverse_split" in ln and ln.endswith(
+        "the phantom no longer equals official minus a processed account (live_attribution, CRYSTALLISED)")
+        for ln in after)
+    json.dumps(out)
