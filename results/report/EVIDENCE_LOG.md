@@ -4662,3 +4662,15 @@ that adds it does not exist when it is written.
 - source: `ops/sleeves/events_sleeves.json` @ `ef8b93a`; `quantt/sleeves/tests/test_run.py` @ `ef8b93a`; `quantt/sleeves/deploy/README.md` @ `ef8b93a`; `docs/REFERENCES.md` @ `ef8b93a`
 - supports: §4
 - status: current. Supersedes the $15,000-a-book sizing of E-2026-11-16-02; the gross cap of 1.5x stands. Nothing is installed or armed
+
+### E-2026-11-16-04 · Kill: the antidumping-decision calendar has too few listed small petitioners to test
+- kind: kill
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - USITC investigations file, fetched 2026-11-16: 4,446 records; 76 preliminary-phase antidumping or countervailing cases started 2021–2025 name a petitioner (10, 7, 12, 27, 20 by year); none does before 2021 [V]
+  - 11 of the 76 name a company matched by name to a CRSP common stock; 7 one with a median market value under $5bn in 2021–25 (0, 0, 3, 1, 3 by year), against a gate of about 8 a year set before the count [V]
+  - 184 distinct petitioner names, led by a union and by coalitions whose members the file does not list [V]
+- source: `results/ideas/2026-11-15_niche_hunt.md` @ `1713155`; `results/ideas/niche_hunt/hunt.json` @ `1713155`
+- supports: §4
+- status: current. Counts only; no return read. The name match is rough and the count was made in the session, not stored as a script. Coalition member lists would reopen it
