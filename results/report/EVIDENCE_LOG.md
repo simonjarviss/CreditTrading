@@ -4620,7 +4620,7 @@ that adds it does not exist when it is written.
 - figures:
   - Yahoo's earnings calendar by day against IBES on five 2025 release days: 1,443 of 1,524 releases found; rank correlation of the surprise 0.80 on 1,276; sign agrees on 87%; top tenths among ranks 1,501–4,000 share 44 of 64 names [V]
   - first fetch, 76 days back: 3,699 rows listed, 1,791 stored as small US companies with a complete result; 1,455 live signals on 2026-11-13 and 96 names in the long tenth; 2 min 59 s [V]
-  - the book runs the version the backtest scored 0.68 (t 3.41) on licensed figures, not the 1.27 version [S: E-2026-11-15-15]
+  - the book runs the version the backtest scored 0.68 (t 3.41) on licensed figures, not the 1.27 version (E-2026-11-15-15) [S]
 - source: `shadow/fetch/earnings.py` @ `afd24b9`; `shadow/signals/pead.py` @ `afd24b9`; `shadow/books/pead_small_long.json` @ `afd24b9`; `shadow/tests/test_pead.py` @ `afd24b9`; `docs/REFERENCES.md` @ `afd24b9`; `results/ideas/2026-11-15_pead_small.md` @ `afd24b9`
 - supports: §4
 - status: current. Simulated book, starts 2026-11-17 once the VM's shadow clone has this commit. The IBES comparison was run in the session and is not stored as a script. Size is a dollar limit, not a rank; foreign listings are not removed
