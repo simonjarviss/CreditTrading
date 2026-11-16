@@ -22,6 +22,7 @@ skeptics': 5 test first, 9 worth a test, 15 weak, 3 dead.
 | Thrift conversions, first year | 0.32 against seasoned thrifts (t 1.79), negative since 2016; set aside | `results/ideas/2026-11-15_thrift_conversions.md` |
 | Recent share offering as a filter on earnings-drift longs | changes the long leg by −0.22% a year (t −0.94); 2.9% of name-days flagged; closed | `results/ideas/2026-11-15_pead_small.md` |
 | Antidumping-decision calendar, bought through the listed petitioner | closed at its gate, no return read: 7 of 76 cases in 2021–25 name a listed petitioner under $5bn (0, 0, 3, 1, 3 by year) against a gate of 8 a year | this page, below |
+| Patent import cases (section 337): the listed complainant after a dated ruling | closed at the count, no return read: 71 small listed complainants in 17 years (about 4 a year) and 21 wins at the judge's ruling | `results/ideas/usitc_337/stage.py`; this page, below |
 
 ## The ledger
 
@@ -96,5 +97,19 @@ eight cases a year have a listed petitioner worth under $5bn.
 - **What would reopen it:** member lists for the coalitions (they are in each petition's
   public version), which could lift the count several-fold.
 
-One thing seen on the way and not followed: the same file lists 1,896 complainants in
-section 337 (patent) import cases, a different event with many listed companies.
+## Patent import cases (section 337): closed at the count, 2026-11-16 [V]
+
+Seen in the same file: a company asks the Commission to bar imports that infringe its
+patents, and the case runs on a public dated track (instituted, a judge's initial
+determination, a final determination). Not from the hunt; counted before any return.
+
+- **Count** (`results/ideas/usitc_337/stage.py`, CRSP names valid on the event date, 2009–2025):
+  1,390 violation-phase investigations; 165 institutions with a complainant matched to a CRSP
+  common stock, 71 of them worth under $5bn at the time: about four a year (between 1 and
+  10). Judges' rulings on the merits for those small complainants: 21 violation, 16 no
+  violation, in 17 years.
+- **Verdict:** too few for a book or for a test that could say anything. The same gate as
+  the antidumping idea (about eight a year) fails.
+- **The match is exact on the reduced name**, so a subsidiary filing under its own name is
+  missed. Respondents are more numerous (448 matched institutions, 136 small), but a
+  respondent's event is a short.
