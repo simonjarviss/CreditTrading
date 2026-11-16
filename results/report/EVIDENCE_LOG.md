@@ -4686,3 +4686,17 @@ that adds it does not exist when it is written.
 - source: `results/ideas/usitc_337/stage.py` @ `c8a31de`; `results/ideas/2026-11-15_niche_hunt.md` @ `c8a31de`
 - supports: §4
 - status: current. Counts only; no return read. Exact match on the reduced company name, so subsidiaries filing under their own names are missed
+
+### E-2026-11-16-06 · Result: companies priced below net cash earn 0.75 against IWM, but nothing over cash-rich peers once they must be tradable
+- kind: result
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - rule fixed before any return was read: latest reported Compustat quarter, cash less all debt at or above market value; non-financial, $1, $10M, $100k a day; equal weights monthly against IWM; CRSP to 2025-12-31 [V]
+  - BELOW against IWM: Sharpe 0.75 (t 3.77), 19.0% a year on 25.4% volatility, halves 1.00 / 0.57, eras 0.80, 1.04, 0.35, −0.01, 1.33; worst drawdown −83% [V]
+  - control (net cash half to one times market value) 0.45; BELOW less the control 0.51 (t 2.56), halves 0.70 / 0.37 [V]
+  - not pre-specified: on price $2 and $500k a day 0.28 (t 1.42) and −0.02 less its control; lists three months late 0.52; non-drug companies less their control 0.00 [V]
+  - per name-month against IWM, 9,369: mean +1.9%, median −2.1%, 44% positive, best +1,211% [V]
+- source: `results/ideas/net_cash/explore.py` @ `e872349`; `results/ideas/net_cash/checks.py` @ `e872349`; `scripts/research/stage_comp_net_cash.py` @ `e872349`; `results/ideas/2026-11-16_net_cash.md` @ `e872349`
+- supports: §4
+- status: current. Gross. The harness's constant weights rebalance daily at closing prices, which flatters shares this thin; not rescored at the quote. Not promoted; not independently reviewed
