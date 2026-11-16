@@ -48,6 +48,9 @@ import pandas as pd
 
 REPO = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO))
+from scripts.research import explore as _explore  # noqa: E402,F401  turns numexpr off (see its header)
+
+assert pd.get_option("compute.use_numexpr") is False
 HERE = Path(__file__).resolve().parent
 ETFS = ("MUB", "HYG", "BKLN")
 GROUP_ETF = {"muni": "MUB", "hy": "HYG", "multi": "HYG", "loan": "BKLN"}
