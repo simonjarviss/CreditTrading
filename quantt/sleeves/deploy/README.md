@@ -21,7 +21,9 @@ decision files only.
 
 ## Prerequisites (team lead, by hand)
 
-1. Create a **new $100,000 Alpaca paper account** for this book. No other book shares it.
+1. Create a **new Alpaca paper account with $1,000,000** for this book (team lead, 2026-11-16).
+   A new account starts at $100,000 by default; Alpaca's paper-trading page says the balance
+   can be set to an arbitrary amount (`docs/REFERENCES.md` 12pa). No other book shares it.
 2. Put its two keys in the vault as secrets `alpaca-events-key-id` and
    `alpaca-events-secret-key`. The VM's identity must be allowed to read them.
 3. Release a tag that contains `quantt/sleeves/` and `ops/sleeves/events_sleeves.json`, and

@@ -2107,3 +2107,11 @@ books' own fills disagree with a page, both are given.
 | The first fetch (76 days back) listed 3,699 rows and kept 1,791 as small US companies with a complete result; with prices for 1,739 symbols it took 2 min 59 s. Two reads minutes apart agreed on every stored figure | [V] 2026-11-15 | `python3 -m shadow.fetch.earnings` into a trial state directory |
 | Whether Yahoo's `Market Cap` and figures for a past day are as they stood on that day, or as revised since | [U] | not measurable from one read; rows stored by the first fetch are flagged `first_run` |
 | The 1,500th largest US common stock was worth $1.86bn to $1.89bn at the CRSP panel's last month-end ranks (read on 2025-12-31); IWM closed at 246.16 on 2025-12-31 | [V] 2026-11-15 | `~/quantt_research/crsp_top4500_daily.parquet`; Yahoo |
+
+## 12pa. Alpaca paper accounts: balance and number (added 2026-11-16)
+
+| fact | status | source |
+|---|---|---|
+| "Your initial paper trading account is created with $100k balance as a default setting", and it can be reset "with arbitrary amount as you configure"; the balance cannot otherwise be changed after creation | [S] 2026-11-16 | https://docs.alpaca.markets/us/docs/paper-trading (page updated 2026-07-07), read through a fetch agent; not opened here |
+| The dashboard now creates and deletes paper accounts ("Open New Paper Account" under the paper account number) in place of resetting; a new account needs new API keys | [S] 2026-11-16 | the same page |
+| The largest balance allowed, the number of paper accounts allowed, and whether the amount can be chosen at creation rather than by reset | [U] | not stated on the page |
