@@ -418,8 +418,19 @@ def test_positions_that_moved_since_the_plan_refuse(w):
     assert w.c.submitted == [] and not (w.day / "STARTED").exists()
 
 
-@pytest.mark.parametrize("hh, mm, why", [(15, 40, "outside the late-market send window"),
-                                         (15, 58, "outside the late-market send window"),
+def test_a_send_before_the_window_is_idle_and_writes_nothing_but_a_preview_still_shows_the_gates(w):
+    """The early-close timer slots fire every day; on a normal day they must not mark the day
+    refused (a REFUSED send.json reads as a missed day at VERIFY)."""
+    arm(w)
+    do_plan(w)
+    w.c.now = at(F, 12, 41)
+    before = sorted(p.name for p in w.day.iterdir())
+    assert sr.send(w.deps) == core.EXIT_IDLE and "before the send window" in w.out.getvalue()
+    assert w.c.submitted == [] and sorted(p.name for p in w.day.iterdir()) == before
+    assert sr.send(w.deps, preview=True) == core.EXIT_PREVIEW and "outside the late-market send window" in w.out.getvalue()
+
+
+@pytest.mark.parametrize("hh, mm, why", [(15, 58, "outside the late-market send window"),
                                          (15, 57, "SEND BUDGET")])
 def test_outside_the_late_window_or_too_late_to_finish_refuses(w, hh, mm, why):
     arm(w)
@@ -557,7 +568,7 @@ def test_a_send_refused_for_time_is_a_missed_day_not_an_explained_one(w):
     """Only DRY_RUN, arming and a halt explain a day with orders and no send (the core's rule)."""
     arm(w)
     do_plan(w)
-    assert do_send(w, hh=15, mm=40) == core.EXIT_REFUSED
+    assert do_send(w, hh=15, mm=58) == core.EXIT_REFUSED            # after the window (8 to 2 minutes here)
     assert do_verify(w) == sr.VERIFY_FAIL
     assert "MISSED" in read(w.day / "verify.json")["reason"] and led(w)["session"] == str(F)
 

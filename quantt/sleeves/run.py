@@ -528,6 +528,17 @@ def _send(deps: Deps, preview: bool) -> int:
     clk, F, D, cal_row, win = _session(c, cfg)
     if F is None:
         raise Refused(f"{clk['timestamp'].astimezone(gt.ET).date()} is not a trading day; nothing is sent")
+    # BEFORE THE WINDOW IS NOT A REFUSAL (2026-11-16). The timers fire SEND at the early-close
+    # slots (12:41, 12:46) every day, because the unit cannot know the day's close; on a normal
+    # day those runs are hours early. Refusing there marked the unit failed daily and wrote a
+    # REFUSED send.json that VERIFY would read as a missed day if the real send never ran. So a
+    # send that finds the Alpaca clock before the window's start says so, writes NOTHING and
+    # exits IDLE. `--preview` still runs every read and gate, so a person can see them early.
+    if not preview and clk["timestamp"] < win[0]:
+        print(f"{cfg.book} SEND {F}: {clk['timestamp'].astimezone(gt.ET):%H:%M:%S} ET is before the send "
+              f"window ({win[0]:%H:%M}-{win[1]:%H:%M} ET); nothing read, nothing written", file=out)
+        print(f"exit {EXIT_IDLE} {EXIT_NAMES[EXIT_IDLE]}", file=out)
+        return EXIT_IDLE
     day = state / F.isoformat()
     plan_d, orders = load_plan(day, F, cfg.book)
     if plan_d["asof"] != D.isoformat():
