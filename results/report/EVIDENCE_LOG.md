@@ -4637,3 +4637,15 @@ that adds it does not exist when it is written.
 - source: `quantt/sleeves/run.py` @ `5b9ec56`; `quantt/sleeves/net.py` @ `5b9ec56`; `quantt/sleeves/ledger.py` @ `5b9ec56`; `quantt/sleeves/inputs.py` @ `5b9ec56`; `quantt/sleeves/prices.py` @ `5b9ec56`; `quantt/sleeves/tests/test_run.py` @ `5b9ec56`; `ops/sleeves/events_sleeves.json` @ `5b9ec56`
 - supports: §4
 - status: current. Paper only. Never run against a broker: the command-line entry and key loading are untested. No systemd units exist for it yet. Every value in the book file is a proposal for the team lead
+
+### E-2026-11-16-02 · Ruling: the event sleeves trade in a new $100,000 paper account, seven books at $15,000 each, gross to 1.5x
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - team lead, by question prompt: "New $100k paper account (Recommended)" and "Equal, gross up to 1.5x (Recommended)" [V]
+  - books: specdiv_wait_small, specdiv_wait, cef_exdate_after, cef_exdate_before_after, units_exdate_after, units_exdate_before_after, pead_small_long [V]
+  - derived from the ruling and awaiting confirmation at install: minimum order $25, largest name $35,000, at most 300 orders, sent from 20 to 2 minutes before the close; the core's send budget fits 346 orders in that window [V]
+- source: `ops/sleeves/events_sleeves.json` @ `369a8bb`; `quantt/sleeves/tests/test_run.py` @ `369a8bb`; `quantt/sleeves/deploy/install_events_vm.sh` @ `369a8bb`; `quantt/sleeves/deploy/README.md` @ `369a8bb`
+- supports: §4
+- status: current. Nothing is installed or armed; the installer has passed a shell syntax check only and has never run. Supersedes "shadow books first" (2026-11-09) for these seven books
