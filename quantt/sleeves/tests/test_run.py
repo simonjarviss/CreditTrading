@@ -12,6 +12,7 @@ from types import SimpleNamespace
 import pytest
 
 from quantt.broker import alpaca
+from quantt.session import gate as gt
 from quantt.session import run as core
 from quantt.sleeves import config, ledger, prices
 from quantt.sleeves import run as sr
@@ -719,14 +720,20 @@ def test_the_paper_endpoint_constant_is_the_clients_and_the_package_never_import
 # ---------------------------------------------------------------------- book file
 
 def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
+    """The values are pinned on purpose: they are the team lead's rulings of 2026-11-16 (seven
+    books, $15,000 each, gross to 1.5x) and the order limits derived from them, so a change to
+    the file is a deliberate edit of this test too. The window must fit max_orders by the
+    core's own send budget, or the first session, which builds every book, could never start."""
     cfg = config.load(sr.BOOK_PATH)
-    assert cfg.book == "events" and len(cfg.sleeves) == 6 and all(s.enabled and s.capital_usd == 15000 for s in cfg.sleeves)
+    assert cfg.book == "events" and len(cfg.sleeves) == 7 and all(s.enabled and s.capital_usd == 15000 for s in cfg.sleeves)
     assert (cfg.min_order_usd, cfg.max_gross_x_equity, cfg.max_name_usd, cfg.max_stale_sessions, cfg.max_orders,
-            cfg.window_minutes_before_close) == (100, 1.0, 20000, 2, 100, (8, 2))
+            cfg.window_minutes_before_close) == (25, 1.5, 35000, 2, 300, (20, 2))
+    first, last = cfg.window_minutes_before_close
+    assert gt.send_budget_s(cfg.max_orders) <= (first - last) * 60
     for slug in cfg.slugs:
         book = sr.REPO / "shadow" / "books" / f"{slug}.json"
         assert book.exists() and read(book)["slug"] == slug and read(book)["fill"] == "next_close"
-    assert "PROPOSAL" in read(sr.BOOK_PATH)["_note"]
+    assert "PAPER ONLY" in read(sr.BOOK_PATH)["_note"]
 
 
 # -------------------------------------------------------------------------- prices

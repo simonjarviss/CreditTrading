@@ -1,26 +1,61 @@
 {
- "_note": "PROPOSALS, not rulings. Every value below is a starting suggestion for the team lead to set before quantt/sleeves is installed: the events paper account's size is not yet known, and each number here was chosen without it. Read by quantt/sleeves/config.py, where every key is required. PAPER ONLY.",
+ "_note": "Read by quantt/sleeves/config.py, where every key is required. PAPER ONLY. Account and sizing ruled by the team lead on 2026-11-16 (question prompts): a NEW $100,000 Alpaca paper account for this book, equal capital per sleeve, gross up to 1.5x equity. The order limits below were derived from those rulings on 2026-11-16 and are for the team lead to confirm at install.",
  "book": "events",
  "_note_book": "The Alpaca paper account's name: keys ALPACA_EVENTS_KEY_ID / ALPACA_EVENTS_SECRET_KEY, client order ids events-<YYYYMMDD>-<SYMBOL>-1, and the state directory must be named 'events'.",
  "sleeves": [
-  {"slug": "specdiv_wait_small", "capital_usd": 15000, "enabled": true},
-  {"slug": "specdiv_wait", "capital_usd": 15000, "enabled": true},
-  {"slug": "cef_exdate_after", "capital_usd": 15000, "enabled": true},
-  {"slug": "cef_exdate_before_after", "capital_usd": 15000, "enabled": true},
-  {"slug": "units_exdate_after", "capital_usd": 15000, "enabled": true},
-  {"slug": "units_exdate_before_after", "capital_usd": 15000, "enabled": true}
+  {
+   "slug": "specdiv_wait_small",
+   "capital_usd": 15000,
+   "enabled": true
+  },
+  {
+   "slug": "specdiv_wait",
+   "capital_usd": 15000,
+   "enabled": true
+  },
+  {
+   "slug": "cef_exdate_after",
+   "capital_usd": 15000,
+   "enabled": true
+  },
+  {
+   "slug": "cef_exdate_before_after",
+   "capital_usd": 15000,
+   "enabled": true
+  },
+  {
+   "slug": "units_exdate_after",
+   "capital_usd": 15000,
+   "enabled": true
+  },
+  {
+   "slug": "units_exdate_before_after",
+   "capital_usd": 15000,
+   "enabled": true
+  },
+  {
+   "slug": "pead_small_long",
+   "capital_usd": 15000,
+   "enabled": true
+  }
  ],
- "_note_sleeves": "PROPOSAL: six shadow books at $15,000 each. A sleeve's decision weights are fractions of its capital_usd here (the shadow file's own notional is ignored). enabled=false with shares still in the ledger FLATTENS that sleeve; to stop it without trading, halt the book.",
- "min_order_usd": 100,
- "_note_min_order_usd": "PROPOSAL. A net order whose estimated notional is below this is not sent (re-sizing noise); the sleeves' wanted change stays unfilled and is planned again next session.",
- "max_gross_x_equity": 1.0,
- "_note_max_gross_x_equity": "PROPOSAL. The book's gross after the plan, as a multiple of account equity. Above it every sleeve's targets are scaled by one factor at PLAN, and SEND refuses a set that ADDS gross and would end above it on the lower of the plan's equity and live equity (a set that takes gross down always goes; quantt/session/gate.py stress_breach).",
- "max_name_usd": 20000,
- "_note_max_name_usd": "PROPOSAL. The largest net position in one symbol at the as-of close. Above it the whole plan is refused, naming the symbol; it is not trimmed.",
+ "_note_sleeves": "Team lead 2026-11-16: seven shadow books at $15,000 each. A sleeve's decision weights are fractions of its capital_usd here (the shadow file's own notional is ignored). enabled=false with shares still in the ledger FLATTENS that sleeve; to stop it without trading, halt the book.",
+ "min_order_usd": 25,
+ "_note_min_order_usd": "DERIVED 2026-11-16, to confirm. cef_exdate_after holds every eligible fund of a 91-fund universe on its long side: about $7,500 / 85 = $88 a fund. At the earlier proposal of $100 none of those would ever be bought and the sleeve would sit short-only in the account. $25 lets them trade and still drops a one-share re-sizing in a $10 fund. Paper charges no commission.",
+ "max_gross_x_equity": 1.5,
+ "_note_max_gross_x_equity": "Team lead 2026-11-16. The book's gross after the plan, as a multiple of account equity. Above it every sleeve's targets are scaled by one factor at PLAN; SEND judges an adding set against the same multiple on the lower of planned and live equity (the core's stress rule).",
+ "max_name_usd": 35000,
+ "_note_max_name_usd": "DERIVED 2026-11-16, to confirm. IWM is the hedge of three sleeves: pead_small_long shorts 100% of its capital ($15,000) and each special-dividend sleeve up to 50% ($7,500), $30,000 together. $35,000 leaves room for price drift; any other name is far below it. Above it the whole plan is refused, naming the symbol.",
  "max_stale_sessions": 2,
- "_note_max_stale_sessions": "PROPOSAL. A sleeve with no usable decision (missing, late, malformed, or a named symbol with no close) holds its shares for this many sessions in a row, then is flattened.",
- "max_orders": 100,
- "_note_max_orders": "PROPOSAL. The most orders one session may send. Above it the plan is refused. The send window (6 minutes) fits about a hundred at the core's 3 s per order plus 42 s (quantt/session/gate.py).",
- "execution": {"mode": "late_market", "window_minutes_before_close": [8, 2]},
- "_note_execution": "The paper exception of 2026-09-29 (CLAUDE.md order-path rule 3): market day orders from 8 to 2 minutes before the close, as the core book. No other mode is built."
+ "_note_max_stale_sessions": "PROPOSAL. A sleeve with no usable decision holds its shares for this many sessions in a row, then is flattened.",
+ "max_orders": 300,
+ "_note_max_orders": "DERIVED 2026-11-16, to confirm. The first session builds every book at once: about 97 names in pead_small_long, 85 in the closed-end fund books, 45 in the unit books, a few in special dividends. Above this the plan is refused.",
+ "execution": {
+  "mode": "late_market",
+  "window_minutes_before_close": [
+   20,
+   2
+  ]
+ },
+ "_note_execution": "The paper exception of 2026-09-29 (CLAUDE.md order-path rule 3): market day orders before the close. No other mode is built. DERIVED 2026-11-16, to confirm: the core's window is [8, 2]; its send budget (quantt/session/gate.py: 3 s an order plus 42 s) fits about 106 orders in those six minutes. [20, 2] is 18 minutes and fits 346. Paper fills at the quote, so an earlier send costs the score a little drift to the close and nothing else."
 }
