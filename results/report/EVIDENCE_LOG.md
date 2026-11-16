@@ -4649,3 +4649,16 @@ that adds it does not exist when it is written.
 - source: `ops/sleeves/events_sleeves.json` @ `369a8bb`; `quantt/sleeves/tests/test_run.py` @ `369a8bb`; `quantt/sleeves/deploy/install_events_vm.sh` @ `369a8bb`; `quantt/sleeves/deploy/README.md` @ `369a8bb`
 - supports: §4
 - status: current. Nothing is installed or armed; the installer has passed a shell syntax check only and has never run. Supersedes "shadow books first" (2026-11-09) for these seven books
+
+### E-2026-11-16-03 · Ruling: the events paper account is $1,000,000, $100,000 a book; the core stays at $100,000
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - team lead, by question prompt: "$1M, $100k per book (Recommended)", the small-name special-dividend book at $25,000; and "Leave the core at $100k (Recommended)" [V]
+  - the sleeves cannot share the core's account: each runner requires every position in its account to be its own, and the ex-date books hold the core's funds [V]
+  - re-derived limits awaiting confirmation at install: minimum order $100, largest name $190,000 (IWM hedges three books for up to $162,500), 300 orders, 20 to 2 minutes before the close [V]
+  - Alpaca's paper-trading page: a paper account starts at $100k and can be reset to an arbitrary amount; the largest amount is not stated [S]
+- source: `ops/sleeves/events_sleeves.json` @ `ef8b93a`; `quantt/sleeves/tests/test_run.py` @ `ef8b93a`; `quantt/sleeves/deploy/README.md` @ `ef8b93a`; `docs/REFERENCES.md` @ `ef8b93a`
+- supports: §4
+- status: current. Supersedes the $15,000-a-book sizing of E-2026-11-16-02; the gross cap of 1.5x stands. Nothing is installed or armed
