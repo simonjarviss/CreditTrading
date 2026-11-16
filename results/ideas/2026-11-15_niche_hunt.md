@@ -20,6 +20,7 @@ skeptics': 5 test first, 9 worth a test, 15 weak, 3 dead.
 | idea | result | card |
 |---|---|---|
 | Thrift conversions, first year | 0.32 against seasoned thrifts (t 1.79), negative since 2016; set aside | `results/ideas/2026-11-15_thrift_conversions.md` |
+| Recent share offering as a filter on earnings-drift longs | changes the long leg by −0.22% a year (t −0.94); 2.9% of name-days flagged; closed | `results/ideas/2026-11-15_pead_small.md` |
 
 ## The ledger
 

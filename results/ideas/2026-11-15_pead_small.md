@@ -96,6 +96,23 @@ dated at the decision, and entries into the long tenth are not selected on later
   sign does not flip, and the result is gone at 30bp. What these stocks cost to trade at
   the close is not measured.
 
+## A recent share offering as a filter (`issuance_filter.py`), 2026-11-15 [V]
+
+Proposed by the niche hunt (`results/ideas/2026-11-15_niche_hunt.md`): drop from the long
+tenth any stock that priced a follow-on offering in the 90 days before the decision. Fixed
+before the filtered return was read; a second look at a sample already read.
+
+| long leg against IWM | Sharpe (t) | return a year | names a day |
+|---|---:|---:|---:|
+| as fixed | 1.27 (6.42) | 12.8% | 56.0 |
+| flagged names removed | 1.24 (6.26) | 12.6% | 54.4 |
+| flagged names alone | 0.34 (1.72) | 10.8% on 31.7% volatility | 1.6 |
+| removed only when the company itself sold shares | 1.25 (6.34) | 12.8% | 54.9 |
+
+- **No use.** 2.9% of long name-days are flagged, and removing them changes the leg by
+  −0.22% a year (t −0.94). The flagged names earn about what the others do, with more noise.
+- The expectation (flagged below, filtered above) was wrong. Closed.
+
 ## What I conclude
 
 1. Earnings drift is alive in stocks ranked below 1,500 and is earned on the long side, in
