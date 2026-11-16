@@ -4600,3 +4600,15 @@ that adds it does not exist when it is written.
 - source: `results/ideas/thrift_conversions/explore.py` @ `7da05ab`; `scripts/research/stage_crsp_thrift_listings.py` @ `7da05ab`; `results/ideas/2026-11-15_thrift_conversions.md` @ `7da05ab`; `results/ideas/2026-11-15_niche_hunt.md` @ `7da05ab`; `results/ideas/niche_hunt/hunt.json` @ `7da05ab`
 - supports: §4
 - status: current. Gross, no costs. Second-step conversions could not be separated in CRSP. The hunt's figures are the scouts' and skeptics', not re-read here. Set aside
+
+### E-2026-11-15-18 · Kill: a recent share offering does not spoil a small-stock earnings-drift long
+- kind: kill
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - rule fixed before the filtered return was read: drop from the long tenth any stock that priced an SDC follow-on in the 90 days strictly before the decision; CRSP to 2025-12-31 [V]
+  - long leg against IWM as fixed 1.27 (t 6.42); flagged names removed 1.24 (t 6.26); removed only when primary shares were sold 1.25 (t 6.34) [V]
+  - 2.9% of long name-days are flagged; the filtered leg less the unfiltered one −0.22% a year (t −0.94); flagged names alone 0.34 (t 1.72), 10.8% a year on 31.7% volatility [V]
+- source: `results/ideas/pead_small/issuance_filter.py` @ `4919bfd`; `results/ideas/2026-11-15_pead_small.md` @ `4919bfd`
+- supports: §4
+- status: current. Gross. A second look at a sample already read; proposed by the niche hunt. Closed
