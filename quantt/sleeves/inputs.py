@@ -13,11 +13,16 @@ So `read` returns, per sleeve, either the weights or a reason string; `net.py` t
 sleeve that has no decision (and flattens it after the book file's `max_stale_sessions`).
 The reasons are recorded in the plan.
 
-THE ON-TIME RULE is the shadow engine's own (shadow/engine.py, "ON TIME, OR NOT SCORED"): the
-file must have been written before 13:00 New York on F. A file written later could have
-seen F's prices. It must also carry `fill == "next_close"`, the only convention the engine
-implements, and this module is given F and the previous session by the caller from the
-exchange calendar, never from the file.
+THE ON-TIME RULE is STRICTER than the shadow engine's. The engine scores a decision written
+before 13:00 New York on F (shadow/engine.py, "ON TIME, OR NOT SCORED"). This runner trades
+one only if it was written before 09:30 New York on F, the open. Why stricter (review of
+stage 2, 2026-11-16): on a 13:00 early close the send window is 12:52-12:58, so a file written
+at 12:30 on F passes the engine's rule having seen most of F's session, and would be traded
+at F's close: lookahead. Before the open no file can have seen any of F's regular session,
+on any day. The engine's 13:00 stays the engine's scoring rule; a decision it scores and this
+runner refuses is a held session here, recorded as late. The file must also carry
+`fill == "next_close"`, the only convention the engine implements, and this module is given F
+and the previous session by the caller from the exchange calendar, never from the file.
 
 This module imports nothing from `shadow`: the file format is read as data, and the
 constants it needs are restated here and pinned by a test against a file the engine writes.
@@ -33,7 +38,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 NY = ZoneInfo("America/New_York")
-ON_TIME_CUTOFF = dt.time(13, 0)          # shadow/engine.py ON_TIME_CUTOFF
+ON_TIME_CUTOFF = dt.time(9, 30)          # the open; stricter than shadow/engine.py's 13:00 (docstring)
 FILL = "next_close"                      # shadow/book.py FILLS
 SYMBOL = re.compile(r"[A-Z][A-Z0-9.]{0,9}")
 MAX_ABS_WEIGHT = 2.0                     # a single weight beyond this is not a book this desk runs
@@ -63,9 +68,9 @@ def read_one(decisions_dir: Path, slug: str, asof: dt.date, session: dt.date) ->
         return {"missing": "written_at missing or unreadable"}
     if written.tzinfo is None:
         return {"missing": "written_at has no time zone"}
-    # ALIGNMENT: the file must predate the earliest possible close of the session it trades in.
+    # ALIGNMENT: the file must predate the OPEN of the session it trades in.
     if not written < dt.datetime.combine(session, ON_TIME_CUTOFF, tzinfo=NY):
-        return {"missing": f"written {written.isoformat()}, not before 13:00 New York on {session}: late, never traded"}
+        return {"missing": f"written {written.isoformat()}, not before 09:30 New York on {session}: late, never traded"}
     if written.astimezone(NY).date() < asof:
         return {"missing": f"written {written.isoformat()}, before its own as-of session {asof}"}
     w = rec.get("weights")

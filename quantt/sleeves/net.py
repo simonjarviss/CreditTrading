@@ -18,6 +18,14 @@ in a row it is FLATTENED: a book nobody is deciding must not sit in the account.
 the book file disables is flattened at once. A missing price for a symbol a decision names
 is treated as no decision, naming the symbol: never sized on another day's price.
 
+WHEN A HELD SYMBOL HAS NO CLOSE on the as-of session (a halt, a delisting: no daily bar), the
+sleeve that holds it HOLDS everything it has, whatever its decision says, and a flatten
+(disabled, or past the stale limit) is DEFERRED: nothing can be sized or valued in that name
+today, and an order in it would be priced on nothing. Before 2026-11-16 one such symbol
+refused the whole plan and stopped every sleeve (review of stage 2; coordinator's ruling). The
+runner counts that position in the gross at the last close it recorded itself, labelled stale
+(`run.py`), and `apply_limits` never scales it (`frozen`).
+
 WHEN A LEG CANNOT BE OPENED. A short may be opened or increased only in a symbol Alpaca
 marks shortable and easy to borrow today; a long only in an active, tradable asset. A leg
 that fails stays at what the sleeve already holds on that side, and THE OTHER SIDE OF THAT
@@ -27,7 +35,12 @@ would be a different, unhedged strategy that nobody tested. A sleeve whose whole
 side is blocked therefore opens nothing. Dropped legs are returned and recorded.
 
 THE BOOK'S LIMITS. If the gross of the netted targets exceeds `max_gross_x_equity` x equity,
-every sleeve's targets are scaled by one factor (truncated again), so the mix is kept.
+every sleeve's targets are scaled by one factor (truncated again), so the mix is kept. The
+gross is measured AGAIN after the truncation and, if it is still above the limit, the factor
+is lowered and the ORIGINAL targets are scaled again, until it fits: truncating each sleeve
+toward zero can leave the NET of two offsetting sleeves larger than the factor implies (+10
+against -3 nets 7; at one half, 5 against -1 nets 4, not 3.5). Scale-again was chosen over a
+fixed headroom because no headroom has a derivation here and the loop needs none.
 A net position above `max_name_usd` REFUSES the plan, naming the symbol: one name that
 large is a mistake upstream, not something to trim quietly.
 
@@ -107,20 +120,36 @@ def plan_sleeves(cfg, decisions: dict, ledger_shares: dict, stale_before: dict, 
     ledger_shares  {slug: {symbol: shares}} from the ledger; a slug absent holds nothing
     stale_before   {slug: sessions in a row without a decision before this one}
     """
-    unknown = sorted(set(ledger_shares) - set(cfg.slugs))
+    # A sleeve that holds NOTHING may be dropped from the book file: its ledger record stays
+    # (its cash is its realised P&L) and `ledger.shares_of` still lists it, with no shares.
+    unknown = sorted(slug for slug, sh in ledger_shares.items()
+                     if slug not in cfg.slugs and any(q != 0 for q in sh.values()))
     if unknown:
         raise NetError(f"the ledger holds shares for {unknown}, which the book file does not list; "
                        "list the sleeve (disabled, to flatten it) before running")
     out = []
     for s in cfg.sleeves:
         held = {k: v for k, v in ledger_shares.get(s.slug, {}).items() if v != 0}
+        unpriced = sorted(sym for sym in held if _price(closes, sym) is None)
         if not s.enabled:
-            out.append(SleevePlan(s.slug, "flatten", "disabled in the book file", {}, 0))
+            if unpriced:
+                out.append(SleevePlan(s.slug, "hold", f"disabled in the book file; flatten deferred: no "
+                                      f"close for held {unpriced} on the as-of session", dict(sorted(held.items())), 0))
+            else:
+                out.append(SleevePlan(s.slug, "flatten", "disabled in the book file", {}, 0))
             continue
         d = decisions.get(s.slug)
         if d is None:
             raise NetError(f"no decision record was read for enabled sleeve {s.slug}")
         why = d.get("missing")
+        if unpriced:
+            n = int(stale_before.get(s.slug, 0)) + 1
+            out.append(SleevePlan(s.slug, "hold", f"no close for held {unpriced} on the as-of session: "
+                                  "the sleeve holds everything it has"
+                                  + (f"; flatten deferred ({n} sessions, limit {cfg.max_stale_sessions})"
+                                     if n > cfg.max_stale_sessions else "")
+                                  + (f"; also: {why}" if why else ""), dict(sorted(held.items())), n))
+            continue
         if why is None:
             try:
                 t, dropped, scale = sleeve_targets(d["weights"], s.capital_usd, closes, held, can_short, can_buy)
@@ -145,8 +174,14 @@ def net_targets(plans) -> dict:
     return {s: q for s, q in sorted(net.items()) if q != 0}
 
 
-def apply_limits(cfg, plans: list, closes: dict, equity: float) -> tuple:
-    """(plans, factor, gross_usd): scale to the gross limit, then refuse on the per-name limit."""
+MAX_RESCALES = 50
+
+
+def apply_limits(cfg, plans: list, closes: dict, equity: float, frozen=()) -> tuple:
+    """(plans, factor, gross_usd): scale to the gross limit, then refuse on the per-name limit.
+    `frozen` symbols (held, with no close today) are valued but never scaled; if they alone
+    are above the limit the plan is refused."""
+    frozen = set(frozen)
     if isinstance(equity, bool) or not isinstance(equity, (int, float)) or not math.isfinite(equity) or equity <= 0:
         raise NetError(f"account equity {equity!r} must be a finite number > 0")
 
@@ -159,14 +194,31 @@ def apply_limits(cfg, plans: list, closes: dict, equity: float) -> tuple:
             tot += abs(q) * p
         return tot
 
+    def scaled(f):
+        out = []
+        for p in plans:
+            t = {s: (q if s in frozen else int(math.trunc(q * f))) for s, q in p.targets.items()}
+            out.append(SleevePlan(p.slug, p.action, p.why, {s: q for s, q in t.items() if q != 0},
+                                  p.stale_sessions, p.dropped, p.scale))
+        return out
+
     g, factor = gross(plans), 1.0
     cap = cfg.max_gross_x_equity * equity
     if g > cap:
-        factor = cap / g
-        plans = [SleevePlan(p.slug, p.action, p.why, {s: int(math.trunc(q * factor)) for s, q in p.targets.items()
-                                                      if int(math.trunc(q * factor)) != 0},
-                            p.stale_sessions, p.dropped, p.scale) for p in plans]
-        g = gross(plans)
+        # the frozen part cannot shrink, so the first factor is the room left over what can
+        held_usd = sum(abs(q) * _price(closes, s) for s, q in net_targets(plans).items() if s in frozen)
+        factor = max(cap - held_usd, 0.0) / (g - held_usd) if g > held_usd else 0.0
+        for _ in range(MAX_RESCALES):
+            plans = scaled(factor)
+            g = gross(plans)
+            if g <= cap:
+                break
+            # measured again after truncation (module docstring): lower the factor, start over
+            factor *= min(cap / g, 0.999)
+        else:
+            raise NetError(f"the plan's gross ${g:,.0f} cannot be scaled under max_gross_x_equity x equity "
+                           f"${cap:,.0f}" + (f"; positions with no close today {sorted(frozen)} are not scaled"
+                                             if frozen else ""))
     for sym, q in net_targets(plans).items():
         usd = abs(q) * _price(closes, sym)
         if usd > cfg.max_name_usd:

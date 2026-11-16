@@ -13,7 +13,7 @@ THE BOUNDARY, BOTH WAYS
     not import it: it reads a shadow book's decision FILES as data, from the directory
     QUANTT_SLEEVES_DECISIONS_DIR names, and checks each one before use (`inputs.py`).
   * The slugs that may trade, their capital and every limit are in a release-tagged file,
-    `ops/books/events_sleeves.json` (`config.py`). A decision file for a slug not listed
+    `ops/sleeves/events_sleeves.json` (`config.py`). A decision file for a slug not listed
     there is never read. So what a branch the shadow clone follows can change is the
     weights of listed books, inside the caps; it cannot add a book or raise a limit.
 

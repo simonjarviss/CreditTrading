@@ -1,0 +1,26 @@
+{
+ "_note": "PROPOSALS, not rulings. Every value below is a starting suggestion for the team lead to set before quantt/sleeves is installed: the events paper account's size is not yet known, and each number here was chosen without it. Read by quantt/sleeves/config.py, where every key is required. PAPER ONLY.",
+ "book": "events",
+ "_note_book": "The Alpaca paper account's name: keys ALPACA_EVENTS_KEY_ID / ALPACA_EVENTS_SECRET_KEY, client order ids events-<YYYYMMDD>-<SYMBOL>-1, and the state directory must be named 'events'.",
+ "sleeves": [
+  {"slug": "specdiv_wait_small", "capital_usd": 15000, "enabled": true},
+  {"slug": "specdiv_wait", "capital_usd": 15000, "enabled": true},
+  {"slug": "cef_exdate_after", "capital_usd": 15000, "enabled": true},
+  {"slug": "cef_exdate_before_after", "capital_usd": 15000, "enabled": true},
+  {"slug": "units_exdate_after", "capital_usd": 15000, "enabled": true},
+  {"slug": "units_exdate_before_after", "capital_usd": 15000, "enabled": true}
+ ],
+ "_note_sleeves": "PROPOSAL: six shadow books at $15,000 each. A sleeve's decision weights are fractions of its capital_usd here (the shadow file's own notional is ignored). enabled=false with shares still in the ledger FLATTENS that sleeve; to stop it without trading, halt the book.",
+ "min_order_usd": 100,
+ "_note_min_order_usd": "PROPOSAL. A net order whose estimated notional is below this is not sent (re-sizing noise); the sleeves' wanted change stays unfilled and is planned again next session.",
+ "max_gross_x_equity": 1.0,
+ "_note_max_gross_x_equity": "PROPOSAL. The book's gross after the plan, as a multiple of account equity. Above it every sleeve's targets are scaled by one factor at PLAN, and SEND refuses a set that ADDS gross and would end above it on the lower of the plan's equity and live equity (a set that takes gross down always goes; quantt/session/gate.py stress_breach).",
+ "max_name_usd": 20000,
+ "_note_max_name_usd": "PROPOSAL. The largest net position in one symbol at the as-of close. Above it the whole plan is refused, naming the symbol; it is not trimmed.",
+ "max_stale_sessions": 2,
+ "_note_max_stale_sessions": "PROPOSAL. A sleeve with no usable decision (missing, late, malformed, or a named symbol with no close) holds its shares for this many sessions in a row, then is flattened.",
+ "max_orders": 100,
+ "_note_max_orders": "PROPOSAL. The most orders one session may send. Above it the plan is refused. The send window (6 minutes) fits about a hundred at the core's 3 s per order plus 42 s (quantt/session/gate.py).",
+ "execution": {"mode": "late_market", "window_minutes_before_close": [8, 2]},
+ "_note_execution": "The paper exception of 2026-09-29 (CLAUDE.md order-path rule 3): market day orders from 8 to 2 minutes before the close, as the core book. No other mode is built."
+}

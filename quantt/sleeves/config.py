@@ -1,4 +1,4 @@
-"""`ops/books/events_sleeves.json`: which shadow books trade on paper, with how much, inside which limits.
+"""`ops/sleeves/events_sleeves.json`: which shadow books trade on paper, with how much, inside which limits.
 
 Every key is REQUIRED and checked. A missing or mistyped key raises, naming it: a default
 here would be a limit nobody chose (CLAUDE.md, no silent fallbacks). Keys starting with `_`

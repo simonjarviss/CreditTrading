@@ -69,6 +69,8 @@ def test_a_good_decision_is_read_with_its_hash(tmp_path):
 
 @pytest.mark.parametrize("over, why", [
     ({"written": "2026-11-17T18:00:00+00:00"}, "late"),            # 13:00 New York on F: could have seen F
+    ({"written": "2026-11-17T14:30:00+00:00"}, "late"),            # 09:30 New York on F, the open: the cutoff itself
+    ({"written": "2026-11-17T17:30:00+00:00"}, "late"),            # 12:30 on F: before the engine's 13:00, after most of a half day
     ({"written": "2026-11-17T17:59:59"}, "time zone"),
     ({"slug_in_file": "b"}, "slug"),
     ({"fill": "next_open"}, "fill convention"),
@@ -97,7 +99,8 @@ def test_the_reader_matches_a_file_the_shadow_engine_writes(tmp_path, monkeypatc
     """The format is restated in inputs.py, not imported: this pins it to the engine's."""
     from shadow import engine
     from shadow.book import Book
-    assert inputs.ON_TIME_CUTOFF == engine.ON_TIME_CUTOFF
+    # Stricter than the engine's scoring rule on purpose (inputs.py, THE ON-TIME RULE): the open.
+    assert inputs.ON_TIME_CUTOFF == dt.time(9, 30) < engine.ON_TIME_CUTOFF == dt.time(13, 0)
     monkeypatch.setattr(Book, "signal_fn", lambda self: (lambda asof, panels: pd.Series({"AAA": 0.1, "IWM": -0.1})))
     b = Book("a", "card", "m:f", (), (), "next_close", 1e6, D, True)
     engine.decide(b, tmp_path, D, now=dt.datetime(2026, 11, 16, 23, 50, tzinfo=dt.timezone.utc))
@@ -135,16 +138,16 @@ def test_no_decision_holds_then_flattens_and_never_opens(tmp_path):
     c = cfg(tmp_path)
     dec = {"a": {"missing": "late"}, "b": {"missing": "late"}}
     led = {"a": {"AAA": 7}}
-    p1 = net.plan_sleeves(c, dec, led, {"a": 1}, {}, YES, YES)
+    p1 = net.plan_sleeves(c, dec, led, {"a": 1}, {"AAA": 9.0}, YES, YES)
     assert (p1[0].action, p1[0].targets, p1[0].stale_sessions) == ("hold", {"AAA": 7}, 2)
-    p2 = net.plan_sleeves(c, dec, led, {"a": 2}, {}, YES, YES)
+    p2 = net.plan_sleeves(c, dec, led, {"a": 2}, {"AAA": 9.0}, YES, YES)
     assert (p2[0].action, p2[0].targets) == ("flatten", {})
     assert p1[1].targets == {} and p2[1].targets == {}
 
 
 def test_a_disabled_sleeve_is_flattened_and_an_unlisted_one_refuses(tmp_path):
     c = cfg(tmp_path, sleeves=[{"slug": "a", "capital_usd": 1, "enabled": False}])
-    assert net.plan_sleeves(c, {}, {"a": {"AAA": 3}}, {}, {}, YES, YES)[0].action == "flatten"
+    assert net.plan_sleeves(c, {}, {"a": {"AAA": 3}}, {}, {"AAA": 9.0}, YES, YES)[0].action == "flatten"
     with pytest.raises(net.NetError, match="does not list"):
         net.plan_sleeves(c, {}, {"ghost": {"AAA": 3}}, {}, {}, YES, YES)
 
@@ -221,3 +224,54 @@ def test_the_package_never_imports_shadow_and_names_no_order_method_yet():
         src = (here / f).read_text()
         assert "import shadow" not in src and "from shadow" not in src, f
         assert "submit_order" not in src, f
+
+
+# ------------------------------------------------- review of stage 2, 2026-11-16
+
+def test_a_decision_written_just_before_the_open_is_on_time(tmp_path):
+    decision(tmp_path, written="2026-11-17T14:29:59+00:00")          # 09:29:59 New York on F
+    assert "weights" in inputs.read_one(tmp_path, "a", D, F)
+
+
+def test_a_sleeve_holding_a_name_with_no_close_holds_everything_and_a_flatten_is_deferred(tmp_path):
+    """One halted name must not stop the book, and must never be sized or sold on no price."""
+    c = cfg(tmp_path)
+    dec = {"a": {"weights": {"BBB": 0.1}}, "b": {"weights": {"BBB": 0.1}}}
+    plans = net.plan_sleeves(c, dec, {"a": {"AAA": 7, "BBB": 1}}, {}, {"BBB": 10.0}, YES, YES)
+    assert (plans[0].action, plans[0].targets, plans[0].stale_sessions) == ("hold", {"AAA": 7, "BBB": 1}, 1)
+    assert "AAA" in plans[0].why and plans[1].targets == {"BBB": 100}
+    over = net.plan_sleeves(c, dec, {"a": {"AAA": 7}}, {"a": 5}, {"BBB": 10.0}, YES, YES)[0]
+    assert (over.action, over.targets) == ("hold", {"AAA": 7}) and "flatten deferred" in over.why
+    off = cfg(tmp_path, sleeves=[{"slug": "a", "capital_usd": 1, "enabled": False}])
+    d = net.plan_sleeves(off, {}, {"a": {"AAA": 3}}, {}, {}, YES, YES)[0]
+    assert (d.action, d.targets) == ("hold", {"AAA": 3}) and "flatten deferred" in d.why
+
+
+def test_an_emptied_sleeve_may_be_dropped_from_the_book_file(tmp_path):
+    """`ledger.shares_of` lists a sleeve that holds nothing as {slug: {}}; that is not a holding."""
+    c = cfg(tmp_path, sleeves=[BOOK["sleeves"][0]])
+    plans = net.plan_sleeves(c, {"a": {"weights": {"AAA": 0.1}}}, {"a": {}, "b": {}, "gone": {"X": 0}}, {},
+                             {"AAA": 10.0}, YES, YES)
+    assert [p.slug for p in plans] == ["a"]
+    with pytest.raises(net.NetError, match="does not list"):
+        net.plan_sleeves(c, {"a": {"weights": {}}}, {"b": {"AAA": 1}}, {}, {"AAA": 10.0}, YES, YES)
+
+
+def test_the_gross_is_measured_again_after_truncation_and_scaled_until_it_fits(tmp_path):
+    """Offsetting sleeves: +10 against -3 nets 7 ($700); at the first factor (0.5) each sleeve
+    truncates toward zero and the net is 4 ($400), above the $350 limit."""
+    c = cfg(tmp_path, max_gross_x_equity=0.035)
+    a = net.SleevePlan("a", "decided", "", {"AAA": 10}, 0)
+    b = net.SleevePlan("b", "decided", "", {"AAA": -3}, 0)
+    plans, f, g = net.apply_limits(c, [a, b], {"AAA": 100.0}, 10000.0)
+    assert g <= 350.0 and f < 0.5 and g == abs(sum(p.targets.get("AAA", 0) for p in plans)) * 100.0
+
+
+def test_a_frozen_position_is_valued_but_never_scaled_and_refuses_if_it_alone_is_too_large(tmp_path):
+    c = cfg(tmp_path)
+    a = net.SleevePlan("a", "hold", "", {"HALT": 50}, 1)
+    b = net.SleevePlan("b", "decided", "", {"BBB": 100}, 0)
+    plans, f, g = net.apply_limits(c, [a, b], {"HALT": 100.0, "BBB": 100.0}, 10000.0, frozen={"HALT"})
+    assert plans[0].targets == {"HALT": 50} and plans[1].targets == {"BBB": 50} and g == 10000.0
+    with pytest.raises(net.NetError, match="not scaled"):
+        net.apply_limits(c, [a, b], {"HALT": 300.0, "BBB": 100.0}, 10000.0, frozen={"HALT"})
