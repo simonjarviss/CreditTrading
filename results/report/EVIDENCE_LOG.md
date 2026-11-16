@@ -4624,3 +4624,16 @@ that adds it does not exist when it is written.
 - source: `shadow/fetch/earnings.py` @ `afd24b9`; `shadow/signals/pead.py` @ `afd24b9`; `shadow/books/pead_small_long.json` @ `afd24b9`; `shadow/tests/test_pead.py` @ `afd24b9`; `docs/REFERENCES.md` @ `afd24b9`; `results/ideas/2026-11-15_pead_small.md` @ `afd24b9`
 - supports: §4
 - status: current. Simulated book, starts 2026-11-17 once the VM's shadow clone has this commit. The IBES comparison was run in the session and is not stored as a script. Size is a dollar limit, not a rank; foreign listings are not removed
+
+### E-2026-11-16-01 · Method: a paper runner for the event sleeves is built and reviewed; it is not installed or armed
+- kind: method
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - team lead's ruling of 2026-11-15: build and test a runner that trades chosen shadow books in one separate Alpaca paper account; the team lead installs and arms it [V]
+  - an independent review of the order phase found no path that sends an order it must not, four book-keeping defects and four notes; all eight are fixed, each with a test that fails without the fix [S]
+  - read from Alpaca on 2026-11-16, GET only: a single-asset lookup returns easy_to_borrow and borrow_status (IWM, MHD, PDI); a daily-bar request with start equal to end returns that day's bar, stamped 05:00Z [V]
+  - the shadow runner writes decisions at 18:50 and 20:50 on the as-of day and 07:20 on the trading day, before the runner's 09:30 New York cut-off [V]
+- source: `quantt/sleeves/run.py` @ `5b9ec56`; `quantt/sleeves/net.py` @ `5b9ec56`; `quantt/sleeves/ledger.py` @ `5b9ec56`; `quantt/sleeves/inputs.py` @ `5b9ec56`; `quantt/sleeves/prices.py` @ `5b9ec56`; `quantt/sleeves/tests/test_run.py` @ `5b9ec56`; `ops/sleeves/events_sleeves.json` @ `5b9ec56`
+- supports: §4
+- status: current. Paper only. Never run against a broker: the command-line entry and key loading are untested. No systemd units exist for it yet. Every value in the book file is a proposal for the team lead
