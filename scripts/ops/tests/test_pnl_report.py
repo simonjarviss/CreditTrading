@@ -97,8 +97,11 @@ class FakeReader:
     def distributions(self, symbols, start, end):
         return []
 
-    def corporate_actions(self, symbols, start, end):
+    def corporate_actions(self, symbols, start, end, *, rows=None):
         return []
+
+    def corporate_action_activities(self):
+        return []                                   # the cef account had none (2026-11-14)
 
     def fee_activities(self):
         if self.fee_error:
@@ -631,8 +634,11 @@ def test_a_phantom_closing_fill_never_makes_the_block_flat(tmp_path):
     """Team lead, 2026-11-11 (second review of PR #82): FLAT is never read from a rebuild that
     does not reconcile. A closing fill the account never made flattens the rebuild, and the
     rebuild misses the official change on 01-22; the block is UNMEASURED, saying whether the book
-    is flat cannot be read from it, and risk_daily shows UNMEASURED. Fails on the parent d498c4f,
-    where the block was FLAT and risk_daily INFO while the account held two positions."""
+    is flat cannot be read from it. Fails on the parent d498c4f, where the block was FLAT and
+    risk_daily INFO while the account held two positions. Since the third review of PR #82 (team
+    lead, 2026-11-11/12) risk_daily cross-checks every status against the account record, so the
+    rebuild's empty book against the record's two positions is a WATCH, naming them (it was
+    UNMEASURED from d498c4f to 8eb9ce1)."""
     from scripts.ops import risk_daily as RD
     rep, code = run(tmp_path, reader=_PhantomReader(FLATTEN))
     f = rep["factor"]
@@ -643,7 +649,10 @@ def test_a_phantom_closing_fill_never_makes_the_block_flat(tmp_path):
     assert "whether the book is flat at that close cannot be read from it" in f["why"]
     assert "flat" not in f and not any("FLAT, the book holds no position" in ln for ln in f["lines"])
     _account_record(tmp_path / "cef", ASOF, {"AAA": 4000, "BBB": -2000})
-    assert RD.factor_block("cef", tmp_path / "cef", ASOF)["status"] == RD.UNMEASURED
+    b = RD.factor_block("cef", tmp_path / "cef", ASOF)
+    assert b["status"] == RD.WATCH, b["lines"][0]
+    assert "they differ on 2 symbol(s) (in the account only: AAA, BBB)" in b["lines"][0]
+    assert f["rebuild_positions"] == {"session": ASOF.isoformat(), "qty": {}, "source": P.REBUILD_POSITIONS_SOURCE}
 
 
 def test_a_phantom_fill_that_reconciles_is_caught_by_risk_dailys_cross_check(tmp_path):
@@ -708,8 +717,10 @@ def test_a_name_left_out_only_on_an_earlier_date_is_a_history_note_not_partial(t
         assert x["exposure_usd"] == pytest.approx(float(direct.at[k, "exposure_usd"]), rel=1e-12), k
         assert x["review"] == direct.at[k, "review"], k
     from scripts.ops import risk_daily as RD
+    _account_record(tmp_path / "cef", ASOF, {"AAA": 4000})        # the account holds what the rebuild holds
     b = RD.factor_block("cef", tmp_path / "cef", ASOF)
-    assert b["status"] == RD.INFO and b["lines"] == f["lines"]
+    assert b["status"] == RD.INFO and b["lines"][1:] == f["lines"]
+    assert b["lines"][0].startswith(f"Factor exposure at the close of {ASOF}, cross-checked")
 
 
 # held 01-20, flat 01-21, held again 01-22 (the 01-20 book is the plain fixture's): the review's interlude
@@ -723,14 +734,13 @@ def _cum_lines(f):
 
 
 def test_every_cumulative_factor_pnl_line_labels_the_sessions_it_covers(tmp_path, monkeypatch):
-    """Second review of PR #82 (2026-11-11): the cumulative factor P&L leaves out a session that
-    closed flat after a held close (the team lead left that to a follow-up PR), so each line that
-    prints it says which sessions it covers: the count, the first and last, and the rule (the
-    sums are the readout's own, not changed). Held through 01-22: 01-21 and 01-22. Flat at
-    01-22: 01-21 only. Fails on
-    the parent 51b209f, whose held line named no session and whose flat line only the last."""
-    rule = ("each a session whose previous close and own close both held a position; a session that closed flat "
-            "after a held close is not in it (not read here: a follow-up PR, team lead, 2026-11-11)")
+    """Second review of PR #82 (2026-11-11): each line that prints the cumulative factor P&L says
+    which sessions it covers: the count, the first and last, and the rule. Since the follow-up PR
+    (team lead, 2026-11-11/12) the rule counts the session the book closed flat, so held through
+    01-22 and flat at 01-22 both cover 01-21 and 01-22. Fails on the parent 8eb9ce1, whose rule
+    left the flat-entry session out (the flat line covered 01-21 only)."""
+    rule = ("each a session from the first trade to the as-of close whose previous close held a position, a session "
+            "that closed flat included (E(t-1) x f(t) needs only the previous close's book; team lead, 2026-11-11/12)")
     rep, _ = run(tmp_path / "held")
     f = rep["factor"]
     assert f["status"] == "OK" and len(_cum_lines(f)) == 1
@@ -741,32 +751,91 @@ def test_every_cumulative_factor_pnl_line_labels_the_sessions_it_covers(tmp_path
     rep, _ = run(tmp_path / "flat")
     f = rep["factor"]
     assert f["status"] == P.FLAT and len(_cum_lines(f)) == 1
-    assert _cum_lines(f)[0].startswith(f"Cumulative factor P&L (book, E(t-1) x f(t), model reading) over 1 session(s), "
-                                       f"{TRADED[1]} to {TRADED[1]}, {rule}: MUNI ")
-    assert f["factor_pnl_sessions"] == {"count": 1, "first": TRADED[1].isoformat(), "last": TRADED[1].isoformat()}
+    assert _cum_lines(f)[0].startswith(f"Cumulative factor P&L (book, E(t-1) x f(t), model reading) over 2 session(s), "
+                                       f"{TRADED[1]} to {TRADED[2]}, {rule}: MUNI ")
+    assert f["factor_pnl_sessions"] == {"count": 2, "first": TRADED[1].isoformat(), "last": TRADED[2].isoformat()}
     assert P.FACTOR_PNL_SESSIONS == rule
 
 
-@pytest.mark.parametrize("night", ["held_interlude", "flat_after_one_close"])
-def test_no_session_held_at_both_closes_says_why_there_is_no_factor_pnl(tmp_path, monkeypatch, night):
-    """Second review of PR #82 (2026-11-11): after held -> flat -> held, no session was held at
-    both its previous close and its own, so the readout has no factor P&L row; the held block
-    printed no cumulative line at all and its JSON said `factor_pnl: null` with no reason. Now
-    the block says it was not read and why, in a line and in `factor_pnl_why`; a flat block whose
-    history is one held close does the same. Fails on the parent 51b209f (no line, no reason)."""
-    fills = INTERLUDE if night == "held_interlude" else FILLS[:2] + [
-        ("f3", "AAA", "sell", 5000, "10.20", TRADED[1]), ("f4", "BBB", "buy", 2000, "20.20", TRADED[1])]
+def _readout_rows(fills, on):
+    """The book factor P&L rows dated `on` of a strict readout of `fills`' held closes, read here
+    from the fixture's own shares and equity, not from the job."""
+    q, rows, eq = {"AAA": 0, "BBB": 0}, [], dict(equity_series())
+    for d in TRADED:
+        for _, s, side, n, _, dd in fills:
+            if dd == d:
+                q[s] += SIGN[side] * n
+        rows += [dict(date=d.isoformat(), symbol=s, shares=float(n), equity=eq[d]) for s, n in q.items() if n]
+    fs = ER.factor_set("cef")
+    fp = ER.readout(price_history(fs), pd.DataFrame(rows), GROUPS, fs=fs, pnl_through=ASOF).factor_pnl
+    return fp[(fp["scope"] == "book") & (fp["date"] == pd.Timestamp(on))].set_index("factor")["pnl_summed"].to_dict()
+
+
+@pytest.mark.parametrize("night", ["held_interlude", "flat_after_one_close", "flat_at_the_as_of"])
+def test_the_session_a_book_closes_flat_is_in_the_factor_pnl(tmp_path, monkeypatch, night):
+    """The team lead's ruling for the follow-up PR (2026-11-11/12, on the second review of PR
+    #82): the factor P&L of the session on which the book goes flat, E(t-1) x f(t), is read. After
+    held -> flat -> held (the review's interlude), and held then flat on 01-21, the block reads
+    01-21's term, the plain fixture's own 01-21 row (the same 01-20 book); flat at the 01-22 close,
+    the cumulative equals the book held through 01-22, to the last bit (the same 01-21 book earns
+    the same f(01-22)). Fails on the parent 8eb9ce1: no factor P&L in the first two (the review
+    found the interlude's empty) and 01-22's term missing from the third (25% of its MUNI sum)."""
+    fills = {"held_interlude": INTERLUDE,
+             "flat_after_one_close": FILLS[:2] + [("f3", "AAA", "sell", 5000, "10.20", TRADED[1]),
+                                                  ("f4", "BBB", "buy", 2000, "20.20", TRADED[1])],
+             "flat_at_the_as_of": FILLS + FLATTEN}[night]
+    held, _ = run(tmp_path / "held")
     monkeypatch.setattr(THIS, "FILLS", fills)
-    rep, code = run(tmp_path)
+    rep, code = run(tmp_path / night)
     f = rep["factor"]
     assert code == P.EXIT_OK and rep["attribution"]["reconciled"] is True
     assert f["status"] == ("OK" if night == "held_interlude" else P.FLAT), f["lines"]
+    if night == "flat_at_the_as_of":
+        assert f["factor_pnl_sessions"] == {"count": 2, "first": TRADED[1].isoformat(), "last": TRADED[2].isoformat()}
+        assert f["factor_pnl"] == held["factor"]["factor_pnl"]
+        return
+    assert f["factor_pnl_sessions"] == {"count": 1, "first": TRADED[1].isoformat(), "last": TRADED[1].isoformat()}
+    want = _readout_rows(FILLS, TRADED[1])              # the plain fixture's 01-21 term: the same 01-20 book
+    assert f["factor_pnl"] == pytest.approx(want, rel=1e-12) and set(f["factor_pnl"]) == set(want)
+    assert "factor_pnl_why" not in f
+
+
+def test_a_book_first_held_at_the_as_of_close_has_no_factor_pnl_and_says_why(tmp_path, monkeypatch):
+    """A book whose only held close is the as-of close (its first trade that session) has no
+    session after a held close, so no factor P&L: the block says it was not read and why, in a
+    line and in `factor_pnl_why` (second review of PR #82). A pin on the wording under the new
+    rule; on the parent 8eb9ce1 the reason named the old rule."""
+    monkeypatch.setattr(THIS, "FILLS", [("f1", "AAA", "buy", 4000, "10.05", TRADED[2])])
+    rep, code = run(tmp_path)
+    f = rep["factor"]
+    assert code == P.EXIT_OK and f["status"] == "OK", f["lines"]
     cum = _cum_lines(f)
-    assert len(cum) == 1, f["lines"]
-    assert cum[0].startswith("Cumulative factor P&L not read: no session since the first trade held a position at "
-                             "both its previous close and its own, so no E(t-1) x f(t) was read")
-    assert f["factor_pnl"] is None and cum[0] == f"Cumulative factor P&L not read: {f.get('factor_pnl_why')}"
-    assert "factor_pnl_sessions" not in f
+    assert len(cum) == 1 and cum[0] == f"Cumulative factor P&L not read: {f['factor_pnl_why']}"
+    assert f["factor_pnl_why"] == ("no session from the first trade to the as-of close followed a close that held a "
+                                   "position (the only held close is the as-of close), so no E(t-1) x f(t) was read")
+    assert f["factor_pnl"] is None and "factor_pnl_sessions" not in f
+
+
+def test_a_flat_as_of_term_without_its_factor_returns_is_unmeasured_and_named(tmp_path, monkeypatch):
+    """The book closes flat at 01-22, so 01-22's factor P&L is E(01-21) x f(01-22), and the price
+    fetch has no factor ETF row on 01-22. That term alone is UNMEASURED, named in its own line and
+    in `asof_term_why`; the cumulative covers 01-21 and says 01-22 is not in it; the block stays
+    FLAT (the FLAT reading needs no price). Fails on the parent 8eb9ce1, which never read the term
+    and so never said it was missing."""
+    monkeypatch.setattr(THIS, "FILLS", FILLS + FLATTEN)
+    etfs = ER.factor_set("cef").etfs
+    rep, code = run(tmp_path, price_fetcher=_late(set(etfs)))
+    f = rep["factor"]
+    assert code == P.EXIT_OK and rep["status"] == "OK" and f["status"] == P.FLAT, f["lines"]
+    assert f["asof_term_why"] == (f"the factor ETF return(s) at the close of {ASOF} are not in the price fetch: "
+                                  + "; ".join(f"{e} (no close on {ASOF})" for e in etfs))
+    line = [ln for ln in f["lines"] if ln.startswith(f"Factor P&L of the as-of session {ASOF} UNMEASURED")]
+    assert line == [f"Factor P&L of the as-of session {ASOF} UNMEASURED: the book held positions at the close of "
+                    f"{TRADED[1]} and closed flat at {ASOF}, so that session's factor P&L is E({TRADED[1]}) x f({ASOF}), "
+                    f"and {f['asof_term_why']}"]
+    assert f["factor_pnl_sessions"] == {"count": 1, "first": TRADED[1].isoformat(), "last": TRADED[1].isoformat()}
+    assert _cum_lines(f)[0].endswith(f"; not in it: the factor P&L of the as-of session {ASOF}, E({TRADED[1]}) x "
+                                     f"f({ASOF}), the session the book closed flat, is UNMEASURED: {f['asof_term_why']}")
 
 
 def test_the_block_refuses_a_readout_whose_last_date_is_not_the_as_of_close():
@@ -922,3 +991,466 @@ def test_cli_requires_a_state_dir(capsys, monkeypatch):
     monkeypatch.delenv("QUANTT_STATE_DIR", raising=False)
     assert P.main(["--book", "cef"]) == 2
     assert "no --state-dir" in capsys.readouterr().err
+
+
+# --- the third review of PR #82 (team lead, 2026-11-11/12): a held night's positions, checked ---
+
+HALF_PHANTOM = [("p1", "AAA", "sell", 2000, "10.05", TRADED[2])]   # a sale of 2,000 AAA the account never made
+# The same sale at a price whose fill P&L cancels its modelled fees to the cent, so the rebuild
+# reconciles although its AAA is half the account's (found by the third review's search; the
+# test below asserts that it reconciles rather than trusting this comment).
+HALF_PHANTOM_RECONCILING = [("p1", "AAA", "sell", 2000, "10.050213", TRADED[2])]
+
+
+def test_the_json_carries_the_rebuilds_positions_for_every_factor_status(tmp_path, monkeypatch):
+    """Team lead, 2026-11-11/12: the job writes the rebuild's signed whole shares at the factor
+    block's as-of close for every factor status, for risk_daily's cross-check: a held OK block,
+    a FLAT one, and an UNMEASURED one (a bug in the readout). Fails on the parent 8eb9ce1, whose
+    JSON had no such field."""
+    base = list(FILLS)
+    rep, _ = run(tmp_path / "held")
+    assert rep["factor"]["status"] == "OK"
+    assert "rebuild_positions" in rep["factor"], sorted(rep["factor"])
+    want = {"session": ASOF.isoformat(), "source": P.REBUILD_POSITIONS_SOURCE}
+    assert rep["factor"]["rebuild_positions"] == dict(want, qty={"AAA": 4000, "BBB": -2000})
+    monkeypatch.setattr(THIS, "FILLS", FILLS + FLATTEN)
+    rep, _ = run(tmp_path / "flat")
+    assert rep["factor"]["status"] == P.FLAT and rep["factor"]["rebuild_positions"] == dict(want, qty={})
+    monkeypatch.setattr(THIS, "FILLS", base)
+
+    def raises(*a, **k):
+        raise TypeError("simulated bug in the readout")
+    monkeypatch.setattr(ER, "readout", raises)
+    rep, _ = run(tmp_path / "bug")
+    assert rep["factor"]["status"] == P.UNMEASURED
+    assert rep["factor"]["rebuild_positions"] == dict(want, qty={"AAA": 4000, "BBB": -2000})
+    on_disk = json.loads((tmp_path / "bug" / "cef" / "reports" / "pnl" / f"{ASOF}.json").read_text())
+    assert on_disk["factor"]["rebuild_positions"]["qty"] == {"AAA": 4000, "BBB": -2000}
+
+
+def test_a_phantom_sale_on_a_held_night_is_never_ok_or_info(tmp_path):
+    """The third review of PR #82 (team lead, 2026-11-11/12): the activities list a sale of 2,000
+    AAA at the 01-22 close that the account never made, so the rebuild holds AAA 2,000 where the
+    account holds 4,000, and the rebuild does not reconcile. The block is read for diagnosis but
+    is UNRECONCILED, never OK, every flag says so, and risk_daily shows a WATCH naming AAA when
+    the collector's record holds the account's positions, and a WATCH still when it has no record
+    (an unreconciled held night). Fails on the parent 8eb9ce1, where the block was OK at half the
+    true MUNI exposure and risk_daily INFO."""
+    from scripts.ops import risk_daily as RD
+    rep, code = run(tmp_path, reader=_PhantomReader(HALF_PHANTOM))
+    f = rep["factor"]
+    assert rep["attribution"]["reconciled"] is False and rep["status"] == P.UNRECONCILED and code == P.EXIT_UNRECONCILED
+    assert f["status"] == P.UNRECONCILED and f["reading_status"] == "OK" and f["reconciled"] is False
+    assert f["lines"][0].startswith(f"Factor exposure UNRECONCILED (team lead, 2026-11-11/12): every reading below is "
+                                    f"on the fill rebuild's positions at the close of {ASOF}")
+    assert all(x["review"].endswith(" (UNRECONCILED)") for x in f["factors"].values())
+    assert all("(UNRECONCILED)" in ln for ln in f["lines"] if ln.startswith(("MUNI (", "TERM (", "CREDIT (", "LOANS (")))
+    assert f["rebuild_positions"]["qty"] == {"AAA": 2000, "BBB": -2000}
+    md = (tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text()
+    assert "## Factor exposure against the review line (UNRECONCILED)" in md
+    state = tmp_path / "cef"
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.WATCH, b["lines"][0]                 # no account record: still at least a WATCH
+    _account_record(state, ASOF, {"AAA": 4000, "BBB": -2000})
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.WATCH and "they differ on 1 symbol(s) (a different quantity of AAA)" in b["lines"][0]
+    assert RD.attribution_block("cef", state, ASOF)["status"] == RD.WATCH
+
+
+def test_a_phantom_sale_that_reconciles_is_caught_by_the_cross_check(tmp_path):
+    """The third review's second variant (team lead, 2026-11-11/12): the phantom sale priced so the
+    rebuild reconciles. The job cannot see it (its block is OK, on AAA 2,000); risk_daily's
+    cross-check against the collector's record for 01-22 makes it a WATCH naming AAA, and
+    UNMEASURED when there is no record, never INFO; the true book with a matching record is INFO.
+    Fails on the parent 8eb9ce1, where every one of these was INFO."""
+    from scripts.ops import risk_daily as RD
+    rep, code = run(tmp_path / "phantom", reader=_PhantomReader(HALF_PHANTOM_RECONCILING))
+    f = rep["factor"]
+    assert rep["attribution"]["reconciled"] is True and rep["status"] == "OK" and code == P.EXIT_OK
+    assert f["status"] == "OK"
+    state = tmp_path / "phantom" / "cef"
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.UNMEASURED and "not cross-checked (UNMEASURED): no account record at" in b["lines"][0]
+    _account_record(state, ASOF, {"AAA": 4000, "BBB": -2000})
+    b = RD.factor_block("cef", state, ASOF)
+    assert b["status"] == RD.WATCH and b["data"]["positions_cross_check"]["differ"] == ["AAA"]
+    assert b["lines"][1:] == f["lines"] and "4000" not in b["lines"][0] and "2000" not in b["lines"][0]
+    rep, _ = run(tmp_path / "truth")
+    truth = tmp_path / "truth" / "cef"
+    _account_record(truth, ASOF, {"AAA": 4000, "BBB": -2000})
+    b = RD.factor_block("cef", truth, ASOF)
+    assert b["status"] == RD.INFO and b["lines"][1:] == rep["factor"]["lines"]
+    assert f["rebuild_positions"]["qty"] == {"AAA": 2000, "BBB": -2000}      # the phantom's, read by the job as OK
+
+
+# --- a late EOD point (team lead, 2026-11-11/12, third review of PR #82) ---
+
+class _LateEODReader(FakeReader):
+    """Alpaca's EOD history has no point for the as-of yet when the job runs."""
+    def eod_equity_history(self, start, end):
+        return [p for p in super().eod_equity_history(start, end) if p.date != ASOF]
+
+
+def test_a_late_eod_point_puts_the_session_read_in_the_headline(tmp_path, capsys):
+    """The job reads 01-21, the latest point, under 01-22's name. The markdown's title and the
+    line under its status say so in capitals, the JSON's `session_read` names it, and the stdout
+    line too; a night with its own point keeps the title as it was, byte for byte. Fails on the
+    parent 8eb9ce1, whose title said "as-of 2026-01-22" over 01-21's figures."""
+    rep, code = run(tmp_path / "late", reader=_LateEODReader())
+    assert code == P.EXIT_OK and rep["attribution"]["effective_session"] == TRADED[1].isoformat()
+    md = (tmp_path / "late" / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text().splitlines()
+    assert md[0] == f"# P&L attribution and factor exposure, cef, as-of {ASOF}: READ AT THE CLOSE OF {TRADED[1]}, NOT {ASOF}"
+    assert md[4] == (f"**Alpaca's EOD history had no point for {ASOF} when this ran, so every figure below, the "
+                     f"attribution and the factor exposure, is of the close of {TRADED[1]}, its latest point; nothing "
+                     f"here is read for {ASOF}.**")
+    assert rep["session_read"] == TRADED[1].isoformat() and rep["factor"]["asof"] == TRADED[1].isoformat()
+    assert f"pnl_report cef {ASOF}: OK (READ AT THE CLOSE OF {TRADED[1]}, NOT {ASOF}); exit 0" in capsys.readouterr().out
+    rep, _ = run(tmp_path / "own", reader=FakeReader())
+    md = (tmp_path / "own" / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text().splitlines()
+    assert md[0] == f"# P&L attribution and factor exposure, cef, as-of {ASOF}" and md[3] == "Overall: **OK**."
+    assert md[4] == "" and rep["session_read"] == ASOF.isoformat()
+
+
+# flat at the 01-21 close, AAA re-bought on 01-22 (the third review's late-point scenario)
+STALE_FLAT = FILLS[:2] + [("f3", "AAA", "sell", 5000, "10.20", TRADED[1]), ("f4", "BBB", "buy", 2000, "20.20", TRADED[1]),
+                          ("f5", "AAA", "buy", 4000, "10.05", TRADED[2])]
+
+
+@pytest.mark.parametrize("night", ["held", "flat"])
+def test_a_late_eod_point_is_never_info_in_risk_daily(tmp_path, monkeypatch, night):
+    """The third review of PR #82 (team lead, 2026-11-11/12): Alpaca's EOD history has no 01-22
+    point when the job runs, so it reads 01-21, a held book or (the review's case) a book flat at
+    01-21 that bought AAA on 01-22. risk_daily's 01-22 report shows both blocks UNMEASURED, saying
+    the reading is 01-21's, not 01-22's, with 01-21's account record agreeing; a 01-21 record that
+    disagrees is still a WATCH. Fails on the parent 8eb9ce1, where both blocks were INFO ("FLAT at
+    the close of 2026-01-21, cross-checked" on 01-22's report)."""
+    from scripts.ops import risk_daily as RD
+    if night == "flat":
+        monkeypatch.setattr(THIS, "FILLS", STALE_FLAT)
+    rep, code = run(tmp_path, reader=_LateEODReader())
+    state = tmp_path / "cef"
+    assert rep["factor"]["status"] == ("OK" if night == "held" else P.FLAT)
+    at_prev = {"AAA": 4000, "BBB": -2000} if night == "held" else {}
+    _account_record(state, TRADED[1], at_prev)
+    _account_record(state, ASOF, {"AAA": 4000})
+    f, a = RD.factor_block("cef", state, ASOF), RD.attribution_block("cef", state, ASOF)
+    assert f["status"] == a["status"] == RD.UNMEASURED, (f["lines"][0], a["lines"][0])
+    assert f["lines"][0].startswith(f"Factor exposure UNMEASURED for {ASOF}: the P&L job read the close of {TRADED[1]}, "
+                                    f"NOT {ASOF}")
+    assert a["lines"][0].startswith(f"Attribution UNMEASURED for {ASOF}: the P&L job read the close of {TRADED[1]}, NOT {ASOF}")
+    assert "cross-checked" in f["lines"][1] and f"at the close of {TRADED[1]}" in f["lines"][1]
+    _account_record(state, TRADED[1], {"AAA": 3000})
+    assert RD.factor_block("cef", state, ASOF)["status"] == RD.WATCH
+
+
+# --- a split record in a fund the book held (team lead, 2026-11-14: option A of the third review of PR #82) ---
+
+def _split_fetch(sym, day, book="cef", ratio=2.0):
+    """A price fetch in which `sym` carries a yfinance split record on `day` and no split-sized
+    step in its close (yfinance's post-split basis, once it has adjusted); every other row as
+    served (split_driver.py's scenarios, third review of PR #82)."""
+    def fetch(tickers, start, asof):
+        px = price_history(ER.factor_set(book)).copy()
+        px.loc[(px["ticker"] == sym) & (px["date"] == pd.Timestamp(day)), "split"] = ratio
+        return px, {}, {}
+    return fetch
+
+
+OPEN_BBB_ON_THE_EX_DATE = [("f1", "AAA", "buy", 5000, "10.00", TRADED[0]), ("f2", "BBB", "sell_short", 2000, "20.20", TRADED[1]),
+                           ("f3", "AAA", "sell", 1000, "10.15", TRADED[1])]
+# case: (fills, BBB's ex-date, {book: (factor status, dates BBB is left out on)})
+SPLIT_CASES = {
+    "held_before": (FILLS + COVER_BBB_EARLY, TRADED[2], {"cef": ("OK", [TRADED[0]]), "c4": ("OK", [TRADED[0]])}),
+    "held_across": (FILLS, TRADED[1], {"cef": ("PARTIAL", [TRADED[0], TRADED[2]]), "c4": ("OK", [TRADED[0]])}),
+    "held_only_after": (OPEN_BBB_ON_THE_EX_DATE, TRADED[1], {"cef": ("PARTIAL", [TRADED[2]]), "c4": ("OK", [])}),
+    "beta_window_only": (FILLS, FUNDED[-1], {"cef": ("PARTIAL", list(TRADED)), "c4": ("OK", [])}),
+    "flat_after_holding_before": (FILLS + COVER_BBB_EARLY + [("f5", "AAA", "sell", 4000, "10.05", TRADED[2])], TRADED[2],
+                                  {"cef": (P.FLAT, [TRADED[0]]), "c4": (P.FLAT, [TRADED[0]])}),
+}
+
+
+@pytest.mark.parametrize("book", ["cef", "c4"])
+@pytest.mark.parametrize("case", sorted(SPLIT_CASES))
+def test_a_split_leaves_the_fund_out_only_where_it_can_touch_the_reading(tmp_path, monkeypatch, case, book):
+    """Team lead, 2026-11-14 (option A of the third review of PR #82). Before it, a split record
+    in any fund the book ever held made the factor block UNMEASURED every night after: the
+    readout refused any split after the first positions date, and the core's guard refused an
+    already-adjusted split anywhere in the fetch. Now, in the job's partial mode, the fund is
+    left out, named (symbol, ex-date, ratio), only on the dates the split can touch: those it
+    was held before the ex-date and, for the core, those whose beta window holds it. So held
+    only before the split (sold first): an OK or FLAT block with a history note; held across it,
+    opened on the ex-date, or with the split only in its beta window: the core is PARTIAL at
+    the close (risk_daily WATCH naming BBB) and C4, which reads through a split after its
+    ex-date, is OK. Fails on the parent 3743ad9, where every case was UNMEASURED but C4's
+    beta-window-only one (a pin: C4's guard already dropped that multiplier)."""
+    from scripts.ops import risk_daily as RD
+    fills, ex, want = SPLIT_CASES[case]
+    status, left_out = want[book]
+    monkeypatch.setattr(THIS, "FILLS", fills)
+    rep, code = run(tmp_path, book=book, price_fetcher=_split_fetch("BBB", ex, book))
+    f = rep["factor"]
+    assert code == P.EXIT_OK and rep["attribution"]["reconciled"] is True
+    assert f["status"] == status, f["lines"]
+    assert f.get("partial_dates", {}) == {d.isoformat(): ["BBB"] for d in left_out}
+    named = f"a split record of BBB ex {ex} (yfinance ratio 2)"
+    reasons = [x["reason"] for x in f.get("earlier_exclusions", [])] + [m["reason"] for m in f.get("missing", [])]
+    assert len(reasons) == len(left_out) and all(r.startswith(named) for r in reasons), reasons
+    if status == "PARTIAL":
+        assert [m["symbol"] for m in f["missing"]] == ["BBB"] and f"in its 252-session beta window before {ASOF}" in \
+            f["missing"][0]["reason"]
+        q = _positions_at_closes()[-1]
+        _account_record(tmp_path / book, ASOF, {s: n for s, n in q.items() if n})
+        b = RD.factor_block(book, tmp_path / book, ASOF)
+        assert b["status"] == RD.WATCH and b["lines"][0].startswith("Factor exposure PARTIAL: BBB left out at the last close")
+    elif left_out:
+        note = [ln for ln in f["lines"] if ln.startswith("History note")]
+        assert len(note) == 1 and f"{left_out[0]} BBB ({named} after this close" in note[0]
+
+
+def test_a_split_the_reading_cannot_see_leaves_the_as_of_reading_as_it_was(tmp_path, monkeypatch):
+    """The split touches only the readings it can (team lead, 2026-11-14): BBB held at 01-20 only
+    and split on 01-22, the core's as-of reading of AAA is the reading with no split record at
+    all, figure for figure, and so is C4's when BBB is held across its split (C4 reads through
+    it after the ex-date). Fails on the parent 3743ad9, where the split made the block UNMEASURED."""
+    monkeypatch.setattr(THIS, "FILLS", FILLS + COVER_BBB_EARLY)
+    with_split, _ = run(tmp_path / "split", price_fetcher=_split_fetch("BBB", TRADED[2]))
+    without, _ = run(tmp_path / "none")
+    assert with_split["factor"]["status"] == "OK", with_split["factor"]["lines"]
+    for k in ("factors", "gross_usd", "net_usd", "total_of_target", "split"):
+        assert with_split["factor"][k] == without["factor"][k], k
+    monkeypatch.setattr(THIS, "FILLS", list(SPLIT_CASES["held_across"][0]))
+    with_split, _ = run(tmp_path / "c4split", book="c4", price_fetcher=_split_fetch("BBB", TRADED[1], "c4"))
+    without, _ = run(tmp_path / "c4none", book="c4")
+    assert with_split["factor"]["status"] == "OK", with_split["factor"]["lines"]
+    for k in ("factors", "gross_usd", "net_usd", "total_of_target"):
+        assert with_split["factor"][k] == without["factor"][k], k
+
+
+# --- a corporate action on a held fund (team lead, 2026-11-14: "narrow and handle it") ---
+
+class _CorpReader(FakeReader):
+    """The market feed lists one corporate action (`event`, with its raw row's rates); the
+    account's own corporate-action activities are empty, as on paper today."""
+    def __init__(self, event, rates=None, **kw):
+        super().__init__(**kw)
+        self.event, self.rates = event, rates or {}
+
+    def corporate_actions(self, symbols, start, end, *, rows=None):
+        e = self.event
+        if not start <= e["date"] <= end:
+            return []
+        if rows is not None:
+            rows.setdefault(e["id"], []).append(dict(self.rates, id=e["id"]))
+        return [dict(e, date_field="ex_date", process_date=e["date"])]
+
+
+BBB_SPLIT = {"id": "rs-x", "type": "reverse_split", "date": ASOF, "parties": [["BBB", "subject"]]}
+
+
+def test_a_split_paper_did_not_process_is_reconciled_with_a_labelled_phantom(tmp_path):
+    """H1 on the job (team lead, 2026-11-14): a 1:2 reverse split of BBB (short 2,000 into
+    01-22) that paper did not process. The report is no longer refused: it reconciles, its
+    session section carries "Phantom: paper did not process reverse_split BBB ..." =
+    (q_prev - q_prev x k) x close_t = (-2,000 + 1,000) x 20.40 = -20,400, the cumulative phantom
+    line sits beside the official P&L (unchanged, the P&L of record), and the session's NAV and
+    discount parts are UNMEASURED, named. Fails on the parent fa84045, where the attribution
+    refused ("share-count corporate action(s) in the window", exit 4)."""
+    rep, code = run(tmp_path, reader=_CorpReader(BBB_SPLIT, rates={"old_rate": 2, "new_rate": 1}))
+    att = rep["attribution"]
+    assert code == P.EXIT_OK and att["status"] == "OK" and att["reconciled"] is True, att["lines"]
+    assert att["phantom_cumulative"] == pytest.approx(-20400.0) and att["phantom_session"] == pytest.approx(-20400.0)
+    line = [ln for ln in att["lines"] if ln.startswith("Phantom: paper did not process reverse_split BBB")]
+    assert len(line) == 1 and "= -20,400.00 (q_prev -2000, k 1/2)" in line[0]
+    assert any(ln.startswith("Phantom from corporate actions paper did not process, estimated in the official P&L at the "
+                             "as-of: -20,400.00 (1 event(s), 1 still open") for ln in att["lines"])
+    eq = dict(equity_series())
+    assert att["session"]["eod_change"] == pytest.approx(eq[TRADED[-1]] - eq[TRADED[-2]])   # official, untouched
+    assert att["session"]["nav_part"] is None and att["session"]["disc_part"] is None
+    assert any("NAV/discount split is UNMEASURED" in g and "BBB" in g for g in rep["gaps"])
+
+
+def test_an_unreconciled_session_after_a_corporate_action_names_the_event(tmp_path):
+    """H2 on the job: paper froze the position (the equity misses the rebuild on 01-22). The
+    existing UNRECONCILED path, exit 5, now names the event the residual follows. Fails on the
+    parent fa84045, where the attribution refused (exit 4) and named no session."""
+    reader = _CorpReader(BBB_SPLIT, rates={"old_rate": 2, "new_rate": 1}, tamper={ASOF: 1800.0})
+    rep, code = run(tmp_path, reader=reader)
+    assert code == P.EXIT_UNRECONCILED and rep["status"] == P.UNRECONCILED
+    fail = rep["attribution"]["reconciliation"]["lines"][0]
+    assert fail.startswith(f"RECONCILIATION FAILED on 1 session(s): {ASOF} residual")
+    assert f"reverse_split BBB ex {ASOF} (id rs-x), session {ASOF}" in fail
+
+
+def test_an_acquirer_merger_changes_nothing_in_the_report(tmp_path):
+    """A merger in which a held fund is the ACQUIRER (the core's MHD and MQY, 2026-02; docs/
+    REFERENCES.md §12pc): the report is the one with no event at all, figure for figure. Fails on
+    the parent fa84045, where it refused the attribution."""
+    merger = {"id": "m-1", "type": "stock_merger", "date": ASOF, "parties": [["XYZ", "acquiree"], ["AAA", "acquirer"]]}
+    with_event, code = run(tmp_path / "m", reader=_CorpReader(merger))
+    plain, _ = run(tmp_path / "p")
+    assert code == P.EXIT_OK
+    assert with_event["attribution"]["session"] == plain["attribution"]["session"]
+    assert with_event["attribution"]["cumulative"] == plain["attribution"]["cumulative"]
+    assert "phantom_cumulative" not in with_event["attribution"]
+
+
+@pytest.mark.parametrize("case", ["resize", "full_exit"])
+def test_the_report_says_the_first_trade_crystallised_the_phantom(case):
+    """Second review of the follow-up, finding 1 (team lead, 2026-11-15): after the runner's
+    re-size (CA_RESIZE) the report said -1,440.00 was still in the official P&L, and after a full
+    exit +8,280.00 "still OPEN"; an independent account simulator gives -1,630.18 and +8,093.83,
+    constant from the trade. The report now names the crystallisation, the fee term and the
+    cumulative phantom at those figures. Fails on the parent f550da3, which kept accruing."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    if case == "resize":
+        fills, corp = TLA.CA_BASE_FILLS + TLA.CA_RESIZE["H1"], TLA.CA_SPLIT
+    else:
+        fills, corp = TLA.CA_BASE_FILLS + [TLA._ca_fill("x1", "LNG", "sell", 900, "13.49", TLA.CA_S[4])], TLA.CA_SPLIT[:1]
+    res = TLA._ca_run(fills, TLA._ca_account(fills), corp)
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
+    want = {"resize": -1630.18, "full_exit": 8093.83}[case]
+    assert out["phantom_cumulative"] == pytest.approx(want, abs=1e-9)
+    assert any(ln.startswith("Phantom crystallised by the trade on 2026-02-06: paper's extra 600 share(s) of LNG at "
+                             "the fill price 13.4900 against the close 13.3800: +66.00") for ln in lines)
+    assert any(ln.startswith("Phantom fee term on 2026-02-06") for ln in lines)
+    assert not any("still OPEN" in ln for ln in lines)
+    assert "phantom_session" not in out                      # constant from the trade: nothing on the as-of
+    n = 2 if case == "resize" else 1
+    # every crystallised phantom is approximate, naming the band (team lead, 2026-11-15, fourth review)
+    assert [a.split(" (")[0] for a in out["phantom_approximate"]] == ["LNG", "SHS"][:n]
+    assert all(" (the account traded " in a and "no-trade band" in a for a in out["phantom_approximate"])
+    assert any("approximate: " in ln and "no-trade band" in ln for ln in lines if ln.startswith("Phantom: "))
+    assert lines[-1].startswith(f"Phantom from corporate actions paper did not process, estimated in the official P&L at "
+                                f"the as-of: {want:+,.2f} ({n} event(s), 0 still open, {n} crystallised by a trade)")
+    json.dumps(out)                                          # the event records serialise
+
+
+# --- the account's own rows stop the report (team lead, 2026-11-15: "simplify") -------------
+
+class _RowsReader(FakeReader):
+    """The account's corporate-action activities serve `rows` in the shape the reader's GET
+    returns (`AlpacaReader.corporate_action_activities`); everything else is the fixture's."""
+    def __init__(self, rows, **kw):
+        super().__init__(**kw)
+        self.rows = rows
+
+    def corporate_action_activities(self):
+        return [dict(r) for r in self.rows]
+
+
+def _act(i, typ, d, sym, qty=None, price=None, cash=None):
+    r = {"id": i, "activity_type": typ, "date": d.isoformat(), "symbol": sym}
+    if qty is not None:
+        r.update(qty=str(qty), price=str(price))
+    if cash is not None:
+        r["net_amount"] = str(cash)
+    return r
+
+
+ROW_SHAPES = {
+    "split_legs_on_a_held_short": [_act("s1", "SPLIT", ASOF, "BBB", 2000, "20.20"),
+                                   _act("s2", "SPLIT", ASOF, "BBB", -1000, "40.40")],
+    "cash_in_lieu_alone": [_act("c1", "CIL", ASOF, "BBB", cash="4.40")],
+    "merger_leg_on_a_held_acquirer": [_act("m1", "MA", TRADED[1], "AAA", 120, "10.00")],
+    "name_change_to_a_new_symbol": [_act("n1", "NC", TRADED[1], "AAA", -5000, "10.00"),
+                                    _act("n2", "NC", TRADED[1], "AAAN", 5000, "10.00")],
+    "spin_off_shares_of_a_new_symbol": [_act("p1", "SPIN", ASOF, "SPN", 90, "5.00")],
+    "a_symbol_never_traded_before_the_window": [_act("z1", "SPLIT", FUNDED[0], "ZZZ", 10, "1.00")],
+}
+
+
+@pytest.mark.parametrize("shape", sorted(ROW_SHAPES))
+def test_any_account_corporate_action_row_stops_the_report_with_exit_4(tmp_path, shape):
+    """Team lead, 2026-11-15 ("simplify"), on the third review of the follow-up: any
+    corporate-action activity row of the account on or before the as-of stops the attribution,
+    named (each row's symbol, type, date and share count or cash), because its REST format has
+    never been measured; the unit fails with exit 4 and the file says why. Fails on the parent
+    09c452a, which applied rows like these (or tied, checked and refused them differently)."""
+    rows = ROW_SHAPES[shape]
+    rep_, code = run(tmp_path, reader=_RowsReader(rows))
+    assert code == P.EXIT_INCOMPLETE and rep_["status"] == P.UNMEASURED
+    why = rep_["attribution"]["why"]
+    assert f"{len(rows)} corporate-action activity row(s) of the account on or before {ASOF}" in why, why
+    for r in rows:
+        what = f"qty {int(r['qty']):+d}" if "qty" in r else f"cash {float(r['net_amount']):,.2f}"
+        assert f"{r['symbol']} {r['activity_type']} {r['date']} {what} (id {r['id']})" in why, why
+    assert ("The account recorded a corporate-action row; its REST format has never been measured; the report "
+            "stops until one has been seen and the handling is built against it (team lead, 2026-11-15)") in why
+    assert (tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.json").is_file()
+
+
+def test_an_account_row_the_parser_cannot_read_stops_the_report_loudly(tmp_path):
+    """A row the strict parser cannot read (a fractional share count here) stops the job before
+    anything is cached, naming the row: exit 4, never a skipped row. A pin of kept behaviour."""
+    rep_, code = run(tmp_path, reader=_RowsReader([_act("f1", "SPLIT", ASOF, "BBB", "0.5", "20.20")]))
+    assert code == P.EXIT_INCOMPLETE and rep_["status"] == P.UNMEASURED
+    assert "id='f1'" in rep_["attribution"]["why"] and "whole number" in rep_["attribution"]["why"]
+
+
+@pytest.mark.parametrize("case", ["fills_on_both_sides", "fractional_count"])
+def test_the_report_labels_an_approximate_phantom_and_names_the_reason_in_its_json(case):
+    """Team lead, 2026-11-15, on the third review: where the phantom's exactness conditions fail
+    the report's phantom line and cumulative line say "approximate: <reason>", and the JSON names
+    the reason (`approximate` on the event, `phantom_approximate`). Since the ruling that every
+    crystallised phantom is approximate (team lead, 2026-11-15, the no-trade band), only an open
+    phantom with a whole q_prev x k is unlabelled (the open-phantom tests). Fails on the parent 82ff173,
+    which claimed the figure without a label."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    if case == "fills_on_both_sides":
+        fills = TLA.CA_BASE_FILLS + [TLA._ca_fill("x1", "LNG", "sell", 650, "13.49", TLA.CA_S[4]),
+                                     TLA._ca_fill("x2", "LNG", "buy", 50, "13.52", TLA.CA_S[4])]
+        want = "fills on both sides of LNG on 2026-02-06"
+    else:
+        fills = [TLA._ca_fill("f1", "LNG", "buy", 901, "4.51", TLA.CA_S[1]),
+                 TLA._ca_fill("x1", "LNG", "sell", 601, "13.49", TLA.CA_S[4])]
+        want = "q_prev x k = 901 x 1/3 = 300.3333 is not a whole number of shares"
+    res = TLA._ca_run(fills, TLA._ca_account(fills), TLA.CA_SPLIT[:1])
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
+    phantom = [ln for ln in lines if ln.startswith("Phantom: paper did not process reverse_split LNG")]
+    assert len(phantom) == 1 and "; approximate: " in phantom[0] and want in phantom[0]
+    assert lines[-1].startswith("Phantom from corporate actions paper did not process")
+    assert "approximate: LNG (" in lines[-1] and want in lines[-1]
+    assert want in out["corporate_actions"][0]["approximate"]
+    assert out["phantom_approximate"][0].startswith("LNG (") and want in out["phantom_approximate"][0]
+    json.dumps(out)
+
+
+def test_a_row_dated_after_the_session_read_but_on_the_as_of_still_stops_the_report(tmp_path):
+    """Fourth review of the follow-up, finding 2 (its stop_probe case A): on a late night Alpaca
+    has no EOD point for the as-of yet, so the attribution reads the session before, and the stop
+    filtered rows by that session: a cash-in-lieu row dated the as-of went unread, exit 0. The job
+    now stops at its own as-of, naming the row, exit 4. Fails on the parent 3412d29 (exit 0)."""
+    class Late(_RowsReader):
+        def eod_equity_history(self, start, end):
+            return [p for p in super().eod_equity_history(start, end) if p.date != ASOF]
+    rep_, code = run(tmp_path, reader=Late([_act("cil1", "CIL", ASOF, "BBB", cash="4.40")]))
+    assert code == P.EXIT_INCOMPLETE and rep_["status"] == P.UNMEASURED
+    why = rep_["attribution"]["why"]
+    assert f"1 corporate-action activity row(s) of the account on or before {ASOF}: BBB CIL {ASOF} cash 4.40 (id cil1)" in why
+
+
+def test_the_stop_names_every_row_however_many(tmp_path):
+    """Fourth review, finding 3 (stop_probe case B): the stop named ten rows and then "...". The
+    ruling names each row, so twelve rows are all named, in the JSON and the markdown. Fails on
+    the parent 3412d29, which cut at ten."""
+    rows = [_act(f"r{i:02d}", "SPLIT", ASOF, "BBB", (-1) ** i * (i + 1), "20.20") for i in range(12)]
+    rep_, code = run(tmp_path, reader=_RowsReader(rows))
+    assert code == P.EXIT_INCOMPLETE
+    md = (tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.md").read_text()
+    on_disk = json.loads((tmp_path / "cef" / "reports" / "pnl" / f"{ASOF}.json").read_text())
+    for r in rows:
+        named = f"BBB SPLIT {ASOF} qty {int(r['qty']):+d} (id {r['id']})"
+        assert named in rep_["attribution"]["why"] and named in on_disk["attribution"]["why"] and named in md, named
+    assert " ..." not in rep_["attribution"]["why"]
+
+
+def test_an_open_phantom_is_not_labelled_approximate_in_the_report():
+    """Team lead, 2026-11-15, on the fourth review: an open phantom (no trade in the name yet,
+    q_prev x k whole) is official minus a processed account and stays unlabelled; only the
+    crystallised ones say approximate. A pin of the ruling's other half (the parent 3412d29 left
+    it unlabelled too)."""
+    from scripts.cef.tests import test_live_attribution as TLA
+    res = TLA._ca_run(TLA.CA_BASE_FILLS, TLA._ca_account(TLA.CA_BASE_FILLS), TLA.CA_SPLIT)
+    lines, out = P.corporate_action_lines(res, TLA.CA_S[1], TLA.CA_S[-1])
+    assert "phantom_approximate" not in out and not any("approximate" in ln for ln in lines)
+    assert all(c["approximate"] is None for c in out["corporate_actions"])

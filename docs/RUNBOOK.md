@@ -1272,7 +1272,13 @@ distributions, then factor exposure at the last close against the review line
 (REVIEW_FRACTION x vol_target_annual x sizing_multiplier, each read from the book's own
 spec, the multiplier since the team lead's ruling of 2026-11-10 because the account holds m
 x the unit book; the report prints the three inputs beside the line), headline first, by
-muni/taxable (core) or by family (C4). The rebuild must reconcile to official to the
+muni/taxable (core) or by family (C4), with the cumulative factor P&L, E(t-1) x f(t) summed
+per factor over every session from the first trade to the as-of close whose previous close
+held a position, labelled with its count, first and last session. The session on which the
+book closes flat is in it (team lead, 2026-11-11/12, on the second review of PR #82: until
+this follow-up it was left out); a flat book whose
+as-of term lacks a factor ETF's return at the as-of names that term UNMEASURED and sums the
+sessions before it. The rebuild must reconcile to official to the
 cent, or the report says so at its top (overall status UNRECONCILED, not OK). **A breach of a review line is report-only: it
 appears in the report and sends NOTHING** (no push, no ACT, no halt, no trade; team lead,
 2026-11-09). `risk_daily`'s attribution and factor blocks read this job's JSON and stay
@@ -1343,19 +1349,71 @@ reading and REVIEW flag on the partial book says PARTIAL; `risk_daily` shows tha
 WATCH naming the share. PARTIAL is about the as-of close only (independent review of PR #82,
 2026-11-11): a name left out only on an earlier date (a fund once held that yfinance no
 longer serves) is a named history note in an OK block, and `risk_daily` shows it as INFO. A
+split record in a fund the book has held leaves that fund out, named with its ex-date and
+yfinance's ratio, only on the dates the split can touch (team lead, 2026-11-14, option A of the
+third review of PR #82): the dates it was held before the ex-date (its close may be on the
+post-split basis) and, for the core, the dates whose beta window (the spec's z_window sessions)
+holds the ex-date; at the as-of close that is PARTIAL, only earlier a history note, and every
+other reading is unchanged. Before that ruling one split made the block UNMEASURED every night
+after. A corporate action no longer stops the attribution by being in the window (team lead,
+2026-11-14: "narrow and handle it"; `scripts/cef/live_attribution.py`, CORPORATE ACTIONS). Only
+a fund held into the event's session, in a role whose count or symbol the event changes, is
+touched: an acquirer's merger (the core's MHD and MQY, 2026-02) and a flat name are not.
+Positions come from FILLs alone, never from the market feed and never from the account's own
+corporate-action activity rows (team lead, 2026-11-15: "simplify"). Paper has never written such
+a row and its REST format is undocumented, so the job still reads them strictly, and any row on
+or before the job's as-of (also on a night whose EOD point is not out yet), for any symbol, stops
+the attribution, naming every row's symbol, type, date and share count (exit 4): "the report
+stops until one has been seen and the handling is built
+against it". A row the parser cannot read stops it too. One split listed under two ids by the
+feed is one event; two records that disagree on its rates refuse, named, and a second record of
+a split already handled, within `live_attribution.CA_MATCH_SESSIONS` sessions with the same
+rates, refuses naming both ids. A forward or reverse split paper did not process reconciles as
+the account shows it; the report prints a labelled phantom line per event, (q_prev - q_prev x k)
+x close, then the phantom's accrual while it stays open (paper's extra shares move with the
+price) until the account first trades the name, its crystallisation at that trade (the extra
+shares at the fill price, plus the session's fee term), and the cumulative phantom line beside
+the official P&L, which stays the P&L of record: an estimate of what paper's missing split put
+into it. Every crystallised phantom is labelled "approximate: <reason>" (team lead, 2026-11-15):
+the live sleeve trades a name only outside its no-trade band, to the band's edge, so an account
+that had processed the split need not have traded to the same position (src/deploy/sleeves/
+cef_discount.py, NO-TRADE BAND; it sizes on equity that carries the phantom, section 6.1 step 5).
+The label also names fills on both sides of the name on the crystallising session, a q_prev x k
+that is not a whole number, and a fee term shared with such a session, where they apply; an
+open phantom (no trade in the name yet) is labelled only for a fractional q_prev x k. The label
+is in the report, its JSON (`approximate` on the event, `phantom_approximate`) and the
+attribution's gaps. That name-day's
+NAV/discount split is UNMEASURED, named. A session that does not reconcile (paper froze the
+position, or support pushed the split with no account row) is UNRECONCILED, exit 5, naming the
+session and the event (independent review of the follow-up, 2026-11-14). Any other
+count-changing type held into its date stops the attribution, named (exit 4). A
 book that holds nothing at the as-of close has a FLAT factor block (the same review): it
 says the book is flat and reads no exposure, flag or PARTIAL for that close, never the
 previous close's reading; its history since the first trade is labelled with its dates;
 the report's overall status is OK. A bug, the
 no-lookahead assertion or a failed price fetch (yfinance down) while reading that history
-makes the block UNMEASURED, as on a held night (second review of PR #82, 2026-11-11). FLAT
-is read from the fill rebuild, so two checks guard it (team lead, 2026-11-11): the job never
-says FLAT when the rebuild does not reconcile (the block is UNMEASURED, saying whether the
-book is flat cannot be read from it), and `risk_daily` cross-checks every FLAT against the
-collector's account record for that same close, `<state>/data/<D>/account.json` (written by
-the collector's `account_snapshot` step after D's close and before the next open). The block
-is INFO when that record holds no position, a WATCH naming the count and the symbols when
-it holds any, and UNMEASURED when the record is missing, unreadable or for another session.
+makes the block UNMEASURED, as on a held night (second review of PR #82, 2026-11-11). Every
+factor block, FLAT or held, is read from the fill rebuild's positions, never the account's, so
+checks guard it (team lead, 2026-11-11 for FLAT, 2026-11-11/12 for every status after the
+third review of PR #82, whose phantom sale of 2,000 AAA at the close left a held block OK at
+half the true MUNI exposure). The job never says FLAT when the rebuild does not reconcile (the
+block is UNMEASURED, saying whether the book is flat cannot be read from it), and never OK on a
+held night whose rebuild does not reconcile (the block is read for diagnosis under status
+UNRECONCILED, every flag labelled; `risk_daily` shows it as at least a WATCH). The JSON carries
+the rebuild's signed shares per name at the block's close (`factor.rebuild_positions`), and
+`risk_daily` compares them, share for share, with the collector's account record for that
+same close, `<state>/data/<D>/account.json` (written by the collector's `account_snapshot`
+step after D's close and before the next open), for every factor status. The cross-check is
+INFO when the record holds the same positions, a WATCH naming the counts and the symbols that
+differ when it holds others, and UNMEASURED when the record is missing, unreadable, for another
+session or not whole shares, so a reading the account record cannot confirm is never INFO.
+When Alpaca's EOD history has no point for the as-of D when the job runs, it reads the latest
+session it has, D-1, and writes it under D's name. Its markdown then says so in its title and
+under its status ("READ AT THE CLOSE OF D-1, NOT D"), its JSON names the session read
+(`session_read`), and `risk_daily`'s D report shows the attribution and factor blocks as
+UNMEASURED for D, never INFO, each first line saying the reading is D-1's and D-1's lines below
+it as history; a WATCH in D-1's reading stays a WATCH (team lead, 2026-11-11/12, on the third
+review of PR #82; UNMEASURED because a block that cannot measure D says so, 8.11).
 A factor ETF
 without its price, or no held name with its inputs, makes the block UNMEASURED, naming it;
 the attribution above it stays either way. A book whose lag rule has produced no Dimson lag

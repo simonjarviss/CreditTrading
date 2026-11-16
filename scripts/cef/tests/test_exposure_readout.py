@@ -483,18 +483,54 @@ def test_group_exposures_use_the_summed_dimson_betas_and_add_up_to_the_book():
     assert abs(fit.beta.at["AAA", ("TERM", 0)] - fit.beta_sum.at["AAA", "TERM"]) > 0.5
 
 
-def test_factor_pnl_needs_the_immediately_previous_session_in_the_positions():
-    """E(t-1) x f(t) needs the book at t-1's close. Across a gap in the positions dates no
-    P&L is booked: an older book is not t-1's book."""
+def test_factor_pnl_pairs_each_positions_date_with_its_next_session_flat_or_not():
+    """E(t-1) x f(t) needs only the book at t-1's close (team lead, 2026-11-11/12, on the second
+    review of PR #82). Each positions date tp is paired with its next price session t, whether
+    or not t is itself a positions date (a date with no row holds nothing: the session on which
+    the book goes flat), up to the last positions date or `pnl_through`, and never across a gap:
+    an older book is not t-1's book, and a session after a flat close has no exposure going in.
+    Until that ruling this test said a gap booked nothing; it fails on the parent 8eb9ce1 (no row
+    for the session the book went flat)."""
     R = _returns_with_names()
     px = _px_from_returns(R)
-    gap = [SESS[150], SESS[152]]
+    gap = [SESS[150], SESS[152]]                     # held at 150, flat at 151, held at 152
     ro = ER.readout(px, _positions(gap, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L)
-    assert len(ro.factor_pnl) == 0
-    some = [SESS[150], SESS[151], SESS[153]]
-    ro = ER.readout(px, _positions(some, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L)
     assert sorted(ro.factor_pnl["date"].unique()) == [SESS[151]]
     assert set(ro.factor_pnl["prev"]) == {SESS[150]}
+    some = [SESS[150], SESS[151], SESS[153]]          # flat at 152
+    ro = ER.readout(px, _positions(some, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L)
+    pairs = sorted({(d, p) for d, p in zip(ro.factor_pnl["date"], ro.factor_pnl["prev"])})
+    assert pairs == [(SESS[151], SESS[150]), (SESS[152], SESS[151])]   # never (153, 151): 152's book was empty
+    # the bound: the last positions date by default; the report job passes its as-of close
+    ro = ER.readout(px, _positions(gap, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L, pnl_through=SESS[153])
+    pairs = sorted({(d, p) for d, p in zip(ro.factor_pnl["date"], ro.factor_pnl["prev"])})
+    assert pairs == [(SESS[151], SESS[150]), (SESS[153], SESS[152])]
+    with pytest.raises(ER.ReadoutError, match="is before the last positions date"):
+        ER.readout(px, _positions(gap, {"AAA": 1.0}), {"AAA": "multi"}, window=W, lags=L, pnl_through=SESS[151])
+
+
+def test_a_flat_entry_sessions_factor_pnl_is_the_held_books_own_row():
+    """The session a book closes flat earns E(t-1) x f(t) on the book it held at t-1's close, the
+    same term a book still held at t's close earns (team lead, 2026-11-11/12). A book held at 150
+    and 151, flat at 152 and held again at 153 has, for 151 and 152, exactly the rows of the same
+    book held on all four dates, value for value; and 152's is E(151) x f(152) by hand. Fails on
+    the parent 8eb9ce1, which had no row for 152 (the review measured the dropped term at 25% of a
+    fixture's cumulative MUNI factor P&L)."""
+    R = _returns_with_names()
+    px = _px_from_returns(R)
+    book, groups = {"AAA": 1000.0, "BBB": -400.0}, {"AAA": "multi", "BBB": "muni"}
+    flat_at_152 = ER.readout(px, _positions([SESS[150], SESS[151], SESS[153]], book), groups, window=W, lags=L)
+    held = ER.readout(px, _positions(list(SESS[150:154]), book), groups, window=W, lags=L)
+    key = ["date", "prev", "scope", "factor"]
+    a = flat_at_152.factor_pnl[flat_at_152.factor_pnl["date"].isin([SESS[151], SESS[152]])].sort_values(key)
+    b = held.factor_pnl[held.factor_pnl["date"].isin([SESS[151], SESS[152]])].sort_values(key)
+    pd.testing.assert_frame_equal(a.reset_index(drop=True), b.reset_index(drop=True), check_exact=True)
+    R2, C2, _ = ER.returns_panel(px)
+    fit = ER.fit_window(R2, SESS, SESS[151], list(book), window=W, lags=L)
+    E = (pd.Series(book) * C2.loc[SESS[151], list(book)]).to_numpy() @ fit.beta_sum.to_numpy()
+    f = R2.loc[SESS[152], ETFS].to_numpy() @ fit.M.to_numpy()
+    got = a[(a["date"] == SESS[152]) & (a["scope"] == "book")].set_index("factor")["pnl_summed"]
+    assert got.reindex(list(ER.FACTOR_NAMES)).to_numpy() == pytest.approx(E * f, rel=1e-10, abs=1e-12)
 
 
 # --------------------------------------------------------------------------- plateau check
@@ -1747,3 +1783,91 @@ def test_cache_provenance_line_compares_the_cache_it_is_given():
                                                                                 ER.C4_RULE_CACHE_SHA256, ER.C4_RULE_CACHE_ASOF)
     assert "DIFFERS" in ER.cache_provenance_line("0" * 64, ER.C4_RULE_CACHE_SHA256, ER.C4_RULE_CACHE_ASOF)
     assert ER.C4_RULE_CACHE_SHA256[:16] in ER.cache_provenance_line("0" * 64, ER.C4_RULE_CACHE_SHA256, ER.C4_RULE_CACHE_ASOF)
+
+
+# --------------------------------------------------------------------------- a split in partial mode
+# (team lead, 2026-11-14, option A of the third review of PR #82: exclude and name)
+
+def _split_px(px, ticker, day, ratio=2.0):
+    """`px` with a yfinance split record for `ticker` on `day` and no split-sized step in its
+    close: the post-split basis yfinance serves once it has adjusted (data_guards, IGR)."""
+    out = px.copy()
+    out.loc[(out["ticker"] == ticker) & (out["date"] == day), "split"] = ratio
+    return out
+
+
+def test_partial_mode_leaves_a_split_fund_out_only_where_the_split_can_touch_it():
+    """A core book holds AAA and BBB on SESS[150..152]; BBB has a split record on SESS[151].
+    Strict mode refuses the whole readout, as before. Partial mode leaves BBB out on SESS[150]
+    (before the ex-date: its close may be re-based) and on SESS[152] (the ex-date is in its beta
+    window, a return the core's guard does not read across), each named with the ex-date and
+    ratio, and reads it on SESS[151] itself; every reading equals the strict readout of the same
+    book without BBB on those two dates, exactly. Fails on the parent 3743ad9, where partial
+    mode refused the whole readout too."""
+    R = _returns_with_names()
+    px = _px_from_returns(R)
+    S = SESS[151]
+    split = _split_px(px, "BBB", S)
+    dates, book, groups = list(SESS[150:153]), {"AAA": 1000.0, "BBB": -400.0}, {"AAA": "multi", "BBB": "muni"}
+    P = _positions(dates, book)
+    with pytest.raises(ER.ReadoutError, match="split records after the first positions date on held names"):
+        ER.readout(split, P, groups, window=W, lags=L)                     # strict: unchanged
+    ro = ER.readout(split, P, groups, window=W, lags=L, partial=True)
+    assert list(zip(ro.excluded["date"], ro.excluded["symbol"])) == [(SESS[150], "BBB"), (SESS[152], "BBB")]
+    why = dict(zip(ro.excluded["date"], ro.excluded["reason"]))
+    assert why[SESS[150]].startswith(f"a split record of BBB ex {S.date()} (yfinance ratio 2) after this close: its "
+                                     f"close on {SESS[150].date()} may be on the post-split basis")
+    assert why[SESS[152]] == (f"a split record of BBB ex {S.date()} (yfinance ratio 2) in its {W}-session beta window "
+                              f"before {SESS[152].date()}: the core's split guard reads no return across a split")
+    assert set(ro.betas.loc[ro.betas["date"] == S, "symbol"]) == {"AAA", "BBB"}
+    direct = ER.readout(px, P[~((P["symbol"] == "BBB") & P["date"].isin([SESS[150], SESS[152]]))], groups,
+                        window=W, lags=L)
+    pd.testing.assert_frame_equal(ro.exposure, direct.exposure, check_exact=True)
+    pd.testing.assert_frame_equal(ro.factor_pnl, direct.factor_pnl, check_exact=True)
+
+
+def test_partial_mode_reads_a_c4_fund_through_a_split_after_its_ex_date():
+    """C4's returns drop an adjusted split's multiplier and name it (THE C4 LAG RULE), so a C4
+    fund is left out only before the ex-date (its close's basis), and read after it, window and
+    all. Fails on the parent 3743ad9, where partial mode refused the whole readout."""
+    R = _c4_returns()
+    px = _px_from_returns(R)
+    S = SESS[151]
+    dates, book, groups = list(SESS[150:153]), {"AAA": 1000.0, "BBB": -400.0}, {"AAA": "equity_domestic",
+                                                                               "BBB": "equity_sector"}
+    P = _positions(dates, book)
+    ro = ER.readout(_split_px(px, "BBB", S), P, groups, window=W, fs=_c4_fs(), partial=True)
+    assert list(zip(ro.excluded["date"], ro.excluded["symbol"])) == [(SESS[150], "BBB")]
+    direct = ER.readout(px, P[~((P["symbol"] == "BBB") & (P["date"] == SESS[150]))], groups, window=W, fs=_c4_fs())
+    pd.testing.assert_frame_equal(ro.exposure, direct.exposure, check_exact=True)
+
+
+def test_partial_mode_judges_only_the_split_cells_it_reads():
+    """The core's split-basis guard, in partial mode, judges only the cells the readout reads
+    (team lead, 2026-11-14). A held fund's split in its beta window before its first held date
+    leaves it out on each date whose window holds it (named); a split outside every window read
+    leaves it in, and that return is NaN rather than a number no guard judged; a factor ETF's
+    split in a read window still refuses. Strict mode refuses all three, unchanged. Fails on the
+    parent 3743ad9, where partial mode refused the first two as strict mode does."""
+    from scripts.cef.data_guards import SplitBasisError
+    R = _returns_with_names()
+    px = _px_from_returns(R)
+    dates, book, groups = list(SESS[150:153]), {"AAA": 1000.0, "BBB": -400.0}, {"AAA": "multi", "BBB": "muni"}
+    P = _positions(dates, book)
+    in_window, outside = SESS[100], SESS[10]                 # windows read reach back to SESS[150 - W - L]
+    for day in (in_window, outside):
+        with pytest.raises(SplitBasisError, match="already on the post-split"):
+            ER.readout(_split_px(px, "BBB", day), P, groups, window=W, lags=L)   # strict: unchanged
+    ro = ER.readout(_split_px(px, "BBB", in_window), P, groups, window=W, lags=L, partial=True)
+    assert list(zip(ro.excluded["date"], ro.excluded["symbol"])) == [(d, "BBB") for d in dates]
+    assert all(f"a split record of BBB ex {in_window.date()} (yfinance ratio 2) in its {W}-session beta window" in r
+               for r in ro.excluded["reason"])
+    ro = ER.readout(_split_px(px, "BBB", outside), P, groups, window=W, lags=L, partial=True)
+    assert len(ro.excluded) == 0
+    direct = ER.readout(px, P, groups, window=W, lags=L)
+    pd.testing.assert_frame_equal(ro.exposure, direct.exposure, check_exact=True)
+    with pytest.raises(SplitBasisError, match="the cells the partial readout reads"):
+        ER.readout(_split_px(px, "MUB", SESS[120]), P, groups, window=W, lags=L, partial=True)
+    read = pd.DataFrame(False, index=SESS, columns=sorted(px["ticker"].unique()))
+    Rp, _, _ = ER.returns_panel(_split_px(px, "BBB", outside), read=read)
+    assert np.isnan(Rp.at[outside, "BBB"]) and np.isfinite(Rp.at[SESS[11], "BBB"])

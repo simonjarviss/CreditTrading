@@ -4261,3 +4261,84 @@ that adds it does not exist when it is written.
 - source: `quantt/broker/alpaca.py` @ `6814c2e`; `quantt/tests/test_alpaca_client.py` @ `6814c2e`; `docs/REFERENCES.md` @ `6814c2e`
 - supports: §5
 - status: current (an independent review found no material defect; its one low finding, a calendar date served twice, now raises. Not measured: whether a half day's point is final at 17:00, so the 2026-11-27 evening figure should be compared with the next day's re-read. Not released: prod runs the old rule until the team lead installs a release with this change; the report job's reader `scripts/ops/alpaca_read.py` still has the 20:00 rule and is the peer's follow-up PR)
+
+### E-2026-11-14-50 · Result: Alpaca stamps a half day's end-of-day point four hours after its 13:00 close, at 17:00 New York, and the core paper account holds no row of any of the nine corporate-action activity types paper accepts
+- kind: result
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - cef paper, `period=3A`, 754 points: all 747 sessions with a 16:00 calendar close stamped 20:00:00 New York; all 7 with a 13:00 close stamped 17:00:00 (2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; the last two funded) [V]
+  - cef paper account activities, read 2026-11-14: each of the nine types SPLIT, CIL, MA, NC, SC, SPIN, REO, REORG and JNLS returned 0 rows; SSP and SSO answered HTTP 422 [S]
+- source: `scripts/ops/alpaca_read.py` @ `fa84045` (the half-day stamps); `scripts/ops/alpaca_read.py` @ `8dfe3eb` (the activity types)
+- supports: §4, §5
+- status: current
+
+### E-2026-11-14-51 · Rulings: splits leave a fund out of the factor block, named; corporate actions are narrowed and handled from the account's own records; the half-day stamp is fixed in the runner's client by its owner and in the report's reader here
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - none (rulings, 2026-11-14: a fund that split is left out and named on the dates the split can touch, with the PARTIAL rules (option A); the attribution's corporate-action refusal is narrowed to a fund held into an event that changes the holder's share count, never an acquirer, with the rebuild from the account's own activity rows, never the market feed, and an unprocessed paper split shown on its own labelled phantom line beside the official P&L; an unreconciled held night keeps its factor figures, labelled UNRECONCILED; the runner owner fixes AlpacaClient's half-day stamp rule in its own PR before 2026-11-27, and the report's reader copies its rule exactly; the report's follow-up PR is reviewed and merged before any install)
+- source: `scripts/cef/live_attribution.py` @ `8dfe3eb`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`
+- supports: §4, §5
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the rebuild from the account's own activity rows was not kept; any such row now stops the report, named
+
+### E-2026-11-14-52 · Method: the report job's follow-up is built: account cross-checks on every factor reading, no stale reading shown as current, the flat-entry session counted in factor P&L, splits scoped, half-day stamps read, corporate actions narrowed and handled
+- kind: method
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before except the factor P&L rows the flat-entry fix adds on sessions where the book goes flat)
+- source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed; superseded in part by E-2026-11-15-53 (2026-11-15): corporate actions are narrowed, and an account corporate-action row stops the report rather than being handled
+
+### E-2026-11-15-50 · Ruling and method: the corporate-action handling is fixed properly after its review: one phantom per split, the account's own rows rebased in a corp line of their own, and late rows closing the open phantom
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a review of the report follow-up found three ways the new corporate-action handling could show confidently wrong side figures while still reconciling; the account-row paths do not run today, the account having no such rows, but the phantom path runs on paper's first unprocessed split of a held fund. The team lead ruled on 2026-11-14 to fix all three properly rather than refuse: a split the feed lists twice is one event, and records disagreeing on the ratio raise; a position the account's rows move is rebased in its own corp component, so hold and fill stay true and every session still reconciles to the cent; rows posting within ten sessions after the event close the open phantom with a labelled reversal, and the cumulative phantom carries the later moves on the extra shares, intended to equal what is still inside the official P&L (ruled 2026-11-15); that holds only until the account trades the fund, corrected by E-2026-11-15-51. The risk check also refuses a held reading whose two session fields disagree. With no corporate action, the attribution's output is byte-identical to before)
+- source: `scripts/cef/live_attribution.py` @ `adf42b2`; `scripts/cef/live_attribution.py` @ `813676a`; `scripts/ops/risk_daily.py` @ `5d9bcdf`
+- supports: §4, §5
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the corp component and the late-row tie-back were removed; the one-event-per-split dedupe stands
+
+### E-2026-11-15-51 · Ruling and method: a paper split's phantom freezes at the first trade in the fund, and the account's own corporate-action rows are applied for every fund a record names, checked against the split ratio
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a second review of the report follow-up found the phantom kept adding the extra shares' daily moves after the runner had traded them away, so it drifted from what is in the official P&L. The team lead ruled on 2026-11-15: it freezes on the first session the account trades the fund, labelled crystallised; it then equals an independent simulation of a processed account exactly in the six tested cases, with one named gap, when paper applies the split late to an already re-sized count. Also ruled: the account's rows are applied for any fund a corporate-action record names, in any role, with late cash in lieu tied to its split; a new share count that contradicts the split ratio stops the attribution, named (rounded toward zero, which for a short is unverified); a second record of an already-handled split stops it, naming both. A method choice beyond the brief: a session whose account rows do not net to zero at their own prices values every row at the close, which two of the tested cases need to reconcile. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
+- source: `scripts/cef/live_attribution.py` @ `891aea3`; `scripts/cef/live_attribution.py` @ `1a7a1a9`; `scripts/cef/live_attribution.py` @ `6b68fe9`
+- supports: §4, §5
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the account-row handling it describes was removed; the phantom's freeze at the first trade stands; and superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
+
+### E-2026-11-15-52 · Method: the report job's reader reads the half-day end-of-day stamp by the same rule as the runner's client, held equal by test
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (after PR #83 merged the client's rule (E-2026-11-14-02), the reader's own copy, close plus four hours from the calendar, is held equal to it on half days and on full days, and both refuse each wrong stamp with the same message. This updates E-2026-11-14-02's note that the reader still had the 20:00 rule, once this branch merges)
+- source: `scripts/ops/alpaca_read.py` @ `f550da3`; `scripts/ops/tests/test_alpaca_read.py` @ `f550da3`
+- supports: §5
+- status: built on branch reports-followup, under review; not installed
+
+### E-2026-11-15-53 · Ruling: the report stops, naming the row, whenever the account records a corporate-action row, until one has been seen; the paper-split phantom stays, labelled approximate where it cannot be exact
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a third review found four more defects in the code that applied the account's own corporate-action rows, a path paper has never exercised and whose row format is undocumented; each review round had fixed the last and found new ones. The team lead ruled on 2026-11-15 to simplify: any such row on or before the as-of stops the attribution, naming each row, and the job exits 4; no code applies one. Kept: the narrowed trigger, the paper-split phantom with its freeze at the first trade, one event per split, and the refusal of a second record of a handled split. The phantom is labelled approximate, with the reason, when the crystallising session has fills on both sides or the split leaves a fraction of a share. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
+- source: `scripts/cef/live_attribution.py` @ `82ff173`; `scripts/cef/live_attribution.py` @ `bcc3446`; `scripts/ops/pnl_report.py` @ `bcc3446`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed; supersedes the account-row parts of E-2026-11-15-50 and E-2026-11-15-51; superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
+
+### E-2026-11-15-54 · Ruling: a paper split's phantom, once frozen by a trade, is always labelled approximate, because the runner's no-trade band means a correctly processed account need not have traded to the same position
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a review found the frozen phantom's claim to equal official equity minus a processed account rested on both ending at the same position after the trade; the live sleeve trades only outside its no-trade band and only to the band's edge, sizing on equity that carries the phantom, so the true gap keeps moving after the trade. The team lead ruled on 2026-11-15: every frozen phantom is labelled approximate, naming the band, and nothing calls it exact; the figure is unchanged. An open phantom, before any trade, stays unlabelled unless the split leaves a fraction of a share. Also fixed in the same round: the stop checks the job's own as-of and names every row, and a research run on data cached before the stop existed says it did not run)
+- source: `scripts/cef/live_attribution.py` @ `aead2da`; `scripts/ops/pnl_report.py` @ `aead2da`; `scripts/cef/live_attribution.py` @ `fa0c2a0`; `scripts/ops/pnl_report.py` @ `fa0c2a0`; `scripts/cef/live_attribution.py` @ `e14f79b`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed
