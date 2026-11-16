@@ -4571,3 +4571,17 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Gross; the cost figures are a labelled real-money view. The IBES consensus construction and CRSP's delisting row could not be checked at source by the reviewer. Not on shadow
 
+
+### E-2026-11-15-16 · Result: the core paper book is flat on a near-worst NAV draw while its signal earned; an ETF hedge of the NAV part lowers the backtest Sharpe
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - `cef` paper account, Alpaca end-of-day equity: $100,000.00 to $99,902.79 over 34 sessions to 2026-11-13, 7.3% annualised volatility [V]
+  - rebuilt from fills (sums to −$87 against −$97): hold +$522, of which NAV part −$3,164 and discount part +$3,685; fills −$609 (6.5bp on $931,022 traded); the two muni funds' NAV part −$3,350 [V]
+  - backtest of the frozen spec, 2013-01 to 2026-10-14, gross: book Sharpe 1.00 (t 4.20), discount part 1.02, NAV part −0.09 (t −0.40) with 15% of the variance and correlation −0.22 with the discount part [V]
+  - ETF hedge fixed before any hedged return was read (MUB, HYG, BKLN; 5-session NAV betas over 252 sessions to t−1): every group 0.93, muni only 0.94, no MUB short 0.94; volatility unchanged (5.71% to 5.73%); lower than unhedged in 2016–19, 2020–22 and 2023–26 [V]
+  - 34-session windows in the backtest at 1.3× sizing: NAV part mean −0.03%, worst −3.52%, 0.4% of windows below the live −3.16%; discount part mean +1.34%, 82% of windows below the live +3.69%; book mean +1.31%, 30% of windows below the live −0.10% [V]
+- source: `results/ideas/core_nav_hedge/explore.py` @ `e59f4d3`; `results/ideas/core_nav_hedge/live_split.py` @ `e59f4d3`; `results/ideas/2026-11-15_core_nav_hedge.md` @ `e59f4d3`
+- supports: §4
+- status: current. Gross, no costs. The live split uses Yahoo closes and NAVs and does not rebuild fees or unbooked distributions; panels end 2026-10-14, so the live window is outside the backtest. Hedge set aside; not independently reviewed
