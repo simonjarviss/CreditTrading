@@ -1,9 +1,9 @@
 # Idea card — Earnings drift in smaller stocks: strong on the long side, where the large-stock version found nothing
 
 **Slug:** `pead_small` · **Written:** 2026-11-15 ·
-**Status:** EXPLORE, cleared and independently reviewed. Long-only against IWM: 1.27 gross as
-fixed, 1.1 with conservative release timing, about 0.7 with the surprise a free feed can
-supply. Not on shadow: it needs a live small-stock panel and an earnings feed ·
+**Status:** ON SHADOW from 2026-11-17 (`pead_small_long`, the free-feed version). Reviewed.
+Long-only against IWM: 1.27 gross as fixed, 1.1 with conservative release timing, about
+0.7 with the surprise a free feed can supply ·
 **Reproducer:** `python3 scripts/research/stage_crsp_equities.py --top 4500`,
 `python3 scripts/research/stage_ibes_surprises.py`, then
 `python3 results/ideas/pead_small/explore.py` and `checks.py` ·
@@ -121,12 +121,30 @@ before the filtered return was read; a second look at a sample already read.
    licensed, not available live), about 0.7 with the surprise a free source gives.
 3. It fits a small book: $1M uses about 0.1% of a day's volume per name.
 
+## On shadow from 2026-11-17: `pead_small_long`
+
+Built 2026-11-15 (`shadow/fetch/earnings.py`, `shadow/signals/pead.py`,
+`shadow/books/pead_small_long.json`, tests in `shadow/tests/test_pead.py`).
+
+- **The feed** is Yahoo's earnings calendar read by day, which lists the forecast, the
+  reported figure and the market value for every release (`docs/REFERENCES.md` 12ye).
+  Against the licensed surprises on five release days of 2025 the rank correlation is 0.80
+  and the two top tenths among these stocks share 44 of 64 names [V].
+- **The book** is the free-feed version above (0.68 in the backtest, not 1.27): surprise
+  over forecast, every release known one session after its date, the top tenth long for 40
+  sessions against IWM.
+- **Size, not rank.** No free feed has a size rank, so the book takes companies worth
+  $1.9bn or less (the 1,500th largest at the end of 2025), scaled by IWM since. Stocks
+  below rank 4,000 are not excluded by size; the $5 and $500,000-a-day floors do that work.
+- **The first fetch reaches back 76 days** so the book does not start empty: 1,791 results
+  stored, 1,455 with a live signal on 2026-11-13, 96 names in the long tenth that day [V].
+  Those rows are flagged; what Yahoo shows for them now may have been revised.
+- **Not checked:** foreign companies listed in the US are not removed (Alpaca's bulk asset
+  list has no flag for them), and Yahoo's reported figure may exclude one-off items where
+  the licensed one does not.
+
 ## Next
 
-- **A live version needs two things the desk does not have:** a daily price panel for about
-  1,100 small stocks, and an earnings feed. yfinance returns the estimate, the reported
-  figure and a timed release for covered small stocks (read for three names on 2026-11-15:
-  two had current rows, one had none since 2014); it has no bulk calendar, and Nasdaq's
-  public calendar refused this machine (HTTP 403). The shadow book is a build, not a switch.
-- The free-feed sort (0.68) is the one to carry into that build, with the later timing.
 - The announcement-move sort is closed for this universe.
+- A shadow record is the next evidence: the backtest for this version is 0.68 on licensed
+  figures, and the live feed is a different vendor.

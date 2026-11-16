@@ -125,6 +125,15 @@ class ReadOnlyData:
                 "borrow_status": a.get("borrow_status"), "exchange": a["exchange"],
                 "name": a.get("name") or "", "status": a["status"]}
 
+    def asset_table(self) -> dict:
+        """{symbol: {exchange, tradable}} for every ACTIVE US equity Alpaca lists, in one call.
+        For a reader that must place thousands of symbols at once (the earnings calendar):
+        `asset_flags` costs a request a symbol. The rows carry no company name, so a caller
+        that must tell a company from a fund needs a name from its own source. True on its
+        read date only."""
+        return {a["symbol"]: {"exchange": a["exchange"], "tradable": a["tradable"]}
+                for a in self.__client.assets(status="active")}
+
     def spin_offs(self, first: dt.date, last: dt.date) -> tuple[list, int]:
         """Every spin-off row Alpaca's corporate-actions feed lists with a process date in
         [first, last], for the whole market: ([{id, source_symbol, new_symbol, ex_date,
