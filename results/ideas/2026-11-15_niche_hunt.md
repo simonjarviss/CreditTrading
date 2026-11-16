@@ -21,6 +21,7 @@ skeptics': 5 test first, 9 worth a test, 15 weak, 3 dead.
 |---|---|---|
 | Thrift conversions, first year | 0.32 against seasoned thrifts (t 1.79), negative since 2016; set aside | `results/ideas/2026-11-15_thrift_conversions.md` |
 | Recent share offering as a filter on earnings-drift longs | changes the long leg by −0.22% a year (t −0.94); 2.9% of name-days flagged; closed | `results/ideas/2026-11-15_pead_small.md` |
+| Antidumping-decision calendar, bought through the listed petitioner | closed at its gate, no return read: 7 of 76 cases in 2021–25 name a listed petitioner under $5bn (0, 0, 3, 1, 3 by year) against a gate of 8 a year | this page, below |
 
 ## The ledger
 
@@ -71,3 +72,29 @@ skeptics': 5 test first, 9 worth a test, 15 weak, 3 dead.
   nobody on the desk has read.
 - The closing trade of leveraged single-stock funds needs a decision before the close on
   an intraday price, which the shadow engine does not do.
+
+## Antidumping calendar: closed at the count, 2026-11-16 [V]
+
+The scout and the skeptic agreed on a gate before any return: stop if fewer than about
+eight cases a year have a listed petitioner worth under $5bn.
+
+- **Source:** the USITC's public investigations file (`https://ids.usitc.gov/investigations.json`,
+  37 MB, 4,446 records, fetched 2026-11-16; kept outside the repository). It does carry
+  petitioner names, from 2021 on: 76 preliminary-phase antidumping or countervailing cases
+  started 2021–2025 name at least one (10, 7, 12, 27, 20 by year). Before 2021 the field
+  is empty, which is what the scout saw.
+- **Count:** 11 of the 76 name a company whose name matches a CRSP common stock, and 7 a
+  company with a median market value under $5bn in 2021–25 (Eastman Kodak, Leggett & Platt
+  and Carpenter, Worthington, Ferroglobe twice, Rayonier Advanced Materials, Manitowoc).
+  By year: 0, 0, 3, 1, 3.
+- **Why so few:** most petitions are filed by a coalition, a union or a private company.
+  The 184 distinct petitioner names are led by the steelworkers' union and by "Coalition
+  of …" entries, whose member companies the file does not list.
+- **How it was matched:** company names with legal suffixes removed, exact or prefix match
+  to CRSP issuer names active from 2021. A rough match: a listed parent filing through a
+  differently named subsidiary is missed, and coalition members are not counted.
+- **What would reopen it:** member lists for the coalitions (they are in each petition's
+  public version), which could lift the count several-fold.
+
+One thing seen on the way and not followed: the same file lists 1,896 complainants in
+section 337 (patent) import cases, a different event with many listed companies.
