@@ -4342,3 +4342,30 @@ that adds it does not exist when it is written.
 - source: `scripts/cef/live_attribution.py` @ `aead2da`; `scripts/ops/pnl_report.py` @ `aead2da`; `scripts/cef/live_attribution.py` @ `fa0c2a0`; `scripts/ops/pnl_report.py` @ `fa0c2a0`; `scripts/cef/live_attribution.py` @ `e14f79b`
 - supports: §4, §5
 - status: built on branch reports-followup, under review; not installed
+
+### E-2026-11-15-55 · Ruling: the release check runs on 49b99db now; C4's corporate-action rows are read by the installed report job's first run, not by a separate script; the team lead restores the VM's ssh access
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (the team lead ruled on 2026-11-15, about 20:15 New York, after PR #84 merged: (1) run the read-only release check on 49b99db tonight; (2) C4's account corporate-action rows, on which the P&L report job stops (exit 4, naming each row), are read by starting C4's report unit once by hand after the release and the `--reports` install, with no separate script and no key handling outside the existing units; (3) `ssh quantt-vm` timed out from the laptop at 20:10 New York, so `ops.prod_state` showed the VM UNMEASURED, and the team lead restores access, after which prod_state is re-run before any install)
+- source: `docs/RUNBOOK.md` @ `49b99db` (8.12); `scripts/ops/pnl_report.py` @ `49b99db`
+- supports: §5
+- status: current
+
+### E-2026-11-15-56 · Result: the release check on 49b99db (main after PR #84) is GO to tag; the install waits until the VM is measured
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - PR #84 merged by the team lead at 20:10 New York (merge commit 49b99db); E-2026-11-14-50 to -52 and E-2026-11-15-50 to -54, whose status reads "on branch reports-followup", are on main from that merge and installed nowhere [V]
+  - release-20261104-1..49b99db: 235 commits (`git rev-list --count`) [V]
+  - `python3 -m pytest` exit 0, 4559 passed, 2 skipped; the real-panel replay skipped on the laptop's stale `data/cef`, its synthetic version ran [S]
+  - `ops.doc_audit --check` 0 DRIFT, 2 NOTE, neither on the order path; `ops.orient` exit 0 at 49b99db with nothing uncommitted [S]
+  - the DRY_RUN=1 preview exited 4 (PREVIEW); the laptop's panels end 2026-10-15 (closes) and 2026-10-14 (NAV), so the data gate refused all 13 names and no order list was built: the te4 runner path is covered by its unit tests only [S]
+  - quant-reviewer and execution-engineer each covered the whole range and found no order-path defect; the only spec change is `_sizing_multiplier_note` text, `ops/books/` is unchanged, and no spec sets `below_min_names = "trade_eligible"`, so the te4 path is dormant [S]
+  - the first run was NO-GO only because the execution-engineer seat, added on main in the desk rebuild, was not in the running session's agent registry, so that review never ran; it was re-run by a general agent told to act as `.claude/agents/execution-engineer.md` at 49b99db, read-only, with the other stages' results reused [V]
+  - the preview's corporate-action check, in report mode on both books, showed two rows with no symbol as BLOCKING for every held name (a partial call processed 2026-11-12, a reorganisation effective 2026-11-16); report mode refuses nothing. Open PR #68 (the bond-ISIN and CUSIP fix) is the standing work on rows of this kind [S]
+- source: `.claude/workflows/release-check.js` @ `49b99db`; `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.11, 8.12); `ops/books/cef_discount_book.json` @ `49b99db`; `ops/books/c4_families_book.json` @ `49b99db`
+- supports: §1, §5
+- status: current. Not tagged, released or installed; the tag and the install are the team lead's. Before the install: prod_state must measure the VM, because a re-install without `--armed` disarms; `quantt/session/run.py` changed, so RUNBOOK 8.6 step 2's replay applies; C4's timers are disabled before the core's install and C4 is re-installed after it (8.9); the alert push needs `alert-smtp-user` and `alert-smtp-pass` in the vault (8.11)
