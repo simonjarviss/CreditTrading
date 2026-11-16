@@ -4585,3 +4585,18 @@ that adds it does not exist when it is written.
 - source: `results/ideas/core_nav_hedge/explore.py` @ `e59f4d3`; `results/ideas/core_nav_hedge/live_split.py` @ `e59f4d3`; `results/ideas/2026-11-15_core_nav_hedge.md` @ `e59f4d3`
 - supports: §4
 - status: current. Gross, no costs. The live split uses Yahoo closes and NAVs and does not rebuild fees or unbooked distributions; panels end 2026-10-14, so the live window is outside the backtest. Hedge set aside; not independently reviewed
+
+### E-2026-11-15-17 · Result: newly converted savings banks earn thrift beta in their first year, 0.32 against seasoned thrifts and negative since 2016; the niche hunt's 32 ideas are logged
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - niche hunt, six scouts and three skeptics on public sources: 32 ideas; skeptics' verdicts 5 test first, 9 worth a test, 15 weak, 3 dead [S]
+  - thrift conversions, rule fixed before any return was read: 147 new CRSP listings with SIC 6035/6036 and a first close of $8 to $16, 1995-02-14 to 2025-05-02, prices to 2025-12-31; days 6 to 250, 10% a name [V]
+  - first year less the equal-weighted seasoned-thrift return: Sharpe 0.32 (t 1.79), halves 0.56 / −0.08, eras 0.21, 0.94, 0.09, −0.29; less IWM from 2000-05: 0.36 (t 1.81); unhedged 1.10 [V]
+  - per event, days 6 to 250 less seasoned thrifts: mean +3.0%, median −1.9%, 45% positive (t 1.13); the 17 listed 2016–25: −6.9% (t −1.89) [V]
+  - control, days 251 to 630 less seasoned thrifts: −8.2% per event (t −3.27); book −0.12 [V]
+  - median dollar volume on days 6 to 60 $165,038; median closing spread on day 5 0.60% [V]
+- source: `results/ideas/thrift_conversions/explore.py` @ `7da05ab`; `scripts/research/stage_crsp_thrift_listings.py` @ `7da05ab`; `results/ideas/2026-11-15_thrift_conversions.md` @ `7da05ab`; `results/ideas/2026-11-15_niche_hunt.md` @ `7da05ab`; `results/ideas/niche_hunt/hunt.json` @ `7da05ab`
+- supports: §4
+- status: current. Gross, no costs. Second-step conversions could not be separated in CRSP. The hunt's figures are the scouts' and skeptics', not re-read here. Set aside
