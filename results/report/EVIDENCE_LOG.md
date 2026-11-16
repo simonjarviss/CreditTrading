@@ -4674,3 +4674,15 @@ that adds it does not exist when it is written.
 - source: `results/ideas/2026-11-15_niche_hunt.md` @ `1713155`; `results/ideas/niche_hunt/hunt.json` @ `1713155`
 - supports: §4
 - status: current. Counts only; no return read. The name match is rough and the count was made in the session, not stored as a script. Coalition member lists would reopen it
+
+### E-2026-11-16-05 · Kill: patent import cases at the trade commission give about four small listed complainants a year
+- kind: kill
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - USITC investigations file, fetched 2026-11-16: 1,390 violation-phase (section 337) investigations; matched to CRSP issuer names valid on the event date, 2009–2025 [V]
+  - institutions with a matched complainant 165, of which 71 under $5bn at the event (1 to 10 a year); judges' merit rulings for those small complainants 21 violation and 16 no violation [V]
+  - matched respondents: 448 institutions, 136 under $5bn [V]
+- source: `results/ideas/usitc_337/stage.py` @ `c8a31de`; `results/ideas/2026-11-15_niche_hunt.md` @ `c8a31de`
+- supports: §4
+- status: current. Counts only; no return read. Exact match on the reduced company name, so subsidiaries filing under their own names are missed
