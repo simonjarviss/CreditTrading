@@ -433,6 +433,38 @@ def test_shadow_unit_names_are_the_ones_the_shadow_installer_writes():
     assert written and written == set(iv.SHADOW_UNIT_FILES), written
 
 
+def test_book_c4_installs_beside_the_events_runners_units(c4world, capsys):
+    """The event sleeves' seven unit files (quantt/sleeves/deploy/install_events_vm.sh) are
+    the repository's own: a C4 install goes through beside them and leaves them byte-identical.
+    Without EVENTS_UNIT_FILES it refuses as it did on the shadow runner's on 2026-11-18. A
+    stray `quantt-events-*` unit that is not one of the seven is still refused, by name."""
+    assert c4world.run("--apply", capsys=capsys)[0] == 0
+    ev = [_dormant(c4world, f"etc/systemd/system/{u}", "[Service]\nExecStart=/bin/true\n")
+          for u in iv.EVENTS_UNIT_FILES]
+    before = [f.read_bytes() for f in ev]
+    rc, out = c4world.c4("--apply", capsys=capsys)
+    assert rc == 0 and "no unit any book installs" not in out, out
+    assert [f.read_bytes() for f in ev] == before
+    stray = _dormant(c4world, "etc/systemd/system/quantt-events-extra.service",
+                     "[Service]\nExecStart=/bin/true\n")
+    rc, out = c4world.c4("--apply", capsys=capsys)
+    assert rc == 2 and str(stray) in out and "no unit any book installs" in out, out
+
+
+def test_events_unit_names_are_the_ones_the_events_installer_writes():
+    """EVENTS_UNIT_FILES is a copy of names owned by a shell script. Pin it: the units that
+    script names literally (the key service and the three timers), a service for every timer
+    (its job template writes `quantt-events-<job>.service`), and nothing else."""
+    import re
+    from pathlib import Path
+    sh = (Path(iv.__file__).resolve().parents[2] / "quantt" / "sleeves" / "deploy" / "install_events_vm.sh").read_text()
+    literal = set(re.findall(r"^\s*unit_file (quantt-events-[a-z]+\.(?:service|timer)) <<", sh, flags=re.M))
+    assert 'unit_file "quantt-events-$1.service" <<' in sh
+    timers = {u for u in literal if u.endswith(".timer")}
+    assert len(timers) == 3 and literal - timers == {"quantt-events-secret.service"}, literal
+    assert literal | {u[:-len(".timer")] + ".service" for u in timers} == set(iv.EVENTS_UNIT_FILES)
+
+
 def test_book_c4_installs_over_the_cores_own_units_and_its_lower_copies(c4world, capsys):
     """Not over-strict: the core's installed units, and a lower-priority copy of one, are
     known units, so a clean C4 install still goes through after the core's."""

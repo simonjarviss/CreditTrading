@@ -4859,3 +4859,19 @@ that adds it does not exist when it is written.
 - source: `scripts/ops/data_qa.py`, `scripts/ops/tests/test_data_qa.py`, `docs/DATA.md`, `docs/REFERENCES.md` (today's row), commit `4098634`; `results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md` (the shortlist of replacement sources)
 - supports: §1, §5
 - status: current, not released. The book still decides on one NAV source (Yahoo). The replacement second source is the team lead's choice from the 2026-10-19 shortlist; changing how the fetcher looks to the site is ruled out there. Not determined: whether the 21:45 QA job always finds the 21:40 collect's report for the as-of day (if not, Q9 says UNMEASURED and names the file)
+
+### E-2026-11-18-04 · Ruling: the event sleeves are sized by equal risk per family and start at a quarter size on a ladder; a shadow book is promoted after ten clean sessions; no combined risk budget yet
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - backtest daily correlations between sleeves of different families are within ±0.06 (11 series; core against C4 0.02 over 3,145 sessions, 2013-06-25 to 2025-12-23); within a family the variants are one bet: CEF ex-date pair 0.70, units pair 0.65, special-dividend pair 0.49 [S: portfolio-manager run of 2026-11-18, gross; panels: core to 2026-10-14, CRSP event panels to 2025-12-31]
+  - live, core against C4 official daily P&L: +0.16 over 10 sessions (2026-11-04 to 11-17), 95% interval -0.52 to +0.72: no information yet [S]
+  - the seven event sleeves at the 2026-11-16 sizes ($100,000 each, $25,000 for the small-name book): the units ex-date pair is 68.3% of the account's backtest risk, earnings drift 16.6%, CEF ex-date 10.5%, special dividends 4.6% [V, covariance of the seven series, 2000-06-01 to 2025-12-23, 6,430 sessions]
+  - equal risk per family on the same $625,000, the small-name book kept at $25,000 and the $81,000 that frees left unallocated: cef_exdate_after $132,000, cef_exdate_before_after $97,000, units_exdate_after $52,000, units_exdate_before_after $36,000, specdiv_wait $105,000, specdiv_wait_small $25,000, pead_small_long $96,000 [V]
+  - three schemes on 2014-06-25 to 2025-12-23: equal risk beats equal dollars by +0.59 to +1.22 of Sharpe on all 11 series and +0.22 to +0.70 without the four ex-date books (90% block-bootstrap intervals); a shrunk mean-variance scheme is within noise of equal risk [S]. The portfolio Sharpes themselves (5 to 6 with the ex-date books, about 3 without) are gross backtests leaning on unreviewed ex-date results and are not forecasts
+  - the team lead's answers: sizing "Equal risk per family"; combined budget "No combined budget yet"; promotion "10 clean sessions + ladder"; build order "Runner PR, then report" [V]
+  - `ops/sleeves/events_sleeves.json` now holds each sleeve at a quarter of its full size (every sleeve has zero live sessions), with `min_order_usd` 25 and `max_name_usd` 50,000 re-derived for that stage; the pinning test was edited with it [V]
+- source: `ops/sleeves/events_sleeves.json`, `quantt/sleeves/tests/test_run.py`, `docs/SYSTEM.md` section 5 (the block dated 2026-11-16 and 2026-11-18), this commit; the allocation scripts and per-sleeve series are outside the repository in `~/quantt_research/pm_alloc_2026-11-18/`
+- supports: §5
+- status: current. The events runner is not installed and has never run against a broker. The allocation analysis was one run by one agent and has not been independently re-derived; the C4 series in it is the trial-52 series, not the deployed blend

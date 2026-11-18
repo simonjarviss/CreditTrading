@@ -871,6 +871,22 @@ and are not rewritten. How it changes the agents' rules is `CLAUDE.md`, "Hard ru
 |---|---|
 | What the desk is | **An event-driven and special-situations desk as well as a systematic one, in any asset class.** Every idea hunt also looks for niche verticals along those lines. The seed list is `docs/MISSION.md` §5 (the block dated 2026-11-11). Nothing else in the 2026-11-09 ruling changes: shadow books first, no paper account for a new sleeve without the team lead, releases by the team lead only |
 
+### Team lead, 2026-11-16 and 2026-11-18 — the event sleeves' account, how sleeves are sized, and how a book is promoted
+
+Answered through question prompts. The 2026-11-16 rows were in `ops/sleeves/events_sleeves.json` and
+`results/report/EVIDENCE_LOG.md` (E-2026-11-16-02, -03) only; they are recorded here on 2026-11-18. The 2026-11-18 rows
+followed a measured comparison of sizing schemes (`EVIDENCE_LOG` E-2026-11-18-04).
+
+| question | ruling |
+|---|---|
+| Where promoted event sleeves trade (2026-11-16) | **One new Alpaca paper account, $1,000,000, named `events`**, gross up to 1.5x equity. Seven shadow books are its first sleeves. The small-name special-dividend book is capped at $25,000 by what its names can absorb |
+| How the sleeves in that account are sized (2026-11-18) | **Equal risk per family, not $100,000 a book.** Variants of one idea are one family and split its share. Supersedes 2026-11-16's "$100,000 each". At $100,000 a book the two units ex-date books carried 68% of the account's backtest risk [V, gross, 2000-06-01 to 2025-12-23]. Full sizes are in the book file's `_note_sleeves` |
+| A combined risk budget across all accounts (2026-11-18) | **Not yet.** Each account keeps its own limits. Asked as "8% combined vol with HALVE at 12% and KILL at 18%"; to be asked again after the events account has traded |
+| What promotes a shadow book to a paper sleeve (2026-11-18) | **Ten clean on-time shadow sessions**: no UNMEASURED and no LATE day. It tests the feed and the plumbing, not the return: no statistic exists that early |
+| How a new sleeve scales (2026-11-18) | **A ladder, counted in sessions on which the sleeve held a position.** Under 20: a quarter of its full size. 20 to 59: half, if fills track the shadow book. From 60: full if live P&L is above -1 sigma x sqrt(T), half between -1 and -2 sigma, stopped below -2 sigma. Sixty sessions cannot confirm a Sharpe; the ladder only catches failures. Supersedes 2026-10-29's "a full equal-risk share from day one" for sleeves in the events account |
+| What is built first (2026-11-18) | **The runner's PR to main, then a read-only combined daily report** across the accounts (P&L and risk share by family, factor exposure, trailing correlations once 20 sessions exist) |
+| Not asked, and open | A demotion rule on drawdown (the ladder's -2 sigma stop is the only one); whether the two shadow books outside the seven (`month_end_ief`, `spinoff_first_week`) become sleeves; a replacement second NAV source for the core (E-2026-11-18-03) |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |

@@ -554,6 +554,17 @@ REPORT_UNIT_FILES = (REPORT_SECRET_UNIT,) + tuple(REPORT_PNL_KEY_UNITS[b] for b 
 # runner is the next) must add its names the same way, in the same PR.
 SHADOW_UNIT_FILES = ("quantt-shadow-secret.service", "quantt-shadow.service", "quantt-shadow.timer")
 
+# The event sleeves' runner (quantt/sleeves/, its notes quantt/sleeves/deploy/README.md) has its own installer too,
+# quantt/sleeves/deploy/install_events_vm.sh: one key service and a service and timer for
+# each of plan, send and verify. Registered here in the PR that brought that installer to
+# main, as the note above asks, so a C4 or `--reports` install does not refuse beside them.
+# THESE UNITS SEND ORDERS (the events paper account). Knowing their names changes nothing
+# about them: this installer never writes, starts, stops or arms them, and a drop-in or a
+# stray `quantt-events-*` file that is not one of these seven is still refused by name.
+# Pinned to the shell installer by test_events_unit_names_are_the_ones_the_events_installer_writes.
+EVENTS_UNIT_FILES = ("quantt-events-secret.service",) + tuple(
+    f"quantt-events-{job}.{kind}" for job in ("plan", "send", "verify") for kind in ("service", "timer"))
+
 
 class ReportVm(VmBook):
     @property
@@ -962,7 +973,7 @@ def dormant_overrides(run_cmd: Callable, layout: "Layout", units=ALL_UNIT_FILES,
     # The shadow runner's units are installed by the repository's own
     # shadow/deploy/install_shadow_vm.sh (RUNBOOK 8.10), which runs its own daemon-reload.
     # They are ours too. See SHADOW_UNIT_FILES for what refusing them cost.
-    known = set(units) | set(REPORT_UNIT_FILES) | set(SHADOW_UNIT_FILES)
+    known = set(units) | set(REPORT_UNIT_FILES) | set(SHADOW_UNIT_FILES) | set(EVENTS_UNIT_FILES)
     for d in roots if unexpected_prefixes else ():
         for f in sorted(d.glob("*")) if d.is_dir() else ():
             if (f.name.startswith(unexpected_prefixes) and f.suffix in (".service", ".timer")

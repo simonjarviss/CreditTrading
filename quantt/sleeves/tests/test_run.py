@@ -731,15 +731,23 @@ def test_the_paper_endpoint_constant_is_the_clients_and_the_package_never_import
 # ---------------------------------------------------------------------- book file
 
 def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
-    """The values are pinned on purpose: they are the team lead's rulings of 2026-11-16 (seven
-    books, $100,000 each and $25,000 for the small-name one, in a $1M account, gross to 1.5x) and the order limits derived from them, so a change to
-    the file is a deliberate edit of this test too. The window must fit max_orders by the
-    core's own send budget, or the first session, which builds every book, could never start."""
+    """The values are pinned on purpose: they are the team lead's rulings (2026-11-16: seven
+    books in a $1M account, gross to 1.5x, the small-name book capped at $25,000; 2026-11-18:
+    equal risk per family, every new sleeve at a quarter of its full size) and the order
+    limits derived from them, so a change to the file is a deliberate edit of this test too.
+    The window must fit max_orders by the core's own send budget, or the first session, which
+    builds every book, could never start."""
     cfg = config.load(sr.BOOK_PATH)
     assert cfg.book == "events" and len(cfg.sleeves) == 7 and all(s.enabled for s in cfg.sleeves)
-    assert {s.slug: s.capital_usd for s in cfg.sleeves if s.capital_usd != 100000} == {"specdiv_wait_small": 25000}
+    full = {"cef_exdate_after": 132000, "cef_exdate_before_after": 97000, "units_exdate_after": 52000,
+            "units_exdate_before_after": 36000, "specdiv_wait": 105000, "specdiv_wait_small": 25000,
+            "pead_small_long": 96000}
+    assert {s.slug: s.capital_usd for s in cfg.sleeves} == {k: v / 4 for k, v in full.items()}
     assert (cfg.min_order_usd, cfg.max_gross_x_equity, cfg.max_name_usd, cfg.max_stale_sessions, cfg.max_orders,
-            cfg.window_minutes_before_close) == (100, 1.5, 190000, 2, 300, (20, 2))
+            cfg.window_minutes_before_close) == (25, 1.5, 50000, 2, 300, (20, 2))
+    # the shared IWM hedge at this stage fits under max_name_usd: pead 100%, each special-dividend book 50%
+    c = {s.slug: s.capital_usd for s in cfg.sleeves}
+    assert c["pead_small_long"] + 0.5 * (c["specdiv_wait"] + c["specdiv_wait_small"]) <= cfg.max_name_usd
     first, last = cfg.window_minutes_before_close
     assert gt.send_budget_s(cfg.max_orders) <= (first - last) * 60
     for slug in cfg.slugs:

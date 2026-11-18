@@ -1,51 +1,51 @@
 {
- "_note": "Read by quantt/sleeves/config.py, where every key is required. PAPER ONLY. Team lead's rulings (question prompts): 2026-11-16 a NEW Alpaca paper account for this book, gross up to 1.5x equity; later the same day, the account is $1,000,000 and each book runs $100,000, except the small-name special-dividend book at $25,000 because its names cannot absorb more. The order limits below were derived from those rulings and are for the team lead to confirm at install.",
+ "_note": "Read by quantt/sleeves/config.py, where every key is required. PAPER ONLY. Team lead's rulings (question prompts): 2026-11-16 a NEW Alpaca paper account for this book, $1,000,000, gross up to 1.5x equity. 2026-11-18: sleeves are sized by EQUAL RISK PER FAMILY, not $100,000 a book (at $100,000 a book the two units books carried 68% of this account's backtest risk), and a new sleeve starts at a QUARTER of its full size (the ladder in _note_sleeves). The order limits below were re-derived from those rulings on 2026-11-18 and are for the team lead to confirm at install.",
  "book": "events",
  "_note_book": "The Alpaca paper account's name: keys ALPACA_EVENTS_KEY_ID / ALPACA_EVENTS_SECRET_KEY, client order ids events-<YYYYMMDD>-<SYMBOL>-1, and the state directory must be named 'events'.",
  "sleeves": [
   {
    "slug": "specdiv_wait_small",
-   "capital_usd": 25000,
+   "capital_usd": 6250.0,
    "enabled": true
   },
   {
    "slug": "specdiv_wait",
-   "capital_usd": 100000,
+   "capital_usd": 26250.0,
    "enabled": true
   },
   {
    "slug": "cef_exdate_after",
-   "capital_usd": 100000,
+   "capital_usd": 33000.0,
    "enabled": true
   },
   {
    "slug": "cef_exdate_before_after",
-   "capital_usd": 100000,
+   "capital_usd": 24250.0,
    "enabled": true
   },
   {
    "slug": "units_exdate_after",
-   "capital_usd": 100000,
+   "capital_usd": 13000.0,
    "enabled": true
   },
   {
    "slug": "units_exdate_before_after",
-   "capital_usd": 100000,
+   "capital_usd": 9000.0,
    "enabled": true
   },
   {
    "slug": "pead_small_long",
-   "capital_usd": 100000,
+   "capital_usd": 24000.0,
    "enabled": true
   }
  ],
- "_note_sleeves": "Team lead 2026-11-16: seven shadow books, $100,000 each in a $1,000,000 account; specdiv_wait_small $25,000 (its card puts the trade at $250k to $1M in names trading $100k to $5M a day, and 10% of $25,000 is $2,500 a name). A sleeve's decision weights are fractions of its capital_usd here (the shadow file's own notional is ignored). enabled=false with shares still in the ledger FLATTENS that sleeve; to stop it without trading, halt the book.",
- "min_order_usd": 100,
- "_note_min_order_usd": "DERIVED 2026-11-16, to confirm. The smallest regular position is cef_exdate_after's long side, about $50,000 / 85 funds = $588, so $100 drops only re-sizing noise. (At the first ruling of $15,000 a book this had to be $25.)",
+ "_note_sleeves": "Team lead 2026-11-18 (docs/SYSTEM.md section 5; EVIDENCE_LOG E-2026-11-18-04). FULL SIZE, equal risk across the four families in this account (CEF ex-date, units ex-date, special dividends, earnings drift), a family's variants splitting its share, from each sleeve's backtest volatility 2000-06-01 to 2025-12-23 (4.2%, 5.7%, 10.7%, 15.4%, 5.3%, 5.3%, 11.7% a year in the order below the special-dividend pair; ~/quantt_research/pm_alloc_2026-11-18/, gross, unreviewed for the ex-date books), on the $625,000 the 2026-11-16 ruling gave the seven: cef_exdate_after $132,000, cef_exdate_before_after $97,000, units_exdate_after $52,000, units_exdate_before_after $36,000, specdiv_wait $105,000, pead_small_long $96,000; specdiv_wait_small stays capped at $25,000 by its names' capacity (2026-11-16) and the $81,000 that cap frees is NOT moved to another sleeve, so the special-dividend family sits under an equal share. THE LADDER, counted in sessions on which the sleeve held a position: under 20 a QUARTER of full size; 20 to 59 a HALF if fills track the shadow book; from 60 FULL if live P&L is above -1 sigma x sqrt(T), half between -1 and -2 sigma, stopped below -2 sigma. capital_usd below is the CURRENT STAGE (every sleeve at a quarter: no sleeve has a live session), and moving a sleeve up or down the ladder is an edit of its capital_usd here in a PR. A sleeve is enabled only after its shadow book has 10 clean on-time sessions (no UNMEASURED or LATE day): read the scoreboard at install and set enabled=false for any that has not. A sleeve's decision weights are fractions of its capital_usd here (the shadow file's own notional is ignored). enabled=false with shares still in the ledger FLATTENS that sleeve; to stop it without trading, halt the book.",
+ "min_order_usd": 25,
+ "_note_min_order_usd": "DERIVED 2026-11-18, to confirm. At a quarter size the smallest regular positions are units_exdate_before_after's, about $9,000 over some 45 units = $200 a name before the long/short split, and cef_exdate_after's long side, about $16,500 / 85 funds = $194; $100 would drop real positions, $25 drops only re-sizing noise (the same figure the $15,000-a-book ruling needed). Revisit when sleeves reach full size.",
  "max_gross_x_equity": 1.5,
  "_note_max_gross_x_equity": "Team lead 2026-11-16. The book's gross after the plan, as a multiple of account equity. Above it every sleeve's targets are scaled by one factor at PLAN; SEND judges an adding set against the same multiple on the lower of planned and live equity (the core's stress rule).",
- "max_name_usd": 190000,
- "_note_max_name_usd": "DERIVED 2026-11-16, to confirm. IWM is the hedge of three sleeves: pead_small_long shorts 100% of its capital ($100,000), specdiv_wait up to 50% ($50,000) and specdiv_wait_small up to 50% ($12,500): $162,500 together. $190,000 leaves room for price drift; the largest other position is $10,000 (10% of a special-dividend book). Above it the whole plan is refused, naming the symbol.",
+ "max_name_usd": 50000,
+ "_note_max_name_usd": "DERIVED 2026-11-18, to confirm. IWM is the hedge of three sleeves: pead_small_long shorts 100% of its capital ($24,000 at a quarter), specdiv_wait up to 50% ($13,125) and specdiv_wait_small up to 50% ($3,125): $40,250 together. $50,000 leaves room for price drift; the largest other position is $2,625 (10% of specdiv_wait). At full size the same sum is $161,000 and this limit must rise with the ladder (it was $190,000 at $100,000 a book). Above it the whole plan is refused, naming the symbol.",
  "max_stale_sessions": 2,
  "_note_max_stale_sessions": "PROPOSAL. A sleeve with no usable decision holds its shares for this many sessions in a row, then is flattened.",
  "max_orders": 300,
