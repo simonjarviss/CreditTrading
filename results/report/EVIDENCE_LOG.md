@@ -4874,3 +4874,29 @@ that adds it does not exist when it is written.
 - source: `shadow/signals/uit_termination.py` @ `96b05ff`; `shadow/universes/build_uit_terminations_v1.py` @ `96b05ff`; `shadow/universes/uit_terminations_v1.csv` @ `96b05ff`; `shadow/books/uit_termination.json` @ `96b05ff`; `shadow/books/uit_termination_big_sale.json` @ `96b05ff`; `results/ideas/2026-11-16_uit_cef_flows.md` @ `96b05ff`; `docs/REFERENCES.md` @ `96b05ff` (§12ut)
 - supports: §4, §5
 - status: current. SIMULATED books, not evidence of what trading earns; committed locally on branch shadow-uit, not pushed and not on the VM. The nightly run itself was not run on the laptop (it needs the Alpaca data key); the price fetch and both signal functions were run on real prices, weights only, no return read. The 98 trusts that terminated between 2026-01-02 and 2026-11-18 are the out-of-sample year and have not been scored
+
+### E-2026-11-18-22 · Result: a hold-off after a distribution cut lowers the return of both live closed-end-fund books; no change to either
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - asked because E-2026-11-18-11 found funds keep falling after a cut, and a discount-reversion book might buy that; tested on the canonical harness with that card's event definition, rule fixed before any return was read: no new long, or flat, for 20 or 60 sessions after the cut is known [S]
+  - events: 38 cuts on 10 of the core's 13 funds since 2013-06-25 (2.9 a year, none after 2023-03-02); 235 cuts on 58 of the C4 z book's 74 funds since 2005 (10.9 a year); panels end core 2026-10-14, families 2026-10-09, CRSP events 2025-12-31 [S]
+  - the books do buy: position change from K-3 to K+5 is +4.1% of capital on the core (t 2.3) and +0.8% on C4 (t 3.5), against about zero at unchanged declarations; book P&L in the cut fund per event is +11bp and +17bp of capital at 20 and 60 sessions on the core (t 0.7, 0.8) [S]
+  - against the unchanged book, gross Sharpe: core 1.15, no new long 1.04 (20) and 0.91 (60, -140bp a year, t -2.2), flat 1.11 and 1.08; C4 1.34, no new long 1.34 and 1.24, flat 1.32 and 1.25; turnover moves 3.2% at most [S]
+  - placebo dates, 200 draws each: no variant beats them; no new long on the core is worse than 98.5% to 100% of draws; the 60-session rules are negative in every era with events on both books [S]
+- source: `results/ideas/2026-11-18_core_dist_cut_filter.md` @ `c85dd8e`; `results/ideas/core_dist_cut_filter/explore.py` @ `c85dd8e`; `results/IDEA_LEDGER.md` @ `c85dd8e`
+- supports: §4
+- status: current. Set aside: no spec change. One agent's run, not independently reviewed. Not done: the deployed C4 blend (only the z book could be driven), C4 on total returns, cuts after 2025-12-31
+
+### E-2026-11-18-23 · Result: the shadow runner's nightly loop now contains one book's exception, so a faulty book cannot leave the books after it without a decision
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - before: `engine.decide` turned a book's own Unmeasured into a status, but any other exception from a signal left `nightly.run`'s loop, and every later book got no decision that night [V]
+  - now the broken book is printed with its exception, the run exits 3 as it does for UNMEASURED, nothing is decided for that book, and the remaining books decide; one new test, which fails on `b2df5e5` [V]
+  - made the same day two unit-trust books joined the branch, taking the list to eleven books [V]
+- source: `shadow/nightly.py` @ `9c4409c`; `shadow/tests/test_nightly.py` @ `9c4409c`
+- supports: §5
+- status: current. On branch mission-work; reaches the VM's shadow runner when the branch `shadow` is next pushed
