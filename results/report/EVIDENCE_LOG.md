@@ -4881,3 +4881,20 @@ that adds it does not exist when it is written.
 - source: `ops/sleeves/events_sleeves.json` @ `b5b5687`; `quantt/sleeves/tests/test_run.py` @ `b5b5687`; `docs/SYSTEM.md` @ `b5b5687` (section 5, the block dated 2026-11-16 and 2026-11-18); the allocation scripts and per-sleeve series are outside the repository in `~/quantt_research/pm_alloc_2026-11-18/`
 - supports: §5
 - status: current. The events runner is not installed and has never run against a broker. The allocation analysis was one run by one agent and has not been independently re-derived; the C4 series in it is the trial-52 series, not the deployed blend
+
+### E-2026-11-18-21 · A read-only promotion and ladder report for the event sleeves; the book file now states each sleeve's full size and family; three of the ladder's tests cannot be measured yet
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - `quantt/sleeves/promote.py` (`python3 -m quantt.sleeves.promote --shadow-state <dir> --events-state <dir>`) counts both rules of E-2026-11-18-04 from the two state directories and prints the one-line edit of the book file that is due; exit 0 agree, 30 a change is due, 31 unmeasured, 32 refused. It imports the standard library and `config.py` only and names no call that writes a file, which a test checks from source [V]
+  - a clean session, as implemented and for the team lead to confirm: one row of the shadow book's `scores.csv` whose status is SCORED or FLAT and whose filling decision (`decisions/<prev>.json`) was written before 13:00 New York on that session; eligible when the latest 10 rows are all clean. A flat day with an on-time decision counts; the engine also writes FLAT when no on-time decision exists, so the status alone is not used [V]
+  - the book file gains two required keys per sleeve, `full_capital_usd` and `family`: 132,000, 97,000, 52,000, 36,000, 105,000, 25,000 and 96,000 dollars in four families, the figures of E-2026-11-18-04; `capital_usd` is unchanged and is still the only size the runner trades (`run.py`, `net.py` and `ledger.py` are untouched) [V]
+  - the report refuses, naming the sleeve, a `capital_usd` that is not its full size x 0.25, 0.5 or 1; all 7 sleeves in the released file read as a quarter [V]
+  - not measurable, and reported as UNMEASURED: the 20-to-59 stage ("if fills track the shadow book" has no written definition; the report prints paper and shadow P&L on the same sessions and their difference, with no pass or fail) and the stage from 60 sessions (no sigma is recorded for any sleeve, and `sleeve_scores.csv` does not record the capital each session traded at) [V]
+  - run on the laptop on 2026-11-18 against the copy of the VM's 2026-11-17 scoreboard, which holds no state files, and no events state: all 7 shadow records and all 7 sleeve verdicts UNMEASURED, each naming the missing path, exit 31. The report has not been run against real state [V]
+  - on that 2026-11-17 scoreboard the most sessions any shadow book had was 5 (scored plus flat), so no book can have had 10 clean sessions then; whether each was on time cannot be read from a scoreboard [S]
+  - `.claude/skills/paper/SKILL.md` told agents to refuse "anything under `quantt/`" for a new sleeve; it now refuses a new account, a book config under `ops/books/` and a scheduler entry, and sends a sleeve in the events account through the report and a one-file PR [V]
+- source: `quantt/sleeves/promote.py` @ `99cbae4`; `quantt/sleeves/tests/test_promote.py` @ `99cbae4`; `quantt/sleeves/config.py` @ `99cbae4`; `ops/sleeves/events_sleeves.json` @ `99cbae4`; `quantt/sleeves/deploy/README.md` @ `99cbae4` ("Promotion and the ladder"); `.claude/skills/paper/SKILL.md` @ `99cbae4`
+- supports: §5
+- status: current, on branch `sleeve-promotion`, not merged and not released. Open for the team lead: whether a flat day with an on-time decision is a clean session; what "fills track the shadow book" means; which sigma the 60-session test uses (the backtest volatilities in `_note_sleeves` are the only candidate on record) and at what capital; whether a sleeve that has traded is demoted by a later unclean shadow day (the report does not)
