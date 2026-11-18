@@ -4384,3 +4384,22 @@ that adds it does not exist when it is written.
 - source: `ops/prod_state.py`, `ops/orient.py`, `ops/tests/test_prod_state.py`, `ops/tests/test_orient.py` on branch `ops-prod-state-books`
 - supports: §5
 - status: on branch `ops-prod-state-books`, committed locally, not pushed, not merged, installed nowhere (the reader runs on the laptop; nothing on the VM changes)
+
+### E-2026-11-18-02 · Result: why the two paper books are below $100,000 at the 2026-11-17 close, and why C4 sends few orders
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - core, attributed from Alpaca's own records read on 2026-11-18 (568 fills from `/v2/account/activities/FILL`, raw daily SIP closes from `/v2/stocks/bars`): holding P&L +$592.57, fills against the same day's close -$785.10, CAT fees -$12.01 (61 FEE rows), total -$204.54, equal to the official end-of-day record to the cent [V]
+  - core, the holding P&L by side: positions held long -$2,199.52, positions held short +$2,792.09; the equal-weight return of the 13 names from the 2026-09-29 close was negative in the 2026-11-02 to 2026-11-17 window (-2.73%) [V]
+  - core, by name: the two municipal funds lost $3,105.68 between them (short from 2026-09-30 while they rose, covered 2026-11-03 and 2026-11-04, long from 2026-11-06 while they fell, flat on 2026-11-16); the other eleven names made +$2,913.15 [V]
+  - core, by window: +$1,476.76 to the 2026-10-12 peak; -$2,688.21 from 2026-10-13 to 2026-10-19; +$235.47 to 2026-10-30; +$783.45 from 2026-11-02 to 2026-11-17 [V]
+  - core, execution: $1,096,900 traded in 36 sessions, every fill between 15:50 and 15:59 New York; -$785.10 against the close is 7.2bp of traded notional [V]
+  - Alpaca paper DID charge fees on this account: 61 CAT fee rows, $12.01. `CLAUDE.md` landmine 1 says paper charges no regulatory fees [V: docs]; the account's activity record disagrees, and the record is what was measured [V]
+  - C4, official: -$360.50 at the 2026-11-17 close, eleven trading sessions from 2026-11-03. Not attributed by name: its account keys and plan are on the VM only [V]
+  - distributions paper never paid or charged (dist-adjusted minus auction-marked, sessions where both exist): core +$49.32 over 28 sessions to 2026-11-13; C4 +$328.07 over 9 sessions to 2026-11-13 [V]
+  - C4's plan for 2026-11-18, by the new `plan shape` reading: 74 names, of which 49 `illiquid` (under the spec's `min_adv_usd`), 7 `no discount today` (NAV-repeat mask), 1 below the minimum weight, and 17 held (7 long, 10 short), all 17 `band hold`; 0 orders; gross $122,196.86 = 1.23x the plan's equity [V]
+  - the core's plan for the same day: 13 names, 12 re-targeted (`cef discount`), none on a band hold, 10 orders; gross $166,226.76 = 1.67x [V]
+- source: `ops/prod_state.py` on branch `ops-prod-state-books` (`plan_shape`); the attribution script is session scratch, not in the repo; Alpaca paper account `cef`, read-only, 2026-11-18
+- supports: §5
+- status: current as measured on 2026-11-18. A result about 36 sessions of one account; not a test of the strategy

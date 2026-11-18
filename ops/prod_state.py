@@ -642,6 +642,7 @@ q @K@verify sudo -n sh -c "if [ -e $S/verify.log ]; then tail -n1 $S/verify.log;
 q @K@equity_header sudo -n sh -c "if [ -e $S/equity.csv ]; then head -n1 $S/equity.csv; else echo NO-FILE; fi"
 q @K@equity_last sudo -n sh -c "if [ -e $S/equity.csv ]; then tail -n1 $S/equity.csv; else echo NO-FILE; fi"
 q @K@newest_plan sudo -n python3 -I -c "@PLAN_PY@" "$S"
+qw @K@plan_shape sudo -n python3 -I -c "@SHAPE_PY@" "$S"
 qw @K@pnl sudo -n -u @USER@ python3 -I -c "@PNL_PY@" "$S"
 printf '@K@END\t0\tquantt-prod-state\n'
 """
@@ -664,6 +665,46 @@ _PLAN_PY = ("import json,os,sys; s=sys.argv[1]; "
             "else 'ok' if f.get('ok') else 'warning', "
             "'shock_usd': (f or {}).get('shock_usd')}))")
 assert not set(_PLAN_PY) & set('$`"'), "the plan summary must survive double quotes"
+# The newest plan's SHAPE, again summarised ON the VM: how many names it covers,
+# how many are held long and short, their gross and net at the plan's own
+# closes, and how many names carry each kind of reason (the sleeve's reason
+# string cut at its z-score, its first `|` or its first digit, letters only: `cef band hold`,
+# `cef discount`).
+# WHY (team lead, 2026-11-18): C4 sent 0 to 3 orders a day on 74 names while the
+# core sent about 10 on 13, and the only way to see why was to copy the plan,
+# positions and all, off the VM by hand. Counts and totals answer it; no symbol,
+# quantity or per-name weight leaves the machine. A held name with no close in
+# the plan makes gross and net null, never a partial sum.
+_SHAPE_PY = """import json, os, sys
+s = sys.argv[1]
+ds = sorted(d for d in os.listdir(s) if d[:2] == '20'
+            and os.path.isfile(os.path.join(s, d, 'plan.json')))
+if not ds:
+    print('NO-PLAN')
+else:
+    p = json.load(open(os.path.join(s, ds[-1], 'plan.json')))
+    t = p.get('targets') or {}
+    c = p.get('closes') or {}
+    why = {}
+    for v in t.values():
+        k = str(v.get('reason') or 'no reason').split(' z=')[0].split('|')[0].split(' gmax')[0]
+        k = k[:min([i for i, ch in enumerate(k) if ch.isdigit()] or [len(k)])]
+        k = ' '.join(''.join(ch if ch.isalpha() else ' ' for ch in k).split())[:48]
+        why[k] = why.get(k, 0) + 1
+    held = {k: v['current'] for k, v in t.items() if v.get('current')}
+    moves = sum(1 for v in t.values() if v.get('target') != v.get('current'))
+    priced = all(isinstance(c.get(k), (int, float)) for k in held)
+    eq = p.get('equity')
+    print(json.dumps({'session_date': p.get('session_date'), 'names': len(t),
+                      'held': len(held), 'long': sum(1 for q in held.values() if q > 0),
+                      'short': sum(1 for q in held.values() if q < 0),
+                      'target_differs': moves,
+                      'gross_usd': round(sum(abs(q) * c[k] for k, q in held.items()), 2) if priced else None,
+                      'net_usd': round(sum(q * c[k] for k, q in held.items()), 2) if priced else None,
+                      'equity': eq if isinstance(eq, (int, float)) else None,
+                      'why': dict(sorted(why.items()))}, separators=(',', ':')))
+"""
+assert not set(_SHAPE_PY) & set('$`"\\'), "the plan shape must survive double quotes"
 # `pnl_tails` itself, then one call printing compact JSON. PNL_FILES goes in as
 # its repr (single-quoted strings, tuples, ints), so the VM selects exactly the
 # columns this module names and no others.
@@ -695,6 +736,7 @@ def remote_script(book: str = iv.BOOK, prefix: str = "") -> str:
             .replace("@PNL_PY@", _PNL_PY)
             .replace("@WIDE@", str(PNL_REPLY_MAX_CHARS))
             .replace("@PLAN_PY@", _PLAN_PY)
+            .replace("@SHAPE_PY@", _SHAPE_PY)
             .replace("@K@", prefix)
             .replace("@STATE@", shlex.quote(str(lay.state_dir)))
             .replace("@PROD@", shlex.quote(str(lay.prod_dir)))
@@ -871,6 +913,17 @@ def _vm_from_readings(got: dict, alias: str, book: str = iv.BOOK) -> dict:
     else:
         out["newest_plan"] = _unm(f"`sudo -n python3` plan summary exited {rc}: {scrub(v or '')}")
 
+    rc, v = reading("plan_shape")
+    if rc == 0 and v == "NO-PLAN":
+        out["plan_shape"] = _absent("no plan.json in any day directory yet")
+    elif rc == 0 and v:
+        try:
+            out["plan_shape"] = _val(json.loads(v))
+        except json.JSONDecodeError:
+            out["plan_shape"] = _unm(f"the plan shape is not JSON: {scrub(v)[:120]}")
+    else:
+        out["plan_shape"] = _unm(f"`sudo -n python3` plan shape exited {rc}: {scrub(v or '')}")
+
     rc, v = reading("pnl")
     where = f"{alias}:{lay.state_dir}"
     why = None
@@ -1041,6 +1094,23 @@ def plan_text(r: dict | None) -> str:
             f"{'sent' if n.get('sent') else 'not sent yet'}; {pf_text}")
 
 
+def shape_text(r: dict | None) -> str:
+    """`13 names, 12 held (6 long, 6 short); gross $178,000.00 = 1.78x equity, net
+    -$1,200.00; 9 target(s) differ from holdings; reasons: cef band hold 4, cef discount 9`."""
+    if not isinstance(r, dict) or "value" not in r:
+        return show(r)
+    n = r["value"]
+    g, net, eq = n.get("gross_usd"), n.get("net_usd"), n.get("equity")
+    money = ("gross and net UNMEASURED (a held name has no close in the plan)"
+             if g is None or net is None else
+             f"gross ${g:,.2f}" + (f" = {g / eq:.2f}x the plan's equity" if eq else "")
+             + f", net {'-' if net < 0 else '+'}${abs(net):,.2f}")
+    why = ", ".join(f"{k} {c}" for k, c in (n.get("why") or {}).items()) or "none"
+    return (f"{n.get('names')} name(s), {n.get('held')} held ({n.get('long')} long, "
+            f"{n.get('short')} short); {money}; {n.get('target_differs')} target(s) differ "
+            f"from holdings; reasons: {why}")
+
+
 def pnl_files_text(r: dict | None) -> str:
     """`eod_equity.csv none · scores.csv 16 row(s), to 2026-10-16 · ...`: which
     P&L files a machine holds. The figures are orient's PNL section, from the
@@ -1113,6 +1183,7 @@ def _render_vm_book(p, v: dict, label: str, clone: bool = True) -> None:
     p("  equity.csv last row", equity_text(v.get("equity")))
     p("  P&L files", pnl_files_text(v.get("pnl")))
     p("  newest plan", plan_text(v.get("newest_plan")))
+    p("  plan shape", shape_text(v.get("plan_shape")))
 
 
 def _stem(unit: str) -> str:

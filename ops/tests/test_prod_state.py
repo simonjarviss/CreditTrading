@@ -499,6 +499,57 @@ class TestNewestPlan:
                                    "sent": False, "preflight": "warning", "shock_usd": 9.5}
         assert "AAA" not in out
 
+    def test_the_plan_shape_line_ships_counts_and_totals_and_no_position(self, tmp_path):
+        """The real `plan_shape` line, `sudo -n` removed, run by sh. Synthetic
+        plan: it tests the summary, not a book. Why it exists: on 2026-11-18
+        nothing short of copying C4's plan off the VM could say why 74 names
+        produced no order."""
+        import shlex
+        import subprocess
+        hold = "cef band hold: |gap|<=0.0480 w=-0.0240 gmax=1.8000"
+        plan = {"session_date": "2026-01-07", "equity": 1000.0,
+                "closes": {"AAA": 10.0, "BBB": 20.0, "CCC": 5.0, "DDD": 1.0},
+                "targets": {"AAA": {"current": 30, "target": 30, "reason": hold},
+                            "BBB": {"current": -10, "target": -12,
+                                    "reason": "cef discount z=-3.01 w=+0.2301 volscal=1.88"},
+                            "CCC": {"current": 0, "target": 0, "reason": "cef: illiquid gmax=1.8"},
+                            "DDD": {"current": 0, "target": 0, "reason": "cef: illiquid gmax=1.8"}}}
+        state = tmp_path / "state"
+        (state / "2026-01-07").mkdir(parents=True)
+        (state / "2026-01-07" / "plan.json").write_text(json.dumps(plan))
+        lines = ps.REMOTE_SCRIPT.split("\n")
+        i = next(k for k, ln in enumerate(lines) if ln.startswith("qw plan_shape"))
+        j = next(k for k in range(i + 1, len(lines)) if lines[k].startswith("qw pnl"))
+        line = "\n".join(lines[i:j]).replace("sudo -n ", "")
+        script = f"{lines[1]}\nS={shlex.quote(str(state))}\n{line}\n"
+        r = subprocess.run(["sh", "-c", script], capture_output=True, text=True, timeout=30)
+        key, rc, out = r.stdout.rstrip("\n").split("\t")
+        assert (key, rc) == ("plan_shape", "0"), r.stderr
+        assert json.loads(out) == {
+            "session_date": "2026-01-07", "names": 4, "held": 2, "long": 1, "short": 1,
+            "target_differs": 1, "gross_usd": 500.0, "net_usd": 100.0, "equity": 1000.0,
+            "why": {"cef band hold": 1, "cef discount": 1, "cef illiquid": 2}}
+        assert not any(sym in out for sym in ("AAA", "BBB", "CCC", "DDD"))
+        text = ps.shape_text({"value": json.loads(out)})
+        assert "4 name(s), 2 held (1 long, 1 short)" in text and "0.50x the plan's equity" in text
+
+    def test_a_held_name_without_a_close_makes_the_totals_a_gap(self, tmp_path):
+        import shlex
+        import subprocess
+        plan = {"closes": {}, "targets": {"AAA": {"current": 3, "target": 3, "reason": "x"}}}
+        state = tmp_path / "state"
+        (state / "2026-01-07").mkdir(parents=True)
+        (state / "2026-01-07" / "plan.json").write_text(json.dumps(plan))
+        lines = ps.REMOTE_SCRIPT.split("\n")
+        i = next(k for k, ln in enumerate(lines) if ln.startswith("qw plan_shape"))
+        j = next(k for k in range(i + 1, len(lines)) if lines[k].startswith("qw pnl"))
+        line = "\n".join(lines[i:j]).replace("sudo -n ", "")
+        r = subprocess.run(["sh", "-c", f"{lines[1]}\nS={shlex.quote(str(state))}\n{line}\n"],
+                           capture_output=True, text=True, timeout=30)
+        got = json.loads(r.stdout.rstrip("\n").split("\t")[2])
+        assert got["gross_usd"] is None and got["net_usd"] is None and got["held"] == 1
+        assert "UNMEASURED" in ps.shape_text({"value": got})
+
 
 # ------------------------------------------- the daily P&L files (2026-10-19)
 # The team lead ruled that day that Alpaca's EOD portfolio history is the
