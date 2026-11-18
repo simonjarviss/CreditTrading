@@ -4360,8 +4360,6 @@ that adds it does not exist when it is written.
 - status: current. Figures re-derived by a separate reviewer agent in the session; the reviewer's scripts and the liquidity and era splits quoted in the card are not stored in the repository. The event books' windows were chosen after seeing the profile. No cost or borrow is modelled, and whether a share can be borrowed on its second day of trading is unknown. Not on shadow: no live spin-off reader yet
 
 ### E-2026-11-14-01 · Method: a spin-off first-week shadow book starts on a first-seen reader of Alpaca's feed; the nightly marks step now follows changing names; four units' closing prints were on the Texas Stock Exchange
-
-### E-2026-11-14-02 · Method: Alpaca stamps a half day's end-of-day point at 17:00 New York, and the client's fixed 20:00 rule would have stopped the official P&L from 2026-11-27; the rule is now the session's close plus four hours
 - kind: method
 - era: ALPACA
 - date: 2026-11-14
@@ -4374,6 +4372,51 @@ that adds it does not exist when it is written.
 - source: `shadow/signals/spinoff.py` @ `fcfccd3`; `shadow/fetch/spinoffs.py` @ `fcfccd3`; `shadow/books/spinoff_first_week.json` @ `fcfccd3`; `shadow/nightly.py` @ `fcfccd3`; `shadow/sources.py` @ `fcfccd3`; `docs/REFERENCES.md` @ `fcfccd3` (§12so)
 - supports: §4, §5
 - status: current. A shadow book under the 2026-11-09 one-time approval (E-2026-11-09-03); SIMULATED, $1M, no borrow modelled. The probe of the feed and the print-by-exchange check were run in the session and are not stored as scripts. The VM has been unreachable from the laptop since 2026-11-10, so no shadow run there has been read and the units books' sessions from 2026-11-11 until this commit reaches the VM are expected to be UNMEASURED
+
+### E-2026-11-14-02 · Method: Alpaca stamps a half day's end-of-day point at 17:00 New York, and the client's fixed 20:00 rule would have stopped the official P&L from 2026-11-27; the rule is now the session's close plus four hours
+- kind: method
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - 754 daily points read on the cef paper account (`period=3A`, last 2026-11-13): 747 sessions with a 16:00 calendar close, all stamped 20:00:00 New York; 7 sessions with a 13:00 close, all stamped 17:00:00 [V]
+  - the 7 half days: 2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; the first five are before funding (equity 0), the last two carry equity [V]
+  - with the new rule the client reads 2023-11-13 to 2026-11-13 on the live endpoint: 292 funded points, 2025-09-18 to 2026-11-13, two of them at 17:00 [V]
+  - eight of the new and changed tests fail on `8eb9ce1`, the old rule; the half-day stamp was found by a peer session's read-only GET on 2026-11-14 and re-measured here [V]
+  - none for the effect on 2026-11-27 (from the code, not run: every point is checked before the window is applied, so the collector's EOD step would raise on each run once the half-day point is served, and verify would show the official P&L as PENDING)
+- source: `quantt/broker/alpaca.py` @ `6814c2e`; `quantt/tests/test_alpaca_client.py` @ `6814c2e`; `docs/REFERENCES.md` @ `6814c2e`
+- supports: §5
+- status: current (an independent review found no material defect; its one low finding, a calendar date served twice, now raises. Not measured: whether a half day's point is final at 17:00, so the 2026-11-27 evening figure should be compared with the next day's re-read. Not released: prod runs the old rule until the team lead installs a release with this change; the report job's reader `scripts/ops/alpaca_read.py` still has the 20:00 rule and is the peer's follow-up PR)
+
+### E-2026-11-14-50 · Result: Alpaca stamps a half day's end-of-day point four hours after its 13:00 close, at 17:00 New York, and the core paper account holds no row of any of the nine corporate-action activity types paper accepts
+- kind: result
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - cef paper, `period=3A`, 754 points: all 747 sessions with a 16:00 calendar close stamped 20:00:00 New York; all 7 with a 13:00 close stamped 17:00:00 (2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; the last two funded) [V]
+  - cef paper account activities, read 2026-11-14: each of the nine types SPLIT, CIL, MA, NC, SC, SPIN, REO, REORG and JNLS returned 0 rows; SSP and SSO answered HTTP 422 [S]
+- source: `scripts/ops/alpaca_read.py` @ `fa84045` (the half-day stamps); `scripts/ops/alpaca_read.py` @ `8dfe3eb` (the activity types)
+- supports: §4, §5
+- status: current
+
+### E-2026-11-14-51 · Rulings: splits leave a fund out of the factor block, named; corporate actions are narrowed and handled from the account's own records; the half-day stamp is fixed in the runner's client by its owner and in the report's reader here
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - none (rulings, 2026-11-14: a fund that split is left out and named on the dates the split can touch, with the PARTIAL rules (option A); the attribution's corporate-action refusal is narrowed to a fund held into an event that changes the holder's share count, never an acquirer, with the rebuild from the account's own activity rows, never the market feed, and an unprocessed paper split shown on its own labelled phantom line beside the official P&L; an unreconciled held night keeps its factor figures, labelled UNRECONCILED; the runner owner fixes AlpacaClient's half-day stamp rule in its own PR before 2026-11-27, and the report's reader copies its rule exactly; the report's follow-up PR is reviewed and merged before any install)
+- source: `scripts/cef/live_attribution.py` @ `8dfe3eb`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`
+- supports: §4, §5
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the rebuild from the account's own activity rows was not kept; any such row now stops the report, named
+
+### E-2026-11-14-52 · Method: the report job's follow-up is built: account cross-checks on every factor reading, no stale reading shown as current, the flat-entry session counted in factor P&L, splits scoped, half-day stamps read, corporate actions narrowed and handled
+- kind: method
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before except the factor P&L rows the flat-entry fix adds on sessions where the book goes flat)
+- source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed; superseded in part by E-2026-11-15-53 (2026-11-15): corporate actions are narrowed, and an account corporate-action row stops the report rather than being handled
 
 ### E-2026-11-15-01 · Incident: the VM's shadow runner was read for the first time since 2026-11-10; every run since the 2026-11-12 evening ended non-zero because four units had no closing print, as expected, and one run stopped on an exchange name the map did not have
 - kind: incident
@@ -4615,48 +4658,6 @@ that adds it does not exist when it is written.
 - status: current. Gross. A second look at a sample already read; proposed by the niche hunt. Closed
 
 ### E-2026-11-15-19 · Method: the small-stock earnings-drift book is on shadow, on a free earnings feed checked against the licensed one
-
-  - 754 daily points read on the cef paper account (`period=3A`, last 2026-11-13): 747 sessions with a 16:00 calendar close, all stamped 20:00:00 New York; 7 sessions with a 13:00 close, all stamped 17:00:00 [V]
-  - the 7 half days: 2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; the first five are before funding (equity 0), the last two carry equity [V]
-  - with the new rule the client reads 2023-11-13 to 2026-11-13 on the live endpoint: 292 funded points, 2025-09-18 to 2026-11-13, two of them at 17:00 [V]
-  - eight of the new and changed tests fail on `8eb9ce1`, the old rule; the half-day stamp was found by a peer session's read-only GET on 2026-11-14 and re-measured here [V]
-  - none for the effect on 2026-11-27 (from the code, not run: every point is checked before the window is applied, so the collector's EOD step would raise on each run once the half-day point is served, and verify would show the official P&L as PENDING)
-- source: `quantt/broker/alpaca.py` @ `6814c2e`; `quantt/tests/test_alpaca_client.py` @ `6814c2e`; `docs/REFERENCES.md` @ `6814c2e`
-- supports: §5
-- status: current (an independent review found no material defect; its one low finding, a calendar date served twice, now raises. Not measured: whether a half day's point is final at 17:00, so the 2026-11-27 evening figure should be compared with the next day's re-read. Not released: prod runs the old rule until the team lead installs a release with this change; the report job's reader `scripts/ops/alpaca_read.py` still has the 20:00 rule and is the peer's follow-up PR)
-
-### E-2026-11-14-50 · Result: Alpaca stamps a half day's end-of-day point four hours after its 13:00 close, at 17:00 New York, and the core paper account holds no row of any of the nine corporate-action activity types paper accepts
-- kind: result
-- era: ALPACA
-- date: 2026-11-14
-- figures:
-  - cef paper, `period=3A`, 754 points: all 747 sessions with a 16:00 calendar close stamped 20:00:00 New York; all 7 with a 13:00 close stamped 17:00:00 (2023-11-24, 2024-07-03, 2024-11-29, 2024-12-24, 2025-07-03, 2025-11-28, 2025-12-24; the last two funded) [V]
-  - cef paper account activities, read 2026-11-14: each of the nine types SPLIT, CIL, MA, NC, SC, SPIN, REO, REORG and JNLS returned 0 rows; SSP and SSO answered HTTP 422 [S]
-- source: `scripts/ops/alpaca_read.py` @ `fa84045` (the half-day stamps); `scripts/ops/alpaca_read.py` @ `8dfe3eb` (the activity types)
-- supports: §4, §5
-- status: current
-
-### E-2026-11-14-51 · Rulings: splits leave a fund out of the factor block, named; corporate actions are narrowed and handled from the account's own records; the half-day stamp is fixed in the runner's client by its owner and in the report's reader here
-- kind: ruling
-- era: ALPACA
-- date: 2026-11-14
-- figures:
-  - none (rulings, 2026-11-14: a fund that split is left out and named on the dates the split can touch, with the PARTIAL rules (option A); the attribution's corporate-action refusal is narrowed to a fund held into an event that changes the holder's share count, never an acquirer, with the rebuild from the account's own activity rows, never the market feed, and an unprocessed paper split shown on its own labelled phantom line beside the official P&L; an unreconciled held night keeps its factor figures, labelled UNRECONCILED; the runner owner fixes AlpacaClient's half-day stamp rule in its own PR before 2026-11-27, and the report's reader copies its rule exactly; the report's follow-up PR is reviewed and merged before any install)
-- source: `scripts/cef/live_attribution.py` @ `8dfe3eb`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`
-- supports: §4, §5
-- status: superseded in part by E-2026-11-15-53 (2026-11-15): the rebuild from the account's own activity rows was not kept; any such row now stops the report, named
-
-### E-2026-11-14-52 · Method: the report job's follow-up is built: account cross-checks on every factor reading, no stale reading shown as current, the flat-entry session counted in factor P&L, splits scoped, half-day stamps read, corporate actions narrowed and handled
-- kind: method
-- era: ALPACA
-- date: 2026-11-14
-- figures:
-  - none (six fixes from the third review of PR #82 and the corporate-action investigation, each with tests that fail on the code before it. No attribution figure moved in any earlier scenario; the factor P&L changed only by the added flat-entry term; one scenario that refused before now attributes, because its fund was flat into the split. Research mode's readout output is byte-identical to before except the factor P&L rows the flat-entry fix adds on sessions where the book goes flat)
-- source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
-- supports: §4, §5
-- status: built on branch reports-followup, under review; not installed; superseded in part by E-2026-11-15-53 (2026-11-15): corporate actions are narrowed, and an account corporate-action row stops the report rather than being handled
-
-### E-2026-11-15-50 · Ruling and method: the corporate-action handling is fixed properly after its review: one phantom per split, the account's own rows rebased in a corp line of their own, and late rows closing the open phantom
 - kind: method
 - era: ALPACA
 - date: 2026-11-15
@@ -4667,6 +4668,83 @@ that adds it does not exist when it is written.
 - source: `shadow/fetch/earnings.py` @ `afd24b9`; `shadow/signals/pead.py` @ `afd24b9`; `shadow/books/pead_small_long.json` @ `afd24b9`; `shadow/tests/test_pead.py` @ `afd24b9`; `docs/REFERENCES.md` @ `afd24b9`; `results/ideas/2026-11-15_pead_small.md` @ `afd24b9`
 - supports: §4
 - status: current. Simulated book, starts 2026-11-17 once the VM's shadow clone has this commit. The IBES comparison was run in the session and is not stored as a script. Size is a dollar limit, not a rank; foreign listings are not removed
+
+### E-2026-11-15-50 · Ruling and method: the corporate-action handling is fixed properly after its review: one phantom per split, the account's own rows rebased in a corp line of their own, and late rows closing the open phantom
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a review of the report follow-up found three ways the new corporate-action handling could show confidently wrong side figures while still reconciling; the account-row paths do not run today, the account having no such rows, but the phantom path runs on paper's first unprocessed split of a held fund. The team lead ruled on 2026-11-14 to fix all three properly rather than refuse: a split the feed lists twice is one event, and records disagreeing on the ratio raise; a position the account's rows move is rebased in its own corp component, so hold and fill stay true and every session still reconciles to the cent; rows posting within ten sessions after the event close the open phantom with a labelled reversal, and the cumulative phantom carries the later moves on the extra shares, intended to equal what is still inside the official P&L (ruled 2026-11-15); that holds only until the account trades the fund, corrected by E-2026-11-15-51. The risk check also refuses a held reading whose two session fields disagree. With no corporate action, the attribution's output is byte-identical to before)
+- source: `scripts/cef/live_attribution.py` @ `adf42b2`; `scripts/cef/live_attribution.py` @ `813676a`; `scripts/ops/risk_daily.py` @ `5d9bcdf`
+- supports: §4, §5
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the corp component and the late-row tie-back were removed; the one-event-per-split dedupe stands
+
+### E-2026-11-15-51 · Ruling and method: a paper split's phantom freezes at the first trade in the fund, and the account's own corporate-action rows are applied for every fund a record names, checked against the split ratio
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a second review of the report follow-up found the phantom kept adding the extra shares' daily moves after the runner had traded them away, so it drifted from what is in the official P&L. The team lead ruled on 2026-11-15: it freezes on the first session the account trades the fund, labelled crystallised; it then equals an independent simulation of a processed account exactly in the six tested cases, with one named gap, when paper applies the split late to an already re-sized count. Also ruled: the account's rows are applied for any fund a corporate-action record names, in any role, with late cash in lieu tied to its split; a new share count that contradicts the split ratio stops the attribution, named (rounded toward zero, which for a short is unverified); a second record of an already-handled split stops it, naming both. A method choice beyond the brief: a session whose account rows do not net to zero at their own prices values every row at the close, which two of the tested cases need to reconcile. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
+- source: `scripts/cef/live_attribution.py` @ `891aea3`; `scripts/cef/live_attribution.py` @ `1a7a1a9`; `scripts/cef/live_attribution.py` @ `6b68fe9`
+- supports: §4, §5
+- status: superseded in part by E-2026-11-15-53 (2026-11-15): the account-row handling it describes was removed; the phantom's freeze at the first trade stands; and superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
+
+### E-2026-11-15-52 · Method: the report job's reader reads the half-day end-of-day stamp by the same rule as the runner's client, held equal by test
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (after PR #83 merged the client's rule (E-2026-11-14-02), the reader's own copy, close plus four hours from the calendar, is held equal to it on half days and on full days, and both refuse each wrong stamp with the same message. This updates E-2026-11-14-02's note that the reader still had the 20:00 rule, once this branch merges)
+- source: `scripts/ops/alpaca_read.py` @ `f550da3`; `scripts/ops/tests/test_alpaca_read.py` @ `f550da3`
+- supports: §5
+- status: built on branch reports-followup, under review; not installed
+
+### E-2026-11-15-53 · Ruling: the report stops, naming the row, whenever the account records a corporate-action row, until one has been seen; the paper-split phantom stays, labelled approximate where it cannot be exact
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a third review found four more defects in the code that applied the account's own corporate-action rows, a path paper has never exercised and whose row format is undocumented; each review round had fixed the last and found new ones. The team lead ruled on 2026-11-15 to simplify: any such row on or before the as-of stops the attribution, naming each row, and the job exits 4; no code applies one. Kept: the narrowed trigger, the paper-split phantom with its freeze at the first trade, one event per split, and the refusal of a second record of a handled split. The phantom is labelled approximate, with the reason, when the crystallising session has fills on both sides or the split leaves a fraction of a share. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
+- source: `scripts/cef/live_attribution.py` @ `82ff173`; `scripts/cef/live_attribution.py` @ `bcc3446`; `scripts/ops/pnl_report.py` @ `bcc3446`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed; supersedes the account-row parts of E-2026-11-15-50 and E-2026-11-15-51; superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
+
+### E-2026-11-15-54 · Ruling: a paper split's phantom, once frozen by a trade, is always labelled approximate, because the runner's no-trade band means a correctly processed account need not have traded to the same position
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (a review found the frozen phantom's claim to equal official equity minus a processed account rested on both ending at the same position after the trade; the live sleeve trades only outside its no-trade band and only to the band's edge, sizing on equity that carries the phantom, so the true gap keeps moving after the trade. The team lead ruled on 2026-11-15: every frozen phantom is labelled approximate, naming the band, and nothing calls it exact; the figure is unchanged. An open phantom, before any trade, stays unlabelled unless the split leaves a fraction of a share. Also fixed in the same round: the stop checks the job's own as-of and names every row, and a research run on data cached before the stop existed says it did not run)
+- source: `scripts/cef/live_attribution.py` @ `aead2da`; `scripts/ops/pnl_report.py` @ `aead2da`; `scripts/cef/live_attribution.py` @ `fa0c2a0`; `scripts/ops/pnl_report.py` @ `fa0c2a0`; `scripts/cef/live_attribution.py` @ `e14f79b`
+- supports: §4, §5
+- status: built on branch reports-followup, under review; not installed
+
+### E-2026-11-15-55 · Ruling: the release check runs on 49b99db now; C4's corporate-action rows are read by the installed report job's first run, not by a separate script; the team lead restores the VM's ssh access
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - none (the team lead ruled on 2026-11-15, about 20:15 New York, after PR #84 merged: (1) run the read-only release check on 49b99db tonight; (2) C4's account corporate-action rows, on which the P&L report job stops (exit 4, naming each row), are read by starting C4's report unit once by hand after the release and the `--reports` install, with no separate script and no key handling outside the existing units; (3) `ssh quantt-vm` timed out from the laptop at 20:10 New York, so `ops.prod_state` showed the VM UNMEASURED, and the team lead restores access, after which prod_state is re-run before any install)
+- source: `docs/RUNBOOK.md` @ `49b99db` (8.12); `scripts/ops/pnl_report.py` @ `49b99db`
+- supports: §5
+- status: current
+
+### E-2026-11-15-56 · Result: the release check on 49b99db (main after PR #84) is GO to tag; the install waits until the VM is measured
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - PR #84 merged by the team lead at 20:10 New York (merge commit 49b99db); E-2026-11-14-50 to -52 and E-2026-11-15-50 to -54, whose status reads "on branch reports-followup", are on main from that merge and installed nowhere [V]
+  - release-20261104-1..49b99db: 235 commits (`git rev-list --count`) [V]
+  - `python3 -m pytest` exit 0, 4559 passed, 2 skipped; the real-panel replay skipped on the laptop's stale `data/cef`, its synthetic version ran [S]
+  - `ops.doc_audit --check` 0 DRIFT, 2 NOTE, neither on the order path; `ops.orient` exit 0 at 49b99db with nothing uncommitted [S]
+  - the DRY_RUN=1 preview exited 4 (PREVIEW); the laptop's panels end 2026-10-15 (closes) and 2026-10-14 (NAV), so the data gate refused all 13 names and no order list was built: the te4 runner path is covered by its unit tests only [S]
+  - quant-reviewer and execution-engineer each covered the whole range and found no order-path defect; the only spec change is `_sizing_multiplier_note` text, `ops/books/` is unchanged, and no spec sets `below_min_names = "trade_eligible"`, so the te4 path is dormant [S]
+  - the first run was NO-GO only because the execution-engineer seat, added on main in the desk rebuild, was not in the running session's agent registry, so that review never ran; it was re-run by a general agent told to act as `.claude/agents/execution-engineer.md` at 49b99db, read-only, with the other stages' results reused [V]
+  - the preview's corporate-action check, in report mode on both books, showed two rows with no symbol as BLOCKING for every held name (a partial call processed 2026-11-12, a reorganisation effective 2026-11-16); report mode refuses nothing. Open PR #68 (the bond-ISIN and CUSIP fix) is the standing work on rows of this kind [S]
+- source: `.claude/workflows/release-check.js` @ `49b99db`; `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.11, 8.12); `ops/books/cef_discount_book.json` @ `49b99db`; `ops/books/c4_families_book.json` @ `49b99db`
+- supports: §1, §5
+- status: current. Not tagged, released or installed; the tag and the install are the team lead's. Before the install: prod_state must measure the VM, because a re-install without `--armed` disarms; `quantt/session/run.py` changed, so RUNBOOK 8.6 step 2's replay applies; C4's timers are disabled before the core's install and C4 is re-installed after it (8.9); the alert push needs `alert-smtp-user` and `alert-smtp-pass` in the vault (8.11)
 
 ### E-2026-11-16-01 · Method: a paper runner for the event sleeves is built and reviewed; it is not installed or armed
 - kind: method
@@ -4744,78 +4822,6 @@ that adds it does not exist when it is written.
 - supports: §4
 - status: current. Gross. The harness's constant weights rebalance daily at closing prices, which flatters shares this thin; not rescored at the quote. Not promoted; not independently reviewed
 
-  - none (a review of the report follow-up found three ways the new corporate-action handling could show confidently wrong side figures while still reconciling; the account-row paths do not run today, the account having no such rows, but the phantom path runs on paper's first unprocessed split of a held fund. The team lead ruled on 2026-11-14 to fix all three properly rather than refuse: a split the feed lists twice is one event, and records disagreeing on the ratio raise; a position the account's rows move is rebased in its own corp component, so hold and fill stay true and every session still reconciles to the cent; rows posting within ten sessions after the event close the open phantom with a labelled reversal, and the cumulative phantom carries the later moves on the extra shares, intended to equal what is still inside the official P&L (ruled 2026-11-15); that holds only until the account trades the fund, corrected by E-2026-11-15-51. The risk check also refuses a held reading whose two session fields disagree. With no corporate action, the attribution's output is byte-identical to before)
-- source: `scripts/cef/live_attribution.py` @ `adf42b2`; `scripts/cef/live_attribution.py` @ `813676a`; `scripts/ops/risk_daily.py` @ `5d9bcdf`
-- supports: §4, §5
-- status: superseded in part by E-2026-11-15-53 (2026-11-15): the corp component and the late-row tie-back were removed; the one-event-per-split dedupe stands
-
-### E-2026-11-15-51 · Ruling and method: a paper split's phantom freezes at the first trade in the fund, and the account's own corporate-action rows are applied for every fund a record names, checked against the split ratio
-- kind: method
-- era: ALPACA
-- date: 2026-11-15
-- figures:
-  - none (a second review of the report follow-up found the phantom kept adding the extra shares' daily moves after the runner had traded them away, so it drifted from what is in the official P&L. The team lead ruled on 2026-11-15: it freezes on the first session the account trades the fund, labelled crystallised; it then equals an independent simulation of a processed account exactly in the six tested cases, with one named gap, when paper applies the split late to an already re-sized count. Also ruled: the account's rows are applied for any fund a corporate-action record names, in any role, with late cash in lieu tied to its split; a new share count that contradicts the split ratio stops the attribution, named (rounded toward zero, which for a short is unverified); a second record of an already-handled split stops it, naming both. A method choice beyond the brief: a session whose account rows do not net to zero at their own prices values every row at the close, which two of the tested cases need to reconcile. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
-- source: `scripts/cef/live_attribution.py` @ `891aea3`; `scripts/cef/live_attribution.py` @ `1a7a1a9`; `scripts/cef/live_attribution.py` @ `6b68fe9`
-- supports: §4, §5
-- status: superseded in part by E-2026-11-15-53 (2026-11-15): the account-row handling it describes was removed; the phantom's freeze at the first trade stands; and superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
-
-### E-2026-11-15-52 · Method: the report job's reader reads the half-day end-of-day stamp by the same rule as the runner's client, held equal by test
-- kind: method
-- era: ALPACA
-- date: 2026-11-15
-- figures:
-  - none (after PR #83 merged the client's rule (E-2026-11-14-02), the reader's own copy, close plus four hours from the calendar, is held equal to it on half days and on full days, and both refuse each wrong stamp with the same message. This updates E-2026-11-14-02's note that the reader still had the 20:00 rule, once this branch merges)
-- source: `scripts/ops/alpaca_read.py` @ `f550da3`; `scripts/ops/tests/test_alpaca_read.py` @ `f550da3`
-- supports: §5
-- status: built on branch reports-followup, under review; not installed
-
-### E-2026-11-15-53 · Ruling: the report stops, naming the row, whenever the account records a corporate-action row, until one has been seen; the paper-split phantom stays, labelled approximate where it cannot be exact
-- kind: ruling
-- era: ALPACA
-- date: 2026-11-15
-- figures:
-  - none (a third review found four more defects in the code that applied the account's own corporate-action rows, a path paper has never exercised and whose row format is undocumented; each review round had fixed the last and found new ones. The team lead ruled on 2026-11-15 to simplify: any such row on or before the as-of stops the attribution, naming each row, and the job exits 4; no code applies one. Kept: the narrowed trigger, the paper-split phantom with its freeze at the first trade, one event per split, and the refusal of a second record of a handled split. The phantom is labelled approximate, with the reason, when the crystallising session has fills on both sides or the split leaves a fraction of a share. With no corporate action the attribution's output is byte-identical to before, except one gap line on a cache without corp_activities.json)
-- source: `scripts/cef/live_attribution.py` @ `82ff173`; `scripts/cef/live_attribution.py` @ `bcc3446`; `scripts/ops/pnl_report.py` @ `bcc3446`
-- supports: §4, §5
-- status: built on branch reports-followup, under review; not installed; supersedes the account-row parts of E-2026-11-15-50 and E-2026-11-15-51; superseded in part by E-2026-11-15-54 (2026-11-15): every crystallised phantom is labelled approximate
-
-### E-2026-11-15-54 · Ruling: a paper split's phantom, once frozen by a trade, is always labelled approximate, because the runner's no-trade band means a correctly processed account need not have traded to the same position
-- kind: ruling
-- era: ALPACA
-- date: 2026-11-15
-- figures:
-  - none (a review found the frozen phantom's claim to equal official equity minus a processed account rested on both ending at the same position after the trade; the live sleeve trades only outside its no-trade band and only to the band's edge, sizing on equity that carries the phantom, so the true gap keeps moving after the trade. The team lead ruled on 2026-11-15: every frozen phantom is labelled approximate, naming the band, and nothing calls it exact; the figure is unchanged. An open phantom, before any trade, stays unlabelled unless the split leaves a fraction of a share. Also fixed in the same round: the stop checks the job's own as-of and names every row, and a research run on data cached before the stop existed says it did not run)
-- source: `scripts/cef/live_attribution.py` @ `aead2da`; `scripts/ops/pnl_report.py` @ `aead2da`; `scripts/cef/live_attribution.py` @ `fa0c2a0`; `scripts/ops/pnl_report.py` @ `fa0c2a0`; `scripts/cef/live_attribution.py` @ `e14f79b`
-- supports: §4, §5
-- status: built on branch reports-followup, under review; not installed
-
-### E-2026-11-15-55 · Ruling: the release check runs on 49b99db now; C4's corporate-action rows are read by the installed report job's first run, not by a separate script; the team lead restores the VM's ssh access
-- kind: ruling
-- era: ALPACA
-- date: 2026-11-15
-- figures:
-  - none (the team lead ruled on 2026-11-15, about 20:15 New York, after PR #84 merged: (1) run the read-only release check on 49b99db tonight; (2) C4's account corporate-action rows, on which the P&L report job stops (exit 4, naming each row), are read by starting C4's report unit once by hand after the release and the `--reports` install, with no separate script and no key handling outside the existing units; (3) `ssh quantt-vm` timed out from the laptop at 20:10 New York, so `ops.prod_state` showed the VM UNMEASURED, and the team lead restores access, after which prod_state is re-run before any install)
-- source: `docs/RUNBOOK.md` @ `49b99db` (8.12); `scripts/ops/pnl_report.py` @ `49b99db`
-- supports: §5
-- status: current
-
-### E-2026-11-15-56 · Result: the release check on 49b99db (main after PR #84) is GO to tag; the install waits until the VM is measured
-- kind: result
-- era: ALPACA
-- date: 2026-11-15
-- figures:
-  - PR #84 merged by the team lead at 20:10 New York (merge commit 49b99db); E-2026-11-14-50 to -52 and E-2026-11-15-50 to -54, whose status reads "on branch reports-followup", are on main from that merge and installed nowhere [V]
-  - release-20261104-1..49b99db: 235 commits (`git rev-list --count`) [V]
-  - `python3 -m pytest` exit 0, 4559 passed, 2 skipped; the real-panel replay skipped on the laptop's stale `data/cef`, its synthetic version ran [S]
-  - `ops.doc_audit --check` 0 DRIFT, 2 NOTE, neither on the order path; `ops.orient` exit 0 at 49b99db with nothing uncommitted [S]
-  - the DRY_RUN=1 preview exited 4 (PREVIEW); the laptop's panels end 2026-10-15 (closes) and 2026-10-14 (NAV), so the data gate refused all 13 names and no order list was built: the te4 runner path is covered by its unit tests only [S]
-  - quant-reviewer and execution-engineer each covered the whole range and found no order-path defect; the only spec change is `_sizing_multiplier_note` text, `ops/books/` is unchanged, and no spec sets `below_min_names = "trade_eligible"`, so the te4 path is dormant [S]
-  - the first run was NO-GO only because the execution-engineer seat, added on main in the desk rebuild, was not in the running session's agent registry, so that review never ran; it was re-run by a general agent told to act as `.claude/agents/execution-engineer.md` at 49b99db, read-only, with the other stages' results reused [V]
-  - the preview's corporate-action check, in report mode on both books, showed two rows with no symbol as BLOCKING for every held name (a partial call processed 2026-11-12, a reorganisation effective 2026-11-16); report mode refuses nothing. Open PR #68 (the bond-ISIN and CUSIP fix) is the standing work on rows of this kind [S]
-- source: `.claude/workflows/release-check.js` @ `49b99db`; `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.11, 8.12); `ops/books/cef_discount_book.json` @ `49b99db`; `ops/books/c4_families_book.json` @ `49b99db`
-- supports: §1, §5
-- status: current. Not tagged, released or installed; the tag and the install are the team lead's. Before the install: prod_state must measure the VM, because a re-install without `--armed` disarms; `quantt/session/run.py` changed, so RUNBOOK 8.6 step 2's replay applies; C4's timers are disabled before the core's install and C4 is re-installed after it (8.9); the alert push needs `alert-smtp-user` and `alert-smtp-pass` in the vault (8.11)
-
 ### E-2026-11-18-01 · Release: release-20261116-1 is installed on the VM for both books, armed as measured, with the report jobs; a C4 or reports install refuses while the shadow runner's unit files are on disk
 - kind: release
 - era: ALPACA
@@ -4842,7 +4848,7 @@ that adds it does not exist when it is written.
   - `install_vm.dormant_overrides` treats `quantt-shadow-secret.service`, `quantt-shadow.service` and `quantt-shadow.timer` (`SHADOW_UNIT_FILES`) as known, as it already did the report units; the installer still never writes, starts or stops them [V]
   - three new tests: a C4 install and a `--reports` install each go through with the three files on disk, leave them byte-identical, and still refuse a stray `quantt-shadow-extra.service`; the names are pinned to what `shadow/deploy/install_shadow_vm.sh` writes [V]
   - with only the scan line reverted, the C4 test and the reports test both fail on the refusal seen on the VM ("is no unit any book installs") [V]
-- source: `quantt/deploy/install_vm.py`, `quantt/deploy/tests/test_install_vm_books.py`, `quantt/deploy/tests/test_install_vm_reports.py`, `docs/RUNBOOK.md` (8.10), this commit
+- source: `quantt/deploy/install_vm.py` @ `6087ab5` (`SHADOW_UNIT_FILES`, `dormant_overrides`); `quantt/deploy/tests/test_install_vm_books.py` @ `6087ab5`; `quantt/deploy/tests/test_install_vm_reports.py` @ `6087ab5`; `docs/RUNBOOK.md` @ `6087ab5` (8.10)
 - supports: §5
 - status: current, not released. Until a release carries it, a C4 or reports install on the VM needs the park-and-restore in RUNBOOK 8.10. The event sleeves' installer (branch mission-work, `quantt-events-*` units) is not covered and must register its names when it reaches main
 
@@ -4856,7 +4862,7 @@ that adds it does not exist when it is written.
   - recording the outage as a status and calling the day COMPLETE was the team lead's ruling of 2026-10-29 (E-2026-10-29-08), not an unnoticed failure; what was missing is any report that named it [V]
   - `scripts/ops/data_qa.py` gains Q9: it reads the collector's `report.json` for the as-of day and FLAGs a cross-check that was unavailable or did not complete, with the count of consecutive trading days and the first day ("at least N" when an earlier report is missing); UNMEASURED, never OK, when there is no report; NOT_RUN for C4, which has no second source by ruling. No threshold was chosen: it flags from the first night [V]
   - seven new tests in `scripts/ops/tests/test_data_qa.py`, all failing against `8cac532`'s `data_qa.py`; nothing on the live path changed (collector, session and fetcher untouched) [S]
-- source: `scripts/ops/data_qa.py`, `scripts/ops/tests/test_data_qa.py`, `docs/DATA.md`, `docs/REFERENCES.md` (today's row), commit `4098634`; `results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md` (the shortlist of replacement sources)
+- source: `scripts/ops/data_qa.py` @ `4098634` (`q9_second_source`); `scripts/ops/tests/test_data_qa.py` @ `4098634`; `docs/DATA.md` @ `4098634`; `docs/REFERENCES.md` @ `4098634` (today's row); `results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md` @ `8cac532` (the shortlist of replacement sources)
 - supports: §1, §5
 - status: current, not released. The book still decides on one NAV source (Yahoo). The replacement second source is the team lead's choice from the 2026-10-19 shortlist; changing how the fetcher looks to the site is ruled out there. Not determined: whether the 21:45 QA job always finds the 21:40 collect's report for the as-of day (if not, Q9 says UNMEASURED and names the file)
 
@@ -4865,13 +4871,13 @@ that adds it does not exist when it is written.
 - era: ALPACA
 - date: 2026-11-18
 - figures:
-  - backtest daily correlations between sleeves of different families are within ±0.06 (11 series; core against C4 0.02 over 3,145 sessions, 2013-06-25 to 2025-12-23); within a family the variants are one bet: CEF ex-date pair 0.70, units pair 0.65, special-dividend pair 0.49 [S: portfolio-manager run of 2026-11-18, gross; panels: core to 2026-10-14, CRSP event panels to 2025-12-31]
+  - backtest daily correlations between sleeves of different families are within ±0.06 (11 series; core against C4 0.02 over 3,145 sessions, 2013-06-25 to 2025-12-23); within a family the variants are one bet: CEF ex-date pair 0.70, units pair 0.65, special-dividend pair 0.49; from the portfolio-manager run of 2026-11-18, gross; panels: core to 2026-10-14, CRSP event panels to 2025-12-31 [S]
   - live, core against C4 official daily P&L: +0.16 over 10 sessions (2026-11-04 to 11-17), 95% interval -0.52 to +0.72: no information yet [S]
-  - the seven event sleeves at the 2026-11-16 sizes ($100,000 each, $25,000 for the small-name book): the units ex-date pair is 68.3% of the account's backtest risk, earnings drift 16.6%, CEF ex-date 10.5%, special dividends 4.6% [V, covariance of the seven series, 2000-06-01 to 2025-12-23, 6,430 sessions]
+  - the seven event sleeves at the 2026-11-16 sizes ($100,000 each, $25,000 for the small-name book): the units ex-date pair is 68.3% of the account's backtest risk, earnings drift 16.6%, CEF ex-date 10.5%, special dividends 4.6%; covariance of the seven series, 2000-06-01 to 2025-12-23, 6,430 sessions [V]
   - equal risk per family on the same $625,000, the small-name book kept at $25,000 and the $81,000 that frees left unallocated: cef_exdate_after $132,000, cef_exdate_before_after $97,000, units_exdate_after $52,000, units_exdate_before_after $36,000, specdiv_wait $105,000, specdiv_wait_small $25,000, pead_small_long $96,000 [V]
-  - three schemes on 2014-06-25 to 2025-12-23: equal risk beats equal dollars by +0.59 to +1.22 of Sharpe on all 11 series and +0.22 to +0.70 without the four ex-date books (90% block-bootstrap intervals); a shrunk mean-variance scheme is within noise of equal risk [S]. The portfolio Sharpes themselves (5 to 6 with the ex-date books, about 3 without) are gross backtests leaning on unreviewed ex-date results and are not forecasts
+  - three schemes on 2014-06-25 to 2025-12-23: equal risk beats equal dollars by +0.59 to +1.22 of Sharpe on all 11 series and +0.22 to +0.70 without the four ex-date books (90% block-bootstrap intervals); a shrunk mean-variance scheme is within noise of equal risk. The portfolio Sharpes themselves (5 to 6 with the ex-date books, about 3 without) are gross backtests leaning on unreviewed ex-date results and are not forecasts [S]
   - the team lead's answers: sizing "Equal risk per family"; combined budget "No combined budget yet"; promotion "10 clean sessions + ladder"; build order "Runner PR, then report" [V]
   - `ops/sleeves/events_sleeves.json` now holds each sleeve at a quarter of its full size (every sleeve has zero live sessions), with `min_order_usd` 25 and `max_name_usd` 50,000 re-derived for that stage; the pinning test was edited with it [V]
-- source: `ops/sleeves/events_sleeves.json`, `quantt/sleeves/tests/test_run.py`, `docs/SYSTEM.md` section 5 (the block dated 2026-11-16 and 2026-11-18), this commit; the allocation scripts and per-sleeve series are outside the repository in `~/quantt_research/pm_alloc_2026-11-18/`
+- source: `ops/sleeves/events_sleeves.json` @ `b5b5687`; `quantt/sleeves/tests/test_run.py` @ `b5b5687`; `docs/SYSTEM.md` @ `b5b5687` (section 5, the block dated 2026-11-16 and 2026-11-18); the allocation scripts and per-sleeve series are outside the repository in `~/quantt_research/pm_alloc_2026-11-18/`
 - supports: §5
 - status: current. The events runner is not installed and has never run against a broker. The allocation analysis was one run by one agent and has not been independently re-derived; the C4 series in it is the trial-52 series, not the deployed blend
