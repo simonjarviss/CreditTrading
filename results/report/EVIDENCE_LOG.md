@@ -4856,3 +4856,21 @@ that adds it does not exist when it is written.
 - source: `results/ideas/2026-11-16_core_group_cap.md` @ `a9f6c44`; `results/ideas/core_group_cap/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
 - supports: §4
 - status: current. SET ASIDE: no cap (team lead, 2026-11-18, leaves the core uncapped). Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-20 · Method: two unit-trust termination shadow books are written, on a rule fixed before any 2026 price was read and a calendar of 271 trusts built from every First Trust and Guggenheim prospectus since 2023-07
+- kind: method
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule as written: a closed-end fund held by a terminating First Trust or Guggenheim closed-end trust, price $2 or more and 21-session dollar volume $100,000 or more read 10 sessions before T; decided after the close of T−1, bought at the close of T, sold at the close of T+3; long only; weights in proportion to the number of trusts, adding to 1, no fund above 10% [S]
+  - the second book keeps events whose estimated sale is 5% or more of the fund's dollar volume over T−18..T−10, size from 24F-2NT notices filed more than 30 days before T [S]
+  - forms 487 of the two sponsors filed 2023-07-01 to 2026-11-17: 2,374; read in full (15 or more mentions of "closed-end"): 426; trusts parsed 605; closed-end trusts 334; in the calendar (terminating 2026-01-02 to 2028-11-13) 271, First Trust 204 and Guggenheim 67; 6,876 trust-fund rows, 6,249 fund-events on 307 funds [V]
+  - unparsed and listed by accession number: 7 trusts, all Guggenheim's Flaherty & Crumrine Preferred Portfolio; forms 24F-2NT parsed: 269, for 206 of 241 registrants [V]
+  - the prospectus's own "CLOSED-END FUNDS" heading against the research's CRSP rule, on the 384 trusts the idea's crawl parsed from filings since 2023-07-01: the same answer on all 384 (195 closed-end, 189 not); local check on licensed rows, not stored [V]
+  - terminations from 2026-11-19 to 2027-11-18: 101 trusts (First Trust 78, Guggenheim 23) on 64 dates, 2,276 fund-events on 249 funds; trusts by month from November 2026: 2, 12, 10, 7, 6, 11, 7, 9, 5, 5, 8, 12, 7 [V]
+  - decisions in the next 252 sessions that hold anything: 151, median 30 funds, none under ten funds, so the 10% cap does not bind on the all-events book [V]
+  - first price fetch (Yahoo, 2026-11-18, after the rule was committed): 153 of 167 funds near a termination date have prices to 2026-11-17; the 14 without cannot be held [V]
+  - the first termination date ahead is 2026-11-20 (one trust, 30 funds, 29 with prices): decided 2026-11-19, bought at that close, if the commit is on the shadow branch by then [V]
+- source: `shadow/signals/uit_termination.py` @ `96b05ff`; `shadow/universes/build_uit_terminations_v1.py` @ `96b05ff`; `shadow/universes/uit_terminations_v1.csv` @ `96b05ff`; `shadow/books/uit_termination.json` @ `96b05ff`; `shadow/books/uit_termination_big_sale.json` @ `96b05ff`; `results/ideas/2026-11-16_uit_cef_flows.md` @ `96b05ff`; `docs/REFERENCES.md` @ `96b05ff` (§12ut)
+- supports: §4, §5
+- status: current. SIMULATED books, not evidence of what trading earns; committed locally on branch shadow-uit, not pushed and not on the VM. The nightly run itself was not run on the laptop (it needs the Alpaca data key); the price fetch and both signal functions were run on real prices, weights only, no return read. The 98 trusts that terminated between 2026-01-02 and 2026-11-18 are the out-of-sample year and have not been scored

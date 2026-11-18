@@ -294,3 +294,12 @@ the book's first price fetch.
   evening of 2026-11-19; the next are 2026-11-23 and 2026-12-04.
 - **What the shadow book cannot answer** is the reviewer's second condition: it assumes the
   fill at T's official close. A paper account fills near the quote and is a separate test.
+- **Dry run, 2026-11-18, after the rule was committed (`96b05ff`).** The price fetch ran without
+  a key: prices to 2026-11-17 for 153 of the 167 funds near a termination date; 14 have none on
+  Yahoo (merged or renamed since their prospectus) and cannot be held. Both signal functions
+  were then called on those prices for the sessions 2026-11-10 to 2026-11-17, weights only: 14
+  to 19 funds in the all-events line around the 2026-11-09 and 2026-11-12 dates (largest weight
+  7.1%), 10 to 13 in the big-sale line (where ten funds sit exactly at the 10% cap), and nothing
+  on 11-16 and 11-17, when no date is in the window. No return was read. The full nightly run
+  was not tried: it needs the Alpaca data key for the exchange calendar and the marks.
+
