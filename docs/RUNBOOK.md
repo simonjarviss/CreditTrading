@@ -1177,6 +1177,16 @@ every book is `/home/quantt-shadow/shadow_state/SCOREBOARD.md`.
 
 **Stop it:** `sudo systemctl disable --now quantt-shadow.timer`. Nothing else depends on it.
 
+**Beside a C4 or `--reports` install.** Those installs refuse any `quantt-` unit file that no
+book installs. On 2026-11-18 (release-20261116-1) they refused on the shadow runner's three,
+with C4's timers already disabled, and the files had to be moved out of
+`/etc/systemd/system` and back by hand. From the release after that one the installer knows
+the three names (`install_vm.SHADOW_UNIT_FILES`, pinned to the shell installer by a test).
+**On release-20261116-1 or older, park them first:** stop `quantt-shadow.timer`, move the
+three files to a directory outside systemd's search path, run the install, move them back,
+`sudo systemctl daemon-reload`, `sudo systemctl enable --now quantt-shadow.timer`. A new
+installer that writes `quantt-` units must add its names to the scan in the same PR.
+
 **What the separate user does not protect against.** The vault is read through the VM's own
 identity, which every local user can reach. File permissions keep shadow code out of prod's
 state and key file, and they cover accidents; they do not stop code on the `shadow` branch

@@ -69,6 +69,25 @@ def test_reports_dry_run_renders_every_unit_and_writes_nothing(rw, capsys):
     assert "alert-smtp-pass" in out and "team lead" in out           # the warning names the TL's step
 
 
+def test_reports_install_beside_the_shadow_runners_units(rw, capsys):
+    """The `--reports` install runs the same scan as a C4 install, and on 2026-11-18 it
+    refused on the shadow runner's three unit files (EVIDENCE_LOG E-2026-11-18-01). They are
+    the repository's own (iv.SHADOW_UNIT_FILES): the install goes through and never writes
+    them. A stray `quantt-` unit beside them is still refused. Fails on 49b99db."""
+    rw.layout.units_dir.mkdir(parents=True, exist_ok=True)
+    shadow = [rw.layout.units_dir / u for u in iv.SHADOW_UNIT_FILES]
+    for f in shadow:
+        f.write_text("[Service]\nExecStart=/bin/true\n")
+    before = [f.read_bytes() for f in shadow]
+    rc, out = rw.reports("--apply", capsys=capsys)
+    assert rc == 0 and "no unit any book installs" not in out, out
+    assert [f.read_bytes() for f in shadow] == before
+    stray = rw.layout.units_dir / "quantt-shadow-extra.service"
+    stray.write_text("[Service]\nExecStart=/bin/true\n")
+    rc, out = rw.reports("--apply", capsys=capsys)
+    assert rc == 2 and str(stray) in out and "no unit any book installs" in out, out
+
+
 def test_reports_apply_writes_units_as_contracted(rw, capsys):
     rc, out = rw.reports("--apply", capsys=capsys)
     assert rc == 0, out

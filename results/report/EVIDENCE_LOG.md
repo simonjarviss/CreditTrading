@@ -4387,3 +4387,15 @@ that adds it does not exist when it is written.
 - source: `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.10, 8.11, 8.12); `quantt/deploy/install_vm.py` @ `49b99db` (`dormant_overrides`, `scan_units`); the install's own output, read once in the session and not stored in the repository
 - supports: §1, §5
 - status: current. Open: (1) `install_vm.py`'s scan does not know the shadow runner's three unit names, so every C4 or reports install needs the park-and-restore until it does; (2) the vault has no `alert-smtp-user` / `alert-smtp-pass`, so a fired stop is recorded as not delivered; (3) the ssh rule is open to any address until `nsg_ip.sh` narrows it
+
+### E-2026-11-18-02 · Result: the installer's unit scan now knows the shadow runner's three unit names, so a C4 or reports install no longer refuses beside it
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - `install_vm.dormant_overrides` treats `quantt-shadow-secret.service`, `quantt-shadow.service` and `quantt-shadow.timer` (`SHADOW_UNIT_FILES`) as known, as it already did the report units; the installer still never writes, starts or stops them [V]
+  - three new tests: a C4 install and a `--reports` install each go through with the three files on disk, leave them byte-identical, and still refuse a stray `quantt-shadow-extra.service`; the names are pinned to what `shadow/deploy/install_shadow_vm.sh` writes [V]
+  - with only the scan line reverted, the C4 test and the reports test both fail on the refusal seen on the VM ("is no unit any book installs") [V]
+- source: `quantt/deploy/install_vm.py`, `quantt/deploy/tests/test_install_vm_books.py`, `quantt/deploy/tests/test_install_vm_reports.py`, `docs/RUNBOOK.md` (8.10), this commit
+- supports: §5
+- status: current, not released. Until a release carries it, a C4 or reports install on the VM needs the park-and-restore in RUNBOOK 8.10. The event sleeves' installer (branch mission-work, `quantt-events-*` units) is not covered and must register its names when it reaches main

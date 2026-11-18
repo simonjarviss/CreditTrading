@@ -537,6 +537,24 @@ REPORT_UNIT_FILES = (REPORT_SECRET_UNIT,) + tuple(REPORT_PNL_KEY_UNITS[b] for b 
     tuple(f for vj in REPORT_JOBS for f in (vj.service, vj.timer))
 
 
+# The shadow-book runner's three unit files (shadow/deploy/install_shadow_vm.sh, RUNBOOK
+# 8.10): a separate unix user, its own clone following the branch `shadow`, simulated
+# books only, no order code. This installer never writes, starts or stops them; the tuple
+# exists only so `dormant_overrides` does not call them "no unit any book installs".
+#
+# WHY (2026-11-18, EVIDENCE_LOG E-2026-11-18-01): the shadow runner went on the VM on
+# 2026-11-10, after the last C4 install (2026-11-04). The next release's C4 install and
+# its `--reports` install each REFUSED on these three names, with C4's timers already
+# disabled for the core's install, so C4 could not trade until the files were moved out of
+# systemd's directory by hand and moved back afterwards. A refusal that can only be cleared
+# by moving another service's unit files is a worse hazard than the one the scan guards.
+# The names are pinned to the shell installer by a test
+# (test_shadow_unit_names_are_the_ones_the_shadow_installer_writes): rename one there and
+# the test fails here. A NEW installer that writes `quantt-` units (the event sleeves'
+# runner is the next) must add its names the same way, in the same PR.
+SHADOW_UNIT_FILES = ("quantt-shadow-secret.service", "quantt-shadow.service", "quantt-shadow.timer")
+
+
 class ReportVm(VmBook):
     @property
     def env_file(self) -> Path:          # alert.env: it holds SMTP settings, not Alpaca keys
@@ -941,7 +959,10 @@ def dormant_overrides(run_cmd: Callable, layout: "Layout", units=ALL_UNIT_FILES,
     # The report units are installed by `--reports`, so a C4 install does not name them
     # in `units`, but they are ours: never "no unit any book installs" (and a report
     # unit could not change what a C4 session does in any case).
-    known = set(units) | set(REPORT_UNIT_FILES)
+    # The shadow runner's units are installed by the repository's own
+    # shadow/deploy/install_shadow_vm.sh (RUNBOOK 8.10), which runs its own daemon-reload.
+    # They are ours too. See SHADOW_UNIT_FILES for what refusing them cost.
+    known = set(units) | set(REPORT_UNIT_FILES) | set(SHADOW_UNIT_FILES)
     for d in roots if unexpected_prefixes else ():
         for f in sorted(d.glob("*")) if d.is_dir() else ():
             if (f.name.startswith(unexpected_prefixes) and f.suffix in (".service", ".timer")

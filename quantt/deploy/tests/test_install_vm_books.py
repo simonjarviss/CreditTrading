@@ -403,6 +403,36 @@ def test_book_c4_refuses_a_quantt_unit_no_book_installs(c4world, capsys):
     assert rc == 2 and str(f) in out and "no unit any book installs" in out, out
 
 
+def test_book_c4_installs_beside_the_shadow_runners_units(c4world, capsys):
+    """The shadow runner's three unit files (shadow/deploy/install_shadow_vm.sh) are the
+    repository's own and no book's: a C4 install must not refuse on them. On 2026-11-18 it
+    did, with C4's timers already disabled for the core's install, and C4 could not trade
+    until the files were moved aside by hand (EVIDENCE_LOG E-2026-11-18-01). Fails on
+    49b99db ("is no unit any book installs"). A stray unit beside them is still refused."""
+    assert c4world.run("--apply", capsys=capsys)[0] == 0
+    shadow = [_dormant(c4world, f"etc/systemd/system/{u}", "[Service]\nExecStart=/bin/true\n")
+              for u in iv.SHADOW_UNIT_FILES]
+    before = [f.read_bytes() for f in shadow]
+    rc, out = c4world.c4("--apply", capsys=capsys)
+    assert rc == 0 and "no unit any book installs" not in out, out
+    assert all((c4world.layout.units_dir / u).exists() for u in iv.C4_VM.unit_files)
+    assert [f.read_bytes() for f in shadow] == before          # never written by this installer
+    stray = _dormant(c4world, "etc/systemd/system/quantt-shadow-extra.service",
+                     "[Service]\nExecStart=/bin/true\n")
+    rc, out = c4world.c4("--apply", capsys=capsys)
+    assert rc == 2 and str(stray) in out and "no unit any book installs" in out, out
+
+
+def test_shadow_unit_names_are_the_ones_the_shadow_installer_writes():
+    """SHADOW_UNIT_FILES is a copy of names owned by a shell script. Pin it: every unit file
+    that script writes under its UNIT_DIR, and nothing else."""
+    import re
+    from pathlib import Path
+    sh = (Path(iv.__file__).resolve().parents[2] / "shadow" / "deploy" / "install_shadow_vm.sh").read_text()
+    written = set(re.findall(r'cat > "\$\{UNIT_DIR\}/([^"]+)"', sh))
+    assert written and written == set(iv.SHADOW_UNIT_FILES), written
+
+
 def test_book_c4_installs_over_the_cores_own_units_and_its_lower_copies(c4world, capsys):
     """Not over-strict: the core's installed units, and a lower-priority copy of one, are
     known units, so a clean C4 install still goes through after the core's."""
