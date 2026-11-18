@@ -4369,3 +4369,21 @@ that adds it does not exist when it is written.
 - source: `.claude/workflows/release-check.js` @ `49b99db`; `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.11, 8.12); `ops/books/cef_discount_book.json` @ `49b99db`; `ops/books/c4_families_book.json` @ `49b99db`
 - supports: §1, §5
 - status: current. Not tagged, released or installed; the tag and the install are the team lead's. Before the install: prod_state must measure the VM, because a re-install without `--armed` disarms; `quantt/session/run.py` changed, so RUNBOOK 8.6 step 2's replay applies; C4's timers are disabled before the core's install and C4 is re-installed after it (8.9); the alert push needs `alert-smtp-user` and `alert-smtp-pass` in the vault (8.11)
+
+### E-2026-11-18-01 · Release: release-20261116-1 is installed on the VM for both books, armed as measured, with the report jobs; a C4 or reports install refuses while the shadow runner's unit files are on disk
+- kind: release
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - tag release-20261116-1 = 49b99db (annotated, pushed by the team lead on 2026-11-16); installed by the team lead on 2026-11-18 between about 10:14 and 10:19 New York, one wrapper step at a time, outside every send window [S]
+  - before the install the VM measured: core ARMED at release-20261104-1 (DRY_RUN=0, AUTO_ARMED present); C4 DRY_RUN=0, AUTO_ARMED present; no halt file; no job running [V]
+  - replay of the core's day records through the new runner (RUNBOOK 8.6 step 2, `ops.replay_exposure`): 90 runs replayed, 31 skipped; gate 8 refused 24 then, 0 now [S]
+  - core install: 24 steps, units written with DRY_RUN=0, three timers read back active; C4 install: 20 steps, DRY_RUN=0, three timers read back active; reports install: 23 steps, six report timers read back active (pnl 20:30/20:35, dataqa 21:45/21:50, risk 22:15/22:20) [S]
+  - after the install `ops.prod_state` measured: clone at release-20261116-1, core ARMED, newest plan 2026-11-18 decided, 10 orders, not yet sent [V]
+  - the C4 install and the reports install each REFUSED on first try: "unit file /etc/systemd/system/quantt-shadow-secret.service is no unit any book installs" (and the same for quantt-shadow.service and quantt-shadow.timer). The shadow runner was installed on 2026-11-10, after the last C4 install on 2026-11-04, so this was the first meeting. The core's install does not run that scan and passed [S]
+  - the way round it, twice: the three shadow unit files were moved to a holding directory outside systemd's search path, the install was run, and the files were moved back with a daemon-reload; after each restore the shadow timer and key service read enabled and active and the next firing was still 18:50 [S]
+  - C4's P&L report, started once by hand (team lead's ruling, E-2026-11-15-55): unit exit 0, overall OK, as-of 2026-11-17; every session reconciles to the cent (largest residual 0.01); cumulative official from the first trade (2026-11-04, 10 sessions) -360.50 USD; no corporate-action row named; the distribution line is UNMEASURED on 17 name-days for 2026-11-17 because the second source's panel was not yet current, and is retried on a later run [S]
+  - the VM's ssh rule was opened to any source address the same morning at the team lead's request ("make it reachable from any ip"); the VM accepts key logins only (a login with no key returned "Permission denied (publickey)") [V]
+- source: `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.10, 8.11, 8.12); `quantt/deploy/install_vm.py` @ `49b99db` (`dormant_overrides`, `scan_units`); the install's own output, read once in the session and not stored in the repository
+- supports: §1, §5
+- status: current. Open: (1) `install_vm.py`'s scan does not know the shadow runner's three unit names, so every C4 or reports install needs the park-and-restore until it does; (2) the vault has no `alert-smtp-user` / `alert-smtp-pass`, so a fired stop is recorded as not delivered; (3) the ssh rule is open to any address until `nsg_ip.sh` narrows it
