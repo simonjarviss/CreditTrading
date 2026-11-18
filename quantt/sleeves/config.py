@@ -6,10 +6,20 @@ are notes and are ignored.
 
   book                 the Alpaca paper account's name: keys ALPACA_<BOOK>_KEY_ID / _SECRET_KEY,
                        client order ids `<book>-<YYYYMMDD>-<SYMBOL>-1`.
-  sleeves              [{slug, capital_usd, enabled}]. `slug` is a shadow book's; its weights
-                       are fractions of `capital_usd` here (the shadow file's own notional is
-                       ignored). `enabled: false` with shares still in the ledger means
-                       FLATTEN that sleeve; to stop it without trading, halt the book.
+  sleeves              [{slug, family, full_capital_usd, capital_usd, enabled}]. `slug` is a
+                       shadow book's; its weights are fractions of `capital_usd` here (the
+                       shadow file's own notional is ignored). `enabled: false` with shares
+                       still in the ledger means FLATTEN that sleeve; to stop it without
+                       trading, halt the book.
+                       `capital_usd` is what the runner TRADES: the sleeve's current stage on
+                       the ladder. `full_capital_usd` is its full size and `family` the idea
+                       it is a variant of (team lead, 2026-11-18: equal risk per family, a
+                       family's variants splitting its share). The runner sizes nothing from
+                       those two; they are here so the file says by itself which stage a
+                       sleeve is at, and `quantt/sleeves/promote.py` (read-only) checks that
+                       `capital_usd` is `full_capital_usd` x a ladder stage. Until 2026-11-18
+                       the full sizes lived only in the prose of `_note_sleeves`, where no
+                       program could check a stage against them.
   min_order_usd        a net order smaller than this is not sent (re-sizing noise).
   max_gross_x_equity   the book's gross after the plan, as a multiple of account equity;
                        above it every sleeve's target is scaled by one factor.
@@ -33,7 +43,7 @@ from pathlib import Path
 
 REQUIRED = ("book", "sleeves", "min_order_usd", "max_gross_x_equity", "max_name_usd",
             "max_stale_sessions", "max_orders", "execution")
-SLEEVE_KEYS = ("slug", "capital_usd", "enabled")
+SLEEVE_KEYS = ("slug", "family", "full_capital_usd", "capital_usd", "enabled")
 
 
 class ConfigError(ValueError):
@@ -43,8 +53,10 @@ class ConfigError(ValueError):
 @dataclass(frozen=True)
 class Sleeve:
     slug: str
-    capital_usd: float
+    capital_usd: float        # what the runner trades: the current ladder stage
     enabled: bool
+    full_capital_usd: float   # the sleeve's full size; read by promote.py, never by the runner
+    family: str               # the idea this sleeve is a variant of; read by reports only
 
 
 @dataclass(frozen=True)
@@ -110,7 +122,11 @@ def load(path: Path) -> Config:
         seen.add(slug)
         if not isinstance(s["enabled"], bool):
             raise ConfigError(f"{path}: sleeves[{i}].enabled must be true or false")
-        sleeves.append(Sleeve(slug, _num(path, f"sleeves[{i}].capital_usd", s["capital_usd"]), s["enabled"]))
+        family = s["family"]
+        if not isinstance(family, str) or not re.fullmatch(r"[a-z0-9_]+", family):
+            raise ConfigError(f"{path}: sleeves[{i}].family {family!r} must be lowercase letters, digits and underscores")
+        sleeves.append(Sleeve(slug, _num(path, f"sleeves[{i}].capital_usd", s["capital_usd"]), s["enabled"],
+                              _num(path, f"sleeves[{i}].full_capital_usd", s["full_capital_usd"]), family))
     ex = raw["execution"]
     if not isinstance(ex, dict) or ex.get("mode") != "late_market":
         raise ConfigError(f"{path}: execution.mode must be 'late_market' (the only mode built; paper only)")

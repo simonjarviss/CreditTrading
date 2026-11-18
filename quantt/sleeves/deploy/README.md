@@ -114,6 +114,56 @@ session is booked. In order:
    must be repaired by a person against the broker's positions and fills. **Never edit
    `ledger.json` without reading `verify.json` first**, and keep a copy of the file you change.
 
+## Promotion and the ladder
+
+The rules are the team lead's (2026-11-18, `docs/SYSTEM.md` section 5). `quantt/sleeves/promote.py`
+counts the sessions and says which edit of the book file is due. It is read-only: it sends
+nothing, writes nothing and imports no broker client. Its docstring defines every term.
+
+- **Promotion.** A shadow book may become a sleeve after **ten clean on-time shadow sessions in a
+  row**. A session is one row of the book's `scores.csv`. It is clean when its status is SCORED or
+  FLAT and the decision that fills on it was written before 13:00 New York that day. A flat day
+  with an on-time decision counts; a flat day with no decision file does not.
+- **The ladder**, counted in sessions on which the sleeve held a position (`n_names` > 0 in
+  `sleeve_scores.csv`): under 20 a quarter of `full_capital_usd`; 20 to 59 a half if fills track
+  the shadow book; from 60 full, a half or stopped by live P&L against -1 and -2 sigma x sqrt(T).
+- **In the book file**, `capital_usd` is the current stage and the only size the runner trades.
+  `full_capital_usd` and `family` describe the sleeve and size nothing. Stopped is
+  `"enabled": false`, which flattens the sleeve.
+
+The routine:
+
+1. On the VM, as a user who can read both state directories:
+   `python3 -m quantt.sleeves.promote --shadow-state <shadow state> --events-state <events state>`
+   (`--json` for a program; `--book-file` to check a proposed file before it is merged).
+2. Read the exit code: **0** every sleeve agrees with the rules; **30** an edit is due, printed
+   as one line a sleeve; **31** a verdict is UNMEASURED, with the path or the rule that is
+   missing (edits that are due are still printed); **32** refused: the book file cannot be
+   loaded, or a `capital_usd` is not `full_capital_usd` x a quarter, a half or one.
+3. Open a PR that edits **only** `ops/sleeves/events_sleeves.json`: the `capital_usd` or `enabled`
+   line the report printed, and the pinned figures in
+   `quantt/sleeves/tests/test_run.py::test_the_released_book_file_loads_and_every_slug_is_a_shadow_book`.
+   Paste the report into the PR. If the stage raises the shared IWM hedge above `max_name_usd`,
+   that limit is the team lead's to change in the same PR (`_note_max_name_usd`).
+4. The team lead merges, tags a release and installs it (`docs/RUNBOOK.md` section 8). The
+   runner reads the file from the tagged prod clone, so **nothing changes until the release**:
+   a new size, a new sleeve and a removed sleeve all need one. A new sleeve also needs this
+   installer re-run, which grants the read ACL on its decisions and sets `DRY_RUN` back to 1.
+5. To add a shadow book the report shows as eligible: add its entry (`slug`, `family`,
+   `full_capital_usd`, `capital_usd` at a quarter, `enabled`) in the same kind of PR. Its full
+   size and whether it joins at all are the team lead's rulings, not the report's.
+
+What the report cannot yet decide, and says so (UNMEASURED):
+
+- **20 to 59 sessions.** "If fills track the shadow book" has no written definition. The report
+  prints paper P&L beside the shadow book's on the same sessions and their difference, and no
+  pass or fail.
+- **From 60 sessions.** No sigma is recorded for any sleeve, and `sleeve_scores.csv` does not
+  record the capital each session traded at. The backtest volatilities in `_note_sleeves` are
+  the only candidate on record; no ruling names them as the sigma.
+- **Before the first VERIFY.** With no `sleeve_scores.csv` the sleeve half is UNMEASURED, never
+  "zero sessions".
+
 ## Known gaps
 - **Never run against a broker.** Every test uses a fake client. `main` and `default_deps`
   (the command line, the real client, the key file) are untested.

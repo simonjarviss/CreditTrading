@@ -21,8 +21,8 @@ NY = sr.gt.ET
 D, F = dt.date(2026, 11, 16), dt.date(2026, 11, 17)
 SESSIONS = [dt.date(2026, 11, 13), D, F, dt.date(2026, 11, 18), dt.date(2026, 11, 19), dt.date(2026, 11, 20)]
 BOOK = {"book": "events",
-        "sleeves": [{"slug": "a", "capital_usd": 10000, "enabled": True},
-                    {"slug": "b", "capital_usd": 10000, "enabled": True}],
+        "sleeves": [{"slug": "a", "family": "f", "full_capital_usd": 40000, "capital_usd": 10000, "enabled": True},
+                    {"slug": "b", "family": "f", "full_capital_usd": 40000, "capital_usd": 10000, "enabled": True}],
         "min_order_usd": 100, "max_gross_x_equity": 1.0, "max_name_usd": 20000,
         "max_stale_sessions": 2, "max_orders": 100,
         "execution": {"mode": "late_market", "window_minutes_before_close": [8, 2]}}
@@ -743,6 +743,14 @@ def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
             "units_exdate_before_after": 36000, "specdiv_wait": 105000, "specdiv_wait_small": 25000,
             "pead_small_long": 96000}
     assert {s.slug: s.capital_usd for s in cfg.sleeves} == {k: v / 4 for k, v in full.items()}
+    # 2026-11-18: the full sizes and the four families are in the file itself, no longer only in
+    # the prose of _note_sleeves; the ladder report (promote.py) reads them from here
+    assert {s.slug: s.full_capital_usd for s in cfg.sleeves} == full
+    assert {s.slug: s.family for s in cfg.sleeves} == {
+        "cef_exdate_after": "cef_exdate", "cef_exdate_before_after": "cef_exdate",
+        "units_exdate_after": "units_exdate", "units_exdate_before_after": "units_exdate",
+        "specdiv_wait": "special_dividends", "specdiv_wait_small": "special_dividends",
+        "pead_small_long": "earnings_drift"}
     assert (cfg.min_order_usd, cfg.max_gross_x_equity, cfg.max_name_usd, cfg.max_stale_sessions, cfg.max_orders,
             cfg.window_minutes_before_close) == (25, 1.5, 50000, 2, 300, (20, 2))
     # the shared IWM hedge at this stage fits under max_name_usd: pead 100%, each special-dividend book 50%
