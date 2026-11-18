@@ -267,8 +267,11 @@ EOD_MAX_ROWS = 2520
 PNL_TAIL_ROWS = 30
 PNL_FILES = {
     "eod_equity": ("eod_equity.csv", ("date", "equity", "change_usd"), EOD_MAX_ROWS),
+    # scores.csv is kept WHOLE too since 2026-11-18: `auction_hold_pnl_usd` feeds
+    # a cumulative figure (orient's "modelled at the close"), and a cumulative
+    # figure on a 30-row tail is a different number under the same name.
     "scores": ("scores.csv", ("date", "verdict", "alpaca_equity_change_usd",
-                              "auction_pnl_usd"), PNL_TAIL_ROWS),
+                              "auction_pnl_usd", "auction_hold_pnl_usd"), EOD_MAX_ROWS),
     "dist": ("distribution_scores.csv", ("date", "auction_pnl_with_distributions_usd"),
              PNL_TAIL_ROWS),
 }

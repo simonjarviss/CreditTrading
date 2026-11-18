@@ -4403,3 +4403,20 @@ that adds it does not exist when it is written.
 - source: `ops/prod_state.py` on branch `ops-prod-state-books` (`plan_shape`); the attribution script is session scratch, not in the repo; Alpaca paper account `cef`, read-only, 2026-11-18
 - supports: §5
 - status: current as measured on 2026-11-18. A result about 36 sessions of one account; not a test of the strategy
+
+### E-2026-11-18-03 · Ruling and result: the close is modelled for the investor view; at the closing-auction print the core is +$592.57 and C4 -$237.79 to the 2026-11-17 close
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead, 2026-11-18: "on a real account we would get close, so we should model closing for showing investors" [V]
+  - the measure is the runner's own `auction_hold_pnl_usd` (`quantt/session/score.py` (b), first term): the book held into the close, marked official auction print to auction print, as if every fill had printed in the auction. MODELLED, gross: no borrow, no distributions, no fees, no allowance for our orders moving the auction. The official record stays Alpaca's end-of-day history (team lead 2026-10-19) [V]
+  - core, 36 sessions from the 2026-09-29 close: modelled +$592.57 against official -$204.54. Annualised sd of the modelled daily P&L on $100,000: 7.13% [V]
+  - the core's score file on the VM has no row for 2026-09-30, 10-01, 10-02 and 10-06 (the laptop ran those sessions); those four days are from raw SIP daily closes and the account's fills, read on 2026-11-18. On the 32 sessions the runner scored, that second method gives -$143.74 and the runner -$143.74, with no daily difference above $0.005 [V]
+  - C4, 11 sessions from 2026-11-03: modelled -$237.79 against official -$360.50 [V]
+  - the two accounts together, each on $100,000: modelled +$354.78 against official -$565.04 (a sum of two books' dollars, shown for scale; the books are separate accounts) [V]
+  - NOT in the modelled figure: the distributions paper never paid (measured, to 2026-11-13: core +$49.32, C4 +$328.07, E-2026-11-18-02) and the borrow a live account pays on its shorts (unmeasured) [V]
+  - `ops.orient` PNL now prints an `at-close` column and a "modelled at the close" line per book, with the official sum on the same sessions beside it; scores.csv is read whole for that sum [V]
+- source: `ops/orient.py` (`close_model`), `ops/prod_state.py` (`PNL_FILES`) on branch `ops-prod-state-books`; `quantt-vm:/home/quantt/quantt_state/{cef,c4}/scores.csv` and `eod_equity.csv`, read 2026-11-18
+- supports: §5
+- status: current. 36 and 11 sessions: a description of what happened, not evidence of an edge

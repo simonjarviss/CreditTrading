@@ -113,7 +113,7 @@ NEWEST_PLAN = ('{"session_date": "2026-01-07", "status": "decided", "orders": 4,
 # the market). eod_equity.csv absent is the state until the collector step that
 # writes it is installed.
 PNL_RAW = {"eod_equity": {"absent": "eod_equity.csv"},
-           "scores": {"rows": [["2026-01-06", "PASS", "3.00", "2.00"]], "n_rows": 1,
+           "scores": {"rows": [["2026-01-06", "PASS", "3.00", "2.00", "2.50"]], "n_rows": 1,
                       "file": "scores.csv"},
            "dist": {"rows": [["2026-01-06", "1.50"]], "n_rows": 1,
                     "file": "distribution_scores.csv"}}
@@ -562,9 +562,9 @@ class TestNewestPlan:
 # A header NOT in verify's column order, with the positions column in the
 # middle and a sentinel inside it: whatever leaves the selector must not hold it.
 SECRET = "POSITION-SENTINEL-ZZQ"
-SCORES = ("verdict,per_symbol_json,auction_pnl_usd,date,book,alpaca_equity_change_usd\n"
-          f'FAIL,"{{""{SECRET}"":5}}",UNMEASURED,2026-01-05,cef,1.00\n'
-          f'PASS,"{{""{SECRET}"":6}}",2.00,2026-01-06,cef,3.00\n')
+SCORES = ("verdict,per_symbol_json,auction_pnl_usd,date,book,alpaca_equity_change_usd,auction_hold_pnl_usd\n"
+          f'FAIL,"{{""{SECRET}"":5}}",UNMEASURED,2026-01-05,cef,1.00,UNMEASURED\n'
+          f'PASS,"{{""{SECRET}"":6}}",2.00,2026-01-06,cef,3.00,2.50\n')
 DIST = ("date,auction_pnl_usd,distribution_pnl_usd,auction_pnl_with_distributions_usd,"
         "unmeasured,per_symbol_json,source,label,written_at_utc\n"
         f'2026-01-06,2.00,-0.50,1.50,,"{{""{SECRET}"":1}}",alpaca,x,t\n')
@@ -609,14 +609,14 @@ class TestPnlFiles:
         p = m["pnl"]
         assert p["where"].startswith(f"{ps.VM_ALIAS}:")
         assert "absent" in p["eod_equity"] and "eod_equity.csv" in p["eod_equity"]["absent"]
-        assert p["scores"]["value"]["rows"] == [["2026-01-06", "PASS", "3.00", "2.00"]]
+        assert p["scores"]["value"]["rows"] == [["2026-01-06", "PASS", "3.00", "2.00", "2.50"]]
         assert p["dist"]["value"]["rows"] == [["2026-01-06", "1.50"]]
 
     def test_the_remote_line_selects_by_header_and_never_ships_positions(self, tmp_path):
         stdout, raw = _run_remote_pnl_line(_state(tmp_path))
         assert SECRET not in stdout and "per_symbol_json" not in stdout
-        assert raw["scores"] == {"rows": [["2026-01-05", "FAIL", "1.00", "UNMEASURED"],
-                                          ["2026-01-06", "PASS", "3.00", "2.00"]],
+        assert raw["scores"] == {"rows": [["2026-01-05", "FAIL", "1.00", "UNMEASURED", "UNMEASURED"],
+                                          ["2026-01-06", "PASS", "3.00", "2.00", "2.50"]],
                                  "n_rows": 2, "file": "scores.csv"}
         assert raw["dist"]["rows"] == [["2026-01-06", "1.50"]]
         assert raw["eod_equity"]["rows"] == [["2026-01-05", "0", "0"],
@@ -647,12 +647,18 @@ class TestPnlFiles:
         assert ps.UNMEASURED in r["scores"] and "line 4" in r["scores"][ps.UNMEASURED]
 
     def test_only_the_tail_is_kept_and_the_full_count_is_said(self, tmp_path):
-        head = "date,verdict,alpaca_equity_change_usd,auction_pnl_usd\n"
-        body = "".join(f"2026-{1 + i // 28:02d}-{1 + i % 28:02d},PASS,1.00,1.00\n" for i in range(40))
-        s = _state(tmp_path, scores=head + body)
-        got = ps.pnl_tails(str(s), ps.PNL_FILES)["scores"]
-        assert got["n_rows"] == 40 and len(got["rows"]) == ps.PNL_TAIL_ROWS
-        assert got["rows"][-1][0] == "2026-02-12"
+        """distribution_scores.csv feeds a 10-session table: a tail. scores.csv
+        is kept whole since 2026-11-18, because its at-close column is summed
+        over the book's life (orient `close_model`)."""
+        head = "date,auction_pnl_with_distributions_usd\n"
+        body = "".join(f"2026-{1 + i // 28:02d}-{1 + i % 28:02d},1.00\n" for i in range(40))
+        sc = "date,verdict,alpaca_equity_change_usd,auction_pnl_usd,auction_hold_pnl_usd\n" + "".join(
+            f"2026-{1 + i // 28:02d}-{1 + i % 28:02d},PASS,1.00,1.00,1.00\n" for i in range(40))
+        s = _state(tmp_path, dist=head + body, scores=sc)
+        got = ps.pnl_tails(str(s), ps.PNL_FILES)
+        assert got["dist"]["n_rows"] == 40 and len(got["dist"]["rows"]) == ps.PNL_TAIL_ROWS
+        assert got["dist"]["rows"][-1][0] == "2026-02-12"
+        assert len(got["scores"]["rows"]) == 40, "the whole series, for a whole-life sum"
 
     def test_laptop_reads_its_own_state_dir_with_the_same_selector(self, tmp_path):
         lay = make_laptop(tmp_path)

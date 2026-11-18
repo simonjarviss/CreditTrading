@@ -237,6 +237,7 @@ PNL_COLUMNS = (
     ("snapshot", "snapshot", ("scores", "alpaca_equity_change_usd")),
     ("auction", "auction", ("scores", "auction_pnl_usd")),
     ("dist_adj", "dist-adj", ("dist", "auction_pnl_with_distributions_usd")),
+    ("at_close", "at-close", ("scores", "auction_hold_pnl_usd")),
 )
 PNL_LEGEND = (
     "official = eod_equity.csv change_usd: Alpaca's end-of-day history, the P&L of record "
@@ -246,6 +247,9 @@ PNL_LEGEND = (
     "auction = scores.csv auction_pnl_usd: auction-marked (quantt/session/score.py (b))",
     "dist-adj = distribution_scores.csv auction_pnl_with_distributions_usd "
     "(quantt/session/dist_score.py)",
+    "at-close = scores.csv auction_hold_pnl_usd: MODELLED, not the record. The book held "
+    "into the close, marked auction print to auction print, as if every fill had printed "
+    "in the closing auction (a live MOC order does; Alpaca paper runs no auction)",
     "each column is its own file's, never filled from another; all gross",
 )
 
@@ -447,6 +451,55 @@ def pnl_table(official: dict, files: dict) -> dict:
     return {"rows": rows, "sums": sums, "notes": notes, "file_gaps": gaps}
 
 
+def close_model(files: dict) -> dict:
+    """The cumulative P&L had every fill printed in the closing auction, beside
+    the official record on the SAME sessions.
+
+    WHY (team lead, 2026-11-18: "on a real account we would get close, so we
+    should model closing for showing investors"). The paper account fills a
+    late market order at the quote a few minutes before the close; a live MOC
+    order fills in the auction. On the core, 2026-09-29 to 2026-11-17, that
+    difference was -$785.10 against holding P&L of +$592.57 (E-2026-11-18-02),
+    so the official record understates what the same decisions earn at the
+    close. `auction_hold_pnl_usd` is the runner's own daily measure of the
+    second number (`quantt/session/score.py` (b), first term).
+
+    IT IS A MODEL, AND SAYS SO. Broker-confirmed fills are the only live
+    statistic (CLAUDE.md research rules); this is what those fills' positions
+    earned close to close. It is gross: no borrow, no distributions, no fees,
+    and no allowance for our own orders moving the auction. The like-for-like
+    official sum is over the same dates, because the score file can start
+    after the account did, and a model summed over fewer days than the record
+    it is compared with is not a comparison.
+    """
+    m, partial, gap = _by_date(files.get("scores"), "auction_hold_pnl_usd", "scores")
+    if gap:
+        return {"UNMEASURED": f"scores.csv: {gap}"}
+    if partial:
+        return {"UNMEASURED": "scores.csv holds more rows than the reader carries, so the "
+                              "sum would be over a window"}
+    eod = files.get("eod_equity")
+    off = ({r[0]: r[2] for r in eod["value"]["rows"]}
+           if isinstance(eod, dict) and "value" in eod else {})
+    notes: list = []
+    model, official, used, unread = 0.0, 0.0, [], []
+    for d in sorted(m):
+        v = _cell(m[d], f"{d} at-close", notes)
+        try:
+            o = _finite(off[d], f"{d} official") if d in off else None
+        except Unmeasured:
+            o = None
+        if isinstance(v, float) and o is not None:
+            model, official = model + v, official + o
+            used.append(d)
+        else:
+            unread.append(d)
+    if not used:
+        return {"UNMEASURED": "no session has both a measured at-close score and an official row"}
+    return {"model_usd": model, "official_same_sessions_usd": official, "n": len(used),
+            "first": used[0], "last": used[-1], "not_comparable": unread, "notes": notes}
+
+
 def _reading_gap(r) -> str | None:
     if not isinstance(r, dict):
         return "UNMEASURED — no reading"
@@ -507,6 +560,7 @@ def pnl(prod_sec: dict) -> dict:
                           "ops.prod_state pnl_tails on the prod machine)",
             "prod": v["prod"], "where": files.get("where"), "official": official,
             "vol_target": _vol_target(), "table": pnl_table(official, files),
+            "close_model": close_model(files),
             "books": _pnl_other_books(prod_sec, v["prod"])}
 
 
@@ -540,7 +594,8 @@ def _pnl_other_books(prod_sec: dict, prod_machine: str) -> dict:
         except Unmeasured as exc:
             official = {"UNMEASURED": str(exc)}
         out[name] = {"book": name, "prod": "vm", "where": files.get("where"),
-                     "official": official, "table": pnl_table(official, files)}
+                     "official": official, "table": pnl_table(official, files),
+                     "close_model": close_model(files)}
     return out
 
 
@@ -877,6 +932,16 @@ def _render_pnl(sec: dict) -> None:
             _p("  caution", f"{g['date']}: change_usd {g['change_usd']:+.2f} but EOD equity moved "
                             f"{g['equity_diff_usd']:+.2f} (a cashflow or a file defect); the "
                             f"figures above use change_usd, the record")
+    cm = sec.get("close_model")
+    if cm is not None:
+        _p("modelled at the close", f"UNMEASURED — {cm['UNMEASURED']}" if "UNMEASURED" in cm else
+           f"{_usd(cm['model_usd'], True)} over {cm['n']} session(s), {cm['first']} to {cm['last']}, "
+           f"against {_usd(cm['official_same_sessions_usd'], True)} official on the same sessions. "
+           f"MODELLED, not the record: every fill at the closing-auction print; gross, no borrow, "
+           f"no distributions"
+           + (f"; {len(cm['not_comparable'])} session(s) left out for a missing score or official "
+              f"row ({', '.join(cm['not_comparable'][:6])}"
+              f"{', ...' if len(cm['not_comparable']) > 6 else ''})" if cm["not_comparable"] else ""))
     vt = sec.get("vol_target")
     if vt is None:
         pass                      # another book: the core's spec is not its target
