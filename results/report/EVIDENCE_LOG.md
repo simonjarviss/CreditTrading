@@ -4700,3 +4700,159 @@ that adds it does not exist when it is written.
 - source: `results/ideas/net_cash/explore.py` @ `e872349`; `results/ideas/net_cash/checks.py` @ `e872349`; `scripts/research/stage_comp_net_cash.py` @ `e872349`; `results/ideas/2026-11-16_net_cash.md` @ `e872349`
 - supports: §4
 - status: current. Gross. The harness's constant weights rebalance daily at closing prices, which flatters shares this thin; not rescored at the quote. Not promoted; not independently reviewed
+
+### E-2026-11-18-05 · Result: a thin ETF's gap to its liquid twin closes before a next-close fill; killed, and the review agrees
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a thin ETF's gap to its most-correlated liquid twin, traded back for 5 sessions; data: every CRSP fund/ETF, 6,933 with dead ones (2025-12-31) [S]
+  - last-trade prices 0.32 (t 1.55); mid quotes 0.48 (t 2.35); one more session's wait 0.09; 29,439 events [S]
+  - independent adversarial review, which re-ran the scripts: kill holds; without the 10 best days 0.24 [S]
+- source: `results/ideas/2026-11-16_etf_twins.md` @ `a9f6c44`; `results/ideas/etf_twins/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE (killed): the gap closes before a next-close fill. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-06 · Result: share-class spreads revert (0.89 gross) but the average trade is smaller than the quoted spread; not promoted
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: spread reversion between two share classes of one company, 245 pairs; data: CRSP daily with delisted (2025-12-31) [S]
+  - gross Sharpe 0.89 (t 4.54), every era positive, both controls flat; +28.5bp a trade against a 28.9bp two-leg quoted spread [S]
+  - independent adversarial review, which re-ran the scripts: holds; at fill-day closing quotes the mean trade is −40bp [S]
+- source: `results/ideas/2026-11-16_dual_class_pairs.md` @ `a9f6c44`; `results/ideas/dual_class_pairs/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE, not promoted: smaller than the spread; reopens on closing-auction fill data or a borrow reading. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-07 · Result: S&P SmallCap 600 deletions do not beat matched controls at month-end entry; set aside with a 3-session lead
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: rebound in S&P SmallCap 600 deletions and give-back in additions after the effective date; data: CRSP daily; change list (2025-12-31) [S]
+  - deletions vs IWM 20 sessions 0.19 (t 0.80), no better than matched controls [S]
+  - independent adversarial review, which re-ran the scripts: holds; lead, picked after looking: a 3-session rebound on the 160 deletions datable to the rebalance Friday [S]
+- source: `results/ideas/2026-11-16_sp600_changes.md` @ `a9f6c44`; `results/ideas/sp600_changes/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE; reopens as one pre-specified 3-session rule. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-08 · Result: the leveraged-ETF give-back happens on the next session before a next-close fill; set aside, with an open-fill lead found in review
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: fade the underlying after days when leveraged ETFs' forced closing trade was large against its volume; data: CRSP daily, 373 leveraged funds identified by rule (2025-12-31) [S]
+  - next-close fills: sector/index book 0.09 (t 0.37); the give-back is at t+1 (+11.3bp, t 5.56), before the fill [S]
+  - independent adversarial review, which re-ran the scripts: weaker than claimed; open-to-close on t+1 scores 1.49 (t 6.5) gross at 154× turnover, found after the fact [S]
+- source: `results/ideas/2026-11-16_levered_etf_reversal.md` @ `a9f6c44`; `results/ideas/levered_etf_reversal/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE under next-close fills; reopens as a pre-specified next-open rule scored on opening quotes. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-09 · Result: nothing is left of a thin ETF's stale close at the desk's fill; killed
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: drift left after a thin ETF's stale close, filled at the next close; data: every CRSP fund/ETF (2025-12-31) [S]
+  - main book 0.18 (t 0.92); +3.1bp per event against a 28bp median spread; controls flat [S]
+  - independent adversarial review, which re-ran the scripts: kill holds; a residual on mids in the fastest cells earns about 1.2bp per unit traded against a 14bp half spread [S]
+- source: `results/ideas/2026-11-16_thin_etf_catchup.md` @ `a9f6c44`; `results/ideas/thin_etf_catchup/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE (killed). Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-10 · Result: predicted crossings of the Russell 2000's bottom edge earn nothing over their controls; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: stocks crossing between the Russell 2000 and the microcap zone, predicted from market-value ranks; data: CRSP daily (2025-10-31) [S]
+  - additions vs IWM 0.10; deletions less additions 20 sessions +1.8% a year (t 1.19), 60 sessions +4.0% (t 1.41), 2009 alone +54%; controls match [S]
+  - independent adversarial review, which re-ran the scripts: holds [S]
+- source: `results/ideas/2026-11-16_russell_micro_boundary.md` @ `a9f6c44`; `results/ideas/russell_micro_boundary/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE; reopens on FTSE Russell's published add/delete lists. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-11 · Result: closed-end funds keep falling after a distribution cut; the raise drift is weaker than first claimed
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a CEF's regular distribution cut (rebound) or raise (drift) as a dated event, 20 and 60 sessions; data: every CRSP closed-end fund with dead ones (2025-12-31) [S]
+  - cuts keep falling: book −0.94 (t −4.78), −85bp per event over 20 sessions (t −5.49, n 2,224), every era; raises +0.80 (t 4.08), +83bp per event (n 1,097), taxable funds only [S]
+  - independent adversarial review, which re-ran the scripts: raises weaker than claimed, +25bp (t 1.2) dated from the ex-date and −15bp in 2024–25 [S]
+- source: `results/ideas/2026-11-16_cef_dist_changes.md` @ `a9f6c44`; `results/ideas/cef_dist_changes/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE: long-after-a-cut killed; the cut list is a candidate filter for the core book (untested); raises need a timed live feed. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-12 · Result: closed-end funds fall about 2.5% through a rights offering's subscription period; the long after expiry does not beat its control
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a CEF's fall through a rights offering's subscription period and its recovery after expiry; data: CRSP distributions and daily (2025-12-31), 130 eligible events [S]
+  - long after expiry 60 sessions 0.39 (t 1.99), no better than the same funds a year earlier; the fall is the result: −252bp over the subscription period (t −6.4) [S]
+  - independent adversarial review, which re-ran the scripts: holds; earning the fall needs a short, and at 10% borrow the short book falls from 0.71 to 0.45 [S]
+- source: `results/ideas/2026-11-16_cef_rights_offerings.md` @ `a9f6c44`; `results/ideas/cef_rights_offerings/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE: reopens on borrow measured inside the window. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-13 · Result: dated term trusts earn the bill rate into termination and nothing over it; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: dated term CEFs converging to NAV into their termination date; data: CRSP names and daily (2025-12-31), 38 events in 31 years [S]
+  - long only 0.60 (t 3.33) but 0.06 less the CEF market and +0.05% per event less SHY: the return is the bill rate [S]
+  - independent adversarial review, which re-ran the scripts: null holds; the liquidating payment was missing from the panel and adding it does not change the answer [S]
+- source: `results/ideas/2026-11-16_cef_term_trusts.md` @ `a9f6c44`; `results/ideas/cef_term_trusts/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE; reopens with point-in-time NAVs from EDGAR. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-14 · Result: the January rebound in the year's worst closed-end funds is not there; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: the year's worst fifth of CEFs bought in mid-December for the January rebound; data: CRSP CEF panel (2025-12-31), 25 seasons [S]
+  - worst fifth less all funds +0.50% a season (t 0.97, 14 of 25); small-cap stocks under the same rule +0.91% [S]
+  - independent adversarial review, which re-ran the scripts: null holds [S]
+- source: `results/ideas/2026-11-16_cef_tax_loss_january.md` @ `a9f6c44`; `results/ideas/cef_tax_loss_january/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-15 · Result: a small pay-date bump exists in closed-end funds but the reinvestment mechanism's own tests fail; explore
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: the reinvestment plan agent's buying around a CEF's payment date; data: CRSP distributions and daily (2025-12-31), 72,439 events [S]
+  - book 1.66 (t 8.41) at 71× turnover; +9.1bp per event (t 3.68); the mechanism's own tests fail (discount less premium funds −0.05) [S]
+  - independent adversarial review, which re-ran the scripts: weaker than claimed; about +28bp over P−1..P since T+1 settlement, against a 19bp spread [S]
+- source: `results/ideas/2026-11-16_cef_drip_paydate.md` @ `a9f6c44`; `results/ideas/cef_drip_paydate/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE: reopens as one settlement-aligned rule run forward. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-16 · Result: unit trusts' forced selling of closed-end funds into a termination date, and the rebound after, survive an adversarial review; promising
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: forced selling of CEFs by unit trusts into their mandatory termination date, and the rebound after; data: EDGAR 487 filings (First Trust, a one-in-three sample) and CRSP daily (2025-12-31), 24,623 events [S]
+  - T−9..T −39.9bp (t −9.8); T+1..T+10 +33.2bp (t 7.8); pre-specified T+2..T+11 +14.9bp (t 3.7); dose-response by sale share; controls score nothing [S]
+  - independent adversarial review, which re-ran the scripts: could not break it; the T-close entry was chosen after seeing the profile, and a day late keeps 13bp [S]
+- source: `results/ideas/2026-11-16_uit_cef_flows.md` @ `a9f6c44`; `results/ideas/uit_cef_flows/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. PROMISING (EXPLORE, cleared): next a pre-specified T-close rule and a shadow book. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-17 · Result: a soft group cap on the core book is no better than a plain size cut; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a soft cap on each group's net position in the core book, on the canonical harness; data: the desk's CEF panels (2026-10-14) [S]
+  - uncapped 1.15 (t 4.20); a 25% flat cap 1.13 at lower gross; no cap beats a plain size cut [S]
+  - independent adversarial review, which re-ran the scripts: holds; the muni evidence is one episode in 2026 [S]
+- source: `results/ideas/2026-11-16_core_group_cap.md` @ `a9f6c44`; `results/ideas/core_group_cap/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE: no cap (team lead, 2026-11-18, leaves the core uncapped). Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
