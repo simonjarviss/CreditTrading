@@ -4399,3 +4399,17 @@ that adds it does not exist when it is written.
 - source: `quantt/deploy/install_vm.py`, `quantt/deploy/tests/test_install_vm_books.py`, `quantt/deploy/tests/test_install_vm_reports.py`, `docs/RUNBOOK.md` (8.10), this commit
 - supports: §5
 - status: current, not released. Until a release carries it, a C4 or reports install on the VM needs the park-and-restore in RUNBOOK 8.10. The event sleeves' installer (branch mission-work, `quantt-events-*` units) is not covered and must register its names when it reaches main
+
+### E-2026-11-18-03 · Result: CEFConnect serves its block page to the laptop as well as the VM, so the core's NAV cross-check still has no second source; the nightly data QA now flags that every night with the day count
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the core collector's log on the VM carried "nav_crosscheck: second source unavailable (cefconnect: JSONDecodeError)" on 821 lines, the first dated 2026-10-29; `docs/JOURNAL.md` dates the refusals from 2026-10-21 [S]
+  - the same request from the laptop on 2026-11-18 at about 15:24 UTC (PDI, `scripts/cef/fetch_daily.py` `_cefconnect_navs`): HTTP 200, `text/html`, 17,298 bytes, titled "Your request was blocked"; not an Azure-only block and no sign the endpoint moved [S]
+  - recording the outage as a status and calling the day COMPLETE was the team lead's ruling of 2026-10-29 (E-2026-10-29-08), not an unnoticed failure; what was missing is any report that named it [V]
+  - `scripts/ops/data_qa.py` gains Q9: it reads the collector's `report.json` for the as-of day and FLAGs a cross-check that was unavailable or did not complete, with the count of consecutive trading days and the first day ("at least N" when an earlier report is missing); UNMEASURED, never OK, when there is no report; NOT_RUN for C4, which has no second source by ruling. No threshold was chosen: it flags from the first night [V]
+  - seven new tests in `scripts/ops/tests/test_data_qa.py`, all failing against `8cac532`'s `data_qa.py`; nothing on the live path changed (collector, session and fetcher untouched) [S]
+- source: `scripts/ops/data_qa.py`, `scripts/ops/tests/test_data_qa.py`, `docs/DATA.md`, `docs/REFERENCES.md` (today's row), commit `4098634`; `results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md` (the shortlist of replacement sources)
+- supports: §1, §5
+- status: current, not released. The book still decides on one NAV source (Yahoo). The replacement second source is the team lead's choice from the 2026-10-19 shortlist; changing how the fetcher looks to the site is ruled out there. Not determined: whether the 21:45 QA job always finds the 21:40 collect's report for the as-of day (if not, Q9 says UNMEASURED and names the file)
