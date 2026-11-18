@@ -325,7 +325,8 @@ the W sessions STRICTLY BEFORE t (the y rows), with lagged factor rows reaching 
 further back. `assert_strictly_before` raises `LookaheadError` if any row of either window
 is dated t or later; it is an explicit raise, not an `assert`, so `python -O` cannot strip
 it. The factor P&L of session t uses the exposure of the previous session (E(t-1) x f(t)),
-with f(t) built from E(t-1)'s own slopes.
+with f(t) built from E(t-1)'s own slopes; it is read for the session after every positions
+date, a session the book closes flat included (team lead, 2026-11-11/12; `readout`).
 
 TOTAL RETURNS (H15)
 -------------------
@@ -426,7 +427,9 @@ WHAT IT REFUSES (raises, naming what is missing; never a default)
     in the default strict mode; the report job's partial mode leaves it out, named: PARTIAL,
     below);
   * a split on a held name after the first positions date (the cached close would no
-    longer match the share count), and a split the guard reads as already adjusted;
+    longer match the share count), and a split the guard reads as already adjusted (in the
+    default strict mode; the report job's partial mode leaves the fund out, named, on each
+    date the split can touch: PARTIAL, below);
   * a positions file with a duplicate (date, symbol), a non-finite share count, a date
     that is not a cached session, or an equity column that holds a value that is not a
     plain number (e.g. "$100,000.00"), is empty on every row, is missing on some rows,
@@ -459,8 +462,26 @@ rest. So, behind explicit parameters that every research path and the CLI leave 
     factor P&L of today, E(yesterday) x f(today), keeps it. If no held name has its inputs
     on a date, `NoInputsError` (a ReadoutError) is raised: there is no book to read. A
     factor ETF's missing return still raises as in strict mode.
+  * A SPLIT RECORD (team lead, 2026-11-14, on the third review of PR #82: option A, exclude
+    and name). The strict readout refuses any split record on a held name after the first
+    positions date, and the core's split-basis guard refuses an already-adjusted split
+    anywhere in the fetch. The report job re-reads from the first trade every night, so a
+    split in any fund it ever held made the factor block UNMEASURED every night after,
+    although the split can touch only some readings. What it can touch: yfinance's Close is
+    split-adjusted after the fact (data_guards, the IGR record), so on a date BEFORE the
+    ex-date S the fund's close may sit on a basis its share count does not share; and, for
+    the core, whose guard refuses a return across an adjusted split rather than drop its
+    multiplier as C4's does, on a date whose beta window CONTAINS S. In partial mode the fund
+    is left out on exactly those dates, each recorded in `Readout.excluded` with the split
+    named (symbol, ex-date, yfinance's ratio), so the job's PARTIAL rules apply: left out at
+    the as-of close is PARTIAL, only earlier is a history note. Everywhere else it is read.
+    The split-basis guard then judges only the cells the readout reads (`returns_panel`'s
+    `read`): one it does not read is not judged, and its return is NaN, so a read the scope
+    missed would raise as a missing return, never book a split it did not judge. A factor
+    ETF's split in a read cell still raises as in strict mode.
 With both at False (the default) nothing above runs and the outputs are byte-identical to
-the strict build's (the proof is in the commit that added this).
+the strict build's (the proof is in the commit that added this; for the split scope, in the
+commit of 2026-11-14).
 
 TWO BOOKS (team lead, 2026-11-09)
 ---------------------------------
@@ -1076,7 +1097,8 @@ def cache_provenance_line(sha: str | None, recorded_sha: str = RULE_CACHE_SHA256
 # --------------------------------------------------------------------------- returns
 
 def returns_panel(px: pd.DataFrame, *, drop_adjusted_splits: bool = False,
-                  dropped: list | None = None) -> tuple[pd.DataFrame, pd.DataFrame, pd.DatetimeIndex]:
+                  dropped: list | None = None, read: pd.DataFrame | None = None
+                  ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DatetimeIndex]:
     """(R, C, sessions): wide daily total returns, wide raw closes, and the session index.
 
     R is the harness's formula on yfinance's raw Close and Dividends (module docstring,
@@ -1086,7 +1108,12 @@ def returns_panel(px: pd.DataFrame, *, drop_adjusted_splits: bool = False,
     `drop_adjusted_splits` (C4 only; module docstring, THE C4 LAG RULE): a split the check
     reads as `adjusted` (the cached close made no split-sized step; yfinance adjusts Close
     for splits after the fact) is not applied, and each such (ticker, date, factor) is
-    appended to `dropped`. The core's call keeps False: the guard raises on such a cell."""
+    appended to `dropped`. The core's call keeps False: the guard raises on such a cell.
+
+    `read` (partial mode only, `readout`; team lead, 2026-11-14): a boolean frame of the cells
+    the readout will read. The split-basis guard judges only those; a cell it does not read
+    with a recorded split multiplier is not judged, and its return is NaN rather than a number
+    no guard has checked. None (every other caller) is the guard on every cell, unchanged."""
     C = px.pivot(index="date", columns="ticker", values="close").sort_index()
     D = px.pivot(index="date", columns="ticker", values="dividend").reindex_like(C)
     S = px.pivot(index="date", columns="ticker", values="split").reindex_like(C)
@@ -1105,13 +1132,22 @@ def returns_panel(px: pd.DataFrame, *, drop_adjusted_splits: bool = False,
                 k.at[r.ex_date, r.ticker] = 1.0
                 if dropped is not None:
                     dropped.append((r.ticker, pd.Timestamp(r.ex_date).date().isoformat(), float(r.factor)))
-    k = guard_split_basis(Rpx, k, series="close", context="exposure_readout.returns_panel")
+    if read is None:
+        k = guard_split_basis(Rpx, k, series="close", context="exposure_readout.returns_panel")
+        unjudged = None
+    else:
+        rd = read.reindex(index=k.index, columns=k.columns, fill_value=False).astype(bool)
+        guard_split_basis(Rpx, k.where(rd, 1.0), series="close",
+                          context="exposure_readout.returns_panel (the cells the partial readout reads)")
+        unjudged = (k != 1.0) & ~rd
     clash = (k != 1.0) & (D.fillna(0.0) != 0.0)
     if clash.to_numpy().any():
         where = [(C.index[i].date().isoformat(), C.columns[j]) for i, j in np.argwhere(clash.to_numpy())]
         raise ReadoutError(f"a split and a distribution fall on the same name-date {where[:5]}; "
                            "the per-share amount is ambiguous and this module will not guess")
     R = (1.0 + Rpx) * k - 1.0 + D / prev
+    if unjudged is not None:
+        R = R.mask(unjudged)                 # a split return no guard judged is never a number
     return R, C, sessions
 
 
@@ -1407,19 +1443,95 @@ def _missing_input(s: str, t, C: pd.DataFrame, R: pd.DataFrame, sessions: pd.Dat
     return None
 
 
+def _split_scope(px: pd.DataFrame, P: pd.DataFrame, dates: list, held_any: list, fs: FactorSet, window: int,
+                 lags: int, pnl_through) -> tuple[dict, pd.DataFrame]:
+    """Partial mode's treatment of split records (module docstring, PARTIAL: A SPLIT RECORD;
+    team lead, 2026-11-14, option A of the third review of PR #82): (why, read).
+
+    `why` {(date, symbol): reason} for each held name on each positions date a split record of
+    its can touch: the date is before the ex-date S (its close may be on the post-split basis,
+    its share count is not), or, for the core (the book whose guard refuses rather than drops
+    an adjusted multiplier, `returns_panel`), S is in its beta window (the `window` sessions
+    strictly before the date, `window_rows`). Each reason names the symbol's split: ex-date and
+    yfinance's ratio. A date on or after S whose window does not contain S is not touched.
+
+    `read` the cells (session x ticker) the readout reads: each kept held name's beta window on
+    each positions date, each factor ETF's lagged window there, and each ETF's rows of every
+    factor P&L term (t - lags .. t, for the session after each positions date up to the bound).
+    Built from the price cache's own sessions, as `returns_panel` builds them, by index
+    arithmetic that never raises: a date the cache cannot serve raises later where it always did
+    (a positions date that is not a session; a window too short, in `window_rows`)."""
+    sessions = pd.DatetimeIndex(pd.to_datetime(px["date"]).unique()).sort_values()
+    pos = {d: i for i, d in enumerate(sessions)}
+    core_guard = fs.book != "c4"             # the same switch as returns_panel's drop_adjusted_splits
+    splits: dict = {}
+    rec = px[px["ticker"].isin(held_any) & (px["split"] != 0)]
+    for r in rec.sort_values(["ticker", "date"]).itertuples():
+        splits.setdefault(r.ticker, []).append((pd.Timestamp(r.date), float(r.split)))
+    why: dict = {}
+    kept: dict = {}
+    for t in dates:
+        held = list(P.loc[(P["date"] == t) & (P["shares"] != 0), "symbol"])
+        y = sessions[max(0, pos[t] - window):pos[t]] if t in pos else sessions[:0]
+        for s in held:
+            hits = []
+            for S, ratio in splits.get(s, ()):
+                if t < S:
+                    hits.append(f"a split record of {s} ex {S.date()} (yfinance ratio {ratio:g}) after this close: its "
+                                f"close on {t.date()} may be on the post-split basis, which its share count does not share")
+                elif core_guard and S in y:
+                    hits.append(f"a split record of {s} ex {S.date()} (yfinance ratio {ratio:g}) in its {window}-session "
+                                f"beta window before {t.date()}: the core's split guard reads no return across a split")
+            if hits:
+                why[(t, s)] = "; ".join(hits)
+        kept[t] = [s for s in held if (t, s) not in why]
+    read = pd.DataFrame(False, index=sessions, columns=sorted(px["ticker"].unique()))
+    etfs = [e for e in fs.etfs if e in read.columns]
+    for t in dates:
+        if t not in pos:
+            continue
+        i = pos[t]
+        names = [s for s in kept[t] if s in read.columns]
+        if names:
+            read.loc[sessions[max(0, i - window):i], names] = True
+        read.loc[sessions[max(0, i - window - lags):i], etfs] = True
+    bound = dates[-1] if pnl_through is None else pd.Timestamp(pnl_through)
+    for tp in dates:
+        if tp in pos and pos[tp] + 1 < len(sessions) and sessions[pos[tp] + 1] <= bound:
+            j = pos[tp] + 1
+            read.loc[sessions[max(0, j - lags):j + 1], etfs] = True
+    return why, read
+
+
 def readout(px: pd.DataFrame, positions: pd.DataFrame, groups: dict, *, window: int | None = None,
             lags: int | None = None, vol_target: float | None = None, fs: FactorSet = CORE,
-            partial: bool = False) -> Readout:
-    """Exposures on every positions date, and the factor P&L on every positions date whose
-    previous session is also a positions date (E(t-1) x f(t), and the lag-distributed
-    second method). `window`, `lags` and `vol_target` default to the book's (`fs`); a book
-    whose lag rule has not run raises rather than guess a lag. The line's multiplier is
-    always the book's own (`fs.multiplier`, team lead, 2026-11-10).
+            partial: bool = False, pnl_through=None) -> Readout:
+    """Exposures on every positions date, and the factor P&L of the session after each positions
+    date (E(t-1) x f(t), and the lag-distributed second method). `window`, `lags` and
+    `vol_target` default to the book's (`fs`); a book whose lag rule has not run raises rather
+    than guess a lag. The line's multiplier is always the book's own (`fs.multiplier`, team
+    lead, 2026-11-10).
+
+    THE FACTOR P&L PAIRS EACH POSITIONS DATE tp WITH ITS NEXT PRICE SESSION t (team lead,
+    2026-11-11/12, on the second review of PR #82). E(t-1) x f(t) needs only the book at t-1's
+    close, so session t is read whether or not t is itself a positions date. Before that ruling
+    a row needed t to be a positions date too, so the session on which a book goes flat (a date
+    with no row: the report job's `positions_frame` drops flat closes, and in a positions file a
+    date with no row holds nothing) had no factor P&L, although its book at t-1 earned f(t): the
+    review measured the dropped term at 25% of a two-session fixture's cumulative MUNI factor
+    P&L, and after held -> flat -> held the P&L was empty. Rows for consecutive positions dates
+    are unchanged, value for value and in order; the only new rows are flat-entry sessions.
+    t is the price cache's next session after tp, and is read only if t <= `pnl_through`
+    (default: the last positions date, so nothing after the book the caller gave is read; the
+    report job passes its attribution's as-of close). A `pnl_through` before the last positions
+    date raises: it would drop that date's own next session without a word.
 
     `partial` (default False: the strict readout, unchanged; True from the daily report job
     only, team lead 2026-11-10, module docstring PARTIAL): a held name without every input on
     a date is left out of that date and recorded in `excluded`, and a date on which no held
-    name has its inputs raises NoInputsError."""
+    name has its inputs raises NoInputsError. A split record is one such input since the team
+    lead's ruling of 2026-11-14 (`_split_scope`): the fund is left out, named, on the dates the
+    split can touch, where the strict readout refuses the whole readout."""
     window = fs.window if window is None else window
     vol_target = fs.vol_target if vol_target is None else vol_target
     if lags is None:
@@ -1435,11 +1547,16 @@ def readout(px: pd.DataFrame, positions: pd.DataFrame, groups: dict, *, window: 
     # count does not share (yfinance re-bases Close for splits). Checked before the returns,
     # so the refusal names the real problem rather than the split-basis guard's symptom.
     held_any = sorted(P.loc[P["shares"] != 0, "symbol"].unique())
-    sp = px[(px["ticker"].isin(held_any)) & (px["split"] != 0) & (px["date"] > dates[0])]
-    if len(sp):
-        raise ReadoutError(f"split records after the first positions date on held names: "
-                           f"{sp[['ticker', 'date']].astype(str).values.tolist()}")
-    R, C, sessions = returns_panel(px, drop_adjusted_splits=(fs.book == "c4"))
+    if partial:                              # leave the fund out where the split can touch it (`_split_scope`)
+        split_why, read = _split_scope(px, P, dates, held_any, fs, window, lags, pnl_through)
+        R, C, sessions = returns_panel(px, drop_adjusted_splits=(fs.book == "c4"), read=read)
+    else:
+        sp = px[(px["ticker"].isin(held_any)) & (px["split"] != 0) & (px["date"] > dates[0])]
+        if len(sp):
+            raise ReadoutError(f"split records after the first positions date on held names: "
+                               f"{sp[['ticker', 'date']].astype(str).values.tolist()}")
+        R, C, sessions = returns_panel(px, drop_adjusted_splits=(fs.book == "c4"))
+        split_why = {}
     off = [d for d in dates if d not in sessions]
     if off:
         raise ReadoutError(f"positions dates that are not cached sessions: {[d.date().isoformat() for d in off[:5]]}")
@@ -1454,7 +1571,7 @@ def readout(px: pd.DataFrame, positions: pd.DataFrame, groups: dict, *, window: 
         Pt = P[P["date"] == t].set_index("symbol")
         held = list(Pt.index[Pt["shares"] != 0])
         if partial:
-            why = {s: _missing_input(s, t, C, R, sessions, window, lags) for s in held}
+            why = {s: split_why.get((t, s)) or _missing_input(s, t, C, R, sessions, window, lags) for s in held}
             gone = [s for s in held if why[s] is not None]
             if held and len(gone) == len(held):
                 raise NoInputsError(f"no held name has every input the readout needs on {t.date()}: "
@@ -1492,14 +1609,17 @@ def readout(px: pd.DataFrame, positions: pd.DataFrame, groups: dict, *, window: 
         for etf in fs.etfs:
             def_rows.append(dict(date=t, etf=etf, **{k: float(fit.M.at[etf, k]) for k in fs.names}))
 
-    # factor P&L: t whose previous session is a positions date
+    # factor P&L: each positions date tp with its next price session t <= the bound (docstring)
     pnl_rows = []
-    pos_set = set(dates)
-    for t in dates:
-        i = int(sessions.searchsorted(t))
-        if i == 0 or sessions[i - 1] not in pos_set:
+    bound = dates[-1] if pnl_through is None else pd.Timestamp(pnl_through)
+    if bound < dates[-1]:
+        raise ReadoutError(f"pnl_through {bound.date()} is before the last positions date {dates[-1].date()}: the "
+                           "factor P&L of that date's next session would be dropped")
+    for tp in dates:
+        i = int(sessions.searchsorted(tp)) + 1      # tp is a cached session (checked above); i is t's index
+        if i >= len(sessions) or sessions[i] > bound:
             continue
-        tp = sessions[i - 1]
+        t = sessions[i]
         fit, value = fits[tp], values[tp]
         held = list(value.index)
         f_t = R.loc[[t], list(fs.etfs)]

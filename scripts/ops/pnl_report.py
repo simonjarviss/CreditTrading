@@ -97,16 +97,53 @@ A MISSING INPUT IS UNMEASURED, NAMED, NEVER INFERRED (CLAUDE.md, no silent fallb
     left out on an earlier date alone is a named note in the block's history, and the block
     is OK, because the job re-reads from the first trade every night and a fund yfinance no
     longer serves (merged, renamed) would otherwise keep every later night PARTIAL.
+  * a split record in a fund the book has held: the fund is left out, named (symbol, ex-date,
+    yfinance's ratio), only on the dates the split can touch, before its ex-date and, for the
+    core, with the ex-date in its beta window (team lead, 2026-11-14, option A of the third
+    review of PR #82; `exposure_readout._split_scope`); PARTIAL at the as-of close, a history
+    note earlier, as above. Before that ruling one split in a fund ever held made the block
+    UNMEASURED every night after.
+  * a corporate action on a fund the book held into its date (team lead, 2026-11-14:
+    "narrow and handle it", and 2026-11-15: "simplify"; `live_attribution`, CORPORATE ACTIONS).
+    An acquirer's merger, a flat name and an event outside the window touch nothing. The
+    rebuild takes positions from FILLs alone, never the market feed and never the account's own
+    corporate-action activity rows: any such row on or before the job's as-of (not only the
+    session read, on a late-EOD night) stops the attribution, every row named (symbol, type,
+    date, share count), exit 4, because its REST format has never been measured. A forward or
+    reverse split paper did not process is reconciled as the account
+    shows it, with a labelled phantom line per event, its accrual until the account first
+    trades the name, its crystallisation at that trade (with the session's fee term), and a
+    cumulative phantom line, an estimate of what paper's missing split put into the official
+    P&L, beside the official P&L, which stays the P&L of record (`corporate_action_lines`).
+    Every crystallised phantom is labelled "approximate: <reason>" (line and JSON; the live
+    sleeve's no-trade band, team lead, 2026-11-15), and so is any phantom whose other conditions
+    fail; an open one is labelled only for a fractional q_prev x k. A session that does not
+    reconcile (a frozen position, or a hand-pushed split with no row) is UNRECONCILED, exit 5,
+    naming the session and the event (`reconciliation`). Any other count-changing type held into its date
+    refuses the attribution, named (exit 4).
   * a book that holds nothing at the as-of close: the factor block is FLAT (independent
     review of PR #82, 2026-11-11). Nothing is held, so nothing is exposed; the block reads no
     exposure, no flag and no PARTIAL for that close, and never shows an earlier close's
     reading as the as-of one. FLAT is read only from a rebuild that reconciles: an
     unreconciled one makes the block UNMEASURED, naming why (team lead, 2026-11-11;
-    `build_factor`), and risk_daily cross-checks every FLAT against the collector's account
-    record for that close. Its history since the first trade is labelled with its dates;
+    `build_factor`). Its history since the first trade is labelled with its dates;
     a history with no reading for a named reason is an UNMEASURED line in the FLAT block, and
     a bug, a LookaheadError or a failed price fetch while reading it makes the whole block
     UNMEASURED, as on a held night (second review of PR #82, 2026-11-11; `_factor_flat`).
+  * the factor block reads the fill rebuild's positions, never the account's. So the JSON
+    carries those positions at the block's as-of close for every factor status
+    (`rebuild_positions`), and risk_daily compares them, share for share, with the collector's
+    account record of that close: a disagreement is its WATCH, a record it cannot read its
+    UNMEASURED, never INFO (team lead, 2026-11-11/12, on the third review of PR #82, whose
+    phantom sale of 2,000 AAA left the block OK at half the true MUNI exposure). A held book on
+    an unreconciled night is read, for diagnosis, under status UNRECONCILED, never OK
+    (`build_factor`).
+  * Alpaca's EOD history with no point for the as-of D yet: the job reads the latest session it
+    has, D-1, under D's name (`build_attribution`). The markdown's title and the line under its
+    status then say "READ AT THE CLOSE OF D-1, NOT D", the JSON's `session_read` names D-1, and
+    risk_daily shows both blocks UNMEASURED for D, never INFO (team lead, 2026-11-11/12, on the
+    third review of PR #82, where D's report passed D-1's FLAT as INFO; `render_md`,
+    `risk_daily._reading_of`).
   * a book whose Dimson lag rule has no answer: the factor block says UNMEASURED and why.
 
 NO LOOKAHEAD (H7). The attribution uses fills and closes of the sessions it reports, the
@@ -187,7 +224,12 @@ def cumulative(res, first: dt.date) -> dict:
 
 def reconciliation(res, first: dt.date) -> dict:
     """Every session's residual against the official change, to the cent. An unreconciled
-    session is named; the attribution is still shown for diagnosis, labelled."""
+    session is named; the attribution is still shown for diagnosis, labelled.
+
+    A failure on or after a corporate action on a held name names the event too (team lead,
+    2026-11-14; `live_attribution`, CORPORATE ACTIONS): paper may have frozen the position (H2),
+    or support may have pushed the action by hand with no account row (H3), and the rebuild
+    from fills cannot follow either, so the line says which event the residual follows."""
     bad = []
     for r in res.daily[res.daily["date"] >= first].itertuples():
         if abs(Fraction(r.residual)) > RESIDUAL_CENT:
@@ -195,12 +237,116 @@ def reconciliation(res, first: dt.date) -> dict:
     max_res = max((abs(float(r)) for r in res.daily[res.daily["date"] >= first]["residual"]), default=0.0)
     lines = []
     if bad:
+        events = [c for c in getattr(res, "corp_events", []) if c["session"].isoformat() <= bad[-1][0]]
         lines.append(f"RECONCILIATION FAILED on {len(bad)} session(s): " +
                      ", ".join(f"{d} residual {v:+.2f}" for d, v in bad[:10]) +
                      (" ..." if len(bad) > 10 else "") +
                      ". The rebuild (hold + fill + fees) does not equal Alpaca's EOD change to the cent; "
-                     "the figures below are unreconciled for those sessions.")
+                     "the figures below are unreconciled for those sessions."
+                     + (" Corporate action(s) on a held name on or before a failed session, which paper may "
+                        "have frozen, or support may have pushed by hand with no account row: "
+                        + "; ".join(f"{c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), session {c['session']}"
+                                    for c in events) if events else ""))
     return {"reconciled": not bad, "failed_sessions": bad, "max_abs_residual": max_res, "lines": lines}
+
+
+def _px(x) -> str:
+    return "UNMEASURED" if x is None else f"{float(x):,.4f}"
+
+
+def corporate_action_lines(res, first: dt.date, eff: dt.date) -> tuple[list[str], dict]:
+    """The labelled corporate-action lines and JSON fields (team lead, 2026-11-14;
+    `live_attribution`, CORPORATE ACTIONS), or nothing when no corporate action touched a held
+    name since the first trade, so such a report is the one it always was.
+
+    A split paper did not process leaves the old count marked at the new-basis close: hold and
+    the official EOD change both carry (q_prev - q_prev x k) x close_t on its session, a phantom.
+    While it is open, paper's extra shares move with the price, and that accrual is phantom too
+    (inside hold); the first trade in the name crystallises it (second review of the follow-up,
+    2026-11-15, finding 1: the extra shares at the fill price against the last close, plus that
+    session's fee term), and it takes no further terms. Each is shown per event, and the
+    cumulative phantom (JSON `phantom_cumulative`), the booking plus the accruals, the
+    crystallisations and the fee terms, is an estimate of what paper's missing splits put into
+    the official P&L at the as-of: every crystallised one is labelled approximate (`approximate`,
+    `phantom_approximate`), because the live sleeve's no-trade band means an account that
+    processed the split need not have traded to the same position (live_attribution, CORPORATE
+    ACTIONS, WHAT THE FIGURE IS; team lead, 2026-11-15). It sits BESIDE the official
+    change, which stays the P&L of record (docs/SYSTEM.md section 5); nothing is subtracted from
+    any line. A term the market record or a close cannot give is UNMEASURED, and so is any sum
+    that holds it."""
+    evs = [c for c in getattr(res, "corp_events", []) if c["session"] >= first]
+    if not evs:
+        return [], {}
+
+    def f(x):
+        return None if x is None else float(x)
+
+    def moves(c, upto=None):
+        """[(session, amount)] of one event's phantom: booking, accruals, crystallisation."""
+        out = [(c["session"], f(c["phantom"]))] + [(d, f(a)) for d, a in c["accruals"]]
+        if c["crystallised"] is not None:
+            out.append((c["crystallised"]["session"], f(c["crystallised"]["amount"])))
+        return [(d, a) for d, a in out if upto is None or d == upto]
+
+    def total(pairs):
+        return None if any(a is None for _, a in pairs) else sum((a for _, a in pairs), 0.0)
+
+    lines = []
+    for c in evs:
+        lines.append(f"Phantom: paper did not process {c['type']} {c['symbol']} ex {c['date']} (id {c['id']}), "
+                     f"session {c['session']}: (q_prev - q_prev x k) x close_t = "
+                     + (f"{f(c['phantom']):+,.2f} (q_prev {c['q_prev']}, k {c['k']})" if c["phantom"] is not None
+                        else f"UNMEASURED ({c['why']})")
+                     + ", inside hold and the official change; that name-day's NAV/discount split is UNMEASURED"
+                     + (f"; approximate: {c['approximate']}" if c["approximate"] else ""))
+        if c["accruals"]:
+            acc = total([(d, f(a)) for d, a in c["accruals"]])
+            lines.append(f"Phantom accrual: paper's extra {c['extra']} share(s) of {c['symbol']} moved with the price "
+                         f"on {len(c['accruals'])} session(s) after {c['session']}: {_usd(acc)}, inside hold")
+        if c["crystallised"] is not None:
+            cr = c["crystallised"]
+            lines.append(f"Phantom crystallised by the trade on {cr['session']}: paper's extra {c['extra']} share(s) of "
+                         f"{c['symbol']} at the fill price {_px(cr['price'])} against the close {_px(cr['reference_close'])}: "
+                         f"{_usd(f(cr['amount']))}; the phantom of {c['type']} (id {c['id']}) takes no further terms "
+                         "after this trade (team lead, 2026-11-15)")
+        else:
+            lines.append(f"Phantom of {c['type']} {c['symbol']} (id {c['id']}) still OPEN at the as-of: the account has "
+                         "not traded the name since")
+    fee_terms = [(t["session"], f(t["amount"])) for t in getattr(res, "phantom_fees", []) if t["session"] >= first]
+    for t in getattr(res, "phantom_fees", []):
+        if t["session"] >= first:
+            lines.append(f"Phantom fee term on {t['session']}: that session's modelled fees less those of the same trades "
+                         f"without paper's extra shares of {', '.join(t['symbols'])}: {_usd(f(t['amount']))}")
+    cum = total([m for c in evs for m in moves(c)] + fee_terms)
+    ses = [m for c in evs for m in moves(c, eff)] + [m for m in fee_terms if m[0] == eff]
+    n_open = sum(1 for c in evs if c["crystallised"] is None)
+    approx = [f"{c['symbol']} ({c['approximate']})" for c in evs if c["approximate"]]
+    lines.append(f"Phantom from corporate actions paper did not process, estimated in the official P&L at the as-of: "
+                 f"{_usd(cum)} ({len(evs)} event(s), {n_open} still open, {len(evs) - n_open} crystallised by a "
+                 "trade); the official P&L above includes it and stays the P&L of record"
+                 + (f"; approximate: {'; '.join(approx)}" if approx else ""))
+
+    def js(v):
+        """dates as ISO, Fractions as floats, through lists and dicts (the event record's shape)."""
+        if isinstance(v, dt.date):
+            return v.isoformat()
+        if isinstance(v, Fraction):
+            return float(v)
+        if isinstance(v, dict):
+            return {kk: js(vv) for kk, vv in v.items()}
+        if isinstance(v, (list, tuple)):
+            return [js(x) for x in v]
+        return v
+
+    out = {"corporate_actions": [{k: js(v) for k, v in c.items()} for c in evs],
+           "phantom_cumulative": cum}
+    if fee_terms:
+        out["phantom_fee_terms"] = [[d.isoformat(), a] for d, a in fee_terms]
+    if approx:
+        out["phantom_approximate"] = approx
+    if ses:
+        out["phantom_session"] = total(ses)
+    return lines, out
 
 
 def fee_check(res, reader, first: dt.date) -> list[str]:
@@ -247,6 +393,40 @@ def positions_frame(res, inp, first: dt.date, last: dt.date) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=["date", "symbol", "shares", "equity"])
 
 
+REBUILD_POSITIONS_SOURCE = ("the fill rebuild's signed whole shares per held name at the close the factor block is "
+                            "read at (live_attribution name_day q_end, the positions the factor readout reads)")
+
+
+def rebuild_positions(res) -> dict:
+    """The rebuild's per-name signed shares at the factor block's as-of close (`res.asof`), for
+    `risk_daily` to compare with the collector's account record of that close. Team lead,
+    2026-11-11/12, on the third review of PR #82.
+
+    WHY. The factor block reads the fill rebuild's positions, never the account's. The third
+    review listed a sale of 2,000 AAA at the close that the account never made: the rebuild held
+    AAA 2,000 where the account held 4,000, the block read OK with MUNI exposure at half its true
+    value, and risk_daily passed it as INFO; priced so the rebuild still reconciled, every status
+    was OK or INFO. Until then only a FLAT block was checked against the account
+    (`risk_daily._flat_cross_check`). So the job now writes what the readout read, and risk_daily
+    checks it for every factor status (`risk_daily.factor_block`).
+
+    {"session": the as-of close, "qty": {symbol: signed shares}, "source": ...}. Only names with a
+    non-zero position are listed (an empty `qty` is a flat close), as the collector's
+    `positions.qty` lists only positions. Every quantity is a whole share: `Fill.signed_qty` is an
+    int, so a rebuild quantity that is not one is a bug and raises (the caller names it)."""
+    last = res.asof
+    nd = res.name_day[(res.name_day["date"] == last) & (res.name_day["q_end"] != 0)]
+    qty: dict = {}
+    for r in nd.itertuples():
+        q = Fraction(r.q_end)
+        if q.denominator != 1:
+            raise ValueError(f"the rebuild holds {r.symbol} {q} at the close of {last}: not a whole share")
+        if r.symbol in qty:
+            raise ValueError(f"the rebuild lists {r.symbol} twice at the close of {last}")
+        qty[r.symbol] = int(q)
+    return {"session": last.isoformat(), "qty": dict(sorted(qty.items())), "source": REBUILD_POSITIONS_SOURCE}
+
+
 def attribution_lines(sess: dict, cum: dict, recon: dict, *, session_note: str | None) -> list[str]:
     """The report's text for the attribution: session then cumulative. Every line is read by
     `risk_daily` as a report line; none may start with "ACT" (risk_daily's push keys on it),
@@ -289,6 +469,13 @@ def build_attribution(book: str, state: Path, asof: dt.date, reader, groups: dic
     LA.fetch(cache, since=since, asof=asof, client=reader, nav_fetcher=nav_fetcher,
              dist_check_fetcher=dist_check_fetcher, now=now_utc, book=book)
     inp = LA.load_cache(cache, grp=dict(groups))
+    # The account's own corporate-action rows stop the report at the JOB's as-of, not only at the
+    # session read (fourth review of the follow-up, finding 2): on a night Alpaca has no EOD point
+    # for the as-of yet, `attribute` reads the session before, and a row dated between the two
+    # would otherwise go unnamed (`live_attribution`, CORPORATE ACTIONS).
+    rows = [a for a in inp.corp_acts if a["date"] <= asof]
+    if rows:
+        raise LA.AttributionError(LA.account_rows_stop(rows, asof))
     eod_dates = [d for d, _ in inp.eod]
     eff = max(d for d in eod_dates if d <= asof)
     res = LA.attribute(inp, asof=eff, breaks=[], nav_missing="unmeasured")
@@ -303,11 +490,14 @@ def build_attribution(book: str, state: Path, asof: dt.date, reader, groups: dic
         note = (f"Session {asof}: Alpaca's EOD history has no point for it yet (latest {eff}); "
                 f"the session section below is {eff}'s, not {asof}'s.")
     fees = fee_check(res, reader, first)
-    lines = attribution_lines(sess, cum, recon, session_note=note) + fees
-    return {"status": "OK", "session": sess, "cumulative": cum, "reconciled": recon["reconciled"],
-            "reconciliation": recon, "fee_check": fees, "lines": lines, "first_trade": first.isoformat(),
-            "effective_session": eff.isoformat(), "gaps": list(res.gaps),
-            "_res": res, "_inp": inp}
+    ca_lines, ca_out = corporate_action_lines(res, first, eff)
+    lines = attribution_lines(sess, cum, recon, session_note=note) + ca_lines + fees
+    out = {"status": "OK", "session": sess, "cumulative": cum, "reconciled": recon["reconciled"],
+           "reconciliation": recon, "fee_check": fees, "lines": lines, "first_trade": first.isoformat(),
+           "effective_session": eff.isoformat(), "gaps": list(res.gaps),
+           "_res": res, "_inp": inp}
+    out.update(ca_out)                           # only when a corporate action touched a held name
+    return out
 
 
 # ---------------------------------------------------------------- the factor readout
@@ -356,11 +546,20 @@ def build_factor(book: str, res, inp, *, groups: dict, asof: dt.date, reconciled
     the rebuild failed to reconcile that night, which was the only sign. `reconciled` is the
     attribution's own (`reconciliation`, every session from the first trade, to the cent), and
     anything but True means the rebuild's positions are not shown to be the account's: the
-    block is then UNMEASURED, naming why, and no FLAT and no exposure is read. A held book on
-    an unreconciled night is read as before (the report's overall status is UNRECONCILED, the
-    loudest, either way). A rebuild that reconciles while its positions are still wrong (the
-    review's contrived fill whose P&L cancels its modelled fees) is caught by risk_daily's
-    cross-check of a FLAT against the collector's account record (`risk_daily.factor_block`)."""
+    block is then UNMEASURED, naming why, and no FLAT and no exposure is read. A rebuild that
+    reconciles while its positions are still wrong (the review's contrived fill whose P&L
+    cancels its modelled fees) is caught by risk_daily's cross-check against the collector's
+    account record (`risk_daily.factor_block`).
+
+    A HELD BOOK ON AN UNRECONCILED NIGHT IS NEVER OK (team lead, 2026-11-11/12, on the third
+    review of PR #82). It is still read, as the attribution rows still print on such a night,
+    for diagnosis; but the block's status is UNRECONCILED, its first line says the readings are
+    on a rebuild not shown to be the account's, and every flag says "(UNRECONCILED)"
+    (`_factor_report`). Before that ruling it was OK: the review's phantom sale of 2,000 AAA at
+    the close left the rebuild holding half the account's AAA, the block read OK with MUNI
+    exposure at half its true value, and risk_daily read it INFO. risk_daily shows such a block
+    as at least a WATCH; and since the same review every factor status carries the rebuild's
+    positions (`rebuild_positions`, written by `run_report`) for its cross-check."""
     fs = ER.factor_set(book)
     first = min(f.date for f in inp.fills)
     last = dt.date.fromisoformat(res.asof.isoformat())
@@ -377,11 +576,12 @@ def build_factor(book: str, res, inp, *, groups: dict, asof: dt.date, reconciled
         return _factor_unmeasured(f"book {book} has no Dimson lag: its lag rule has not produced one "
                                   "(scripts/cef/exposure_readout.py, THE C4 LAG RULE)", fs)
     try:
-        ro, failed = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher, etf_close_on=last)
+        ro, failed, _ = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher, etf_close_on=last,
+                              pnl_through=last)
     except _NotRead as e:
         return _factor_unmeasured(str(e), fs)
     return _factor_report(ro, fs, book, last, partial=partial_info(ro, res, failed, last),
-                          excluded=exclusions(ro, failed))
+                          excluded=exclusions(ro, failed), unreconciled=reconciled is not True)
 
 
 class _NotRead(Exception):
@@ -394,11 +594,19 @@ class _NotRead(Exception):
 
 
 def _read(fs: ER.FactorSet, P: pd.DataFrame, groups: dict, *, first: dt.date, asof: dt.date, price_fetcher,
-          etf_close_on: dt.date | None):
+          etf_close_on: dt.date | None, pnl_through: dt.date, flat_close: dt.date | None = None):
     """Fetch every held name's and factor ETF's prices and read the partial readout on P.
-    Returns (readout, the fetch's failures by ticker). `etf_close_on` is the close every factor
-    ETF must have a price on (the as-of close of a held book); None for a flat book's history,
-    whose dates are all earlier and whose ETF returns `readout` checks on every window."""
+    Returns (readout, the fetch's failures by ticker, why the as-of term is not read or None).
+    `etf_close_on` is the close every factor ETF must have a price on (the as-of close of a held
+    book); None for a flat book's history, whose dates are all earlier and whose ETF returns
+    `readout` checks on every window. `pnl_through` is the attribution's as-of close: the factor
+    P&L reads each held close's next session up to it (team lead, 2026-11-11/12).
+
+    `flat_close` (a flat book's as-of close, `_factor_flat`): when the book closed flat on that
+    very session, its factor P&L E(last held close) x f(as-of) needs every factor ETF's return at
+    the as-of. If one is not in the fetch, that term alone is UNMEASURED and named (the third
+    value), and the P&L is read through the session before it; the FLAT reading needs no price
+    and stands (the team lead's instruction for this PR)."""
     tickers = sorted(set(P["symbol"]) | set(fs.etfs))
     # 252 sessions of beta window (about 370 calendar days) plus lags before the first positions date.
     start = pd.Timestamp(first).date() - dt.timedelta(days=int(fs.window * 1.6) + 30)
@@ -415,12 +623,45 @@ def _read(fs: ER.FactorSet, P: pd.DataFrame, groups: dict, *, first: dt.date, as
                            + "; ".join(f"{e} ({failed.get(e, 'no row on that date')})" for e in etf_gone)
                            + ("; held name(s) without a price history: " + "; ".join(
                                f"{t} ({failed[t]})" for t in held_failed) if held_failed else ""))
+    term_why = None if flat_close is None else _asof_term_gap(px, fs, P, flat_close)
+    if term_why is not None:
+        pnl_through = flat_close - dt.timedelta(days=1)   # every session before the as-of; the as-of term is named
     try:
-        ro = ER.readout(px, P, groups, fs=fs, partial=True)
+        ro = ER.readout(px, P, groups, fs=fs, partial=True, pnl_through=pnl_through)
     except ER.NoInputsError as e:
         raise _NotRead(f"{e}" + ("; fetch: " + "; ".join(f"{t} ({failed[t]})" for t in held_failed)
                                  if held_failed else "")) from e
-    return ro, failed
+    return ro, failed, term_why
+
+
+def _asof_term_gap(px: pd.DataFrame, fs: ER.FactorSet, P: pd.DataFrame, last: dt.date) -> str | None:
+    """Why the factor P&L of a flat book's as-of session cannot be read, or None (`_read`).
+
+    There is such a term only when the book's last held close is the NYSE session just before
+    the as-of (it closed flat on the as-of itself); a book that went flat earlier has no exposure
+    going into the as-of session, so that session's factor P&L is not missing, it is not there.
+    The term needs each factor ETF's return at the as-of: a finite close on the as-of and on the
+    price cache's session before it (`exposure_readout.returns_panel` divides one by the other)."""
+    held = pd.DatetimeIndex(pd.to_datetime(P["date"]).unique()).sort_values()
+    last_held = held[-1].date()
+    after = ER.nyse_sessions(last_held + dt.timedelta(days=1), last)
+    if not len(after) or after[0] != pd.Timestamp(last):
+        return None
+    t = pd.Timestamp(last)
+    dates = pd.DatetimeIndex(pd.to_datetime(px["date"]).unique()).sort_values()
+    if t not in dates:
+        return f"the price fetch has no row on {last} for any ticker, so no factor ETF return at that close was read"
+    prev = dates[dates.get_loc(t) - 1]
+    rows = px.assign(_d=pd.to_datetime(px["date"]))
+    gone = []
+    for e in fs.etfs:
+        for d in (prev, t):
+            c = rows.loc[(rows["ticker"] == e) & (rows["_d"] == d), "close"].to_numpy(float)
+            if len(c) != 1 or not np.isfinite(c[0]):
+                gone.append(f"{e} (no close on {d.date()})")
+    if not gone:
+        return None
+    return f"the factor ETF return(s) at the close of {last} are not in the price fetch: {'; '.join(gone)}"
 
 
 def exclusions(ro, failed: dict) -> list[dict]:
@@ -498,16 +739,17 @@ def _earlier_note(earlier: list[dict], why_no_severity: str) -> str:
 
 
 # Which sessions the cumulative factor P&L covers, said on every line that prints it (second
-# review of PR #82, 2026-11-11). `exposure_readout.readout` reads E(t-1) x f(t) only on a
-# positions date whose previous session is one, and `positions_frame` drops flat closes, so a
-# session that closes flat after a held close has no row: its factor P&L is not read. The team
-# lead left that gap to a follow-up PR (2026-11-11); until then the label keeps it visible.
-FACTOR_PNL_SESSIONS = ("each a session whose previous close and own close both held a position; a session that "
-                       "closed flat after a held close is not in it (not read here: a follow-up PR, team lead, "
-                       "2026-11-11)")
+# review of PR #82, 2026-11-11). Until the follow-up PR (team lead, 2026-11-11/12) the readout read
+# E(t-1) x f(t) only on a positions date whose previous session was one, and `positions_frame`
+# drops flat closes, so the session on which the book went flat was left out, and the label said
+# so. Now the readout pairs each held close with its next session up to the attribution's as-of
+# close (`exposure_readout.readout`, `pnl_through`), so that session is in the sum.
+FACTOR_PNL_SESSIONS = ("each a session from the first trade to the as-of close whose previous close held a position, "
+                       "a session that closed flat included (E(t-1) x f(t) needs only the previous close's book; team "
+                       "lead, 2026-11-11/12)")
 
 
-def _factor_pnl(ro, order, pdates: set) -> tuple[list[str], dict]:
+def _factor_pnl(ro, order, pdates: set, note: str | None = None) -> tuple[list[str], dict]:
     """The cumulative factor P&L's line and JSON fields: the book's summed factor P&L per factor,
     labelled with the sessions it covers (FACTOR_PNL_SESSIONS: their count, first and last) and
     how many were read on a PARTIAL previous-session book.
@@ -517,12 +759,17 @@ def _factor_pnl(ro, order, pdates: set) -> tuple[list[str], dict]:
     interlude), the readout has no factor P&L row; before that review the block then printed no
     line at all and its JSON said `factor_pnl: null` with no reason. Now the line says it was not
     read and why, and `factor_pnl_why` carries the same. No figure changes: the sums are the
-    readout's own, over the same rows."""
+    readout's own, over the same rows.
+
+    Since the follow-up PR (team lead, 2026-11-11/12) a flat-entry session is read, so the held ->
+    flat -> held interlude has its row; a block with none is one whose only held close is the
+    as-of close (the first trade's own session), or a flat block whose one term is the as-of
+    session's and could not be read (`note`, from `_factor_flat`)."""
     fp = ro.factor_pnl
     if not len(fp):
-        why = ("no session since the first trade held a position at both its previous close and its own, so no "
-               "E(t-1) x f(t) was read; a session that closed flat after a held close is not read here (a "
-               "follow-up PR, team lead, 2026-11-11)")
+        why = ("no session from the first trade to the as-of close followed a close that held a position (the only "
+               "held close is the as-of close), so no E(t-1) x f(t) was read") if note is None else \
+              f"no session before the as-of close followed a close that held a position, and {note}"
         return [f"Cumulative factor P&L not read: {why}"], {"factor_pnl": None, "factor_pnl_why": why}
     book_rows = fp[fp["scope"] == "book"]
     pnl = {k: float(book_rows[book_rows["factor"] == k]["pnl_summed"].sum()) for k in order}
@@ -532,7 +779,8 @@ def _factor_pnl(ro, order, pdates: set) -> tuple[list[str], dict]:
     line = (f"Cumulative factor P&L (book, E(t-1) x f(t), model reading) over {len(sessions)} session(s), "
             f"{sessions[0]} to {sessions[-1]}, {FACTOR_PNL_SESSIONS}: "
             + ", ".join(f"{k} {v:+,.2f}" for k, v in pnl.items())
-            + (f" ({on_partial} session(s) on a PARTIAL previous-session book)" if on_partial else ""))
+            + (f" ({on_partial} session(s) on a PARTIAL previous-session book)" if on_partial else "")
+            + (f"; not in it: {note}" if note else ""))
     return [line], {"factor_pnl": pnl,
                     "factor_pnl_sessions": {"count": len(sessions), "first": sessions[0], "last": sessions[-1]}}
 
@@ -549,8 +797,11 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
     It says so in its first line and reads nothing for that close: no exposure, no within or
     REVIEW flag, no PARTIAL, no share. Before this review the block showed the previous held
     close's exposure as the as-of reading, under status OK, dated but easy to miss. The
-    history since the first trade (the review-flag counts and the factor P&L over the earlier
-    held closes) is still read, and every line of it says which dates it covers; a name left
+    history since the first trade (the review-flag counts over the earlier held closes, and the
+    factor P&L of each session after one, up to the as-of: the session the book closed flat
+    included, team lead 2026-11-11/12) is still read, and every line of it says which dates it
+    covers; that as-of term needs the factor ETFs' returns at the as-of, and without them it is
+    UNMEASURED in its own line, named (`_read`, `_asof_term_gap`); a name left
     out on one of those dates is the history's note and raises nothing. A history with no
     reading for a named reason (`_NotRead`: no held name with its inputs on an earlier date, or
     a book with no Dimson lag) is UNMEASURED in its own line, named, and leaves the as-of
@@ -582,7 +833,8 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
         if fs.dimson_lags is None:
             raise _NotRead(f"book {book} has no Dimson lag: its lag rule has not produced one "
                            "(scripts/cef/exposure_readout.py, THE C4 LAG RULE)")
-        ro, failed = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher, etf_close_on=None)
+        ro, failed, term_why = _read(fs, P, groups, first=first, asof=asof, price_fetcher=price_fetcher,
+                                     etf_close_on=None, pnl_through=last, flat_close=last)
     except _NotRead as e:                        # a named reason only; a bug, a LookaheadError or a failed fetch propagates
         why = str(e)
         lines.append(f"History since the first trade ({first}) UNMEASURED: {why}")
@@ -600,7 +852,15 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
                  f"close(s) with a position, {held[0]} to {held[-1]}; REVIEW on "
                  + ", ".join(f"{k} {history[k]['review_dates']} of {history[k]['dates']}" for k in order)
                  + (f" ({len(pdates)} of those dates PARTIAL)" if pdates else ""))
-    pnl_lines, pnl_out = _factor_pnl(ro, order, pdates)
+    note = None
+    if term_why is not None:
+        note = (f"the factor P&L of the as-of session {last}, E({held[-1]}) x f({last}), the session the book closed "
+                f"flat, is UNMEASURED: {term_why}")
+        lines.append(f"Factor P&L of the as-of session {last} UNMEASURED: the book held positions at the close of "
+                     f"{held[-1]} and closed flat at {last}, so that session's factor P&L is E({held[-1]}) x f({last}), "
+                     f"and {term_why}")
+        out["asof_term_why"] = term_why
+    pnl_lines, pnl_out = _factor_pnl(ro, order, pdates, note)
     lines.extend(pnl_lines)
     if excluded:
         lines.append(_earlier_note(excluded, f"no severity: the book holds nothing at the close of {last}"))
@@ -611,7 +871,7 @@ def _factor_flat(book: str, fs: ER.FactorSet, P: pd.DataFrame, *, groups: dict, 
 
 
 def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict | None = None,
-                   excluded: list[dict] | None = None) -> dict:
+                   excluded: list[dict] | None = None, unreconciled: bool = False) -> dict:
     """The exposure at the as-of close and the review history. A review-line breach is a word
     in this report and nothing else: it pushes nothing and sets no severity (team lead,
     2026-11-09: report-only). The line is REVIEW_FRACTION x vol_target_annual x
@@ -629,7 +889,13 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
     the as-of one (a flat book never reaches here; `_factor_flat`). `excluded` is every name
     the readout left out on any date; those before `last`, when nothing is missing at `last`,
     are the history's named note, and the block stays OK (that review: the status follows the
-    as-of reading)."""
+    as-of reading).
+
+    With `unreconciled` (the attribution's rebuild does not reconcile to the official EOD
+    change; team lead, 2026-11-11/12, `build_factor`) the status is UNRECONCILED, never OK or
+    PARTIAL; `reading_status` keeps which of the two the reading would otherwise be, the first
+    line says why, and every flag says "(UNRECONCILED)", in the JSON as in the text, as PARTIAL
+    labels its flags. No figure changes."""
     ex = ro.exposure
     if pd.Timestamp(ex["date"].max()) != pd.Timestamp(last):
         raise ER.ReadoutError(f"the readout's last date {pd.Timestamp(ex['date'].max()).date()} is not the as-of "
@@ -639,11 +905,12 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
     today = ex[ex["date"] == last].set_index("factor")
     pdates = set(_partial_dates(excluded))
     lab = " (PARTIAL)" if partial else ""
+    ulab = " (UNRECONCILED)" if unreconciled else ""
     def fac(k):
         r = today.loc[k]
         return {"exposure_usd": float(r["exposure_usd"]), "exposure_frac": float(r["exposure_frac"]),
                 "contrib_of_target": float(r["contrib_of_target"]), "t_stat": float(r["t_stat"]),
-                "review": str(r["review"]) + lab, "factor_vol": float(r["factor_vol"])}
+                "review": str(r["review"]) + lab + ulab, "factor_vol": float(r["factor_vol"])}
     order = [fs.headline] + list(fs.indicative)
     factors = {k: fac(k) for k in order}
     history = {k: {"review_dates": int(ex[(ex["factor"] == k) & (ex["review"] == "REVIEW")]["date"].nunique()),
@@ -673,6 +940,12 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
                           "remaining names, each labelled PARTIAL")
         lines.insert(1, "Dates with a name left out: " + "; ".join(f"{d} {', '.join(s)}"
                                                                    for d, s in sorted(_partial_dates(excluded).items())))
+    if unreconciled:
+        lines.insert(0, f"Factor exposure UNRECONCILED (team lead, 2026-11-11/12): every reading below is on the fill "
+                        f"rebuild's positions at the close of {last.date()}, and that rebuild does not reconcile to "
+                        f"Alpaca's official EOD change (the attribution's RECONCILIATION FAILED line names the "
+                        f"session(s)), so they are not shown to be the account's positions; each flag says "
+                        f"UNRECONCILED. risk_daily checks the positions against the collector's account record")
     for k in order:
         f = factors[k]
         tag = "headline" if k == fs.headline else "indicative"
@@ -706,11 +979,14 @@ def _factor_report(ro, fs: ER.FactorSet, book: str, last: dt.date, partial: dict
     earlier = [x for x in excluded if x["date"] < last.date().isoformat()]
     if earlier and not partial:
         lines.append(_earlier_note(earlier, f"no severity: every name held at the close of {last.date()} is read"))
-    out = {"status": "PARTIAL" if partial else "OK", "asof": last.date().isoformat(),
+    reading = "PARTIAL" if partial else "OK"
+    out = {"status": UNRECONCILED if unreconciled else reading, "asof": last.date().isoformat(),
            "headline": fs.headline, "review_line": review_line,
             "factors": factors, "history": history, "split": split, "factor_pnl": pnl_out["factor_pnl"],
             "lines": lines, "gross_usd": float(tv["gross_usd"]), "net_usd": float(tv["net_usd"]),
             "total_of_target": float(tv["total_of_target"])}
+    if unreconciled:
+        out.update(reading_status=reading, reconciled=False)
     out.update(pnl_out)                          # factor_pnl_sessions, or factor_pnl_why when there is none
     if partial:
         out.update(partial)
@@ -766,9 +1042,22 @@ def safe_dist_fetcher(gaps: list):
 
 
 def render_md(rep: dict) -> str:
-    out = [f"# P&L attribution and factor exposure, {rep['book']}, as-of {rep['asof']}", "",
+    """The report's markdown. When the session read is not the as-of the job ran for (Alpaca's EOD
+    history had no point for it yet: `build_attribution` reads the latest session it has), the
+    title and the line under the status say so in capitals (team lead, 2026-11-11/12, on the
+    third review of PR #82: the as-of session must be unmistakable). Before that the title said
+    "as-of D" over figures that were all D-1's, and only a line inside the attribution section
+    said otherwise. On any other night the markdown is unchanged, byte for byte."""
+    read = rep.get("session_read")
+    late = read is not None and read != rep["asof"]
+    title = f"# P&L attribution and factor exposure, {rep['book']}, as-of {rep['asof']}"
+    out = [title + (f": READ AT THE CLOSE OF {read}, NOT {rep['asof']}" if late else ""), "",
            f"Generated {rep['generated_at']} (report only; nothing here touches an order; zero trials).",
            f"Overall: **{rep['status']}**."]
+    if late:
+        out.append(f"**Alpaca's EOD history had no point for {rep['asof']} when this ran, so every figure below, the "
+                   f"attribution and the factor exposure, is of the close of {read}, its latest point; nothing here is "
+                   f"read for {rep['asof']}.**")
     if rep["status"] == UNRECONCILED:
         out += [f"**{ln}**" for ln in (rep["attribution"].get("reconciliation") or {}).get("lines", [])]
     out += ["", "## Attribution"]
@@ -843,6 +1132,11 @@ def run_report(book: str, state: Path, asof: dt.date, *, now_utc=None, reader=No
     except Exception as e:                       # the factor readout's failure costs only its block
         factor = {"status": UNMEASURED, "why": f"{type(e).__name__}: {e}",
                   "lines": [f"Factor exposure UNMEASURED: {type(e).__name__}: {e}"]}
+    if res is not None:                          # every factor status, for risk_daily's cross-check (`rebuild_positions`)
+        try:
+            factor["rebuild_positions"] = rebuild_positions(res)
+        except Exception as e:                   # a bug: named, and risk_daily then cannot cross-check (UNMEASURED)
+            factor["rebuild_positions_why"] = f"{type(e).__name__}: {e}"
     if att["status"] != "OK":
         status = UNMEASURED
     elif att.get("reconciled") is False:
@@ -854,10 +1148,14 @@ def run_report(book: str, state: Path, asof: dt.date, *, now_utc=None, reader=No
     rep = {"book": book, "asof": asof.isoformat(), "generated_at": now.astimezone(ET).isoformat(timespec="seconds"),
            "status": status, "attribution": att, "factor": factor, "gaps": gaps,
            "note": "report only; zero trials; a review-line breach sends nothing"}
+    if att.get("effective_session") is not None:  # the session read: the as-of's, or the latest EOD point before it
+        rep["session_read"] = att["effective_session"]
     write_atomic(out_dir / f"{asof.isoformat()}.json", json.dumps(rep, indent=1, default=str))
     write_atomic(out_dir / f"{asof.isoformat()}.md", render_md(rep))
     code = exit_code(incomplete=incomplete, reconciled=att.get("reconciled"))   # after both files exist
-    print(f"pnl_report {book} {asof}: {status}; exit {code}; wrote {out_dir / f'{asof.isoformat()}.md'}")
+    read = rep.get("session_read")
+    late = f" (READ AT THE CLOSE OF {read}, NOT {asof})" if read not in (None, asof.isoformat()) else ""
+    print(f"pnl_report {book} {asof}: {status}{late}; exit {code}; wrote {out_dir / f'{asof.isoformat()}.md'}")
     return rep, code
 
 
