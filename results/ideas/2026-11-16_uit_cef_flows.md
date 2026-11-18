@@ -2,7 +2,8 @@
 
 **Slug:** `uit_cef_flows` · **Started:** 2026-11-16, **interrupted** (editor force quit about
 20 minutes in), resumed twice and **completed 2026-11-18** ·
-**Status:** PROMISING. Closed-end funds held by a terminating unit trust fall 40bp against
+**Status:** SHADOW from 2026-11-18: books `uit_termination` and `uit_termination_big_sale`, written and
+committed locally, not yet on the VM's `shadow` branch (see "Shadow book" at the end). PROMISING. Closed-end funds held by a terminating unit trust fall 40bp against
 the CEF market over the nine sessions to the Mandatory Termination Date T (t −9.8; controls
 +8bp), most of it on T−2, T−1 and T, and recover 33bp over T+1..T+3 (t 15; 31bp on mid
 quotes; 12bp after paying the full closing spread on both sides, t 5.7). The pre-specified
@@ -247,3 +248,49 @@ there can wait for T's close.
   `n_series` and clean controls; if the effect does not rise with true `n_series`, doubt it.
 - A pre-registration of the T-close entry before any 2026 price is read, then one read of
   2026 as the out-of-sample test.
+
+## Shadow book (added 2026-11-18)
+
+Built under the 2026-11-09 one-time approval for shadow books; simulated, $1M each, no account
+and no order. The reviewer's first condition is met by writing the rule down before any 2026
+price was read: it is the docstring of `shadow/signals/uit_termination.py`, committed before
+the book's first price fetch.
+
+- **The rule.** Every closed-end fund held by a First Trust or Guggenheim closed-end trust whose
+  Mandatory Termination Date falls on T (the last session on or before the date, as assumed
+  above). Eligible on this card's floors read at T−10: a close of $2 or more and 21-session
+  dollar volume of $100,000 or more. Decided after the close of T−1, bought at the close of T,
+  sold at the close of T+3. Long only, against nothing. Weights in proportion to `n_series`,
+  adding to 1, as `checks.py` scored it, with no fund above 10% and the excess left in cash.
+- **Why 10%.** The book above held 41 funds on an active day and a trust holds 26, so ordinary
+  weights are 2.4% to 3.8% (7.7% when two trusts sell one fund). The cap binds only under ten
+  funds. On the calendar below no decision in the next 252 sessions holds fewer than ten funds
+  (median 30) [V], so the cap is a guard and the book is the one scored here.
+- **Second line, `uit_termination_big_sale`:** the same rule on events whose estimated sale is 5%
+  or more of the fund's dollar volume over T−18..T−10, size from 24F-2NT notices filed more than
+  30 days before T (check 4).
+- **Two differences from `checks.py`.** Its book re-read the floors each session on the day
+  before the return, which is a day after the decision; the shadow book reads them once, at
+  T−10. And a fund with no close on the decision date is not bought or kept.
+- **The calendar** (`shadow/universes/uit_terminations_v1.csv`, builder beside it, source note
+  `docs/REFERENCES.md` §12ut). Every form 487 the two sponsors filed from 2023-07-01 to
+  2026-11-17 (2,374; the cap is the filing date and the two sponsors), not the one-in-three
+  sample: 426 candidates read, 605 trusts parsed, 334 closed-end, **271 terminating from
+  2026-01-02 to 2028-11-13** (First Trust 204, Guggenheim 67), 6,249 fund-events on 307 funds;
+  7 trusts unparsed, all Guggenheim's Flaherty & Crumrine Preferred Portfolio, listed by
+  accession number [V]. Closed-end funds are identified by the prospectus's own "CLOSED-END
+  FUNDS" heading, not CRSP; on 384 trusts both rules give the same answer for every trust [V].
+- **Next 12 months, 2026-11-19 to 2027-11-18:** 101 trusts (First Trust 78, Guggenheim 23) on 64
+  dates, 2,276 fund-events on 249 funds. Trusts a month, November 2026 to November 2027: 2, 12,
+  10, 7, 6, 11, 7, 9, 5, 5, 8, 12, 7 [V]. This replaces the count of 90 above, which missed
+  2026 filings. 98 trusts (2,320 fund-events) terminated between 2026-01-02 and 2026-11-18:
+  they are the out-of-sample year the reviewer asked for, not yet read.
+- **What it needs.** Nothing new on the VM: Yahoo for the price floors and Alpaca's auction
+  prints for the marks, both already used by other books. EDGAR is not reachable from the
+  nightly run (no contact header there), so the calendar is a committed file, rebuilt monthly
+  on the laptop (`shadow/universes/README.md`).
+- **First position.** The first date ahead is 2026-11-20: decided 2026-11-19, bought at the
+  close of 2026-11-20. It is taken only if this commit is on the `shadow` branch by the
+  evening of 2026-11-19; the next are 2026-11-23 and 2026-12-04.
+- **What the shadow book cannot answer** is the reviewer's second condition: it assumes the
+  fill at T's official close. A paper account fills near the quote and is a separate test.

@@ -2115,3 +2115,15 @@ books' own fills disagree with a page, both are given.
 | "Your initial paper trading account is created with $100k balance as a default setting", and it can be reset "with arbitrary amount as you configure"; the balance cannot otherwise be changed after creation | [S] 2026-11-16 | https://docs.alpaca.markets/us/docs/paper-trading (page updated 2026-07-07), read through a fetch agent; not opened here |
 | The dashboard now creates and deletes paper accounts ("Open New Paper Account" under the paper account number) in place of resetting; a new account needs new API keys | [S] 2026-11-16 | the same page |
 | The largest balance allowed, the number of paper accounts allowed, and whether the amount can be chosen at creation rather than by reset | [U] | not stated on the page |
+
+## 12ut. EDGAR forms 487 and 24F-2NT, as read for the unit-trust termination calendar (added 2026-11-18)
+
+| claim | status | source and note |
+|---|---|---|
+| First Trust ("FT <n>") and Guggenheim Defined Portfolios filed 2,374 forms 487 from 2023-07-01 to 2026-11-17 | [V] 2026-11-18 | EDGAR quarterly form indexes 2023 Q3 to 2026 Q4 (`https://www.sec.gov/Archives/edgar/full-index/<year>/QTR<q>/form.gz`), read 2026-11-18 by `python3 -m shadow.universes.build_uit_terminations_v1 crawl` through `scripts/data/edgar_client.py`. 426 mention "closed-end" 15 times or more and were read in full; the other 1,948 were counted |
+| Those 426 hold 605 trusts with a readable deposit date, termination date and holdings; 334 are closed-end trusts and 271 of them terminate on or after 2026-01-01 | [V] 2026-11-18 | the same builder, `write`. 7 trusts could not be read (Guggenheim's Flaherty & Crumrine Preferred Portfolio, no tickers) and are listed in `shadow/universes/uit_terminations_v1_unparsed.csv` |
+| Both sponsors head each block of a schedule with its kind ("CLOSED-END FUNDS (50.01%):"), and that heading classifies a trust exactly as the research's CRSP rule did | [V] 2026-11-18 | checked locally on the 384 trusts the idea's crawl parsed from filings since 2023-07-01: 195 closed-end and 189 not by both rules. The comparison used licensed CRSP rows and is not stored |
+| First Trust changed its form 487 from `<PRE>` text to HTML during 2026 | [V] 2026-11-18 | 31 candidate filings of 2026 had no readable schedule until `html_text` was added to the builder. Guggenheim has filed HTML since mid-2020 (`results/ideas/2026-11-16_uit_cef_flows.md`) |
+| EDGAR answered HTTP 502 or 504 on three document requests in about 1,350, and served each on a later try | [V] 2026-11-18 | the crawl's own log. `edgar_client` retries only 403, 429 and 503; the builder retries a gateway time-out four times, 30 seconds apart, and lists a filing it still cannot fetch as unparsed |
+| The trustee sells a terminating trust's holdings "beginning nine business days prior to, and no later than" the Mandatory Termination Date | [S] | `results/ideas/2026-11-16_uit_cef_flows.md` (read there in four cached prospectuses); not re-read for this build |
+
