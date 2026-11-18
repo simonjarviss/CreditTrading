@@ -166,3 +166,26 @@ def test_an_old_gap_is_not_asked_for_again_after_the_retry_window(tmp_path):
     assert asked_for_hole == [False, True, True, True, False, False, False, False]
     gaps = (st / "marks_gaps.csv").read_text().splitlines()
     assert len(gaps) == 2 and "DDD" in gaps[1]                      # header and ONE row: logged once
+
+
+def test_one_books_bug_does_not_stop_the_books_after_it(tmp_path, capsys):
+    """A signal that raises (not `Unmeasured`) used to leave nightly.run's loop, so every later
+    book went without a decision that night. Now the broken book is named with its exception,
+    the run exits 3, and the next book still decides. Fails on b2df5e5 (KeyError propagates)."""
+    days = _days(5)
+    px = _px(days)
+    st = _state(tmp_path, px)
+    good = _book(tmp_path, days, [])
+    f = tmp_path / "books" / "a0.json"
+    f.write_text(json.dumps({
+        "slug": "a0", "card": "none", "signal": "shadow.tests._signals:boom", "fill": "next_close",
+        "panels": {"px": {"path": "px.parquet", "date_col": "date", "required_asof": True}},
+        "refresh": [], "notional_usd": 1_000_000, "started": days[1].isoformat(), "enabled": True}))
+    bad = book_mod.load(f)
+    rc = nightly.run(st, [bad, good], FakeSrc(px, days), check=_check(px), now=_at(days[3], 18, 45))
+    out = capsys.readouterr().out
+    assert rc == 3 and "decide a0" in out and "ERROR KeyError" in out
+    assert f"decide t1 {days[3]}: DECIDED" in out
+    assert (st / "t1" / "decisions" / f"{days[3]}.json").exists()
+    assert not (st / "a0" / "decisions" / f"{days[3]}.json").exists()
+

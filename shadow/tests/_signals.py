@@ -15,3 +15,8 @@ def last_return(asof, panels):
 
 def nan_weight(asof, panels):
     return pd.Series({"AAA": np.nan, "BBB": 1.0})
+
+
+def boom(asof, panels):
+    """A signal with a bug: raises something that is not the engine's own Unmeasured."""
+    raise KeyError("no such column")
