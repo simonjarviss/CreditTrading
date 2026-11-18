@@ -632,18 +632,18 @@ def _launchd_scheduled(job: dict) -> dict:
 _REMOTE_TEMPLATE = r"""q() { k=$1; shift; o=$("$@" 2>&1); r=$?; printf '%s\t%s\t%s\n' "$k" "$r" "$(printf '%s' "$o" | tr '\t\n' '  ' | cut -c1-400)"; }
 qw() { k=$1; shift; o=$("$@" 2>&1); r=$?; printf '%s\t%s\t%s\n' "$k" "$r" "$(printf '%s' "$o" | tr '\t\n' '  ' | cut -c1-@WIDE@)"; }
 S=@STATE@
-q tag sudo -n -u @USER@ git -C @PROD@ describe --tags
-q load_state systemctl show -p LoadState --value @SESSION@
-q dry_run sh -c "systemctl show -p Environment --value @SESSION@ | tr ' ' '\n' | grep '^DRY_RUN=' || true"
-q timers systemctl is-active @TIMERS@
-q timers_enabled systemctl is-enabled @TIMERS@
-q auto_armed sudo -n sh -c "if [ -e $S/AUTO_ARMED ]; then echo present; elif [ -d $S ]; then echo absent; else echo no-state-dir; fi"
-q verify sudo -n sh -c "if [ -e $S/verify.log ]; then tail -n1 $S/verify.log; else echo NO-FILE; fi"
-q equity_header sudo -n sh -c "if [ -e $S/equity.csv ]; then head -n1 $S/equity.csv; else echo NO-FILE; fi"
-q equity_last sudo -n sh -c "if [ -e $S/equity.csv ]; then tail -n1 $S/equity.csv; else echo NO-FILE; fi"
-q newest_plan sudo -n python3 -I -c "@PLAN_PY@" "$S"
-qw pnl sudo -n -u @USER@ python3 -I -c "@PNL_PY@" "$S"
-printf 'END\t0\tquantt-prod-state\n'
+q @K@tag sudo -n -u @USER@ git -C @PROD@ describe --tags
+q @K@load_state systemctl show -p LoadState --value @SESSION@
+q @K@dry_run sh -c "systemctl show -p Environment --value @SESSION@ | tr ' ' '\n' | grep '^DRY_RUN=' || true"
+q @K@timers systemctl is-active @TIMERS@
+q @K@timers_enabled systemctl is-enabled @TIMERS@
+q @K@auto_armed sudo -n sh -c "if [ -e $S/AUTO_ARMED ]; then echo present; elif [ -d $S ]; then echo absent; else echo no-state-dir; fi"
+q @K@verify sudo -n sh -c "if [ -e $S/verify.log ]; then tail -n1 $S/verify.log; else echo NO-FILE; fi"
+q @K@equity_header sudo -n sh -c "if [ -e $S/equity.csv ]; then head -n1 $S/equity.csv; else echo NO-FILE; fi"
+q @K@equity_last sudo -n sh -c "if [ -e $S/equity.csv ]; then tail -n1 $S/equity.csv; else echo NO-FILE; fi"
+q @K@newest_plan sudo -n python3 -I -c "@PLAN_PY@" "$S"
+qw @K@pnl sudo -n -u @USER@ python3 -I -c "@PNL_PY@" "$S"
+printf '@K@END\t0\tquantt-prod-state\n'
 """
 # The newest day's plan.json, summarised ON the VM to one JSON line (the plan
 # holds the account's positions; only counts and verdicts leave the machine).
@@ -674,15 +674,50 @@ assert not set(_PNL_PY) & set('$`"\\'), "the P&L selector must survive double qu
 # The wide cut: a full EOD_MAX_ROWS series at well under 100 bytes a row, plus
 # two 30-row tails, with room. The reply is bounded by the row caps, not by this.
 PNL_REPLY_MAX_CHARS = 400_000
-REMOTE_SCRIPT = (_REMOTE_TEMPLATE
-                 .replace("@PNL_PY@", _PNL_PY)
-                 .replace("@WIDE@", str(PNL_REPLY_MAX_CHARS))
-                 .replace("@PLAN_PY@", _PLAN_PY)
-                 .replace("@STATE@", shlex.quote(str(_VM_LAYOUT.state_dir)))
-                 .replace("@PROD@", shlex.quote(str(_VM_LAYOUT.prod_dir)))
-                 .replace("@USER@", iv.SERVICE_USER)
-                 .replace("@SESSION@", _VM_SESSION.service)
-                 .replace("@TIMERS@", " ".join(VM_TIMERS)))
+
+
+def _vm_book(book: str):
+    """One VM book's (layout, session job, timers), from the installer's own
+    registry (`install_vm.VM_BOOKS`): the units and the state dir are whatever
+    `install_vm --book <book>` installs, never names written again here."""
+    vb = iv.VM_BOOKS[book]
+    return (iv.Layout(Path("/home") / iv.SERVICE_USER, book=book),
+            next(j for j in vb.jobs if j.job.log_stem == "session"),
+            tuple(j.timer for j in vb.jobs))
+
+
+def remote_script(book: str = iv.BOOK, prefix: str = "") -> str:
+    """The read-only script for one book. `prefix` goes in front of every
+    reading's key (and of END), so several books' scripts can be sent in ONE
+    ssh call and their replies told apart."""
+    lay, sess, timers = _vm_book(book)
+    return (_REMOTE_TEMPLATE
+            .replace("@PNL_PY@", _PNL_PY)
+            .replace("@WIDE@", str(PNL_REPLY_MAX_CHARS))
+            .replace("@PLAN_PY@", _PLAN_PY)
+            .replace("@K@", prefix)
+            .replace("@STATE@", shlex.quote(str(lay.state_dir)))
+            .replace("@PROD@", shlex.quote(str(lay.prod_dir)))
+            .replace("@USER@", iv.SERVICE_USER)
+            .replace("@SESSION@", sess.service)
+            .replace("@TIMERS@", " ".join(timers)))
+
+
+# The core's script, exactly as it was before the other books were added
+# (ops/tests/test_prod_state.py pins it), then one script per other VM book
+# with its keys prefixed `<book>.`. WHY one call (team lead, 2026-11-18: "make
+# the c4 reachable as easily as everything else"): until then C4's verdicts,
+# equity and plan could be read only by hand over ssh, so on a day the VM was
+# unreachable from a new network nobody could say whether C4 had traded since
+# the last copy pulled into the repo. The core's readings come first and END
+# before the others start: a reply cut inside another book's part leaves the
+# core measured and that book UNMEASURED.
+REMOTE_SCRIPT = remote_script()
+OTHER_VM_BOOKS = tuple(b for b in iv.VM_BOOKS if b != iv.BOOK)
+
+
+def vm_script(books: tuple = OTHER_VM_BOOKS) -> str:
+    return REMOTE_SCRIPT + "".join(remote_script(b, prefix=f"{b}.") for b in books)
 
 
 def ssh_alias_present(alias: str, config: Path) -> bool:
@@ -702,7 +737,8 @@ def vm_unmeasured(why: str, alias: str = VM_ALIAS) -> dict:
 
 
 def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
-       timeout: float = VM_TIMEOUT_S, run: Run | None = None) -> dict:
+       timeout: float = VM_TIMEOUT_S, run: Run | None = None,
+       books: tuple = OTHER_VM_BOOKS) -> dict:
     """The VM prod (systemd), read over ONE ssh call with a hard time budget.
 
     Only when `~/.ssh/config` names the alias: without it there is no
@@ -732,7 +768,7 @@ def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
 
     cmd = ["ssh", "-o", "BatchMode=yes", "-o", f"ConnectTimeout={SSH_CONNECT_TIMEOUT_S}",
            alias, "sh -s"]
-    r, why = _call(run, cmd, timeout, input=REMOTE_SCRIPT)
+    r, why = _call(run, cmd, timeout, input=vm_script(books))
     if why:
         return vm_unmeasured(why, alias)
     if r.returncode == 255:
@@ -745,33 +781,47 @@ def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
     if "END" not in got:
         return vm_unmeasured(f"ssh {alias} exited {r.returncode} and its reply was cut short "
                              f"(no END line; {len(got)} reading(s)): {scrub(r.stderr)}")
-    return _vm_from_readings(got, alias)
+    out = _vm_from_readings(got, alias)
+    # The other books installed on the same VM (their own units, state dir and
+    # Alpaca account). Each stands or falls on its own END line.
+    out["books"] = {}
+    for b in books:
+        pre = f"{b}."
+        if f"{pre}END" not in got:
+            out["books"][b] = {**vm_unmeasured(
+                f"ssh {alias}: the reply has no {pre}END line, so book {b}'s readings "
+                f"were cut short or never ran: {scrub(r.stderr)}", alias), "book": b}
+        else:
+            out["books"][b] = _vm_from_readings(
+                {k[len(pre):]: v for k, v in got.items() if k.startswith(pre)}, alias, b)
+    return out
 
 
-def _vm_from_readings(got: dict, alias: str) -> dict:
-    out = {"machine": "vm", "scheduler": "systemd", "alias": alias,
+def _vm_from_readings(got: dict, alias: str, book: str = iv.BOOK) -> dict:
+    lay, sess, timers = _vm_book(book)
+    out = {"machine": "vm", "scheduler": "systemd", "alias": alias, "book": book,
            "reproducer": f"ssh -o BatchMode=yes -o ConnectTimeout={SSH_CONNECT_TIMEOUT_S} "
                          f"{alias} 'sh -s' < ops.prod_state.REMOTE_SCRIPT",
-           "clone": str(_VM_LAYOUT.prod_dir), "state_dir": str(_VM_LAYOUT.state_dir)}
+           "clone": str(lay.prod_dir), "state_dir": str(lay.state_dir)}
 
     def reading(key: str):
         return got.get(key, (None, None))
 
     rc, v = reading("tag")
     out["tag"] = (_val(v) if rc == 0 and v else
-                  _unm(f"`sudo -u {iv.SERVICE_USER} git -C {_VM_LAYOUT.prod_dir} describe --tags`"
+                  _unm(f"`sudo -u {iv.SERVICE_USER} git -C {lay.prod_dir} describe --tags`"
                        f" exited {rc}: {scrub(v or '')}"))
 
     rc, v = reading("load_state")
     if rc != 0 or not v:
-        installed = _unm(f"`systemctl show -p LoadState {_VM_SESSION.service}` exited {rc}: {scrub(v or '')}")
+        installed = _unm(f"`systemctl show -p LoadState {sess.service}` exited {rc}: {scrub(v or '')}")
     else:
         installed = _val(v == "loaded", load_state=v)
     out["session_unit"] = installed
 
     rc, v = reading("dry_run")
     if rc != 0:
-        dry = _unm(f"`systemctl show -p Environment {_VM_SESSION.service}` exited {rc}: {scrub(v or '')}")
+        dry = _unm(f"`systemctl show -p Environment {sess.service}` exited {rc}: {scrub(v or '')}")
     else:
         vals = [t.split("=", 1)[1] for t in (v or "").split() if t.startswith("DRY_RUN=")]
         dry = (_val(None) if not vals else _val(vals[0]) if len(vals) == 1 else
@@ -783,31 +833,31 @@ def _vm_from_readings(got: dict, alias: str) -> dict:
     for key, verb in (("timers", "is-active"), ("timers_enabled", "is-enabled")):
         rc, v = reading(key)
         words = (v or "").split()
-        out[key] = (_val(dict(zip(VM_TIMERS, words)))
-                    if rc is not None and len(words) == len(VM_TIMERS) else
-                    _unm(f"`systemctl {verb} {' '.join(VM_TIMERS)}` exited {rc}: {scrub(v or '')}"))
+        out[key] = (_val(dict(zip(timers, words)))
+                    if rc is not None and len(words) == len(timers) else
+                    _unm(f"`systemctl {verb} {' '.join(timers)}` exited {rc}: {scrub(v or '')}"))
 
     rc, v = reading("auto_armed")
     out["auto_armed"] = ({"present": _val(True), "absent": _val(False),
-                          "no-state-dir": _val(False, note=f"no {_VM_LAYOUT.state_dir}")}.get(v)
+                          "no-state-dir": _val(False, note=f"no {lay.state_dir}")}.get(v)
                          if rc == 0 and v in ("present", "absent", "no-state-dir") else
-                         _unm(f"`sudo -n test -e {_VM_LAYOUT.state_dir}/AUTO_ARMED` exited {rc}: {scrub(v or '')}"))
+                         _unm(f"`sudo -n test -e {lay.state_dir}/AUTO_ARMED` exited {rc}: {scrub(v or '')}"))
 
     rc, v = reading("verify")
     out["verify_last"] = (_absent("no verify.log yet") if rc == 0 and v == "NO-FILE" else
                           _val(verdict_line(v)) if rc == 0 and v else
                           _absent("verify.log is empty") if rc == 0 else
-                          _unm(f"`sudo -n tail -n1 {_VM_LAYOUT.state_dir}/verify.log` exited {rc}: {scrub(v or '')}"))
+                          _unm(f"`sudo -n tail -n1 {lay.state_dir}/verify.log` exited {rc}: {scrub(v or '')}"))
 
     rh, hv = reading("equity_header")
     rl, lv = reading("equity_last")
-    where = f"{alias}:{_VM_LAYOUT.state_dir}/equity.csv"
+    where = f"{alias}:{lay.state_dir}/equity.csv"
     if rh == 0 and hv == "NO-FILE":
         out["equity"] = _absent("no equity.csv yet")
     elif rh == 0 and rl == 0 and hv:
         out["equity"] = equity_row(hv, lv or "", where)
     else:
-        out["equity"] = _unm(f"`sudo -n head/tail {_VM_LAYOUT.state_dir}/equity.csv` exited "
+        out["equity"] = _unm(f"`sudo -n head/tail {lay.state_dir}/equity.csv` exited "
                              f"{rh}/{rl}: {scrub(hv or lv or '')}")
 
     rc, v = reading("newest_plan")
@@ -822,7 +872,7 @@ def _vm_from_readings(got: dict, alias: str) -> dict:
         out["newest_plan"] = _unm(f"`sudo -n python3` plan summary exited {rc}: {scrub(v or '')}")
 
     rc, v = reading("pnl")
-    where = f"{alias}:{_VM_LAYOUT.state_dir}"
+    where = f"{alias}:{lay.state_dir}"
     why = None
     if rc is None:
         why = "no pnl line in the reply"
@@ -843,15 +893,15 @@ def _vm_from_readings(got: dict, alias: str) -> dict:
         out["arming"], out["arming_why"] = UNMEASURED, show(installed)
     elif installed["value"] is not True:
         out["arming"], out["arming_why"] = (NOT_INSTALLED,
-                                            f"{_VM_SESSION.service} LoadState={installed['load_state']}")
+                                            f"{sess.service} LoadState={installed['load_state']}")
     else:
-        out["scheduled"] = _systemd_scheduled(out["timers"], out["timers_enabled"])
+        out["scheduled"] = _systemd_scheduled(out["timers"], out["timers_enabled"], sess.timer)
         out["arming"], out["arming_why"], out["cautions"] = _arming(
             dry, out["auto_armed"], out["scheduled"])
     np_ = out["newest_plan"].get("value") or {}
     if np_.get("preflight") == "warning" and not np_.get("sent"):
         out["cautions"] = list(out["cautions"]) + [
-            f"VM plan for {np_.get('session_date')}: PRE-FLIGHT WARNING -- a day as bad as the "
+            f"VM {book} plan for {np_.get('session_date')}: PRE-FLIGHT WARNING -- a day as bad as the "
             f"worst of the last year (${np_.get('shock_usd')}) would get its send refused or "
             f"scaled; the detail is in its plan.json and the session log"]
     return out
@@ -864,11 +914,13 @@ _ENABLED_WORDS = frozenset({"enabled", "enabled-runtime", "alias", "indirect",
 _NOT_ENABLED_WORDS = frozenset({"disabled", "masked", "masked-runtime", "static"})
 
 
-def _systemd_scheduled(active: dict, enabled: dict) -> dict:
+def _systemd_scheduled(active: dict, enabled: dict, timer: str | None = None) -> dict:
     """Will systemd fire the session job? Its timer active: yes. Stopped but
     enabled: yes, at the next boot (RUNBOOK 8.5 step 2 only stops them).
-    Inactive and not enabled: no."""
-    t = _VM_SESSION.timer
+    Inactive and not enabled: no. `timer` is the book's own session timer (the
+    core's by default): read against the core's, another book's timers are a
+    dict that never holds the key, and it printed as UNMEASURED."""
+    t = timer or _VM_SESSION.timer
     a = (active.get("value") or {}).get(t)
     if a == "active":
         return _val(True, why=f"{t} active")
@@ -1027,26 +1079,40 @@ def render_lines(d: dict, p: Callable[[str, str], None]) -> None:
     p("  equity.csv last row", equity_text(lap.get("equity")))
     p("  P&L files", pnl_files_text(lap.get("pnl")))
 
-    p(f"VM  (systemd, ssh {v.get('alias')})",
-      f"{WORDS.get(v['arming'], v['arming'])} — {v['arming_why']}")
-    if UNMEASURED not in v:
-        p("  clone", f"{v['clone']} at {show(v['tag'])}")
-        p("  DRY_RUN (systemd, loaded)", _dry_text(v.get("dry_run")))
-        ta, te = v.get("timers") or {}, v.get("timers_enabled") or {}
-        if "value" in ta and "value" in te:
-            p("  timers (active/enabled)", ", ".join(f"{_stem(k)} {a}/{te['value'].get(k)}"
-                                                     for k, a in ta["value"].items()))
-        else:
-            p("  timers", f"is-active {show(ta)}; is-enabled {show(te)}")
-        p("  AUTO_ARMED", _bool_text(v.get("auto_armed"), f"{v['state_dir']}/AUTO_ARMED"))
-        p("  last verdict", verify_text(v.get("verify_last")))
-        p("  equity.csv last row", equity_text(v.get("equity")))
-        p("  P&L files", pnl_files_text(v.get("pnl")))
-        p("  newest plan", plan_text(v.get("newest_plan")))
+    _render_vm_book(p, v, f"VM  (systemd, ssh {v.get('alias')})")
+    # The other books on the VM: each has its own units, gate files and Alpaca
+    # account, so each is armed or not on its own. They are not part of the
+    # one-prod verdict below, which is about two SCHEDULERS for the core account.
+    for name, b in (v.get("books") or {}).items():
+        _render_vm_book(p, b, f"VM book {name}", clone=False)
+        for c in b.get("cautions") or []:
+            p("  caution", c)
     vd = d["verdict"]
     for c in vd.get("cautions") or []:
         p("  caution", c)
     p("!!" if vd.get("warning") else "=>", vd["line"])
+
+
+def _render_vm_book(p, v: dict, label: str, clone: bool = True) -> None:
+    """One book's VM lines. `clone` is off for the other books: the VM has ONE
+    prod clone at ONE tag for every book (install_vm), printed with the core."""
+    p(label, f"{WORDS.get(v['arming'], v['arming'])} — {v['arming_why']}")
+    if UNMEASURED in v:
+        return
+    if clone:
+        p("  clone", f"{v['clone']} at {show(v['tag'])}")
+    p("  DRY_RUN (systemd, loaded)", _dry_text(v.get("dry_run")))
+    ta, te = v.get("timers") or {}, v.get("timers_enabled") or {}
+    if "value" in ta and "value" in te:
+        p("  timers (active/enabled)", ", ".join(f"{_stem(k)} {a}/{te['value'].get(k)}"
+                                                 for k, a in ta["value"].items()))
+    else:
+        p("  timers", f"is-active {show(ta)}; is-enabled {show(te)}")
+    p("  AUTO_ARMED", _bool_text(v.get("auto_armed"), f"{v['state_dir']}/AUTO_ARMED"))
+    p("  last verdict", verify_text(v.get("verify_last")))
+    p("  equity.csv last row", equity_text(v.get("equity")))
+    p("  P&L files", pnl_files_text(v.get("pnl")))
+    p("  newest plan", plan_text(v.get("newest_plan")))
 
 
 def _stem(unit: str) -> str:

@@ -310,7 +310,8 @@ class TestVM:
         cmd, kw = run.calls[0]
         assert cmd[0] == "ssh" and "BatchMode=yes" in cmd
         assert f"ConnectTimeout={ps.SSH_CONNECT_TIMEOUT_S}" in cmd
-        assert kw["input"] == ps.REMOTE_SCRIPT
+        assert kw["input"] == ps.vm_script()
+        assert kw["input"].startswith(ps.REMOTE_SCRIPT)
 
     def test_remote_script_never_reads_the_key_files(self):
         """/run/quantt holds the keys (RUNBOOK 8). The Environment line is cut
@@ -323,6 +324,75 @@ class TestVM:
     def test_two_dry_run_assignments_are_a_gap_not_a_pick(self, ssh_config):
         m = ps.vm(ssh_config=ssh_config, run=vm_run(vm_reply(dry="DRY_RUN=1 DRY_RUN=0")))
         assert m["arming"] == ps.UNMEASURED
+
+
+# ------------------------------------------------ the other VM books (2026-11-18)
+def book_part(reply: str, book: str = "c4") -> str:
+    """A fake reply's lines re-keyed `<book>.<key>`, as `remote_script(book,
+    prefix)` prints them."""
+    return "".join(f"{book}.{ln}\n" for ln in reply.splitlines())
+
+
+class TestOtherBooks:
+    """C4 has its own units, state dir and Alpaca account on the VM. Until
+    2026-11-18 nothing read them, so its state was known only by hand over ssh."""
+
+    def test_the_cores_script_is_untouched_and_names_no_other_book(self):
+        assert ps.REMOTE_SCRIPT == ps.remote_script(ps.iv.BOOK)
+        assert "c4" not in ps.REMOTE_SCRIPT and "q tag " in ps.REMOTE_SCRIPT
+        assert ps.REMOTE_SCRIPT.rstrip().endswith("printf 'END\\t0\\tquantt-prod-state\\n'")
+
+    def test_each_other_books_script_reads_its_own_units_and_state_dir(self):
+        assert "c4" in ps.OTHER_VM_BOOKS
+        sc = ps.remote_script("c4", prefix="c4.")
+        assert "S=/home/quantt/quantt_state/c4\n" in sc
+        assert "quantt-c4-session.service" in sc and "quantt-cef-" not in sc
+        keyed = [ln.split()[1] for ln in sc.splitlines() if ln.startswith(("q ", "qw "))]
+        assert keyed and all(k.startswith("c4.") for k in keyed)
+        assert "printf 'c4.END" in sc and "/run/" not in sc
+
+    def test_a_book_is_read_from_its_own_prefixed_lines(self, ssh_config):
+        c4 = vm_reply(dry="DRY_RUN=1", auto="absent").replace(" cef traded", " c4 traded")
+        m = ps.vm(ssh_config=ssh_config, run=vm_run(vm_reply() + book_part(c4)))
+        b = m["books"]["c4"]
+        assert m["arming"] == ps.ARMED and b["arming"] == ps.DRY and b["book"] == "c4"
+        assert b["state_dir"].endswith("/quantt_state/c4")
+        assert "c4 traded" in str(b["verify_last"]) and "cef traded" in str(m["verify_last"])
+        assert "quantt_state/c4/equity.csv" in str(b["equity"]) and "333.33" in str(b["equity"])
+
+    def test_a_books_schedule_is_read_from_its_own_session_timer(self, ssh_config):
+        """Read against the core's timer name, C4's timers never held the key
+        and an armed C4 printed as 'whether the scheduler fires is UNMEASURED'."""
+        m = ps.vm(ssh_config=ssh_config, run=vm_run(vm_reply() + book_part(vm_reply())))
+        b = m["books"]["c4"]
+        assert b["scheduled"] == {"value": True, "why": "quantt-c4-session.timer active"}
+        assert b["arming"] == ps.ARMED and "UNMEASURED" not in b["arming_why"]
+        off = ps.vm(ssh_config=ssh_config, run=vm_run(vm_reply() + book_part(vm_reply(
+            timers="inactive inactive inactive", enabled="disabled disabled disabled"))))
+        assert off["arming"] == ps.ARMED and off["books"]["c4"]["arming"] == ps.OFF
+
+    def test_a_reply_cut_inside_a_book_leaves_the_core_measured(self, ssh_config):
+        cut = vm_reply() + book_part(vm_reply(end=False))
+        m = ps.vm(ssh_config=ssh_config, run=vm_run(cut))
+        assert m["arming"] == ps.ARMED
+        assert m["books"]["c4"]["arming"] == ps.UNMEASURED
+        assert "c4.END" in m["books"]["c4"][ps.UNMEASURED]
+
+    def test_no_books_asked_sends_only_the_cores_script(self, ssh_config):
+        run = vm_run(vm_reply())
+        m = ps.vm(ssh_config=ssh_config, run=run, books=())
+        assert run.calls[0][1]["input"] == ps.REMOTE_SCRIPT and m["books"] == {}
+
+    def test_render_prints_each_book_under_the_vm(self, tmp_path, ssh_config):
+        make_laptop(tmp_path, auto_armed=False)
+        lap_run = laptop_run(loaded=(), disabled=LABELS)
+        run = FakeRun(**lap_run.answers, ssh=(0, vm_reply() + book_part(vm_reply(dry="DRY_RUN=1")), ""))
+        d = ps.measure(run=run, home=tmp_path, ssh_config=ssh_config)
+        lines = []
+        ps.render_lines(d, lambda label, value="": lines.append(f"{label} {value}"))
+        out = "\n".join(lines)
+        assert "VM book c4" in out and "quantt_state/c4/AUTO_ARMED" in out
+        assert d["verdict"]["prod"] == "vm"      # the one-prod verdict is still the core's
 
 
 # ---------------------------------------------------------------- verdict --

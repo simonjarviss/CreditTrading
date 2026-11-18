@@ -487,6 +487,29 @@ class TestPnl:
         assert d["sections"]["PNL"]["official"]["cumulative_usd"] == pytest.approx(30.0)
         assert json.loads(json.dumps(d, default=str))["sections"]["PNL"]
 
+    def test_other_vm_books_get_their_own_record_never_summed(self, capsys):
+        """C4 is its own Alpaca account on the VM (team lead 2026-11-18: as
+        reachable as the core). Synthetic rows: they test the reader, not C4."""
+        c4 = _pnl_files(eod=[["2026-01-02", "500.00", "0"], ["2026-01-05", "493.00", "-7.00"]])
+        vm = {**_m("ARMED"), "pnl": _pnl_files(eod=EOD_UP_DOWN),
+              "books": {"c4": {**_m("ARMED"), "pnl": c4},
+                        "x9": {"UNMEASURED": "its reply was cut short"}}}
+        sec = orient.pnl(_prod_section(_m("OFF"), vm))
+        assert sec["official"]["cumulative_usd"] == pytest.approx(30.0), "the core's, unchanged"
+        b = sec["books"]["c4"]
+        assert b["official"]["cumulative_usd"] == pytest.approx(-7.0) and "vol_target" not in b
+        assert "cut short" in sec["books"]["x9"]["official"]["UNMEASURED"]
+        out = _render_with(capsys, PNL=sec)
+        assert "book c4: official P&L" in out and "-$7.00 over 1 session(s)" in out
+        assert "book x9: official P&L" in out and out.count("vol target (spec)") == 1
+        assert out.count("a SNAPSHOT, not the record") == 1, "one legend, under the core"
+
+    def test_the_laptop_as_prod_lists_no_vm_books(self):
+        vm = {**_m("OFF"), "pnl": _pnl_files(eod=EOD_UP_DOWN),
+              "books": {"c4": {**_m("ARMED"), "pnl": _pnl_files(eod=EOD_UP_DOWN)}}}
+        sec = orient.pnl(_prod_section({**_m("ARMED"), "pnl": _pnl_files(eod=EOD_UP_DOWN)}, vm))
+        assert sec["prod"] == "laptop" and sec["books"] == {}
+
 
 class TestPnlVolTargetIsReadFromTheSpec:
     def test_it_is_the_spec_readers_value(self):

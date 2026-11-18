@@ -506,7 +506,42 @@ def pnl(prod_sec: dict) -> dict:
     return {"reproducer": "python3 -m ops.orient --json   (sections.PNL; rows: "
                           "ops.prod_state pnl_tails on the prod machine)",
             "prod": v["prod"], "where": files.get("where"), "official": official,
-            "vol_target": _vol_target(), "table": pnl_table(official, files)}
+            "vol_target": _vol_target(), "table": pnl_table(official, files),
+            "books": _pnl_other_books(prod_sec, v["prod"])}
+
+
+def _pnl_other_books(prod_sec: dict, prod_machine: str) -> dict:
+    """The same record for every other book on the VM (C4), from the rows PROD's
+    one ssh call already brought back (`ops.prod_state` `books`).
+
+    WHY (team lead, 2026-11-18: "make the c4 reachable as easily as everything
+    else"). C4 has its own Alpaca account and its own eod_equity.csv on the VM,
+    and nothing printed them: on 2026-11-18 its newest figure in reach was a
+    copy in the repo seven sessions old. Each book is its own account, so the
+    books are never summed here. No vol target line: `_vol_target` reads the
+    core's spec, which says nothing about another book.
+
+    Only when the VM is prod. The other books have no laptop twin, and with the
+    laptop as prod the VM's files are not the ledger this section prints.
+    """
+    if prod_machine != "vm":
+        return {}
+    out = {}
+    for name, b in (((prod_sec.get("machines") or {}).get("vm") or {}).get("books") or {}).items():
+        files = b.get("pnl") if isinstance(b, dict) else None
+        if not isinstance(files, dict):
+            why = (b or {}).get("UNMEASURED") or "PROD's reading of this book carries no P&L files"
+            out[name] = {"book": name, "prod": "vm", "where": None,
+                         "official": {"UNMEASURED": f"book {name}: {why}"},
+                         "table": {"rows": [], "sums": {}, "notes": [], "file_gaps": []}}
+            continue
+        try:
+            official = official_pnl(files.get("eod_equity"))
+        except Unmeasured as exc:
+            official = {"UNMEASURED": str(exc)}
+        out[name] = {"book": name, "prod": "vm", "where": files.get("where"),
+                     "official": official, "table": pnl_table(official, files)}
+    return out
 
 
 # -------------------------------------------------------------------- spec --
@@ -813,8 +848,12 @@ def _render_pnl(sec: dict) -> None:
     """PNL's lines. The record first; the other three only as their own
     labelled columns, with a legend saying which file and column each is."""
     o = sec["official"]
-    _p("official P&L of record", f"Alpaca end-of-day portfolio history (GET /v2/account/"
-       f"portfolio/history, 1D; team lead 2026-10-19)  [{sec['prod']}]")
+    if sec.get("book"):
+        _p(f"book {sec['book']}: official P&L", f"its own Alpaca account, same source and "
+           f"columns as above; never summed with another book  [{sec['prod']}]")
+    else:
+        _p("official P&L of record", f"Alpaca end-of-day portfolio history (GET /v2/account/"
+           f"portfolio/history, 1D; team lead 2026-10-19)  [{sec['prod']}]")
     if "UNMEASURED" in o:
         _p("", f"UNMEASURED — {o['UNMEASURED']}")
     else:
@@ -838,8 +877,10 @@ def _render_pnl(sec: dict) -> None:
             _p("  caution", f"{g['date']}: change_usd {g['change_usd']:+.2f} but EOD equity moved "
                             f"{g['equity_diff_usd']:+.2f} (a cashflow or a file defect); the "
                             f"figures above use change_usd, the record")
-    vt = sec["vol_target"]
-    if "UNMEASURED" in vt:
+    vt = sec.get("vol_target")
+    if vt is None:
+        pass                      # another book: the core's spec is not its target
+    elif "UNMEASURED" in vt:
         _p("vol target (spec)", f"UNMEASURED — {vt['UNMEASURED']}")
     else:
         try:
@@ -865,10 +906,14 @@ def _render_pnl(sec: dict) -> None:
         _p("  note", n)
     for g in t["file_gaps"]:
         _p("  file", g)
+    if sec.get("book"):
+        return                    # the legend is printed once, under the core
     for i, line in enumerate(PNL_LEGEND + (
             "sum is over the sessions shown; 'k of n' where a column has a gap there "
             "(a sum with a missing term is not the sum)",)):
         _p("columns" if i == 0 else "", line)
+    for b in (sec.get("books") or {}).values():
+        _render_pnl(b)
 
 
 def _p(label: str, value: str = "") -> None:

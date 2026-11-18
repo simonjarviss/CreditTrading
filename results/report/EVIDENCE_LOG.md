@@ -4369,3 +4369,18 @@ that adds it does not exist when it is written.
 - source: `.claude/workflows/release-check.js` @ `49b99db`; `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.11, 8.12); `ops/books/cef_discount_book.json` @ `49b99db`; `ops/books/c4_families_book.json` @ `49b99db`
 - supports: §1, §5
 - status: current. Not tagged, released or installed; the tag and the install are the team lead's. Before the install: prod_state must measure the VM, because a re-install without `--armed` disarms; `quantt/session/run.py` changed, so RUNBOOK 8.6 step 2's replay applies; C4's timers are disabled before the core's install and C4 is re-installed after it (8.9); the alert push needs `alert-smtp-user` and `alert-smtp-pass` in the vault (8.11)
+
+### E-2026-11-18-01 · Change: `ops.prod_state` and `ops.orient` read every book on the VM (C4 beside the core) in the one ssh call
+- kind: change
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead asked on 2026-11-18, about 10:15 New York: "make the c4 reachable as easily as everything else". Until then `ops.prod_state` read the core only; C4's newest figure in reach of the laptop was the repo's copy, last row 2026-11-06 ($100,007.79), seven sessions old [V]
+  - the core's remote script is byte-identical to main's at 8cac532 (compared in the session; `TestOtherBooks` pins it); each other book in `install_vm.VM_BOOKS` adds its own script with keys prefixed `<book>.` to the same call [V]
+  - first read, 2026-11-18 about 10:18 New York, from `quantt-vm:/home/quantt/quantt_state/c4/eod_equity.csv`: C4 official cumulative -$360.50 over 35 sessions, the 2026-09-29 close ($100,000.00) to the 2026-11-17 close ($99,639.50); high-water mark $101,233.72 at the 2026-11-05 close [V]
+  - the same read for the core: -$204.54 over 36 sessions, to $99,795.46 at the 2026-11-17 close; the same figures as Alpaca's end-of-day history fetched directly on the laptop that morning [V]
+  - a defect found and fixed in the same change: `_systemd_scheduled` read every book against the core's session timer, so an armed C4 printed "whether the scheduler fires it is UNMEASURED" [V]
+  - `python3 -m pytest ops/tests` exit 0 [V]
+- source: `ops/prod_state.py`, `ops/orient.py`, `ops/tests/test_prod_state.py`, `ops/tests/test_orient.py` on branch `ops-prod-state-books`
+- supports: §5
+- status: on branch `ops-prod-state-books`, committed locally, not pushed, not merged, installed nowhere (the reader runs on the laptop; nothing on the VM changes)
