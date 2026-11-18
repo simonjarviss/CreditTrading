@@ -123,13 +123,20 @@ nothing, writes nothing and imports no broker client. Its docstring defines ever
 - **Promotion.** A shadow book may become a sleeve after **ten clean on-time shadow sessions in a
   row**. A session is one row of the book's `scores.csv`. It is clean when its status is SCORED or
   FLAT and the decision that fills on it was written before 13:00 New York that day. A flat day
-  with an on-time decision counts; a flat day with no decision file does not.
+  with an on-time decision counts; a flat day with no decision file does not (team lead,
+  2026-11-18: "Any on-time day, ten in a row").
 - **The ladder**, counted in sessions on which the sleeve held a position (`n_names` > 0 in
   `sleeve_scores.csv`): under 20 a quarter of `full_capital_usd`; 20 to 59 a half if fills track
   the shadow book; from 60 full, a half or stopped by live P&L against -1 and -2 sigma x sqrt(T).
+- **Fills track** (team lead, 2026-11-18: "Paper within 2x modelled gap"): pass if the shadow
+  book's P&L less the sleeve's paper P&L, over the sessions from the sleeve's first position
+  on, is no more than 2 x `modelled_fill_cost_bp` x the dollars the sleeve traded on them
+  (its `bookings` in each session's `verify.json`).
+- **Sigma** (team lead, 2026-11-18: "Each sleeve's backtest vol"): `backtest_vol_annual` /
+  sqrt(252), scaled to the capital the sleeve traded at on each position session.
 - **In the book file**, `capital_usd` is the current stage and the only size the runner trades.
-  `full_capital_usd` and `family` describe the sleeve and size nothing. Stopped is
-  `"enabled": false`, which flattens the sleeve.
+  `full_capital_usd`, `family`, `backtest_vol_annual` and the optional `modelled_fill_cost_bp`
+  describe the sleeve and size nothing. Stopped is `"enabled": false`, which flattens the sleeve.
 
 The routine:
 
@@ -153,14 +160,31 @@ The routine:
    `full_capital_usd`, `capital_usd` at a quarter, `enabled`) in the same kind of PR. Its full
    size and whether it joins at all are the team lead's rulings, not the report's.
 
-What the report cannot yet decide, and says so (UNMEASURED):
+What the report cannot yet decide, and says so (UNMEASURED). **Open items:**
 
-- **20 to 59 sessions.** "If fills track the shadow book" has no written definition. The report
-  prints paper P&L beside the shadow book's on the same sessions and their difference, and no
-  pass or fail.
-- **From 60 sessions.** No sigma is recorded for any sleeve, and `sleeve_scores.csv` does not
-  record the capital each session traded at. The backtest volatilities in `_note_sleeves` are
-  the only candidate on record; no ruling names them as the sigma.
+- **`sleeve_scores.csv` needs a per-session `capital_usd` column.** Nothing in the events state
+  records the capital a sleeve traded at on a session (`plan.json` holds share targets, not the
+  capital they were sized from). Both tests need it: the 20-session test to put the shadow
+  book's P&L in the sleeve's dollars, the 60-session test to scale sigma. It is a change to
+  `run.py` (the order path), so it needs its own reviewed PR and release. It is needed **before
+  the first sleeve reaches 20 position sessions** for the fills-track test, and before 60 for
+  sigma. Until then both verdicts are UNMEASURED and name the column; `sigma_verdict` and
+  `track_verdict` in `promote.py` are written and tested and wait only for it. The report does
+  print what the fills-track test would say if today's `capital_usd` had applied on every
+  session, labelled as a what-if.
+- **`modelled_fill_cost_bp` is absent for every sleeve**, so the fills-track test also names
+  that key. The shadow engine fills at the close at no cost and no idea card records a modelled
+  cost a program can read. The team lead sets each one (basis points per dollar traded). What
+  each card would support:
+
+  | sleeve | what its card says | where |
+  |---|---|---|
+  | `cef_exdate_after`, `cef_exdate_before_after` | No measured cost. The edge of 20 to 30bp per fund per leg is called "the same order as a round trip through a closed-end fund's spread": an order of magnitude, 10 to 15bp a side if read literally [U] | `results/ideas/2026-11-10_cef_exdate_drift.md`, "What the gross figure does not show" |
+  | `units_exdate_after`, `units_exdate_before_after` | Nothing: "gross, no cost and no borrow modelled", and no spread is quoted | `results/ideas/2026-11-11_exdate_other_wrappers.md` |
+  | `specdiv_wait_small` | Measured quoted spread at the entry close for its band ($100k to $5M a day): median 0.27%, 90th percentile 1.25%. Half the median spread is 13.5bp a side [S] | `results/ideas/2026-11-15_special_dividends.md`, "The spread, measured" |
+  | `specdiv_wait` | The same table by band: median spread 0.14% at $1M to $5M a day and 0.05% at $5M and over (7bp and 2.5bp a side). No row for this book's own universe ($500k a day and over) [S] | the same section |
+  | `pead_small_long` | No measured cost. The real-money grid of 5 / 15 / 30bp per unit traded, and "what these stocks cost to trade at the close is not measured" [S] | `results/ideas/2026-11-15_pead_small.md`, "Real-money view" |
+
 - **Before the first VERIFY.** With no `sleeve_scores.csv` the sleeve half is UNMEASURED, never
   "zero sessions".
 

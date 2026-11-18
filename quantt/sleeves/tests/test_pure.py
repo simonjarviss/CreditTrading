@@ -10,8 +10,8 @@ from quantt.sleeves import config, inputs, ledger, net
 
 D, F = dt.date(2026, 11, 16), dt.date(2026, 11, 17)
 BOOK = {"book": "events", "_note": "x",
-        "sleeves": [{"slug": "a", "family": "f", "full_capital_usd": 40000, "capital_usd": 10000, "enabled": True},
-                    {"slug": "b", "family": "f", "full_capital_usd": 40000, "capital_usd": 10000, "enabled": True}],
+        "sleeves": [{"slug": "a", "family": "f", "backtest_vol_annual": 0.1, "full_capital_usd": 40000, "capital_usd": 10000, "enabled": True},
+                    {"slug": "b", "family": "f", "backtest_vol_annual": 0.1, "full_capital_usd": 40000, "capital_usd": 10000, "enabled": True}],
         "min_order_usd": 100, "max_gross_x_equity": 1.0, "max_name_usd": 20000,
         "max_stale_sessions": 2, "max_orders": 100,
         "execution": {"mode": "late_market", "window_minutes_before_close": [8, 2]}}
@@ -63,6 +63,24 @@ def test_full_size_and_family_are_loaded_and_checked(tmp_path):
     for bad in ("", "CEF ex-date", 3, None):
         with pytest.raises(config.ConfigError, match="family"):
             cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "family": bad}])
+
+
+def test_the_backtest_vol_is_required_and_the_modelled_cost_is_the_one_optional_key(tmp_path):
+    """`backtest_vol_annual` is the ladder's sigma (team lead, 2026-11-18) and required.
+    `modelled_fill_cost_bp` may be absent, and absent loads as None, never as zero: zero would
+    mean "the model assumes no cost", which fails any sleeve that is a dollar behind."""
+    a = cfg(tmp_path).sleeve("a")
+    assert (a.backtest_vol_annual, a.modelled_fill_cost_bp) == (0.1, None)
+    for bad in (0, -0.1, True, "0.1", float("inf")):
+        with pytest.raises(config.ConfigError, match="backtest_vol_annual"):
+            cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "backtest_vol_annual": bad}])
+    assert cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "modelled_fill_cost_bp": 12.5}]).sleeve("a").modelled_fill_cost_bp == 12.5
+    assert cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "modelled_fill_cost_bp": 0}]).sleeve("a").modelled_fill_cost_bp == 0.0
+    for bad in (-1, None, "10", True):
+        with pytest.raises(config.ConfigError, match="modelled_fill_cost_bp"):
+            cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "modelled_fill_cost_bp": bad}])
+    with pytest.raises(config.ConfigError, match="exactly the keys"):
+        cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "sigma": 0.1}])
 
 
 def test_the_core_books_account_is_refused(tmp_path):
@@ -167,7 +185,7 @@ def test_no_decision_holds_then_flattens_and_never_opens(tmp_path):
 
 
 def test_a_disabled_sleeve_is_flattened_and_an_unlisted_one_refuses(tmp_path):
-    c = cfg(tmp_path, sleeves=[{"slug": "a", "family": "f", "full_capital_usd": 4, "capital_usd": 1, "enabled": False}])
+    c = cfg(tmp_path, sleeves=[{"slug": "a", "family": "f", "backtest_vol_annual": 0.1, "full_capital_usd": 4, "capital_usd": 1, "enabled": False}])
     assert net.plan_sleeves(c, {}, {"a": {"AAA": 3}}, {}, {"AAA": 9.0}, YES, YES)[0].action == "flatten"
     with pytest.raises(net.NetError, match="does not list"):
         net.plan_sleeves(c, {}, {"ghost": {"AAA": 3}}, {}, {}, YES, YES)
@@ -263,7 +281,7 @@ def test_a_sleeve_holding_a_name_with_no_close_holds_everything_and_a_flatten_is
     assert "AAA" in plans[0].why and plans[1].targets == {"BBB": 100}
     over = net.plan_sleeves(c, dec, {"a": {"AAA": 7}}, {"a": 5}, {"BBB": 10.0}, YES, YES)[0]
     assert (over.action, over.targets) == ("hold", {"AAA": 7}) and "flatten deferred" in over.why
-    off = cfg(tmp_path, sleeves=[{"slug": "a", "family": "f", "full_capital_usd": 4, "capital_usd": 1, "enabled": False}])
+    off = cfg(tmp_path, sleeves=[{"slug": "a", "family": "f", "backtest_vol_annual": 0.1, "full_capital_usd": 4, "capital_usd": 1, "enabled": False}])
     d = net.plan_sleeves(off, {}, {"a": {"AAA": 3}}, {}, {}, YES, YES)[0]
     assert (d.action, d.targets) == ("hold", {"AAA": 3}) and "flatten deferred" in d.why
 
