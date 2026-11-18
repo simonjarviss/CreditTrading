@@ -307,3 +307,97 @@ def test_thresholds_are_the_calibration_outputs():
     """The constants in data_qa.py are the calibration run's values, not retyped ones."""
     cal = json.loads((q.REPO / "results/ops/data_qa_calibration/calibration_2026-11-08.json").read_text())
     assert cal["thresholds"] == q.THRESHOLDS
+
+
+# ------------------------------------------------------------------ Q9: the NAV cross-check's second source
+# Each test below fails on 8cac532 (origin/main, 2026-11-18): data_qa had no Q9, so a
+# collector report that said "second source unavailable" left the night's QA status
+# untouched. The report shape is quantt/collect/collect.py `build_report`'s.
+
+UNAVAILABLE = "second source unavailable (cefconnect: JSONDecodeError)"
+
+
+def collector_report(state: Path, day: dt.date, step: dict | None, *, raw: str | None = None):
+    d = state / "data" / day.isoformat()
+    d.mkdir(parents=True, exist_ok=True)
+    steps = {"prices_nav": {"ok": True, "err": None, "detail": {"flags": [], "gaps": []}}}
+    if step is not None:
+        steps["nav_crosscheck"] = step
+    rep = {"date": day.isoformat(), "book": "cef", "complete": True, "failed_steps": [],
+           "flags": [], "gaps": [], "steps": steps}
+    (d / "report.json").write_text(raw if raw is not None else json.dumps(rep))
+
+
+def down():
+    return {"ok": False, "err": UNAVAILABLE, "unavailable": UNAVAILABLE,
+            "detail": {"flags": [], "gaps": [], "fetch_errors": ["x"], "second_source": UNAVAILABLE}}
+
+
+def up():
+    return {"ok": True, "err": None, "detail": {"flags": [], "gaps": [], "fetch_errors": []}}
+
+
+def test_q9_flags_an_unavailable_second_source_and_counts_the_days(tmp_path):
+    # 2026-11-05 is a Thursday: 11-02..11-05 down (4 sessions), 10-30 (Friday) up.
+    collector_report(tmp_path, dt.date(2026, 10, 30), up())
+    for day in (2, 3, 4, 5):
+        collector_report(tmp_path, dt.date(2026, 11, day), down())
+    st, flags, why = q.q9_second_source(tmp_path, ASOF, "nav_crosscheck")
+    assert st == "FLAG" and why is None and len(flags) == 1
+    f = flags[0]
+    assert f.check == "Q9" and f.ticker is None and f.value == 4.0
+    assert UNAVAILABLE in f.rule and "4 consecutive" in f.rule and "since 2026-11-02" in f.rule
+    assert "at least" not in f.rule
+    assert f.evidence["first_day"] == "2026-11-02" and f.evidence["count_is_lower_bound"] is False
+
+
+def test_q9_streak_is_a_lower_bound_when_an_earlier_report_is_missing(tmp_path):
+    collector_report(tmp_path, dt.date(2026, 11, 4), down())
+    collector_report(tmp_path, ASOF, down())                     # no report for 11-03
+    st, flags, _ = q.q9_second_source(tmp_path, ASOF, "nav_crosscheck")
+    f = flags[0]
+    assert st == "FLAG" and f.value == 2.0 and "at least 2 consecutive" in f.rule
+    assert f.evidence["count_is_lower_bound"] is True and "2026-11-03" in f.evidence["walk_stopped_at"]
+
+
+def test_q9_is_ok_only_when_the_collector_says_the_step_was_ok(tmp_path):
+    collector_report(tmp_path, ASOF, up())
+    assert q.q9_second_source(tmp_path, ASOF, "nav_crosscheck") == ("OK", [], None)
+
+
+def test_q9_flags_a_crosscheck_that_did_not_complete(tmp_path):
+    collector_report(tmp_path, ASOF, {"ok": False, "err": "waiting on prices_nav",
+                                      "detail": {"flags": [], "gaps": []}})
+    st, flags, _ = q.q9_second_source(tmp_path, ASOF, "nav_crosscheck")
+    assert st == "FLAG" and "waiting on prices_nav" in flags[0].rule and "did not complete" in flags[0].rule
+
+
+def test_q9_missing_or_unreadable_record_is_unmeasured_and_named_never_ok(tmp_path):
+    st, flags, why = q.q9_second_source(tmp_path, ASOF, "nav_crosscheck")
+    assert st == "UNMEASURED" and not flags and "report.json" in why and str(ASOF) in why
+    collector_report(tmp_path, ASOF, None)                       # a report with no such step
+    st, _, why = q.q9_second_source(tmp_path, ASOF, "nav_crosscheck")
+    assert st == "UNMEASURED" and "no nav_crosscheck step" in why
+    collector_report(tmp_path, ASOF, None, raw="{not json")
+    st, _, why = q.q9_second_source(tmp_path, ASOF, "nav_crosscheck")
+    assert st == "UNMEASURED" and "unreadable" in why
+
+
+def test_q9_is_not_run_for_a_book_with_no_second_source_by_ruling(tmp_path):
+    assert q.BOOKS["c4"].second_source_step is None and q.BOOKS["cef"].second_source_step == "nav_crosscheck"
+    st, flags, why = q.q9_second_source(tmp_path, ASOF, None)
+    assert st == "NOT_RUN" and not flags and "single-source" in why
+
+
+def test_main_reports_the_unavailable_second_source_in_the_nightly_report(tmp_path):
+    """The defect itself: on 8cac532 this night's report had no Q9 and no line about
+    the second source, whatever the collector had recorded."""
+    state = tmp_path / "state"
+    collector_report(state, ASOF, down())
+    rc = q.main(["--book", "cef", "--state-dir", str(state), "--data-dir", str(tmp_path / "nope"),
+                 "--asof", ASOF.isoformat()], now_utc=dt.datetime(2026, 11, 6, 2, 45, tzinfo=dt.timezone.utc))
+    assert rc == 0
+    rep = json.loads((state / "reports" / "data_qa" / f"{ASOF}.json").read_text())
+    assert rep["checks"]["Q9"]["status"] == "FLAG" and rep["status"] == "FLAG"
+    md = (state / "reports" / "data_qa" / f"{ASOF}.md").read_text()
+    assert "**Q9**: FLAG" in md and UNAVAILABLE in md and "single-source NAVs" in md

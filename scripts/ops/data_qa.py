@@ -48,6 +48,10 @@ Q7 corporate actions  the runner's last corporate-action gate record: any blocki
                       event, any unresolved-party row, or UNMEASURED.
 Q8 first-fetch vs seed (C4, first nights only) rows the fetch replaced differ from
                       the seed beyond half a cent. Needs `--seed-dir`.
+Q9 NAV second source  the collector's own record of tonight's NAV cross-check
+                      (`<state>/data/<asof>/report.json`): FLAG when the step had no
+                      second source or did not complete, with the count of consecutive
+                      data days it has been so. No threshold (`q9_second_source`).
 
 THRESHOLDS (H14, H8): derived on fit data only, never swept and picked
 ----------------------------------------------------------------------
@@ -92,7 +96,7 @@ from scripts.cef.data_guards import SPLIT_TOL                                   
 ET = ZoneInfo("America/New_York")
 
 OK, FLAG, UNMEASURED, NOT_RUN = "OK", "FLAG", "UNMEASURED", "NOT_RUN"
-CHECK_IDS = ("Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8")
+CHECK_IDS = ("Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9")
 
 # How much panel a nightly run reads: enough for the longest trailing window
 # (Q2/Q3: 252 rows + Q2_MIN_OBS) at both ends of a weekend/holiday stretch.
@@ -128,10 +132,15 @@ class BookCfg:
     data_dir: str
     spec_path: str
     universe_file: str | None    # None: the spec's frozen.universe
+    # The collector step that compares the panel NAV with a second source (Q9), or
+    # None for a book that has none by ruling. C4 reads no CEFConnect (team lead,
+    # 2026-10-28; quantt/collect/collect.py THE C4 BOOK), so Q9 is NOT_RUN there.
+    second_source_step: str | None = None
 
 
 BOOKS = {
-    "cef": BookCfg("cef", "cef", "ops/specs/cef_discount.frozen.json", None),
+    "cef": BookCfg("cef", "cef", "ops/specs/cef_discount.frozen.json", None,
+                   second_source_step="nav_crosscheck"),
     "c4": BookCfg("c4", "cef_c4", "ops/specs/c4_families.frozen.json",
                   "results/cef/c4/c4_universe_frozen_2026-10-14.csv"),
 }
@@ -632,12 +641,125 @@ def q8_seed_diff(close: pd.DataFrame, nav: pd.DataFrame, seed_dir: Path | None) 
     return (FLAG if flags else OK), flags, None
 
 
+def _collector_report(state_dir: Path, day: dt.date) -> dict | None:
+    """The collector's `<state>/data/<day>/report.json` (quantt/collect/collect.py
+    `build_report`), or None when the file is absent. Unreadable raises Unmeasured."""
+    path = Path(state_dir) / "data" / day.isoformat() / "report.json"
+    if not path.is_file():
+        return None
+    try:
+        rep = json.loads(path.read_text())
+    except (OSError, ValueError) as e:
+        raise Unmeasured(f"{path} unreadable: {type(e).__name__}: {e}") from None
+    if not isinstance(rep, dict) or not isinstance(rep.get("steps"), dict):
+        raise Unmeasured(f"{path} is not a collector report (no `steps` object)")
+    return rep
+
+
+def _second_source_state(rep: dict, step: str) -> tuple[str, str | None]:
+    """("ok" | "unavailable" | "not_ok" | "absent", the collector's own words).
+    `unavailable` is the collector's SECOND SOURCE UNAVAILABLE status: the step is
+    not ok and carries `unavailable` (collect.py `collect`, `build_report`)."""
+    rec = rep["steps"].get(step)
+    if not isinstance(rec, dict):
+        return "absent", None
+    if rec.get("ok"):
+        return "ok", None
+    if rec.get("unavailable"):
+        return "unavailable", str(rec["unavailable"])
+    return "not_ok", str(rec.get("err"))
+
+
+def q9_second_source(state_dir: Path, asof: dt.date, step: str | None) -> tuple[str, list[Flag], str | None]:
+    """Q9: did tonight's NAV cross-check have its second source? (status, flags, why).
+
+    WHY THIS EXISTS (2026-11-18). CEFConnect answered every scripted request with a
+    block page from 2026-10-21. On 2026-10-29 the collector was changed, rightly, to
+    record that as "second source unavailable" without failing the day (a status
+    that was always on said nothing: collect.py `SecondSourceUnavailable`). The
+    result was the opposite failure: the fact lived only in the tail of a line that
+    begins `DATA COMPLETE`, and the core book decided on single-source NAVs every
+    night for three weeks (821 such lines by 2026-11-18) with no report saying so.
+    The nightly QA report is what the evening brief reads, so the fact goes here.
+
+    WHAT IT READS. Only the collector's own record for the as-of day,
+    `<state>/data/<asof>/report.json`. It fetches nothing and compares no NAV: the
+    cross-check is the collector's job, and this reports whether it happened.
+      * the step is ok: OK.
+      * the step carries `unavailable`: FLAG, quoting the collector's status, with
+        the number of consecutive trading days (walking back from the as-of through
+        each day's own report.json) it has been unavailable and the first of them.
+      * the step is otherwise not ok (failed, or waiting on prices_nav): FLAG,
+        quoting its error. Nothing was compared tonight either way.
+      * no report.json for the as-of, or it has no such step: UNMEASURED, named.
+        "The collector has not run" is not "the cross-check passed".
+
+    NO THRESHOLD, ON PURPOSE. It flags from the first night. "Flag after N days"
+    would need an N nobody has derived, and one unverified night is already a fact
+    the brief should show; the count says how long. It is outside the false-alarm
+    budget above for the same reason: this is a recorded fact about a source, not
+    a statistical call that can be a false alarm. It stays FLAG every night until
+    a second source answers, which is the point.
+
+    THE STREAK IS MEASURED, NEVER ASSUMED. The walk back stops at the first earlier
+    trading day whose report does not say `unavailable`. If it stops because that
+    day's report is missing or unreadable, the count is reported as "at least"
+    and the evidence names the day: a missing day is not counted either way.
+
+    A book with no second source by ruling (`step` None: C4) is NOT_RUN, said so."""
+    if step is None:
+        return NOT_RUN, [], ("this book has no second NAV source by ruling (C4 reads no "
+                             "CEFConnect, team lead 2026-10-28): single-source NAVs every night")
+    try:
+        rep = _collector_report(state_dir, asof)
+    except Unmeasured as e:
+        return UNMEASURED, [], str(e)
+    if rep is None:
+        return UNMEASURED, [], (f"no collector report at {Path(state_dir) / 'data' / asof.isoformat() / 'report.json'}"
+                                f": whether {step} had a second source on {asof} is not known")
+    state, words = _second_source_state(rep, step)
+    if state == "absent":
+        return UNMEASURED, [], f"the collector's report for {asof} has no {step} step"
+    if state == "ok":
+        return OK, [], None
+    if state == "not_ok":
+        return FLAG, [Flag("Q9", None, asof.isoformat(),
+                           f"{step} did not complete on {asof} ({words}): no panel NAV was "
+                           f"checked against a second source",
+                           evidence={"step": step, "state": state, "collector": words})], None
+    n, first, stopped = 1, asof, None
+    d = previous_trading_day(asof)
+    while True:
+        try:
+            prev = _collector_report(state_dir, d)
+        except Unmeasured as e:
+            stopped = f"{d}: {e}"
+            break
+        if prev is None:
+            stopped = f"{d}: no collector report"
+            break
+        if _second_source_state(prev, step)[0] != "unavailable":
+            break
+        n, first = n + 1, d
+        d = previous_trading_day(d)
+    count = f"at least {n}" if stopped else str(n)
+    return FLAG, [Flag("Q9", None, asof.isoformat(),
+                       f"{step}: {words}. Unavailable on {count} consecutive trading day(s), "
+                       f"since {first}" + (" or earlier" if stopped else "")
+                       + ": the book decides on single-source NAVs",
+                       value=float(n),
+                       evidence={"step": step, "state": state, "collector": words,
+                                 "consecutive_days": n, "first_day": first.isoformat(),
+                                 "count_is_lower_bound": bool(stopped),
+                                 "walk_stopped_at": stopped})], None
+
+
 # ------------------------------------------------------------------- the run
 
 def run_checks(book: str, panels: Panels, universe: list, thresholds: dict, asof: dt.date,
                expected: dt.date, spec: dict, plan: dict | None, plan_path: str | None,
                splits, seed_dir, *, data_dir: Path) -> dict:
-    """The eight checks on `panels`. Pure except for reading `seed_dir` (Q8)."""
+    """The eight panel checks (Q1 to Q8) on `panels`; Q9 is `main`'s, from the collector's record. Pure except for reading `seed_dir` (Q8)."""
     names = held_names(plan)
     results: dict = {}
 
@@ -767,6 +889,11 @@ def main(argv=None, *, now_utc: dt.datetime | None = None) -> int:
     except Unmeasured as e:
         rep["checks"] = {q: {"status": UNMEASURED, "flags": [], "why": str(e), "n_flags": 0, "n_held": 0}
                          for q in CHECK_IDS}
+    # Q9 reads the collector's record, not the panels, so it is measured even when
+    # the panels could not be read (and is never one of `run_checks`'s pure checks).
+    st, q9, why = q9_second_source(state_dir, asof, cfg.second_source_step)
+    rep["checks"]["Q9"] = {"status": st, "flags": [asdict(f) for f in q9], "why": why,
+                           "n_flags": len(q9), "n_held": 0}
     rep["status"] = overall(rep["checks"])
     out_dir = state_dir / "reports" / "data_qa"
     write_atomic(out_dir / f"{asof.isoformat()}.json", json.dumps(rep, indent=1, default=str))
