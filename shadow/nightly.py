@@ -169,7 +169,19 @@ def run(state: Path, books: list, src, *, check, now: dt.datetime | None = None)
         for cmd, code in _refresh(b, state):
             print(f"{b.slug}: REFRESH FAILED ({code}): {cmd}")
             rc = 3
-        res = engine.decide(b, state, asof, now=now)
+        try:
+            res = engine.decide(b, state, asof, now=now)
+        except Exception as e:      # noqa: BLE001 - deliberate, see below
+            # ONE BOOK'S BUG MUST NOT STOP THE BOOKS AFTER IT. engine.decide turns a book's own
+            # `Unmeasured` into a status, but any other exception from a signal (a KeyError on a
+            # panel column, a bad calendar row) used to leave this loop, so every book later in
+            # the list got no decision that night and its next session was scored FLAT for
+            # nothing it did. Eleven books now share this loop (2026-11-18). This is not a
+            # fallback: nothing is decided for the broken book, the line names it and the
+            # exception, and the run exits non-zero as it does for UNMEASURED.
+            print(f"decide {b.slug} {asof}: ERROR {type(e).__name__}: {e}")
+            rc = 3
+            continue
         print(f"decide {b.slug} {asof}: {res['status']} {res.get('reason', '')}".rstrip())
         if res["status"] == "UNMEASURED":
             rc = 3

@@ -1,0 +1,705 @@
+{
+ "600 DEL OUT": {
+  "vioo_by_year": {
+   "2008": {
+    "UNCHECKED": 13
+   },
+   "2009": {
+    "UNCHECKED": 8
+   },
+   "2010": {
+    "UNCHECKED": 9,
+    "CONFIRMED": 3
+   },
+   "2011": {
+    "UNCHECKED": 6,
+    "CONFIRMED": 5,
+    "NOT CONFIRMED": 1
+   },
+   "2012": {
+    "CONFIRMED": 5,
+    "UNCHECKED": 4
+   },
+   "2013": {
+    "CONFIRMED": 8,
+    "UNCHECKED": 2
+   },
+   "2014": {
+    "CONFIRMED": 6,
+    "NOT CONFIRMED": 2
+   },
+   "2015": {
+    "CONFIRMED": 9
+   },
+   "2016": {
+    "CONFIRMED": 6,
+    "NOT CONFIRMED": 3
+   },
+   "2017": {
+    "CONFIRMED": 6,
+    "NOT CONFIRMED": 3
+   },
+   "2018": {
+    "CONFIRMED": 8,
+    "NOT CONFIRMED": 2
+   },
+   "2019": {
+    "CONFIRMED": 6,
+    "NOT CONFIRMED": 3
+   },
+   "2020": {
+    "CONFIRMED": 4,
+    "NOT CONFIRMED": 1
+   },
+   "2021": {
+    "CONFIRMED": 12,
+    "NOT CONFIRMED": 1
+   },
+   "2022": {
+    "CONFIRMED": 16,
+    "NOT CONFIRMED": 1
+   },
+   "2023": {
+    "CONFIRMED": 57,
+    "NOT CONFIRMED": 1
+   },
+   "2024": {
+    "CONFIRMED": 45
+   },
+   "2025": {
+    "CONFIRMED": 24
+   }
+  },
+  "vioo_total": {
+   "CONFIRMED": 220,
+   "UNCHECKED": 42,
+   "NOT CONFIRMED": 18
+  },
+  "hold_20": {
+   "all": {
+    "n": 280,
+    "mean": 0.0013731118770114927,
+    "median": -0.015382975541945787,
+    "share_positive": 0.46785714285714286,
+    "cohort_t": -0.38093056552413984
+   },
+   "A vioo confirmed": {
+    "n": 220,
+    "mean": -0.006364374908739948,
+    "median": -0.012635996932050142,
+    "share_positive": 0.4772727272727273,
+    "cohort_t": -1.733148026801796
+   },
+   "A vioo not confirmed": {
+    "n": 18,
+    "mean": -0.020438989127341337,
+    "median": 0.00414649259184352,
+    "share_positive": 0.5,
+    "cohort_t": -0.5892213151945088
+   },
+   "A vioo unchecked": {
+    "n": 42,
+    "mean": 0.05125084785186072,
+    "median": -0.02095179232316563,
+    "share_positive": 0.40476190476190477,
+    "cohort_t": 0.8877045955477079
+   },
+   "A confirmed or unchecked": {
+    "n": 262,
+    "mean": 0.002871653167386876,
+    "median": -0.017238746956906748,
+    "share_positive": 0.46564885496183206,
+    "cohort_t": -0.3337021744744
+   },
+   "C price>=5 and adv>=1M": {
+    "n": 143,
+    "mean": 0.006431019183355848,
+    "median": 0.004303197751025167,
+    "share_positive": 0.5104895104895105,
+    "cohort_t": 0.38576200705929553
+   },
+   "C the rest": {
+    "n": 137,
+    "mean": -0.003906309617931889,
+    "median": -0.03250066563506926,
+    "share_positive": 0.4233576642335766,
+    "cohort_t": -0.5282910434457424
+   },
+   "D without best and worst 1%": {
+    "n": 274,
+    "mean": -0.005758791497661336,
+    "median": -0.015382975541945787,
+    "share_positive": 0.46715328467153283,
+    "cohort_t": -1.2238582816837968
+   },
+   "E gone within the window (uses the future)": {
+    "n": 11,
+    "mean": -0.06960632821796528,
+    "median": -0.033765638751222626,
+    "share_positive": 0.45454545454545453,
+    "cohort_t": -1.2341835274510193
+   },
+   "E traded throughout (uses the future)": {
+    "n": 269,
+    "mean": 0.004275616862307938,
+    "median": -0.01438696177001364,
+    "share_positive": 0.4684014869888476,
+    "cohort_t": -0.2417063878655067
+   },
+   "B era 2002-08": {
+    "n": 13,
+    "mean": 0.1732818545066302,
+    "median": 0.07311497866471639,
+    "share_positive": 0.5384615384615384,
+    "cohort_t": 1.28756017570875
+   },
+   "B era 2009-15": {
+    "n": 68,
+    "mean": 0.005815330729573561,
+    "median": -0.019384893191759345,
+    "share_positive": 0.45588235294117646,
+    "cohort_t": -0.12921878711291435
+   },
+   "B era 2016-19": {
+    "n": 37,
+    "mean": -0.011856517107179247,
+    "median": -0.008619148337341898,
+    "share_positive": 0.43243243243243246,
+    "cohort_t": -1.0906697330224837
+   },
+   "B era 2020-22": {
+    "n": 35,
+    "mean": -0.07465956038795593,
+    "median": -0.08838688188507937,
+    "share_positive": 0.37142857142857144,
+    "cohort_t": -2.635348433062271
+   },
+   "B era 2023-25": {
+    "n": 127,
+    "mean": 0.0062058305032292324,
+    "median": 0.0010404750864769774,
+    "share_positive": 0.5039370078740157,
+    "cohort_t": -0.4770065648064101
+   },
+   "B era 2002-08, confirmed or unchecked": {
+    "n": 13,
+    "mean": 0.1732818545066302,
+    "median": 0.07311497866471639,
+    "share_positive": 0.5384615384615384,
+    "cohort_t": 1.28756017570875
+   },
+   "B era 2009-15, confirmed or unchecked": {
+    "n": 65,
+    "mean": 0.0024381164364605415,
+    "median": -0.02067128178358313,
+    "share_positive": 0.4461538461538462,
+    "cohort_t": -0.2611564398143724
+   },
+   "B era 2016-19, confirmed or unchecked": {
+    "n": 26,
+    "mean": -0.021480896291713333,
+    "median": -0.03519528392280491,
+    "share_positive": 0.38461538461538464,
+    "cohort_t": -1.1226574071296858
+   },
+   "B era 2020-22, confirmed or unchecked": {
+    "n": 32,
+    "mean": -0.06093669685327814,
+    "median": -0.07609922624220128,
+    "share_positive": 0.375,
+    "cohort_t": -2.4683932732038123
+   },
+   "B era 2023-25, confirmed or unchecked": {
+    "n": 126,
+    "mean": 0.006743722664989529,
+    "median": 0.0016425031901471931,
+    "share_positive": 0.5079365079365079,
+    "cohort_t": -0.502514120302717
+   }
+  },
+  "hold_60": {
+   "all": {
+    "n": 278,
+    "mean": -0.001118881852461216,
+    "median": -0.028035986463665896,
+    "share_positive": 0.4352517985611511,
+    "cohort_t": 0.2254677587817378
+   },
+   "A vioo confirmed": {
+    "n": 218,
+    "mean": -0.014504244825808588,
+    "median": -0.02007970449731178,
+    "share_positive": 0.44954128440366975,
+    "cohort_t": -0.5900191422792198
+   },
+   "A vioo not confirmed": {
+    "n": 18,
+    "mean": -0.06256366046920077,
+    "median": -0.07291367058390952,
+    "share_positive": 0.3888888888888889,
+    "cohort_t": -0.2838913034908554
+   },
+   "A vioo unchecked": {
+    "n": 42,
+    "mean": 0.09469100251161115,
+    "median": -0.06780495960147709,
+    "share_positive": 0.38095238095238093,
+    "cohort_t": 0.7449794508481581
+   },
+   "A confirmed or unchecked": {
+    "n": 260,
+    "mean": 0.0031349874363899868,
+    "median": -0.02597653331845201,
+    "share_positive": 0.43846153846153846,
+    "cohort_t": 0.32077145116324324
+   },
+   "C price>=5 and adv>=1M": {
+    "n": 141,
+    "mean": -0.02335648879289307,
+    "median": -0.0168955690993019,
+    "share_positive": 0.4326241134751773,
+    "cohort_t": -0.6497803336326388
+   },
+   "C the rest": {
+    "n": 137,
+    "mean": 0.02176799828331171,
+    "median": -0.07839849478001171,
+    "share_positive": 0.43795620437956206,
+    "cohort_t": 0.47152950806807814
+   },
+   "D without best and worst 1%": {
+    "n": 272,
+    "mean": -0.022744972937530618,
+    "median": -0.028035986463665896,
+    "share_positive": 0.4338235294117647,
+    "cohort_t": -0.990340700230199
+   },
+   "E gone within the window (uses the future)": {
+    "n": 20,
+    "mean": -0.2495892084738378,
+    "median": -0.08298656202934973,
+    "share_positive": 0.15,
+    "cohort_t": -2.996594250717197
+   },
+   "E traded throughout (uses the future)": {
+    "n": 258,
+    "mean": 0.018142383777102863,
+    "median": -0.017553553175508496,
+    "share_positive": 0.4573643410852713,
+    "cohort_t": 0.7898639129325906
+   },
+   "B era 2002-08": {
+    "n": 13,
+    "mean": 0.2823362732938582,
+    "median": -0.16590335645532406,
+    "share_positive": 0.38461538461538464,
+    "cohort_t": 1.2022623640687473
+   },
+   "B era 2009-15": {
+    "n": 68,
+    "mean": 0.01347691549582202,
+    "median": -0.023467625836200323,
+    "share_positive": 0.4411764705882353,
+    "cohort_t": -0.1006451432747368
+   },
+   "B era 2016-19": {
+    "n": 37,
+    "mean": 0.02331294120836646,
+    "median": -0.03836430229323118,
+    "share_positive": 0.40540540540540543,
+    "cohort_t": 0.06508857992436846
+   },
+   "B era 2020-22": {
+    "n": 35,
+    "mean": -0.07812624449282092,
+    "median": -0.08050133245034385,
+    "share_positive": 0.42857142857142855,
+    "cohort_t": -1.6407829066294013
+   },
+   "B era 2023-25": {
+    "n": 125,
+    "mean": -0.024208089831848772,
+    "median": -0.015676066653023346,
+    "share_positive": 0.448,
+    "cohort_t": -1.2426181640997869
+   },
+   "B era 2002-08, confirmed or unchecked": {
+    "n": 13,
+    "mean": 0.2823362732938582,
+    "median": -0.16590335645532406,
+    "share_positive": 0.38461538461538464,
+    "cohort_t": 1.2022623640687473
+   },
+   "B era 2009-15, confirmed or unchecked": {
+    "n": 65,
+    "mean": 0.009451690232978016,
+    "median": -0.025461113591932927,
+    "share_positive": 0.4307692307692308,
+    "cohort_t": -0.2604187695923035
+   },
+   "B era 2016-19, confirmed or unchecked": {
+    "n": 26,
+    "mean": 0.055707996782056415,
+    "median": -0.04870664351550036,
+    "share_positive": 0.4230769230769231,
+    "cohort_t": 0.23732603286818263
+   },
+   "B era 2020-22, confirmed or unchecked": {
+    "n": 32,
+    "mean": -0.06248420033529022,
+    "median": -0.07916858161973023,
+    "share_positive": 0.4375,
+    "cohort_t": -1.1321145629202265
+   },
+   "B era 2023-25, confirmed or unchecked": {
+    "n": 124,
+    "mean": -0.02353667895247186,
+    "median": -0.014241494420858758,
+    "share_positive": 0.45161290322580644,
+    "cohort_t": -1.1209483317108753
+   }
+  }
+ },
+ "600 ADD NEW": {
+  "vioo_by_year": {
+   "2008": {
+    "UNCHECKED": 48
+   },
+   "2009": {
+    "UNCHECKED": 44
+   },
+   "2010": {
+    "UNCHECKED": 44,
+    "CONFIRMED": 18,
+    "NOT CONFIRMED": 1
+   },
+   "2011": {
+    "CONFIRMED": 35,
+    "UNCHECKED": 12
+   },
+   "2012": {
+    "CONFIRMED": 15,
+    "UNCHECKED": 15
+   },
+   "2013": {
+    "CONFIRMED": 39,
+    "UNCHECKED": 3
+   },
+   "2014": {
+    "CONFIRMED": 20
+   },
+   "2015": {
+    "CONFIRMED": 53
+   },
+   "2016": {
+    "CONFIRMED": 61,
+    "NOT CONFIRMED": 1
+   },
+   "2017": {
+    "CONFIRMED": 46
+   },
+   "2018": {
+    "CONFIRMED": 45
+   },
+   "2019": {
+    "CONFIRMED": 38
+   },
+   "2020": {
+    "CONFIRMED": 32,
+    "UNCHECKED": 1
+   },
+   "2021": {
+    "CONFIRMED": 33
+   },
+   "2022": {
+    "CONFIRMED": 33
+   },
+   "2023": {
+    "CONFIRMED": 42
+   },
+   "2024": {
+    "CONFIRMED": 44
+   },
+   "2025": {
+    "CONFIRMED": 34
+   }
+  },
+  "vioo_total": {
+   "CONFIRMED": 588,
+   "UNCHECKED": 167,
+   "NOT CONFIRMED": 2
+  },
+  "hold_20": {
+   "all": {
+    "n": 757,
+    "mean": -0.002454041338991489,
+    "median": -0.004607895430621012,
+    "share_positive": 0.47820343461030385,
+    "cohort_t": 0.34911781664172825
+   },
+   "A vioo confirmed": {
+    "n": 588,
+    "mean": 0.001672718593047234,
+    "median": -0.0037573695229835558,
+    "share_positive": 0.4812925170068027,
+    "cohort_t": 0.45579987183828263
+   },
+   "A vioo not confirmed": {
+    "n": 2
+   },
+   "A vioo unchecked": {
+    "n": 167,
+    "mean": -0.01711746368000896,
+    "median": -0.010351834575972552,
+    "share_positive": 0.46706586826347307,
+    "cohort_t": -0.3026855086175039
+   },
+   "A confirmed or unchecked": {
+    "n": 755,
+    "mean": -0.002483520399800957,
+    "median": -0.004607895430621012,
+    "share_positive": 0.4781456953642384,
+    "cohort_t": 0.3428683900772554
+   },
+   "C price>=5 and adv>=1M": {
+    "n": 740,
+    "mean": -0.0032828383260212275,
+    "median": -0.004687559465280322,
+    "share_positive": 0.47702702702702704,
+    "cohort_t": 0.2745655735363609
+   },
+   "C the rest": {
+    "n": 17,
+    "mean": 0.03362300397877357,
+    "median": 0.019394733459907165,
+    "share_positive": 0.5294117647058824,
+    "cohort_t": 0.5727526629758034
+   },
+   "D without best and worst 1%": {
+    "n": 741,
+    "mean": -0.003553951609756491,
+    "median": -0.004607895430621012,
+    "share_positive": 0.4777327935222672,
+    "cohort_t": -0.017866751920610126
+   },
+   "E gone within the window (uses the future)": {
+    "n": 0
+   },
+   "E traded throughout (uses the future)": {
+    "n": 757,
+    "mean": -0.002454041338991489,
+    "median": -0.004607895430621012,
+    "share_positive": 0.47820343461030385,
+    "cohort_t": 0.34911781664172825
+   },
+   "B era 2002-08": {
+    "n": 48,
+    "mean": -0.025072728682979373,
+    "median": -0.004864916625468063,
+    "share_positive": 0.5,
+    "cohort_t": -0.30197557056892166
+   },
+   "B era 2009-15": {
+    "n": 299,
+    "mean": -0.009252077467655476,
+    "median": -0.011995677293760831,
+    "share_positive": 0.451505016722408,
+    "cohort_t": -0.5964435286987342
+   },
+   "B era 2016-19": {
+    "n": 191,
+    "mean": 0.005138911741515359,
+    "median": 0.001017550093996844,
+    "share_positive": 0.5078534031413613,
+    "cohort_t": 0.6604221069219101
+   },
+   "B era 2020-22": {
+    "n": 99,
+    "mean": -5.4278094755814505e-06,
+    "median": -0.005283950760293754,
+    "share_positive": 0.48484848484848486,
+    "cohort_t": -0.10259387429235017
+   },
+   "B era 2023-25": {
+    "n": 120,
+    "mean": 0.009426317137534066,
+    "median": -0.0019695377618943466,
+    "share_positive": 0.48333333333333334,
+    "cohort_t": 1.6477189054604002
+   },
+   "B era 2002-08, confirmed or unchecked": {
+    "n": 48,
+    "mean": -0.025072728682979373,
+    "median": -0.004864916625468063,
+    "share_positive": 0.5,
+    "cohort_t": -0.30197557056892166
+   },
+   "B era 2009-15, confirmed or unchecked": {
+    "n": 298,
+    "mean": -0.009173723943507872,
+    "median": -0.011721081631305696,
+    "share_positive": 0.45302013422818793,
+    "cohort_t": -0.5896671677444589
+   },
+   "B era 2016-19, confirmed or unchecked": {
+    "n": 190,
+    "mean": 0.004903063719645411,
+    "median": 0.000655779394287237,
+    "share_positive": 0.5052631578947369,
+    "cohort_t": 0.6398728664010638
+   },
+   "B era 2020-22, confirmed or unchecked": {
+    "n": 99,
+    "mean": -5.4278094755814505e-06,
+    "median": -0.005283950760293754,
+    "share_positive": 0.48484848484848486,
+    "cohort_t": -0.10259387429235017
+   },
+   "B era 2023-25, confirmed or unchecked": {
+    "n": 120,
+    "mean": 0.009426317137534066,
+    "median": -0.0019695377618943466,
+    "share_positive": 0.48333333333333334,
+    "cohort_t": 1.6477189054604002
+   }
+  },
+  "hold_60": {
+   "all": {
+    "n": 753,
+    "mean": -0.00311075425505289,
+    "median": -0.01944449153588379,
+    "share_positive": 0.46215139442231074,
+    "cohort_t": 1.2790380918090947
+   },
+   "A vioo confirmed": {
+    "n": 584,
+    "mean": 0.0007249633512117261,
+    "median": -0.017975978701973483,
+    "share_positive": 0.464041095890411,
+    "cohort_t": 1.1416651317100717
+   },
+   "A vioo not confirmed": {
+    "n": 2
+   },
+   "A vioo unchecked": {
+    "n": 167,
+    "mean": -0.015633372643822398,
+    "median": -0.026404894005632285,
+    "share_positive": 0.46107784431137727,
+    "cohort_t": 0.5913850195308478
+   },
+   "A confirmed or unchecked": {
+    "n": 751,
+    "mean": -0.002912642655673359,
+    "median": -0.01944449153588379,
+    "share_positive": 0.4633821571238349,
+    "cohort_t": 1.282426971337261
+   },
+   "C price>=5 and adv>=1M": {
+    "n": 736,
+    "mean": -0.003996257311075112,
+    "median": -0.019830144391659643,
+    "share_positive": 0.46059782608695654,
+    "cohort_t": 0.993268956239478
+   },
+   "C the rest": {
+    "n": 17,
+    "mean": 0.035226319229203384,
+    "median": 0.005432475948463189,
+    "share_positive": 0.5294117647058824,
+    "cohort_t": 0.8415859124165286
+   },
+   "D without best and worst 1%": {
+    "n": 737,
+    "mean": -0.006399738733140285,
+    "median": -0.01944449153588379,
+    "share_positive": 0.46132971506105835,
+    "cohort_t": 0.7719719086760592
+   },
+   "E gone within the window (uses the future)": {
+    "n": 5,
+    "mean": 0.1274513101177975,
+    "median": 0.1519419889518745,
+    "share_positive": 0.8,
+    "cohort_t": 2.0973252236242863
+   },
+   "E traded throughout (uses the future)": {
+    "n": 748,
+    "mean": -0.003983495327063921,
+    "median": -0.020252141219575526,
+    "share_positive": 0.45989304812834225,
+    "cohort_t": 1.192287373116222
+   },
+   "B era 2002-08": {
+    "n": 48,
+    "mean": -0.029347837790827298,
+    "median": -0.05901666608592587,
+    "share_positive": 0.3958333333333333,
+    "cohort_t": 0.22964704132956248
+   },
+   "B era 2009-15": {
+    "n": 299,
+    "mean": -0.010386955128413998,
+    "median": -0.00962071174355783,
+    "share_positive": 0.4816053511705686,
+    "cohort_t": 0.851031478165844
+   },
+   "B era 2016-19": {
+    "n": 191,
+    "mean": 0.010782205030237014,
+    "median": -0.007459657498130268,
+    "share_positive": 0.4816753926701571,
+    "cohort_t": 1.0616519185274675
+   },
+   "B era 2020-22": {
+    "n": 99,
+    "mean": 0.008624410080167122,
+    "median": -0.006912341762565832,
+    "share_positive": 0.47474747474747475,
+    "cohort_t": 0.3298725844786763
+   },
+   "B era 2023-25": {
+    "n": 116,
+    "mean": -0.006389826856992631,
+    "median": -0.05138857160876853,
+    "share_positive": 0.39655172413793105,
+    "cohort_t": 0.05197690709716403
+   },
+   "B era 2002-08, confirmed or unchecked": {
+    "n": 48,
+    "mean": -0.029347837790827298,
+    "median": -0.05901666608592587,
+    "share_positive": 0.3958333333333333,
+    "cohort_t": 0.22964704132956248
+   },
+   "B era 2009-15, confirmed or unchecked": {
+    "n": 298,
+    "mean": -0.009963189297408203,
+    "median": -0.007557933693318586,
+    "share_positive": 0.48322147651006714,
+    "cohort_t": 0.863804652187727
+   },
+   "B era 2016-19, confirmed or unchecked": {
+    "n": 190,
+    "mean": 0.010935448987638223,
+    "median": -0.006593867503762563,
+    "share_positive": 0.4842105263157895,
+    "cohort_t": 1.0547960363357922
+   },
+   "B era 2020-22, confirmed or unchecked": {
+    "n": 99,
+    "mean": 0.008624410080167122,
+    "median": -0.006912341762565832,
+    "share_positive": 0.47474747474747475,
+    "cohort_t": 0.3298725844786763
+   },
+   "B era 2023-25, confirmed or unchecked": {
+    "n": 116,
+    "mean": -0.006389826856992631,
+    "median": -0.05138857160876853,
+    "share_positive": 0.39655172413793105,
+    "cohort_t": 0.05197690709716403
+   }
+  }
+ }
+}
