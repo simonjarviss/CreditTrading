@@ -4900,3 +4900,17 @@ that adds it does not exist when it is written.
 - source: `shadow/nightly.py` @ `9c4409c`; `shadow/tests/test_nightly.py` @ `9c4409c`
 - supports: §5
 - status: current. On branch mission-work; reaches the VM's shadow runner when the branch `shadow` is next pushed
+
+### E-2026-11-19-05 · Result: a stale-NAV gate that needs no second source costs more than the stale NAVs do; the core's gate stays in report mode
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the VM's 38 core plans: the stale-NAV gate runs in `report` mode on every one; no name was held and no decide deferred; from 2026-10-21 to 2026-11-19 (21 plans) every CEFConnect read was an error and 111 of 273 name-days had a NAV dated D equal to the cent to the previous NAV [V]
+  - on the desk's panel (NAV to 2026-10-14) 18.8% of name-days repeat genuinely, so about 21.8% of name-days are assumed stale; an inference from two shares, not a count of confirmed stale rows [V]
+  - canonical harness, 2013-06-25 to 2026-10-14, gross: every NAV current 1.15 (t 4.20); 21.8% of name-days stale at random 1.108 (5th to 95th percentile of 200 draws 0.984 to 1.208), 7.41% a year against 7.60%; every NAV a session old 1.03 [V]
+  - the hold rule: no trade on a genuine repeat alone 1.07; stale and genuine repeats both held 0.990 (0.910 to 1.075); against deciding on stale NAVs -0.118 of Sharpe (-0.239 to +0.008) and -0.70% a year (-1.39% to +0.05%) [V]
+  - the team lead had chosen "gate without a second source"; the measured answer is that the only such rule, holding, loses about 0.7% a year to remove a cost of about 0.2% [V]
+- source: `results/ideas/2026-11-19_nav_stale_gate.md` @ `1f27318`; `results/ideas/nav_stale_gate/explore.py` @ `1f27318`; `quantt/session/nav_gate.py` @ `1f27318`
+- supports: §1, §4
+- status: current. Set aside: nothing built, no spec change. Staleness is drawn at random; if stale copies sit on large NAV moves the cost is higher. One run, not independently reviewed
