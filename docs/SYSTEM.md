@@ -893,6 +893,21 @@ followed a measured comparison of sizing schemes (`EVIDENCE_LOG` E-2026-11-18-04
 | What is built first (2026-11-18) | **The runner's PR to main, then a read-only combined daily report** across the accounts (P&L and risk share by family, factor exposure, trailing correlations once 20 sessions exist) |
 | Not asked, and open | A demotion rule on drawdown (the ladder's -2 sigma stop is the only one); whether the two shadow books outside the seven (`month_end_ief`, `spinoff_first_week`) become sleeves; a replacement second NAV source for the core (E-2026-11-18-03) |
 
+### Team lead, 2026-11-19 — deploy the event sleeves now; the core's cap and the risk target are measured before anything changes
+
+Answered through question prompts on 2026-11-19 (`EVIDENCE_LOG` E-2026-11-19-02). The reader work those prompts
+followed is E-2026-11-18-25 to -28.
+
+| question | ruling |
+|---|---|
+| The ten-clean-session rule for the seven event sleeves (2026-11-18) | **Waived: "waive it, i think deploying is better and we can adjust as eneded".** All seven are armed at their quarter size as soon as the account exists and the release is installed, whatever their session count (at the 2026-11-18 close: 6 and 6 for the two CEF ex-date books, 5 and 5 for the units books, 1 each for the other three [V, `ops.prod_state`]). The ladder itself was not asked about and stands. The rule stays for any book promoted later; `quantt/sleeves/promote.py` still counts it and now reports a waiver nobody coded: read its ten-session line for these seven as information |
+| Where the event sleeves trade, asked again | **"Try a third paper account"**: the 2026-11-16 ruling stands. The team lead opens it in the dashboard and puts its keys in the vault. Asked because the team lead proposed folding C4 into the core's runner to free C4's account; the combiner refuses a sleeve that sets `sizing_multiplier` (both specs do) or `level_signal` (C4's does), and one $100,000 account cannot carry both books at their sizes (1.80x and about 1.23x gross) |
+| The core's gross cap, which scales the book every day since the x1.30 sizing (x0.8207 on the 2026-11-19 plan) and so turns every band hold into a trade | **"Backtest the options first"**: today's order, the band applied after the cap, a higher cap, and smaller multipliers, on the canonical harness. Nothing live changes until the team lead has seen it |
+| Raising an account's risk target "if it gives more return" | **"Measure first, then decide"**, in the same run |
+| Who carries the open pull requests (#87 the reader, #88 the installer and QA fixes, #89 the events runner) | **One session, this one.** They are one integration branch, `events-runner-main` |
+| The investor view of the paper books (2026-11-18) | **The net modelled view is the headline**: closing-auction fills, plus the distributions paper never paid, less a fetched borrow cost; the official record and the gross modelled figure beside it, each labelled |
+| Not asked, and open | Whether the ladder's later stages change with the waiver; the cap and target the measurement will point to; whether Alpaca allows a third paper account at all (`docs/REFERENCES.md` 12pa: not stated) |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |

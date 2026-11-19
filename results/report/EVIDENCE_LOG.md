@@ -5199,3 +5199,19 @@ that adds it does not exist when it is written.
 - source: `quantt/sleeves/run.py` @ `ea26621` (`SCORES_COLUMNS`, `score_rows`); `quantt/sleeves/promote.py` @ `ea26621`; `ops/sleeves/events_sleeves.json` @ `ea26621`; `docs/SYSTEM.md` @ `ea26621` (section 5); `results/ideas/2026-11-15_special_dividends.md` @ `ea26621`
 - supports: §5
 - status: current, not released; the events runner has never been installed, so no score file exists yet. The 15bp figures are an assumption to be replaced by each sleeve's own paper fills against the closing print. The promotion agent's run was cut off by a usage limit after it had written the runner's two tests; the rest was written and tested in the main session
+
+### E-2026-11-19-02 · Ruling: the ten-session rule is waived for the seven event sleeves; they trade in a third paper account the team lead opens; the core's cap and the risk target are backtested before any change
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers, by question prompt: the ten clean sessions "waive it, i think deploying is better and we can adjust as eneded"; the events account "Try a third paper account (Recommended)"; the core's cap "Backtest the options first (Recommended)"; the risk target "Measure first, then decide (Recommended)"; the open pull requests "I take over everything" [V]
+  - shadow sessions at the 2026-11-18 close, scored plus flat: cef_exdate_after 6, cef_exdate_before_after 6, units_exdate_after 5, units_exdate_before_after 5, pead_small_long 1, specdiv_wait 1, specdiv_wait_small 1; none had ten [V]
+  - the core's plan for 2026-11-19 carries the gross cap's mark on all 13 names with a scale factor of 0.8207: the signal asked for about 2.19x gross (1.80 / 0.8207) and the cap took it to 1.80x. The multiplier is 1.30, so about 1.07 of it is delivered (1.30 x 0.8207) [V]
+  - the combiner refuses a budgeted sleeve whose spec sets `sizing_multiplier` or `level_signal`; the core's spec sets the first and C4's sets both, so C4 cannot be netted into the core's account as deployed [V]
+  - the live path on main is the installed tag's: `git diff release-20261116-1 origin/main -- quantt src ops/specs ops/books` is empty at bf0446a [V]
+  - no code changes with the waiver: all seven sleeves are already `enabled` at a quarter of their full size in the book file, and the promotion report is read-only [V]
+- source: `docs/SYSTEM.md` @ `4f5eb83` (section 5, the block dated 2026-11-19, added in the commit that carries this entry); `ops/sleeves/events_sleeves.json` @ `4f5eb83`; `quantt/session/combine.py` @ `4f5eb83`; `ops/prod_state.py` @ `4f5eb83`
+- supports: §5
+- status: current. Nothing is installed or armed for the events book: it waits on the account and its two vault secrets (the team lead), a release that holds `quantt/sleeves/`, and its installer's first run
+
