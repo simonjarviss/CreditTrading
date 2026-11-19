@@ -5229,3 +5229,23 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` @ `4f5eb83` (section 5, the block dated 2026-11-19, added in the commit that carries this entry); `ops/sleeves/events_sleeves.json` @ `4f5eb83`; `quantt/session/combine.py` @ `4f5eb83`; `ops/prod_state.py` @ `4f5eb83`
 - supports: §5
 - status: current. Nothing is installed or armed for the events book: it waits on the account and its two vault secrets (the team lead), a release that holds `quantt/sleeves/`, and its installer's first run
+
+### E-2026-11-19-08 · Rulings and results: the core's cap stays as it is after a backtest of four variants; an all-equal-z session holds and says so; the review of the installed release found no order-path defect; the events waiver is a key in the book file
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers, by question prompt: the core's cap "Leave it as it is (Recommended)"; the vol fallback "Stop and name it (Recommended)", then, once the replay showed when it fires, "Hold, but say so (Recommended)"; the release steps "You prepare, I run them (Recommended)"; pushing the integration branch "Yes, push it (Recommended)" [V]
+  - an independent read-only review of the live path at release-20261116-1 (the sleeve, decide and score read in full; run, gate, verify, collect and dist_score in part): no defect that double-sends, sizes on a wrong denominator or mis-states P&L. Confirmed by running code: with `min_trade_usd` 0 a cap-scaled day orders every held name. Latent: `max_nav_age_bd` cannot fire under the band; the vol scalar's `else 1.0`; `ops/books/*.json` `limits.*` are read by no code [S]
+  - the cap backtest, canonical harness (`band_frontier.build_targets`, `band_gross_capped`, `evaluate`, shift(2)), price-only gross, 2013-06-25 to 2026-10-14, panels to 2026-10-14: deployed (x1.30, cap 1.80) 6.85% a year, vol 5.36%, Sharpe 1.28, turnover 31.7; band after the cap 6.32%, 5.30%, 1.19, 26.1; cap 2.00 6.91%, 5.53%, 1.25; cap 2.20 6.99%, 5.67%, 1.23; x1.00 5.41%; x1.13 6.03%; no cap 7.04% [S]
+  - the same run at 5 / 15 / 30bp a trade, the real-money view: deployed 5.26 / 2.09 / -2.67; band after the cap 5.02 / 2.41 / -1.50. The ranking flips between 5bp and 15bp [S]
+  - its reproduction check on the fit-cut panel (to 2022-12-30) against `results/cef/prereg_voltarget/flatten_exact_output_2026-11-02.txt`: x1.30 3.78% / 0.81 / 8.39% max drawdown / 1.343 gross when held, against the recorded 3.78% / 0.805 / 8.39% / 1.343 [S]
+  - in the backtest the cap binds on 30.7% of held days over the whole period and 50.8% from 2023; over the panel's last 60 full sessions the target gross x 1.30 has a median of 2.23 and is above 1.80 on 98.3% of them [S]
+  - the real-panel replay of the changed sleeve, the core's spec, 750 sessions (2023-10-18 to 2026-10-14): no session raises; the trailing vol is positive on all 749 sessions that reach it (minimum 0.0159); the 750th, 2025-04-07, is the explicit hold (every eligible z at -4.00 on 7 names) [V]
+  - on that day, from a held book of five names, the released sleeve and the changed one return the same five share counts; from a flat book on an opening session the released sleeve returns seven SHORT targets with NaN weights and the changed one opens nothing [V]
+  - `ops/sleeves/events_sleeves.json` gains `promotion_waived: true` on all seven sleeves (optional, may only be true, read by `promote.py` only); `capital_usd`, `enabled` and every limit are unchanged [V]
+  - the vault holds secrets named `alpaca-events-key-id` and `alpaca-events-secret-key`, both enabled (names and the enabled flag read on 2026-11-19; no value read; whether the keys authenticate and the account's balance are not measured) [V]
+- source: `src/deploy/sleeves/cef_discount.py` @ `860d5f3` (the cap block as reviewed; the change is in the commit that carries this entry); `scripts/cef/band_frontier.py` @ `860d5f3`; `quantt/sleeves/config.py` @ `860d5f3`; `quantt/sleeves/promote.py` @ `860d5f3`; `ops/sleeves/events_sleeves.json` @ `860d5f3`; `docs/SYSTEM.md` @ `860d5f3` (section 5, 2026-11-19); the backtest, review and replay scripts are session scratch, not in the repo
+- supports: §5
+- status: current, on branch `events-runner-main`, not merged, tagged or installed. The backtest and the review are each one run by one agent, not independently re-derived. The C4 spec was not replayed (its panel is not on the laptop); its level-signal path already raised on a vol with no ratio
+

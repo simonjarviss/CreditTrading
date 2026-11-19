@@ -31,6 +31,13 @@ are notes and are ignored.
                        the close at no cost, and the team lead sets each one. Absent means
                        "not set", and promote.py then reports that test UNMEASURED; it is
                        never read as zero. The runner reads neither key.
+                       `promotion_waived` is the other optional key, and may only be `true`:
+                       the team lead has waived the ten-clean-session promotion rule for this
+                       sleeve (2026-11-19, for the seven sleeves then listed). promote.py then
+                       says so in place of the edit `enabled: false`. Absent means the rule
+                       applies; `false` is refused, so a waiver is never withdrawn by a value
+                       that reads like a default. The runner does not read it: it trades
+                       every enabled sleeve at `capital_usd`, waiver or not.
   min_order_usd        a net order smaller than this is not sent (re-sizing noise).
   max_gross_x_equity   the book's gross after the plan, as a multiple of account equity;
                        above it every sleeve's target is scaled by one factor.
@@ -55,11 +62,21 @@ from pathlib import Path
 REQUIRED = ("book", "sleeves", "min_order_usd", "max_gross_x_equity", "max_name_usd",
             "max_stale_sessions", "max_orders", "execution")
 SLEEVE_KEYS = ("slug", "family", "full_capital_usd", "backtest_vol_annual", "capital_usd", "enabled")
-OPTIONAL_SLEEVE_KEYS = ("modelled_fill_cost_bp",)   # absent = not set; see the docstring
+OPTIONAL_SLEEVE_KEYS = ("modelled_fill_cost_bp", "promotion_waived")   # absent = not set; see the docstring
 
 
 class ConfigError(ValueError):
     """The sleeves book file cannot be used; the message names the file and the key."""
+
+
+def _waived(path, i: int, s: dict) -> bool:
+    """`promotion_waived`: absent -> False; present -> must be exactly true."""
+    if "promotion_waived" not in s:
+        return False
+    if s["promotion_waived"] is not True:
+        raise ConfigError(f"{path}: sleeves[{i}].promotion_waived is {s['promotion_waived']!r}; it may only be "
+                          f"true (the team lead's waiver of the ten-session rule). Delete the key to apply the rule")
+    return True
 
 
 @dataclass(frozen=True)
@@ -71,6 +88,7 @@ class Sleeve:
     family: str               # the idea this sleeve is a variant of; read by reports only
     backtest_vol_annual: float            # a fraction a year; the ladder's sigma; reports only
     modelled_fill_cost_bp: float | None   # None = the key is absent (not set); reports only
+    promotion_waived: bool = False        # True only when the key is present and true; reports only
 
 
 @dataclass(frozen=True)
@@ -145,7 +163,8 @@ def load(path: Path) -> Config:
                               _num(path, f"sleeves[{i}].full_capital_usd", s["full_capital_usd"]), family,
                               _num(path, f"sleeves[{i}].backtest_vol_annual", s["backtest_vol_annual"]),
                               (_num(path, f"sleeves[{i}].modelled_fill_cost_bp", s["modelled_fill_cost_bp"], positive=False)
-                               if "modelled_fill_cost_bp" in s else None)))
+                               if "modelled_fill_cost_bp" in s else None),
+                              _waived(path, i, s)))
     ex = raw["execution"]
     if not isinstance(ex, dict) or ex.get("mode") != "late_market":
         raise ConfigError(f"{path}: execution.mode must be 'late_market' (the only mode built; paper only)")

@@ -791,6 +791,8 @@ def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
     assert {s.slug: s.modelled_fill_cost_bp for s in cfg.sleeves} == {
         "specdiv_wait_small": 13.5, "specdiv_wait": 7.0, "cef_exdate_after": 15.0, "cef_exdate_before_after": 15.0,
         "units_exdate_after": 15.0, "units_exdate_before_after": 15.0, "pead_small_long": 15.0}
+    # team lead, 2026-11-19: the ten-session promotion rule is waived for all seven
+    assert all(s.promotion_waived for s in cfg.sleeves)
     assert (cfg.min_order_usd, cfg.max_gross_x_equity, cfg.max_name_usd, cfg.max_stale_sessions, cfg.max_orders,
             cfg.window_minutes_before_close) == (25, 1.5, 50000, 2, 300, (20, 2))
     # the shared IWM hedge at this stage fits under max_name_usd: pead 100%, each special-dividend book 50%

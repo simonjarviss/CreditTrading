@@ -79,6 +79,13 @@ def test_the_backtest_vol_is_required_and_the_modelled_cost_is_the_one_optional_
     for bad in (-1, None, "10", True):
         with pytest.raises(config.ConfigError, match="modelled_fill_cost_bp"):
             cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "modelled_fill_cost_bp": bad}])
+    # `promotion_waived` (team lead's waiver, 2026-11-19): absent is False, true is True, and
+    # anything else is refused, so a waiver is never switched off by a value that reads like a default
+    assert a.promotion_waived is False
+    assert cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "promotion_waived": True}]).sleeve("a").promotion_waived is True
+    for bad in (False, "true", 1, None):
+        with pytest.raises(config.ConfigError, match="promotion_waived"):
+            cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "promotion_waived": bad}])
     with pytest.raises(config.ConfigError, match="exactly the keys"):
         cfg(tmp_path, sleeves=[{**BOOK["sleeves"][0], "sigma": 0.1}])
 

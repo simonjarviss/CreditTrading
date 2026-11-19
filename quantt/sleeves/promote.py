@@ -397,10 +397,11 @@ def sleeve_report(sleeve, rows_by_slug, shadow: dict, shadow_state: Path, events
            "full_capital_usd": sleeve.full_capital_usd, "capital_usd": sleeve.capital_usd, "stage_in_file": stage,
            "backtest_vol_annual": sleeve.backtest_vol_annual, "modelled_fill_cost_bp": sleeve.modelled_fill_cost_bp,
            "shadow_clean_streak": shadow.get("clean_streak"), "shadow_eligible": shadow.get("eligible"),
+           "promotion_waived": sleeve.promotion_waived,
            "edits": [], "missing": []}
     if isinstance(rows_by_slug, Unreadable):
         out.update(position_sessions=None, verdict=UNMEASURED, missing=[str(rows_by_slug)])
-        if shadow.get("eligible") is False and sleeve.enabled:
+        if shadow.get("eligible") is False and sleeve.enabled and not sleeve.promotion_waived:
             out["missing"].append(f"its shadow book has {shadow['clean_streak']} of {CLEAN_SESSIONS_TO_PROMOTE} "
                                   "clean sessions: if this sleeve has never held a position, the edit due is "
                                   f"\"enabled\": false for {sleeve.slug}")
@@ -462,7 +463,13 @@ def sleeve_report(sleeve, rows_by_slug, shadow: dict, shadow_state: Path, events
                 if stage != due:
                     out["edits"].append(f"\"capital_usd\": {out['capital_due']!r} for {sleeve.slug} (now {sleeve.capital_usd!r})")
     # ---- the promotion gate, for a sleeve that has never held a position
-    if T == 0 and sleeve.enabled:
+    # WAIVED (team lead, 2026-11-19, for the seven sleeves then listed): the book file's
+    # `promotion_waived: true` means the sleeve trades whatever its shadow book's streak, so no
+    # edit is due and an unmeasured shadow record is not a gap in THIS sleeve's verdict. The
+    # streak is still shown (`shadow_clean_streak`), as information.
+    if T == 0 and sleeve.enabled and sleeve.promotion_waived:
+        out["promotion"] = "ten-session rule waived by the team lead (book file: promotion_waived)"
+    elif T == 0 and sleeve.enabled:
         if not shadow.get("measured"):
             out["missing"].append(f"promotion gate: {shadow.get('why', 'no shadow record')}")
         elif not shadow["eligible"]:

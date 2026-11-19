@@ -26,13 +26,14 @@ def weekdays(n, start=dt.date(2026, 1, 5)):
     return out
 
 
-def book_file(tmp_path, capital=FULL / 4, enabled=True, full=FULL, cost_bp=None, vol=0.1):
+def book_file(tmp_path, capital=FULL / 4, enabled=True, full=FULL, cost_bp=None, vol=0.1, waived=False):
     p = tmp_path / "events_sleeves.json"
     p.write_text(json.dumps({
         "book": "events", "min_order_usd": 25, "max_gross_x_equity": 1.5, "max_name_usd": 50000,
         "max_stale_sessions": 2, "max_orders": 300, "execution": EXEC,
         "sleeves": [{"slug": "a", "family": "f", "full_capital_usd": full, "capital_usd": capital,
                      "backtest_vol_annual": vol, "enabled": enabled,
+                     **({"promotion_waived": True} if waived else {}),
                      **({} if cost_bp is None else {"modelled_fill_cost_bp": cost_bp})}]}))
     return p
 
@@ -402,6 +403,19 @@ def test_a_sleeve_holding_an_unmarked_name_still_counts_and_its_pnl_is_unmeasure
 
 
 # ------------------------------------------------------------------ the promotion gate on a listed sleeve
+
+def test_a_waived_sleeve_is_not_told_to_disable_and_says_it_is_waived(tmp_path):
+    """Team lead, 2026-11-19: the ten-session rule is waived for the seven listed sleeves. Before
+    the key existed the report printed `"enabled": false` as the edit due for every one of them."""
+    sh = shadow_state(tmp_path, 3)
+    ev = events_state(tmp_path, 0)
+    s = pm.build(book_file(tmp_path, waived=True), sh, ev)["sleeves"][0]
+    assert s["promotion_waived"] is True and s["shadow_clean_streak"] == 3
+    assert not any("enabled" in e for e in s["edits"]) and "waived" in s["promotion"]
+    assert s["verdict"] == pm.AGREE
+    same = pm.build(book_file(tmp_path, waived=False), sh, ev)["sleeves"][0]
+    assert same["verdict"] == pm.CHANGE and same["edits"][0].startswith('"enabled": false for a')
+
 
 def test_an_enabled_sleeve_that_never_traded_and_whose_book_is_not_eligible_must_be_disabled(tmp_path):
     rep = report(tmp_path, shadow_n=9, held=0)
