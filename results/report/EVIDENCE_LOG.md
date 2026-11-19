@@ -5115,3 +5115,17 @@ that adds it does not exist when it is written.
 - source: `quantt/sleeves/promote.py` @ `beefe1f`; `quantt/sleeves/tests/test_promote.py` @ `beefe1f`; `quantt/sleeves/config.py` @ `beefe1f`; `ops/sleeves/events_sleeves.json` @ `beefe1f`; `quantt/sleeves/deploy/README.md` @ `beefe1f` (open items, and the table of what each card supports); `docs/SYSTEM.md` @ `beefe1f` (section 5, the block dated 2026-11-16 and 2026-11-18)
 - supports: §5
 - status: current, on branch `sleeve-promotion`, not merged and not released. Open: a per-session `capital_usd` column in `sleeve_scores.csv`, a change to the order path that needs its own PR and release before the first sleeve reaches 20 position sessions; the team lead's `modelled_fill_cost_bp` for each sleeve; whether a cross inside the account counts as dollars traded (the report counts it); the backtest volatilities are from one unreviewed run
+
+### E-2026-11-19-01 · Ruling: the events runner records the capital each sleeve was sized from, each sleeve has a modelled fill cost, and only market fills earn the allowance; both ladder tests are now computed
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers: the capital column "Yes, add it now"; the modelled cost "Card figures where measured, 15bp elsewhere"; netted trades "No, only real fills" [V]
+  - runner: PLAN writes each sleeve's `capital_usd` (the config value its targets were sized from) into `plan.json`, inside `record_sha`; VERIFY copies it to a new last column of `sleeve_scores.csv`; an empty cell for the book row and for a sleeve the plan did not list. Nothing in planning, netting, the gates, the send or the ledger changed. Two new tests fail on `4ad01d0` [V]
+  - book file: `modelled_fill_cost_bp` 13.5 for specdiv_wait_small and 7 for specdiv_wait, half the closing spreads measured on their card (0.27% and 0.14%); 15 for the other five, an assumption [S]
+  - report: the shadow book's P&L is put in the sleeve's dollars session by session with the capital carried into that session; the allowance is 2 x the modelled cost on market fills only; 20 to 59 position sessions now end in PASS (a half) or FAIL (a quarter) and 60 on in full, half or stopped. On synthetic state: a $125 shortfall on $12,500 of fills passes at 50bp and fails at 49bp; a sleeve whose trades were all crossed fails at any cost; at $20,000 and 10% a year over 60 sessions the band is $975.90 [V]
+  - an empty capital cell, a missing booked `verify.json` or a shadow decision with no notional leaves the verdict UNMEASURED, naming the date or file; nothing is read from today's book file in its place [V]
+- source: `quantt/sleeves/run.py` @ `ea26621` (`SCORES_COLUMNS`, `score_rows`); `quantt/sleeves/promote.py` @ `ea26621`; `ops/sleeves/events_sleeves.json` @ `ea26621`; `docs/SYSTEM.md` @ `ea26621` (section 5); `results/ideas/2026-11-15_special_dividends.md` @ `ea26621`
+- supports: §5
+- status: current, not released; the events runner has never been installed, so no score file exists yet. The 15bp figures are an assumption to be replaced by each sleeve's own paper fills against the closing print. The promotion agent's run was cut off by a usage limit after it had written the runner's two tests; the rest was written and tested in the main session
