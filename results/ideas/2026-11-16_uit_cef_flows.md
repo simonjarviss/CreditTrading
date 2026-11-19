@@ -303,3 +303,40 @@ the book's first price fetch.
   on 11-16 and 11-17, when no date is in the window. No return was read. The full nightly run
   was not tried: it needs the Alpaca data key for the exchange calendar and the marks.
 
+## Out of sample: 2026 (run 2026-11-19, `results/ideas/uit_cef_flows/oos_2026.py`)
+
+The idea's data ended 2025-12-31 and the rule was committed (`96b05ff`) before any 2026 price was fetched. This is the
+first read of 2026: all 64 termination sessions from 2026-01-02 to 2026-11-12 in the committed calendar (112 trusts),
+2,142 eligible fund-events on 228 funds, a median of 31.5 funds a session. Eligibility is the committed signal's own
+(`_targets`), not re-implemented. Yahoo prices to 2026-11-18, total returns. Measures were fixed in the script's
+docstring before any 2026 return was read; one observation per termination session [V].
+
+| measure, fund less control funds | mean | median | sessions positive | t (64 sessions) | in sample |
+|---|---:|---:|---:|---:|---|
+| **T+1..T+3, the trade** | **+42.6bp** | +34.8bp | 86% | 6.28 | +33bp, 77% |
+| same, less PCEF | +43.5bp | +41.4bp | 78% | 6.56 | |
+| T+1 alone | +33.3bp | +26.2bp | 92% | 8.41 | +19.8bp |
+| T−9..T, the selling window | −32.6bp | −35.4bp | 28% | −1.44 | −39.9bp |
+| the same trade a day late (T+2..T+4) | +12.6bp | +4.9bp | 56% | 1.99 | +13bp |
+
+- **It held, and was larger than in sample.** Both halves of the year are positive (+50.2bp, +35.0bp) and so is every
+  month (from +12.7bp in June to +78.0bp in May).
+- **The day-late figure matches the review's:** enter one session late and about 13bp is left. The fill at T's own
+  close is still the whole trade, and nothing here shows that fill can be had.
+- **Placebos, added after the first run and labelled so:** the same funds 20 sessions later −6.0bp (t −0.96, 48% of
+  sessions positive); 30 sessions earlier +41.3bp in the mean but −3.4bp in the median, t 1.03, 44% positive, i.e.
+  noise with a few large sessions. Without the ten best sessions the trade's mean is +24.8bp.
+- **The two committed books**, decide t, fill t+1 close, earn from t+2, long only and unhedged, invested on 151 of 225
+  sessions: all events +25.6% over the period (+17.0bp a day when invested, 60% of invested days up, worst day
+  −210bp); big sales only +28.1% (+18.6bp, 63%). Raw T+1..T+3 was +59.1bp, so about 16bp of the trade's raw return
+  was the closed-end-fund market rising in 2026: the book is long the market while it holds. Ten months: no Sharpe.
+
+**What this does not show.** (1) Whether an order gets T's closing price: Yahoo has no closing quotes, and the review
+put the in-sample spread near 19bp against this edge. (2) 38 of the 272 calendar funds have no Yahoo price (merged or
+renamed funds, mostly municipal); they are excluded, which leans toward survivors. (3) The control is the calendar's
+own funds with no termination within 15 sessions (a median of 80), not the whole closed-end-fund market. (4) One
+fix after the first run: Yahoo returned the unfinished session of 2026-11-19, which was dropped; no per-event figure
+changed. (5) One run in the main session, not independently reviewed.
+
+**Status after this:** the strongest idea the desk has tested: it survived an adversarial review in sample and a clean
+out-of-sample year. The open question is execution, and only paper fills at the close can answer it.
