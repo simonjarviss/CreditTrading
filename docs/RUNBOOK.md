@@ -1209,7 +1209,7 @@ docstrings give the reasons).
 | job | unit | when (Mon-Fri, local) | writes |
 |---|---|---|---|
 | data QA per book | `quantt-{cef,c4}-dataqa` | 21:45 cef, 21:50 c4 (after the :40 collect, before the 22:00 decide) | `<state>/reports/data_qa/<date>.{md,json}` |
-| risk per account | `quantt-{cef,c4}-risk` | 22:15 cef, 22:20 c4 (after the decide) | `<state>/reports/risk/<date>.{md,json}` |
+| risk per account | `quantt-{cef,c4}-risk` | **05:45 cef, 05:50 c4, Tue-Sat, for the session before** (after the pnl job, before the 06:00 session slot; until release-20261116-1: 22:15 and 22:20 the same evening) | `<state>/reports/risk/<date>.{md,json}` |
 
 These times are clear of every runner slot (session :00/:30, collect :10/:40,
 send, verify 17:30), and the units cannot overrun into the next one:
@@ -1273,7 +1273,7 @@ risk), one job per book:
 
 | job | unit | when (Mon-Fri, local) | writes |
 |---|---|---|---|
-| P&L attribution and factor readout | `quantt-{cef,c4}-pnl` | 20:30 cef, 20:35 c4 (after the 20:00 EOD stamp, clear of the 21:40 collect) | `<state>/reports/pnl/<date>.{md,json}` (and its fetch cache `<state>/reports/pnl/_cache/`, the account's fills and equity, and yfinance's own SQLite caches `<state>/reports/pnl/_yf_cache/`; all outside git) |
+| P&L attribution and factor readout | `quantt-{cef,c4}-pnl` | **05:15 cef, 05:20 c4, Tue-Sat, for the session before** (team lead, 2026-11-19: Alpaca published the EOD point between 03:10 and 03:40 ET on each night measured, so the 20:30/20:35 runs of release-20261116-1 reported the day before) | `<state>/reports/pnl/<date>.{md,json}` (and its fetch cache `<state>/reports/pnl/_cache/`, the account's fills and equity, and yfinance's own SQLite caches `<state>/reports/pnl/_yf_cache/`; all outside git) |
 
 What it reports, per book, for the session just closed and cumulative from the book's
 first trade (read from the account's own fills, never written anywhere): official P&L
