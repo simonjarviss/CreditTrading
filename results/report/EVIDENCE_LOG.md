@@ -4413,3 +4413,18 @@ that adds it does not exist when it is written.
 - source: `scripts/ops/data_qa.py` @ `4098634` (`q9_second_source`); `scripts/ops/tests/test_data_qa.py` @ `4098634`; `docs/DATA.md` @ `4098634`; `docs/REFERENCES.md` @ `4098634` (today's row); `results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md` @ `8cac532` (the shortlist of replacement sources)
 - supports: §1, §5
 - status: current, not released. The book still decides on one NAV source (Yahoo). The replacement second source is the team lead's choice from the 2026-10-19 shortlist; changing how the fetcher looks to the site is ruled out there. Not determined: whether the 21:45 QA job always finds the 21:40 collect's report for the as-of day (if not, Q9 says UNMEASURED and names the file)
+
+### E-2026-11-19-02 · Ruling: the P&L and risk reports move to the morning after the session, because Alpaca publishes the end-of-day point in the small hours and the evening runs reported the day before
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - first night of the report jobs on release-20261116-1 (2026-11-18): all six ran and exited 0; both pnl reports were titled "READ AT THE CLOSE OF 2026-11-17, NOT 2026-11-18", status PARTIAL, and both risk reports' drawdown blocks read UNMEASURED on the 2026-11-17 row [V]
+  - when the point arrives: the core collector's run failed at 03:10 New York and the next finished at 03:40 on 2026-11-19, and `eod_equity.csv`'s read time is 08:40 UTC (03:40 New York) on the rows for 2026-11-16, -17 and -18: three nights, no exception [V]
+  - the same wait is why each collector unit shows failed from the 17:10 run to the 03:10 run every night, about twenty times [V]
+  - official P&L for 2026-11-18, read on 2026-11-19: core +77.39 USD to 99,872.85; C4 -550.40 USD to 99,089.10 [V]
+  - the team lead's answer: "Move both to ~05:15-05:50 ET" [V]
+  - built: pnl at 05:15 (core) and 05:20 (C4), risk at 05:45 and 05:50, Tuesday to Saturday; data QA unchanged at 21:45 and 21:50 on session days. The reports already choose the previous session before 16:45, so no report script's logic changed. The morning kinds have their own timer template; the installer's value check was not widened [V]
+- source: `quantt/deploy/install_vm.py` @ `5092b4b` (`REPORT_SCHEDULE`, `REPORT_WEEKDAYS`); `quantt/deploy/templates/systemd/quantt-report-morning.timer.tmpl` @ `5092b4b`; `quantt/deploy/tests/test_install_vm_reports.py` @ `5092b4b`; `docs/RUNBOOK.md` @ `5092b4b` (8.11, 8.12)
+- supports: §1, §5
+- status: current, not released: the VM still runs the evening times until the next release is installed with `--reports`. Alpaca documents no publication time; three nights is the whole evidence, and a later point would show in the report's title as it did on 2026-11-18. Many notes inside `pnl_report.py` and `risk_daily.py` still describe the 20:30 and 22:15 runs they were written for
