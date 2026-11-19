@@ -70,8 +70,33 @@ small enough that it does not justify paying for one or weakening the free-data 
 - Gross. Holding trades less (turnover 19.9 against 22.8), so a cost per trade would narrow the gap: at 15bp on the
   2.9 difference that is about 0.04% a year, far less than the 0.70%.
 
+## The caveat, tested the same day (`checks.py`; asked by the team lead)
+
+Do stale copies sit on big NAV moves? Each fund-day the VM's gate checked (325, as-of 2026-10-14 to 2026-11-18) was
+set against Yahoo's NAV for that date fetched on 2026-11-19 (last date 2026-11-18). A repeat that Yahoo has since
+changed by more than half a cent is a confirmed stale copy; one it has not is a genuine repeat. The rule was written
+in the script before any move was read [V].
+
+| kind | fund-days | share | mean abs NAV move | median |
+|---|---:|---:|---:|---:|
+| fresh | 199 | 61.2% | 37.0bp | 23.9bp |
+| confirmed stale | 81 | 24.9% | 30.9bp | 23.7bp |
+| genuine repeat | 45 | 13.8% | 0 | 0 |
+
+- **No clustering.** Stale fund-days have, if anything, slightly smaller true moves than fresh ones. Within the same
+  session, stale less fresh is −0.45bp (t −0.12 across 21 sessions, positive on 57%). Of the largest tenth of moves
+  (73bp and up), 21% were stale against 25% overall.
+- **The stale share is now a count, not an inference:** 81 of 325 fund-days, 24.9%, against the 21.8% assumed above.
+  Three fund-days that were not repeats were also revised by Yahoo later (a different defect, not counted as stale).
+- **The cost restated with stale days drawn by the measured share in each move quintile** (9%, 23%, 32%, 38%, 22%,
+  and never on a NAV that did not move), 200 draws: Sharpe 1.097 (0.976 to 1.185) and 7.34% a year, against 1.152 and
+  7.60% with every NAV current. About **0.26% a year**, close to the 0.2% from random draws.
+
+So the conclusion stands: the stale copies are ordinary lateness, they cost about a quarter of a percent a year gross,
+and holding repeated NAVs would cost about three times that. A confirmed stale copy is a lower bound: a row Yahoo
+never corrected looks genuine here.
+
 ## What would reopen it
 
-A confirmed list of stale name-days (the VM's `nav_gate` checks from 2026-10-15 to -20, when CEFConnect still
-answered, plus any later correction of Yahoo's rows) showing that stale copies sit on large NAV moves; or a second
-source that costs nothing.
+A second source that costs nothing; or a longer record (this one is 21 sessions) in which stale copies do sit on
+large NAV moves.
