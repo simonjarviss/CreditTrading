@@ -678,6 +678,11 @@ assert not set(_PLAN_PY) & set('$`"'), "the plan summary must survive double quo
 # positions and all, off the VM by hand. Counts and totals answer it; no symbol,
 # quantity or per-name weight leaves the machine. A held name with no close in
 # the plan makes gross and net null, never a partial sum.
+# `gross_cap_bound` counts the names whose reason carries the sleeve's own mark
+# that the gross cap scaled the book that day (`gmax=1.8000*x0.97`): when it
+# does, the sleeve turns every band HOLD into a trade (cef_discount.py, "THE
+# BAND'S HOLDS BECOME TRADES WHEN THIS BINDS"), which is why a book at its cap
+# sends an order in every name every day.
 _SHAPE_PY = """import json, os, sys
 s = sys.argv[1]
 ds = sorted(d for d in os.listdir(s) if d[:2] == '20'
@@ -695,6 +700,7 @@ else:
         k = ' '.join(''.join(ch if ch.isalpha() else ' ' for ch in k).split())[:48]
         why[k] = why.get(k, 0) + 1
     held = {k: v['current'] for k, v in t.items() if v.get('current')}
+    capped = sum(1 for v in t.values() if '*x' in str(v.get('reason') or '').split('gmax=')[-1].split(' ')[0])
     moves = sum(1 for v in t.values() if v.get('target') != v.get('current'))
     priced = all(isinstance(c.get(k), (int, float)) for k in held)
     eq = p.get('equity')
@@ -702,6 +708,7 @@ else:
                       'held': len(held), 'long': sum(1 for q in held.values() if q > 0),
                       'short': sum(1 for q in held.values() if q < 0),
                       'target_differs': moves,
+                      'gross_cap_bound': capped,
                       'gross_usd': round(sum(abs(q) * c[k] for k, q in held.items()), 2) if priced else None,
                       'net_usd': round(sum(q * c[k] for k, q in held.items()), 2) if priced else None,
                       'equity': eq if isinstance(eq, (int, float)) else None,
@@ -765,6 +772,130 @@ def vm_script(books: tuple = OTHER_VM_BOOKS) -> str:
     return REMOTE_SCRIPT + "".join(remote_script(b, prefix=f"{b}.") for b in books)
 
 
+# ------------------------------------------------------- the shadow books --
+# The shadow books (team lead 2026-11-09, docs/SYSTEM.md section 5) are SIMULATED
+# books: no broker account, no orders, scored nightly on the VM by their own user
+# from a clone that follows a branch. These three names are
+# `shadow/deploy/install_shadow_vm.sh`'s (SVC_USER, STATE, the timer it writes);
+# ops/tests/test_prod_state.py reads that script and fails if they drift apart.
+SHADOW_USER = "quantt-shadow"
+SHADOW_STATE = f"/home/{SHADOW_USER}/shadow_state"
+SHADOW_TIMER = "quantt-shadow.timer"
+# Each book's scores.csv, SUMMARISED ON THE VM to counts and sums by its own
+# header (`shadow/engine.py` SCORE_FIELDS): sessions by status, the first and last
+# date, the summed price-only and total-return P&L over the SCORED rows, and the
+# last row's gross. WHY SUMMARISED THERE (team lead 2026-11-18, "add them like
+# C4"): aggregates may leave the VM, per-name weights may not (docs/SYSTEM.md
+# section 5, 2026-11-03), and a summary cannot carry a weight. A blank total on
+# a SCORED row is the engine's own stated gap (no dividend column); it is counted
+# in `total_gaps` and the total is then null, never the price line under another
+# name. A row that will not parse is an error naming the book and the line.
+_SHADOW_PY = """import csv, json, os, sys
+s = sys.argv[1]
+out = {}
+for slug in sorted(os.listdir(s)) if os.path.isdir(s) else []:
+    p = os.path.join(s, slug, 'scores.csv')
+    if not os.path.isfile(p):
+        continue
+    try:
+        st, price, total, gaps, first, last, gross = {}, 0.0, 0.0, 0, None, None, None
+        with open(p, newline='', encoding='utf-8') as fh:
+            rd = csv.DictReader(fh)
+            need = ('date', 'status', 'pnl_price_usd', 'pnl_total_usd', 'gross')
+            miss = [c for c in need if c not in (rd.fieldnames or [])]
+            if miss:
+                raise ValueError('scores.csv has no column ' + ', '.join(miss))
+            for i, r in enumerate(rd, start=2):
+                if None in r or None in r.values():
+                    raise ValueError('scores.csv line %d is not a whole row' % i)
+                st[r['status']] = st.get(r['status'], 0) + 1
+                first = first or r['date']
+                last, gross = r['date'], r['gross']
+                if r['status'] == 'SCORED':
+                    price += float(r['pnl_price_usd'])
+                    if r['pnl_total_usd'] == '':
+                        gaps += 1
+                    else:
+                        total += float(r['pnl_total_usd'])
+        out[slug] = {'status': dict(sorted(st.items())), 'first': first, 'last': last,
+                     'pnl_price_usd': round(price, 2),
+                     'pnl_total_usd': None if gaps else round(total, 2),
+                     'total_gaps': gaps, 'last_gross': gross}
+    except Exception as e:
+        out[slug] = {'error': type(e).__name__ + ': ' + str(e)[:160]}
+print(json.dumps({'state': os.path.isdir(s), 'books': out}, separators=(',', ':')))
+"""
+assert not set(_SHADOW_PY) & set('$`"\\'), "the shadow summary must survive double quotes"
+SHADOW_SCRIPT = (r"""q shadow.timer sh -c "systemctl is-active @T@; systemctl is-enabled @T@"
+qw shadow.books sudo -n -u @U@ python3 -I -c "@PY@" @S@
+printf 'shadow.END\t0\tquantt-prod-state\n'
+""".replace("@PY@", _SHADOW_PY).replace("@T@", SHADOW_TIMER)
+   .replace("@U@", SHADOW_USER).replace("@S@", shlex.quote(SHADOW_STATE)))
+
+
+def _shadow_from_readings(got: dict, alias: str) -> dict:
+    """The shadow books' reading. Never part of the prod verdict: nothing here
+    can send an order, so there is nothing to arm."""
+    where = f"{alias}:{SHADOW_STATE}"
+    out = {"where": where, "label": "SIMULATED"}
+    if "shadow.END" not in got:
+        return {**out, UNMEASURED: f"ssh {alias}: the reply has no shadow.END line, so the "
+                                   f"shadow reading was cut short or never ran"}
+    rc, v = got.get("shadow.timer", (None, None))
+    words = (v or "").split()
+    out["timer"] = (_val({"active": words[0], "enabled": words[1]}) if len(words) == 2 else
+                    _unm(f"`systemctl is-active/is-enabled {SHADOW_TIMER}` exited {rc}: {scrub(v or '')}"))
+    rc, v = got.get("shadow.books", (None, None))
+    if rc != 0 or not v:
+        out["books"] = _unm(f"`sudo -n -u {SHADOW_USER} python3` summary exited {rc}: {scrub(v or '')}")
+        return out
+    try:
+        raw = json.loads(v)
+    except json.JSONDecodeError:
+        out["books"] = _unm(f"the shadow summary ({len(v)} chars) is not JSON: {scrub(v)[:120]}")
+        return out
+    if not isinstance(raw, dict) or not isinstance(raw.get("books"), dict):
+        out["books"] = _unm("the shadow summary is not the expected object")
+    elif raw.get("state") is not True:
+        out["books"] = _absent(f"no {SHADOW_STATE} on the VM")
+    else:
+        out["books"] = _val({k: ({UNMEASURED: f"{where}/{k}/{scrub(str(b['error']))}"}
+                                 if isinstance(b, dict) and "error" in b else b)
+                             for k, b in raw["books"].items()})
+    return out
+
+
+def shadow_lines(sh: dict | None) -> list:
+    """(label, text) pairs for the renderer: one line per shadow book."""
+    if not isinstance(sh, dict):
+        return []
+    head = "VM shadow books  (SIMULATED)"
+    if UNMEASURED in sh:
+        return [(head, f"UNMEASURED — {sh[UNMEASURED]}")]
+    t = sh.get("timer") or {}
+    lines = [(head, (f"{SHADOW_TIMER} {t['value']['active']}/{t['value']['enabled']}" if "value" in t
+                     else f"timer {show(t)}") + "; no broker account, no orders; price-only "
+                     "P&L on each book's own notional, total return beside it")]
+    b = sh.get("books") or {}
+    if "value" not in b:
+        return lines + [("  books", show(b))]
+    if not b["value"]:
+        return lines + [("  books", "none has a scores.csv yet")]
+    for slug, r in b["value"].items():
+        if UNMEASURED in r:
+            lines.append((f"  {slug}", f"UNMEASURED — {r[UNMEASURED]}")); continue
+        st = r.get("status") or {}
+        tot = r.get("pnl_total_usd")
+        lines.append((f"  {slug}", f"{r.get('first')} to {r.get('last')}: "
+                      + ", ".join(f"{n} {k}" for k, n in st.items())
+                      + f"; price-only {'-' if r['pnl_price_usd'] < 0 else '+'}${abs(r['pnl_price_usd']):,.2f}"
+                      + (f", total return UNMEASURED on {r.get('total_gaps')} scored session(s)"
+                         if tot is None else
+                         f", total return {'-' if tot < 0 else '+'}${abs(tot):,.2f}")
+                      + f"; last gross {r.get('last_gross')}"))
+    return lines
+
+
 def ssh_alias_present(alias: str, config: Path) -> bool:
     """Is there a `Host` line naming exactly this alias? Patterns are not
     expanded: the runbook sets the alias up by name, and a wildcard that
@@ -783,7 +914,7 @@ def vm_unmeasured(why: str, alias: str = VM_ALIAS) -> dict:
 
 def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
        timeout: float = VM_TIMEOUT_S, run: Run | None = None,
-       books: tuple = OTHER_VM_BOOKS) -> dict:
+       books: tuple = OTHER_VM_BOOKS, shadow: bool = True) -> dict:
     """The VM prod (systemd), read over ONE ssh call with a hard time budget.
 
     Only when `~/.ssh/config` names the alias: without it there is no
@@ -813,7 +944,7 @@ def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
 
     cmd = ["ssh", "-o", "BatchMode=yes", "-o", f"ConnectTimeout={SSH_CONNECT_TIMEOUT_S}",
            alias, "sh -s"]
-    r, why = _call(run, cmd, timeout, input=vm_script(books))
+    r, why = _call(run, cmd, timeout, input=vm_script(books) + (SHADOW_SCRIPT if shadow else ""))
     if why:
         return vm_unmeasured(why, alias)
     if r.returncode == 255:
@@ -839,6 +970,8 @@ def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
         else:
             out["books"][b] = _vm_from_readings(
                 {k[len(pre):]: v for k, v in got.items() if k.startswith(pre)}, alias, b)
+    if shadow:
+        out["shadow"] = _shadow_from_readings(got, alias)
     return out
 
 
@@ -1109,9 +1242,12 @@ def shape_text(r: dict | None) -> str:
              f"gross ${g:,.2f}" + (f" = {g / eq:.2f}x the plan's equity" if eq else "")
              + f", net {'-' if net < 0 else '+'}${abs(net):,.2f}")
     why = ", ".join(f"{k} {c}" for k, c in (n.get("why") or {}).items()) or "none"
+    cap = n.get("gross_cap_bound")
+    cap_text = ("" if cap is None else "; gross cap not binding" if not cap else
+                f"; GROSS CAP BINDING on {cap} name(s), so no band hold survives")
     return (f"{n.get('names')} name(s), {n.get('held')} held ({n.get('long')} long, "
             f"{n.get('short')} short); {money}; {n.get('target_differs')} target(s) differ "
-            f"from holdings; reasons: {why}")
+            f"from holdings{cap_text}; reasons: {why}")
 
 
 def pnl_files_text(r: dict | None) -> str:
@@ -1160,6 +1296,8 @@ def render_lines(d: dict, p: Callable[[str, str], None]) -> None:
         _render_vm_book(p, b, f"VM book {name}", clone=False)
         for c in b.get("cautions") or []:
             p("  caution", c)
+    for label, text in shadow_lines(v.get("shadow")):
+        p(label, text)
     vd = d["verdict"]
     for c in vd.get("cautions") or []:
         p("  caution", c)

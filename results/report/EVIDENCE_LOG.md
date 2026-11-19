@@ -4420,3 +4420,22 @@ that adds it does not exist when it is written.
 - source: `ops/orient.py` (`close_model`), `ops/prod_state.py` (`PNL_FILES`) on branch `ops-prod-state-books`; `quantt-vm:/home/quantt/quantt_state/{cef,c4}/scores.csv` and `eod_equity.csv`, read 2026-11-18
 - supports: §5
 - status: current. 36 and 11 sessions: a description of what happened, not evidence of an edge
+
+### E-2026-11-18-04 · Rulings and results: the investor headline is the net modelled view (core +$506.21); the core's gross cap is why its band never holds; C4's volume filter measured; the shadow books join the reader
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead, 2026-11-18, by question: the investor headline is the NET modelled view (closing-auction fills, plus the distributions paper never paid, minus a fetched borrow cost); the core's churn is investigated before any change; C4's volume filter is measured and nothing changes; the VM's ssh rule stays open to any address as it is; C4's by-name attribution comes from one read-only script the team lead runs; the shadow books join the reader; PR #87 is merged after this round [V]
+  - core, 36 sessions to the 2026-11-17 close: modelled close +$592.57, distributions +$49.33, borrow -$135.68, NET +$506.21 against official -$204.54. Annualised sd of the net daily P&L on $100,000: 6.64% [V]
+  - the distributions figure: 24 cash dividends on held names, +$1,526.82 received on longs and -$1,477.50 paid on shorts, from Alpaca's corporate-actions endpoint and the position at the close before each ex-date. The runner's own figure on the 29 sessions both cover is +$49.32, the same five days to the cent [V]
+  - the borrow figure: each close's short market value x 1.02 x fee rate / 360 x calendar days (the formula in `docs/REFERENCES.md` 12l), at IBKR's indicative fee rates in the public shortstock file stamped `#BOF|2026.11.18|17:16:53`, between 0.45% and 2.13% a year on the 13 names, 1.41% blended on an average short book of $66,144. TODAY'S rates applied to every day back to 2026-09-29: no fee history covers the period (the repo's FEE_RATE panel ends 2026-09-09) [V for the file; U for the rates on earlier days]
+  - under Alpaca's own live fee schedule (easy-to-borrow free, `docs/REFERENCES.md` 12l) the borrow is $0 on easy-to-borrow names and the net is +$641.90 before any hard-to-borrow fee, which Alpaca does not publish per name [V for the schedule; U for the hard-to-borrow cost]
+  - why the core's band holds nothing: the sleeve turns every band HOLD into a trade on any day its gross cap scales the book (`src/deploy/sleeves/cef_discount.py`, "THE BAND'S HOLDS BECOME TRADES WHEN THIS BINDS"). The core's plan for 2026-11-18 carries the cap's mark on all 13 names; C4's carries it on none [V]
+  - consistent with it: $558,927 traded in the 24 sessions to 2026-10-30 and $537,973 in the 12 from 2026-11-02, when the sizing multiplier went to 1.13 and then 1.30; fills against the close cost -$308.71 in the first window and -$476.39 in the second [V]
+  - C4's volume filter, by the sleeve's own rule (mean of close x volume over 63 sessions) on Alpaca SIP daily bars to 2026-11-17: 19 of 74 names at or above the spec's $3.0M; 33 at $2.0M; 45 at $1.5M; 58 at $1.0M; 66 at $0.5M. Median $1.91M. The runner's own plan for 2026-11-18, on its own panel, passes 25 (74 less 49 `illiquid`). The two counts are from different volume sources and are both reported; the runner's is what the book trades on [V]
+  - a $10,000 position (10% of C4's equity) is under 1% of a day's volume on 58 of the 74 names and at most 6.4% on the thinnest [V]
+  - shadow books, first read through `ops.prod_state` (SIMULATED, each on its own $1,000,000 notional, sums over SCORED sessions to 2026-11-17): cef_exdate_after -$8,419.64 price-only (-$3,249.44 total return, 4 scored); cef_exdate_before_after +$68.04 (4); units_exdate_after +$21,200.13 (+$24,480.85 total return, 2); units_exdate_before_after +$7,978.98 (1); month_end_ief and spinoff_first_week flat on every session so far [V]
+- source: `ops/prod_state.py` (`plan_shape`, `SHADOW_SCRIPT`), `ops/orient.py` on branch `ops-prod-state-books`; `https://www.interactivebrokers.com/shortstock/usa.txt`, fetched 2026-11-18; Alpaca paper account `cef`, read-only; the attribution and net-view scripts are session scratch, not in the repo
+- supports: §5
+- status: current. C4's net view and by-name attribution wait on the team lead's run of the read-only VM script. One to four scored sessions say nothing about a shadow book

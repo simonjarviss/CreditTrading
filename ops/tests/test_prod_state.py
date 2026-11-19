@@ -310,7 +310,7 @@ class TestVM:
         cmd, kw = run.calls[0]
         assert cmd[0] == "ssh" and "BatchMode=yes" in cmd
         assert f"ConnectTimeout={ps.SSH_CONNECT_TIMEOUT_S}" in cmd
-        assert kw["input"] == ps.vm_script()
+        assert kw["input"] == ps.vm_script() + ps.SHADOW_SCRIPT
         assert kw["input"].startswith(ps.REMOTE_SCRIPT)
 
     def test_remote_script_never_reads_the_key_files(self):
@@ -380,7 +380,7 @@ class TestOtherBooks:
 
     def test_no_books_asked_sends_only_the_cores_script(self, ssh_config):
         run = vm_run(vm_reply())
-        m = ps.vm(ssh_config=ssh_config, run=run, books=())
+        m = ps.vm(ssh_config=ssh_config, run=run, books=(), shadow=False)
         assert run.calls[0][1]["input"] == ps.REMOTE_SCRIPT and m["books"] == {}
 
     def test_render_prints_each_book_under_the_vm(self, tmp_path, ssh_config):
@@ -393,6 +393,89 @@ class TestOtherBooks:
         out = "\n".join(lines)
         assert "VM book c4" in out and "quantt_state/c4/AUTO_ARMED" in out
         assert d["verdict"]["prod"] == "vm"      # the one-prod verdict is still the core's
+
+
+# ------------------------------------------------- the shadow books (2026-11-18)
+SHADOW_OK = {"state": True, "books": {
+    "aaa_book": {"status": {"FLAT": 1, "SCORED": 2}, "first": "2026-01-05", "last": "2026-01-07",
+                 "pnl_price_usd": -12.5, "pnl_total_usd": None, "total_gaps": 1, "last_gross": "1.0"},
+    "bad_book": {"error": "ValueError: scores.csv line 3 is not a whole row"}}}
+
+
+def shadow_part(books=SHADOW_OK, timer="active enabled", end=True):
+    rows = [("shadow.timer", 0, timer), ("shadow.books", 0, json.dumps(books))]
+    if end:
+        rows.append(("shadow.END", 0, "quantt-prod-state"))
+    return "".join(f"{k}\t{rc}\t{v}\n" for k, rc, v in rows)
+
+
+class TestShadowBooks:
+    """Simulated books on the VM, under their own user. Synthetic rows throughout:
+    these test the reader, not any book."""
+
+    def test_the_names_are_the_install_scripts(self):
+        sh = (ps.REPO / "shadow" / "deploy" / "install_shadow_vm.sh").read_text()
+        assert f'SVC_USER="{ps.SHADOW_USER}"' in sh
+        assert 'STATE="${HOME_DIR}/shadow_state"' in sh and 'HOME_DIR="/home/${SVC_USER}"' in sh
+        assert ps.SHADOW_STATE == f"/home/{ps.SHADOW_USER}/shadow_state"
+        assert f"systemctl enable --now {ps.SHADOW_TIMER}" in sh
+
+    def test_the_shadow_part_rides_in_the_one_call_after_every_book(self, ssh_config):
+        run = vm_run(vm_reply() + shadow_part())
+        m = ps.vm(ssh_config=ssh_config, run=run)
+        assert len(run.calls) == 1 and run.calls[0][1]["input"].endswith(ps.SHADOW_SCRIPT)
+        assert "/run/" not in ps.SHADOW_SCRIPT and "alpaca.env" not in ps.SHADOW_SCRIPT
+        sh = m["shadow"]
+        assert sh["timer"]["value"] == {"active": "active", "enabled": "enabled"}
+        assert sh["books"]["value"]["aaa_book"]["pnl_price_usd"] == -12.5
+        assert "line 3" in sh["books"]["value"]["bad_book"][ps.UNMEASURED]
+        assert m["arming"] == ps.ARMED, "a shadow reading never changes the arming reading"
+
+    def test_a_missing_or_cut_shadow_part_is_unmeasured_and_the_core_stands(self, ssh_config):
+        m = ps.vm(ssh_config=ssh_config, run=vm_run(vm_reply() + shadow_part(end=False)))
+        assert m["arming"] == ps.ARMED and "shadow.END" in m["shadow"][ps.UNMEASURED]
+        off = ps.vm(ssh_config=ssh_config, run=vm_run(vm_reply()), shadow=False)
+        assert "shadow" not in off
+
+    def test_render_says_simulated_and_never_passes_a_gap_off_as_a_total(self, ssh_config):
+        m = ps.vm(ssh_config=ssh_config, run=vm_run(vm_reply() + shadow_part()))
+        text = "\n".join(f"{a} {b}" for a, b in ps.shadow_lines(m["shadow"]))
+        assert "SIMULATED" in text and "price-only -$12.50" in text
+        assert "total return UNMEASURED on 1 scored session(s)" in text
+        assert "bad_book UNMEASURED" in text
+        none = ps.shadow_lines(ps._shadow_from_readings(
+            {"shadow.END": (0, ""), "shadow.timer": (0, "active enabled"),
+             "shadow.books": (0, json.dumps({"state": False, "books": {}}))}, "vm"))
+        assert "no /home/quantt-shadow/shadow_state" in none[1][1]
+
+    def test_the_real_summary_line_runs_and_ships_no_name_or_weight(self, tmp_path):
+        """The real python from SHADOW_SCRIPT, run locally on a state dir in the
+        engine's own format (shadow/engine.py SCORE_FIELDS)."""
+        import subprocess
+        import sys as _sys
+        head = ("date,prev,status,pnl_price_usd,pnl_total_usd,gross,net,n_names,turnover,"
+                "decision_asof,detail,label\n")
+        st = tmp_path / "shadow_state"
+        (st / "aaa_book").mkdir(parents=True)
+        (st / "aaa_book" / "scores.csv").write_text(
+            head + "2026-01-05,2026-01-02,FLAT,0.0,0.0,0,0,0,0,2026-01-02,,SIMULATED\n"
+            "2026-01-06,2026-01-05,SCORED,-20.5,-18.0,1.0,0.0,3,0.2,2026-01-05,,SIMULATED\n"
+            "2026-01-07,2026-01-06,SCORED,8.0,,1.0,0.0,3,0.1,2026-01-06,no close for ZZQQ,SIMULATED\n")
+        (st / "bad_book").mkdir()
+        (st / "bad_book" / "scores.csv").write_text(head + "2026-01-05,2026-01-02\n")
+        (st / "no_scores_yet").mkdir()
+        r = subprocess.run([_sys.executable, "-I", "-c", ps._SHADOW_PY, str(st)],
+                           capture_output=True, text=True, timeout=30)
+        got = json.loads(r.stdout)
+        assert got["state"] is True and sorted(got["books"]) == ["aaa_book", "bad_book"]
+        assert got["books"]["aaa_book"] == {
+            "status": {"FLAT": 1, "SCORED": 2}, "first": "2026-01-05", "last": "2026-01-07",
+            "pnl_price_usd": -12.5, "pnl_total_usd": None, "total_gaps": 1, "last_gross": "1.0"}
+        assert "line 2" in got["books"]["bad_book"]["error"]
+        assert "ZZQQ" not in r.stdout, "the detail column names symbols; it never leaves"
+        gone = subprocess.run([_sys.executable, "-I", "-c", ps._SHADOW_PY, str(tmp_path / "nope")],
+                              capture_output=True, text=True, timeout=30)
+        assert json.loads(gone.stdout) == {"state": False, "books": {}}
 
 
 # ---------------------------------------------------------------- verdict --
@@ -511,7 +594,8 @@ class TestNewestPlan:
                 "closes": {"AAA": 10.0, "BBB": 20.0, "CCC": 5.0, "DDD": 1.0},
                 "targets": {"AAA": {"current": 30, "target": 30, "reason": hold},
                             "BBB": {"current": -10, "target": -12,
-                                    "reason": "cef discount z=-3.01 w=+0.2301 volscal=1.88"},
+                                    "reason": "cef discount z=-3.01 w=+0.2301 volscal=1.88 "
+                                              "gmax=1.8000*x0.9700 smult=1.3000"},
                             "CCC": {"current": 0, "target": 0, "reason": "cef: illiquid gmax=1.8"},
                             "DDD": {"current": 0, "target": 0, "reason": "cef: illiquid gmax=1.8"}}}
         state = tmp_path / "state"
@@ -527,11 +611,13 @@ class TestNewestPlan:
         assert (key, rc) == ("plan_shape", "0"), r.stderr
         assert json.loads(out) == {
             "session_date": "2026-01-07", "names": 4, "held": 2, "long": 1, "short": 1,
-            "target_differs": 1, "gross_usd": 500.0, "net_usd": 100.0, "equity": 1000.0,
+            "target_differs": 1, "gross_cap_bound": 1, "gross_usd": 500.0, "net_usd": 100.0, "equity": 1000.0,
             "why": {"cef band hold": 1, "cef discount": 1, "cef illiquid": 2}}
         assert not any(sym in out for sym in ("AAA", "BBB", "CCC", "DDD"))
         text = ps.shape_text({"value": json.loads(out)})
         assert "4 name(s), 2 held (1 long, 1 short)" in text and "0.50x the plan's equity" in text
+        assert "GROSS CAP BINDING on 1 name(s)" in text
+        assert "gross cap not binding" in ps.shape_text({"value": {**json.loads(out), "gross_cap_bound": 0}})
 
     def test_a_held_name_without_a_close_makes_the_totals_a_gap(self, tmp_path):
         import shlex
