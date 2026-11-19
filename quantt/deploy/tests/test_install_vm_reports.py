@@ -119,8 +119,9 @@ def test_report_schedule_is_clear_of_every_runner_slot():
     times = list(other.values())
     assert not (set(times) & busy) and len(set(times)) == len(times)
     for (kind, book), (h, m) in other.items():
-        before_decide = (h, m) < (22, 0)
-        assert before_decide == (kind == "dataqa"), (kind, book)
+        # data QA judges the panels before the 22:00 decide; risk runs the morning after
+        # (team lead, 2026-11-19), before the 06:00 morning session slot
+        assert ((21, 40) < (h, m) < (22, 0)) if kind == "dataqa" else ((4, 0) <= (h, m) < (6, 0)), (kind, book)
         end_min = h * 60 + m + iv.REPORT_TIMEOUT_S / 60
         assert end_min < 22 * 60 or (kind == "risk" and end_min < 22 * 60 + 30), (kind, book)
 
@@ -263,17 +264,30 @@ def test_the_books_rendered_units_are_byte_identical_to_origin_mains(tmp_path, m
 # ------------------------------------------------------------------ the pnl report kind (team lead, 2026-11-09)
 
 def test_the_pnl_schedule_is_the_runner_owners():
-    """Exactly the owner's times; after the 20:00 EOD stamp; clear of the real runner slots
-    (the 21:40 collect, verify, the send windows, the 22:00 decide); no second report at
-    the same minute. 20:30 is the session's idle half-hour tick, not a slot."""
-    assert iv.REPORT_SCHEDULE[("pnl", "cef")] == (20, 30) and iv.REPORT_SCHEDULE[("pnl", "c4")] == (20, 35)
+    """Team lead, 2026-11-19: the pnl and risk reports run the morning after (05:15/05:20 and
+    05:45/05:50, Tuesday to Saturday), because Alpaca published the EOD point between 03:10
+    and 03:40 ET on every night measured and the 20:30/22:15 runs of release-20261116-1
+    reported the day before. Risk after pnl (it reads pnl's JSON), both after 04:00 and done
+    before the 06:00 morning session slot; data QA still in the evening on session days.
+    Fails on 91ebb44 (20:30, 22:15, Mon-Fri)."""
+    S = iv.REPORT_SCHEDULE
+    assert (S[("pnl", "cef")], S[("pnl", "c4")], S[("risk", "cef")], S[("risk", "c4")]) == ((5, 15), (5, 20), (5, 45), (5, 50))
+    assert (S[("dataqa", "cef")], S[("dataqa", "c4")]) == ((21, 45), (21, 50))
+    assert iv.REPORT_WEEKDAYS == {"dataqa": (1, 2, 3, 4, 5), "pnl": (2, 3, 4, 5, 6), "risk": (2, 3, 4, 5, 6)}
+    for book in ("cef", "c4"):
+        assert (4, 0) <= S[("pnl", book)] < S[("risk", book)] < (6, 0)
+        assert S[("risk", book)][1] + iv.REPORT_TIMEOUT_S // 60 <= 60          # cannot run into 06:00
+    by_unit = {vj.unit: iv.oncalendar(vj.job.schedule) for vj in iv.REPORT_JOBS}
+    assert by_unit["quantt-cef-pnl"] == ["Tue,Wed,Thu,Fri,Sat *-*-* 05:15:00"]
+    assert by_unit["quantt-c4-risk"] == ["Tue,Wed,Thu,Fri,Sat *-*-* 05:50:00"]
+    assert by_unit["quantt-cef-dataqa"] == ["Mon,Tue,Wed,Thu,Fri *-*-* 21:45:00"]
     times = list(iv.REPORT_SCHEDULE.values())
     assert len(set(times)) == len(times)
     slots = {(21, 40), (17, 30), (15, 52), (15, 55), (12, 52), (12, 55), (22, 0)}
     for book in ("cef", "c4"):
         h, m = iv.REPORT_SCHEDULE[("pnl", book)]
-        assert (h, m) > (20, 0) and (h, m) not in slots
-        assert h * 60 + m + iv.REPORT_TIMEOUT_S / 60 < 21 * 60 + 40        # done before the 21:40 collect
+        assert (h, m) not in slots
+        assert h * 60 + m + iv.REPORT_TIMEOUT_S / 60 <= 5 * 60 + 30        # done by the 05:30 session tick
 
 
 def test_the_pnl_job_needs_c4s_nav_map_at_the_tag():
@@ -303,7 +317,7 @@ def test_the_pnl_units_read_only_their_own_book_key_file(rw, capsys):
         assert f"--out {env}" in key_text and f"RuntimeDirectory=quantt-reports-{book}-pnl" in key_text
         timer = rw.layout.unit_path(f"quantt-{book}-pnl.timer").read_text()
         h, m = iv.REPORT_SCHEDULE[("pnl", book)]
-        assert f"OnCalendar=Mon,Tue,Wed,Thu,Fri *-*-* {h:02d}:{m:02d}:00" in timer
+        assert f"OnCalendar=Tue,Wed,Thu,Fri,Sat *-*-* {h:02d}:{m:02d}:00" in timer
 
 
 def test_the_pnl_key_services_cannot_write_the_clone(rw, capsys):

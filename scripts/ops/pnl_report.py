@@ -9,7 +9,9 @@ Each book's P&L was explained by hand, session by session, from a laptop cache (
 live_attribution.py`). The team lead ordered it as a daily VM job for BOTH paper books,
 the core and C4: official P&L, hold split into NAV part and discount part, fill cost,
 fees and distributions, then factor exposure against the review line. This is that job.
-It runs on a timer (20:30 ET core, 20:35 ET C4), after the 20:00 EOD stamp and clear of
+It runs on a timer (since 2026-11-19: 05:15 ET core, 05:20 ET C4, the MORNING AFTER the session,
+because Alpaca publishes the EOD point in the small hours; until then 20:30 and 20:35 the same
+evening, which is the time the notes below were written for), after the 20:00 EOD stamp and clear of
 the 21:40 collect, through `install_vm --reports` (kind `pnl`, docs/RUNBOOK.md 8.12).
 
 WHAT IT IS AND IS NOT

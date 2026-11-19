@@ -458,10 +458,11 @@ EOD_FROM_ENV = "QUANTT_EOD_FROM"         # quantt/collect/collect.py EOD_FROM_EN
 # -- the report-only units (team lead 2026-11-08: the nightly check is owned by a VM timer)
 #
 # `--reports` installs, beside the books' units, three report-only jobs per book:
-# scripts/ops/data_qa.py (21:45 cef, 21:50 c4, after the :40 collect and before the
-# 22:00 decide), scripts/ops/risk_daily.py (22:15 cef, 22:20 c4, after the decide) and
-# scripts/ops/pnl_report.py (20:30 cef, 20:35 c4, the P&L report kind below), Mon-Fri,
-# clear of the runner's slots (session decide/send windows, collect 21:40, verify 17:30).
+# scripts/ops/data_qa.py (21:45 cef, 21:50 c4, Mon-Fri, after the :40 collect and before the
+# 22:00 decide), scripts/ops/pnl_report.py (05:15 cef, 05:20 c4, the P&L report kind below)
+# and scripts/ops/risk_daily.py (05:45 cef, 05:50 c4), the last two on Tue-Sat mornings for
+# the session before (REPORT_SCHEDULE says why), all clear of the runner's slots (session
+# decide/send windows, collect :10/:40, verify 17:30).
 # WHY A SEPARATE MODE, NOT MORE JOBS IN THE BOOKS' UNIT LISTS. The core's and C4's
 # plans stay byte for byte what they were (tests/test_install_vm_books.py), and an
 # install that stops, restarts or re-renders a session unit never depends on a report
@@ -474,7 +475,7 @@ EOD_FROM_ENV = "QUANTT_EOD_FROM"         # quantt/collect/collect.py EOD_FROM_EN
 # TimeoutStartSec= so it cannot run into the next slot. A failed report job is its own
 # `failed` unit and touches nothing else.
 # The P&L report kind (team lead, 2026-11-09; docs/RUNBOOK.md 8.12): the third
-# job per book, scripts/ops/pnl_report.py (20:30 cef, 20:35 c4). It reads the
+# job per book, scripts/ops/pnl_report.py (05:15 cef, 05:20 c4). It reads the
 # account, so it needs a broker key, through a GET-only reader; the key comes from
 # the vault at run time into a tmpfs env file of ITS OWN, one per book, written by its
 # own secret service. The dataqa and risk units stay key-free (a test pins it), and the
@@ -488,27 +489,49 @@ REPORT_SECRET_MAP = (("alert-smtp-user", "ALERT_SMTP_USER"), ("alert-smtp-pass",
 REPORT_BOOKS = (BOOK, C4_BOOK)
 REPORT_KINDS = {"dataqa": "scripts.ops.data_qa", "risk": "scripts.ops.risk_daily",
                 "pnl": "scripts.ops.pnl_report"}
+# THE P&L AND RISK REPORTS RUN THE MORNING AFTER, NOT THE SAME EVENING (team lead,
+# 2026-11-19: "Move both to ~05:15-05:50 ET"). Until release-20261116-1 they ran at 20:30
+# (pnl) and 22:15 (risk), "after the 20:00 EOD stamp". The stamp is the time ON the point,
+# not when Alpaca publishes it: on the VM the collector's eod_equity step failed at 03:10 ET
+# and read the point at 03:40 ET on each of 2026-11-17, -18 and -19 (three nights measured;
+# Alpaca documents no publication time, docs/REFERENCES.md 12an). So on their first night
+# every pnl report was titled "READ AT THE CLOSE OF 2026-11-17, NOT 2026-11-18" and the risk
+# report's drawdown block, which judges the HALVE and KILL lines, read UNMEASURED on a day-old
+# figure. At 05:15 the point has existed for about ninety minutes on every night measured; if
+# it is ever later the report says so in its title exactly as before, and nothing guesses.
+# The reports choose their day by scripts/ops/data_qa.expected_day, which before 16:45 ET is
+# the previous session, so a morning run needs no change in them: Tuesday 05:15 reports
+# Monday, Saturday 05:15 reports Friday. Hence Tuesday to Saturday for these two kinds. Risk
+# stays after pnl (it reads pnl's JSON) and both end before the 06:00 morning session slot.
+# Data QA stays in the evening: it judges the panels the 22:00 decide is about to use.
 REPORT_SCHEDULE = {("dataqa", BOOK): (21, 45), ("dataqa", C4_BOOK): (21, 50),
-                   ("risk", BOOK): (22, 15), ("risk", C4_BOOK): (22, 20),
-                   # the runner owner's times (team lead, 2026-11-09): after the 20:00 EOD
-                   # stamp, clear of the 21:40 collect. 20:30 is the session timer's idle
-                   # tick (it decides nothing at that hour); the job takes no lock.
-                   ("pnl", BOOK): (20, 30), ("pnl", C4_BOOK): (20, 35)}
+                   ("pnl", BOOK): (5, 15), ("pnl", C4_BOOK): (5, 20),
+                   ("risk", BOOK): (5, 45), ("risk", C4_BOOK): (5, 50)}
+# launchd weekday numbers (1 = Monday): the evening kind runs on session days, the two
+# morning kinds on the mornings after them.
+REPORT_WEEKDAYS = {"dataqa": (1, 2, 3, 4, 5), "pnl": (2, 3, 4, 5, 6), "risk": (2, 3, 4, 5, 6)}
 REPORT_MEMORY_MAX = "450M"               # data_qa c4 peak 220 MB (2x that); measured 2026-11-08 (RUNBOOK 8.11)
 REPORT_TIMEOUT_S = 480                   # ends before the next :00/:30 session slot
 REPORT_TEMPLATES = {"dataqa": "quantt-report-dataqa.service.tmpl",
                     "risk": "quantt-report-risk.service.tmpl",
                     "pnl": "quantt-report-pnl.service.tmpl",
                     "timer": "quantt-report.timer.tmpl",
+                    # The morning kinds' days are written in their own template, not passed
+                    # as a ${DAYS} value: a day list has commas, and render() refuses any
+                    # value outside SAFE_VALUE_RE. That check guards every book unit too and
+                    # is not widened for a calendar line; the installer compares each rendered
+                    # timer's OnCalendar with oncalendar(job.schedule) either way.
+                    "timer_morning": "quantt-report-morning.timer.tmpl",
                     "secret": "quantt-reports-secret.service.tmpl",
                     "pnl_keys": "quantt-reports-pnl-keys.service.tmpl"}
 
 
 def _report_job(kind: str, book: str) -> VmJob:
-    """The report job's unit name and launchd-shaped job (its schedule is Mon-Fri,
-    so `oncalendar` renders `Mon,Tue,Wed,Thu,Fri *-*-* HH:MM:00`)."""
+    """The report job's unit name and launchd-shaped job. Its days are REPORT_WEEKDAYS[kind],
+    so `oncalendar` renders `Mon,Tue,Wed,Thu,Fri *-*-* HH:MM:00` for data QA and
+    `Tue,Wed,Thu,Fri,Sat *-*-* HH:MM:00` for the two morning kinds."""
     hour, minute = REPORT_SCHEDULE[(kind, book)]
-    sched = tuple({"Weekday": d, "Hour": hour, "Minute": minute} for d in range(1, 6))
+    sched = tuple({"Weekday": d, "Hour": hour, "Minute": minute} for d in REPORT_WEEKDAYS[kind])
     args = ("-B", "-m", REPORT_KINDS[kind], "--book", book)
     return VmJob(f"quantt-{book}-{kind}", ip.Job(f"com.quantt.alpaca.{book}.{kind}", "", args, sched, kind))
 
@@ -1872,7 +1895,8 @@ def _report_template(unit_file: str) -> str:
     if unit_file in REPORT_PNL_KEY_UNITS.values():
         return REPORT_TEMPLATES["pnl_keys"]
     if unit_file.endswith(".timer"):
-        return REPORT_TEMPLATES["timer"]
+        kind = unit_file.split("-")[2].split(".")[0]
+        return REPORT_TEMPLATES["timer" if REPORT_WEEKDAYS[kind] == REPORT_WEEKDAYS["dataqa"] else "timer_morning"]
     return REPORT_TEMPLATES[unit_file.split("-")[2].split(".")[0]]
 
 
