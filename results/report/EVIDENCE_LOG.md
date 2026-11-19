@@ -5230,6 +5230,33 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current. Nothing is installed or armed for the events book: it waits on the account and its two vault secrets (the team lead), a release that holds `quantt/sleeves/`, and its installer's first run
 
+### E-2026-11-19-05 · Result: a stale-NAV gate that needs no second source costs more than the stale NAVs do; the core's gate stays in report mode
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the VM's 38 core plans: the stale-NAV gate runs in `report` mode on every one; no name was held and no decide deferred; from 2026-10-21 to 2026-11-19 (21 plans) every CEFConnect read was an error and 111 of 273 name-days had a NAV dated D equal to the cent to the previous NAV [V]
+  - on the desk's panel (NAV to 2026-10-14) 18.8% of name-days repeat genuinely, so about 21.8% of name-days are assumed stale; an inference from two shares, not a count of confirmed stale rows [V]
+  - canonical harness, 2013-06-25 to 2026-10-14, gross: every NAV current 1.15 (t 4.20); 21.8% of name-days stale at random 1.108 (5th to 95th percentile of 200 draws 0.984 to 1.208), 7.41% a year against 7.60%; every NAV a session old 1.03 [V]
+  - the hold rule: no trade on a genuine repeat alone 1.07; stale and genuine repeats both held 0.990 (0.910 to 1.075); against deciding on stale NAVs -0.118 of Sharpe (-0.239 to +0.008) and -0.70% a year (-1.39% to +0.05%) [V]
+  - the team lead had chosen "gate without a second source"; the measured answer is that the only such rule, holding, loses about 0.7% a year to remove a cost of about 0.2% [V]
+- source: `results/ideas/2026-11-19_nav_stale_gate.md` @ `1f27318`; `results/ideas/nav_stale_gate/explore.py` @ `1f27318`; `quantt/session/nav_gate.py` @ `1f27318`
+- supports: §1, §4
+- status: current. Set aside: nothing built, no spec change. Staleness is drawn at random; if stale copies sit on large NAV moves the cost is higher. One run, not independently reviewed
+
+### E-2026-11-19-06 · Result: stale NAV copies on the core's funds are ordinary lateness, not big-move days; a quarter of fund-days are decided on one, at about 0.26% a year
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - asked by the team lead ("Test the caveat first") after E-2026-11-19-05, which drew stale days at random [V]
+  - 325 fund-days checked by the VM's gate (as-of 2026-10-14 to 2026-11-18) against Yahoo's NAV for the same dates fetched on 2026-11-19: 81 confirmed stale copies (24.9%), 45 genuine repeats (13.8%), 199 fresh; 3 non-repeats were also revised later [V]
+  - true one-session NAV move, mean and median absolute: fresh 37.0bp and 23.9bp; confirmed stale 30.9bp and 23.7bp; within the same session stale less fresh is -0.45bp (t -0.12, 21 sessions); of the largest tenth of moves 21% were stale against 25% overall [V]
+  - the cost with stale days drawn by the measured share in each move quintile, 200 draws on the canonical harness to 2026-10-14: Sharpe 1.097 (0.976 to 1.185) and 7.34% a year against 1.152 and 7.60% with every NAV current [V]
+- source: `results/ideas/nav_stale_gate/checks.py` @ `1cd5351`; `results/ideas/2026-11-19_nav_stale_gate.md` @ `1cd5351`; `scripts/cef/fetch_daily.py` @ `1cd5351` (the X<TICKER>X NAV symbol the check fetches)
+- supports: §1, §4
+- status: current. E-2026-11-19-05's conclusion stands: no hold gate. A confirmed stale copy is a lower bound (a row Yahoo never corrected looks genuine); 21 sessions; one run, not independently reviewed. The VM's check rows and the fetched NAVs are outside the repository in `~/quantt_research/nav_stale_gate/`
+
 ### E-2026-11-19-07 · Result: one read-only page now shows every paper account together; on its first run the two accounts are down 1,038 USD combined
 - kind: result
 - era: ALPACA
@@ -5262,3 +5289,18 @@ that adds it does not exist when it is written.
 - source: `src/deploy/sleeves/cef_discount.py` @ `860d5f3` (the cap block as reviewed; the change is in the commit that carries this entry); `scripts/cef/band_frontier.py` @ `860d5f3`; `quantt/sleeves/config.py` @ `860d5f3`; `quantt/sleeves/promote.py` @ `860d5f3`; `ops/sleeves/events_sleeves.json` @ `860d5f3`; `docs/SYSTEM.md` @ `860d5f3` (section 5, 2026-11-19); the backtest, review and replay scripts are session scratch, not in the repo
 - supports: §5
 - status: current, on branch `events-runner-main`, not merged, tagged or installed. The backtest and the review are each one run by one agent, not independently re-derived. The C4 spec was not replayed (its panel is not on the laptop); its level-signal path already raised on a vol with no ratio
+
+### E-2026-11-19-20 · Result: the unit-trust termination rule holds out of sample on 2026, a year its data never held
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the rule was committed at `96b05ff` (2026-11-18) before any 2026 price was fetched; the idea's data ended 2025-12-31; the measures were written in the script before any 2026 return was read [V]
+  - sample: all 64 termination sessions from 2026-01-02 to 2026-11-12 in the committed calendar (112 trusts), 2,142 eligible fund-events on 228 funds, eligibility by the committed signal itself; Yahoo total returns to 2026-11-18; 38 of 272 calendar funds have no price and are excluded [V]
+  - T+1..T+3 less control funds, one observation a session: mean +42.6bp, median +34.8bp, 86% of sessions positive, t 6.28; less PCEF +43.5bp (t 6.56); halves +50.2bp and +35.0bp; every month positive; in sample it was +33bp with 77% of sessions positive [V]
+  - T+1 alone +33.3bp (t 8.41); the selling window T-9..T -32.6bp (t -1.44); the same trade a day late +12.6bp (t 1.99) [V]
+  - not pre-specified, added after the first run: the same funds 20 sessions later -6.0bp (t -0.96); 30 sessions earlier +41.3bp in the mean and -3.4bp in the median (t 1.03); the trade without its ten best sessions +24.8bp [V]
+  - the committed long-only books over the period, 151 of 225 sessions invested: all events +25.6%, big sales only +28.1%; raw T+1..T+3 was +59.1bp, so about 16bp of the raw return was the market [V]
+- source: `results/ideas/uit_cef_flows/oos_2026.py` @ `a4a5ccb`; `results/ideas/2026-11-16_uit_cef_flows.md` @ `a4a5ccb`; `shadow/signals/uit_termination.py` @ `a4a5ccb`; `shadow/universes/uit_terminations_v1.csv` @ `a4a5ccb`
+- supports: §4
+- status: current. Gross; no closing quotes, so whether an order gets the termination session's closing price is not shown and remains the open condition; survivors only where Yahoo has no price; the control is the calendar's own funds outside their windows; one run, not independently reviewed. The id skips to -20 because the peer session takes -08 onward
