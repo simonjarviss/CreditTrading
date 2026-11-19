@@ -1,6 +1,6 @@
 ---
 name: paper
-description: Promote an idea that cleared Explore to a shadow book - a simulated book on live data, run by the shadow/ package. Shadow books are approved (team lead, 2026-11-09) and an agent may start one without asking. A paper account is a later, separate approval, and this skill refuses to start one. Use after /explore.
+description: Promote an idea that cleared Explore to a shadow book - a simulated book on live data, run by the shadow/ package. Shadow books are approved (team lead, 2026-11-09) and an agent may start one without asking. A new paper account is a separate approval, and this skill refuses to start one; a sleeve in the events account follows the promotion rule (ten clean shadow sessions, then a one-file PR). Use after /explore.
 argument-hint: <slug>
 ---
 
@@ -20,9 +20,22 @@ grep -n -i "shadow" docs/SYSTEM.md | tail -12
   design `results/mission/SHADOW_RUNNER_DESIGN_2026-11-09.md`). An agent may add,
   change and retire a shadow book without asking. A shadow book has no account
   and can send no order.
-- **A paper account for a new sleeve: not approved.** Refuse to create an
-  account, a book config under `ops/books/`, a scheduler entry or anything under
-  `quantt/`. Say that it needs the team lead, and offer the shadow book.
+- **A new paper account: not approved.** Refuse to create an account, a book
+  config under `ops/books/` or a scheduler entry. Say that it needs the team
+  lead, and offer the shadow book.
+- **A sleeve in the events paper account: by the promotion rule** (`docs/SYSTEM.md`
+  §5, "Team lead, 2026-11-16 and 2026-11-18"). After ten clean on-time shadow
+  sessions a book may be proposed as a sleeve. Run the read-only report and
+  follow `quantt/sleeves/deploy/README.md` "Promotion and the ladder":
+
+  ```bash
+  python3 -m quantt.sleeves.promote --shadow-state <dir> --events-state <dir>
+  ```
+
+  An agent may open the one-file PR on `ops/sleeves/events_sleeves.json`. The
+  book's full size, the merge, the release tag, the install and arming stay the
+  team lead's. Never touch the order path (`quantt/sleeves/run.py`, `net.py`,
+  `ledger.py`) for a promotion.
 - **Real money:** the team's decision on a `/go-live` proposal.
 
 ## Steps

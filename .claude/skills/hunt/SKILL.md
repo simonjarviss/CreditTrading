@@ -13,6 +13,11 @@ markets, fixed income and credit, equities, ETFs and flows, futures, macro and
 volatility, and free alternative data. The job is to find edges and get them to
 paper.
 
+**Every hunt covers event-driven and special situations in any asset class, and
+looks for niche verticals there** (team lead, 2026-11-11, `docs/SYSTEM.md` §5; the
+seed list is the block of that date in `docs/MISSION.md` §5). A hunt across
+everything that returns no event or special-situation card is incomplete.
+
 ## 1. Read what exists first
 
 - `results/IDEA_LEDGER.md`: every idea tested, one line each, and the status

@@ -865,6 +865,55 @@ and are not rewritten. How it changes the agents' rules is `CLAUDE.md`, "Hard ru
 | The size a shadow book is simulated at (asked 2026-11-09) | **$1M per book.** Capacity is shown at $1M, $5M and $10M |
 | Refreshing research data (asked 2026-11-09) | **The agent runs the free-source fetchers** from the laptop into a research data folder, never into the live `data/` panels (`CLAUDE.md` landmine 9). The team lead runs only the R2 pulls that need the token |
 
+### Team lead, 2026-11-11 — event-driven and special situations are part of the mission
+
+| question | ruling |
+|---|---|
+| What the desk is | **An event-driven and special-situations desk as well as a systematic one, in any asset class.** Every idea hunt also looks for niche verticals along those lines. The seed list is `docs/MISSION.md` §5 (the block dated 2026-11-11). Nothing else in the 2026-11-09 ruling changes: shadow books first, no paper account for a new sleeve without the team lead, releases by the team lead only |
+
+### Team lead, 2026-11-16 and 2026-11-18 — the event sleeves' account, how sleeves are sized, and how a book is promoted
+
+Answered through question prompts. The 2026-11-16 rows were in `ops/sleeves/events_sleeves.json` and
+`results/report/EVIDENCE_LOG.md` (E-2026-11-16-02, -03) only; they are recorded here on 2026-11-18. The 2026-11-18 rows
+followed a measured comparison of sizing schemes (`EVIDENCE_LOG` E-2026-11-18-04).
+
+| question | ruling |
+|---|---|
+| Where promoted event sleeves trade (2026-11-16) | **One new Alpaca paper account, $1,000,000, named `events`**, gross up to 1.5x equity. Seven shadow books are its first sleeves. The small-name special-dividend book is capped at $25,000 by what its names can absorb |
+| How the sleeves in that account are sized (2026-11-18) | **Equal risk per family, not $100,000 a book.** Variants of one idea are one family and split its share. Supersedes 2026-11-16's "$100,000 each". At $100,000 a book the two units ex-date books carried 68% of the account's backtest risk [V, gross, 2000-06-01 to 2025-12-23]. Each sleeve's full size is a key in the book file (`full_capital_usd`, with its `family`), and the derivation is in its `_note_sleeves` |
+| A combined risk budget across all accounts (2026-11-18) | **Not yet.** Each account keeps its own limits. Asked as "8% combined vol with HALVE at 12% and KILL at 18%"; to be asked again after the events account has traded |
+| What promotes a shadow book to a paper sleeve (2026-11-18) | **Ten clean on-time shadow sessions**: no UNMEASURED and no LATE day. It tests the feed and the plumbing, not the return: no statistic exists that early |
+| How a new sleeve scales (2026-11-18) | **A ladder, counted in sessions on which the sleeve held a position.** Under 20: a quarter of its full size. 20 to 59: half, if fills track the shadow book. From 60: full if live P&L is above -1 sigma x sqrt(T), half between -1 and -2 sigma, stopped below -2 sigma. Sixty sessions cannot confirm a Sharpe; the ladder only catches failures. Supersedes 2026-10-29's "a full equal-risk share from day one" for sleeves in the events account |
+| What a clean session is (2026-11-18, second prompt) | **"Any on-time day, ten in a row."** A session is clean when it was measured and the decision that fills on it was written on time; a flat day with an on-time decision counts. The latest ten must all be clean. Counted by `quantt/sleeves/promote.py` (read-only) |
+| What "fills track the shadow book" means (2026-11-18, second prompt) | **"Paper within 2x modelled gap."** Pass if the sleeve's paper P&L is behind the shadow book's on the same sessions by no more than twice the fill cost the model assumes on the dollars traded. The cost is an optional per-sleeve key, `modelled_fill_cost_bp`, which the team lead sets; it is absent for every sleeve, so the test reads UNMEASURED |
+| The sigma of the 60-session test (2026-11-18, second prompt) | **"Each sleeve's backtest vol"**, scaled to the capital the sleeve traded at. In the book file as `backtest_vol_annual` (gross backtest, 2000-06-01 to 2025-12-23, the allocation run of E-2026-11-18-04). The events runner does not yet record the capital a sleeve traded at each session, so this test and the one above read UNMEASURED until `sleeve_scores.csv` carries it (`quantt/sleeves/deploy/README.md`, open items) |
+| Recording the capital a sleeve traded at (2026-11-19) | **"Yes, add it now."** The events runner writes the capital PLAN sized each sleeve from into `plan.json` and the `capital_usd` column of `sleeve_scores.csv`. Both ladder tests read it; it changes nothing about what is planned or sent |
+| The modelled fill cost per side (2026-11-19) | **"Card figures where measured, 15bp elsewhere."** `specdiv_wait_small` 13.5bp and `specdiv_wait` 7bp (measured closing half-spreads on their card); 15bp, an assumption, for the two CEF ex-date books, the two units books and `pead_small_long`, until paper fills replace it. In the book file as `modelled_fill_cost_bp` |
+| Trades netted inside the account (2026-11-19) | **"No, only real fills."** A cross between two sleeves pays no spread and earns no fill-cost allowance; only market fills count as dollars traded |
+| What is built first (2026-11-18) | **The runner's PR to main, then a read-only combined daily report** across the accounts (P&L and risk share by family, factor exposure, trailing correlations once 20 sessions exist) |
+| Not asked, and open | A demotion rule on drawdown (the ladder's -2 sigma stop is the only one); whether the two shadow books outside the seven (`month_end_ief`, `spinoff_first_week`) become sleeves; a replacement second NAV source for the core (E-2026-11-18-03) |
+
+### Team lead, 2026-11-19 — deploy the event sleeves now; the core's cap and the risk target are measured before anything changes
+
+Answered through question prompts on 2026-11-19 (`EVIDENCE_LOG` E-2026-11-19-04). The reader work those prompts
+followed is E-2026-11-18-25 to -28.
+
+| question | ruling |
+|---|---|
+| The ten-clean-session rule for the seven event sleeves (2026-11-18) | **Waived: "waive it, i think deploying is better and we can adjust as eneded".** All seven are armed at their quarter size as soon as the account exists and the release is installed, whatever their session count (at the 2026-11-18 close: 6 and 6 for the two CEF ex-date books, 5 and 5 for the units books, 1 each for the other three [V, `ops.prod_state`]). The ladder itself was not asked about and stands. The rule stays for any book promoted later; `quantt/sleeves/promote.py` still counts it and now reports a waiver nobody coded: read its ten-session line for these seven as information |
+| Where the event sleeves trade, asked again | **"Try a third paper account"**: the 2026-11-16 ruling stands. The team lead opens it in the dashboard and puts its keys in the vault. Asked because the team lead proposed folding C4 into the core's runner to free C4's account; the combiner refuses a sleeve that sets `sizing_multiplier` (both specs do) or `level_signal` (C4's does), and one $100,000 account cannot carry both books at their sizes (1.80x and about 1.23x gross) |
+| The core's gross cap, which scales the book every day since the x1.30 sizing (x0.8207 on the 2026-11-19 plan) and so turns every band hold into a trade | **"Backtest the options first"**: today's order, the band applied after the cap, a higher cap, and smaller multipliers, on the canonical harness. Nothing live changes until the team lead has seen it |
+| Raising an account's risk target "if it gives more return" | **"Measure first, then decide"**, in the same run |
+| Who carries the open pull requests (#87 the reader, #88 the installer and QA fixes, #89 the events runner) | **One session, this one.** They are one integration branch, `events-runner-main` |
+| The investor view of the paper books (2026-11-18) | **The net modelled view is the headline**: closing-auction fills, plus the distributions paper never paid, less a fetched borrow cost; the official record and the gross modelled figure beside it, each labelled |
+| The core's gross cap, after the measurement (E-2026-11-19-08) | **"Leave it as it is."** Gross, 2013-06-25 to 2026-10-14, the deployed order earns 6.85% a year against 6.32% for the band applied after the cap and 6.91% / 6.99% for caps of 2.00 / 2.20; the band-after-cap variant wins only from about 15bp a trade. No change to the core's spec, cap or multiplier |
+| A full session on which every eligible z is equal, so the weights are 0/0 (2020-03-18 and 2025-04-07, every z at the -4 clip) | **"Hold, but say so."** Every name keeps its shares as a qty target whose reason says why; an unheld name stays unopened; no error. Until then the book also held, but silently, through a vol that read 0 and a scalar that fell back to 1.0, and a flat book on its opening session was handed NaN weights. A trailing vol that is zero or not a number on any OTHER day now stops the decide, naming it (asked first as "Stop and name it") |
+| An eighth event sleeve (asked in both sessions) | **"Yes, at a quarter size" / "Yes, add it."** `uit_termination`, a fifth family (`unit_trust_terminations`): full size $139,000 at the families' risk unit, $34,750 at a quarter, long only, the ten-session wait waived. Its volatility figure is 225 sessions of 2026, not a long backtest (the book file's `_note_uit_termination`). `uit_termination_big_sale` stays a shadow book |
+| The events runner's first sessions | **"One dry session first."** It is installed with orders switched off, plans and verifies one full day against the new account, and is armed by the team lead after that plan has been read |
+| When the release is tagged and installed | **"This afternoon, before 15:25 ET"** (2026-11-19) for the core, C4 and the report jobs. The events installer refuses a listed book with no shadow decisions directory, and `uit_termination`'s first decision is the 18:50 run that evening, so the events book is installed after it |
+| Who runs the release steps (merge, tag, VM installs, arming) | **"You prepare, I run them"**: this session checks and writes the wrappers; the team lead runs each with `!` |
+| Not asked, and open | Whether the ladder's later stages change with the waiver; the cap and target the measurement will point to; whether Alpaca allows a third paper account at all (`docs/REFERENCES.md` 12pa: not stated) |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |

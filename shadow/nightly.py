@@ -38,6 +38,8 @@ DATA_BOOK = "cef"          # whose key reads the data (team lead, 2026-11-09; so
 SETTLE = dt.time(16, 30)   # New York: from here a session's close and prints exist
 TOL_BP = 25.0              # primary vs check: report beyond this (the mark is never changed)
 REFRESH_TIMEOUT_S = 900
+HOLD_TAIL_SESSIONS = 2     # a decision's weights are held until its successor fills: successor's as-of + 1; one more for margin
+GAP_RETRY_SESSIONS = 3     # a missing print is asked for again on the runs of this many sessions, then left as a logged gap
 
 
 def asof_session(sessions: list, now: dt.datetime):
@@ -66,16 +68,36 @@ def _refresh(book: Book, state: Path) -> list:
     return failed
 
 
-def _needed(state: Path, books: list) -> tuple[list, dt.date | None]:
-    """Every symbol any stored decision names, and the earliest decision date."""
-    syms, first = set(), None
+def _needed(state: Path, books: list, sessions: list, asof: dt.date) -> dict:
+    """{session: symbols whose mark the stored decisions need on it}.
+
+    WHY PER SYMBOL AND PER SESSION (2026-11-14). The first version asked for every symbol any
+    decision had ever named, on every session since the first decision. That is right for a
+    fixed universe and wrong for a book whose names change: a company listed yesterday has no
+    print last month, so each night re-asked for every past session and logged a gap for
+    each. A decision's weights are held from its as-of date until the book's NEXT decision
+    fills, so its symbols are needed from its as-of date to HOLD_TAIL_SESSIONS after the next
+    decision's as-of date; the book's latest decision is held until replaced, so its symbols
+    are needed up to the as-of date of this run."""
+    pos = {s: i for i, s in enumerate(sessions)}
+    need: dict = {}
     for b in books:
+        recs = []
         for p in sorted((state / b.slug / "decisions").glob("*.json")):
             rec = json.loads(p.read_text())
-            syms |= set(rec["weights"])
-            d = dt.date.fromisoformat(rec["asof"])
-            first = d if first is None or d < first else first
-    return sorted(syms), first
+            recs.append((dt.date.fromisoformat(rec["asof"]), set(rec["weights"])))
+        recs.sort(key=lambda r: r[0])
+        for k, (d, syms) in enumerate(recs):
+            if not syms or d not in pos:
+                continue
+            if k + 1 < len(recs) and recs[k + 1][0] in pos:
+                last = min(pos[recs[k + 1][0]] + HOLD_TAIL_SESSIONS, len(sessions) - 1)
+            else:
+                last = len(sessions) - 1
+            for s in sessions[pos[d]:last + 1]:
+                if s <= asof:
+                    need.setdefault(s, set()).update(syms)
+    return need
 
 
 def _log(path: Path, fields, rows) -> None:
@@ -89,33 +111,42 @@ def _log(path: Path, fields, rows) -> None:
 
 def update_marks(state: Path, books: list, src, check, sessions: list, asof: dt.date) -> int:
     """Add the (session, symbol) marks the stored decisions need and the file lacks.
-    Returns the number of gaps found (a held name with no primary print)."""
-    syms, first = _needed(state, books)
-    if not syms:
+    Returns the number of gaps found on this run (a held name with no primary print)."""
+    need = _needed(state, books, sessions, asof)
+    if not need:
         return 0
     path = state / "marks.parquet"
     have = set()
     if path.exists():
         old = pd.read_parquet(path, columns=["date", "symbol"])
         have = set(zip(pd.to_datetime(old["date"]).dt.date, old["symbol"]))
-    days = [s for s in sessions if first <= s <= asof and any((s, x) not in have for x in syms)]
-    if not days:
-        return 0
-    new, bad, gaps = marks.build(syms, days, primary=src.prints, check=check,
-                                 distributions=src.distributions, tol_bp=TOL_BP,
-                                 primary_name="alpaca_auction_M", check_name="yfinance_close")
-    marks.append(path, new)
-    if len(bad):
-        _log(state / "marks_disagreements.csv", list(bad.columns), bad.astype(str).to_dict("records"))
-    # a gap already logged on an earlier run is not logged twice
-    seen = set()
     gp = state / "marks_gaps.csv"
+    logged = set()
     if gp.exists():
-        seen = {(r["date"], r["symbol"]) for r in csv.DictReader(open(gp))}
-    fresh = [{"date": d.isoformat(), "symbol": s} for d, s in gaps if (d.isoformat(), s) not in seen]
+        logged = {(r["date"], r["symbol"]) for r in csv.DictReader(open(gp))}
+    closed = [s for s in sessions if s <= asof]
+    retry_from = closed[-GAP_RETRY_SESSIONS] if len(closed) >= GAP_RETRY_SESSIONS else closed[0]
+    # what to ask for: missing, and either never logged as a gap or recent enough to retry
+    ask: dict = {}
+    for day, syms in need.items():
+        want = frozenset(x for x in syms if (day, x) not in have
+                         and ((day.isoformat(), x) not in logged or day >= retry_from))
+        if want:
+            ask.setdefault(want, []).append(day)
+    n_gaps, fresh = 0, []
+    for syms, days in sorted(ask.items(), key=lambda kv: min(kv[1])):
+        new, bad, gaps = marks.build(sorted(syms), sorted(days), primary=src.prints, check=check,
+                                     distributions=src.distributions, tol_bp=TOL_BP,
+                                     primary_name="alpaca_auction_M", check_name="yfinance_close")
+        marks.append(path, new)
+        if len(bad):
+            _log(state / "marks_disagreements.csv", list(bad.columns), bad.astype(str).to_dict("records"))
+        n_gaps += len(gaps)
+        # a gap already logged on an earlier run is not logged twice
+        fresh += [{"date": d.isoformat(), "symbol": s} for d, s in gaps if (d.isoformat(), s) not in logged]
     if fresh:
         _log(gp, ("date", "symbol"), fresh)
-    return len(gaps)
+    return n_gaps
 
 
 def run(state: Path, books: list, src, *, check, now: dt.datetime | None = None) -> int:
@@ -138,7 +169,19 @@ def run(state: Path, books: list, src, *, check, now: dt.datetime | None = None)
         for cmd, code in _refresh(b, state):
             print(f"{b.slug}: REFRESH FAILED ({code}): {cmd}")
             rc = 3
-        res = engine.decide(b, state, asof, now=now)
+        try:
+            res = engine.decide(b, state, asof, now=now)
+        except Exception as e:      # noqa: BLE001 - deliberate, see below
+            # ONE BOOK'S BUG MUST NOT STOP THE BOOKS AFTER IT. engine.decide turns a book's own
+            # `Unmeasured` into a status, but any other exception from a signal (a KeyError on a
+            # panel column, a bad calendar row) used to leave this loop, so every book later in
+            # the list got no decision that night and its next session was scored FLAT for
+            # nothing it did. Eleven books now share this loop (2026-11-18). This is not a
+            # fallback: nothing is decided for the broken book, the line names it and the
+            # exception, and the run exits non-zero as it does for UNMEASURED.
+            print(f"decide {b.slug} {asof}: ERROR {type(e).__name__}: {e}")
+            rc = 3
+            continue
         print(f"decide {b.slug} {asof}: {res['status']} {res.get('reason', '')}".rstrip())
         if res["status"] == "UNMEASURED":
             rc = 3

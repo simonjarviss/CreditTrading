@@ -2025,3 +2025,107 @@ books' own fills disagree with a page, both are given.
 | Yahoo serves today's bar while the session is open, dated as a daily bar | [V] 2026-11-10 | First run at about 11:30 New York returned rows dated 2026-11-10. The fetcher now drops a row until its session has closed (16:30 New York) |
 | Yahoo's adjusted close is re-based on every dividend, so its level changes between fetches and only its returns are stable | [S] | The desk's own finding on the ETF panels (`docs/SYSTEM.md` §5, 2026-10-12, "the 7 ETF panels"; the XASSET Stage 0a note). Not re-measured here |
 | The repo's NYSE calendar (`ops/schedule/nyse_calendar.py`) closes on Martin Luther King Day before 1998, when the exchange was open | [V] 2026-11-10 | SPY traded on 1994-01-17, 1995-01-16, 1996-01-15 and 1997-01-20 (Yahoo), all of which the calendar calls holidays. It does not affect the live path, which only asks about current dates; research before 1998 must not date sessions with it |
+
+## 12sd. Nasdaq Trader's symbol directory, for shadow universes (added 2026-11-11)
+
+| claim | status | source and note |
+|---|---|---|
+| `nasdaqlisted.txt` and `otherlisted.txt` list every Nasdaq-listed and other-exchange-listed US security with its security name, an ETF flag and a test-issue flag, pipe-delimited, with a "File Creation Time" last line | [V] 2026-11-11 | `https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt` and `.../otherlisted.txt`, fetched 2026-11-11 (creation time 2026-11-11 18:01): 5,608 and 7,678 lines. Read by `shadow/universes/build_units_v1.py` |
+| The files' terms of use were not read | [U] | Only the symbol and the security name are used, to pick a list of symbols; no price or quote data comes from Nasdaq. This is a different product from the Nasdaq Fund Network data whose policy forbids trading use (the NFN rows above) |
+| A name rule on that directory, then Alpaca (tradable, a cash distribution in 400 days), gives 48 partnership and trust units; 34 were shortable at Alpaca on the build date | [V] 2026-11-11 | `python3 -m shadow.universes.build_units_v1`, run 2026-11-11: 294 names pass the rule, 294 tradable, 48 paid. It holds 46 of the 51 CRSP "units" securities with an ex-date since 2025-06 (checked locally against the R2 mirror; the five missed are named by issuer form the rule does not catch) |
+
+## 12ma. SDC mergers and CRSP delisting rows, as measured for the merger test (added 2026-11-12)
+
+| claim | status | source and note |
+|---|---|---|
+| In CRSP's CIZ daily file (`crsp_a_stock.dsf_v2`) a merger delisting has an extra row, flagged `dlydelflg = 'Y'` and dated the session after the last trade, whose `dlyret` is the delisting return | [V] 2026-11-12 | Compared with the legacy file's separate `dlret` on 2,137 merger delistings to 2022-12-30 (the rows staged on 2026-10-20 by `scripts/data/stage_crsp_merger_targets.py`): equal within 1bp on 98.3%; in 35 of the 36 others the legacy `dlret` is missing. Run in the session; the comparison is not stored as a script |
+| SDC's `dateann` can precede the market's reaction by a session | [V] 2026-11-12 | `results/ideas/merger_arb/explore.py`: all-cash merger targets rise 23.7% on average on `dateann` and 6.9% on the next session, then 0.03%. 95.9% of `dateann` values are sessions. `dateann` is after `dateannorig` on 16.3% of deals and never before |
+| SDC's 'Merger' form includes unsolicited and hostile proposals, nearly all later withdrawn | [V] 2026-11-12 | Of 1,529 eligible all-cash one-step deals 2000–2025, 155 are marked Unsolic. or Hostile and 148 of those have status Withdrawn; Friendly deals are withdrawn 8.3% of the time. `attitude_change_yn` is 'Yes' on 0.1% of eligible deals |
+| SDC's percentage fields and its consideration text disagree often | [V] 2026-11-12 | `scripts/research/stage_sdc_deals.py`: "all cash by percentages" matches "cash per share and no shares in the text" on 5,034 of 5,959 deals that have both (84%). The tests use the percentages only |
+| 6,104 of 9,202 SDC 'Merger' deals for US public targets, 2000–2025, link to exactly one CRSP US common share by 6-digit CUSIP and name date; 41 link to more than one and are dropped | [V] 2026-11-12 | the same script's printed counts. The unlinked third are presumed not exchange-listed [U] |
+
+## 12so. Alpaca's spin-off rows and closing prints, as measured for the shadow books (added 2026-11-14)
+
+| claim | status | source and note |
+|---|---|---|
+| Alpaca's corporate-actions feed returned 215 `spin_off` rows with process dates 2023-01-01 to 2026-11-14 and none with a later process date | [V] 2026-11-14 | a read-only probe through the client's GET (`types=spin_off`, `data_quality=all`), run in the session and not stored. Rows by ex-date year: 2021 3, 2022 11, 2023 47, 2024 38, 2025 64, 2026 52. So history cannot say how early a row appears; `shadow/fetch/spinoffs.py` records the day each row is first seen |
+| The row's process date is the ex-date at the median and 10 days later at the 75th percentile; the range is −474 to +1,613 days | [V] 2026-11-14 | the same probe. Some rows are back-filled long after the event |
+| A `spin_off` row's `new_symbol` is not always a ticker or a new share | [V] 2026-11-14 | first run of `shadow/fetch/spinoffs.py`: of 6 rows with process dates in the 30 days to 2026-11-14, 3 name a contingent value right by a code such as `457CVR025`, 1 names an already listed depositary share handed out by its parent, 1 has an ex-date 107 days before its process date, and 1 is a new common share (MSGR, ex-date 2026-10-27). 13 of the 215 rows have the same source and new symbol |
+| 36 of CRSP's 40 new spin-offs with ex-dates in 2023–2025 have an Alpaca row with an ex-date within a day | [V] 2026-11-14 | the probe, matched on date only (CRSP tickers are not staged), so this is an upper bound on coverage |
+| Yahoo carries when-issued closes for a spin-off before its ex-date | [V] 2026-11-14 | MSGR: closes from 2026-10-21 on about $0.2M a day; the first regular-way session, 2026-10-27, traded $69.6M. `shadow/signals/spinoff.py` counts life from the ex-date for this reason |
+| Energy Transfer, Sunoco, SunocoCorp and USA Compression (ET, SUN, SUNC, USAC) print their official close on the Texas Stock Exchange (SIP code F), while Alpaca's asset record says NYSE | [V] 2026-11-14 | On 2026-11-13 none has a condition-M print under N; each has one under F equal to Yahoo's close to the cent. No N print on any of the six sessions 2026-11-06 to 11-13. Held in `shadow/sources.py` `SYMBOL_PRIMARY_SIP_NAME`. The live client's map is not changed: neither prod book trades them |
+| FISK, NEN and OGCP (thin partnership units) have no closing-auction print on some sessions | [V] 2026-11-14 | the same six sessions: FISK 5 of 6 missing, OGCP 4, NEN 3. They fail the units books' $500,000 volume floor, so they are not held; left in `units_v1.csv` |
+| Alpaca's asset record can name the exchange `TXSE`, and did for ET on one read | [V] 2026-11-15 | the VM's shadow run of 2026-11-13 07:20 ET stopped on `UnmappedExchange: ET: asset exchange 'TXSE'`; the record read `NYSE` on 2026-11-14 and 2026-11-15. On 2026-11-15, 12 active assets carry `TXSE` (CECO, CFR, CFR.PRB, FIFT, IBOC, ICOM, ILS, OBK, PWRX, THRU, TXS, WTAL); the 11 Yahoo prices each have a condition-M print under SIP code F on 2026-11-13 equal to Yahoo's close to the cent, none under N or Q, and one under P at the same price. `shadow/sources.py` `EXTRA_EXCHANGE_SIP_NAME` |
+
+## 12sv. CRSP's special-dividend rows and Alpaca's dividend feed, as measured for the special-dividend test (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| CRSP `stkdistributions` (R2, `crsp_a_stock`) types a special cash dividend `distype = 'SD'`, with `disfreqtype = 'E'` on every such row; 6,601 rows with ex-dates 2000-01-03 to 2025-12-31, of which 6,504 are `disdetailtype = 'SDIV'` and 97 `SDROC` | [V] 2026-11-15 | counts read in the session; `scripts/research/stage_crsp_special_divs.py` |
+| 3,644 of those are on common shares (`EQTY`/`COM`/`NS` on the ex-date); the rest are closed-end funds (1,471), ADRs (825), ETFs (447) and units | [V] 2026-11-15 | the same read, joined to `dsf_v2` on the ex-date |
+| On the common shares, 98.1% of rows carry a declaration date; the ex-date is a median 13 calendar days after it, and at most one day after it for 0.5% | [V] 2026-11-15 | the same read |
+| The special amount is inside `dsf_v2`'s `dlyorddivamt` on the ex-date (100% of the common rows), so a test that reads only that column cannot tell a special from an ordinary dividend | [V] 2026-11-15 | the same read |
+| Alpaca's `/v1/corporate-actions` `cash_dividend` rows carry `special` (boolean) and `foreign`; the request window filters on process date, which equals the pay date on every row printed | [V] 2026-11-15 | read through the client's GET with the cef key: 15,146 rows with process dates 2026-08-01 to 2026-11-14, 105 special; 2,895 rows from 2026-11-16 to 2027-02-28, 73 special, ex-dates out to 2027-02-17 |
+| How long after a company's announcement Alpaca lists a special dividend | [U] | not measurable from one read; a first-seen reader would measure it going forward |
+| Costco's special dividends on CRSP: declared 2012-11-28, 2015-01-30, 2017-04-25, 2020-11-16, 2023-12-14; ex 2012-12-06, 2015-02-05, 2017-05-08, 2020-12-01, 2023-12-27 | [V] as CRSP rows; [U] against the company's filings, which were not fetched | the staged events file |
+| CRSP's declaration date against EDGAR, 60 sampled special dividends with ex-dates from 2019 (tickers in the SEC's current list only): the first 8-K naming the dividend was accepted by the close of CRSP's date for 7, by the close of the next session for 15, later for 12 (0 days after CRSP's date 16, 1 day 12, 2–4 days 6), and none before it; 26 had no such 8-K in the window. Two of the 34 (THG 2018-12-30, NREF 2023-04-24) had no 8-K by the close two sessions after CRSP's date | [V] 2026-11-15 for the 8-K acceptance times; [U] for when each press release went out, which can precede the 8-K | `results/ideas/special_dividends/edgar_dates.py`, `edgar_dates.json` |
+
+## 12lk. SDC's IPO lock-up fields, as measured for the lock-up test (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| `tr_sdc_ni.wrds_ni_details` (R2) flags IPOs with `ipo = 'Yes'` (114,862 rows of all nations; 10,683 US rows dated 2000 on) and carries `min_lock_date` as a date on 47.9% of the US rows | [V] 2026-11-15 | counts read in the session; `scripts/research/stage_sdc_ipo_lockups.py` |
+| `max_lock_date` is stored as a number of days since 1960-01-01, and `min_lockup_days` / `max_lockup_days` as dates counted from 1960-01-01 (1960-06-29 is 180 days): the staging uses `min_lock_date` only | [V] 2026-11-15 | the same read |
+| `min_lock_date` is the deal date plus 180 days on 4,529 of 5,121 dated US rows (90 days on 185, 150 on 147): the contract's date, not an observed release | [V] 2026-11-15 | the same read |
+| 2,823 of 4,995 dated US IPOs match a CRSP common share (same 6-digit CUSIP, first daily row on the IPO date or within 7 days after) | [V] 2026-11-15 | the staging script's printout |
+
+## 12rs. Reverse splits on CRSP and on Alpaca's feed, as measured for the reverse-split test (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| CRSP `stkdistributions` holds 3,375 reverse splits (distype FRS or SP, price factor between −1 and 0) on shares typed common on the ex-date, ex-dates 2000-01-03 to 2025-12-31; 165 have no declaration date; 5,127 forward splits on the same test | [V] 2026-11-15 | `scripts/research/stage_crsp_reverse_splits.py` printout |
+| CRSP's declaration date for a reverse split is a median of one session before the ex-date (first session after the declaration to the ex-date), so it is not a usable announcement date | [V] 2026-11-15 | `results/ideas/reverse_splits/explore.py` (`sessions_d1_to_x_median`) |
+| Alpaca `GET /v1/corporate-actions?types=reverse_split` returned 1,189 rows with ex-dates in the 365 days to 2026-11-15, closed-end funds and ETFs included (IGR, MIN, MMT, ETHA among them) | [V] 2026-11-15 | `results/ideas/reverse_splits/borrow_now.py`, `borrow_now.json` |
+| Of the 32 rows with an ex-date in the 30 days to 2026-11-15, an ex-day close of $2 or more and 21-bar dollar volume of $500,000 or more, 4 were shortable at Alpaca on 2026-11-15 (all four easy to borrow); of the 8 trading $5M a day, none | [V] 2026-11-15, true on that date only | the same |
+
+## 12fo. SDC's follow-on offerings, as measured for the follow-on test (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| `tr_sdc_ni.wrds_ni_details` (R2) holds 16,070 distinct (6-digit CUSIP, issue date) US follow-ons (`ipo = 'No'`, market 'U.S. Public') dated 2000-01-05 to 2026-07-01; 13,491 match a CRSP common share on the issue date through 2025-12-31 | [V] 2026-11-15 | counts read in the session; `scripts/research/stage_sdc_follow_ons.py` printout |
+| `launch_date` is filled on every matched row; it is before the issue date on 8,044 and equal to it on 5,447; the share launched on the issue date rose from 1% (2000) to about 68% (2024–25) | [V] 2026-11-15 | the same |
+| SDC's issue date is not always the first session the offering is priced into the share: events launched on the issue date fall 2.9% against IWM on the session after it (t −18) and are flat on the date itself | [V] 2026-11-15 | `results/ideas/follow_ons/explore.py` (the overnight profile) |
+| `registration_status` is empty on every US follow-on row | [V] 2026-11-15 | counts read in the session |
+| `tr_sdc_ni.wrds_ni_details` holds 3,337 US convertible issues (a conversion price, or a security name containing 'conv' or 'cvt') dated 2000-01-13 to 2025-12-23 that match a CRSP common share on the issue date; 1,403 are in a public market; 2,786 have no `launch_date`. The issuer's share falls 2.54% against IWM on the issue date and 0.56% the session after | [V] 2026-11-15 | `scripts/research/stage_sdc_convertibles.py` printout; `results/ideas/convert_issuance/explore.py` |
+| Alpaca `GET /v1beta1/news` carries a headline containing "convertible" for 430 of 1,286 SDC convertible issues of 2015–2025, read by issuer symbol from 7 days before to 3 after the issue date: 25/84, 15/86, 8/109, 18/127, 14/110, 33/161, 44/140, 17/71, 50/108, 87/126 and 119/164 by year. In 2025, 70 first headlines came at or after 16:00 New York or overnight, 48 before the open and 1 during the session | [V] 2026-11-15 | `results/ideas/convert_issuance/news_dating.py` (its per-event file is kept outside the repository) |
+
+## 12ye. Yahoo Finance's earnings calendar by day, as measured for the small-stock drift book (added 2026-11-15)
+
+| fact | status | source |
+|---|---|---|
+| `https://finance.yahoo.com/calendar/earnings?day=YYYY-MM-DD&offset=N&size=100` serves one HTML table per page: Symbol, Company, Event Name, Earnings Call Time, EPS Estimate, Reported EPS, Surprise (%), Market Cap. The pinned yfinance (0.2.66) reads the same page per ticker (`?symbol=`) and has no per-day call | [V] 2026-11-15 | read through yfinance's session; `shadow/fetch/earnings.py` |
+| 2026-11-05 lists 530 rows over six pages, 517 with a reported figure; 2026-11-13 lists 78; 2026-09-24, seven weeks back, still serves its 9 rows. `Earnings Call Time` reads `TAS` on almost every row (520 of 530), so it does not say whether a release was before the open or after the close | [V] 2026-11-15 | the same read |
+| Against the licensed IBES surprises on five release days of 2025 (05-07, 08-06, 11-04, 11-05, 11-06): 1,443 of 1,524 IBES releases matched by CRSP ticker are on Yahoo's page for the same day; where both give (reported − forecast) / abs(forecast) with a forecast of at least $0.05 (1,276), the rank correlation is 0.80 and the sign agrees on 87%; the reported figure agrees to a cent on 77% and the forecast within two cents on 70%; among stocks ranked 1,501–4,000 (634) the rank correlation is 0.79 and the two top tenths share 44 of 64 names | [V] 2026-11-15 | a one-off comparison in the session against `~/quantt_research/ibes_eps_surprises.parquet`; not stored as a script |
+| The first fetch (76 days back) listed 3,699 rows and kept 1,791 as small US companies with a complete result; with prices for 1,739 symbols it took 2 min 59 s. Two reads minutes apart agreed on every stored figure | [V] 2026-11-15 | `python3 -m shadow.fetch.earnings` into a trial state directory |
+| Whether Yahoo's `Market Cap` and figures for a past day are as they stood on that day, or as revised since | [U] | not measurable from one read; rows stored by the first fetch are flagged `first_run` |
+| The 1,500th largest US common stock was worth $1.86bn to $1.89bn at the CRSP panel's last month-end ranks (read on 2025-12-31); IWM closed at 246.16 on 2025-12-31 | [V] 2026-11-15 | `~/quantt_research/crsp_top4500_daily.parquet`; Yahoo |
+
+## 12pa. Alpaca paper accounts: balance and number (added 2026-11-16)
+
+| fact | status | source |
+|---|---|---|
+| "Your initial paper trading account is created with $100k balance as a default setting", and it can be reset "with arbitrary amount as you configure"; the balance cannot otherwise be changed after creation | [S] 2026-11-16 | https://docs.alpaca.markets/us/docs/paper-trading (page updated 2026-07-07), read through a fetch agent; not opened here |
+| The dashboard now creates and deletes paper accounts ("Open New Paper Account" under the paper account number) in place of resetting; a new account needs new API keys | [S] 2026-11-16 | the same page |
+| The largest balance allowed, the number of paper accounts allowed, and whether the amount can be chosen at creation rather than by reset | [U] | not stated on the page |
+
+## 12ut. EDGAR forms 487 and 24F-2NT, as read for the unit-trust termination calendar (added 2026-11-18)
+
+| claim | status | source and note |
+|---|---|---|
+| First Trust ("FT <n>") and Guggenheim Defined Portfolios filed 2,374 forms 487 from 2023-07-01 to 2026-11-17 | [V] 2026-11-18 | EDGAR quarterly form indexes 2023 Q3 to 2026 Q4 (`https://www.sec.gov/Archives/edgar/full-index/<year>/QTR<q>/form.gz`), read 2026-11-18 by `python3 -m shadow.universes.build_uit_terminations_v1 crawl` through `scripts/data/edgar_client.py`. 426 mention "closed-end" 15 times or more and were read in full; the other 1,948 were counted |
+| Those 426 hold 605 trusts with a readable deposit date, termination date and holdings; 334 are closed-end trusts and 271 of them terminate on or after 2026-01-01 | [V] 2026-11-18 | the same builder, `write`. 7 trusts could not be read (Guggenheim's Flaherty & Crumrine Preferred Portfolio, no tickers) and are listed in `shadow/universes/uit_terminations_v1_unparsed.csv` |
+| Both sponsors head each block of a schedule with its kind ("CLOSED-END FUNDS (50.01%):"), and that heading classifies a trust exactly as the research's CRSP rule did | [V] 2026-11-18 | checked locally on the 384 trusts the idea's crawl parsed from filings since 2023-07-01: 195 closed-end and 189 not by both rules. The comparison used licensed CRSP rows and is not stored |
+| First Trust changed its form 487 from `<PRE>` text to HTML during 2026 | [V] 2026-11-18 | 31 candidate filings of 2026 had no readable schedule until `html_text` was added to the builder. Guggenheim has filed HTML since mid-2020 (`results/ideas/2026-11-16_uit_cef_flows.md`) |
+| EDGAR answered HTTP 502 or 504 on three document requests in about 1,350, and served each on a later try | [V] 2026-11-18 | the crawl's own log. `edgar_client` retries only 403, 429 and 503; the builder retries a gateway time-out four times, 30 seconds apart, and lists a filing it still cannot fetch as unparsed |
+| The trustee sells a terminating trust's holdings "beginning nine business days prior to, and no later than" the Mandatory Termination Date | [S] | `results/ideas/2026-11-16_uit_cef_flows.md` (read there in four cached prospectuses); not re-read for this build |
+

@@ -124,6 +124,20 @@ Treat these as a seed list for idea cards. Check each against the repo's dead-id
 - CFTC COT positioning extremes.
 - Volatility risk premium and VIX term-structure signals (Cboe indices are in the repo).
 
+**Event-driven and special situations, any asset class (added on the team lead's instruction, 2026-11-11)**
+
+The desk is an event-driven and special-situations desk as well as a systematic one. Every hunt covers this block, and looks for niche verticals: small, mechanical, dated events that large funds skip. Count the events per year before anything else (too few events is the usual way these fail), and date each event by when it became public (EDGAR's acceptance time), never by its effective date.
+- Closed-end funds and similar wrappers: tender offers, rights offerings, term-fund liquidations, open-endings, mergers, activist 13D campaigns, managed-distribution changes.
+- Ex-date and distribution events in other wrappers: BDCs, preferreds, MLPs, REITs, royalty trusts, special dividends (extends `cef_exdate_drift`).
+- Deals: merger arbitrage in cash and stock deals, small deals included; tender offers and Dutch auctions; odd-lot priority; going-private bids; SPACs near trust value; contingent value rights.
+- Corporate restructuring: spin-offs and the forced selling after them, stubs and holding-company discounts, dual share classes, ADR and dual-listing gaps, post-bankruptcy equities.
+- Capital-markets events: convertible issuance, secondary offerings, lock-up expiries, buyback announcements, preferred and baby-bond calls and redemptions.
+- Credit events: fallen angels and rising stars, distressed exchanges, covenant and going-concern disclosures, bond tenders and consent solicitations.
+- Forced and mechanical flows: index additions and deletions, niche and thematic ETF reconstitutions, leveraged-ETF rebalances, reverse splits, delisting notices, exchange transfers.
+- Dated macro and market events: FOMC and data releases, Treasury refundings and auctions, option and futures expiries, VIX settlement, commodity index rolls.
+- Regulatory and legal dates: FDA decision dates, court rulings and antitrust reviews on announced deals.
+- Sources: EDGAR (8-K, SC TO, SC 13D, 424B, Form 25, Form 15), the R2 mirror (SDC deals and new issues, TRACE, insider filings, CRSP distribution and delisting events), Alpaca's corporate-action feed, exchange notices. The earlier event work is in `results/events/` and the idea ledger; re-read it under this brief's rules before repeating any of it.
+
 **Alternative public data (free)**
 - SEC EDGAR (all filing types, full-text search), FRED/ALFRED (use ALFRED vintages to avoid lookahead on revised macro data), Treasury and Fed releases, CFTC COT, FINRA short data, Google Trends, Wikipedia page views, GitHub/app-store activity for tech names, government contract awards (USAspending), FDA calendars, EIA energy data, weather (NOAA), news and press-release timing.
 - For each source, the **data-scout** agent (§9) writes a short card: coverage, history, publication lag, how to fetch, and a lookahead plan.

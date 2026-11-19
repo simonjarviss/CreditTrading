@@ -4248,6 +4248,131 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
+### E-2026-11-11-01 · Result: earnings drift on the 1,500 largest US stocks is present but small; the pre-specified book has a gross Sharpe of 0.21 and is not promoted
+- kind: result
+- era: ALPACA
+- date: 2026-11-11
+- figures:
+  - long the top tenth and short the bottom tenth by IBES surprise score for 40 sessions after a quarterly release: gross Sharpe 0.21, t 1.09, 1.20%/yr at 5.59% vol, 2000-03-03 to 2025-12-31; 255,475 releases; shift(2); no cost modelled [S]
+  - halves 0.12 and 0.34; eras 1.12, −0.14, 0.20, 0.67, 0.50 [S]
+  - controls: the surprise 126 sessions late −0.16; ranks 1 to 500 only 0.33; ranks 501 to 1,500 only 0.13 [S]
+  - turnover 39 times a year; beta to the equal-weighted market 0.01 [S]
+  - event time, top less bottom tenth, market-adjusted, t+2 to t+41: 56.8bp sorted on the surprise score, 105.7bp sorted on the two-session announcement move; 141,703 releases [S]
+  - variant, not pre-specified, sorted on the announcement move: Sharpe 0.73 held 40 sessions (0.88 to 2012, 0.55 from 2013), 0.52 held 20 sessions [S]
+- source: `results/ideas/2026-11-11_pead_wide.md` @ `8c8bfe5`; `results/ideas/pead_wide/results.json` @ `8c8bfe5`
+- supports: §3, §4
+- status: current. One run of each reproducer; not independently re-derived. The event-time table and the variant are printed by `results/ideas/pead_wide/event_time.py` and stored only in the card
+
+### E-2026-11-11-02 · Ruling: the desk is event-driven and special situations as well as systematic, in any asset class, and every idea hunt looks for niche verticals there
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-11
+- figures:
+  - none (a ruling)
+- source: `docs/SYSTEM.md` @ `e02abb1` (§5, the 2026-11-11 block); `docs/MISSION.md` @ `e02abb1` (§5, the block dated 2026-11-11); `.claude/skills/hunt/SKILL.md` @ `e02abb1`
+- supports: §2, §5
+- status: current. The team lead's instruction in the session of 2026-11-11. It adds to the 2026-11-09 ruling (E-2026-11-09-01) and changes nothing else in it. The seed list in `docs/MISSION.md` is hypotheses; none is tested
+
+### E-2026-11-11-03 · Result: the fall after the ex-date is also in partnership and trust units (gross Sharpe 3.03), weakly in REITs, and absent in ETFs and large common stocks
+- kind: result
+- era: ALPACA
+- date: 2026-11-11
+- figures:
+  - units (CRSP share type UG), the closed-end fund test unchanged: gross Sharpe 3.03, t 15.40, 32.26%/yr at 10.65% vol, 2000-02-15 to 2025-12-29; 9,044 eligible ex-dates on 242 units; shift(2); no cost and no borrow modelled [S]
+  - units: halves 3.34 and 2.77; eras 3.16, 3.39, 2.77, 3.08, 2.10; placebo events ten sessions later −0.02 [S]
+  - units, event names less the group: X−3..X−1 +44.2bp, X+1..X+3 −85.2bp [S]
+  - units, dating check: on the ex-date the price falls 203.5bp against a mean distribution of 176.8bp, slope 1.18 on the distribution's size; the X+1 slope is 0.14; one eligible ex-date had no volume [S]
+  - units, X+1..X+3 by average daily dollar volume: −106.7bp at $0.5–2M, −81.7bp at $2–10M, −61.4bp above $10M [S]
+  - REITs: Sharpe 0.91, t 4.62, halves 1.00 and 0.81, −0.45 in 2023–25; X+1..X+3 −13.2bp on 13,050 ex-dates [S]
+  - ETFs: Sharpe 0.28 with the placebo at 0.34; the 1,500 largest common stocks: −0.02 [S]
+- source: `results/ideas/2026-11-11_exdate_other_wrappers.md` @ `fc6bc2b`; `results/ideas/exdate_other_wrappers/results.json` @ `fc6bc2b`
+- supports: §3, §4
+- status: current. One run of the reproducer; not independently re-derived. The dating and liquidity checks were run in the session and their figures are in the card, not in a stored file. Borrow, capacity and the live list of units are unmeasured
+
+### E-2026-11-11-04 · Method: two ex-date shadow books start on 48 partnership and trust units, on a list rebuilt from the public exchange directory
+- kind: method
+- era: ALPACA
+- date: 2026-11-11
+- figures:
+  - 294 listed names pass the name rule; 294 are tradable at Alpaca; 48 paid a cash distribution in the 400 days to 2026-11-11 [S]
+  - 34 of the 48 were shortable at Alpaca on 2026-11-11, all 34 easy to borrow [S]
+  - the list holds 46 of the 51 CRSP units with an ex-date since 2025-06 (local check against the R2 mirror) [S]
+  - first fetch: prices for 48 of 48 symbols; 30 ex-dates, 11 units with a future ex-date listed [S]
+  - both books' decisions for 2026-11-11 were flat (no ex-date on 11-10 to 11-12), from a local run too late to be scored [S]
+- source: `shadow/universes/build_units_v1.py` @ `90960fd`; `shadow/universes/units_v1.csv` @ `90960fd`; `shadow/books/units_exdate_after.json` @ `90960fd`; `shadow/books/units_exdate_before_after.json` @ `90960fd`; `docs/REFERENCES.md` @ `90960fd` (§12sd)
+- supports: §4, §5
+- status: current. Shadow books under the 2026-11-09 one-time approval (E-2026-11-09-03); SIMULATED, $1M each, no borrow modelled. The VM's first run of them is unconfirmed: ssh from the laptop timed out on 2026-11-11
+
+### E-2026-11-12-01 · Result: clustered insider buying has no effect in the 2,000 largest US stocks (gross Sharpe 0.05) and is set aside there
+- kind: result
+- era: ALPACA
+- date: 2026-11-12
+- figures:
+  - long each cluster stock for 21 sessions against the other eligible stocks: gross Sharpe 0.05, t 0.21, 0.30%/yr at 6.48% vol, 2006-02-08 to 2025-12-31; shift(2); no cost modelled [S]
+  - halves 0.23 and −0.14; eras 0.30, 0.15, 0.95, −0.69, −0.41 [S]
+  - controls: the events 126 sessions late −0.33; the worst tenth by one-month return with no insider data 0.16; correlation of the book with that control 0.25; held 60 sessions −0.11 [S]
+  - 14,421 clean clusters (the 2026-10-19 census rule); 3,725 (26%) are in the panel on their date; about 14 cluster stocks held a day; 18% of sessions flat [S]
+- source: `results/ideas/2026-11-12_insider_clusters.md` @ `f103660`; `results/ideas/insider_clusters/results.json` @ `f103660`
+- supports: §3, §4
+- status: current. One run of the reproducer; not independently re-derived. The cluster file was built on 2026-10-19 by `scripts/events/ssx/ssx_ins_insider_census.py` and was not rebuilt for this test. Stocks below the 2,000th by market value are untested
+
+### E-2026-11-12-02 · Result: ex-dates were declared in advance for 99% of closed-end fund and unit distributions, so the ex-date tests' timing assumption holds
+- kind: result
+- era: ALPACA
+- date: 2026-11-12
+- figures:
+  - closed-end funds: 143,200 ordinary distributions since 2000; 99.2% declared at least one day before the ex-date, 99.0% at least three; median gap 11 days; 0.7% with no declaration date [S]
+  - units: 12,987 ordinary distributions; 98.9% at least one day before, 98.2% at least three; median gap 9 days; 0.9% with no declaration date [S]
+- source: `results/ideas/2026-11-10_cef_exdate_drift.md` @ `70a35dc`; `results/ideas/2026-11-11_exdate_other_wrappers.md` @ `70a35dc`
+- supports: §3
+- status: current. One query of CRSP `stkdistributions` on the R2 mirror in the session; the query is not stored as a script. Gaps are calendar days. Closes the [U] on declaration dates in E-2026-11-10-07 for the short-after book; the week's notice the long-before leg needs is covered by the median, and its tail is unmeasured
+
+### E-2026-11-12-03 · Result: agreed all-cash US mergers earn a modest premium (raw Sharpe 0.71, 0.48 over bills, on a universe corrected after the first run); the event-time spread of the October design is absent
+- kind: result
+- era: ALPACA
+- date: 2026-11-12
+- figures:
+  - pre-specified universe, one-step all-cash 'Merger' deals, long every live target: raw Sharpe 0.50, t 2.53, 4.48%/yr at 9.02% vol, 2000-02-01 to 2025-12-31; 2.62%/yr and Sharpe 0.29 over 3-month bills; maximum drawdown −42.5% on summed daily returns; 1,529 deals held; shift(2); no cost modelled [S]
+  - friendly deals only, chosen after the first run: raw Sharpe 0.71, t 3.63, halves 0.71 and 0.73; 3.73%/yr and Sharpe 0.48 over bills; maximum drawdown −23.4%; beta to SPY 0.17; alpha 2.38%/yr, Newey-West t 2.19; 1,366 deals held, 18 live a day at the median [S]
+  - of 1,529 eligible deals 155 are marked unsolicited or hostile and 148 of those were withdrawn; friendly deals were withdrawn 8.3% of the time [S]
+  - event-time (hazard) book: raw Sharpe 0.04 as pre-specified and 0.06 on friendly deals; the tender-offer control was invested on 1% of sessions and is unmeasured [S]
+  - announcement dating: targets rise 23.7% on SDC's date and 6.9% on the next session, then 0.03%; the first return earned is three sessions after SDC's date [S]
+  - CRSP's new-format delisting row equals the legacy delisting return within 1bp on 98.3% of 2,137 merger delistings [S]
+  - cross-check on the desk's EDGAR list, 2001-01-31 to 2010-03-31, entered after the first proxy: raw Sharpe 0.36 at 19.6% vol, beta 0.69; the SDC friendly book over the same sessions 0.61; daily correlation 0.48; 1,595 later deals left out for want of a first-proxy date [S]
+  - independent review: friendly premium re-derived at 0.713 raw and 0.478 over bills; weights rebuilt on data cut at 14 dates matched exactly; one more session of delay gives 0.717 [S]
+- source: `results/ideas/2026-11-12_merger_arb.md` @ `3c1d68f`; `results/ideas/merger_arb/results.json` @ `3c1d68f`; `results/ideas/merger_arb/crosscheck_edgar.json` @ `3c1d68f`; `docs/REFERENCES.md` @ `3c1d68f` (§12ma)
+- supports: §3, §4
+- status: current. The premium figures were re-derived by a separate reviewer agent in the session; the reviewer's own script is not stored. The friendly filter is not pre-specified. The staging selects on SDC's final status (830 rumour, seeking-buyer and intent rows left out), whose effect is unmeasured. Stock deals, costs and borrow are untested. Not on shadow: there is no live deal list with break dates yet
+
+### E-2026-11-12-04 · Result: a newly spun-off company falls about 3% against small companies in its first week and other new listings do not; a short over its sessions 3 to 5 has a gross Sharpe of 0.96, not pre-specified
+- kind: result
+- era: ALPACA
+- date: 2026-11-12
+- figures:
+  - 387 new spin-offs (CRSP code SECSO, the distributed company a US common share first listed within 10 days of the ex-date), ex-dates 2000 to 2025; 26 already-listed children left out [S]
+  - return less IWM over life sessions 2–5: −3.2% (t −4.6 by start month); 6–20 +1.8% (t 1.9); 21–63 +1.5% (t 1.7); the control, 5,725 other new listings: −0.3% over sessions 2–5 [S]
+  - pre-specified book, long from life session 21 to 252 against IWM: gross Sharpe 0.49, t 2.46, halves 0.67 and 0.28; eras 0.46, 0.50, −0.12, −0.34, 1.96; the parents' book −0.01 and the other new listings' −0.33 [S]
+  - not pre-specified, windows read from the session profile: short over sessions 3–5 at 10% of the book a name against IWM: gross Sharpe 0.96, t 4.84, 3.18%/yr at 3.31% vol, halves 1.07 and 0.88, eras 1.31, 0.35, 1.25, 1.58, 0.50; 336 names; invested on 12% of sessions [S]
+  - not pre-specified: long over sessions 7–63: 0.47, t 2.36; both together 0.80, t 4.03 [S]
+  - independent review: on the 336 traded names the sessions 3–5 fall is 2.45% (t −4.5), 2.31% winsorised; the ten best names are 41% of the first-week book's P&L and without them the Sharpe is 0.64; using only companies whose first row is the ex-date gives 0.97; a window of sessions 6–8 gives 0.14; beta to IWM 0.006 [S]
+- source: `results/ideas/2026-11-12_spinoffs.md` @ `549de39`; `results/ideas/spinoffs/results.json` @ `549de39`
+- supports: §3, §4
+- status: current. Figures re-derived by a separate reviewer agent in the session; the reviewer's scripts and the liquidity and era splits quoted in the card are not stored in the repository. The event books' windows were chosen after seeing the profile. No cost or borrow is modelled, and whether a share can be borrowed on its second day of trading is unknown. Not on shadow: no live spin-off reader yet
+
+### E-2026-11-14-01 · Method: a spin-off first-week shadow book starts on a first-seen reader of Alpaca's feed; the nightly marks step now follows changing names; four units' closing prints were on the Texas Stock Exchange
+- kind: method
+- era: ALPACA
+- date: 2026-11-14
+- figures:
+  - Alpaca's feed: 215 spin-off rows with process dates 2023-01-01 to 2026-11-14, none later; process date equals the ex-date at the median and is 10 days later at the 75th percentile [S]
+  - of 6 rows with process dates in the 30 days to 2026-11-14: 3 contingent value rights, 1 already listed share, 1 back-filled, 1 new common share [S]
+  - replay on that one share (MSGR, first regular-way session 2026-10-27, $69.6M traded): the rule holds it on 10-27, 10-28 and 10-29; over sessions 3 to 5 the trade would have lost about 1.7% of the book (Yahoo closes; a replay, not a record) [S]
+  - ET, SUN, SUNC and USAC: no closing print under NYSE on any of 6 sessions (2026-11-06 to 11-13); a print under the Texas Stock Exchange equal to Yahoo's close on 2026-11-13 (19.40, 65.23, 66.00, 25.14) [S]
+  - a full nightly cycle on the laptop against the real sources, twice: six books loaded, five decided for 2026-11-13, 109 symbols marked, the four units' gaps filled on the second run after the mapping [S]
+- source: `shadow/signals/spinoff.py` @ `fcfccd3`; `shadow/fetch/spinoffs.py` @ `fcfccd3`; `shadow/books/spinoff_first_week.json` @ `fcfccd3`; `shadow/nightly.py` @ `fcfccd3`; `shadow/sources.py` @ `fcfccd3`; `docs/REFERENCES.md` @ `fcfccd3` (§12so)
+- supports: §4, §5
+- status: current. A shadow book under the 2026-11-09 one-time approval (E-2026-11-09-03); SIMULATED, $1M, no borrow modelled. The probe of the feed and the print-by-exchange check were run in the session and are not stored as scripts. The VM has been unreachable from the laptop since 2026-11-10, so no shadow run there has been read and the units books' sessions from 2026-11-11 until this commit reaches the VM are expected to be UNMEASURED
+
 ### E-2026-11-14-02 · Method: Alpaca stamps a half day's end-of-day point at 17:00 New York, and the client's fixed 20:00 rule would have stopped the official P&L from 2026-11-27; the rule is now the session's close plus four hours
 - kind: method
 - era: ALPACA
@@ -4292,6 +4417,257 @@ that adds it does not exist when it is written.
 - source: `scripts/ops/pnl_report.py` @ `92c90f7`; `scripts/ops/risk_daily.py` @ `459fc73`; `scripts/cef/exposure_readout.py` @ `3743ad9`; `scripts/cef/exposure_readout.py` @ `5984cd2`; `scripts/ops/alpaca_read.py` @ `fa84045`; `scripts/cef/live_attribution.py` @ `8dfe3eb`
 - supports: §4, §5
 - status: built on branch reports-followup, under review; not installed; superseded in part by E-2026-11-15-53 (2026-11-15): corporate actions are narrowed, and an account corporate-action row stops the report rather than being handled
+
+### E-2026-11-15-01 · Incident: the VM's shadow runner was read for the first time since 2026-11-10; every run since the 2026-11-12 evening ended non-zero because four units had no closing print, as expected, and one run stopped on an exchange name the map did not have
+- kind: incident
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 6 runs from 2026-11-12 18:50 to 2026-11-14 07:20 ET, all on code `508bf6c`: five ended with exit 3 and one (2026-11-13 07:20) with exit 1 [V]
+  - the five books decided for 2026-11-12 and 2026-11-13 and were marked for both sessions; the marks step reported 12 (session, symbol) pairs with no primary print after 2026-11-12 and 16 after 2026-11-13 [V]
+  - the exit-1 run stopped with UnmappedExchange: Alpaca's asset record for ET named the exchange 'TXSE'; the same record read 'NYSE' on 2026-11-14 and 2026-11-15 from the laptop [V]
+  - 12 active assets carry exchange 'TXSE' on 2026-11-15; the 11 with a Yahoo price each have a closing print under the Texas Stock Exchange code on 2026-11-13 equal to Yahoo's close to the cent, and none under the NYSE or Nasdaq codes [V]
+  - none for the fix on the VM (the mapping commits `fcfccd3` and this one were pushed after the last run; the next run is 2026-11-16 18:50 ET)
+- source: `shadow/sources.py` @ `db57aa7`; `shadow/tests/test_sources_exchange.py` @ `db57aa7`
+- supports: §5
+- status: current. The log files were printed by the team lead's own command (the agent's read as the service user was refused by the permission check); the state directory, scoreboard and marks_gaps.csv on the VM have not been read. The venue check was run in the session and is not stored as a script
+
+### E-2026-11-15-02 · Result: a common stock gains between a special dividend's announcement and its ex-date; gross Sharpe 1.10 against IWM, 0.62 in names trading $5M a day; a shadow book is built and not yet running
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 3,601 special cash dividends on common shares with ex-dates 2000-06-01 to 2025-12-31 (CRSP on R2, prices to 2025-12-31); 64 have no declaration date and are left out [V]
+  - pre-specified WAIT book (long from the session after the news is public to the close before the ex-date, 10% a name against IWM, yield 1% or more): 1,654 events, gross Sharpe 1.10 (t 5.57), halves 0.78 / 1.36, eras 0.67, 1.09, 1.76, 2.23, 0.64; the same book on ordinary dividends 0.59 [V]
+  - pre-specified AFTER book (short X+1 to X+3): 0.63 (t 3.21), halves 0.64 / 0.64, −0.20 in 2023–25, placebo ten sessions later 0.06. EXDAY book: 0.56, with the ordinary-dividend control at 1.11 [V]
+  - checks not pre-specified: WAIT alpha 6.9% a year (t 5.85) with betas to IWM and SPY of −0.07 and 0.05; 0.98 without its ten best events; 0.62 (t 3.15) on dollar volume of $5M or more and 0.49 (t 2.46) on $20M or more; the same names over windows moved 60, 40 and 20 sessions earlier 0.66, 0.68, 1.02, and later −0.14, 0.03, −0.14 [V]
+  - Alpaca's feed on 2026-11-15: 67 special cash-dividend rows not marked foreign, 47 with a future ex-date; 22 companies pass the shadow book's type filter with an ex-date three or more sessions ahead, 12 of them yielding 1% or more [V]
+  - none for the feed's lag after an announcement (every row was already listed when the reader first ran)
+- source: `results/ideas/special_dividends/explore.py` @ `77d6119`; `results/ideas/special_dividends/checks.py` @ `77d6119`; `scripts/research/stage_crsp_special_divs.py` @ `77d6119`; `shadow/signals/specdiv.py` @ `77d6119`; `shadow/fetch/specdivs.py` @ `77d6119`; `docs/REFERENCES.md` @ `77d6119` (§12sv)
+- supports: §4, §5
+- status: current. Gross, no costs, no borrow, dividend tax not modelled. The shadow book is SIMULATED, $1M, under the 2026-11-09 one-time approval (E-2026-11-09-03), and is a local commit: it does not run until the commit reaches the remote `shadow` branch. An independent review on 2026-11-15 re-derived WAIT at 1.10 (t 5.57) from its own code and found no lookahead; it corrected two readings in the card: the windows moved earlier are 0.63, 0.57 and 0.69 once announcement sessions are removed (not 0.66, 0.68, 1.02), and a start 1 to 3 sessions late gives 0.89 to 0.98. Those figures are the reviewer's and are not stored as a script. AFTER and EXDAY were not re-derived
+
+### E-2026-11-15-03 · Result: the fall at an IPO lock-up expiry is in the data but the textbook three-session short has earned nothing since 2016; the selling now comes in the four sessions before the date
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 2,823 US IPOs with a lock-up date on SDC matched to a CRSP common share, IPO dates 2000-01-24 to 2025-12-16, prices to 2025-12-31; 1,670 eligible events [V]
+  - pre-specified book (short L−1 to L+1 against IWM, 10% a name): gross Sharpe 0.56 (t 2.82); halves 1.29 / 0.19; eras 1.04, 0.85, −0.04, 0.37, −0.21; the window moved 30 sessions earlier −0.00 and later −0.16 [V]
+  - event-time profile against IWM: −32bp on L−4, −24bp on L−2, −32bp on L−1, −37bp on L, +3bp on L+1 [V]
+  - per event, not pre-specified: L−1 to L+1 −1.40% in 2000–08, −0.61% in 2009–15, then +0.09%, −0.18%, +0.33%; L−4 to L −1.21% over the whole sample (t −4.4 by month) and −1.59%, −0.94%, −1.98%, −0.43%, −1.31% by era [V]
+- source: `results/ideas/ipo_lockups/explore.py` @ `b94c91f`; `results/ideas/ipo_lockups/checks.py` @ `b94c91f`; `scripts/research/stage_sdc_ipo_lockups.py` @ `b94c91f`; `docs/REFERENCES.md` @ `b94c91f` (§12lk)
+- supports: §4
+- status: current. Gross, no costs, no borrow; a revival of K5, dropped 2026-10-19 on a borrow count. Not promoted: the earlier window was chosen on this sample. Not independently reviewed
+
+### E-2026-11-15-04 · Result: a reverse-split share keeps falling for a month (gross short Sharpe 1.02), and Alpaca lends 4 of the 32 names the book would hold today
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 3,375 reverse splits on common shares on CRSP, ex-dates 2000-01-03 to 2025-12-31, prices to 2025-12-31; 1,260 eligible at the close of the ex-date (price ≥ $2, 21-session dollar volume ≥ $500,000) [V]
+  - pre-specified book (short X+2 to X+21 against IWM, 10% a name): gross Sharpe 1.02 (t 5.18), 25.1% a year on 24.5% volatility, worst drawdown −49%; halves 0.76 / 1.28; eras 1.08, 0.97, 1.81, 0.51, 1.55; 0.95 (t 4.79) on names trading $5M a day [V]
+  - controls: forward splits on the same rule 0.47; the same reverse splits 60 sessions later 0.45 and earlier 0.63; the book less the mean of those two 0.50 (t 2.53, not pre-specified) [V]
+  - per event over 20 sessions, short less IWM: mean +9.1%, median +7.8%, 64% positive; worst −714% of the position; Sharpe 0.80 without the ten best events [V]
+  - the pre-specified wait book (declaration to ex-date) had 114 tradable events: 0.27 (t 1.37); CRSP's declaration date is a median of one session before the ex-date [V]
+  - borrow at Alpaca read 2026-11-15: of 32 feed rows with an ex-date in the last 30 days passing the same floors, 4 shortable (one a closed-end fund); of the 8 trading $5M a day, 0; true on that date only [V]
+- source: `results/ideas/reverse_splits/explore.py` @ `21fceb3`; `results/ideas/reverse_splits/checks.py` @ `21fceb3`; `results/ideas/reverse_splits/borrow_now.py` @ `21fceb3`; `scripts/research/stage_crsp_reverse_splits.py` @ `21fceb3`; `docs/REFERENCES.md` @ `21fceb3` (§12rs)
+- supports: §4
+- status: current. Gross, no costs, no borrow fee. A revival of G1, closed 2026-10-15 on a borrow count with no return read; set aside again as a short at Alpaca, now with the return known and the borrow read on the names held. No shadow book built. Not independently reviewed
+
+### E-2026-11-15-05 · Result: the recovery after a follow-on share offering was about 0.7% in five sessions before 2013 and has faded; the later short shows nothing
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 13,491 US public follow-ons on SDC matched to a CRSP common share, issue dates 2000-01-05 to 2025-12-31, prices to 2025-12-31; 10,409 eligible at the close of the session after the issue date [V]
+  - pre-specified long (D+3 to D+7 against IWM, 10% a name): gross Sharpe 0.71 (t 3.57); halves 1.56 / 0.26; eras 1.34, 1.30, 0.17, 0.10, 0.15; the window 30 sessions later 0.04; 0.15 on names trading $5M a day [V]
+  - pre-specified short (D+8 to D+47): 0.07 (t 0.34); negative in four of five eras [V]
+  - named cut: launched before the issue date 1.00 (t 5.1), on it −0.30 (t −1.5) [V]
+  - not pre-specified: the launched-before book by era 2.09, 1.56, 1.02, 0.46, 1.00, with the median event at +0.69% in 2000–07 and 0.00% and +0.03% in 2018–22 and 2023–25; events launched one session before pricing 0.67 (t 3.37), positive in all five eras [V]
+- source: `results/ideas/follow_ons/explore.py` @ `c24c1fc`; `results/ideas/follow_ons/checks.py` @ `c24c1fc`; `scripts/research/stage_sdc_follow_ons.py` @ `c24c1fc`; `docs/REFERENCES.md` @ `c24c1fc` (§12fo)
+- supports: §4
+- status: current. Gross, no costs. The first return read on catalogue card K6. Not promoted; no shadow book. Not independently reviewed
+
+### E-2026-11-15-06 · Correction to E-2026-11-15-02: the special-dividend wait book is 0.89 to 0.98 once a dating exposure is removed, and about zero in 2023–25
+- kind: correction
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 60 sampled events from 2019 on, checked against 8-K acceptance times on EDGAR: first 8-K naming the dividend by the close of CRSP's declaration date 7, by the close of the next session 15, later 12, none found 26; none before CRSP's date [V]
+  - of the 12 later ones, 10 were public before the book's fill and 2 were not (THG, NREF): 2 of 34 checked events [V]
+  - the book decided 1, 2 and 3 sessions later, eligibility re-read: gross Sharpe 0.93 (t 4.71), 0.98 (t 4.96), 0.89 (t 4.50) against 1.10 as first reported [V]
+  - by era, decided at D1 / one / two / three sessions later: 2000–07 0.42 / 0.52 / 0.62 / 0.47; 2008–12 1.18 / 1.07 / 0.99 / 1.02; 2013–17 1.69 / 1.74 / 1.69 / 1.79; 2018–22 1.95 / 1.66 / 1.71 / 1.36; 2023–25 0.64 / −0.13 / 0.05 / 0.26 [V]
+- source: `results/ideas/special_dividends/edgar_dates.py` @ `f8f26c0`; `results/ideas/special_dividends/checks.py` @ `f8f26c0`; `results/ideas/2026-11-15_special_dividends.md` @ `f8f26c0`
+- supports: §4
+- status: current. Corrects the headline of E-2026-11-15-02 (1.10, and 0.64 in 2023–25). An 8-K can follow a press release, so the count of late events is an upper bound; foreign filers and REITs in the sample were not checked. The shadow book enters on the feed's first listing and is unaffected
+
+### E-2026-11-15-07 · Result: no drift after a dividend initiation or resumption once the news is two sessions old
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 1,625 initiations and resumptions on CRSP common shares (no cash dividend in the prior 730 days), ex-dates 2000-01-27 to 2025-12-30, prices to 2025-12-31; 1,123 eligible [V]
+  - pre-specified long (D1+3 to D1+62 against IWM, 10% a name): gross Sharpe 0.31 (t 1.57); halves 0.54 / 0.08; eras 0.49, 0.34, −0.19, 0.77, −0.31 [V]
+  - controls: the same events 120 sessions later 0.36 (t 1.82); 60 sessions earlier 1.45 (t 7.34) [V]
+  - per event against IWM: +1.34% in the ten sessions before D1, +1.66% in the ten from D1, then 0.2% to 0.4% a block [V]
+- source: `results/ideas/div_initiations/explore.py` @ `ee428e5`; `scripts/research/stage_crsp_div_initiations.py` @ `ee428e5`
+- supports: §4
+- status: current. Gross, no costs. Set aside: the later-window control equals the book. Not independently reviewed
+
+### E-2026-11-15-08 · Result: buying the issuer three sessions after a convertible issue is 0.67 gross, positive in every era and on liquid names, and small per event
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - 3,337 SDC convertible issues matched to a CRSP common share, issue dates 2000-01-13 to 2025-12-23, prices to 2025-12-31; 2,840 eligible [V]
+  - the follow-on rule unchanged (long D+3 to D+7 against IWM, 10% a name): gross Sharpe 0.67 (t 3.39); halves 0.77 / 0.59; eras 0.81, 0.24, 1.04, 0.36, 0.62; the window 30 sessions later −0.10; 0.68 on names trading $5M a day and 0.49 on $20M [V]
+  - issued 2011–22 (seen by E2 in October) 0.33; issued outside those years 0.59 (t 3.0) [V]
+  - not pre-specified: alpha 4.5% a year (t 3.30); per event +0.44% mean and +0.26% median; 0.42 without the ten best events; the hold begun one and two sessions later 0.45 and 0.56 [V]
+- source: `results/ideas/convert_issuance/explore.py` @ `40d1c60`; `results/ideas/convert_issuance/checks.py` @ `40d1c60`; `scripts/research/stage_sdc_convertibles.py` @ `40d1c60`; `results/ideas/follow_ons/explore.py` @ `40d1c60`
+- supports: §4
+- status: current. Gross, no costs. A re-run of E2 on a longer, differently dated list. Not on shadow: no live list of pricings. Not independently reviewed
+
+### E-2026-11-15-09 · Result: dated from the first news headline, the convertible rebound is not confirmed (0.29, t 0.96, 392 events); Alpaca's news feed names 73% of 2025's issues
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - a headline containing "convertible" exists on Alpaca's news feed for 430 of 1,286 SDC issues of 2015–2025: 8% to 30% a year through 2022, 46% in 2023, 69% in 2024, 73% in 2025; 118 of 119 first headlines in 2025 came outside trading hours [V]
+  - the first session opening after the headline equals SDC's issue date for 218 events, is one session later for 110 and one earlier for 64 [V]
+  - long from two sessions after that session, five sessions, against IWM: gross Sharpe 0.29 (t 0.96) on 392 events; −0.30 in 2015–22 and 1.02 in 2023–25; filled at that session's own close 0.20 (t 0.67) [V]
+- source: `results/ideas/convert_issuance/news_dating.py` @ `0b47e1d`; `results/ideas/convert_issuance/headline_dated.py` @ `0b47e1d`; `results/ideas/2026-11-15_convert_issuance.md` @ `0b47e1d`
+- supports: §4
+- status: current. A second look at the events of E-2026-11-15-08 with other dates, not a new sample; the headline-covered events are a non-random third. Gross, no costs. Not independently reviewed
+
+### E-2026-11-15-10 · Result: the special-dividend wait still works in small names (1.23 gross on $100k–$5M a day, 1.54 in 2023–25) and has stopped in large ones
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - the corrected book (decided one session late) by 21-session dollar volume at the decision: $100k–$1M 1.12 (478 events); $1M–$5M 0.58 (486); $5M and over 0.51 (967) with −0.35 in 2023–25; $100k–$5M 1.23 (t 6.22, 964 events), eras 0.92, 0.61, 1.53, 1.78, 1.54 [V]
+  - the $100k–$5M book two and three sessions late: 1.19 and 0.90; window moved 20, 40, 60 sessions later −0.18, 0.01, −0.13; without ten best events 0.99; beta to IWM −0.04 [V]
+  - ordinary dividends of the same companies in the same band: 1.00 on 17,606 events (0.32 in 2023–25); per session held 4bp against the special's 19bp [V]
+  - by yield inside the band: 0.37 (1–2%), 0.64 (2–5%), 1.04 (5% and over) [V]
+- source: `results/ideas/special_dividends/checks.py` @ `bfce4dc`; `results/ideas/2026-11-15_special_dividends.md` @ `bfce4dc`; `shadow/signals/specdiv.py` @ `bfce4dc`; `shadow/books/specdiv_wait_small.json` @ `bfce4dc`
+- supports: §4
+- status: current. Not pre-specified: the size cut was made after the result, at the team lead's request for small-capital ideas. Gross; closing prices; bid-ask spread in thin names unmeasured. A second shadow book, `specdiv_wait_small`, is the forward test
+
+### E-2026-11-15-11 · Result: short-term reversal is stronger in stocks ranked 1,501–4,000 (1.18 gross) than in the top 1,500 (0.96), and since 2013 all of it is on the short side
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - the `st_reversal_wide` rule unchanged on rank 1,501–4,000, price ≥ $5, $500k a day, CRSP to 2025-12-31: both sides gross Sharpe 1.18 (t 6.00), halves 2.09 / 0.93; signal 21 sessions stale 0.30; turnover 164 a year [V]
+  - long leg against IWM 0.52 (t 2.63), halves 1.13 / −0.02, −1.26 in 2023–25; short leg against IWM 0.90 (t 4.56), halves 1.05 / 0.99 [V]
+  - rank 1,501–2,500 1.19 and 2,501–4,000 1.24; median position 0.01% of a day's volume at $1M [V]
+- source: `results/ideas/st_reversal_small/explore.py` @ `bfce4dc`; `results/ideas/st_reversal_wide/explore.py` @ `bfce4dc`; `scripts/research/stage_crsp_equities.py` @ `bfce4dc`
+- supports: §4
+- status: current. Gross, no costs, no borrow. Not promoted: the leg that needs no borrow has earned nothing since 2013. Not independently reviewed
+
+### E-2026-11-15-12 · Result: the follow-on rebound held in small issuers through 2022 (1.00 gross on $100k–$5M a day) after stopping in large ones in 2013; 2023–25 is unclear
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - the pre-specified rebound book by 21-session dollar volume at the decision: $100k–$5M 1.00 (t 5.03, 3,285 events), eras 1.50, 1.02, 1.58, 1.53, 0.59; begun one session later 0.94; $5M and over 0.15 with −0.07, −0.88, −0.24 in the three eras since 2013 [V]
+  - median event in the $100k–$5M band by era: +0.37%, +0.21%, +0.52%, +1.11%, −0.53% [V]
+- source: `results/ideas/follow_ons/checks.py` @ `28ac8f3`; `results/ideas/2026-11-15_follow_ons.md` @ `28ac8f3`
+- supports: §4
+- status: current. Not pre-specified (a size cut made after E-2026-11-15-05). Gross, closing prices, spread unmeasured. No shadow book: no live list of offerings
+
+### E-2026-11-15-13 · Result: the small-name special-dividend book survives the quoted spread (ask-to-bid +1.21% per event against +1.72% gross)
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - CRSP closing bid and ask on the book's own trades, $100k–$5M a day, 959 of 964 events quoted: spread at the entry close median 0.27%, mean 0.57%, 90th percentile 1.25% [V]
+  - per event against IWM, bought at the closing ask and sold at the closing bid: mean +1.21%, median +0.48%, 55% positive, against +1.72% and +0.97% at closing prices [V]
+  - the same by era: +0.92%, +0.21%, +1.71%, +1.88%, +2.24% (medians +0.19%, −0.41%, +1.40%, +1.03%, +1.00%) [V]
+  - by band: $100k–$1M spread median 0.58%, ask-to-bid +1.74% (median +0.54%); $1M–$5M 0.14%, +0.68% (+0.40%); $5M and over 0.05%, +0.60% (+0.36%) [V]
+- source: `results/ideas/special_dividends/checks.py` @ `d03e025`; `scripts/research/stage_crsp_special_divs.py` @ `d03e025`; `results/ideas/2026-11-15_special_dividends.md` @ `d03e025`
+- supports: §4
+- status: current. A real-money view, labelled and kept apart from the gross result; an upper bound on one round trip's quoted cost, not an estimate of fills. Depth at the quote is unmeasured
+
+### E-2026-11-15-14 · Result: merger targets too small for arbitrage funds pay a wider spread per deal and make a worse book (0.32 over bills)
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - friendly all-cash deals, target priced $2+ and trading $100k to under $1M a day, CRSP to 2025-12-31: 541 deals (21 a year), 14.4% withdrawn; per deal +3.84% mean and +2.53% median over a median 60 sessions; 5th percentile −13.4% [V]
+  - the book (equal weights, flat under five live deals): Sharpe over bills 0.32 (t 1.65), halves 0.82 / −0.15, −0.52 in 2023–25, flat on 52% of sessions [V]
+  - the same rules on $5 and $1M or more: 1,865 deals, 6.5% withdrawn, +1.77% mean and +1.48% median per deal, 0.71 over bills (t 3.61); on $2 and $1M–$5M: 542 deals, 0.58 [V]
+- source: `results/ideas/merger_arb/micro.py` @ `45148ea`; `results/ideas/merger_arb/explore.py` @ `45148ea`; `results/ideas/2026-11-12_merger_arb.md` @ `45148ea`
+- supports: §4
+- status: current. The band was fixed before its returns were read. Gross, no costs; spread not staged. Set aside
+
+### E-2026-11-15-15 · Result: earnings drift in stocks ranked 1,501–4,000 is 1.27 gross on the long side alone against IWM, positive in every era; independently re-derived
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - universe and rule fixed before any return was read: rank 1,501–4,000, price ≥ $5, $500k a day; the `pead_wide` rule on the IBES surprise score, 40 sessions, shift(2); CRSP to 2025-12-31, 291,872 releases [V]
+  - both sides gross Sharpe 1.30 (t 6.60), halves 1.29 / 1.33, signal 126 sessions late 0.41 [V]
+  - long leg against IWM 1.27 (t 6.42), 12.8% a year on 10.1% volatility, halves 1.45 / 1.06, eras 1.65, 1.18, 1.40, 0.54, 1.50, late control 0.27; short leg 0.33 (t 1.68) [V]
+  - the announcement-move sort, pre-specified as the second sort: 0.59, −0.06 since 2013, late control 0.68 [V]
+  - independent review: long leg re-derived at 1.26 (t 6.39), identical on 6,435 of 6,437 days; no lookahead found; delay 1, 2, 5, 10, 20 sessions gives 1.12, 0.99, 0.77, 0.59, 0.36 [S]
+  - stored checks, not pre-specified: 1.37 less its own universe; 1.12 with every release known the session after its date; 0.68 (t 3.41) sorted on surprise over consensus with that timing; stock-side cost of 5 / 15 / 30bp per unit traded gives 1.06 / 0.65 / 0.03 [V]
+- source: `results/ideas/pead_small/explore.py` @ `525d299`; `results/ideas/pead_small/checks.py` @ `525d299`; `results/ideas/pead_wide/explore.py` @ `525d299`; `scripts/research/stage_ibes_surprises.py` @ `525d299`; `results/ideas/2026-11-15_pead_small.md` @ `525d299`
+- supports: §4
+- status: current. Gross; the cost figures are a labelled real-money view. The IBES consensus construction and CRSP's delisting row could not be checked at source by the reviewer. Not on shadow
+
+### E-2026-11-15-16 · Result: the core paper book is flat on a near-worst NAV draw while its signal earned; an ETF hedge of the NAV part lowers the backtest Sharpe
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - `cef` paper account, Alpaca end-of-day equity: $100,000.00 to $99,902.79 over 34 sessions to 2026-11-13, 7.3% annualised volatility [V]
+  - rebuilt from fills (sums to −$87 against −$97): hold +$522, of which NAV part −$3,164 and discount part +$3,685; fills −$609 (6.5bp on $931,022 traded); the two muni funds' NAV part −$3,350 [V]
+  - backtest of the frozen spec, 2013-01 to 2026-10-14, gross: book Sharpe 1.00 (t 4.20), discount part 1.02, NAV part −0.09 (t −0.40) with 15% of the variance and correlation −0.22 with the discount part [V]
+  - ETF hedge fixed before any hedged return was read (MUB, HYG, BKLN; 5-session NAV betas over 252 sessions to t−1): every group 0.93, muni only 0.94, no MUB short 0.94; volatility unchanged (5.71% to 5.73%); lower than unhedged in 2016–19, 2020–22 and 2023–26 [V]
+  - 34-session windows in the backtest at 1.3× sizing: NAV part mean −0.03%, worst −3.52%, 0.4% of windows below the live −3.16%; discount part mean +1.34%, 82% of windows below the live +3.69%; book mean +1.31%, 30% of windows below the live −0.10% [V]
+- source: `results/ideas/core_nav_hedge/explore.py` @ `e59f4d3`; `results/ideas/core_nav_hedge/live_split.py` @ `e59f4d3`; `results/ideas/2026-11-15_core_nav_hedge.md` @ `e59f4d3`
+- supports: §4
+- status: current. Gross, no costs. The live split uses Yahoo closes and NAVs and does not rebuild fees or unbooked distributions; panels end 2026-10-14, so the live window is outside the backtest. Hedge set aside; not independently reviewed
+
+### E-2026-11-15-17 · Result: newly converted savings banks earn thrift beta in their first year, 0.32 against seasoned thrifts and negative since 2016; the niche hunt's 32 ideas are logged
+- kind: result
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - niche hunt, six scouts and three skeptics on public sources: 32 ideas; skeptics' verdicts 5 test first, 9 worth a test, 15 weak, 3 dead [S]
+  - thrift conversions, rule fixed before any return was read: 147 new CRSP listings with SIC 6035/6036 and a first close of $8 to $16, 1995-02-14 to 2025-05-02, prices to 2025-12-31; days 6 to 250, 10% a name [V]
+  - first year less the equal-weighted seasoned-thrift return: Sharpe 0.32 (t 1.79), halves 0.56 / −0.08, eras 0.21, 0.94, 0.09, −0.29; less IWM from 2000-05: 0.36 (t 1.81); unhedged 1.10 [V]
+  - per event, days 6 to 250 less seasoned thrifts: mean +3.0%, median −1.9%, 45% positive (t 1.13); the 17 listed 2016–25: −6.9% (t −1.89) [V]
+  - control, days 251 to 630 less seasoned thrifts: −8.2% per event (t −3.27); book −0.12 [V]
+  - median dollar volume on days 6 to 60 $165,038; median closing spread on day 5 0.60% [V]
+- source: `results/ideas/thrift_conversions/explore.py` @ `7da05ab`; `scripts/research/stage_crsp_thrift_listings.py` @ `7da05ab`; `results/ideas/2026-11-15_thrift_conversions.md` @ `7da05ab`; `results/ideas/2026-11-15_niche_hunt.md` @ `7da05ab`; `results/ideas/niche_hunt/hunt.json` @ `7da05ab`
+- supports: §4
+- status: current. Gross, no costs. Second-step conversions could not be separated in CRSP. The hunt's figures are the scouts' and skeptics', not re-read here. Set aside
+
+### E-2026-11-15-18 · Kill: a recent share offering does not spoil a small-stock earnings-drift long
+- kind: kill
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - rule fixed before the filtered return was read: drop from the long tenth any stock that priced an SDC follow-on in the 90 days strictly before the decision; CRSP to 2025-12-31 [V]
+  - long leg against IWM as fixed 1.27 (t 6.42); flagged names removed 1.24 (t 6.26); removed only when primary shares were sold 1.25 (t 6.34) [V]
+  - 2.9% of long name-days are flagged; the filtered leg less the unfiltered one −0.22% a year (t −0.94); flagged names alone 0.34 (t 1.72), 10.8% a year on 31.7% volatility [V]
+- source: `results/ideas/pead_small/issuance_filter.py` @ `4919bfd`; `results/ideas/2026-11-15_pead_small.md` @ `4919bfd`
+- supports: §4
+- status: current. Gross. A second look at a sample already read; proposed by the niche hunt. Closed
+
+### E-2026-11-15-19 · Method: the small-stock earnings-drift book is on shadow, on a free earnings feed checked against the licensed one
+- kind: method
+- era: ALPACA
+- date: 2026-11-15
+- figures:
+  - Yahoo's earnings calendar by day against IBES on five 2025 release days: 1,443 of 1,524 releases found; rank correlation of the surprise 0.80 on 1,276; sign agrees on 87%; top tenths among ranks 1,501–4,000 share 44 of 64 names [V]
+  - first fetch, 76 days back: 3,699 rows listed, 1,791 stored as small US companies with a complete result; 1,455 live signals on 2026-11-13 and 96 names in the long tenth; 2 min 59 s [V]
+  - the book runs the version the backtest scored 0.68 (t 3.41) on licensed figures, not the 1.27 version (E-2026-11-15-15) [S]
+- source: `shadow/fetch/earnings.py` @ `afd24b9`; `shadow/signals/pead.py` @ `afd24b9`; `shadow/books/pead_small_long.json` @ `afd24b9`; `shadow/tests/test_pead.py` @ `afd24b9`; `docs/REFERENCES.md` @ `afd24b9`; `results/ideas/2026-11-15_pead_small.md` @ `afd24b9`
+- supports: §4
+- status: current. Simulated book, starts 2026-11-17 once the VM's shadow clone has this commit. The IBES comparison was run in the session and is not stored as a script. Size is a dollar limit, not a rank; foreign listings are not removed
 
 ### E-2026-11-15-50 · Ruling and method: the corporate-action handling is fixed properly after its review: one phantom per split, the account's own rows rebased in a corp line of their own, and late rows closing the open phantom
 - kind: method
@@ -4370,6 +4746,82 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current. Not tagged, released or installed; the tag and the install are the team lead's. Before the install: prod_state must measure the VM, because a re-install without `--armed` disarms; `quantt/session/run.py` changed, so RUNBOOK 8.6 step 2's replay applies; C4's timers are disabled before the core's install and C4 is re-installed after it (8.9); the alert push needs `alert-smtp-user` and `alert-smtp-pass` in the vault (8.11)
 
+### E-2026-11-16-01 · Method: a paper runner for the event sleeves is built and reviewed; it is not installed or armed
+- kind: method
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - team lead's ruling of 2026-11-15: build and test a runner that trades chosen shadow books in one separate Alpaca paper account; the team lead installs and arms it [V]
+  - an independent review of the order phase found no path that sends an order it must not, four book-keeping defects and four notes; all eight are fixed, each with a test that fails without the fix [S]
+  - read from Alpaca on 2026-11-16, GET only: a single-asset lookup returns easy_to_borrow and borrow_status (IWM, MHD, PDI); a daily-bar request with start equal to end returns that day's bar, stamped 05:00Z [V]
+  - the shadow runner writes decisions at 18:50 and 20:50 on the as-of day and 07:20 on the trading day, before the runner's 09:30 New York cut-off [V]
+- source: `quantt/sleeves/run.py` @ `5b9ec56`; `quantt/sleeves/net.py` @ `5b9ec56`; `quantt/sleeves/ledger.py` @ `5b9ec56`; `quantt/sleeves/inputs.py` @ `5b9ec56`; `quantt/sleeves/prices.py` @ `5b9ec56`; `quantt/sleeves/tests/test_run.py` @ `5b9ec56`; `ops/sleeves/events_sleeves.json` @ `5b9ec56`
+- supports: §4
+- status: current. Paper only. Never run against a broker: the command-line entry and key loading are untested. No systemd units exist for it yet. Every value in the book file is a proposal for the team lead
+
+### E-2026-11-16-02 · Ruling: the event sleeves trade in a new $100,000 paper account, seven books at $15,000 each, gross to 1.5x
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - team lead, by question prompt: "New $100k paper account (Recommended)" and "Equal, gross up to 1.5x (Recommended)" [V]
+  - books: specdiv_wait_small, specdiv_wait, cef_exdate_after, cef_exdate_before_after, units_exdate_after, units_exdate_before_after, pead_small_long [V]
+  - derived from the ruling and awaiting confirmation at install: minimum order $25, largest name $35,000, at most 300 orders, sent from 20 to 2 minutes before the close; the core's send budget fits 346 orders in that window [V]
+- source: `ops/sleeves/events_sleeves.json` @ `369a8bb`; `quantt/sleeves/tests/test_run.py` @ `369a8bb`; `quantt/sleeves/deploy/install_events_vm.sh` @ `369a8bb`; `quantt/sleeves/deploy/README.md` @ `369a8bb`
+- supports: §4
+- status: current. Nothing is installed or armed; the installer has passed a shell syntax check only and has never run. Supersedes "shadow books first" (2026-11-09) for these seven books
+
+### E-2026-11-16-03 · Ruling: the events paper account is $1,000,000, $100,000 a book; the core stays at $100,000
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - team lead, by question prompt: "$1M, $100k per book (Recommended)", the small-name special-dividend book at $25,000; and "Leave the core at $100k (Recommended)" [V]
+  - the sleeves cannot share the core's account: each runner requires every position in its account to be its own, and the ex-date books hold the core's funds [V]
+  - re-derived limits awaiting confirmation at install: minimum order $100, largest name $190,000 (IWM hedges three books for up to $162,500), 300 orders, 20 to 2 minutes before the close [V]
+  - Alpaca's paper-trading page: a paper account starts at $100k and can be reset to an arbitrary amount; the largest amount is not stated [S]
+- source: `ops/sleeves/events_sleeves.json` @ `ef8b93a`; `quantt/sleeves/tests/test_run.py` @ `ef8b93a`; `quantt/sleeves/deploy/README.md` @ `ef8b93a`; `docs/REFERENCES.md` @ `ef8b93a`
+- supports: §4
+- status: current. Supersedes the $15,000-a-book sizing of E-2026-11-16-02; the gross cap of 1.5x stands. Nothing is installed or armed
+
+### E-2026-11-16-04 · Kill: the antidumping-decision calendar has too few listed small petitioners to test
+- kind: kill
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - USITC investigations file, fetched 2026-11-16: 4,446 records; 76 preliminary-phase antidumping or countervailing cases started 2021–2025 name a petitioner (10, 7, 12, 27, 20 by year); none does before 2021 [V]
+  - 11 of the 76 name a company matched by name to a CRSP common stock; 7 one with a median market value under $5bn in 2021–25 (0, 0, 3, 1, 3 by year), against a gate of about 8 a year set before the count [V]
+  - 184 distinct petitioner names, led by a union and by coalitions whose members the file does not list [V]
+- source: `results/ideas/2026-11-15_niche_hunt.md` @ `1713155`; `results/ideas/niche_hunt/hunt.json` @ `1713155`
+- supports: §4
+- status: current. Counts only; no return read. The name match is rough and the count was made in the session, not stored as a script. Coalition member lists would reopen it
+
+### E-2026-11-16-05 · Kill: patent import cases at the trade commission give about four small listed complainants a year
+- kind: kill
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - USITC investigations file, fetched 2026-11-16: 1,390 violation-phase (section 337) investigations; matched to CRSP issuer names valid on the event date, 2009–2025 [V]
+  - institutions with a matched complainant 165, of which 71 under $5bn at the event (1 to 10 a year); judges' merit rulings for those small complainants 21 violation and 16 no violation [V]
+  - matched respondents: 448 institutions, 136 under $5bn [V]
+- source: `results/ideas/usitc_337/stage.py` @ `c8a31de`; `results/ideas/2026-11-15_niche_hunt.md` @ `c8a31de`
+- supports: §4
+- status: current. Counts only; no return read. Exact match on the reduced company name, so subsidiaries filing under their own names are missed
+
+### E-2026-11-16-06 · Result: companies priced below net cash earn 0.75 against IWM, but nothing over cash-rich peers once they must be tradable
+- kind: result
+- era: ALPACA
+- date: 2026-11-16
+- figures:
+  - rule fixed before any return was read: latest reported Compustat quarter, cash less all debt at or above market value; non-financial, $1, $10M, $100k a day; equal weights monthly against IWM; CRSP to 2025-12-31 [V]
+  - BELOW against IWM: Sharpe 0.75 (t 3.77), 19.0% a year on 25.4% volatility, halves 1.00 / 0.57, eras 0.80, 1.04, 0.35, −0.01, 1.33; worst drawdown −83% [V]
+  - control (net cash half to one times market value) 0.45; BELOW less the control 0.51 (t 2.56), halves 0.70 / 0.37 [V]
+  - not pre-specified: on price $2 and $500k a day 0.28 (t 1.42) and −0.02 less its control; lists three months late 0.52; non-drug companies less their control 0.00 [V]
+  - per name-month against IWM, 9,369: mean +1.9%, median −2.1%, 44% positive, best +1,211% [V]
+- source: `results/ideas/net_cash/explore.py` @ `e872349`; `results/ideas/net_cash/checks.py` @ `e872349`; `scripts/research/stage_comp_net_cash.py` @ `e872349`; `results/ideas/2026-11-16_net_cash.md` @ `e872349`
+- supports: §4
+- status: current. Gross. The harness's constant weights rebalance daily at closing prices, which flatters shares this thin; not rescored at the quote. Not promoted; not independently reviewed
+
 ### E-2026-11-18-01 · Release: release-20261116-1 is installed on the VM for both books, armed as measured, with the report jobs; a C4 or reports install refuses while the shadow runner's unit files are on disk
 - kind: release
 - era: ALPACA
@@ -4414,6 +4866,340 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current, not released. The book still decides on one NAV source (Yahoo). The replacement second source is the team lead's choice from the 2026-10-19 shortlist; changing how the fetcher looks to the site is ruled out there. Not determined: whether the 21:45 QA job always finds the 21:40 collect's report for the as-of day (if not, Q9 says UNMEASURED and names the file)
 
+### E-2026-11-18-04 · Ruling: the event sleeves are sized by equal risk per family and start at a quarter size on a ladder; a shadow book is promoted after ten clean sessions; no combined risk budget yet
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - backtest daily correlations between sleeves of different families are within ±0.06 (11 series; core against C4 0.02 over 3,145 sessions, 2013-06-25 to 2025-12-23); within a family the variants are one bet: CEF ex-date pair 0.70, units pair 0.65, special-dividend pair 0.49; from the portfolio-manager run of 2026-11-18, gross; panels: core to 2026-10-14, CRSP event panels to 2025-12-31 [S]
+  - live, core against C4 official daily P&L: +0.16 over 10 sessions (2026-11-04 to 11-17), 95% interval -0.52 to +0.72: no information yet [S]
+  - the seven event sleeves at the 2026-11-16 sizes ($100,000 each, $25,000 for the small-name book): the units ex-date pair is 68.3% of the account's backtest risk, earnings drift 16.6%, CEF ex-date 10.5%, special dividends 4.6%; covariance of the seven series, 2000-06-01 to 2025-12-23, 6,430 sessions [V]
+  - equal risk per family on the same $625,000, the small-name book kept at $25,000 and the $81,000 that frees left unallocated: cef_exdate_after $132,000, cef_exdate_before_after $97,000, units_exdate_after $52,000, units_exdate_before_after $36,000, specdiv_wait $105,000, specdiv_wait_small $25,000, pead_small_long $96,000 [V]
+  - three schemes on 2014-06-25 to 2025-12-23: equal risk beats equal dollars by +0.59 to +1.22 of Sharpe on all 11 series and +0.22 to +0.70 without the four ex-date books (90% block-bootstrap intervals); a shrunk mean-variance scheme is within noise of equal risk. The portfolio Sharpes themselves (5 to 6 with the ex-date books, about 3 without) are gross backtests leaning on unreviewed ex-date results and are not forecasts [S]
+  - the team lead's answers: sizing "Equal risk per family"; combined budget "No combined budget yet"; promotion "10 clean sessions + ladder"; build order "Runner PR, then report" [V]
+  - `ops/sleeves/events_sleeves.json` now holds each sleeve at a quarter of its full size (every sleeve has zero live sessions), with `min_order_usd` 25 and `max_name_usd` 50,000 re-derived for that stage; the pinning test was edited with it [V]
+- source: `ops/sleeves/events_sleeves.json` @ `b5b5687`; `quantt/sleeves/tests/test_run.py` @ `b5b5687`; `docs/SYSTEM.md` @ `b5b5687` (section 5, the block dated 2026-11-16 and 2026-11-18); the allocation scripts and per-sleeve series are outside the repository in `~/quantt_research/pm_alloc_2026-11-18/`
+- supports: §5
+- status: current. The events runner is not installed and has never run against a broker. The allocation analysis was one run by one agent and has not been independently re-derived; the C4 series in it is the trial-52 series, not the deployed blend
+
+### E-2026-11-18-05 · Result: a thin ETF's gap to its liquid twin closes before a next-close fill; killed, and the review agrees
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a thin ETF's gap to its most-correlated liquid twin, traded back for 5 sessions; data: every CRSP fund/ETF, 6,933 with dead ones (2025-12-31) [S]
+  - last-trade prices 0.32 (t 1.55); mid quotes 0.48 (t 2.35); one more session's wait 0.09; 29,439 events [S]
+  - independent adversarial review, which re-ran the scripts: kill holds; without the 10 best days 0.24 [S]
+- source: `results/ideas/2026-11-16_etf_twins.md` @ `a9f6c44`; `results/ideas/etf_twins/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE (killed): the gap closes before a next-close fill. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-06 · Result: share-class spreads revert (0.89 gross) but the average trade is smaller than the quoted spread; not promoted
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: spread reversion between two share classes of one company, 245 pairs; data: CRSP daily with delisted (2025-12-31) [S]
+  - gross Sharpe 0.89 (t 4.54), every era positive, both controls flat; +28.5bp a trade against a 28.9bp two-leg quoted spread [S]
+  - independent adversarial review, which re-ran the scripts: holds; at fill-day closing quotes the mean trade is −40bp [S]
+- source: `results/ideas/2026-11-16_dual_class_pairs.md` @ `a9f6c44`; `results/ideas/dual_class_pairs/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE, not promoted: smaller than the spread; reopens on closing-auction fill data or a borrow reading. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-07 · Result: S&P SmallCap 600 deletions do not beat matched controls at month-end entry; set aside with a 3-session lead
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: rebound in S&P SmallCap 600 deletions and give-back in additions after the effective date; data: CRSP daily; change list (2025-12-31) [S]
+  - deletions vs IWM 20 sessions 0.19 (t 0.80), no better than matched controls [S]
+  - independent adversarial review, which re-ran the scripts: holds; lead, picked after looking: a 3-session rebound on the 160 deletions datable to the rebalance Friday [S]
+- source: `results/ideas/2026-11-16_sp600_changes.md` @ `a9f6c44`; `results/ideas/sp600_changes/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE; reopens as one pre-specified 3-session rule. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-08 · Result: the leveraged-ETF give-back happens on the next session before a next-close fill; set aside, with an open-fill lead found in review
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: fade the underlying after days when leveraged ETFs' forced closing trade was large against its volume; data: CRSP daily, 373 leveraged funds identified by rule (2025-12-31) [S]
+  - next-close fills: sector/index book 0.09 (t 0.37); the give-back is at t+1 (+11.3bp, t 5.56), before the fill [S]
+  - independent adversarial review, which re-ran the scripts: weaker than claimed; open-to-close on t+1 scores 1.49 (t 6.5) gross at 154× turnover, found after the fact [S]
+- source: `results/ideas/2026-11-16_levered_etf_reversal.md` @ `a9f6c44`; `results/ideas/levered_etf_reversal/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE under next-close fills; reopens as a pre-specified next-open rule scored on opening quotes. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-09 · Result: nothing is left of a thin ETF's stale close at the desk's fill; killed
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: drift left after a thin ETF's stale close, filled at the next close; data: every CRSP fund/ETF (2025-12-31) [S]
+  - main book 0.18 (t 0.92); +3.1bp per event against a 28bp median spread; controls flat [S]
+  - independent adversarial review, which re-ran the scripts: kill holds; a residual on mids in the fastest cells earns about 1.2bp per unit traded against a 14bp half spread [S]
+- source: `results/ideas/2026-11-16_thin_etf_catchup.md` @ `a9f6c44`; `results/ideas/thin_etf_catchup/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE (killed). Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-10 · Result: predicted crossings of the Russell 2000's bottom edge earn nothing over their controls; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: stocks crossing between the Russell 2000 and the microcap zone, predicted from market-value ranks; data: CRSP daily (2025-10-31) [S]
+  - additions vs IWM 0.10; deletions less additions 20 sessions +1.8% a year (t 1.19), 60 sessions +4.0% (t 1.41), 2009 alone +54%; controls match [S]
+  - independent adversarial review, which re-ran the scripts: holds [S]
+- source: `results/ideas/2026-11-16_russell_micro_boundary.md` @ `a9f6c44`; `results/ideas/russell_micro_boundary/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE; reopens on FTSE Russell's published add/delete lists. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-11 · Result: closed-end funds keep falling after a distribution cut; the raise drift is weaker than first claimed
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a CEF's regular distribution cut (rebound) or raise (drift) as a dated event, 20 and 60 sessions; data: every CRSP closed-end fund with dead ones (2025-12-31) [S]
+  - cuts keep falling: book −0.94 (t −4.78), −85bp per event over 20 sessions (t −5.49, n 2,224), every era; raises +0.80 (t 4.08), +83bp per event (n 1,097), taxable funds only [S]
+  - independent adversarial review, which re-ran the scripts: raises weaker than claimed, +25bp (t 1.2) dated from the ex-date and −15bp in 2024–25 [S]
+- source: `results/ideas/2026-11-16_cef_dist_changes.md` @ `a9f6c44`; `results/ideas/cef_dist_changes/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE: long-after-a-cut killed; the cut list is a candidate filter for the core book (untested); raises need a timed live feed. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-12 · Result: closed-end funds fall about 2.5% through a rights offering's subscription period; the long after expiry does not beat its control
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a CEF's fall through a rights offering's subscription period and its recovery after expiry; data: CRSP distributions and daily (2025-12-31), 130 eligible events [S]
+  - long after expiry 60 sessions 0.39 (t 1.99), no better than the same funds a year earlier; the fall is the result: −252bp over the subscription period (t −6.4) [S]
+  - independent adversarial review, which re-ran the scripts: holds; earning the fall needs a short, and at 10% borrow the short book falls from 0.71 to 0.45 [S]
+- source: `results/ideas/2026-11-16_cef_rights_offerings.md` @ `a9f6c44`; `results/ideas/cef_rights_offerings/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE: reopens on borrow measured inside the window. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-13 · Result: dated term trusts earn the bill rate into termination and nothing over it; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: dated term CEFs converging to NAV into their termination date; data: CRSP names and daily (2025-12-31), 38 events in 31 years [S]
+  - long only 0.60 (t 3.33) but 0.06 less the CEF market and +0.05% per event less SHY: the return is the bill rate [S]
+  - independent adversarial review, which re-ran the scripts: null holds; the liquidating payment was missing from the panel and adding it does not change the answer [S]
+- source: `results/ideas/2026-11-16_cef_term_trusts.md` @ `a9f6c44`; `results/ideas/cef_term_trusts/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE; reopens with point-in-time NAVs from EDGAR. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-14 · Result: the January rebound in the year's worst closed-end funds is not there; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: the year's worst fifth of CEFs bought in mid-December for the January rebound; data: CRSP CEF panel (2025-12-31), 25 seasons [S]
+  - worst fifth less all funds +0.50% a season (t 0.97, 14 of 25); small-cap stocks under the same rule +0.91% [S]
+  - independent adversarial review, which re-ran the scripts: null holds [S]
+- source: `results/ideas/2026-11-16_cef_tax_loss_january.md` @ `a9f6c44`; `results/ideas/cef_tax_loss_january/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-15 · Result: a small pay-date bump exists in closed-end funds but the reinvestment mechanism's own tests fail; explore
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: the reinvestment plan agent's buying around a CEF's payment date; data: CRSP distributions and daily (2025-12-31), 72,439 events [S]
+  - book 1.66 (t 8.41) at 71× turnover; +9.1bp per event (t 3.68); the mechanism's own tests fail (discount less premium funds −0.05) [S]
+  - independent adversarial review, which re-ran the scripts: weaker than claimed; about +28bp over P−1..P since T+1 settlement, against a 19bp spread [S]
+- source: `results/ideas/2026-11-16_cef_drip_paydate.md` @ `a9f6c44`; `results/ideas/cef_drip_paydate/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. EXPLORE: reopens as one settlement-aligned rule run forward. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-16 · Result: unit trusts' forced selling of closed-end funds into a termination date, and the rebound after, survive an adversarial review; promising
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: forced selling of CEFs by unit trusts into their mandatory termination date, and the rebound after; data: EDGAR 487 filings (First Trust, a one-in-three sample) and CRSP daily (2025-12-31), 24,623 events [S]
+  - T−9..T −39.9bp (t −9.8); T+1..T+10 +33.2bp (t 7.8); pre-specified T+2..T+11 +14.9bp (t 3.7); dose-response by sale share; controls score nothing [S]
+  - independent adversarial review, which re-ran the scripts: could not break it; the T-close entry was chosen after seeing the profile, and a day late keeps 13bp [S]
+- source: `results/ideas/2026-11-16_uit_cef_flows.md` @ `a9f6c44`; `results/ideas/uit_cef_flows/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. PROMISING (EXPLORE, cleared): next a pre-specified T-close rule and a shadow book. Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-17 · Result: a soft group cap on the core book is no better than a plain size cut; set aside
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule, fixed before any return was read except where the card says otherwise: a soft cap on each group's net position in the core book, on the canonical harness; data: the desk's CEF panels (2026-10-14) [S]
+  - uncapped 1.15 (t 4.20); a 25% flat cap 1.13 at lower gross; no cap beats a plain size cut [S]
+  - independent adversarial review, which re-ran the scripts: holds; the muni evidence is one episode in 2026 [S]
+- source: `results/ideas/2026-11-16_core_group_cap.md` @ `a9f6c44`; `results/ideas/core_group_cap/explore.py` @ `a9f6c44`; `results/IDEA_LEDGER.md` @ `a9f6c44`
+- supports: §4
+- status: current. SET ASIDE: no cap (team lead, 2026-11-18, leaves the core uncapped). Gross. The builder's run was cut off on 2026-11-16 and completed on 2026-11-18 by a second agent holding the written rule; figures are the agents' reports, not re-derived by the desk lead. The reviewer's own scripts were scratch files and are not in the repository
+
+### E-2026-11-18-20 · Method: two unit-trust termination shadow books are written, on a rule fixed before any 2026 price was read and a calendar of 271 trusts built from every First Trust and Guggenheim prospectus since 2023-07
+- kind: method
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the rule as written: a closed-end fund held by a terminating First Trust or Guggenheim closed-end trust, price $2 or more and 21-session dollar volume $100,000 or more read 10 sessions before T; decided after the close of T−1, bought at the close of T, sold at the close of T+3; long only; weights in proportion to the number of trusts, adding to 1, no fund above 10% [S]
+  - the second book keeps events whose estimated sale is 5% or more of the fund's dollar volume over T−18..T−10, size from 24F-2NT notices filed more than 30 days before T [S]
+  - forms 487 of the two sponsors filed 2023-07-01 to 2026-11-17: 2,374; read in full (15 or more mentions of "closed-end"): 426; trusts parsed 605; closed-end trusts 334; in the calendar (terminating 2026-01-02 to 2028-11-13) 271, First Trust 204 and Guggenheim 67; 6,876 trust-fund rows, 6,249 fund-events on 307 funds [V]
+  - unparsed and listed by accession number: 7 trusts, all Guggenheim's Flaherty & Crumrine Preferred Portfolio; forms 24F-2NT parsed: 269, for 206 of 241 registrants [V]
+  - the prospectus's own "CLOSED-END FUNDS" heading against the research's CRSP rule, on the 384 trusts the idea's crawl parsed from filings since 2023-07-01: the same answer on all 384 (195 closed-end, 189 not); local check on licensed rows, not stored [V]
+  - terminations from 2026-11-19 to 2027-11-18: 101 trusts (First Trust 78, Guggenheim 23) on 64 dates, 2,276 fund-events on 249 funds; trusts by month from November 2026: 2, 12, 10, 7, 6, 11, 7, 9, 5, 5, 8, 12, 7 [V]
+  - decisions in the next 252 sessions that hold anything: 151, median 30 funds, none under ten funds, so the 10% cap does not bind on the all-events book [V]
+  - first price fetch (Yahoo, 2026-11-18, after the rule was committed): 153 of 167 funds near a termination date have prices to 2026-11-17; the 14 without cannot be held [V]
+  - the first termination date ahead is 2026-11-20 (one trust, 30 funds, 29 with prices): decided 2026-11-19, bought at that close, if the commit is on the shadow branch by then [V]
+- source: `shadow/signals/uit_termination.py` @ `96b05ff`; `shadow/universes/build_uit_terminations_v1.py` @ `96b05ff`; `shadow/universes/uit_terminations_v1.csv` @ `96b05ff`; `shadow/books/uit_termination.json` @ `96b05ff`; `shadow/books/uit_termination_big_sale.json` @ `96b05ff`; `results/ideas/2026-11-16_uit_cef_flows.md` @ `96b05ff`; `docs/REFERENCES.md` @ `96b05ff` (§12ut)
+- supports: §4, §5
+- status: current. SIMULATED books, not evidence of what trading earns; committed locally on branch shadow-uit, not pushed and not on the VM. The nightly run itself was not run on the laptop (it needs the Alpaca data key); the price fetch and both signal functions were run on real prices, weights only, no return read. The 98 trusts that terminated between 2026-01-02 and 2026-11-18 are the out-of-sample year and have not been scored
+
+### E-2026-11-18-21 · A read-only promotion and ladder report for the event sleeves; the book file now states each sleeve's full size and family; three of the ladder's tests cannot be measured yet
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - `quantt/sleeves/promote.py` (`python3 -m quantt.sleeves.promote --shadow-state <dir> --events-state <dir>`) counts both rules of E-2026-11-18-04 from the two state directories and prints the one-line edit of the book file that is due; exit 0 agree, 30 a change is due, 31 unmeasured, 32 refused. It imports the standard library and `config.py` only and names no call that writes a file, which a test checks from source [V]
+  - a clean session, as implemented and for the team lead to confirm: one row of the shadow book's `scores.csv` whose status is SCORED or FLAT and whose filling decision (`decisions/<prev>.json`) was written before 13:00 New York on that session; eligible when the latest 10 rows are all clean. A flat day with an on-time decision counts; the engine also writes FLAT when no on-time decision exists, so the status alone is not used [V]
+  - the book file gains two required keys per sleeve, `full_capital_usd` and `family`: 132,000, 97,000, 52,000, 36,000, 105,000, 25,000 and 96,000 dollars in four families, the figures of E-2026-11-18-04; `capital_usd` is unchanged and is still the only size the runner trades (`run.py`, `net.py` and `ledger.py` are untouched) [V]
+  - the report refuses, naming the sleeve, a `capital_usd` that is not its full size x 0.25, 0.5 or 1; all 7 sleeves in the released file read as a quarter [V]
+  - not measurable, and reported as UNMEASURED: the 20-to-59 stage ("if fills track the shadow book" has no written definition; the report prints paper and shadow P&L on the same sessions and their difference, with no pass or fail) and the stage from 60 sessions (no sigma is recorded for any sleeve, and `sleeve_scores.csv` does not record the capital each session traded at) [V]
+  - run on the laptop on 2026-11-18 against the copy of the VM's 2026-11-17 scoreboard, which holds no state files, and no events state: all 7 shadow records and all 7 sleeve verdicts UNMEASURED, each naming the missing path, exit 31. The report has not been run against real state [V]
+  - on that 2026-11-17 scoreboard the most sessions any shadow book had was 5 (scored plus flat), so no book can have had 10 clean sessions then; whether each was on time cannot be read from a scoreboard [S]
+  - `.claude/skills/paper/SKILL.md` told agents to refuse "anything under `quantt/`" for a new sleeve; it now refuses a new account, a book config under `ops/books/` and a scheduler entry, and sends a sleeve in the events account through the report and a one-file PR [V]
+- source: `quantt/sleeves/promote.py` @ `99cbae4`; `quantt/sleeves/tests/test_promote.py` @ `99cbae4`; `quantt/sleeves/config.py` @ `99cbae4`; `ops/sleeves/events_sleeves.json` @ `99cbae4`; `quantt/sleeves/deploy/README.md` @ `99cbae4` ("Promotion and the ladder"); `.claude/skills/paper/SKILL.md` @ `99cbae4`
+- supports: §5
+- status: current, on branch `sleeve-promotion`, not merged and not released. Open for the team lead: whether a flat day with an on-time decision is a clean session; what "fills track the shadow book" means; which sigma the 60-session test uses (the backtest volatilities in `_note_sleeves` are the only candidate on record) and at what capital; whether a sleeve that has traded is demoted by a later unclean shadow day (the report does not)
+
+### E-2026-11-18-22 · Result: a hold-off after a distribution cut lowers the return of both live closed-end-fund books; no change to either
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - asked because E-2026-11-18-11 found funds keep falling after a cut, and a discount-reversion book might buy that; tested on the canonical harness with that card's event definition, rule fixed before any return was read: no new long, or flat, for 20 or 60 sessions after the cut is known [S]
+  - events: 38 cuts on 10 of the core's 13 funds since 2013-06-25 (2.9 a year, none after 2023-03-02); 235 cuts on 58 of the C4 z book's 74 funds since 2005 (10.9 a year); panels end core 2026-10-14, families 2026-10-09, CRSP events 2025-12-31 [S]
+  - the books do buy: position change from K-3 to K+5 is +4.1% of capital on the core (t 2.3) and +0.8% on C4 (t 3.5), against about zero at unchanged declarations; book P&L in the cut fund per event is +11bp and +17bp of capital at 20 and 60 sessions on the core (t 0.7, 0.8) [S]
+  - against the unchanged book, gross Sharpe: core 1.15, no new long 1.04 (20) and 0.91 (60, -140bp a year, t -2.2), flat 1.11 and 1.08; C4 1.34, no new long 1.34 and 1.24, flat 1.32 and 1.25; turnover moves 3.2% at most [S]
+  - placebo dates, 200 draws each: no variant beats them; no new long on the core is worse than 98.5% to 100% of draws; the 60-session rules are negative in every era with events on both books [S]
+- source: `results/ideas/2026-11-18_core_dist_cut_filter.md` @ `c85dd8e`; `results/ideas/core_dist_cut_filter/explore.py` @ `c85dd8e`; `results/IDEA_LEDGER.md` @ `c85dd8e`
+- supports: §4
+- status: current. Set aside: no spec change. One agent's run, not independently reviewed. Not done: the deployed C4 blend (only the z book could be driven), C4 on total returns, cuts after 2025-12-31
+
+### E-2026-11-18-23 · Result: the shadow runner's nightly loop now contains one book's exception, so a faulty book cannot leave the books after it without a decision
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - before: `engine.decide` turned a book's own Unmeasured into a status, but any other exception from a signal left `nightly.run`'s loop, and every later book got no decision that night [V]
+  - now the broken book is printed with its exception, the run exits 3 as it does for UNMEASURED, nothing is decided for that book, and the remaining books decide; one new test, which fails on `b2df5e5` [V]
+  - made the same day two unit-trust books joined the branch, taking the list to eleven books [V]
+- source: `shadow/nightly.py` @ `9c4409c`; `shadow/tests/test_nightly.py` @ `9c4409c`
+- supports: §5
+- status: current. On branch mission-work; reaches the VM's shadow runner when the branch `shadow` is next pushed
+
+### E-2026-11-18-24 · Ruling: a clean session is any on-time day, ten in a row; fills track means paper within twice the modelled fill cost; the 60-session sigma is each sleeve's backtest volatility. Neither ladder test can be decided yet: the capital a sleeve traded at each session is not recorded
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead's answers to the three points E-2026-11-18-21 left open: clean session "Any on-time day, ten in a row"; fills track "Paper within 2x modelled gap"; sigma "Each sleeve's backtest vol", scaled to the capital the sleeve traded at [V]
+  - the clean-session rule is what the report already counted; only its wording changed, from a reading to be confirmed to a ruling [V]
+  - the book file gains a required key per sleeve, `backtest_vol_annual`: 0.042, 0.057, 0.107, 0.154, 0.053, 0.053 and 0.117 for cef_exdate_after, cef_exdate_before_after, units_exdate_after, units_exdate_before_after, specdiv_wait, specdiv_wait_small and pead_small_long: gross backtest daily volatility annualised, 2000-06-01 to 2025-12-23, the allocation run of E-2026-11-18-04, copied from the percentages already in `_note_sleeves` and not re-derived [S]
+  - sigma x sqrt(T) in dollars is computed as backtest_vol_annual / sqrt(252) x the root of the summed squares of the capital traded at on each position session; full above -1 of these, stopped below -2, a half between (`sigma_verdict`, tested; for 60 sessions at 10,000 dollars and 10% a year the band is 487.95 dollars, a synthetic check of the arithmetic) [V]
+  - fills track is computed as: shortfall = shadow P&L less paper P&L over every session from the sleeve's first position on that both measured; allowance = 2 x modelled_fill_cost_bp / 10,000 x the dollars the sleeve traded on them, read from the bookings in each session's `verify.json`, fills and crosses alike; pass if the shortfall is no more than the allowance (`track_verdict`, tested) [V]
+  - `modelled_fill_cost_bp` is an optional per-sleeve key, absent for all 7 sleeves: the shadow engine assumes no cost and no idea card or shadow book file records a modelled cost in a form a program can read; absent is reported as UNMEASURED and never read as zero [V]
+  - what the cards would support, for the team lead to set: special dividends, measured closing spread, median 0.27% for the small-name band (100,000 to 5,000,000 dollars a day), 0.14% at 1,000,000 to 5,000,000 and 0.05% above; earnings drift, the 5 / 15 / 30bp grid only; closed-end fund ex-date, "the same order as a round trip through a closed-end fund's spread" against 20 to 30bp an event, no measurement; units, nothing [S]
+  - neither verdict can be reached from what the runner records: `sleeve_scores.csv` has no per-session capital column and `plan.json` holds share targets, not the capital they were sized from. Both stay UNMEASURED naming that column, with or without the cost key; the report shows a labelled what-if at today's `capital_usd` for the fills-track test only. `run.py` was not changed [V]
+- source: `quantt/sleeves/promote.py` @ `beefe1f`; `quantt/sleeves/tests/test_promote.py` @ `beefe1f`; `quantt/sleeves/config.py` @ `beefe1f`; `ops/sleeves/events_sleeves.json` @ `beefe1f`; `quantt/sleeves/deploy/README.md` @ `beefe1f` (open items, and the table of what each card supports); `docs/SYSTEM.md` @ `beefe1f` (section 5, the block dated 2026-11-16 and 2026-11-18)
+- supports: §5
+- status: current, on branch `sleeve-promotion`, not merged and not released. Open: a per-session `capital_usd` column in `sleeve_scores.csv`, a change to the order path that needs its own PR and release before the first sleeve reaches 20 position sessions; the team lead's `modelled_fill_cost_bp` for each sleeve; whether a cross inside the account counts as dollars traded (the report counts it); the backtest volatilities are from one unreviewed run
+
+### E-2026-11-18-25 · Method: `ops.prod_state` and `ops.orient` read every book on the VM (C4 beside the core) in the one ssh call
+- kind: method
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead asked on 2026-11-18, about 10:15 New York: "make the c4 reachable as easily as everything else". Until then `ops.prod_state` read the core only; C4's newest figure in reach of the laptop was the repo's copy, last row 2026-11-06 ($100,007.79), seven sessions old [V]
+  - the core's remote script is byte-identical to main's at 8cac532 (compared in the session; `TestOtherBooks` pins it); each other book in `install_vm.VM_BOOKS` adds its own script with keys prefixed `<book>.` to the same call [V]
+  - first read, 2026-11-18 about 10:18 New York, from `quantt-vm:/home/quantt/quantt_state/c4/eod_equity.csv`: C4 official cumulative -$360.50 over 35 sessions, the 2026-09-29 close ($100,000.00) to the 2026-11-17 close ($99,639.50); high-water mark $101,233.72 at the 2026-11-05 close [V]
+  - the same read for the core: -$204.54 over 36 sessions, to $99,795.46 at the 2026-11-17 close; the same figures as Alpaca's end-of-day history fetched directly on the laptop that morning [V]
+  - a defect found and fixed in the same change: `_systemd_scheduled` read every book against the core's session timer, so an armed C4 printed "whether the scheduler fires it is UNMEASURED" [V]
+  - `python3 -m pytest ops/tests` exit 0 [V]
+- source: `ops/prod_state.py` @ `dd5a885`; `ops/orient.py` @ `dd5a885`; `ops/tests/test_prod_state.py` @ `dd5a885`; `ops/tests/test_orient.py` @ `dd5a885` (branch `ops-prod-state-books`)
+- supports: §5
+- status: on branch `ops-prod-state-books`, committed locally, not pushed, not merged, installed nowhere (the reader runs on the laptop; nothing on the VM changes)
+
+### E-2026-11-18-26 · Result: why the two paper books are below $100,000 at the 2026-11-17 close, and why C4 sends few orders
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - core, attributed from Alpaca's own records read on 2026-11-18 (568 fills from `/v2/account/activities/FILL`, raw daily SIP closes from `/v2/stocks/bars`): holding P&L +$592.57, fills against the same day's close -$785.10, CAT fees -$12.01 (61 FEE rows), total -$204.54, equal to the official end-of-day record to the cent [V]
+  - core, the holding P&L by side: positions held long -$2,199.52, positions held short +$2,792.09; the equal-weight return of the 13 names from the 2026-09-29 close was negative in the 2026-11-02 to 2026-11-17 window (-2.73%) [V]
+  - core, by name: the two municipal funds lost $3,105.68 between them (short from 2026-09-30 while they rose, covered 2026-11-03 and 2026-11-04, long from 2026-11-06 while they fell, flat on 2026-11-16); the other eleven names made +$2,913.15 [V]
+  - core, by window: +$1,476.76 to the 2026-10-12 peak; -$2,688.21 from 2026-10-13 to 2026-10-19; +$235.47 to 2026-10-30; +$783.45 from 2026-11-02 to 2026-11-17 [V]
+  - core, execution: $1,096,900 traded in 36 sessions, every fill between 15:50 and 15:59 New York; -$785.10 against the close is 7.2bp of traded notional [V]
+  - Alpaca paper DID charge fees on this account: 61 CAT fee rows, $12.01. `CLAUDE.md` landmine 1 says paper charges no regulatory fees [V: docs]; the account's activity record disagrees, and the record is what was measured [V]
+  - C4, official: -$360.50 at the 2026-11-17 close, eleven trading sessions from 2026-11-03. Not attributed by name: its account keys and plan are on the VM only [V]
+  - distributions paper never paid or charged (dist-adjusted minus auction-marked, sessions where both exist): core +$49.32 over 28 sessions to 2026-11-13; C4 +$328.07 over 9 sessions to 2026-11-13 [V]
+  - C4's plan for 2026-11-18, by the new `plan shape` reading: 74 names, of which 49 `illiquid` (under the spec's `min_adv_usd`), 7 `no discount today` (NAV-repeat mask), 1 below the minimum weight, and 17 held (7 long, 10 short), all 17 `band hold`; 0 orders; gross $122,196.86 = 1.23x the plan's equity [V]
+  - the core's plan for the same day: 13 names, 12 re-targeted (`cef discount`), none on a band hold, 10 orders; gross $166,226.76 = 1.67x [V]
+- source: `ops/prod_state.py` @ `8c87afd` (`plan_shape`, branch `ops-prod-state-books`); the attribution script is session scratch, not in the repo; Alpaca paper account `cef`, read-only, 2026-11-18
+- supports: §5
+- status: current as measured on 2026-11-18. A result about 36 sessions of one account; not a test of the strategy
+
+### E-2026-11-18-27 · Ruling and result: the close is modelled for the investor view; at the closing-auction print the core is +$592.57 and C4 -$237.79 to the 2026-11-17 close
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead, 2026-11-18: "on a real account we would get close, so we should model closing for showing investors" [V]
+  - the measure is the runner's own `auction_hold_pnl_usd` (`quantt/session/score.py` (b), first term): the book held into the close, marked official auction print to auction print, as if every fill had printed in the auction. MODELLED, gross: no borrow, no distributions, no fees, no allowance for our orders moving the auction. The official record stays Alpaca's end-of-day history (team lead 2026-10-19) [V]
+  - core, 36 sessions from the 2026-09-29 close: modelled +$592.57 against official -$204.54. Annualised sd of the modelled daily P&L on $100,000: 7.13% [V]
+  - the core's score file on the VM has no row for 2026-09-30, 10-01, 10-02 and 10-06 (the laptop ran those sessions); those four days are from raw SIP daily closes and the account's fills, read on 2026-11-18. On the 32 sessions the runner scored, that second method gives -$143.74 and the runner -$143.74, with no daily difference above $0.005 [V]
+  - C4, 11 sessions from 2026-11-03: modelled -$237.79 against official -$360.50 [V]
+  - the two accounts together, each on $100,000: modelled +$354.78 against official -$565.04 (a sum of two books' dollars, shown for scale; the books are separate accounts) [V]
+  - NOT in the modelled figure: the distributions paper never paid (measured, to 2026-11-13: core +$49.32, C4 +$328.07, E-2026-11-18-26) and the borrow a live account pays on its shorts (unmeasured) [V]
+  - `ops.orient` PNL now prints an `at-close` column and a "modelled at the close" line per book, with the official sum on the same sessions beside it; scores.csv is read whole for that sum [V]
+- source: `ops/orient.py` @ `9d49a98` (`close_model`); `ops/prod_state.py` @ `9d49a98` (`PNL_FILES`; branch `ops-prod-state-books`); `quantt-vm:/home/quantt/quantt_state/{cef,c4}/scores.csv` and `eod_equity.csv`, read 2026-11-18
+- supports: §5
+- status: current. 36 and 11 sessions: a description of what happened, not evidence of an edge
+
+### E-2026-11-18-28 · Rulings and results: the investor headline is the net modelled view (core +$506.21); the core's gross cap is why its band never holds; C4's volume filter measured; the shadow books join the reader
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead, 2026-11-18, by question: the investor headline is the NET modelled view (closing-auction fills, plus the distributions paper never paid, minus a fetched borrow cost); the core's churn is investigated before any change; C4's volume filter is measured and nothing changes; the VM's ssh rule stays open to any address as it is; C4's by-name attribution comes from one read-only script the team lead runs; the shadow books join the reader; PR #87 is merged after this round [V]
+  - core, 36 sessions to the 2026-11-17 close: modelled close +$592.57, distributions +$49.33, borrow -$135.68, NET +$506.21 against official -$204.54. Annualised sd of the net daily P&L on $100,000: 6.64% [V]
+  - the distributions figure: 24 cash dividends on held names, +$1,526.82 received on longs and -$1,477.50 paid on shorts, from Alpaca's corporate-actions endpoint and the position at the close before each ex-date. The runner's own figure on the 29 sessions both cover is +$49.32, the same five days to the cent [V]
+  - the borrow figure: each close's short market value x 1.02 x fee rate / 360 x calendar days (the formula in `docs/REFERENCES.md` 12l), at IBKR's indicative fee rates in the public shortstock file stamped `#BOF|2026.11.18|17:16:53`, between 0.45% and 2.13% a year on the 13 names, 1.41% blended on an average short book of $66,144. TODAY'S rates applied to every day back to 2026-09-29: no fee history covers the period (the repo's FEE_RATE panel ends 2026-09-09). The file as fetched is verified; the rates on the earlier days are not [U]
+  - under Alpaca's own live fee schedule (easy-to-borrow free, `docs/REFERENCES.md` 12l) the borrow is $0 on easy-to-borrow names and the net is +$641.90 before any hard-to-borrow fee, which Alpaca does not publish per name. The schedule is verified; the hard-to-borrow cost is not [U]
+  - why the core's band holds nothing: the sleeve turns every band HOLD into a trade on any day its gross cap scales the book (`src/deploy/sleeves/cef_discount.py`, "THE BAND'S HOLDS BECOME TRADES WHEN THIS BINDS"). The core's plan for 2026-11-18 carries the cap's mark on all 13 names; C4's carries it on none [V]
+  - consistent with it: $558,927 traded in the 24 sessions to 2026-10-30 and $537,973 in the 12 from 2026-11-02, when the sizing multiplier went to 1.13 and then 1.30; fills against the close cost -$308.71 in the first window and -$476.39 in the second [V]
+  - C4's volume filter, by the sleeve's own rule (mean of close x volume over 63 sessions) on Alpaca SIP daily bars to 2026-11-17: 19 of 74 names at or above the spec's $3.0M; 33 at $2.0M; 45 at $1.5M; 58 at $1.0M; 66 at $0.5M. Median $1.91M. The runner's own plan for 2026-11-18, on its own panel, passes 25 (74 less 49 `illiquid`). The two counts are from different volume sources and are both reported; the runner's is what the book trades on [V]
+  - a $10,000 position (10% of C4's equity) is under 1% of a day's volume on 58 of the 74 names and at most 6.4% on the thinnest [V]
+  - shadow books, first read through `ops.prod_state` (SIMULATED, each on its own $1,000,000 notional, sums over SCORED sessions to 2026-11-17): cef_exdate_after -$8,419.64 price-only (-$3,249.44 total return, 4 scored); cef_exdate_before_after +$68.04 (4); units_exdate_after +$21,200.13 (+$24,480.85 total return, 2); units_exdate_before_after +$7,978.98 (1); month_end_ief and spinoff_first_week flat on every session so far [V]
+- source: `ops/prod_state.py` @ `fc0232b` (`plan_shape`, `SHADOW_SCRIPT`); `ops/orient.py` @ `fc0232b` (branch `ops-prod-state-books`); `src/deploy/sleeves/cef_discount.py` @ `fc0232b`; `https://www.interactivebrokers.com/shortstock/usa.txt`, fetched 2026-11-18; Alpaca paper account `cef`, read-only; the attribution and net-view scripts are session scratch, not in the repo
+- supports: §5
+- status: current. C4's net view and by-name attribution wait on the team lead's run of the read-only VM script. One to four scored sessions say nothing about a shadow book
+
+### E-2026-11-19-01 · Ruling: the events runner records the capital each sleeve was sized from, each sleeve has a modelled fill cost, and only market fills earn the allowance; both ladder tests are now computed
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers: the capital column "Yes, add it now"; the modelled cost "Card figures where measured, 15bp elsewhere"; netted trades "No, only real fills" [V]
+  - runner: PLAN writes each sleeve's `capital_usd` (the config value its targets were sized from) into `plan.json`, inside `record_sha`; VERIFY copies it to a new last column of `sleeve_scores.csv`; an empty cell for the book row and for a sleeve the plan did not list. Nothing in planning, netting, the gates, the send or the ledger changed. Two new tests fail on `4ad01d0` [V]
+  - book file: `modelled_fill_cost_bp` 13.5 for specdiv_wait_small and 7 for specdiv_wait, half the closing spreads measured on their card (0.27% and 0.14%); 15 for the other five, an assumption [S]
+  - report: the shadow book's P&L is put in the sleeve's dollars session by session with the capital carried into that session; the allowance is 2 x the modelled cost on market fills only; 20 to 59 position sessions now end in PASS (a half) or FAIL (a quarter) and 60 on in full, half or stopped. On synthetic state: a $125 shortfall on $12,500 of fills passes at 50bp and fails at 49bp; a sleeve whose trades were all crossed fails at any cost; at $20,000 and 10% a year over 60 sessions the band is $975.90 [V]
+  - an empty capital cell, a missing booked `verify.json` or a shadow decision with no notional leaves the verdict UNMEASURED, naming the date or file; nothing is read from today's book file in its place [V]
+- source: `quantt/sleeves/run.py` @ `ea26621` (`SCORES_COLUMNS`, `score_rows`); `quantt/sleeves/promote.py` @ `ea26621`; `ops/sleeves/events_sleeves.json` @ `ea26621`; `docs/SYSTEM.md` @ `ea26621` (section 5); `results/ideas/2026-11-15_special_dividends.md` @ `ea26621`
+- supports: §5
+- status: current, not released; the events runner has never been installed, so no score file exists yet. The 15bp figures are an assumption to be replaced by each sleeve's own paper fills against the closing print. The promotion agent's run was cut off by a usage limit after it had written the runner's two tests; the rest was written and tested in the main session
+
 ### E-2026-11-19-02 · Ruling: the P&L and risk reports move to the morning after the session, because Alpaca publishes the end-of-day point in the small hours and the evening runs reported the day before
 - kind: ruling
 - era: ALPACA
@@ -4429,6 +5215,48 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current, not released: the VM still runs the evening times until the next release is installed with `--reports`. Alpaca documents no publication time; three nights is the whole evidence, and a later point would show in the report's title as it did on 2026-11-18. Many notes inside `pnl_report.py` and `risk_daily.py` still describe the 20:30 and 22:15 runs they were written for
 
+### E-2026-11-19-04 · Ruling: the ten-session rule is waived for the seven event sleeves; they trade in a third paper account the team lead opens; the core's cap and the risk target are backtested before any change
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers, by question prompt: the ten clean sessions "waive it, i think deploying is better and we can adjust as eneded"; the events account "Try a third paper account (Recommended)"; the core's cap "Backtest the options first (Recommended)"; the risk target "Measure first, then decide (Recommended)"; the open pull requests "I take over everything" [V]
+  - shadow sessions at the 2026-11-18 close, scored plus flat: cef_exdate_after 6, cef_exdate_before_after 6, units_exdate_after 5, units_exdate_before_after 5, pead_small_long 1, specdiv_wait 1, specdiv_wait_small 1; none had ten [V]
+  - the core's plan for 2026-11-19 carries the gross cap's mark on all 13 names with a scale factor of 0.8207: the signal asked for about 2.19x gross (1.80 / 0.8207) and the cap took it to 1.80x. The multiplier is 1.30, so about 1.07 of it is delivered (1.30 x 0.8207) [V]
+  - the combiner refuses a budgeted sleeve whose spec sets `sizing_multiplier` or `level_signal`; the core's spec sets the first and C4's sets both, so C4 cannot be netted into the core's account as deployed [V]
+  - the live path on main is the installed tag's: `git diff release-20261116-1 origin/main -- quantt src ops/specs ops/books` is empty at bf0446a [V]
+  - no code changes with the waiver: all seven sleeves are already `enabled` at a quarter of their full size in the book file, and the promotion report is read-only [V]
+- source: `docs/SYSTEM.md` @ `4f5eb83` (section 5, the block dated 2026-11-19, added in the commit that carries this entry); `ops/sleeves/events_sleeves.json` @ `4f5eb83`; `quantt/session/combine.py` @ `4f5eb83`; `ops/prod_state.py` @ `4f5eb83`
+- supports: §5
+- status: current. Nothing is installed or armed for the events book: it waits on the account and its two vault secrets (the team lead), a release that holds `quantt/sleeves/`, and its installer's first run
+
+### E-2026-11-19-05 · Result: a stale-NAV gate that needs no second source costs more than the stale NAVs do; the core's gate stays in report mode
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the VM's 38 core plans: the stale-NAV gate runs in `report` mode on every one; no name was held and no decide deferred; from 2026-10-21 to 2026-11-19 (21 plans) every CEFConnect read was an error and 111 of 273 name-days had a NAV dated D equal to the cent to the previous NAV [V]
+  - on the desk's panel (NAV to 2026-10-14) 18.8% of name-days repeat genuinely, so about 21.8% of name-days are assumed stale; an inference from two shares, not a count of confirmed stale rows [V]
+  - canonical harness, 2013-06-25 to 2026-10-14, gross: every NAV current 1.15 (t 4.20); 21.8% of name-days stale at random 1.108 (5th to 95th percentile of 200 draws 0.984 to 1.208), 7.41% a year against 7.60%; every NAV a session old 1.03 [V]
+  - the hold rule: no trade on a genuine repeat alone 1.07; stale and genuine repeats both held 0.990 (0.910 to 1.075); against deciding on stale NAVs -0.118 of Sharpe (-0.239 to +0.008) and -0.70% a year (-1.39% to +0.05%) [V]
+  - the team lead had chosen "gate without a second source"; the measured answer is that the only such rule, holding, loses about 0.7% a year to remove a cost of about 0.2% [V]
+- source: `results/ideas/2026-11-19_nav_stale_gate.md` @ `1f27318`; `results/ideas/nav_stale_gate/explore.py` @ `1f27318`; `quantt/session/nav_gate.py` @ `1f27318`
+- supports: §1, §4
+- status: current. Set aside: nothing built, no spec change. Staleness is drawn at random; if stale copies sit on large NAV moves the cost is higher. One run, not independently reviewed
+
+### E-2026-11-19-06 · Result: stale NAV copies on the core's funds are ordinary lateness, not big-move days; a quarter of fund-days are decided on one, at about 0.26% a year
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - asked by the team lead ("Test the caveat first") after E-2026-11-19-05, which drew stale days at random [V]
+  - 325 fund-days checked by the VM's gate (as-of 2026-10-14 to 2026-11-18) against Yahoo's NAV for the same dates fetched on 2026-11-19: 81 confirmed stale copies (24.9%), 45 genuine repeats (13.8%), 199 fresh; 3 non-repeats were also revised later [V]
+  - true one-session NAV move, mean and median absolute: fresh 37.0bp and 23.9bp; confirmed stale 30.9bp and 23.7bp; within the same session stale less fresh is -0.45bp (t -0.12, 21 sessions); of the largest tenth of moves 21% were stale against 25% overall [V]
+  - the cost with stale days drawn by the measured share in each move quintile, 200 draws on the canonical harness to 2026-10-14: Sharpe 1.097 (0.976 to 1.185) and 7.34% a year against 1.152 and 7.60% with every NAV current [V]
+- source: `results/ideas/nav_stale_gate/checks.py` @ `1cd5351`; `results/ideas/2026-11-19_nav_stale_gate.md` @ `1cd5351`; `scripts/cef/fetch_daily.py` @ `1cd5351` (the X<TICKER>X NAV symbol the check fetches)
+- supports: §1, §4
+- status: current. E-2026-11-19-05's conclusion stands: no hold gate. A confirmed stale copy is a lower bound (a row Yahoo never corrected looks genuine); 21 sessions; one run, not independently reviewed. The VM's check rows and the fetched NAVs are outside the repository in `~/quantt_research/nav_stale_gate/`
+
 ### E-2026-11-19-07 · Result: one read-only page now shows every paper account together; on its first run the two accounts are down 1,038 USD combined
 - kind: result
 - era: ALPACA
@@ -4442,3 +5270,51 @@ that adds it does not exist when it is written.
 - source: `ops/daily_page.py` @ `d4d80cb`; `ops/tests/test_daily_page.py` @ `d4d80cb`; `docs/RUNBOOK.md` @ `d4d80cb` (8.6)
 - supports: §1, §5
 - status: current. It runs from the laptop on demand; nothing schedules it. The page holds no limit of its own, and the combined drawdown is judged against nothing: there is no combined risk budget (team lead, 2026-11-18). Combined factor exposure is not in this version
+
+### E-2026-11-19-08 · Rulings and results: the core's cap stays as it is after a backtest of four variants; an all-equal-z session holds and says so; the review of the installed release found no order-path defect; the events waiver is a key in the book file
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers, by question prompt: the core's cap "Leave it as it is (Recommended)"; the vol fallback "Stop and name it (Recommended)", then, once the replay showed when it fires, "Hold, but say so (Recommended)"; the release steps "You prepare, I run them (Recommended)"; pushing the integration branch "Yes, push it (Recommended)" [V]
+  - an independent read-only review of the live path at release-20261116-1 (the sleeve, decide and score read in full; run, gate, verify, collect and dist_score in part): no defect that double-sends, sizes on a wrong denominator or mis-states P&L. Confirmed by running code: with `min_trade_usd` 0 a cap-scaled day orders every held name. Latent: `max_nav_age_bd` cannot fire under the band; the vol scalar's `else 1.0`; `ops/books/*.json` `limits.*` are read by no code [S]
+  - the cap backtest, canonical harness (`band_frontier.build_targets`, `band_gross_capped`, `evaluate`, shift(2)), price-only gross, 2013-06-25 to 2026-10-14, panels to 2026-10-14: deployed (x1.30, cap 1.80) 6.85% a year, vol 5.36%, Sharpe 1.28, turnover 31.7; band after the cap 6.32%, 5.30%, 1.19, 26.1; cap 2.00 6.91%, 5.53%, 1.25; cap 2.20 6.99%, 5.67%, 1.23; x1.00 5.41%; x1.13 6.03%; no cap 7.04% [S]
+  - the same run at 5 / 15 / 30bp a trade, the real-money view: deployed 5.26 / 2.09 / -2.67; band after the cap 5.02 / 2.41 / -1.50. The ranking flips between 5bp and 15bp [S]
+  - its reproduction check on the fit-cut panel (to 2022-12-30) against `results/cef/prereg_voltarget/flatten_exact_output_2026-11-02.txt`: x1.30 3.78% / 0.81 / 8.39% max drawdown / 1.343 gross when held, against the recorded 3.78% / 0.805 / 8.39% / 1.343 [S]
+  - in the backtest the cap binds on 30.7% of held days over the whole period and 50.8% from 2023; over the panel's last 60 full sessions the target gross x 1.30 has a median of 2.23 and is above 1.80 on 98.3% of them [S]
+  - the real-panel replay of the changed sleeve, the core's spec, 750 sessions (2023-10-18 to 2026-10-14): no session raises; the trailing vol is positive on all 749 sessions that reach it (minimum 0.0159); the 750th, 2025-04-07, is the explicit hold (every eligible z at -4.00 on 7 names) [V]
+  - on that day, from a held book of five names, the released sleeve and the changed one return the same five share counts; from a flat book on an opening session the released sleeve returns seven SHORT targets with NaN weights and the changed one opens nothing [V]
+  - `ops/sleeves/events_sleeves.json` gains `promotion_waived: true` on all seven sleeves (optional, may only be true, read by `promote.py` only); `capital_usd`, `enabled` and every limit are unchanged [V]
+  - the vault holds secrets named `alpaca-events-key-id` and `alpaca-events-secret-key`, both enabled (names and the enabled flag read on 2026-11-19; no value read; whether the keys authenticate and the account's balance are not measured) [V]
+- source: `src/deploy/sleeves/cef_discount.py` @ `860d5f3` (the cap block as reviewed; the change is in the commit that carries this entry); `scripts/cef/band_frontier.py` @ `860d5f3`; `quantt/sleeves/config.py` @ `860d5f3`; `quantt/sleeves/promote.py` @ `860d5f3`; `ops/sleeves/events_sleeves.json` @ `860d5f3`; `docs/SYSTEM.md` @ `860d5f3` (section 5, 2026-11-19); the backtest, review and replay scripts are session scratch, not in the repo
+- supports: §5
+- status: current, on branch `events-runner-main`, not merged, tagged or installed. The backtest and the review are each one run by one agent, not independently re-derived. The C4 spec was not replayed (its panel is not on the laptop); its level-signal path already raised on a vol with no ratio
+
+### E-2026-11-19-09 · Ruling: the unit-trust termination book is the events account's eighth sleeve at a quarter size; the events runner has one dry session before it is armed; the release goes on 2026-11-19 for the core and C4
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers, by question prompt in this session: the eighth sleeve "Yes, add it (Recommended)" (the other session's prompt: "Yes, at a quarter size"); release timing "This afternoon, before 15:25 ET"; the first arming "One dry session first (Recommended)" [V]
+  - `ops/sleeves/events_sleeves.json` gains `uit_termination`: family `unit_trust_terminations`, `full_capital_usd` 139,000, `capital_usd` 34,750, `backtest_vol_annual` 0.081, `modelled_fill_cost_bp` 15, `promotion_waived` true. The eight sleeves' `capital_usd` sum to $170,500 [V]
+  - the full size is the other session's derivation, not re-derived here: one family's risk unit 96,000 x 0.117 = 11,232 dollars a year, over the book's 8.07% annual volatility on the 225 sessions 2025-12-29 to 2026-11-18 [S]
+  - the rule's out-of-sample result is E-2026-11-19-20; this entry adds nothing to it [S]
+  - `quantt/sleeves/deploy/install_events_vm.sh` stops if a listed book has no `decisions` directory under the shadow state; the other session reports `uit_termination`'s first shadow decision is the 18:50 New York run of 2026-11-19, so the events install cannot pass before it [S]
+- source: `ops/sleeves/events_sleeves.json` @ `f4a5aad` (the sleeve is in the commit that carries this entry); `quantt/sleeves/tests/test_run.py` @ `f4a5aad`; `quantt/sleeves/deploy/install_events_vm.sh` @ `f4a5aad`; `shadow/books/uit_termination.json` @ `f4a5aad`; `docs/SYSTEM.md` @ `f4a5aad` (section 5, 2026-11-19)
+- supports: §5
+- status: current, on branch `events-runner-main`; not merged, tagged or installed
+
+### E-2026-11-19-20 · Result: the unit-trust termination rule holds out of sample on 2026, a year its data never held
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the rule was committed at `96b05ff` (2026-11-18) before any 2026 price was fetched; the idea's data ended 2025-12-31; the measures were written in the script before any 2026 return was read [V]
+  - sample: all 64 termination sessions from 2026-01-02 to 2026-11-12 in the committed calendar (112 trusts), 2,142 eligible fund-events on 228 funds, eligibility by the committed signal itself; Yahoo total returns to 2026-11-18; 38 of 272 calendar funds have no price and are excluded [V]
+  - T+1..T+3 less control funds, one observation a session: mean +42.6bp, median +34.8bp, 86% of sessions positive, t 6.28; less PCEF +43.5bp (t 6.56); halves +50.2bp and +35.0bp; every month positive; in sample it was +33bp with 77% of sessions positive [V]
+  - T+1 alone +33.3bp (t 8.41); the selling window T-9..T -32.6bp (t -1.44); the same trade a day late +12.6bp (t 1.99) [V]
+  - not pre-specified, added after the first run: the same funds 20 sessions later -6.0bp (t -0.96); 30 sessions earlier +41.3bp in the mean and -3.4bp in the median (t 1.03); the trade without its ten best sessions +24.8bp [V]
+  - the committed long-only books over the period, 151 of 225 sessions invested: all events +25.6%, big sales only +28.1%; raw T+1..T+3 was +59.1bp, so about 16bp of the raw return was the market [V]
+- source: `results/ideas/uit_cef_flows/oos_2026.py` @ `a4a5ccb`; `results/ideas/2026-11-16_uit_cef_flows.md` @ `a4a5ccb`; `shadow/signals/uit_termination.py` @ `a4a5ccb`; `shadow/universes/uit_terminations_v1.csv` @ `a4a5ccb`
+- supports: §4
+- status: current. Gross; no closing quotes, so whether an order gets the termination session's closing price is not shown and remains the open condition; survivors only where Yahoo has no price; the control is the calendar's own funds outside their windows; one run, not independently reviewed. The id skips to -20 because the peer session takes -08 onward

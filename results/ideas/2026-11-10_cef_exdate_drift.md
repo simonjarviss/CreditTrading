@@ -99,4 +99,8 @@ ex-date listed [V: `python3 -m shadow.fetch.exdates cef_v1`]. On the last sessio
 start, 82 funds were eligible and 6 were in their post-ex window. With 91 funds the books
 will be noisier than the test.
 
+## Added 2026-11-12: the ex-date was known in advance [V: CRSP `stkdistributions` on R2, queried 2026-11-12, not stored]
+
+The test assumed a fund's ex-date is known the session before. CRSP's distribution table carries the declaration date: of 143,200 ordinary distributions by closed-end funds since 2000, 99.2% were declared at least one day before the ex-date and 99.0% at least three; the median gap is 11 days; 0.7% have no declaration date. The assumption holds for the short-after book. The long-before leg needs about a week's notice, which the median covers and the tail was not measured for.
+
 ![equity curve](cef_exdate_drift/equity.png)

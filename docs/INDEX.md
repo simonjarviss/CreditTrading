@@ -29,6 +29,7 @@ Figures are not owned by any document: `python3 -m ops.orient` produces them.
 | `docs/MISSION.md` | canonical | the team lead's standing brief of 2026-11-09, verbatim: the mission, what stays and what was dropped, how to think about edges, the pipeline from idea to live, the engineering and agent-layer build, the phases | — |
 | `results/mission/SHADOW_RUNNER_DESIGN_2026-11-09.md` | reference | the shadow-book runner's approved design: what a shadow book is, how it is kept apart from prod, the book file, the daily cycle and the on-time rule, where it runs, the marks; the package `shadow/` is built against it | `shadow/tests/` |
 | `shadow/universes/README.md` | reference | the lists of symbols a shadow book may trade, and the repository files each list is built from | `shadow/tests/` |
+| `quantt/sleeves/deploy/README.md` | reference | the event sleeves' paper runner on the VM: what the installer does, what the team lead does by hand first, the first-day checklist, exit codes, how to halt, what to do when VERIFY fails | `quantt/sleeves/tests/` |
 | `results/IDEA_LEDGER.md` | ledger | every idea tested, one line each: date, idea, data, gross result, status; a record and not a gate; updated in the same commit as the test | — |
 | `docs/ROADMAP.md` | ledger | every step from here to the Alpaca book in prod, and its status | `ops.doc_audit` (pointers) |
 | `docs/RUNNER.md` | canonical | the Alpaca runner's design: the session, module boundaries, the nine gates | `ops.doc_audit` (pointers) |
