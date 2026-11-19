@@ -176,7 +176,7 @@ now"; the cost "Card figures where measured, 15bp elsewhere"; netted trades "No,
 - **Sigma (from 60).** `backtest_vol_annual` / sqrt(252) x the root of the summed squares of the
   position sessions' capital. Live P&L above -1 of that is full size, between -1 and -2 a half,
   below -2 the edit `"enabled": false`, which flattens the sleeve.
-- **`modelled_fill_cost_bp` is set for all seven sleeves**; the book file's
+- **`modelled_fill_cost_bp` is set for all eight sleeves**; the book file's
   `_note_modelled_fill_cost_bp` says which two are measured (the special-dividend books, from
   their card's closing spreads) and that 15bp for the other five is an assumption to be replaced
   by what paper fills show. What each card says:

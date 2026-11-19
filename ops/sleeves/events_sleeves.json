@@ -72,6 +72,16 @@
    "enabled": true,
    "modelled_fill_cost_bp": 15.0,
    "promotion_waived": true
+  },
+  {
+   "slug": "uit_termination",
+   "family": "unit_trust_terminations",
+   "full_capital_usd": 139000.0,
+   "backtest_vol_annual": 0.081,
+   "capital_usd": 34750.0,
+   "enabled": true,
+   "modelled_fill_cost_bp": 15.0,
+   "promotion_waived": true
   }
  ],
  "_note_backtest_vol_annual": "Each sleeve's backtest_vol_annual is a BACKTEST figure, not a live one: its gross daily volatility annualised, 2000-06-01 to 2025-12-23, from the allocation run of 2026-11-18 (EVIDENCE_LOG E-2026-11-18-04; the scripts and series are outside the repository in ~/quantt_research/pm_alloc_2026-11-18/; one run, not independently re-derived, and the ex-date books' backtests are unreviewed). They are the figures quoted as percentages in _note_sleeves. The team lead ruled on 2026-11-18 that this is the sigma of the ladder's 60-session test, scaled to the capital the sleeve traded at. The runner does not read it.",
@@ -95,5 +105,6 @@
   ]
  },
  "_note_execution": "The paper exception of 2026-09-29 (CLAUDE.md order-path rule 3): market day orders before the close. No other mode is built. DERIVED 2026-11-16, to confirm: the core's window is [8, 2]; its send budget (quantt/session/gate.py: 3 s an order plus 42 s) fits about 106 orders in those six minutes. [20, 2] is 18 minutes and fits 346. Paper fills at the quote, so an earlier send costs the score a little drift to the close and nothing else.",
- "_note_promotion_waived": "Team lead, 2026-11-19, by question prompt: the ten-clean-session promotion rule of 2026-11-18 is WAIVED for these seven sleeves. At the 2026-11-18 close their shadow books had 6, 6, 5, 5, 1, 1 and 1 sessions. Read by quantt/sleeves/promote.py only (it stops printing `enabled: false` as the edit due); the runner does not read it. The ladder stands: every sleeve is still at a quarter of full_capital_usd. A sleeve added later carries no waiver unless the team lead gives one. docs/SYSTEM.md section 5, 2026-11-19; EVIDENCE_LOG E-2026-11-19-04."
+ "_note_promotion_waived": "Team lead, 2026-11-19, by question prompt: the ten-clean-session promotion rule of 2026-11-18 is WAIVED for these seven sleeves. At the 2026-11-18 close their shadow books had 6, 6, 5, 5, 1, 1 and 1 sessions. Read by quantt/sleeves/promote.py only (it stops printing `enabled: false` as the edit due); the runner does not read it. The ladder stands: every sleeve is still at a quarter of full_capital_usd. A sleeve added later carries no waiver unless the team lead gives one. docs/SYSTEM.md section 5, 2026-11-19; EVIDENCE_LOG E-2026-11-19-04.",
+ "_note_uit_termination": "EIGHTH SLEEVE, a fifth family (team lead, 2026-11-19, by question prompt in both sessions: \"Yes, at a quarter size\" and \"Yes, add it\"): the shadow book uit_termination (buy closed-end funds at the close of a unit trust's mandatory termination date, long only, at most 10% a fund; card results/ideas/2026-11-16_uit_cef_flows.md; EVIDENCE_LOG E-2026-11-19-20). Sized like the others, one family's risk unit of about $11,200 a year (pead_small_long 96,000 x 0.117 = 11,232): 11,232 / 0.0807 = about $139,000 full, $34,750 at a quarter. PROVENANCE DIFFERS FROM THE OTHER SEVEN: backtest_vol_annual 0.081 is the book's own daily P&L over the 225 sessions 2025-12-29 to 2026-11-18 (8.07% a year; invested on 151 of them), computed by the other session on 2026-11-19 and not re-derived here, because the idea's long CRSP series was not saved. Re-derive it when that series exists. modelled_fill_cost_bp 15 is the same labelled assumption as the other unmeasured sleeves. The ten-session wait is waived as for the seven. Its sibling uit_termination_big_sale is NOT a sleeve: shadow only. The whole edge is the fill at the termination day's own close, which this runner's late-market send is the first test of. It may hold funds the core book also holds (MHD, MQY): a different account, so no wash trade; it could not share an account with the core."
 }

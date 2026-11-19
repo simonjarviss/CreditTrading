@@ -767,10 +767,13 @@ def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
     The window must fit max_orders by the core's own send budget, or the first session, which
     builds every book, could never start."""
     cfg = config.load(sr.BOOK_PATH)
-    assert cfg.book == "events" and len(cfg.sleeves) == 7 and all(s.enabled for s in cfg.sleeves)
+    assert cfg.book == "events" and len(cfg.sleeves) == 8 and all(s.enabled for s in cfg.sleeves)
     full = {"cef_exdate_after": 132000, "cef_exdate_before_after": 97000, "units_exdate_after": 52000,
             "units_exdate_before_after": 36000, "specdiv_wait": 105000, "specdiv_wait_small": 25000,
-            "pead_small_long": 96000}
+            "pead_small_long": 96000,
+            # team lead, 2026-11-19: the unit-trust termination book, a fifth family, at the same
+            # risk unit (11,232 / 0.0807); its vol is 225 sessions of 2026, not a long backtest
+            "uit_termination": 139000}
     assert {s.slug: s.capital_usd for s in cfg.sleeves} == {k: v / 4 for k, v in full.items()}
     # 2026-11-18: the full sizes and the four families are in the file itself, no longer only in
     # the prose of _note_sleeves; the ladder report (promote.py) reads them from here
@@ -779,19 +782,20 @@ def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
         "cef_exdate_after": "cef_exdate", "cef_exdate_before_after": "cef_exdate",
         "units_exdate_after": "units_exdate", "units_exdate_before_after": "units_exdate",
         "specdiv_wait": "special_dividends", "specdiv_wait_small": "special_dividends",
-        "pead_small_long": "earnings_drift"}
+        "pead_small_long": "earnings_drift", "uit_termination": "unit_trust_terminations"}
     # 2026-11-18 (E-2026-11-18-24): the sigma of the 60-session test is each sleeve's backtest
     # volatility, the figures of E-2026-11-18-04; no modelled fill cost is set for any sleeve yet
     assert {s.slug: s.backtest_vol_annual for s in cfg.sleeves} == {
         "cef_exdate_after": 0.042, "cef_exdate_before_after": 0.057, "units_exdate_after": 0.107,
         "units_exdate_before_after": 0.154, "specdiv_wait": 0.053, "specdiv_wait_small": 0.053,
-        "pead_small_long": 0.117}
+        "pead_small_long": 0.117, "uit_termination": 0.081}
     # team lead, 2026-11-19: the cards' measured half-spreads for the two special-dividend
     # books, 15bp as a labelled assumption for the other five (the file's _note says which)
     assert {s.slug: s.modelled_fill_cost_bp for s in cfg.sleeves} == {
         "specdiv_wait_small": 13.5, "specdiv_wait": 7.0, "cef_exdate_after": 15.0, "cef_exdate_before_after": 15.0,
-        "units_exdate_after": 15.0, "units_exdate_before_after": 15.0, "pead_small_long": 15.0}
-    # team lead, 2026-11-19: the ten-session promotion rule is waived for all seven
+        "units_exdate_after": 15.0, "units_exdate_before_after": 15.0, "pead_small_long": 15.0,
+        "uit_termination": 15.0}
+    # team lead, 2026-11-19: the ten-session promotion rule is waived for all eight
     assert all(s.promotion_waived for s in cfg.sleeves)
     assert (cfg.min_order_usd, cfg.max_gross_x_equity, cfg.max_name_usd, cfg.max_stale_sessions, cfg.max_orders,
             cfg.window_minutes_before_close) == (25, 1.5, 50000, 2, 300, (20, 2))
@@ -804,6 +808,9 @@ def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
         book = sr.REPO / "shadow" / "books" / f"{slug}.json"
         assert book.exists() and read(book)["slug"] == slug and read(book)["fill"] == "next_close"
     assert "PAPER ONLY" in read(sr.BOOK_PATH)["_note"]
+    # the eighth sleeve at its quarter: a long-only book capped at 10% a fund, so its largest
+    # name is far under max_name_usd, and the account's sleeves together are under its equity
+    assert 0.10 * c["uit_termination"] <= cfg.max_name_usd and sum(c.values()) == 170500.0
 
 
 # -------------------------------------------------------------------------- prices

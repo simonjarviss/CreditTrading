@@ -5290,6 +5290,20 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current, on branch `events-runner-main`, not merged, tagged or installed. The backtest and the review are each one run by one agent, not independently re-derived. The C4 spec was not replayed (its panel is not on the laptop); its level-signal path already raised on a vol with no ratio
 
+### E-2026-11-19-09 · Ruling: the unit-trust termination book is the events account's eighth sleeve at a quarter size; the events runner has one dry session before it is armed; the release goes on 2026-11-19 for the core and C4
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's answers, by question prompt in this session: the eighth sleeve "Yes, add it (Recommended)" (the other session's prompt: "Yes, at a quarter size"); release timing "This afternoon, before 15:25 ET"; the first arming "One dry session first (Recommended)" [V]
+  - `ops/sleeves/events_sleeves.json` gains `uit_termination`: family `unit_trust_terminations`, `full_capital_usd` 139,000, `capital_usd` 34,750, `backtest_vol_annual` 0.081, `modelled_fill_cost_bp` 15, `promotion_waived` true. The eight sleeves' `capital_usd` sum to $170,500 [V]
+  - the full size is the other session's derivation, not re-derived here: one family's risk unit 96,000 x 0.117 = 11,232 dollars a year, over the book's 8.07% annual volatility on the 225 sessions 2025-12-29 to 2026-11-18 [S]
+  - the rule's out-of-sample result is E-2026-11-19-20; this entry adds nothing to it [S]
+  - `quantt/sleeves/deploy/install_events_vm.sh` stops if a listed book has no `decisions` directory under the shadow state; the other session reports `uit_termination`'s first shadow decision is the 18:50 New York run of 2026-11-19, so the events install cannot pass before it [S]
+- source: `ops/sleeves/events_sleeves.json` @ `f4a5aad` (the sleeve is in the commit that carries this entry); `quantt/sleeves/tests/test_run.py` @ `f4a5aad`; `quantt/sleeves/deploy/install_events_vm.sh` @ `f4a5aad`; `shadow/books/uit_termination.json` @ `f4a5aad`; `docs/SYSTEM.md` @ `f4a5aad` (section 5, 2026-11-19)
+- supports: §5
+- status: current, on branch `events-runner-main`; not merged, tagged or installed
+
 ### E-2026-11-19-20 · Result: the unit-trust termination rule holds out of sample on 2026, a year its data never held
 - kind: result
 - era: ALPACA
