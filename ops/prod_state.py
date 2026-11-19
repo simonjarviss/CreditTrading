@@ -701,6 +701,8 @@ else:
         why[k] = why.get(k, 0) + 1
     held = {k: v['current'] for k, v in t.items() if v.get('current')}
     capped = sum(1 for v in t.values() if '*x' in str(v.get('reason') or '').split('gmax=')[-1].split(' ')[0])
+    scales = sorted(set(str(v.get('reason') or '').split('gmax=')[-1].split(' ')[0].split('*x')[1]
+                        for v in t.values() if '*x' in str(v.get('reason') or '').split('gmax=')[-1].split(' ')[0]))
     moves = sum(1 for v in t.values() if v.get('target') != v.get('current'))
     priced = all(isinstance(c.get(k), (int, float)) for k in held)
     eq = p.get('equity')
@@ -709,6 +711,7 @@ else:
                       'short': sum(1 for q in held.values() if q < 0),
                       'target_differs': moves,
                       'gross_cap_bound': capped,
+                      'gross_cap_scale': scales,
                       'gross_usd': round(sum(abs(q) * c[k] for k, q in held.items()), 2) if priced else None,
                       'net_usd': round(sum(q * c[k] for k, q in held.items()), 2) if priced else None,
                       'equity': eq if isinstance(eq, (int, float)) else None,
@@ -1243,8 +1246,10 @@ def shape_text(r: dict | None) -> str:
              + f", net {'-' if net < 0 else '+'}${abs(net):,.2f}")
     why = ", ".join(f"{k} {c}" for k, c in (n.get("why") or {}).items()) or "none"
     cap = n.get("gross_cap_bound")
+    sc = n.get("gross_cap_scale") or []
     cap_text = ("" if cap is None else "; gross cap not binding" if not cap else
-                f"; GROSS CAP BINDING on {cap} name(s), so no band hold survives")
+                f"; GROSS CAP BINDING on {cap} name(s)"
+                + (f", book scaled x{' / x'.join(sc)}" if sc else "") + ", so no band hold survives")
     return (f"{n.get('names')} name(s), {n.get('held')} held ({n.get('long')} long, "
             f"{n.get('short')} short); {money}; {n.get('target_differs')} target(s) differ "
             f"from holdings{cap_text}; reasons: {why}")

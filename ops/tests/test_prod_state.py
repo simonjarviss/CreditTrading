@@ -611,12 +611,12 @@ class TestNewestPlan:
         assert (key, rc) == ("plan_shape", "0"), r.stderr
         assert json.loads(out) == {
             "session_date": "2026-01-07", "names": 4, "held": 2, "long": 1, "short": 1,
-            "target_differs": 1, "gross_cap_bound": 1, "gross_usd": 500.0, "net_usd": 100.0, "equity": 1000.0,
+            "target_differs": 1, "gross_cap_bound": 1, "gross_cap_scale": ["0.9700"], "gross_usd": 500.0, "net_usd": 100.0, "equity": 1000.0,
             "why": {"cef band hold": 1, "cef discount": 1, "cef illiquid": 2}}
         assert not any(sym in out for sym in ("AAA", "BBB", "CCC", "DDD"))
         text = ps.shape_text({"value": json.loads(out)})
         assert "4 name(s), 2 held (1 long, 1 short)" in text and "0.50x the plan's equity" in text
-        assert "GROSS CAP BINDING on 1 name(s)" in text
+        assert "GROSS CAP BINDING on 1 name(s), book scaled x0.9700" in text
         assert "gross cap not binding" in ps.shape_text({"value": {**json.loads(out), "gross_cap_bound": 0}})
 
     def test_a_held_name_without_a_close_makes_the_totals_a_gap(self, tmp_path):
