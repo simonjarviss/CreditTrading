@@ -4387,3 +4387,29 @@ that adds it does not exist when it is written.
 - source: `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.10, 8.11, 8.12); `quantt/deploy/install_vm.py` @ `49b99db` (`dormant_overrides`, `scan_units`); the install's own output, read once in the session and not stored in the repository
 - supports: §1, §5
 - status: current. Open: (1) `install_vm.py`'s scan does not know the shadow runner's three unit names, so every C4 or reports install needs the park-and-restore until it does; (2) the vault has no `alert-smtp-user` / `alert-smtp-pass`, so a fired stop is recorded as not delivered; (3) the ssh rule is open to any address until `nsg_ip.sh` narrows it
+
+### E-2026-11-18-02 · Result: the installer's unit scan now knows the shadow runner's three unit names, so a C4 or reports install no longer refuses beside it
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - `install_vm.dormant_overrides` treats `quantt-shadow-secret.service`, `quantt-shadow.service` and `quantt-shadow.timer` (`SHADOW_UNIT_FILES`) as known, as it already did the report units; the installer still never writes, starts or stops them [V]
+  - three new tests: a C4 install and a `--reports` install each go through with the three files on disk, leave them byte-identical, and still refuse a stray `quantt-shadow-extra.service`; the names are pinned to what `shadow/deploy/install_shadow_vm.sh` writes [V]
+  - with only the scan line reverted, the C4 test and the reports test both fail on the refusal seen on the VM ("is no unit any book installs") [V]
+- source: `quantt/deploy/install_vm.py` @ `6087ab5` (`SHADOW_UNIT_FILES`, `dormant_overrides`); `quantt/deploy/tests/test_install_vm_books.py` @ `6087ab5`; `quantt/deploy/tests/test_install_vm_reports.py` @ `6087ab5`; `docs/RUNBOOK.md` @ `6087ab5` (8.10)
+- supports: §5
+- status: current, not released. Until a release carries it, a C4 or reports install on the VM needs the park-and-restore in RUNBOOK 8.10. The event sleeves' installer (branch mission-work, `quantt-events-*` units) is not covered and must register its names when it reaches main
+
+### E-2026-11-18-03 · Result: CEFConnect serves its block page to the laptop as well as the VM, so the core's NAV cross-check still has no second source; the nightly data QA now flags that every night with the day count
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the core collector's log on the VM carried "nav_crosscheck: second source unavailable (cefconnect: JSONDecodeError)" on 821 lines, the first dated 2026-10-29; `docs/JOURNAL.md` dates the refusals from 2026-10-21 [S]
+  - the same request from the laptop on 2026-11-18 at about 15:24 UTC (PDI, `scripts/cef/fetch_daily.py` `_cefconnect_navs`): HTTP 200, `text/html`, 17,298 bytes, titled "Your request was blocked"; not an Azure-only block and no sign the endpoint moved [S]
+  - recording the outage as a status and calling the day COMPLETE was the team lead's ruling of 2026-10-29 (E-2026-10-29-08), not an unnoticed failure; what was missing is any report that named it [V]
+  - `scripts/ops/data_qa.py` gains Q9: it reads the collector's `report.json` for the as-of day and FLAGs a cross-check that was unavailable or did not complete, with the count of consecutive trading days and the first day ("at least N" when an earlier report is missing); UNMEASURED, never OK, when there is no report; NOT_RUN for C4, which has no second source by ruling. No threshold was chosen: it flags from the first night [V]
+  - seven new tests in `scripts/ops/tests/test_data_qa.py`, all failing against `8cac532`'s `data_qa.py`; nothing on the live path changed (collector, session and fetcher untouched) [S]
+- source: `scripts/ops/data_qa.py` @ `4098634` (`q9_second_source`); `scripts/ops/tests/test_data_qa.py` @ `4098634`; `docs/DATA.md` @ `4098634`; `docs/REFERENCES.md` @ `4098634` (today's row); `results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md` @ `8cac532` (the shortlist of replacement sources)
+- supports: §1, §5
+- status: current, not released. The book still decides on one NAV source (Yahoo). The replacement second source is the team lead's choice from the 2026-10-19 shortlist; changing how the fetcher looks to the site is ruled out there. Not determined: whether the 21:45 QA job always finds the 21:40 collect's report for the as-of day (if not, Q9 says UNMEASURED and names the file)
