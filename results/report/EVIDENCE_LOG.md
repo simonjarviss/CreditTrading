@@ -4914,3 +4914,16 @@ that adds it does not exist when it is written.
 - source: `results/ideas/2026-11-19_nav_stale_gate.md` @ `1f27318`; `results/ideas/nav_stale_gate/explore.py` @ `1f27318`; `quantt/session/nav_gate.py` @ `1f27318`
 - supports: §1, §4
 - status: current. Set aside: nothing built, no spec change. Staleness is drawn at random; if stale copies sit on large NAV moves the cost is higher. One run, not independently reviewed
+
+### E-2026-11-19-06 · Result: stale NAV copies on the core's funds are ordinary lateness, not big-move days; a quarter of fund-days are decided on one, at about 0.26% a year
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - asked by the team lead ("Test the caveat first") after E-2026-11-19-05, which drew stale days at random [V]
+  - 325 fund-days checked by the VM's gate (as-of 2026-10-14 to 2026-11-18) against Yahoo's NAV for the same dates fetched on 2026-11-19: 81 confirmed stale copies (24.9%), 45 genuine repeats (13.8%), 199 fresh; 3 non-repeats were also revised later [V]
+  - true one-session NAV move, mean and median absolute: fresh 37.0bp and 23.9bp; confirmed stale 30.9bp and 23.7bp; within the same session stale less fresh is -0.45bp (t -0.12, 21 sessions); of the largest tenth of moves 21% were stale against 25% overall [V]
+  - the cost with stale days drawn by the measured share in each move quintile, 200 draws on the canonical harness to 2026-10-14: Sharpe 1.097 (0.976 to 1.185) and 7.34% a year against 1.152 and 7.60% with every NAV current [V]
+- source: `results/ideas/nav_stale_gate/checks.py` @ `1cd5351`; `results/ideas/2026-11-19_nav_stale_gate.md` @ `1cd5351`; `scripts/cef/fetch_daily.py` @ `1cd5351` (the X<TICKER>X NAV symbol the check fetches)
+- supports: §1, §4
+- status: current. E-2026-11-19-05's conclusion stands: no hold gate. A confirmed stale copy is a lower bound (a row Yahoo never corrected looks genuine); 21 sessions; one run, not independently reviewed. The VM's check rows and the fetched NAVs are outside the repository in `~/quantt_research/nav_stale_gate/`
