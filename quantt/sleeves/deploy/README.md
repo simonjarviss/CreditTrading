@@ -160,22 +160,26 @@ The routine:
    `full_capital_usd`, `capital_usd` at a quarter, `enabled`) in the same kind of PR. Its full
    size and whether it joins at all are the team lead's rulings, not the report's.
 
-What the report cannot yet decide, and says so (UNMEASURED). **Open items:**
+What the two ladder tests read, since 2026-11-19 (team lead: the capital column "Yes, add it
+now"; the cost "Card figures where measured, 15bp elsewhere"; netted trades "No, only real fills"):
 
-- **`sleeve_scores.csv` needs a per-session `capital_usd` column.** Nothing in the events state
-  records the capital a sleeve traded at on a session (`plan.json` holds share targets, not the
-  capital they were sized from). Both tests need it: the 20-session test to put the shadow
-  book's P&L in the sleeve's dollars, the 60-session test to scale sigma. It is a change to
-  `run.py` (the order path), so it needs its own reviewed PR and release. It is needed **before
-  the first sleeve reaches 20 position sessions** for the fills-track test, and before 60 for
-  sigma. Until then both verdicts are UNMEASURED and name the column; `sigma_verdict` and
-  `track_verdict` in `promote.py` are written and tested and wait only for it. The report does
-  print what the fills-track test would say if today's `capital_usd` had applied on every
-  session, labelled as a what-if.
-- **`modelled_fill_cost_bp` is absent for every sleeve**, so the fills-track test also names
-  that key. The shadow engine fills at the close at no cost and no idea card records a modelled
-  cost a program can read. The team lead sets each one (basis points per dollar traded). What
-  each card would support:
+- **The capital a sleeve traded at** is the `capital_usd` column of `sleeve_scores.csv`: the
+  capital PLAN sized that sleeve's targets from, written into `plan.json` inside `record_sha`
+  and copied to the score row by VERIFY. It is never re-read from the book file. An empty cell
+  (a sleeve the plan did not list) makes the verdict UNMEASURED, naming the dates.
+- **Fills track (20 to 59 position sessions).** Shortfall = the shadow book's P&L put in the
+  sleeve's dollars (each session's shadow P&L x the capital carried into it / the shadow
+  notional) less the sleeve's paper P&L, from its first position session. Allowance = 2 x
+  `modelled_fill_cost_bp` / 10,000 x the dollars the sleeve FILLED IN THE MARKET on those
+  sessions (`verify.json` bookings of kind `fill`; a cross netted inside the account pays no
+  spread and earns nothing). PASS means a half, FAIL a quarter.
+- **Sigma (from 60).** `backtest_vol_annual` / sqrt(252) x the root of the summed squares of the
+  position sessions' capital. Live P&L above -1 of that is full size, between -1 and -2 a half,
+  below -2 the edit `"enabled": false`, which flattens the sleeve.
+- **`modelled_fill_cost_bp` is set for all seven sleeves**; the book file's
+  `_note_modelled_fill_cost_bp` says which two are measured (the special-dividend books, from
+  their card's closing spreads) and that 15bp for the other five is an assumption to be replaced
+  by what paper fills show. What each card says:
 
   | sleeve | what its card says | where |
   |---|---|---|
@@ -185,8 +189,10 @@ What the report cannot yet decide, and says so (UNMEASURED). **Open items:**
   | `specdiv_wait` | The same table by band: median spread 0.14% at $1M to $5M a day and 0.05% at $5M and over (7bp and 2.5bp a side). No row for this book's own universe ($500k a day and over) [S] | the same section |
   | `pead_small_long` | No measured cost. The real-money grid of 5 / 15 / 30bp per unit traded, and "what these stocks cost to trade at the close is not measured" [S] | `results/ideas/2026-11-15_pead_small.md`, "Real-money view" |
 
-- **Before the first VERIFY.** With no `sleeve_scores.csv` the sleeve half is UNMEASURED, never
-  "zero sessions".
+**Still open:** nothing in the report is UNMEASURED by design any more. It will read UNMEASURED
+when an input is missing (no `sleeve_scores.csv`, a session without a booked `verify.json`, a
+shadow decision with no notional, an empty capital cell), and it names the file or date. A new
+sleeve added without a `modelled_fill_cost_bp` is UNMEASURED at 20 sessions until one is ruled.
 
 ## Known gaps
 - **Never run against a broker.** Every test uses a fake client. `main` and `default_deps`

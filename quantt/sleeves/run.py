@@ -110,8 +110,13 @@ BOOK_PATH = REPO / "ops" / "sleeves" / "events_sleeves.json"
 PAPER_BASE = "https://paper-api.alpaca.markets"      # quantt.broker.alpaca.PAPER_BASE; pinned by a test
 CALENDAR_LOOKBACK_DAYS = 14                          # as verify.PREV_SESSION_LOOKBACK_DAYS
 VERIFY_PASS, VERIFY_FAIL = 0, 1
+# capital_usd (team lead, 2026-11-19): the capital the PLAN sized that sleeve's targets from,
+# copied from plan.json, where it sits inside record_sha. The ladder's two tests
+# (quantt/sleeves/promote.py) scale a sleeve's expected volatility and its shadow book's P&L
+# by it, and until this column nothing recorded what a sleeve traded at on a given session.
+# Empty for the book row, for a ledger sleeve the plan did not list, and never defaulted.
 SCORES_COLUMNS = ("date", "slug", "shares_value", "cash", "pnl", "day_change", "n_names",
-                  "equity_change", "residual")
+                  "equity_change", "residual", "capital_usd")
 BOOK_ROW = "_book"
 _DAY_DIR = re.compile(r"\d{4}-\d{2}-\d{2}")
 # orders.jsonl events `_transmit` writes for an order BEFORE its `submit` line, so they can
@@ -451,8 +456,12 @@ def _plan(deps: Deps, preview: bool) -> int:
              *gt.gate_sanity(orders, universe, pos, cfg.book, F,
                              {k: acct[k] for k in ("trading_blocked", "account_blocked",
                                                    "trade_suspended_by_user")})]
+    # The capital each sleeve's weights were turned into shares with, recorded for the score
+    # row. None for a sleeve the book file no longer lists (it is being flattened from the ledger).
+    sized_from = {s.slug: s.capital_usd for s in cfg.sleeves}
     sleeves = [{"slug": p.slug, "action": p.action, "why": p.why, "targets": p.targets,
                 "stale_sessions": p.stale_sessions, "dropped": list(p.dropped), "scale": p.scale,
+                "capital_usd": sized_from.get(p.slug),
                 "decision": ({k: decs[p.slug][k] for k in ("sha256", "written_at")}
                              if "weights" in decs.get(p.slug, {})
                              else {"missing": decs.get(p.slug, {}).get("missing", "not read: disabled in the book file")})}
@@ -749,7 +758,8 @@ def _f(x) -> str:
     return "" if x is None else f"{x:.4f}"
 
 
-def score_rows(day: dt.date, new: dict, marks: dict, last: dict, equity_change) -> tuple:
+def score_rows(day: dt.date, new: dict, marks: dict, last: dict, equity_change,
+               capital: dict | None = None) -> tuple:
     """(rows, unmarked): one row per sleeve and the book row, marked at `day`'s closes.
 
     pnl = cash + shares at the marks (ledger.pnl's definition); day_change is against that
@@ -758,7 +768,10 @@ def score_rows(day: dt.date, new: dict, marks: dict, last: dict, equity_change) 
     price, and so does its next row's day_change. The book row sums the sleeves and sets
     them against the change in account equity (Alpaca's `equity - last_equity`, a snapshot
     read at verify; empty when verify runs on a later day): the residual is what the
-    ledger does not attribute (dividends, fees, and after-hours marks; ledger.py)."""
+    ledger does not attribute (dividends, fees, and after-hours marks; ledger.py).
+    `capital` is {slug: the capital_usd the plan sized that sleeve from}; a sleeve absent from
+    it, or mapped to None, gets an empty cell (SCORES_COLUMNS)."""
+    capital = capital or {}
     rows, unmarked, tot = [], {}, {"sv": 0.0, "cash": 0.0, "pnl": 0.0, "chg": 0.0}
     whole = True
     for slug, r in sorted(new["sleeves"].items()):
@@ -778,13 +791,14 @@ def score_rows(day: dt.date, new: dict, marks: dict, last: dict, equity_change) 
             tot["sv"] += sv; tot["cash"] += r["cash"]; tot["pnl"] += pnl; tot["chg"] += chg
         rows.append({"date": day.isoformat(), "slug": slug, "shares_value": _f(sv), "cash": _f(r["cash"]),
                      "pnl": _f(pnl), "day_change": _f(chg), "n_names": len(held),
-                     "equity_change": "", "residual": ""})
+                     "equity_change": "", "residual": "", "capital_usd": _f(capital.get(slug))})
     names = len({s for r in new["sleeves"].values() for s, q in r["shares"].items() if q != 0})
     rows.append({"date": day.isoformat(), "slug": BOOK_ROW,
                  "shares_value": _f(tot["sv"] if whole else None), "cash": _f(tot["cash"] if whole else None),
                  "pnl": _f(tot["pnl"] if whole else None), "day_change": _f(tot["chg"] if whole else None),
                  "n_names": names, "equity_change": _f(equity_change),
-                 "residual": _f(equity_change - tot["chg"] if whole and equity_change is not None else None)})
+                 "residual": _f(equity_change - tot["chg"] if whole and equity_change is not None else None),
+                 "capital_usd": ""})
     return rows, unmarked
 
 
@@ -1012,7 +1026,8 @@ def _verify(deps: Deps, date) -> int:
     if not late:
         acct = c.account()
         equity_change = acct["equity"] - acct["last_equity"]
-    rows, unmarked = score_rows(F, new, marks, _last_pnl(state / "sleeve_scores.csv"), equity_change)
+    rows, unmarked = score_rows(F, new, marks, _last_pnl(state / "sleeve_scores.csv"), equity_change,
+                                {s["slug"]: s.get("capital_usd") for s in plan_d["sleeves"]})
     for slug, miss in unmarked.items():
         fails.append(f"{slug} holds {miss} with no close on {F}: not scored (never marked at another day's price)")
 

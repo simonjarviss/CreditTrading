@@ -4,6 +4,7 @@ No test here builds an `AlpacaClient` or opens a socket (the root conftest block
 The fake records every call it receives, fills `day` market orders at once at a canned price,
 and moves its own positions, so a test can run whole sessions. Each test names the failure it
 guards."""
+import csv
 import datetime as dt
 import io
 import json
@@ -521,6 +522,34 @@ def test_verify_books_full_fills_scores_each_sleeve_and_is_idempotent(w):
                                                        w.day / "verify.json", w.day / "ledger_before.json")}
 
 
+def test_each_score_row_records_the_capital_the_plan_sized_the_sleeve_from(w):
+    """Team lead, 2026-11-19: "Yes, add it now". The ladder's two tests (promote.py) need the
+    capital a sleeve traded at on each session, and nothing recorded it. PLAN writes each
+    sleeve's capital_usd into plan.json from the config it sized the targets with (inside
+    record_sha, so it cannot be edited afterwards) and VERIFY copies it to the score row. It
+    is NOT read from the book file at VERIFY: the file here changes between SEND and VERIFY,
+    as a release in the afternoon would change it, and the row still says what was traded.
+    Fails on 4ad01d0, which has no such column."""
+    arm(w)
+    assert (do_plan(w), do_send(w)) == (core.EXIT_PLANNED, core.EXIT_SENT)
+    assert {s["slug"]: s["capital_usd"] for s in read(w.day / "plan.json")["sleeves"]} == {"a": 10000.0, "b": 10000.0}
+    set_book(w, sleeves=[{**BOOK["sleeves"][0], "capital_usd": 20000}, BOOK["sleeves"][1]])
+    assert do_verify(w) == sr.VERIFY_PASS
+    rows = list(csv.DictReader((w.state / "sleeve_scores.csv").open()))
+    assert sr.SCORES_COLUMNS[-1] == "capital_usd"
+    assert {r["slug"]: r["capital_usd"] for r in rows} == {"a": "10000.0000", "b": "10000.0000", sr.BOOK_ROW: ""}
+
+
+def test_a_sleeve_with_no_recorded_capital_gets_an_empty_cell_never_a_default():
+    """A plan written before the column existed, or a ledger sleeve the plan does not list:
+    the cell is empty, and promote.py reads empty as UNMEASURED."""
+    new = {"sleeves": {"a": {"shares": {"AAA": 1}, "cash": -20.0}, "old": {"shares": {}, "cash": 3.0}}}
+    rows, _ = sr.score_rows(F, new, {"AAA": 21.0}, {}, None, {"a": 10000.0})
+    assert {r["slug"]: r["capital_usd"] for r in rows} == {"a": "10000.0000", "old": "", sr.BOOK_ROW: ""}
+    rows, _ = sr.score_rows(F, new, {"AAA": 21.0}, {}, None, {"a": None})
+    assert rows[0]["capital_usd"] == ""
+
+
 def test_verify_books_a_partial_fill_and_conserves_shares_and_cash(w):
     arm(w)
     w.c.fill_frac["IWM"] = 0.5                          # 4 of 8 short
@@ -757,7 +786,11 @@ def test_the_released_book_file_loads_and_every_slug_is_a_shadow_book():
         "cef_exdate_after": 0.042, "cef_exdate_before_after": 0.057, "units_exdate_after": 0.107,
         "units_exdate_before_after": 0.154, "specdiv_wait": 0.053, "specdiv_wait_small": 0.053,
         "pead_small_long": 0.117}
-    assert all(s.modelled_fill_cost_bp is None for s in cfg.sleeves)
+    # team lead, 2026-11-19: the cards' measured half-spreads for the two special-dividend
+    # books, 15bp as a labelled assumption for the other five (the file's _note says which)
+    assert {s.slug: s.modelled_fill_cost_bp for s in cfg.sleeves} == {
+        "specdiv_wait_small": 13.5, "specdiv_wait": 7.0, "cef_exdate_after": 15.0, "cef_exdate_before_after": 15.0,
+        "units_exdate_after": 15.0, "units_exdate_before_after": 15.0, "pead_small_long": 15.0}
     assert (cfg.min_order_usd, cfg.max_gross_x_equity, cfg.max_name_usd, cfg.max_stale_sessions, cfg.max_orders,
             cfg.window_minutes_before_close) == (25, 1.5, 50000, 2, 300, (20, 2))
     # the shared IWM hedge at this stage fits under max_name_usd: pead 100%, each special-dividend book 50%

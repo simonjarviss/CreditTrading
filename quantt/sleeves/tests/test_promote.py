@@ -64,9 +64,12 @@ def shadow_state(tmp_path, n, slug="a", late=(), unmeasured=(), no_decision=(), 
     return tmp_path / "shadow"
 
 
-def events_state(tmp_path, held, slug="a", empty_days=0, day_change="5.0000", pnl=None):
+def events_state(tmp_path, held, slug="a", empty_days=0, day_change="5.0000", pnl=None, capital=FULL / 4,
+                 no_capital=()):
     """A sleeve_scores.csv in run.py's layout: `empty_days` rows with no position, then `held`
-    rows with one. Dates are the shadow_state() sessions, so the two line up."""
+    rows with one. Dates are the shadow_state() sessions, so the two line up. Every sleeve row
+    carries `capital` as the capital the plan sized it from, except the row indices in
+    `no_capital`, whose cell is empty (a plan from before the column existed)."""
     days = weekdays(empty_days + held + 1)[1:]
     st = tmp_path / "events"
     st.mkdir()
@@ -79,7 +82,8 @@ def events_state(tmp_path, held, slug="a", empty_days=0, day_change="5.0000", pn
             for s in (slug, pm.BOOK_ROW):
                 w.writerow({"date": day.isoformat(), "slug": s, "shares_value": "0.0000", "cash": "0.0000",
                             "pnl": total, "day_change": day_change if n else "0.0000", "n_names": n,
-                            "equity_change": "", "residual": ""})
+                            "equity_change": "", "residual": "",
+                            "capital_usd": "" if s == pm.BOOK_ROW or i in no_capital else f"{capital:.4f}"})
     return st
 
 
@@ -97,10 +101,14 @@ def bookings(st, n, usd=1000.0, slug="a", skip=(), unbooked=()):
                          {"slug": "zzz", "symbol": "AAA", "shares": 99, "price": 50.0, "kind": "fill"}]}))
 
 
-def report(tmp_path, *, shadow_n=12, held=None, capital=FULL / 4, enabled=True, **shadow_kw):
+def report(tmp_path, *, shadow_n=12, held=None, capital=FULL / 4, enabled=True, cost_bp=None, pnl=None,
+           no_capital=(), **shadow_kw):
     sh = shadow_state(tmp_path, shadow_n, **shadow_kw)
-    ev = events_state(tmp_path, held) if held is not None else tmp_path / "events"
-    return pm.build(book_file(tmp_path, capital, enabled), sh, ev)
+    ev = (events_state(tmp_path, held, capital=capital, pnl=pnl, no_capital=no_capital)
+          if held is not None else tmp_path / "events")
+    if held and cost_bp is not None:
+        bookings(ev, held)
+    return pm.build(book_file(tmp_path, capital, enabled, cost_bp=cost_bp), sh, ev)
 
 
 # ------------------------------------------------------------------ promotion
@@ -173,19 +181,71 @@ def test_a_missing_or_malformed_shadow_record_is_unmeasured_naming_the_path(tmp_
     (19, FULL / 2, pm.CHANGE, pm.EXIT_CHANGE),
     (20, FULL / 4, pm.UNMEASURED, pm.EXIT_UNMEASURED),
     (59, FULL / 2, pm.UNMEASURED, pm.EXIT_UNMEASURED),
-    (60, FULL / 2, pm.UNMEASURED, pm.EXIT_UNMEASURED),
 ])
 def test_the_ladder_at_its_boundaries(tmp_path, held, capital, verdict, code):
+    """With no modelled cost in the file, 20 to 59 position sessions cannot be judged: the
+    verdict names the key and nothing else (the capital column is there)."""
     rep = report(tmp_path, shadow_n=max(12, held), held=held, capital=capital)
     s = rep["sleeves"][0]
     assert (s["position_sessions"], s["verdict"], rep["exit_code"]) == (held, verdict, code)
     if held < 20:
         assert (s["stage_due"], s["capital_due"]) == ("QUARTER", FULL / 4)
-    elif held < 60:
-        assert s["missing"] == [pm.NO_COST_KEY, pm.NO_CAPITAL_TRACK] and s["capital_due"] is None and "HALF" in s["stage_due"]
     else:
-        assert s["missing"] == [pm.NO_CAPITAL_SIGMA] and s["capital_due"] is None
-        assert s["sigma_daily_frac"] == pytest.approx(0.1 / 252 ** 0.5)
+        assert s["missing"] == [pm.NO_COST_KEY] and s["capital_due"] is None and "HALF" in s["stage_due"]
+
+
+@pytest.mark.parametrize("cost_bp, capital, track, verdict, edit", [
+    (50.0, FULL / 4, "PASS", pm.CHANGE, '"capital_usd": 20000.0 for a (now 10000.0)'),   # earns its half
+    (50.0, FULL / 2, "PASS", pm.AGREE, None),
+    (49.0, FULL / 4, "FAIL", pm.AGREE, None),                                            # stays a quarter
+    (0.0, FULL / 4, "FAIL", pm.AGREE, None),
+])
+def test_twenty_five_sessions_reach_a_fills_track_verdict(tmp_path, cost_bp, capital, track, verdict, edit):
+    """Team lead, 2026-11-19: the capital column, a modelled cost and real fills only. At
+    $10,000 the sleeve made +$5 a session and its shadow book +$1,000 on $1,000,000, i.e.
+    +$10 at this capital: over 25 sessions paper is $125 behind. It filled $500 in the market
+    each session ($12,500) and crossed another $500 inside the account, which earns nothing:
+    twice 50bp on the fills allows exactly $125 and passes, twice 49bp allows $122.50 and
+    fails. (At $20,000 the shadow line doubles; the row below prices that with its own fills.)"""
+    if capital == FULL / 2:
+        cost_bp = 150.0                    # shortfall 25 x (20 - 5) = 375 = 2 x 150bp x 12,500
+    rep = report(tmp_path, shadow_n=25, held=25, capital=capital, cost_bp=cost_bp)
+    s = rep["sleeves"][0]
+    t = s["tracking"]
+    assert t["traded"] == {"usd": 25000.0, "fills_usd": 12500.0, "crosses_usd": 12500.0}
+    assert t["allowance_usd"] == pytest.approx(2 * cost_bp / 1e4 * 12500) and t["verdict"] == track
+    assert (s["verdict"], s["missing"], s["edits"]) == (verdict, [], [edit] if edit else [])
+    assert s["capital_due"] == (FULL / 2 if track == "PASS" else FULL / 4)
+    assert f"fills track {track}" in pm.render(rep)
+
+
+def test_a_sleeve_whose_only_trades_were_crossed_earns_no_allowance(tmp_path):
+    """Team lead, 2026-11-19: "No, only real fills". Every booking here is a cross inside the
+    account, so the allowance is zero whatever the modelled cost, and a paper line $125 behind
+    its shadow book fails."""
+    sh = shadow_state(tmp_path, 25)
+    ev = events_state(tmp_path, 25)
+    for i, day in enumerate(weekdays(26)[1:]):
+        (ev / day.isoformat()).mkdir()
+        (ev / day.isoformat() / "verify.json").write_text(json.dumps({"ledger_applied": True, "bookings": [
+            {"slug": "a", "symbol": "BBB", "shares": -10, "price": 100.0, "kind": "cross"}]}))
+    t = pm.build(book_file(tmp_path, cost_bp=500.0), sh, ev)["sleeves"][0]["tracking"]
+    assert t["traded"] == {"usd": 25000.0, "fills_usd": 0.0, "crosses_usd": 25000.0}
+    assert (t["allowance_usd"], t["verdict"]) == (0.0, "FAIL")
+
+
+def test_a_row_with_no_recorded_capital_is_unmeasured_naming_its_date(tmp_path):
+    """A plan written before the column existed leaves an empty cell. The report never fills
+    it from today's book file: 20 to 59 sessions and 60 on are both UNMEASURED, naming the date."""
+    rep = report(tmp_path, shadow_n=25, held=25, cost_bp=50.0, no_capital=[3])
+    s = rep["sleeves"][0]
+    assert s["verdict"] == pm.UNMEASURED and "verdict" not in s["tracking"]
+    # the empty cell is row 3's (2026-01-09); it is the capital carried into the NEXT session
+    assert "empty capital_usd" in s["missing"][0] and "2026-01-12" in s["missing"][0]
+    rep = report(tmp_path / "x", shadow_n=60, held=60, capital=FULL / 2, no_capital=[7])
+    s = rep["sleeves"][0]
+    assert s["verdict"] == pm.UNMEASURED and s["missing"][0].startswith("sigma x sqrt(T): sleeve_scores.csv has an empty")
+    assert "2026-01-15" in s["missing"][0]
 
 
 def test_a_change_names_the_exact_edit(tmp_path):
@@ -204,33 +264,33 @@ def test_only_sessions_with_a_position_count(tmp_path):
 def test_tracking_figures_with_no_modelled_cost_name_the_absent_key(tmp_path):
     """25 position sessions at a quarter ($10,000): paper +5 a day; the shadow book +$1,000 a
     day on $1,000,000, i.e. +$10 a day at this capital. With no modelled_fill_cost_bp there is
-    no allowance and no what-if, and the verdict names the key and the missing column."""
+    no allowance and no verdict, and the report names the key."""
     rep = report(tmp_path, shadow_n=25, held=25)
     s = rep["sleeves"][0]
     t = s["tracking"]
     assert (t["sessions_compared"], t["paper_pnl_usd"], t["shadow_pnl_usd_at_shadow_notional"],
             t["shadow_pnl_usd_at_capital_usd"], t["difference_usd"]) == (25, 125.0, 25000.0, 250.0, -125.0)
-    assert "allowance_usd" not in t and "if_capital_constant" not in t
+    assert "allowance_usd" not in t and "verdict" not in t
     assert s["verdict"] == pm.UNMEASURED and "modelled_fill_cost_bp is absent" in pm.render(rep)
-    assert "no per-session capital_usd column" in pm.render(rep)
 
 
-@pytest.mark.parametrize("cost_bp, whatif", [(25.0, "PASS"), (24.0, "FAIL"), (0.0, "FAIL")])
-def test_with_a_modelled_cost_the_allowance_is_computed_and_the_verdict_still_waits_for_capital(tmp_path, cost_bp, whatif):
-    """The shortfall is $125 (above). The sleeve traded $1,000 on each of 25 sessions, half by
-    fills and half crossed: $25,000, so twice 25bp allows exactly $125 and twice 24bp $120.
-    The pass or fail is shown only as a what-if at today's capital: the capital each session
-    traded at is not recorded, so the verdict is UNMEASURED and names only that."""
+def test_the_shadow_line_is_scaled_by_the_capital_of_the_plan_that_sized_what_was_carried_in(tmp_path):
+    """Ten sessions at $10,000 then fifteen at $20,000: the first row uses its own capital and
+    every later row the row before it, so eleven sessions scale at $10,000 (+$10) and fourteen
+    at $20,000 (+$20): $390, not 25 sessions at today's $20,000 ($500)."""
     sh = shadow_state(tmp_path, 25)
     ev = events_state(tmp_path, 25)
-    bookings(ev, 25)
-    rep = pm.build(book_file(tmp_path, cost_bp=cost_bp), sh, ev)
-    s = rep["sleeves"][0]
-    t = s["tracking"]
-    assert t["traded"] == {"usd": 25000.0, "fills_usd": 12500.0, "crosses_usd": 12500.0}
-    assert t["allowance_usd"] == pytest.approx(2 * cost_bp / 1e4 * 25000) and t["if_capital_constant"] == whatif
-    assert s["missing"] == [pm.NO_CAPITAL_TRACK] and s["verdict"] == pm.UNMEASURED and rep["exit_code"] == pm.EXIT_UNMEASURED
-    assert f"would {whatif}; that is not the verdict" in pm.render(rep)
+    lines = (ev / "sleeve_scores.csv").read_text().splitlines()
+    out, seen = [lines[0]], 0
+    for ln in lines[1:]:
+        if ",a," in ln:
+            seen += 1
+            if seen > 10:
+                ln = ln.rsplit(",", 1)[0] + ",20000.0000"
+        out.append(ln)
+    (ev / "sleeve_scores.csv").write_text("\n".join(out) + "\n")
+    t = pm.build(book_file(tmp_path, capital=FULL / 2), sh, ev)["sleeves"][0]["tracking"]
+    assert t["shadow_pnl_usd_at_capital_usd"] == pytest.approx(11 * 10.0 + 14 * 20.0)
 
 
 @pytest.mark.parametrize("kw, word", [({"skip": [3]}, "verify.json"), ({"unbooked": [3]}, "ledger_applied")])
@@ -239,8 +299,8 @@ def test_dollars_traded_are_unmeasured_when_a_session_has_no_booked_verify_file(
     ev = events_state(tmp_path, 25)
     bookings(ev, 25, **kw)
     s = pm.build(book_file(tmp_path, cost_bp=25.0), sh, ev)["sleeves"][0]
-    assert s["tracking"]["traded"] is None and "allowance_usd" not in s["tracking"]
-    assert word in s["missing"][0] and "2026-01-09" in s["missing"][0] and s["missing"][1] == pm.NO_CAPITAL_TRACK
+    assert s["tracking"]["traded"] is None and "allowance_usd" not in s["tracking"] and "verdict" not in s["tracking"]
+    assert len(s["missing"]) == 1 and word in s["missing"][0] and "2026-01-09" in s["missing"][0]
 
 
 def test_the_session_a_sleeve_sells_out_on_is_a_common_session(tmp_path):
@@ -250,7 +310,7 @@ def test_the_session_a_sleeve_sells_out_on_is_a_common_session(tmp_path):
     ev = events_state(tmp_path, 22, empty_days=2)
     rows = (ev / "sleeve_scores.csv").read_text().splitlines()
     last = weekdays(25)[-1].isoformat()
-    rows += [f"{last},a,0.0000,0.0000,103.0000,-7.0000,0,,", f"{last},_book,0.0000,0.0000,103.0000,-7.0000,0,,"]
+    rows += [f"{last},a,0.0000,0.0000,103.0000,-7.0000,0,,,10000.0000", f"{last},_book,0.0000,0.0000,103.0000,-7.0000,0,,,"]
     (ev / "sleeve_scores.csv").write_text("\n".join(rows) + "\n")
     s = pm.build(book_file(tmp_path), sh, ev)["sleeves"][0]
     assert (s["position_sessions"], s["tracking"]["sessions_compared"], s["tracking"]["paper_pnl_usd"]) == (22, 23, 103.0)
@@ -281,11 +341,30 @@ def test_sigma_verdict_scales_the_backtest_vol_to_the_capital_traded_at():
             pm.sigma_verdict(0.0, 0.1, bad)
 
 
-def test_sixty_sessions_stay_unmeasured_naming_the_missing_column(tmp_path):
-    rep = report(tmp_path, shadow_n=60, held=60, capital=FULL / 2)
-    text = pm.render(rep)
-    assert "sigma x sqrt(T): sleeve_scores.csv has no per-session capital_usd column" in text
-    assert "backtest_vol_annual 0.1 / sqrt(252)" in text and rep["exit_code"] == pm.EXIT_UNMEASURED
+@pytest.mark.parametrize("pnl, capital, due, verdict, edit", [
+    (None, FULL / 2, "FULL", pm.CHANGE, '"capital_usd": 40000.0 for a (now 20000.0)'),   # +$300: above -1 sigma
+    ("-1000.0000", FULL / 2, "HALF", pm.AGREE, None),                                     # between -1 and -2
+    ("-1000.0000", FULL, None, None, None),                                               # (band differs: below)
+    ("-2000.0000", FULL / 2, "STOPPED", pm.CHANGE, "enabled"),                            # below -2 sigma
+])
+def test_sixty_sessions_reach_the_sigma_verdict(tmp_path, pnl, capital, due, verdict, edit):
+    """Sixty position sessions at $20,000 and 10% a year: sigma x sqrt(T) = 20,000 x 0.1 /
+    sqrt(252) x sqrt(60) = $975.90. A live P&L of +$300 is FULL, -$1,000 a HALF, -$2,000
+    STOPPED, and STOPPED is the edit `enabled: false`. At $40,000 the band is $1,951.80, so
+    the same -$1,000 is FULL: the band is in the dollars the sleeve traded at."""
+    rep = report(tmp_path, shadow_n=60, held=60, capital=capital, pnl=pnl)
+    s = rep["sleeves"][0]
+    if capital == FULL:
+        assert s["sigma_band_usd"] == pytest.approx(1951.80, abs=0.01) and s["stage_due"].startswith("FULL")
+        assert s["verdict"] == pm.AGREE
+        return
+    assert s["sigma_band_usd"] == pytest.approx(975.90, abs=0.01) and s["missing"] == []
+    assert s["stage_due"].startswith(due) and s["verdict"] == verdict
+    if edit == "enabled":
+        assert s["edits"][0].startswith('"enabled": false for a') and s["capital_due"] is None
+    else:
+        assert s["edits"] == ([edit] if edit else [])
+    assert "sigma x sqrt(T) over the position sessions = 975.90" in pm.render(rep)
 
 
 def test_capital_off_the_ladder_is_refused_naming_the_sleeve(tmp_path, capsys):

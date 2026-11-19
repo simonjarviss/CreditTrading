@@ -55,19 +55,25 @@ FILLS TRACK (team lead, 2026-11-18: "Paper within 2x modelled gap"). `track_verd
     a sleeve sells out on ends with no position and still carries that day's P&L and the
     exit's cost. A session either side could not measure is left out and listed.
   * DOLLARS TRADED: sum of |shares| x price over the sleeve's rows in `bookings` of
-    `<events state>/<session>/verify.json`, fills and crosses inside the account alike
-    (a cross is booked at the close and costs nothing, but the model charges per dollar
-    traded and cannot know which trades will cross). A session whose verify.json is missing
-    or did not book the ledger makes the allowance UNMEASURED, naming the file.
-  * `modelled_fill_cost_bp` is OPTIONAL in the book file and absent for every sleeve today:
-    the shadow engine fills at the close at no cost, so twice the modelled cost is twice
-    nothing until the team lead sets one. Absent: UNMEASURED, naming the key.
-  * SHADOW P&L IN THE SLEEVE'S DOLLARS needs the capital the sleeve traded at on each session
-    (shadow P&L x capital / the shadow notional). NOTHING RECORDS IT: `sleeve_scores.csv` has
-    no capital column, and plan.json holds share targets, not the capital they were sized
-    from. So even with the key set the verdict is UNMEASURED, naming that column. The
-    report prints what the test WOULD say if today's `capital_usd` had applied on every
-    session, labelled as that, and it is not the verdict.
+    `<events state>/<session>/verify.json`, MARKET FILLS ONLY (team lead, 2026-11-19: "No,
+    only real fills"): a cross netted inside the account is booked at the close, pays no
+    spread and earns no allowance. Crossed dollars are still printed, beside the fills. A
+    session whose verify.json is missing or did not book the ledger makes the allowance
+    UNMEASURED, naming the file.
+  * `modelled_fill_cost_bp` (per side, per dollar filled) is in the book file for every
+    sleeve since 2026-11-19 (team lead: the cards' measured half-spreads where there are
+    any, 15bp as a labelled assumption elsewhere). The key stays optional in config.py: a
+    new sleeve whose cost nobody has ruled on is UNMEASURED here, naming the key, and is
+    never given another sleeve's figure.
+  * SHADOW P&L IN THE SLEEVE'S DOLLARS: each compared session's shadow P&L x capital_t / that
+    decision's shadow notional. capital_t is the `capital_usd` on the sleeve's PREVIOUS score
+    row (the plan that sized the shares carried into the session), or the row's own for the
+    sleeve's first row. The column exists since 2026-11-19 (run.py, SCORES_COLUMNS; team
+    lead: "Yes, add it now"). An empty cell on any compared session makes the verdict
+    UNMEASURED, naming the dates; it is never filled from today's book file.
+  * VERDICT: PASS if (shadow P&L in the sleeve's dollars - paper P&L) <= 2 x
+    modelled_fill_cost_bp / 10,000 x dollars filled; FAIL otherwise. PASS at 20 to 59
+    position sessions means a HALF; FAIL means a QUARTER.
 
 SIGMA (team lead, 2026-11-18: "Each sleeve's backtest vol", scaled to the capital the sleeve
 traded at). `sigma_verdict`:
@@ -76,8 +82,8 @@ traded at). `sigma_verdict`:
   constant capital this is capital x daily sigma x sqrt(T). 252 is the sessions-a-year figure
   the allocation run and the shadow scoreboard use. FULL if live P&L (the sleeve's latest
   `pnl`) is above -1 of these, STOPPED below -2, a HALF otherwise. `backtest_vol_annual` is in
-  the book file. capital_t is not recorded anywhere (above), so this verdict is UNMEASURED
-  too, naming the column, until `sleeve_scores.csv` carries a per-session `capital_usd`.
+  the book file. capital_t is each position session's own `capital_usd` in sleeve_scores.csv;
+  an empty cell on any of them makes this verdict UNMEASURED, naming the dates.
 
 STOPPED is `enabled: false` (config.py requires capital_usd > 0, and a disabled sleeve is
 flattened), so a `capital_usd` of zero cannot occur and the stages a file can hold are a
@@ -122,7 +128,7 @@ NY = ZoneInfo("America/New_York")
 ON_TIME_CUTOFF = dt.time(13, 0)            # shadow.engine.ON_TIME_CUTOFF, pinned by a test
 SHADOW_STATUSES = ("SCORED", "FLAT", "UNMEASURED")   # every status shadow.engine writes
 SCORES_COLUMNS = ("date", "slug", "shares_value", "cash", "pnl", "day_change", "n_names",
-                  "equity_change", "residual")      # quantt.sleeves.run.SCORES_COLUMNS, pinned by a test
+                  "equity_change", "residual", "capital_usd")   # quantt.sleeves.run.SCORES_COLUMNS, pinned by a test
 BOOK_ROW = "_book"                         # run.py's row for the whole account; not a sleeve
 CLEAN_SESSIONS_TO_PROMOTE = 10             # team lead, 2026-11-18
 HALF_FROM, FULL_FROM = 20, 60              # position sessions; team lead, 2026-11-18
@@ -134,10 +140,19 @@ RULING = "docs/SYSTEM.md section 5, team lead 2026-11-18"
 PERIODS = 252                              # sessions a year, as shadow/scoreboard.py
 NO_COST_KEY = ("fills track: the optional key modelled_fill_cost_bp is absent for this sleeve in the book file "
                "(the fill cost the model assumes, in bp per dollar traded; the team lead sets it)")
-NO_CAPITAL = ("sleeve_scores.csv has no per-session capital_usd column, and nothing else in the events state "
-              "records the capital a sleeve traded at on each session")
-NO_CAPITAL_TRACK = f"fills track: {NO_CAPITAL}; the shadow P&L cannot be put in the sleeve's dollars without it"
-NO_CAPITAL_SIGMA = f"sigma x sqrt(T): {NO_CAPITAL}; backtest_vol_annual cannot be scaled to dollars without it"
+NO_CAPITAL = ("sleeve_scores.csv has an empty capital_usd for this sleeve on {dates} (a plan written before the "
+              "column existed, or a session on which the plan did not list the sleeve)")
+NO_CAPITAL_TRACK = "fills track: " + NO_CAPITAL + "; the shadow P&L cannot be put in the sleeve's dollars without it"
+NO_CAPITAL_SIGMA = "sigma x sqrt(T): " + NO_CAPITAL + "; backtest_vol_annual cannot be scaled to dollars without it"
+
+
+def _capital(row: dict):
+    """A score row's capital_usd as a float, or None for an empty cell. Never a default."""
+    return float(row["capital_usd"]) if row.get("capital_usd") not in ("", None) else None
+
+
+def _dates(ds: list) -> str:
+    return ", ".join(ds[:3]) + (f" and {len(ds) - 3} more" if len(ds) > 3 else "")
 
 
 class PromoteError(RuntimeError):
@@ -290,8 +305,7 @@ def track_verdict(shortfall_usd: float, modelled_fill_cost_bp: float, traded_usd
 
 def sigma_verdict(live_pnl_usd: float, backtest_vol_annual: float, capitals: list) -> tuple:
     """(FULL | HALF | STOPPED, sigma x sqrt(T) in dollars), `capitals` holding the capital
-    traded at on each position session (module docstring, SIGMA). Not yet reachable from
-    the report: nothing records those capitals."""
+    traded at on each position session (module docstring, SIGMA)."""
     if not capitals or any(c <= 0 for c in capitals):
         raise PromoteError(f"sigma_verdict needs a positive capital for every position session, got {capitals!r}")
     band = backtest_vol_annual / PERIODS ** 0.5 * sum(c * c for c in capitals) ** 0.5
@@ -323,14 +337,14 @@ def tracking(rows: list, shadow: dict, sleeve, shadow_state: Path, events_state:
     notional; the rescaled line multiplies it by capital_usd / notional and so ASSUMES
     today's capital_usd on every session. That is why `if_capital_constant` is a labelled
     what-if and never the verdict."""
-    slug, capital_usd = sleeve.slug, sleeve.capital_usd
+    slug = sleeve.slug
     if not shadow.get("measured"):
         return {"measured": False, "why": shadow.get("why", "no shadow record")}
     by_date = {r["date"].isoformat(): r for r in shadow["_rows"]}
     paper = shadow_usd = 0.0
-    used, skipped = [], []
+    used, skipped, cap_of = [], [], {}
     first = next((i for i, r in enumerate(rows) if r["_n"] > 0), len(rows))
-    for r in rows[first:]:
+    for i, r in enumerate(rows[first:], start=first):
         s = by_date.get(r["date"])
         if r["day_change"] == "" or s is None or s["status"] == "UNMEASURED":
             skipped.append(r["date"])
@@ -338,6 +352,7 @@ def tracking(rows: list, shadow: dict, sleeve, shadow_state: Path, events_state:
         paper += float(r["day_change"])
         shadow_usd += float(s["pnl_price_usd"])        # FLAT rows carry 0.0; SCORED the price line
         used.append(r["date"])
+        cap_of[r["date"]] = _capital(rows[i - 1] if i > 0 else r)   # the plan that sized what was carried in
     out = {"measured": True, "sessions_compared": len(used), "sessions_skipped": skipped,
            "paper_pnl_usd": round(paper, 2), "shadow_pnl_usd_at_shadow_notional": round(shadow_usd, 2)}
     try:
@@ -347,22 +362,31 @@ def tracking(rows: list, shadow: dict, sleeve, shadow_state: Path, events_state:
         out["traded_why"] = str(e)
     cost = sleeve.modelled_fill_cost_bp
     if cost is not None and out["traded"] is not None:
-        out["allowance_usd"] = round(track_verdict(0.0, cost, out["traded"]["usd"])[1], 2)
-    notionals = set()
+        out["allowance_usd"] = round(track_verdict(0.0, cost, out["traded"]["fills_usd"])[1], 2)
+    scaled, no_notional = 0.0, []
     for d in used:
         p = shadow_state / slug / "decisions" / f"{by_date[d]['prev'].isoformat()}.json"
         try:
-            notionals.add(float(json.loads(p.read_text())["notional_usd"]))
+            notional = float(json.loads(p.read_text())["notional_usd"])
+            if not notional > 0:
+                raise ValueError(notional)
         except (OSError, ValueError, KeyError, TypeError):
-            notionals.add(None)
-    if len(notionals) == 1 and None not in notionals:
-        scaled = shadow_usd * capital_usd / notionals.pop()
+            no_notional.append(d)
+            continue
+        if cap_of[d] is not None:
+            scaled += float(by_date[d]["pnl_price_usd"]) * cap_of[d] / notional
+    out["no_capital"] = [d for d in used if cap_of[d] is None]
+    if not used:
+        out["rescaled"] = "UNMEASURED: no session to compare"
+    elif no_notional:
+        out["rescaled"] = (f"UNMEASURED: the shadow decision filling on {_dates(no_notional)} carries no readable "
+                           "notional_usd")
+    elif out["no_capital"]:
+        out["rescaled"] = "UNMEASURED: " + NO_CAPITAL.format(dates=_dates(out["no_capital"]))
+    else:
         out.update(shadow_pnl_usd_at_capital_usd=round(scaled, 2), difference_usd=round(paper - scaled, 2))
         if "allowance_usd" in out:
-            out["if_capital_constant"] = track_verdict(scaled - paper, cost, out["traded"]["usd"])[0]
-    else:
-        out["rescaled"] = ("UNMEASURED: the shadow decisions on these sessions do not all carry one readable "
-                           "notional_usd" if used else "UNMEASURED: no session to compare")
+            out["verdict"] = track_verdict(scaled - paper, cost, out["traded"]["fills_usd"])[0]
     return out
 
 
@@ -405,12 +429,38 @@ def sleeve_report(sleeve, rows_by_slug, shadow: dict, shadow_state: Path, events
             out["missing"].append(f"fills track: {t['why']}")
         elif t["traded"] is None:
             out["missing"].append(f"fills track: dollars traded: {t['traded_why']}")
-        out["missing"].append(NO_CAPITAL_TRACK)       # always, until the column exists: no verdict without it
+        if t["measured"] and t.get("no_capital"):
+            out["missing"].append(NO_CAPITAL_TRACK.format(dates=_dates(t["no_capital"])))
+        elif t["measured"] and "rescaled" in t and "verdict" not in t:
+            out["missing"].append(f"fills track: {t['rescaled']}")
+        if "verdict" in t and not out["missing"]:
+            due = "HALF" if t["verdict"] == "PASS" else "QUARTER"
+            out.update(stage_due=f"{due} (fills track: {t['verdict']})", capital_due=sleeve.full_capital_usd * STAGES[due])
+            if stage != due:
+                out["edits"].append(f"\"capital_usd\": {out['capital_due']!r} for {sleeve.slug} (now {sleeve.capital_usd!r})")
     else:
         out.update(stage_due="FULL, HALF or STOPPED by live P&L against -1 and -2 sigma x sqrt(T)", capital_due=None,
                    tracking=tracking(rows, shadow, sleeve, shadow_state, events_state),
                    sigma_daily_frac=sleeve.backtest_vol_annual / PERIODS ** 0.5)
-        out["missing"].append(NO_CAPITAL_SIGMA)       # sigma_verdict() is ready; its capitals are not recorded
+        caps = [_capital(r) for r in held]
+        blank = [r["date"] for r, c in zip(held, caps) if c is None]
+        if blank:
+            out["missing"].append(NO_CAPITAL_SIGMA.format(dates=_dates(blank)))
+        elif out.get("live_pnl_usd") is None:
+            out["missing"].append(f"sigma x sqrt(T): {out.get('live_pnl_note', 'the sleeve has no live P&L row')}")
+        else:
+            due, band = sigma_verdict(out["live_pnl_usd"], sleeve.backtest_vol_annual, caps)
+            out.update(sigma_band_usd=round(band, 2))
+            if due == "STOPPED":
+                out.update(stage_due="STOPPED (live P&L below -2 sigma x sqrt(T))", capital_due=None)
+                if sleeve.enabled:
+                    out["edits"].append(f"\"enabled\": false for {sleeve.slug} (live P&L {out['live_pnl_usd']:,.2f} is "
+                                        f"below -2 x {band:,.2f}; disabling flattens the sleeve)")
+            else:
+                out.update(stage_due=f"{due} (live P&L against sigma x sqrt(T) = {band:,.2f})",
+                           capital_due=sleeve.full_capital_usd * STAGES[due])
+                if stage != due:
+                    out["edits"].append(f"\"capital_usd\": {out['capital_due']!r} for {sleeve.slug} (now {sleeve.capital_usd!r})")
     # ---- the promotion gate, for a sleeve that has never held a position
     if T == 0 and sleeve.enabled:
         if not shadow.get("measured"):
@@ -502,14 +552,13 @@ def render(rep: dict) -> str:
             out.append(f"- {s['slug']}: UNMEASURED: {m}")
         t = s.get("tracking")
         if t and t["measured"]:
-            scaled = (f"{t['shadow_pnl_usd_at_capital_usd']:+,.2f} at today's capital_usd (assumed on every session), "
+            scaled = (f"{t['shadow_pnl_usd_at_capital_usd']:+,.2f} at the capital each session was sized from, "
                       f"paper less shadow {t['difference_usd']:+,.2f}" if "difference_usd" in t else t["rescaled"])
             traded = (f"traded {t['traded']['usd']:,.2f} (fills {t['traded']['fills_usd']:,.2f}, crossed inside the "
                       f"account {t['traded']['crosses_usd']:,.2f})" if t["traded"] else f"traded UNMEASURED: {t['traded_why']}")
-            allow = (f"allowance 2 x {s['modelled_fill_cost_bp']:g}bp x traded = {t['allowance_usd']:,.2f}"
+            allow = (f"allowance 2 x {s['modelled_fill_cost_bp']:g}bp x fills = {t['allowance_usd']:,.2f}"
                      if "allowance_usd" in t else "allowance UNMEASURED")
-            whatif = (f". IF today's capital_usd applied on every session this would {t['if_capital_constant']}; "
-                      "that is not the verdict" if "if_capital_constant" in t else "")
+            whatif = f": fills track {t['verdict']}" if "verdict" in t else ""
             out.append(f"- {s['slug']}: tracking, {t['sessions_compared']} session(s) compared, "
                        f"{len(t['sessions_skipped'])} skipped as unmeasured: paper {t['paper_pnl_usd']:+,.2f}; shadow "
                        f"{t['shadow_pnl_usd_at_shadow_notional']:+,.2f} at its own notional, {scaled}; {traded}; "
@@ -518,7 +567,9 @@ def render(rep: dict) -> str:
             out.append(f"- {s['slug']}: tracking UNMEASURED: {t['why']}")
         if "sigma_daily_frac" in s:
             out.append(f"- {s['slug']}: sigma: backtest_vol_annual {s['backtest_vol_annual']:g} / sqrt({PERIODS}) = "
-                       f"{s['sigma_daily_frac']:.6f} of capital a session (a backtest figure)")
+                       f"{s['sigma_daily_frac']:.6f} of capital a session (a backtest figure)"
+                       + (f"; sigma x sqrt(T) over the position sessions = {s['sigma_band_usd']:,.2f}"
+                          if "sigma_band_usd" in s else ""))
         if "live_pnl_usd" in s:
             out.append(f"- {s['slug']}: live P&L to its last row {_usd(s['live_pnl_usd'])}"
                        + (f" ({s['live_pnl_note']})" if "live_pnl_note" in s else ""))

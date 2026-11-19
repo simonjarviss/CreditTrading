@@ -9,7 +9,8 @@
    "full_capital_usd": 25000.0,
    "backtest_vol_annual": 0.053,
    "capital_usd": 6250.0,
-   "enabled": true
+   "enabled": true,
+   "modelled_fill_cost_bp": 13.5
   },
   {
    "slug": "specdiv_wait",
@@ -17,7 +18,8 @@
    "full_capital_usd": 105000.0,
    "backtest_vol_annual": 0.053,
    "capital_usd": 26250.0,
-   "enabled": true
+   "enabled": true,
+   "modelled_fill_cost_bp": 7.0
   },
   {
    "slug": "cef_exdate_after",
@@ -25,7 +27,8 @@
    "full_capital_usd": 132000.0,
    "backtest_vol_annual": 0.042,
    "capital_usd": 33000.0,
-   "enabled": true
+   "enabled": true,
+   "modelled_fill_cost_bp": 15.0
   },
   {
    "slug": "cef_exdate_before_after",
@@ -33,7 +36,8 @@
    "full_capital_usd": 97000.0,
    "backtest_vol_annual": 0.057,
    "capital_usd": 24250.0,
-   "enabled": true
+   "enabled": true,
+   "modelled_fill_cost_bp": 15.0
   },
   {
    "slug": "units_exdate_after",
@@ -41,7 +45,8 @@
    "full_capital_usd": 52000.0,
    "backtest_vol_annual": 0.107,
    "capital_usd": 13000.0,
-   "enabled": true
+   "enabled": true,
+   "modelled_fill_cost_bp": 15.0
   },
   {
    "slug": "units_exdate_before_after",
@@ -49,7 +54,8 @@
    "full_capital_usd": 36000.0,
    "backtest_vol_annual": 0.154,
    "capital_usd": 9000.0,
-   "enabled": true
+   "enabled": true,
+   "modelled_fill_cost_bp": 15.0
   },
   {
    "slug": "pead_small_long",
@@ -57,11 +63,12 @@
    "full_capital_usd": 96000.0,
    "backtest_vol_annual": 0.117,
    "capital_usd": 24000.0,
-   "enabled": true
+   "enabled": true,
+   "modelled_fill_cost_bp": 15.0
   }
  ],
  "_note_backtest_vol_annual": "Each sleeve's backtest_vol_annual is a BACKTEST figure, not a live one: its gross daily volatility annualised, 2000-06-01 to 2025-12-23, from the allocation run of 2026-11-18 (EVIDENCE_LOG E-2026-11-18-04; the scripts and series are outside the repository in ~/quantt_research/pm_alloc_2026-11-18/; one run, not independently re-derived, and the ex-date books' backtests are unreviewed). They are the figures quoted as percentages in _note_sleeves. The team lead ruled on 2026-11-18 that this is the sigma of the ladder's 60-session test, scaled to the capital the sleeve traded at. The runner does not read it.",
- "_note_modelled_fill_cost_bp": "OPTIONAL per sleeve and ABSENT for all seven on purpose. The ladder's 20-session test (team lead 2026-11-18: paper P&L no more than twice the modelled fill cost behind the shadow book) needs the cost the model assumes, in basis points per dollar traded. The shadow engine assumes none and no idea card records one in a form a program can read, so the team lead sets each; quantt/sleeves/deploy/README.md lists what each card would support. While it is absent the report says UNMEASURED for that test; it never reads absent as zero.",
+ "_note_modelled_fill_cost_bp": "Team lead, 2026-11-19 (question prompt: \"Card figures where measured, 15bp elsewhere\"). The fill cost per side, per dollar filled in the market, that the ladder's fills-track test allows twice over (quantt/sleeves/promote.py). MEASURED, from results/ideas/2026-11-15_special_dividends.md, \"The spread, measured\": specdiv_wait_small 13.5bp (half its median closing spread of 0.27%) and specdiv_wait 7bp (half of 0.14%, the card's $1M-5M-a-day row). AN ASSUMPTION, not a measurement: 15bp for cef_exdate_after, cef_exdate_before_after, units_exdate_after, units_exdate_before_after and pead_small_long, the middle of the desk's old 5/15/30bp grid, to be replaced per sleeve by the cost its own paper fills show against the closing print. The runner reads none of these.",
  "_note_sleeves": "Team lead 2026-11-18 (docs/SYSTEM.md section 5; EVIDENCE_LOG E-2026-11-18-04). FULL SIZE, equal risk across the four families in this account (CEF ex-date, units ex-date, special dividends, earnings drift), a family's variants splitting its share, from each sleeve's backtest volatility 2000-06-01 to 2025-12-23 (4.2%, 5.7%, 10.7%, 15.4%, 5.3%, 5.3%, 11.7% a year in the order below the special-dividend pair; ~/quantt_research/pm_alloc_2026-11-18/, gross, unreviewed for the ex-date books), on the $625,000 the 2026-11-16 ruling gave the seven: cef_exdate_after $132,000, cef_exdate_before_after $97,000, units_exdate_after $52,000, units_exdate_before_after $36,000, specdiv_wait $105,000, pead_small_long $96,000; specdiv_wait_small stays capped at $25,000 by its names' capacity (2026-11-16) and the $81,000 that cap frees is NOT moved to another sleeve, so the special-dividend family sits under an equal share. THE LADDER, counted in sessions on which the sleeve held a position: under 20 a QUARTER of full size; 20 to 59 a HALF if fills track the shadow book; from 60 FULL if live P&L is above -1 sigma x sqrt(T), half between -1 and -2 sigma, stopped below -2 sigma. Each sleeve's full_capital_usd is the full size above and its family the idea it is a variant of (both added 2026-11-18 so that the file states them itself; the runner sizes nothing from them). capital_usd is the CURRENT STAGE and the only figure the runner trades (every sleeve at a quarter: no sleeve has a live session); moving a sleeve up or down the ladder is an edit of its capital_usd here in a PR, and `python3 -m quantt.sleeves.promote` (read-only) says which edit is due and refuses a capital_usd that is not full_capital_usd x a quarter, a half or one. STOPPED is enabled=false, which flattens the sleeve. Team lead 2026-11-18 (question prompts; EVIDENCE_LOG E-2026-11-18-24): a clean session is any on-time day, ten in a row; 'fills track' is paper within twice the modelled fill cost; the 60-session sigma is each sleeve's backtest volatility scaled to the capital it traded at. A sleeve is enabled only after its shadow book has 10 clean on-time sessions (no UNMEASURED or LATE day): run the promote report at install and set enabled=false for any that has not. A sleeve's decision weights are fractions of its capital_usd here (the shadow file's own notional is ignored). enabled=false with shares still in the ledger FLATTENS that sleeve; to stop it without trading, halt the book.",
  "min_order_usd": 25,
  "_note_min_order_usd": "DERIVED 2026-11-18, to confirm. At a quarter size the smallest regular positions are units_exdate_before_after's, about $9,000 over some 45 units = $200 a name before the long/short split, and cef_exdate_after's long side, about $16,500 / 85 funds = $194; $100 would drop real positions, $25 drops only re-sizing noise (the same figure the $15,000-a-book ruling needed). Revisit when sleeves reach full size.",
