@@ -5116,6 +5116,76 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current, on branch `sleeve-promotion`, not merged and not released. Open: a per-session `capital_usd` column in `sleeve_scores.csv`, a change to the order path that needs its own PR and release before the first sleeve reaches 20 position sessions; the team lead's `modelled_fill_cost_bp` for each sleeve; whether a cross inside the account counts as dollars traded (the report counts it); the backtest volatilities are from one unreviewed run
 
+### E-2026-11-18-25 · Method: `ops.prod_state` and `ops.orient` read every book on the VM (C4 beside the core) in the one ssh call
+- kind: method
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead asked on 2026-11-18, about 10:15 New York: "make the c4 reachable as easily as everything else". Until then `ops.prod_state` read the core only; C4's newest figure in reach of the laptop was the repo's copy, last row 2026-11-06 ($100,007.79), seven sessions old [V]
+  - the core's remote script is byte-identical to main's at 8cac532 (compared in the session; `TestOtherBooks` pins it); each other book in `install_vm.VM_BOOKS` adds its own script with keys prefixed `<book>.` to the same call [V]
+  - first read, 2026-11-18 about 10:18 New York, from `quantt-vm:/home/quantt/quantt_state/c4/eod_equity.csv`: C4 official cumulative -$360.50 over 35 sessions, the 2026-09-29 close ($100,000.00) to the 2026-11-17 close ($99,639.50); high-water mark $101,233.72 at the 2026-11-05 close [V]
+  - the same read for the core: -$204.54 over 36 sessions, to $99,795.46 at the 2026-11-17 close; the same figures as Alpaca's end-of-day history fetched directly on the laptop that morning [V]
+  - a defect found and fixed in the same change: `_systemd_scheduled` read every book against the core's session timer, so an armed C4 printed "whether the scheduler fires it is UNMEASURED" [V]
+  - `python3 -m pytest ops/tests` exit 0 [V]
+- source: `ops/prod_state.py` @ `dd5a885`; `ops/orient.py` @ `dd5a885`; `ops/tests/test_prod_state.py` @ `dd5a885`; `ops/tests/test_orient.py` @ `dd5a885` (branch `ops-prod-state-books`)
+- supports: §5
+- status: on branch `ops-prod-state-books`, committed locally, not pushed, not merged, installed nowhere (the reader runs on the laptop; nothing on the VM changes)
+
+### E-2026-11-18-26 · Result: why the two paper books are below $100,000 at the 2026-11-17 close, and why C4 sends few orders
+- kind: result
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - core, attributed from Alpaca's own records read on 2026-11-18 (568 fills from `/v2/account/activities/FILL`, raw daily SIP closes from `/v2/stocks/bars`): holding P&L +$592.57, fills against the same day's close -$785.10, CAT fees -$12.01 (61 FEE rows), total -$204.54, equal to the official end-of-day record to the cent [V]
+  - core, the holding P&L by side: positions held long -$2,199.52, positions held short +$2,792.09; the equal-weight return of the 13 names from the 2026-09-29 close was negative in the 2026-11-02 to 2026-11-17 window (-2.73%) [V]
+  - core, by name: the two municipal funds lost $3,105.68 between them (short from 2026-09-30 while they rose, covered 2026-11-03 and 2026-11-04, long from 2026-11-06 while they fell, flat on 2026-11-16); the other eleven names made +$2,913.15 [V]
+  - core, by window: +$1,476.76 to the 2026-10-12 peak; -$2,688.21 from 2026-10-13 to 2026-10-19; +$235.47 to 2026-10-30; +$783.45 from 2026-11-02 to 2026-11-17 [V]
+  - core, execution: $1,096,900 traded in 36 sessions, every fill between 15:50 and 15:59 New York; -$785.10 against the close is 7.2bp of traded notional [V]
+  - Alpaca paper DID charge fees on this account: 61 CAT fee rows, $12.01. `CLAUDE.md` landmine 1 says paper charges no regulatory fees [V: docs]; the account's activity record disagrees, and the record is what was measured [V]
+  - C4, official: -$360.50 at the 2026-11-17 close, eleven trading sessions from 2026-11-03. Not attributed by name: its account keys and plan are on the VM only [V]
+  - distributions paper never paid or charged (dist-adjusted minus auction-marked, sessions where both exist): core +$49.32 over 28 sessions to 2026-11-13; C4 +$328.07 over 9 sessions to 2026-11-13 [V]
+  - C4's plan for 2026-11-18, by the new `plan shape` reading: 74 names, of which 49 `illiquid` (under the spec's `min_adv_usd`), 7 `no discount today` (NAV-repeat mask), 1 below the minimum weight, and 17 held (7 long, 10 short), all 17 `band hold`; 0 orders; gross $122,196.86 = 1.23x the plan's equity [V]
+  - the core's plan for the same day: 13 names, 12 re-targeted (`cef discount`), none on a band hold, 10 orders; gross $166,226.76 = 1.67x [V]
+- source: `ops/prod_state.py` @ `8c87afd` (`plan_shape`, branch `ops-prod-state-books`); the attribution script is session scratch, not in the repo; Alpaca paper account `cef`, read-only, 2026-11-18
+- supports: §5
+- status: current as measured on 2026-11-18. A result about 36 sessions of one account; not a test of the strategy
+
+### E-2026-11-18-27 · Ruling and result: the close is modelled for the investor view; at the closing-auction print the core is +$592.57 and C4 -$237.79 to the 2026-11-17 close
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead, 2026-11-18: "on a real account we would get close, so we should model closing for showing investors" [V]
+  - the measure is the runner's own `auction_hold_pnl_usd` (`quantt/session/score.py` (b), first term): the book held into the close, marked official auction print to auction print, as if every fill had printed in the auction. MODELLED, gross: no borrow, no distributions, no fees, no allowance for our orders moving the auction. The official record stays Alpaca's end-of-day history (team lead 2026-10-19) [V]
+  - core, 36 sessions from the 2026-09-29 close: modelled +$592.57 against official -$204.54. Annualised sd of the modelled daily P&L on $100,000: 7.13% [V]
+  - the core's score file on the VM has no row for 2026-09-30, 10-01, 10-02 and 10-06 (the laptop ran those sessions); those four days are from raw SIP daily closes and the account's fills, read on 2026-11-18. On the 32 sessions the runner scored, that second method gives -$143.74 and the runner -$143.74, with no daily difference above $0.005 [V]
+  - C4, 11 sessions from 2026-11-03: modelled -$237.79 against official -$360.50 [V]
+  - the two accounts together, each on $100,000: modelled +$354.78 against official -$565.04 (a sum of two books' dollars, shown for scale; the books are separate accounts) [V]
+  - NOT in the modelled figure: the distributions paper never paid (measured, to 2026-11-13: core +$49.32, C4 +$328.07, E-2026-11-18-26) and the borrow a live account pays on its shorts (unmeasured) [V]
+  - `ops.orient` PNL now prints an `at-close` column and a "modelled at the close" line per book, with the official sum on the same sessions beside it; scores.csv is read whole for that sum [V]
+- source: `ops/orient.py` @ `9d49a98` (`close_model`); `ops/prod_state.py` @ `9d49a98` (`PNL_FILES`; branch `ops-prod-state-books`); `quantt-vm:/home/quantt/quantt_state/{cef,c4}/scores.csv` and `eod_equity.csv`, read 2026-11-18
+- supports: §5
+- status: current. 36 and 11 sessions: a description of what happened, not evidence of an edge
+
+### E-2026-11-18-28 · Rulings and results: the investor headline is the net modelled view (core +$506.21); the core's gross cap is why its band never holds; C4's volume filter measured; the shadow books join the reader
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - the team lead, 2026-11-18, by question: the investor headline is the NET modelled view (closing-auction fills, plus the distributions paper never paid, minus a fetched borrow cost); the core's churn is investigated before any change; C4's volume filter is measured and nothing changes; the VM's ssh rule stays open to any address as it is; C4's by-name attribution comes from one read-only script the team lead runs; the shadow books join the reader; PR #87 is merged after this round [V]
+  - core, 36 sessions to the 2026-11-17 close: modelled close +$592.57, distributions +$49.33, borrow -$135.68, NET +$506.21 against official -$204.54. Annualised sd of the net daily P&L on $100,000: 6.64% [V]
+  - the distributions figure: 24 cash dividends on held names, +$1,526.82 received on longs and -$1,477.50 paid on shorts, from Alpaca's corporate-actions endpoint and the position at the close before each ex-date. The runner's own figure on the 29 sessions both cover is +$49.32, the same five days to the cent [V]
+  - the borrow figure: each close's short market value x 1.02 x fee rate / 360 x calendar days (the formula in `docs/REFERENCES.md` 12l), at IBKR's indicative fee rates in the public shortstock file stamped `#BOF|2026.11.18|17:16:53`, between 0.45% and 2.13% a year on the 13 names, 1.41% blended on an average short book of $66,144. TODAY'S rates applied to every day back to 2026-09-29: no fee history covers the period (the repo's FEE_RATE panel ends 2026-09-09). The file as fetched is verified; the rates on the earlier days are not [U]
+  - under Alpaca's own live fee schedule (easy-to-borrow free, `docs/REFERENCES.md` 12l) the borrow is $0 on easy-to-borrow names and the net is +$641.90 before any hard-to-borrow fee, which Alpaca does not publish per name. The schedule is verified; the hard-to-borrow cost is not [U]
+  - why the core's band holds nothing: the sleeve turns every band HOLD into a trade on any day its gross cap scales the book (`src/deploy/sleeves/cef_discount.py`, "THE BAND'S HOLDS BECOME TRADES WHEN THIS BINDS"). The core's plan for 2026-11-18 carries the cap's mark on all 13 names; C4's carries it on none [V]
+  - consistent with it: $558,927 traded in the 24 sessions to 2026-10-30 and $537,973 in the 12 from 2026-11-02, when the sizing multiplier went to 1.13 and then 1.30; fills against the close cost -$308.71 in the first window and -$476.39 in the second [V]
+  - C4's volume filter, by the sleeve's own rule (mean of close x volume over 63 sessions) on Alpaca SIP daily bars to 2026-11-17: 19 of 74 names at or above the spec's $3.0M; 33 at $2.0M; 45 at $1.5M; 58 at $1.0M; 66 at $0.5M. Median $1.91M. The runner's own plan for 2026-11-18, on its own panel, passes 25 (74 less 49 `illiquid`). The two counts are from different volume sources and are both reported; the runner's is what the book trades on [V]
+  - a $10,000 position (10% of C4's equity) is under 1% of a day's volume on 58 of the 74 names and at most 6.4% on the thinnest [V]
+  - shadow books, first read through `ops.prod_state` (SIMULATED, each on its own $1,000,000 notional, sums over SCORED sessions to 2026-11-17): cef_exdate_after -$8,419.64 price-only (-$3,249.44 total return, 4 scored); cef_exdate_before_after +$68.04 (4); units_exdate_after +$21,200.13 (+$24,480.85 total return, 2); units_exdate_before_after +$7,978.98 (1); month_end_ief and spinoff_first_week flat on every session so far [V]
+- source: `ops/prod_state.py` @ `fc0232b` (`plan_shape`, `SHADOW_SCRIPT`); `ops/orient.py` @ `fc0232b` (branch `ops-prod-state-books`); `src/deploy/sleeves/cef_discount.py` @ `fc0232b`; `https://www.interactivebrokers.com/shortstock/usa.txt`, fetched 2026-11-18; Alpaca paper account `cef`, read-only; the attribution and net-view scripts are session scratch, not in the repo
+- supports: §5
+- status: current. C4's net view and by-name attribution wait on the team lead's run of the read-only VM script. One to four scored sessions say nothing about a shadow book
+
 ### E-2026-11-19-01 · Ruling: the events runner records the capital each sleeve was sized from, each sleeve has a modelled fill cost, and only market fills earn the allowance; both ladder tests are now computed
 - kind: ruling
 - era: ALPACA
