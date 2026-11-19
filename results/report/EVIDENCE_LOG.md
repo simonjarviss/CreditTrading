@@ -5230,6 +5230,20 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current. Nothing is installed or armed for the events book: it waits on the account and its two vault secrets (the team lead), a release that holds `quantt/sleeves/`, and its installer's first run
 
+### E-2026-11-19-07 · Result: one read-only page now shows every paper account together; on its first run the two accounts are down 1,038 USD combined
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - built at the team lead's choice ("P&L and risk by book, one page"): `python3 -m ops.daily_page` reads, over one ssh call, each account's `eod_equity.csv` and newest risk report and the shadow scoreboard; no broker call, no key, no order code (a test pins the remote script to cat, test and ls, and the module's imports) [V]
+  - first run, 2026-11-19: core official equity 99,872.85 USD at the 2026-11-18 close (+77.39 that session, -127.15 over 37 sessions, 1.58% below its high-water mark of 2026-10-12); C4 99,089.10 USD (-550.40, -910.90 over 36 sessions, 2.12% below its mark of 2026-11-05) [V]
+  - the two accounts summed over the 36 sessions both have an official row for: 198,961.95 USD, -473.01 on 2026-11-18, -1,038.03 to date, 1.25% below the combined high-water mark of 2026-10-12 [V]
+  - both risk reports read WATCH; neither names an ACT line; each could not measure its attribution, factor-exposure and stops blocks that night (the first two for the timing reason of E-2026-11-19-02) [V]
+  - thirteen tests on synthetic replies: an account a session behind is named and the combined line stops there; an unreadable file is UNMEASURED for that book only; a malformed equity file is refused by name [V]
+- source: `ops/daily_page.py` @ `d4d80cb`; `ops/tests/test_daily_page.py` @ `d4d80cb`; `docs/RUNBOOK.md` @ `d4d80cb` (8.6)
+- supports: §1, §5
+- status: current. It runs from the laptop on demand; nothing schedules it. The page holds no limit of its own, and the combined drawdown is judged against nothing: there is no combined risk budget (team lead, 2026-11-18). Combined factor exposure is not in this version
+
 ### E-2026-11-19-08 · Rulings and results: the core's cap stays as it is after a backtest of four variants; an all-equal-z session holds and says so; the review of the installed release found no order-path defect; the events waiver is a key in the book file
 - kind: ruling
 - era: ALPACA
@@ -5248,4 +5262,3 @@ that adds it does not exist when it is written.
 - source: `src/deploy/sleeves/cef_discount.py` @ `860d5f3` (the cap block as reviewed; the change is in the commit that carries this entry); `scripts/cef/band_frontier.py` @ `860d5f3`; `quantt/sleeves/config.py` @ `860d5f3`; `quantt/sleeves/promote.py` @ `860d5f3`; `ops/sleeves/events_sleeves.json` @ `860d5f3`; `docs/SYSTEM.md` @ `860d5f3` (section 5, 2026-11-19); the backtest, review and replay scripts are session scratch, not in the repo
 - supports: §5
 - status: current, on branch `events-runner-main`, not merged, tagged or installed. The backtest and the review are each one run by one agent, not independently re-derived. The C4 spec was not replayed (its panel is not on the laptop); its level-signal path already raised on a vol with no ratio
-
