@@ -883,6 +883,17 @@ NOTHING_TO_SEND, PREVIEW, PLANNED and DRY as success (`SuccessExitStatus`), so
 `systemctl --failed` shows REFUSED and FAIL. Verify exits 1 on a FAIL line, so a
 missed day shows there too.
 
+**Every account on one page:** `python3 -m ops.daily_page` (read-only, one ssh call, about a
+second). For each paper account: the official P&L of record, its drawdown from the high-water
+mark, and the headline lines of its own nightly risk report (severity, drawdown against its
+HALVE and KILL lines, gross and net, the plan and fills), with the blocks that report could
+not measure named. Above them the accounts summed over the sessions both have an official row
+for, and below them the shadow scoreboard's table (SIMULATED). A file it cannot read is
+UNMEASURED for that book only; an account a session behind is named and the combined line
+stops there. It holds no limit of its own and there is no combined risk budget (team lead,
+2026-11-18), so the combined drawdown is for information. Added 2026-11-19 (team lead: "P&L
+and risk by book, one page").
+
 **Tonight's plan:** `python3 -m ops.orient` PROD prints the VM's `newest plan`:
 its date, status, order count, whether it was sent, and its evening pre-flight.
 `PRE-FLIGHT WARNING` means a day as bad as the worst of the last year would get
