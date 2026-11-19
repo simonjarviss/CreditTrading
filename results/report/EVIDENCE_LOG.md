@@ -4428,3 +4428,17 @@ that adds it does not exist when it is written.
 - source: `quantt/deploy/install_vm.py` @ `5092b4b` (`REPORT_SCHEDULE`, `REPORT_WEEKDAYS`); `quantt/deploy/templates/systemd/quantt-report-morning.timer.tmpl` @ `5092b4b`; `quantt/deploy/tests/test_install_vm_reports.py` @ `5092b4b`; `docs/RUNBOOK.md` @ `5092b4b` (8.11, 8.12)
 - supports: §1, §5
 - status: current, not released: the VM still runs the evening times until the next release is installed with `--reports`. Alpaca documents no publication time; three nights is the whole evidence, and a later point would show in the report's title as it did on 2026-11-18. Many notes inside `pnl_report.py` and `risk_daily.py` still describe the 20:30 and 22:15 runs they were written for
+
+### E-2026-11-19-07 · Result: one read-only page now shows every paper account together; on its first run the two accounts are down 1,038 USD combined
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - built at the team lead's choice ("P&L and risk by book, one page"): `python3 -m ops.daily_page` reads, over one ssh call, each account's `eod_equity.csv` and newest risk report and the shadow scoreboard; no broker call, no key, no order code (a test pins the remote script to cat, test and ls, and the module's imports) [V]
+  - first run, 2026-11-19: core official equity 99,872.85 USD at the 2026-11-18 close (+77.39 that session, -127.15 over 37 sessions, 1.58% below its high-water mark of 2026-10-12); C4 99,089.10 USD (-550.40, -910.90 over 36 sessions, 2.12% below its mark of 2026-11-05) [V]
+  - the two accounts summed over the 36 sessions both have an official row for: 198,961.95 USD, -473.01 on 2026-11-18, -1,038.03 to date, 1.25% below the combined high-water mark of 2026-10-12 [V]
+  - both risk reports read WATCH; neither names an ACT line; each could not measure its attribution, factor-exposure and stops blocks that night (the first two for the timing reason of E-2026-11-19-02) [V]
+  - thirteen tests on synthetic replies: an account a session behind is named and the combined line stops there; an unreadable file is UNMEASURED for that book only; a malformed equity file is refused by name [V]
+- source: `ops/daily_page.py` @ `d4d80cb`; `ops/tests/test_daily_page.py` @ `d4d80cb`; `docs/RUNBOOK.md` @ `d4d80cb` (8.6)
+- supports: §1, §5
+- status: current. It runs from the laptop on demand; nothing schedules it. The page holds no limit of its own, and the combined drawdown is judged against nothing: there is no combined risk budget (team lead, 2026-11-18). Combined factor exposure is not in this version
