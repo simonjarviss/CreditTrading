@@ -4370,7 +4370,25 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current. Not tagged, released or installed; the tag and the install are the team lead's. Before the install: prod_state must measure the VM, because a re-install without `--armed` disarms; `quantt/session/run.py` changed, so RUNBOOK 8.6 step 2's replay applies; C4's timers are disabled before the core's install and C4 is re-installed after it (8.9); the alert push needs `alert-smtp-user` and `alert-smtp-pass` in the vault (8.11)
 
-### E-2026-11-18-01 · Method: `ops.prod_state` and `ops.orient` read every book on the VM (C4 beside the core) in the one ssh call
+### E-2026-11-18-01 · Release: release-20261116-1 is installed on the VM for both books, armed as measured, with the report jobs; a C4 or reports install refuses while the shadow runner's unit files are on disk
+- kind: release
+- era: ALPACA
+- date: 2026-11-18
+- figures:
+  - tag release-20261116-1 = 49b99db (annotated, pushed by the team lead on 2026-11-16); installed by the team lead on 2026-11-18 between about 10:14 and 10:19 New York, one wrapper step at a time, outside every send window [S]
+  - before the install the VM measured: core ARMED at release-20261104-1 (DRY_RUN=0, AUTO_ARMED present); C4 DRY_RUN=0, AUTO_ARMED present; no halt file; no job running [V]
+  - replay of the core's day records through the new runner (RUNBOOK 8.6 step 2, `ops.replay_exposure`): 90 runs replayed, 31 skipped; gate 8 refused 24 then, 0 now [S]
+  - core install: 24 steps, units written with DRY_RUN=0, three timers read back active; C4 install: 20 steps, DRY_RUN=0, three timers read back active; reports install: 23 steps, six report timers read back active (pnl 20:30/20:35, dataqa 21:45/21:50, risk 22:15/22:20) [S]
+  - after the install `ops.prod_state` measured: clone at release-20261116-1, core ARMED, newest plan 2026-11-18 decided, 10 orders, not yet sent [V]
+  - the C4 install and the reports install each REFUSED on first try: "unit file /etc/systemd/system/quantt-shadow-secret.service is no unit any book installs" (and the same for quantt-shadow.service and quantt-shadow.timer). The shadow runner was installed on 2026-11-10, after the last C4 install on 2026-11-04, so this was the first meeting. The core's install does not run that scan and passed [S]
+  - the way round it, twice: the three shadow unit files were moved to a holding directory outside systemd's search path, the install was run, and the files were moved back with a daemon-reload; after each restore the shadow timer and key service read enabled and active and the next firing was still 18:50 [S]
+  - C4's P&L report, started once by hand (team lead's ruling, E-2026-11-15-55): unit exit 0, overall OK, as-of 2026-11-17; every session reconciles to the cent (largest residual 0.01); cumulative official from the first trade (2026-11-04, 10 sessions) -360.50 USD; no corporate-action row named; the distribution line is UNMEASURED on 17 name-days for 2026-11-17 because the second source's panel was not yet current, and is retried on a later run [S]
+  - the VM's ssh rule was opened to any source address the same morning at the team lead's request ("make it reachable from any ip"); the VM accepts key logins only (a login with no key returned "Permission denied (publickey)") [V]
+- source: `docs/RUNBOOK.md` @ `49b99db` (8.6, 8.9, 8.10, 8.11, 8.12); `quantt/deploy/install_vm.py` @ `49b99db` (`dormant_overrides`, `scan_units`); the install's own output, read once in the session and not stored in the repository
+- supports: §1, §5
+- status: current. Open: (1) `install_vm.py`'s scan does not know the shadow runner's three unit names, so every C4 or reports install needs the park-and-restore until it does; (2) the vault has no `alert-smtp-user` / `alert-smtp-pass`, so a fired stop is recorded as not delivered; (3) the ssh rule is open to any address until `nsg_ip.sh` narrows it
+
+### E-2026-11-18-02 · Method: `ops.prod_state` and `ops.orient` read every book on the VM (C4 beside the core) in the one ssh call
 - kind: method
 - era: ALPACA
 - date: 2026-11-18
@@ -4385,7 +4403,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: on branch `ops-prod-state-books`, committed locally, not pushed, not merged, installed nowhere (the reader runs on the laptop; nothing on the VM changes)
 
-### E-2026-11-18-02 · Result: why the two paper books are below $100,000 at the 2026-11-17 close, and why C4 sends few orders
+### E-2026-11-18-03 · Result: why the two paper books are below $100,000 at the 2026-11-17 close, and why C4 sends few orders
 - kind: result
 - era: ALPACA
 - date: 2026-11-18
@@ -4404,7 +4422,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current as measured on 2026-11-18. A result about 36 sessions of one account; not a test of the strategy
 
-### E-2026-11-18-03 · Ruling and result: the close is modelled for the investor view; at the closing-auction print the core is +$592.57 and C4 -$237.79 to the 2026-11-17 close
+### E-2026-11-18-04 · Ruling and result: the close is modelled for the investor view; at the closing-auction print the core is +$592.57 and C4 -$237.79 to the 2026-11-17 close
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-18
@@ -4415,13 +4433,13 @@ that adds it does not exist when it is written.
   - the core's score file on the VM has no row for 2026-09-30, 10-01, 10-02 and 10-06 (the laptop ran those sessions); those four days are from raw SIP daily closes and the account's fills, read on 2026-11-18. On the 32 sessions the runner scored, that second method gives -$143.74 and the runner -$143.74, with no daily difference above $0.005 [V]
   - C4, 11 sessions from 2026-11-03: modelled -$237.79 against official -$360.50 [V]
   - the two accounts together, each on $100,000: modelled +$354.78 against official -$565.04 (a sum of two books' dollars, shown for scale; the books are separate accounts) [V]
-  - NOT in the modelled figure: the distributions paper never paid (measured, to 2026-11-13: core +$49.32, C4 +$328.07, E-2026-11-18-02) and the borrow a live account pays on its shorts (unmeasured) [V]
+  - NOT in the modelled figure: the distributions paper never paid (measured, to 2026-11-13: core +$49.32, C4 +$328.07, E-2026-11-18-03) and the borrow a live account pays on its shorts (unmeasured) [V]
   - `ops.orient` PNL now prints an `at-close` column and a "modelled at the close" line per book, with the official sum on the same sessions beside it; scores.csv is read whole for that sum [V]
 - source: `ops/orient.py` @ `9d49a98` (`close_model`); `ops/prod_state.py` @ `9d49a98` (`PNL_FILES`; branch `ops-prod-state-books`); `quantt-vm:/home/quantt/quantt_state/{cef,c4}/scores.csv` and `eod_equity.csv`, read 2026-11-18
 - supports: §5
 - status: current. 36 and 11 sessions: a description of what happened, not evidence of an edge
 
-### E-2026-11-18-04 · Rulings and results: the investor headline is the net modelled view (core +$506.21); the core's gross cap is why its band never holds; C4's volume filter measured; the shadow books join the reader
+### E-2026-11-18-05 · Rulings and results: the investor headline is the net modelled view (core +$506.21); the core's gross cap is why its band never holds; C4's volume filter measured; the shadow books join the reader
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-18

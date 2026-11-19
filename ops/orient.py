@@ -459,7 +459,7 @@ def close_model(files: dict) -> dict:
     should model closing for showing investors"). The paper account fills a
     late market order at the quote a few minutes before the close; a live MOC
     order fills in the auction. On the core, 2026-09-29 to 2026-11-17, that
-    difference was -$785.10 against holding P&L of +$592.57 (E-2026-11-18-02),
+    difference was -$785.10 against holding P&L of +$592.57 (E-2026-11-18-03),
     so the official record understates what the same decisions earn at the
     close. `auction_hold_pnl_usd` is the runner's own daily measure of the
     second number (`quantt/session/score.py` (b), first term).
