@@ -27,7 +27,7 @@ A MISSING INPUT IS UNMEASURED AND NAMED, never inferred (CLAUDE.md). Blocks whos
 inputs do not exist on the VM say so, with the exact command that would measure
 them on a machine that has them: R1-R3 need `stops.py`'s fit series, the
 attribution and factor readout read `<state>/reports/pnl/<asof>.json`, written by
-the 20:30 job (`scripts/ops/pnl_report.py`, the team lead's report of 2026-11-09;
+the pnl job (`scripts/ops/pnl_report.py`; 05:15 the morning after since 2026-11-19, 20:30 the same evening before, the team lead's report of 2026-11-09;
 absent, they stay UNMEASURED and named). Those are stated gaps, not silent zeros.
 
 THE DRAWDOWN READ. At 22:15 the as-of day's EOD row is not written yet, so

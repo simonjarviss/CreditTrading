@@ -5200,7 +5200,22 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current, not released; the events runner has never been installed, so no score file exists yet. The 15bp figures are an assumption to be replaced by each sleeve's own paper fills against the closing print. The promotion agent's run was cut off by a usage limit after it had written the runner's two tests; the rest was written and tested in the main session
 
-### E-2026-11-19-02 · Ruling: the ten-session rule is waived for the seven event sleeves; they trade in a third paper account the team lead opens; the core's cap and the risk target are backtested before any change
+### E-2026-11-19-02 · Ruling: the P&L and risk reports move to the morning after the session, because Alpaca publishes the end-of-day point in the small hours and the evening runs reported the day before
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - first night of the report jobs on release-20261116-1 (2026-11-18): all six ran and exited 0; both pnl reports were titled "READ AT THE CLOSE OF 2026-11-17, NOT 2026-11-18", status PARTIAL, and both risk reports' drawdown blocks read UNMEASURED on the 2026-11-17 row [V]
+  - when the point arrives: the core collector's run failed at 03:10 New York and the next finished at 03:40 on 2026-11-19, and `eod_equity.csv`'s read time is 08:40 UTC (03:40 New York) on the rows for 2026-11-16, -17 and -18: three nights, no exception [V]
+  - the same wait is why each collector unit shows failed from the 17:10 run to the 03:10 run every night, about twenty times [V]
+  - official P&L for 2026-11-18, read on 2026-11-19: core +77.39 USD to 99,872.85; C4 -550.40 USD to 99,089.10 [V]
+  - the team lead's answer: "Move both to ~05:15-05:50 ET" [V]
+  - built: pnl at 05:15 (core) and 05:20 (C4), risk at 05:45 and 05:50, Tuesday to Saturday; data QA unchanged at 21:45 and 21:50 on session days. The reports already choose the previous session before 16:45, so no report script's logic changed. The morning kinds have their own timer template; the installer's value check was not widened [V]
+- source: `quantt/deploy/install_vm.py` @ `5092b4b` (`REPORT_SCHEDULE`, `REPORT_WEEKDAYS`); `quantt/deploy/templates/systemd/quantt-report-morning.timer.tmpl` @ `5092b4b`; `quantt/deploy/tests/test_install_vm_reports.py` @ `5092b4b`; `docs/RUNBOOK.md` @ `5092b4b` (8.11, 8.12)
+- supports: §1, §5
+- status: current, not released: the VM still runs the evening times until the next release is installed with `--reports`. Alpaca documents no publication time; three nights is the whole evidence, and a later point would show in the report's title as it did on 2026-11-18. Many notes inside `pnl_report.py` and `risk_daily.py` still describe the 20:30 and 22:15 runs they were written for
+
+### E-2026-11-19-04 · Ruling: the ten-session rule is waived for the seven event sleeves; they trade in a third paper account the team lead opens; the core's cap and the risk target are backtested before any change
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-19
@@ -5214,4 +5229,3 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` @ `4f5eb83` (section 5, the block dated 2026-11-19, added in the commit that carries this entry); `ops/sleeves/events_sleeves.json` @ `4f5eb83`; `quantt/session/combine.py` @ `4f5eb83`; `ops/prod_state.py` @ `4f5eb83`
 - supports: §5
 - status: current. Nothing is installed or armed for the events book: it waits on the account and its two vault secrets (the team lead), a release that holds `quantt/sleeves/`, and its installer's first run
-

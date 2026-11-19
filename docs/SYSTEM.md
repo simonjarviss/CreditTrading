@@ -895,7 +895,7 @@ followed a measured comparison of sizing schemes (`EVIDENCE_LOG` E-2026-11-18-04
 
 ### Team lead, 2026-11-19 — deploy the event sleeves now; the core's cap and the risk target are measured before anything changes
 
-Answered through question prompts on 2026-11-19 (`EVIDENCE_LOG` E-2026-11-19-02). The reader work those prompts
+Answered through question prompts on 2026-11-19 (`EVIDENCE_LOG` E-2026-11-19-04). The reader work those prompts
 followed is E-2026-11-18-25 to -28.
 
 | question | ruling |
