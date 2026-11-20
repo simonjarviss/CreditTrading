@@ -5371,3 +5371,19 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current. NOT ARMED: the 2026-11-20 session is the dry session the team lead asked for (SEND will stop on DRY_RUN, VERIFY at 17:35). Open for the team lead: reset the account to $1,000,000 or keep it at $100,000; then arming, which is theirs
 
+### E-2026-11-20-11 · Result and rulings: C4's loss by fund, and its net modelled view (-$110.35 to 2026-11-19); the events account stays at $100,000; arming waits for the team lead's go on Monday's list
+- kind: result
+- era: ALPACA
+- date: 2026-11-20
+- figures:
+  - the team lead's answers, by question prompt, 2026-11-20: the account "Keep $100,000 for now (Recommended)"; arming "Show me Monday's list, I say go (Recommended)"; alerts "Skip alerts for now (Recommended)" [V]
+  - C4, from the VM's own `scores.csv` (13 rows, 2026-11-03 to 2026-11-19, the runner's per-symbol auction-marked P&L; no unmeasured symbol-day): -$600.99 = holding -$477.80 + fills against the auction -$123.19; the official end-of-day record is -$603.21 ($99,396.79 at the 2026-11-19 close) [V]
+  - by the side held at the start of each day: long positions -$4,384.12, short positions +$3,841.35 [V]
+  - by family: equity sector -$602.15, preferred -$202.53, covered call -$79.83, domestic equity +$132.22, multi-asset +$151.30. Seventeen funds have traded; the worst five lost $3,979.32 between them and the best five made $2,964.07 [V]
+  - distributions paper never paid, the runner's `distribution_scores.csv`, 11 sessions to 2026-11-17: +$395.45; no row yet for 2026-11-18 and -19 [V]
+  - borrow on C4's shorts at IBKR's indicative rates in the file stamped 2026-11-18 (0.43% to 1.58% a year on its ten shorted funds, 0.91% blended), on each plan's holdings and closes, as-of 2026-11-03 to 2026-11-19: -$28.00. Current rates applied backwards, as for the core (E-2026-11-18-28) [U]
+  - C4's net modelled view to 2026-11-19: -$477.80 + $395.45 - $28.00 = -$110.35, against -$603.21 official [V]
+- source: `quantt/session/score.py` @ `00b1cd1`; `quantt/session/dist_score.py` @ `00b1cd1`; `docs/SYSTEM.md` @ `00b1cd1` (section 5, the 2026-11-20 rows are in the commit that carries this entry); the VM's `quantt_state/c4` score files and plans, copied read-only on 2026-11-20; the attribution script is session scratch
+- supports: §5
+- status: current. Thirteen sessions: a description of what happened, not evidence about the strategy
+
