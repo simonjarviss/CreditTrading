@@ -5304,6 +5304,24 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current, on branch `events-runner-main`; not merged, tagged or installed
 
+### E-2026-11-19-10 · Release: release-20261119-1 is installed on the VM for the core, C4 and the report jobs, both books armed as measured; the events runner is in the tag and not installed
+- kind: release
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead, 2026-11-19, on the prepared steps: "Can you runt htose i dont want too". This session then ran the admin merge of PR #89 (merge commit f1ba445, CI passed on 8eb1bb9), the tag and the VM install [V]
+  - `release-20261119-1` = f1ba445; its files equal the tested head 8eb1bb9 (`git diff --quiet`), on which `python3 -m pytest` exited 0 and `ops.doc_audit --check` gave 0 DRIFT [V]
+  - before the install (12:37 New York): clone at release-20261116-1; core and C4 each DRY_RUN=0 loaded and AUTO_ARMED present; no HALT file; no job running [V]
+  - `ops.replay_exposure` on the core's day records copied from the VM, through the tag's code: 92 runs replayed, 31 skipped, gate 8 refused 24 then and 0 now [V]
+  - the install, 13:01 to 13:04 New York: C4's timers disabled and the core's stopped; the core's dry run did not refuse (the installed installer checks the clone out at the new tag itself, so no separate checkout step was run); core `--apply --enable --armed`; C4 `--book c4 --apply --enable --armed` beside the shadow runner's unit files with no park step; `--reports --apply --enable`. Every installer run exited 0 and read its timers back as active [V]
+  - after (13:04, `ops.prod_state` from the tag): clone at release-20261119-1; core ARMED and C4 ARMED (DRY_RUN=0 loaded, AUTO_ARMED present, session, verify and collect timers active and enabled); the core's plan for 2026-11-19 decided with 13 orders and C4's with 2, neither sent yet; `quantt-shadow.timer` active and enabled [V]
+  - the report timers after: data QA Mon-Fri 21:45 and 21:50; P&L Tue-Sat 05:15 and 05:20; risk Tue-Sat 05:45 and 05:50. The four P&L and risk jobs each ran once at 13:02:22, when their timers were started, and exited 0; they are read-only [V]
+  - `quantt-reports-secret.service` is failed: the vault has no `alert-smtp-user` or `alert-smtp-pass`, as the installer warned and as before this release [V]
+  - no `quantt-events-*` unit exists. The events installer stops on a listed book with no shadow decisions directory, and `uit_termination`'s first decision is the 18:50 run of 2026-11-19 [S]
+- source: `quantt/deploy/install_vm.py` @ `f1ba445`; `src/deploy/sleeves/cef_discount.py` @ `f1ba445`; `ops/sleeves/events_sleeves.json` @ `f1ba445`; `docs/RUNBOOK.md` @ `f1ba445` (8.6, 8.9, 8.11); the wrapper `vmrelease_1119.sh` is local and untracked
+- supports: §1, §5
+- status: current. The release check was this session's own read of the change list and one independent read-only review of the installed tag (E-2026-11-19-08); no multi-agent release check was run. C4's spec was not replayed on its own panel. The events book is installed next, with DRY_RUN=1, for one dry session before the team lead arms it
+
 ### E-2026-11-19-20 · Result: the unit-trust termination rule holds out of sample on 2026, a year its data never held
 - kind: result
 - era: ALPACA
