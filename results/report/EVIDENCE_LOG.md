@@ -5215,6 +5215,22 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current, not released: the VM still runs the evening times until the next release is installed with `--reports`. Alpaca documents no publication time; three nights is the whole evidence, and a later point would show in the report's title as it did on 2026-11-18. Many notes inside `pnl_report.py` and `risk_daily.py` still describe the 20:30 and 22:15 runs they were written for
 
+### E-2026-11-19-03 · Result: the VM was rebooted for its pending kernel and libc updates; both books came back armed exactly as before, and that night's decide was waiting on late NAVs before and after
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's ruling by question prompt on 2026-11-19: reboot "Tonight after 22:30 ET"; the agent runs VM upkeep itself [V]
+  - before, read 22:47 to 23:00 New York: up 42 days; `/var/run/reboot-required` present since 2026-11-14 (libc6, linux-image 7.0.0-1014 and 7.0.0-1017); clone at release-20261119-1; no systemd job running; core and C4 each DRY_RUN=0 with AUTO_ARMED present; 13 quantt timers enabled [V]
+  - the reboot was sent at 23:01:00 New York, 40 seconds after the 23:00 decide slot ended; ssh answered again by 23:01:28 on kernel 7.0.0-1017-azure [V]
+  - after, read 23:01:34: systemd state `running` with no failed unit; all 13 timers waiting again (collect 23:10, session 23:30, P&L 05:15 and 05:20, risk 05:45 and 05:50, shadow 07:20); the core, C4 and shadow key services active with their key files present (existence only, never read); core and C4 each DRY_RUN=0 with AUTO_ARMED present; `/var/run/reboot-required` gone; `python3 -m ops.prod_state` measures both books ARMED at release-20261119-1 [V]
+  - the session for 2026-11-20 was not decided for either book before or after: the decide slots of 22:00, 22:30 and 23:00 each exited 11 on the missing-NAV hold, the core for 4 of 13 funds (BIT, DSL, PDI, PDO) and C4 for 24 funds whose newest NAV was dated 2026-11-18; each book's `plan.json` (status refused) and `runs` folder were unchanged by the reboot [V]
+  - Yahoo's chart feed, fetched from the laptop at 22:50 New York, had no 2026-11-19 value for XBITX, XDSLX, XPDIX or XPDOX, so the lateness is at the source [V]
+  - the core's eleven sessions before this one were each decided at 22:00 the evening before [V]
+- source: `docs/RUNBOOK.md` @ `d4d80cb` (section 8); `quantt/session/run.py` @ `f1ba445` (exit 11 is REFUSED); the readings are ssh output of this session, not in the repo
+- supports: §5
+- status: current. Whether the 2026-11-20 session was decided later that night or held the late funds at their shares from the final check is not measured here. The alert-settings unit, the one failed unit before the reboot, had not run again when the after reading was taken
+
 ### E-2026-11-19-04 · Ruling: the ten-session rule is waived for the seven event sleeves; they trade in a third paper account the team lead opens; the core's cap and the risk target are backtested before any change
 - kind: ruling
 - era: ALPACA
@@ -5336,3 +5352,22 @@ that adds it does not exist when it is written.
 - source: `results/ideas/uit_cef_flows/oos_2026.py` @ `a4a5ccb`; `results/ideas/2026-11-16_uit_cef_flows.md` @ `a4a5ccb`; `shadow/signals/uit_termination.py` @ `a4a5ccb`; `shadow/universes/uit_terminations_v1.csv` @ `a4a5ccb`
 - supports: §4
 - status: current. Gross; no closing quotes, so whether an order gets the termination session's closing price is not shown and remains the open condition; survivors only where Yahoo has no price; the control is the calendar's own funds outside their windows; one run, not independently reviewed. The id skips to -20 because the peer session takes -08 onward
+
+### E-2026-11-20-10 · Release: the events book's runner is installed on the VM with every order switched off; its first plan is 212 orders on an account that holds $100,000, not the $1,000,000 ruled
+- kind: release
+- era: ALPACA
+- date: 2026-11-20
+- figures:
+  - the team lead, 2026-11-20: "Do the next steps in full now". This session ran the install; nothing was armed [V]
+  - under release-20261119-1 both books passed their first session: core 2026-11-19 PASS, 13 orders, 13 filled; C4 PASS, 2 orders, 2 filled (`ops.prod_state`, 11:37 New York on 2026-11-20) [V]
+  - before the install: clone at release-20261119-1; no `quantt-events-*` unit; all eight listed shadow books had a decisions directory (1 file for `uit_termination`, dated 2026-11-19); no job running [V]
+  - the VM had no `acl` package, and the installer refuses without `setfacl` and `getfacl`. `acl` 2.3.2-1build1.1 alone was installed at 11:42 New York (0 upgraded, 1 newly installed), with no book job running before or after and no change in the failed-unit list. `quantt/deploy/vm/bootstrap.sh` now lists it [V]
+  - `install_events_vm.sh --vault <the VM's vault>` exited 0: a read-only ACL for user `quantt` on the eight decisions directories, tested both ways; `/home/quantt/quantt_state/events` (0700); one key service and a service and timer for plan, send and verify, every unit with DRY_RUN=1; no AUTO_ARMED [V]
+  - the key service fetched `ALPACA_EVENTS_KEY_ID` and `ALPACA_EVENTS_SECRET_KEY` (names only are logged) and the plan read the account, so the keys authenticate [V]
+  - the first scheduled PLAN, 11:45 New York, exit 6 PLANNED, the same `plan_sha` as the hand preview a minute earlier (59fdf5b27b6d): as-of 2026-11-19; all eight sleeves decided, none stale; 212 orders, 202 buys for $84,754 and 10 sells for $51,985, of which the IWM hedge is a short of 146 shares, $38,576; gross after $136,739, 1.37x the account's equity against a limit of 1.5x; send window 15:40 to 15:58 [V]
+  - the account's equity as the runner read it: $100,000.00. The ruling of 2026-11-16 is a $1,000,000 account; the eight sleeves' quarter sizes sum to $170,500. The runner sized the plan inside its 1.5x limit with a scale factor of 1.0000, so nothing was cut, but the account is a tenth of the size ruled [V]
+  - `cef_exdate_after` names two blocked short legs (EMO, SCD) and scales its long side by 0.8188 to stay balanced [V]
+- source: `quantt/sleeves/deploy/install_events_vm.sh` @ `f1ba445`; `quantt/sleeves/run.py` @ `f1ba445`; `ops/sleeves/events_sleeves.json` @ `f1ba445`; `quantt/deploy/vm/bootstrap.sh` @ `f1ba445` (the `acl` line is in the commit that carries this entry); the wrapper `vmevents.sh` is local and untracked
+- supports: §1, §5
+- status: current. NOT ARMED: the 2026-11-20 session is the dry session the team lead asked for (SEND will stop on DRY_RUN, VERIFY at 17:35). Open for the team lead: reset the account to $1,000,000 or keep it at $100,000; then arming, which is theirs
+
