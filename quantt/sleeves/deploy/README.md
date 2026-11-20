@@ -29,6 +29,8 @@ decision files only.
 3. Release a tag that contains `quantt/sleeves/` and `ops/sleeves/events_sleeves.json`, and
    install prod at it (`docs/RUNBOOK.md` section 8). Confirm the limits in the book file first.
 4. The shadow runner must have run every listed book at least once.
+5. The `acl` package (`setfacl`, `getfacl`) must be on the VM: `quantt/deploy/vm/bootstrap.sh` installs
+   it since 2026-11-20. On a VM bootstrapped earlier: `sudo apt-get install -y acl`.
 
 ## Install
 
