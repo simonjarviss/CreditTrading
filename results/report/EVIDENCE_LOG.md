@@ -5318,3 +5318,19 @@ that adds it does not exist when it is written.
 - source: `results/ideas/uit_cef_flows/oos_2026.py` @ `a4a5ccb`; `results/ideas/2026-11-16_uit_cef_flows.md` @ `a4a5ccb`; `shadow/signals/uit_termination.py` @ `a4a5ccb`; `shadow/universes/uit_terminations_v1.csv` @ `a4a5ccb`
 - supports: §4
 - status: current. Gross; no closing quotes, so whether an order gets the termination session's closing price is not shown and remains the open condition; survivors only where Yahoo has no price; the control is the calendar's own funds outside their windows; one run, not independently reviewed. The id skips to -20 because the peer session takes -08 onward
+
+### E-2026-11-19-03 · Result: the VM was rebooted for its pending kernel and libc updates; both books came back armed exactly as before, and that night's decide was waiting on late NAVs before and after
+- kind: result
+- era: ALPACA
+- date: 2026-11-19
+- figures:
+  - the team lead's ruling by question prompt on 2026-11-19: reboot "Tonight after 22:30 ET"; the agent runs VM upkeep itself [V]
+  - before, read 22:47 to 23:00 New York: up 42 days; `/var/run/reboot-required` present since 2026-11-14 (libc6, linux-image 7.0.0-1014 and 7.0.0-1017); clone at release-20261119-1; no systemd job running; core and C4 each DRY_RUN=0 with AUTO_ARMED present; 13 quantt timers enabled [V]
+  - the reboot was sent at 23:01:00 New York, 40 seconds after the 23:00 decide slot ended; ssh answered again by 23:01:28 on kernel 7.0.0-1017-azure [V]
+  - after, read 23:01:34: systemd state `running` with no failed unit; all 13 timers waiting again (collect 23:10, session 23:30, P&L 05:15 and 05:20, risk 05:45 and 05:50, shadow 07:20); the core, C4 and shadow key services active with their key files present (existence only, never read); core and C4 each DRY_RUN=0 with AUTO_ARMED present; `/var/run/reboot-required` gone; `python3 -m ops.prod_state` measures both books ARMED at release-20261119-1 [V]
+  - the session for 2026-11-20 was not decided for either book before or after: the decide slots of 22:00, 22:30 and 23:00 each exited 11 on the missing-NAV hold, the core for 4 of 13 funds (BIT, DSL, PDI, PDO) and C4 for 24 funds whose newest NAV was dated 2026-11-18; each book's `plan.json` (status refused) and `runs` folder were unchanged by the reboot [V]
+  - Yahoo's chart feed, fetched from the laptop at 22:50 New York, had no 2026-11-19 value for XBITX, XDSLX, XPDIX or XPDOX, so the lateness is at the source [V]
+  - the core's eleven sessions before this one were each decided at 22:00 the evening before [V]
+- source: `docs/RUNBOOK.md` @ `d4d80cb` (section 8); `quantt/session/run.py` @ `f1ba445` (exit 11 is REFUSED); the readings are ssh output of this session, not in the repo
+- supports: §5
+- status: current. Whether the 2026-11-20 session was decided later that night or held the late funds at their shares from the final check is not measured here. The alert-settings unit, the one failed unit before the reboot, had not run again when the after reading was taken
