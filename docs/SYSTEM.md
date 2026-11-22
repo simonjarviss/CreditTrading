@@ -924,7 +924,7 @@ followed is E-2026-11-18-25 to -28.
 Answered through question prompts on 2026-11-22, after the team lead said the infrastructure and the strategy "are
 very disorganized and not done at the proper standard we need it to be done, we cant deploy capital on this
 infrastructure". The result is `docs/STANDARD.md`, with its sources in `docs/REFERENCES.md` §12st (`EVIDENCE_LOG`
-E-2026-11-22-03).
+E-2026-11-22-04).
 
 | question | ruling |
 |---|---|
