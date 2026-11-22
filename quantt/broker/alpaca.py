@@ -1150,8 +1150,22 @@ class AlpacaClient:
 
         A symbol with no matching print from its primary exchange raises
         MissingAuctionPrint naming every such symbol: another venue's print
-        and a daily bar close are never substituted. Two prices from the
-        primary at `condition` raise AmbiguousAuctionPrint.
+        and a daily bar close are never substituted.
+
+        TWO PRICES FROM THE PRIMARY (team lead's ruling, 2026-11-22, by question
+        prompt: "Take the later print if the daily bar agrees"). On 2026-11-20
+        NYSE sent two condition-M prints for SCD: 14.348 (1,400 shares,
+        16:00:02 ET) and 14.28 (300 shares, 16:10:00 ET); the consolidated daily
+        bar closed at 14.28 [V: GET only, 2026-11-22]. Until then two prices
+        raised, and one such fund-day stalled C4's collector and the shadow
+        books' marks for a weekend. The rule: the print with the LATEST
+        timestamp is the official close if, and only if, its price equals the
+        close of that day's raw SIP daily bar; the earlier prices are returned
+        under "superseded" so a caller can say so. The bar never supplies the
+        price, it only confirms which of the exchange's own prints stood. Any
+        other case raises AmbiguousAuctionPrint, naming the prints and the bar:
+        the latest two prints share a timestamp, there is no bar for the day,
+        or the bar's close is not the later print.
         """
         date = _date_param(date, "date")
         if isinstance(symbols, str):
@@ -1238,10 +1252,11 @@ class AlpacaClient:
                 continue
             prices = {_num(p, "p", f"auction {sym}") for p in prints}
             if len(prices) > 1:
-                pairs = sorted((p["x"], p["p"]) for p in prints)
-                raise AmbiguousAuctionPrint(
-                    f"{sym} {date}: primary exchange {exchange_codes[sym]!r} has more than one "
-                    f"condition {condition!r} price {pairs}")
+                p, superseded = self._later_print_the_bar_confirms(
+                    sym, date, prints, condition, start_ts, end_ts)
+                out[sym] = {"price": _num(p, "p", f"auction {sym}"), "exchange": p["x"],
+                            "condition": p["c"], "t": p["t"], "superseded": superseded}
+                continue
             p = prints[0]
             out[sym] = {"price": prices.pop(), "exchange": p["x"], "condition": p["c"],
                         "t": p["t"]}
@@ -1252,6 +1267,54 @@ class AlpacaClient:
                 f"{ {s: exchange_codes[s] for s in missing} }; another venue's print and a bar "
                 f"close are not substituted", symbols=missing)
         return out
+
+    def _later_print_the_bar_confirms(self, sym: str, date: dt.date, prints: list,
+                                      condition: str, start_ts: dt.datetime,
+                                      end_ts: dt.datetime) -> tuple[dict, list]:
+        """(the later print, the superseded prices) when the primary sent more than one
+        price at `condition` and the day's daily bar closes on the later one; otherwise
+        raises AmbiguousAuctionPrint (`closing_auction_prints`, "TWO PRICES").
+
+        The bar is asked for with the auction query's own timestamps, never a bare date:
+        a date-only `end` reaches into the 15 minutes the data plan refuses on the
+        evening of the day itself (the same 403 as above). ALIGNMENT: the one bar used
+        must be dated `date` in New York; any other raises."""
+        pairs = sorted((p["x"], p["p"], p["t"]) for p in prints)
+        what = (f"{sym} {date}: primary exchange {prints[0]['x']!r} has more than one "
+                f"condition {condition!r} price {[(x, px) for x, px, _ in pairs]}")
+        timed = sorted(((parse_ts(p["t"], f"auction {sym}"), _num(p, "p", f"auction {sym}"), p)
+                        for p in prints), key=lambda r: r[0])
+        last_t, last_px, last = timed[-1]
+        if any(t == last_t and px != last_px for t, px, _ in timed[:-1]):
+            raise AmbiguousAuctionPrint(f"{what}; the latest two share the timestamp {last['t']}, "
+                                        "so neither is the later print")
+        w = f"GET /v2/stocks/bars {sym}"
+        body = self._get(self._data, "/v2/stocks/bars",
+                         {"symbols": sym, "timeframe": "1Day", "adjustment": "raw", "feed": "sip",
+                          "start": start_ts.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                          "end": end_ts.strftime("%Y-%m-%dT%H:%M:%SZ"), "limit": 10})
+        _require(body, ("bars",), w)
+        bars = body["bars"]
+        if bars is None:
+            bars = {}
+        if not isinstance(bars, dict):
+            raise UnexpectedResponse(f"{w}: bars is {type(bars).__name__}, not an object")
+        rows = bars.get(sym) or []
+        if not isinstance(rows, list):
+            raise UnexpectedResponse(f"{w}: bars[{sym}] is not a list")
+        if len(rows) != 1:
+            raise AmbiguousAuctionPrint(f"{what}; {len(rows)} daily bar(s) for {date} to confirm the "
+                                        "later print with, so nothing is chosen")
+        _require(rows[0], ("t", "c"), w)
+        bar_day = parse_ts(rows[0]["t"], w).astimezone(NY).date()
+        if bar_day != date:
+            raise UnexpectedResponse(f"{w}: bar dated {bar_day} returned for {date}")
+        bar_c = _num(rows[0], "c", w)
+        if abs(bar_c - last_px) > 1e-9:
+            raise AmbiguousAuctionPrint(f"{what}; the later print is {last_px} at {last['t']} but the "
+                                        f"daily bar closes at {bar_c}, so nothing is chosen")
+        superseded = [{"price": px, "t": p["t"]} for _, px, p in timed[:-1] if px != last_px]
+        return last, superseded
 
     def distributions(self, symbols, start: dt.date, end: dt.date) -> list[dict]:
         """Cash dividends and capital-gains distributions for `symbols`, from the data API.

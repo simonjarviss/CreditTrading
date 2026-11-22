@@ -635,7 +635,7 @@ def step_official_closes(ctx: Ctx, day: dt.date, clk: dict, status: dict) -> dic
     have = set(_on_day(old, day)["ticker"]) if old is not None else set()
 
     exchanges = ctx.client.stock_exchanges()
-    rows, gaps, transient = [], [], []
+    rows, gaps, transient, flags = [], [], [], []
     fetched_at = _utc_now()
     for sym in [s for s in symbols if s not in have]:
         try:
@@ -651,6 +651,13 @@ def step_official_closes(ctx: Ctx, day: dt.date, clk: dict, status: dict) -> dic
         if sym not in got:
             raise ValueError(f"closing_auction_prints returned no row and no error for {sym}")
         p = got[sym]
+        if p.get("superseded"):
+            # The primary sent two prices and the client took the later one because the daily
+            # bar closes on it (alpaca.closing_auction_prints, "TWO PRICES"; team lead's ruling
+            # 2026-11-22). The file has no column for it, so the day's report says so.
+            flags.append({"fund": sym, "check": "two_primary_prints_later_used",
+                          "price": float(p["price"]), "t": str(p["t"]),
+                          "superseded": p["superseded"]})
         rows.append({"date": pd.Timestamp(day), "ticker": sym, "price": float(p["price"]),
                      "exchange": p["exchange"], "condition": p["condition"], "t": str(p["t"]),
                      "fetched_at_utc": fetched_at})
@@ -662,7 +669,7 @@ def step_official_closes(ctx: Ctx, day: dt.date, clk: dict, status: dict) -> dic
         common.atomic_write(frame, path)
     stored = have | {r["ticker"] for r in rows}
     missing = [t for t in ctx.deployed if t not in stored]
-    detail = {"flags": [], "gaps": gaps, "stored_now": len(rows), "stored_before": len(have),
+    detail = {"flags": flags, "gaps": gaps, "stored_now": len(rows), "stored_before": len(have),
               "transient_errors": transient}
     if missing:
         raise StepFailed(f"no official close for deployed name(s) {missing}", detail)
