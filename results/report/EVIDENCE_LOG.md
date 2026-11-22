@@ -5403,3 +5403,31 @@ that adds it does not exist when it is written.
 - source: `quantt/sleeves/prices.py` @ `17c7823` (the fix is in the commit that carries this entry); `quantt/sleeves/tests/test_run.py` @ `17c7823`; the VM's unit results and the events book's logs, read on 2026-11-20; the probe script is session scratch
 - supports: §5
 - status: current. The fix is not on the VM until the next release is installed
+
+### E-2026-11-22-01 · Release: release-20261122-1 installed on the VM; the three books are as they were
+- kind: release
+- era: ALPACA
+- date: 2026-11-22
+- figures:
+  - `release-20261122-1` is main at `70e1228`. Against `release-20261119-1`, outside documents and research, it changes `quantt/sleeves/prices.py`, `quantt/sleeves/run.py`, their tests, `quantt/deploy/vm/bootstrap.sh` and one README: the events book's same-day close read (E-2026-11-20-12). No file of the core's or C4's order path differs [V]
+  - before tagging: the full suite and the document audit passed on the tested tree (`e9be427`, identical in content to `70e1228`); the diff was reviewed by a second reader, which found no defect and asked for three boundary tests, since added [V]
+  - installed Sunday 2026-11-22, 11:42 to about 11:50 ET, market closed: timers stopped, core applied armed, C4 applied armed, report jobs re-applied, events units re-installed. Read back afterwards: clone at `release-20261122-1`; core and C4 DRY_RUN=0 with AUTO_ARMED present, as before; every events unit DRY_RUN=1 with no AUTO_ARMED; no job running [V]
+  - not yet seen: the events book's VERIFY passing on the VM with the new read. Its first run is 17:35 ET on 2026-11-23 [U]
+- source: `quantt/sleeves/prices.py` @ `70e1228`; `quantt/deploy/install_vm.py` @ `70e1228`; the VM's installer output and `ops/prod_state.py` @ `70e1228` read on 2026-11-22
+- supports: §5
+- status: current
+
+### E-2026-11-22-02 · Ruling and incident: one fund-day with two official closes stalled C4's collector and the shadow marks; the later print stands when the daily bar agrees
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-22
+- figures:
+  - found on 2026-11-22 while reading the VM after the install: C4's collector had ended "incomplete" on every run for data day 2026-11-20 since that evening (86 lines in its data log against 21 or 22 for each of the five days before), and the shadow books' nightly job had failed three times (2026-11-20 18:54 and 20:54, 2026-11-21 07:24 ET). One cause: `AmbiguousAuctionPrint` for SCD [V]
+  - Alpaca's auction record for SCD on 2026-11-20, GET only: NYSE condition M at 14.348 (1,400 shares, 16:00:02 ET) and again at 14.28 (300 shares, 16:10:00 ET); NYSE Arca M 14.348, Nasdaq M 14.18. The raw SIP daily bar closes at 14.28 [V]
+  - what it did not touch: both live books passed on 2026-11-20 (13 of 13 and 2 of 2 orders filled); the shadow books' decisions for 2026-11-20 were written before the marks step failed; C4's order path reads no official-close file [V]
+  - the team lead's answers, by question prompt, 2026-11-22: the close for that fund-day "$14.28, the later print (Recommended)"; the standing rule "Take the later print if the daily bar agrees" [V]
+  - the rule in code, run on the real feed for 2026-11-20: SCD 14.28 with 14.348 named as superseded; USA, one print, 5.40, unchanged [V]
+  - still to do when this entry was written: a release carrying the rule, and the same client change on the `shadow` branch, which keeps its own copy of the client [U]
+- source: `quantt/broker/alpaca.py` @ `70e1228` (the rule is in the commit that carries this entry); `quantt/collect/collect.py` @ `70e1228`; `docs/SYSTEM.md` @ `70e1228` (section 5, the 2026-11-22 row is in the commit that carries this entry); the VM's `quantt_state/c4` data log and report and the shadow job's log, read on 2026-11-22
+- supports: §5
+- status: current
