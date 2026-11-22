@@ -139,7 +139,7 @@ def trees() -> dict:
     `ibkr-final` tags the last IBKR-era commit, so "what did the old system
     run" stays a git question.
     """
-    out = {"reproducer": "git status  ·  git describe --tags  ·  git tag -l ibkr-final"}
+    out = {"reproducer": "git status  ·  git rev-list --left-right --count HEAD...origin/main  ·  git tag -l ibkr-final"}
     out["dev"] = {
         "path": str(REPO),
         "branch": _run(["git", "rev-parse", "--abbrev-ref", "HEAD"]).strip(),
@@ -147,6 +147,11 @@ def trees() -> dict:
         "uncommitted": len([l for l in _run(
             ["git", "status", "--porcelain"]).splitlines() if l.strip()]),
     }
+    # docs/STANDARD.md A1.1: a checkout behind origin/main loads superseded
+    # rules, and on 2026-11-22 the main dev folder was 841 commits behind with
+    # nothing saying so. Local refs only; ops/checkout.py says why.
+    from ops import checkout
+    out["dev"]["against_main"] = checkout.against_main(REPO)
     out["ibkr_final"] = _run(["git", "tag", "-l", "ibkr-final"]).strip() or None
     out["legacy_prod_present"] = PROD_TREE.is_dir()
     return out
@@ -1008,6 +1013,11 @@ def render(d: dict) -> None:
         dv = sec["dev"]
         _p("dev  (you are here)", f"{dv['path']}  {dv['branch']} {dv['sha']}"
                                   f"  {dv['uncommitted']} uncommitted")
+        from ops import checkout
+        am = dv.get("against_main", {"UNMEASURED": "not in this TREES reading"})
+        _p("vs origin/main", checkout.describe(am))
+        if (w := checkout.warning(am)):
+            _p("", f"  WARNING — {w}")
         _p("ibkr-final tag", sec["ibkr_final"] or "MISSING — the IBKR-era record has no tag")
         _p("prod", "measured in PROD below (which machine, which tag, armed or not)")
         if sec["legacy_prod_present"]:
