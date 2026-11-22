@@ -420,7 +420,7 @@ def _plan(deps: Deps, preview: bool) -> int:
     # ALIGNMENT: sized on the close of D, the session strictly before F (asof_for); `closes`
     # raises on a bar dated anything else.
     assert D < F, (D, F)
-    cl = prices.closes(c, symbols, D) if symbols else {}
+    cl = prices.closes(c, symbols, D, deps.utcnow()) if symbols else {}
     # A held name with no bar on D (module docstring): its sleeves hold, and it is valued at
     # the last close this runner recorded, kept apart from `closes` and labelled.
     stale = {}
@@ -1011,7 +1011,7 @@ def _verify(deps: Deps, date) -> int:
                             tuple(s["dropped"]), s["scale"]) for s in plan_d["sleeves"]]
     syms = sorted(set(ledger.totals(before)) | {s for p in plans for s in p.targets} | set(pos) | set(fills))
     # Marks and cross prices are F's own closes; a symbol with no bar on F has none.
-    marks = prices.closes(c, syms, F) if syms else {}
+    marks = prices.closes(c, syms, F, deps.utcnow()) if syms else {}
     try:
         new, bookings = ledger.apply(before, plans, fills, marks, F.isoformat())
         ledger.check_against_broker(new, pos)

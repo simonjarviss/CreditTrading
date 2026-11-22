@@ -5387,3 +5387,18 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current. Thirteen sessions: a description of what happened, not evidence about the strategy
 
+
+### E-2026-11-20-12 · Incident: the events book's first evening check failed on a refused price read; the request now ends twenty minutes in the past
+- kind: incident
+- era: ALPACA
+- date: 2026-11-20
+- figures:
+  - the dry session, read from the VM at 17:42 ET on 2026-11-20: PLAN exit 6 (planned) at 15:20; SEND exit 10 at 15:46, refused twice (DRY_RUN is 1; not armed), no order sent; VERIFY exit 1 at 17:35 on HTTP 403 "subscription does not permit querying recent SIP data" from `/v2/stocks/bars`. No AUTO_ARMED file; the account holds no position [V]
+  - the cause, measured the same evening with the core account's keys, GET only, 17:43 ET, for the 2026-11-20 daily bar of IWM and EIM: `end=2026-11-20` refused (403); `end` 14 minutes ago refused (403); `end` 16 minutes ago served; no `end` served; the day before with `end` as its date served. A date-only `end` is the end of that day, inside the 15 minutes the plan withholds [V]
+  - the bars served at 17:43 ET: IWM 256.61, EIM 8.76 [V]
+  - the fix: a same-day read ends at the caller's clock minus 20 minutes; a read of a day that has not closed (before 16:20 ET) raises and makes no request; a past day is asked for by its date, as before. The core and C4 do not use this module [V]
+  - not measured: whether the daily bar served at 17:35 ET is ever revised later that evening [U]
+  - the same read showed the core and C4 collectors "failed" with exit 5 (incomplete) at 17:10 and 17:40 ET; the same exit is in the journal every evening checked (2026-11-10, -18, -19) and clears by the morning. Both books' sessions passed on 2026-11-20: 13 of 13 and 2 of 2 orders filled [V]
+- source: `quantt/sleeves/prices.py` @ `17c7823` (the fix is in the commit that carries this entry); `quantt/sleeves/tests/test_run.py` @ `17c7823`; the VM's unit results and the events book's logs, read on 2026-11-20; the probe script is session scratch
+- supports: §5
+- status: current. The fix is not on the VM until the next release is installed

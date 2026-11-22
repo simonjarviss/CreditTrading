@@ -32,9 +32,25 @@ Alpaca]. The stamp is a UTC instant, so the bar's date is read by CONVERTING it 
 never by slicing the string: a midnight-New-York stamp is 04:00Z in summer and 05:00Z in
 winter, and any stamp before 04:00Z/05:00Z belongs to the previous New York day.
 
-NOT VERIFIED: how soon after the close the SIP daily bar for the same day is served on this
-account's data plan. If it is not there yet the read is empty: symbols ABSENT, which holds or
-leaves a sleeve unscored, never a wrong price.
+THE SAME-DAY READ, AND WHY `end` IS A TIMESTAMP THEN. These paper accounts' data plan refuses any
+SIP query whose window reaches into the last 15 minutes: HTTP 403 "subscription does not permit
+querying recent SIP data". A date-only `end` means the END of that day, so on the evening of
+`day` itself `end=day` is refused, and the book's first VERIFY failed on exactly that at 17:35 ET
+on 2026-11-20 (results/report/EVIDENCE_LOG.md). Measured the same evening on the core account's
+keys, GET only [V 2026-11-20 17:43 ET]: `end=<day>` 403; `end=now-14min` 403; `end=now-16min`
+200 with the day's bar; the day before with `end=<day>` 200. So while `day` is not yet
+`SIP_DELAY` in the past, `end` is the instant `utcnow - SIP_DELAY`; once it is, `end` stays the
+date, as before. The bar is the same object either way (one precomputed daily bar, stamped
+midnight New York), and the date check below still refuses any other day's.
+
+A DAY THAT HAS NOT CLOSED HAS NO CLOSE. Before the fix the 403 also, by accident, stopped a read
+of today's bar at midday, when its `c` is only the last trade so far. That protection is now
+explicit: a same-day read before `CLOSE_ET` + `SIP_DELAY` raises. 16:00 is the latest close the
+exchange has; on a half day the bar is final earlier and the read simply waits longer than it
+must.
+
+NOT VERIFIED: that the daily bar served at 17:35 ET is never revised later that evening (a late
+correction to the closing print). VERIFY marks on what is served when it runs.
 """
 from __future__ import annotations
 
@@ -48,6 +64,9 @@ SYMBOL = re.compile(r"[A-Z][A-Z0-9.]{0,9}")      # as inputs.SYMBOL and the clie
 CHUNK = 100                                      # symbols per request: keeps the URL short
 PAGE_LIMIT = 10000                               # /v2/stocks/bars: limit max 10000 [S: Alpaca docs, not re-read]
 MAX_PAGES = 50                                   # one bar a symbol: more pages than this is a bug
+SIP_DELAY = dt.timedelta(minutes=20)             # the plan refuses the last 15 minutes [V 2026-11-20]; 5 spare
+                                                 # for a machine clock that runs ahead of Alpaca's
+CLOSE_ET = dt.time(16, 0)                        # the latest regular close; a half day closes earlier
 
 
 class PriceError(RuntimeError):
@@ -73,10 +92,29 @@ def _bar_close(sym: str, bar, day: dt.date) -> float:
     return float(c)
 
 
-def closes(client, symbols, day: dt.date) -> dict:
-    """{symbol: close of `day`} from `/v2/stocks/bars`; a symbol with no bar that day is absent."""
+def _end_param(day: dt.date, utcnow: dt.datetime) -> str:
+    """The `end` to send for `day` at `utcnow` (module docstring, "THE SAME-DAY READ")."""
+    if not isinstance(utcnow, dt.datetime) or utcnow.tzinfo is None:
+        raise PriceError(f"utcnow {utcnow!r} must be a datetime with a time zone")
+    cutoff = utcnow.astimezone(dt.timezone.utc) - SIP_DELAY
+    day_end = dt.datetime.combine(day + dt.timedelta(days=1), dt.time(0), NY)
+    if day_end <= cutoff:
+        return day.isoformat()                    # the whole day is old enough: the date, as before
+    closed = dt.datetime.combine(day, CLOSE_ET, NY)
+    if cutoff < closed:
+        raise PriceError(f"the close of {day} is not readable at {utcnow.astimezone(NY):%Y-%m-%d %H:%M} ET: "
+                         f"the data plan serves SIP data only {int(SIP_DELAY.total_seconds() // 60)} minutes old, "
+                         f"and the session is not over before {CLOSE_ET:%H:%M} ET; no partial day's bar is "
+                         "used as a close")
+    return cutoff.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def closes(client, symbols, day: dt.date, utcnow: dt.datetime) -> dict:
+    """{symbol: close of `day`} from `/v2/stocks/bars`; a symbol with no bar that day is absent.
+    `utcnow` is the caller's clock: it decides only the `end` of the request, never the price."""
     if not isinstance(day, dt.date) or isinstance(day, dt.datetime):
         raise PriceError(f"day {day!r} must be a datetime.date")
+    end = _end_param(day, utcnow)
     syms = sorted(set(symbols))
     for s in syms:
         if not isinstance(s, str) or not SYMBOL.fullmatch(s):
@@ -87,7 +125,7 @@ def closes(client, symbols, day: dt.date) -> dict:
         token, seen_tokens = None, set()
         for _ in range(MAX_PAGES):
             params = {"symbols": ",".join(chunk), "timeframe": "1Day", "adjustment": "raw",
-                      "feed": "sip", "start": day.isoformat(), "end": day.isoformat(),
+                      "feed": "sip", "start": day.isoformat(), "end": end,
                       "limit": PAGE_LIMIT}
             if token is not None:
                 params["page_token"] = token

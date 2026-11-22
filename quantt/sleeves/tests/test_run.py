@@ -738,7 +738,10 @@ def test_no_code_path_addresses_anything_but_the_client_it_was_given(w, monkeypa
     assert session(w, F) == (core.EXIT_PLANNED, core.EXIT_SENT, sr.VERIFY_PASS)
     assert set(w.c.calls) <= EXPECTED_CALLS and w.c.calls.count("submit_order") == 3
     assert {p["start"] for p in w.c.get_params} == {str(D), str(F)}
-    assert all(p["start"] == p["end"] and p["timeframe"] == "1Day" and p["adjustment"] == "raw"
+    # PLAN asks for D by its date; VERIFY, at 16:30 on F, asks for F up to SIP_DELAY ago (prices.py).
+    f_end = (at(F, 16, 30).astimezone(dt.timezone.utc) - prices.SIP_DELAY).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert {(p["start"], p["end"]) for p in w.c.get_params} == {(str(D), str(D)), (str(F), f_end)}
+    assert all(p["timeframe"] == "1Day" and p["adjustment"] == "raw"
                and p["feed"] == "sip" for p in w.c.get_params)
 
 
@@ -826,6 +829,9 @@ class Bars:
         return self.pages.pop(0)
 
 
+OLD = dt.datetime(2026, 12, 1, tzinfo=dt.timezone.utc)      # a clock long after every day asked for: `end` is the date
+
+
 def bar(day, c):
     return {"t": f"{day}T05:00:00Z", "c": c}
 
@@ -833,13 +839,13 @@ def bar(day, c):
 def test_closes_reads_every_page_through_the_clients_get_and_leaves_a_missing_symbol_absent():
     c = Bars([{"bars": {"AAA": [bar(D, 20.5)]}, "next_page_token": "t1"},
               {"bars": {"IWM": [bar(D, 250)]}, "next_page_token": None}])
-    assert prices.closes(c, ["IWM", "AAA", "GONE"], D) == {"AAA": 20.5, "IWM": 250.0}
+    assert prices.closes(c, ["IWM", "AAA", "GONE"], D, OLD) == {"AAA": 20.5, "IWM": 250.0}
     (b0, p0, q0), (_, _, q1) = c.seen
     assert (b0, p0) == ("DATA-HOST", "/v2/stocks/bars")
     assert q0 == {"symbols": "AAA,GONE,IWM", "timeframe": "1Day", "adjustment": "raw", "feed": "sip",
                   "start": str(D), "end": str(D), "limit": prices.PAGE_LIMIT}
     assert q1["page_token"] == "t1"
-    assert prices.closes(Bars([{"bars": None}]), ["AAA"], D) == {}
+    assert prices.closes(Bars([{"bars": None}]), ["AAA"], D, OLD) == {}
 
 
 @pytest.mark.parametrize("body, why", [
@@ -856,12 +862,12 @@ def test_closes_reads_every_page_through_the_clients_get_and_leaves_a_missing_sy
 def test_closes_raises_on_a_bar_it_cannot_trust(body, why):
     with pytest.raises(prices.PriceError, match=why):
         prices.closes(Bars([body, {"bars": {}, "next_page_token": "same"}, {"bars": {}, "next_page_token": "same"}]),
-                      ["AAA"], D)
+                      ["AAA"], D, OLD)
 
 
 def test_closes_refuses_a_symbol_that_is_not_one():
     with pytest.raises(prices.PriceError, match="not an upper-case"):
-        prices.closes(Bars([]), ["aaa/../x"], D)
+        prices.closes(Bars([]), ["aaa/../x"], D, OLD)
 
 
 # ===================================================== review of stage 2, 2026-11-16
@@ -1060,11 +1066,47 @@ def test_an_emptied_sleeve_can_be_dropped_from_the_book_file_and_keeps_its_ledge
 # ---- item 8: the bar's date is its New York date
 
 def test_a_bar_is_dated_by_its_new_york_day_not_by_the_utc_string():
-    assert prices.closes(Bars([{"bars": {"AAA": [{"t": f"{F}T00:30:00Z", "c": 20.0}]}}]), ["AAA"], D) == {"AAA": 20.0}
+    assert prices.closes(Bars([{"bars": {"AAA": [{"t": f"{F}T00:30:00Z", "c": 20.0}]}}]), ["AAA"], D, OLD) == {"AAA": 20.0}
     with pytest.raises(prices.PriceError, match="never used for another day"):
-        prices.closes(Bars([{"bars": {"AAA": [{"t": f"{F}T00:30:00Z", "c": 20.0}]}}]), ["AAA"], F)
+        prices.closes(Bars([{"bars": {"AAA": [{"t": f"{F}T00:30:00Z", "c": 20.0}]}}]), ["AAA"], F, OLD)
     assert prices.closes(Bars([{"bars": {"AAA": [{"t": "2026-07-01T04:00:00Z", "c": 20.0}]}}]), ["AAA"],
-                         dt.date(2026, 7, 1)) == {"AAA": 20.0}        # midnight New York in summer
+                         dt.date(2026, 7, 1), OLD) == {"AAA": 20.0}        # midnight New York in summer
+
+
+# ---- the same-day read: the data plan refuses the last 15 minutes of SIP data (2026-11-20)
+
+def test_the_evening_read_of_todays_close_ends_twenty_minutes_ago_not_at_the_date():
+    """VERIFY at 17:35 ET on F asks for F's own bar. `end=F` means the end of F, inside the
+    15 minutes the plan refuses (HTTP 403 on 2026-11-20); the request must end in the past."""
+    c = Bars([{"bars": {"AAA": [bar(F, 20.5)]}}])
+    assert prices.closes(c, ["AAA"], F, at(F, 17, 35)) == {"AAA": 20.5}
+    q = c.seen[0][2]
+    assert q["start"] == str(F)
+    assert q["end"] == (at(F, 17, 35).astimezone(dt.timezone.utc) - prices.SIP_DELAY).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert prices.SIP_DELAY > dt.timedelta(minutes=15)
+
+
+def test_a_day_long_past_is_still_asked_for_by_its_date():
+    c = Bars([{"bars": {}}])
+    prices.closes(c, ["AAA"], D, at(F, 11, 45))
+    assert c.seen[0][2]["end"] == str(D)
+    c = Bars([{"bars": {}}])                               # 00:21 the next day: the whole day is old enough
+    prices.closes(c, ["AAA"], F, at(F + dt.timedelta(days=1), 0, 21))
+    assert c.seen[0][2]["end"] == str(F)
+
+
+@pytest.mark.parametrize("hh, mm", [(13, 0), (16, 0), (16, 19)])
+def test_a_day_that_has_not_closed_has_no_close(hh, mm):
+    """Today's bar before the close carries the last trade so far. No request is made."""
+    c = Bars([])
+    with pytest.raises(prices.PriceError, match="no partial day's bar"):
+        prices.closes(c, ["AAA"], F, at(F, hh, mm))
+    assert c.seen == []
+
+
+def test_the_clock_must_carry_a_time_zone():
+    with pytest.raises(prices.PriceError, match="time zone"):
+        prices.closes(Bars([]), ["AAA"], D, dt.datetime(2026, 12, 1))
 
 
 # ---- guards at SEND
