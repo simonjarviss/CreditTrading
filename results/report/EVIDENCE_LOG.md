@@ -5431,3 +5431,18 @@ that adds it does not exist when it is written.
 - source: `quantt/broker/alpaca.py` @ `70e1228` (the rule is in the commit that carries this entry); `quantt/collect/collect.py` @ `70e1228`; `docs/SYSTEM.md` @ `70e1228` (section 5, the 2026-11-22 row is in the commit that carries this entry); the VM's `quantt_state/c4` data log and report and the shadow job's log, read on 2026-11-22
 - supports: §5
 - status: current
+
+### E-2026-11-22-03 · Ruling: the standard for a clean platform and for real money is written; research carries on; real capital still waits for a broker
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-22
+- figures:
+  - the team lead, 2026-11-22: the infrastructure and the strategy "are very disorganized and not done at the proper standard we need it to be done, we cant deploy capital on this infrastructure" [V]
+  - measured that day on the team lead's laptop: the main dev folder on branch `research-alpha-leakage`, 841 commits behind `origin/main`, 148 uncommitted files, with an untracked `CLAUDE.md` 179 changed lines from main's; 199 local branches, 102 remote branches and 143 worktrees, read with `git log`, `git status`, `git branch` and `git worktree list` [V]
+  - measured on `origin/main` a624e13: 681 commits from 2026-10-22, 132 merge commits from 2026-11-01; Python lines by top folder `scripts` 127,532, `quantt` 47,121, `src` 11,632, `ops` 8,989, `shadow` 5,023; `docs/SYSTEM.md` §5 holds 41 ruling sections in 654 lines; CI runs the tests and `ops.doc_audit` only; read with `git log`, `git ls-tree` and `wc -l`, and from `.github/workflows/checks.yml` [V]
+  - the team lead's answers, by question prompt: keep research as it is; everything on the desk; draft the standard first; save the dev folder and switch it to main after release-20261122-2 is installed; dashboard and logs for alerts; HALVE/KILL act on real money; a combined risk budget before real capital; agent review is enough; broker-neutral, the 2026-10-28 wait stands; types, coverage floor and import boundary in CI; a rehearsed recovery procedure; the daily acknowledgement not ruled ("we arnt deploying capital anytime soon"); then keep the draft's three proposals (monthly stop rehearsal, the 14-day branch rule, the go-live variant count), run the audit, push this standard as a pull request, switch the dev folder [V]
+  - external sources read through a fetch agent: SEC 15c3-5, FINRA 15-09, EU 2017/589 (RTS 6), FIA 2024, the SEC's Knight Capital order, Bailey and López de Prado 2014, Bailey et al. 2014, AIMA's DDQ topics. None binds the desk [S]
+  - what it does not change: no book, spec, gate or schedule; nothing on the VM [V]
+- source: `docs/SYSTEM.md` @ `a624e13` and `.github/workflows/checks.yml` @ `a624e13` (the base measured); `docs/STANDARD.md`, `docs/REFERENCES.md` §12st and the §5 standard ruling are in the commit that carries this entry
+- supports: §5
+- status: current

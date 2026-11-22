@@ -919,6 +919,31 @@ followed is E-2026-11-18-25 to -28.
 | Who runs the release steps (merge, tag, VM installs, arming) | **"You prepare, I run them"**: this session checks and writes the wrappers; the team lead runs each with `!` |
 | Not asked, and open | Whether the ladder's later stages change with the waiver; the cap and target the measurement will point to; whether Alpaca allows a third paper account at all (`docs/REFERENCES.md` 12pa: not stated) |
 
+### Team lead, 2026-11-22 — the standard: a clean platform first, then real money
+
+Answered through question prompts on 2026-11-22, after the team lead said the infrastructure and the strategy "are
+very disorganized and not done at the proper standard we need it to be done, we cant deploy capital on this
+infrastructure". The result is `docs/STANDARD.md`, with its sources in `docs/REFERENCES.md` §12st (`EVIDENCE_LOG`
+E-2026-11-22-03).
+
+| question | ruling |
+|---|---|
+| Whether new research pauses while the platform is brought to standard | **"Keep research as it is."** The standard gates changes to the platform and real money, not ideas (`docs/STANDARD.md` §0.2) |
+| What the first standard covers | **"Everything on the desk"**: every book, sleeve, shadow book, collector and report job |
+| What comes first | **"Draft the standard with you"**: `docs/STANDARD.md`, then an audit against it (§0.4) |
+| The main dev folder: branch `research-alpha-leakage`, 841 commits behind `origin/main`, 148 uncommitted files and an untracked `CLAUDE.md` from before 2026-11-09 | **"Save changes, then switch to main"**, and **"After the release finishes"**: not while another session is installing release-20261122-2 from that folder |
+| Alerting for real money | **"Dashboard and logs are enough."** Recorded as a departure from the sources (`docs/STANDARD.md` C.2) |
+| HALVE and KILL on a real-money book | **"Act automatically"**: HALVE halves the next plan's gross; KILL sends nothing new until a person re-arms. Paper stays in report mode (2026-10-19) |
+| A combined risk budget | **"Required before real capital."** For real money only; it narrows 2026-11-18's "Not yet", and the paper accounts keep their own limits |
+| A review of the order path by someone outside the desk | **"Agent review is enough"** |
+| The real-money broker | **"Keep waiting, write it broker-neutral."** The 2026-10-28 ruling stands; every runner sends through one broker interface (`docs/STANDARD.md` A2.6) |
+| CI on the live path | **"Types, coverage floor, import boundary"** (A2.1 to A2.3) |
+| Recovery from a VM failure on a trading day | **"Rehearsed procedure"**: written, rehearsed on paper each quarter and timed; a rebuild of the VM from scratch tested once (A9) |
+| A person acknowledging the last verdict before a real-money book sends | Not ruled: "we arnt deploying capital anytime soon, we need to clean our infrastructure up". Asked again at the first go-live proposal (A5.3) |
+| Three proposals in the draft (asked after it was written) | **"Keep all three"**: the stop-everything command rehearsed on paper every month (A4.2); a branch with no open pull request, not a lane branch and no commit in 14 days is tagged `archive/<branch>` and deleted (A1.2); at go-live, the variants of the idea tried are counted from `results/IDEA_LEDGER.md` and the Sharpe deflated for them (B7). B7 applies at the go-live proposal only; research keeps the 2026-11-09 rules |
+| The next steps | **"Run it now"** for the audit against `docs/STANDARD.md` (§0.4); **"Push and open the PR"** for this standard; **"Yes, switch it now"** for the dev folder, once the team lead confirmed release-20261122-2 was finished |
+| Not asked, and open | Approval of `docs/STANDARD.md` as written, at the pull request's review. An independent risk function (C.2) |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
@@ -931,6 +956,7 @@ followed is E-2026-11-18-25 to -28.
 | Ideas that have failed so far — check before proposing anything; nothing is banned (2026-11-08) | `/graveyard`, and the KILLED table |
 | External claims | `docs/REFERENCES.md` |
 | Work orders and the plan | `docs/ROADMAP.md`. The old work orders were deleted 2026-09-28 (tag `pre-clean-slate`). |
+| What "done properly" means for the platform and for real money; the audit against it | `docs/STANDARD.md` |
 | Which document owns which question | `docs/INDEX.md`, checked by `python3 -m ops.doc_audit` |
 | Who keeps which lane; how work reaches `main` and prod; the shared-ledger rules | `docs/TEAM.md` |
 
@@ -964,3 +990,4 @@ followed is E-2026-11-18-25 to -28.
 | 2026-11-05 | §5 records the analysts' roles reopened as starting points, any analyst may propose a signal, and the end-of-November pitch. | analyst guide, for the team lead |
 | 2026-11-08 | §5 records that research is not pass or fail; §1's holdout sentence and the 2026-10-27 power and admission rows point at it. | research method, for the team lead |
 | 2026-11-09 | §5 records the mission (`docs/MISSION.md`): open scope, paper as the test, no costs in research, the research gates dropped, self-promotion to paper through a separate path, releases by the team lead only, alpha-only dropped. §1 and §6 point at it. | the mission, for the team lead |
+| 2026-11-22 | §5 records the standard's rulings (`docs/STANDARD.md`); §6 points at it. | the standard, for the team lead |
