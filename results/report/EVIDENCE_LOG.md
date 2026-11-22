@@ -5431,3 +5431,19 @@ that adds it does not exist when it is written.
 - source: `quantt/broker/alpaca.py` @ `70e1228` (the rule is in the commit that carries this entry); `quantt/collect/collect.py` @ `70e1228`; `docs/SYSTEM.md` @ `70e1228` (section 5, the 2026-11-22 row is in the commit that carries this entry); the VM's `quantt_state/c4` data log and report and the shadow job's log, read on 2026-11-22
 - supports: §5
 - status: current
+
+### E-2026-11-22-03 · Release: release-20261122-2 installed; C4's stuck data day, the shadow marks and the events book's Friday check all cleared
+- kind: release
+- era: ALPACA
+- date: 2026-11-22
+- figures:
+  - `release-20261122-2` is main at `a624e13`. Against `release-20261122-1`, outside documents, it changes `quantt/broker/alpaca.py` (the two-prices rule of E-2026-11-22-02, inside `closing_auction_prints` and one new helper), `quantt/collect/collect.py` (the flag, carried across retries) and their tests. Before tagging: full suite and document audit passed on the tested tree; a second reader found no defect in the rule and one in the flag (lost on a retry), fixed with a test that fails without it [V]
+  - installed Sunday 2026-11-22 from 12:42 ET, market closed. Read back: clone at `release-20261122-2`; core and C4 DRY_RUN=0 with AUTO_ARMED present, as before; every events unit DRY_RUN=1, no AUTO_ARMED [V]
+  - C4's collector at 13:10 ET: "2026-11-20 DATA COMPLETE flags=63 gaps=0"; the day's report carries `two_primary_prints_later_used` for SCD, price 14.28, superseded 14.348 [V]
+  - the shadow books' job, started once by hand at about 13:13 ET on the `shadow` branch at `a8e944e` (the other session's port of the client change): exit 0 at 13:17 ET, one new marked session for each book read back [V]
+  - the events book's check for 2026-11-20, re-run by hand with `--date` (PLAN refuses while an earlier session is unbooked): "2026-11-20 PASS events no trade: send ended DRY; 0 symbol(s) filled, 0 booking(s); ledger booked to 2026-11-20" [V]
+  - not yet seen: the events book's same-evening VERIFY on the new read (first run 17:35 ET, 2026-11-23); whether the daily bar already carries a later print by 16:45 to 17:30 ET the same evening (measured only two days after); a correction printed after 16:30 ET is outside the auction query's window and would not be seen [U]
+  - units left failed on the VM: `quantt-reports-secret.service` only, by the team lead's choice of 2026-11-20 [V]
+- source: `quantt/broker/alpaca.py` @ `a624e13`; `quantt/collect/collect.py` @ `a624e13`; `quantt/sleeves/run.py` @ `a624e13`; the VM's installer output, C4 data log and report, shadow log and events verify line, read on 2026-11-22
+- supports: §5
+- status: current
