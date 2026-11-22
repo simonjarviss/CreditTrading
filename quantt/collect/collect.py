@@ -635,7 +635,14 @@ def step_official_closes(ctx: Ctx, day: dt.date, clk: dict, status: dict) -> dic
     have = set(_on_day(old, day)["ticker"]) if old is not None else set()
 
     exchanges = ctx.client.stock_exchanges()
-    rows, gaps, transient, flags = [], [], [], []
+    rows, gaps, transient = [], [], []
+    # A fund flagged on an earlier slot of this day is already stored and is not asked for
+    # again, so its flag is carried forward from that slot's record: without this a retry
+    # (another name's transient error) would overwrite the day's report with no trace that a
+    # later print was chosen (review 2026-11-22).
+    prev = (status["steps"].get("official_closes") or {}).get("detail") or {}
+    flags = [f for f in prev.get("flags", [])
+             if isinstance(f, dict) and f.get("check") == "two_primary_prints_later_used"]
     fetched_at = _utc_now()
     for sym in [s for s in symbols if s not in have]:
         try:
@@ -655,6 +662,7 @@ def step_official_closes(ctx: Ctx, day: dt.date, clk: dict, status: dict) -> dic
             # The primary sent two prices and the client took the later one because the daily
             # bar closes on it (alpaca.closing_auction_prints, "TWO PRICES"; team lead's ruling
             # 2026-11-22). The file has no column for it, so the day's report says so.
+            flags = [f for f in flags if f.get("fund") != sym]
             flags.append({"fund": sym, "check": "two_primary_prints_later_used",
                           "price": float(p["price"]), "t": str(p["t"]),
                           "superseded": p["superseded"]})

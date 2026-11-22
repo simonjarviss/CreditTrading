@@ -582,6 +582,27 @@ def test_a_later_print_the_client_chose_is_stored_and_flagged_in_the_days_report
                       "t": "2026-09-29T20:00:01Z", "superseded": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}]
 
 
+def test_the_later_print_flag_survives_a_retry_that_does_not_ask_for_that_fund_again(env):
+    """Review 2026-11-22: BBB is resolved and stored on the first slot while CCC errors, so the
+    step fails; on the next slot BBB is not asked for again. Its flag must still be in the record."""
+    client = FakeClient()
+    client.superseded = {"BBB": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}
+    real = client.closing_auction_prints
+
+    def flaky(symbols, date, **kw):
+        if symbols[0] == "CCC":
+            raise al.AlpacaHTTPError("GET /v2/stocks/auctions -> HTTP 503", status=503)
+        return real(symbols, date, **kw)
+    client.closing_auction_prints = flaky
+    assert co.collect(make_ctx(env, client)) == co.EXIT_INCOMPLETE
+    client.closing_auction_prints = real
+    client.calls.clear()
+    co.collect(make_ctx(env, client))
+    d = status(env)["steps"]["official_closes"]
+    assert d["ok"] and ("prints", "BBB") not in client.calls
+    assert [(f["fund"], f["check"]) for f in d["detail"]["flags"]] == [("BBB", "two_primary_prints_later_used")]
+
+
 # ------------------------------------------------------------------ account
 
 def test_account_snapshot_drops_raw_and_credential_like_fields(env):

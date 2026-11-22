@@ -647,6 +647,39 @@ def test_a_bar_for_another_day_never_confirms_a_print(env_file, sleeps):
         c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
 
 
+def test_a_confirmed_pair_beside_a_missing_symbol_names_only_the_missing_one(env_file, sleeps):
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS)]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28)}))
+    with pytest.raises(al.MissingAuctionPrint) as e:
+        c.closing_auction_prints(["SCD", "NVG"], D, exchange_codes={"SCD": "N", "NVG": "N"})
+    assert e.value.symbols == ["NVG"]
+
+
+def test_two_prices_a_few_nanoseconds_apart_are_a_tie(env_file, sleeps):
+    """parse_ts keeps microseconds; below that the order is not known, so nothing is chosen."""
+    near = [pr("N", 14.348, t="2026-09-29T20:10:00.000000100Z"), pr("N", 14.28, t="2026-09-29T20:10:00.000000900Z")]
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(near)]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28)}))
+    with pytest.raises(al.AmbiguousAuctionPrint, match="share the timestamp"):
+        c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
+
+
+def test_a_refused_bar_read_returns_no_price(env_file, sleeps):
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS)]}),
+                                           "/v2/stocks/bars": FakeResp(403, text="subscription does not permit")}))
+    with pytest.raises(al.AlpacaError):
+        c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
+
+
+def test_the_confirming_bar_is_dated_in_new_york_in_winter(env_file, sleeps):
+    w = dt.date(2026, 11, 20)                              # the real case; midnight New York is 05:00Z
+    prints = [pr("N", 14.348, t="2026-11-20T21:00:02.365804871Z"), pr("N", 14.28, t="2026-11-20T21:10:00.003842801Z")]
+    c, s = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(prints, d="2026-11-20")]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28, t="2026-11-20T05:00:00Z")}))
+    assert c.closing_auction_prints(["SCD"], w, exchange_codes={"SCD": "N"})["SCD"]["price"] == 14.28
+    assert (s.gets[-1][1]["start"], s.gets[-1][1]["end"]) == ("2026-11-20T05:00:00Z", "2026-11-20T21:30:00Z")
+
+
 def test_one_price_printed_twice_reads_no_bar_and_names_nothing_superseded(env_file, sleeps):
     twice = [pr("N", 18.50, t="2026-09-29T20:00:00Z"), pr("N", 18.50, t="2026-09-29T20:10:00Z")]
     c, s = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"PDI": [day(twice)]})}))
@@ -682,6 +715,8 @@ def test_auction_requires_a_primary_code_for_every_symbol(env_file, sleeps):
 
 
 def test_auction_two_primary_prices_are_ambiguous(env_file, sleeps):
+    # pr() gives both prints one timestamp, so this is the tie: no later print, nothing chosen.
+    # Distinct times are the "two prices from the primary" tests above.
     body = auction_body({"PDI": [day([pr("N", 18.50), pr("N", 18.52)])]})
     c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": body}))
     with pytest.raises(al.AmbiguousAuctionPrint, match="PDI"):
