@@ -5462,3 +5462,21 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` @ `a624e13` and `.github/workflows/checks.yml` @ `a624e13` (the base measured); `docs/STANDARD.md`, `docs/REFERENCES.md` §12st and the §5 standard ruling are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-22-05 · Result: the first audit against the standard's Part A finds 1 of 45 checks passing; the events book's orders can be changed by an unreviewed push to the `shadow` branch
+- kind: result
+- era: ALPACA
+- date: 2026-11-22
+- figures:
+  - 45 checks audited (A5.3, the deferred daily acknowledgement, names no measurer): auditors' verdicts 1 PASS, 24 PARTIAL, 19 GAP, 1 NOT MEASURABLE; the five verifiers agreed with all 45 [S]
+  - read strictly by `docs/STANDARD.md` §0.3, where a missing measurer counts as a gap: 1 PASS, 17 PARTIAL, 27 GAP [S]
+  - the one PASS is A3.4: shadow books never transmit an order [S]
+  - every verifier confirmed it: the events runner trades decision files written by the VM's shadow clone, which checks out the head of `shadow` before every run, and whose identity can read every secret in the vault [V]
+  - read from the GitHub API at 16:20 ET: `shadow` is not protected; the two rulesets cover the default branch and the release, spec and provenance tags; six accounts can push, four of them admins; `origin/shadow` a8e944e is 4 commits ahead of `main` and 87 behind [V]
+  - the events units are `DRY_RUN=1`, so the exposure is latent until the events book is armed [S]
+  - 34 ranked work orders, carried as `docs/ROADMAP.md` Phase 7; 18 findings outside the checks [S]
+  - method: five auditors and five verifiers, read-only, workflow run `wf_039a7231-1cb`, 732 tool calls; its first run stopped at the account's usage limit at 14:05 ET and was re-run from the start [V]
+  - what it does not change: no book, spec, gate, schedule or GitHub setting; nothing on the VM [V]
+- source: `docs/STANDARD.md` @ `877320c` (the standard audited); `shadow/deploy/nightly.sh` @ `07532f2`; `quantt/sleeves/inputs.py` @ `07532f2`; `shadow/deploy/install_shadow_vm.sh` @ `07532f2`; `results/ops/STANDARD_AUDIT_2026-11-22.md` and `results/ops/standard_audit_2026-11-22.json` are in the commit that carries this entry
+- supports: §5
+- status: current
