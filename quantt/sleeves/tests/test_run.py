@@ -1104,6 +1104,32 @@ def test_a_day_that_has_not_closed_has_no_close(hh, mm):
     assert c.seen == []
 
 
+def _z(when):
+    return when.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def test_the_first_minute_a_same_day_read_is_allowed_ends_at_the_close():
+    c = Bars([{"bars": {}}])
+    prices.closes(c, ["AAA"], F, at(F, 16, 20))
+    assert c.seen[0][2]["end"] == _z(at(F, 16, 0)) == f"{F}T21:00:00Z"        # winter: 16:00 ET is 21:00Z
+
+
+def test_just_after_midnight_the_day_before_is_still_inside_the_refused_window():
+    """00:10 the next day: the date-only end (midnight) is 10 minutes old, which the plan refuses."""
+    c = Bars([{"bars": {}}])
+    prices.closes(c, ["AAA"], F, at(F + dt.timedelta(days=1), 0, 10))
+    assert c.seen[0][2]["end"] == _z(at(F, 23, 50))
+
+
+def test_a_summer_day_converts_with_the_summer_offset():
+    day = dt.date(2026, 7, 1)
+    c = Bars([{"bars": {}}])
+    prices.closes(c, ["AAA"], day, at(day, 17, 35))
+    assert c.seen[0][2]["end"] == "2026-07-01T21:15:00Z"                     # 17:15 EDT
+    with pytest.raises(prices.PriceError, match="no partial day's bar"):
+        prices.closes(Bars([]), ["AAA"], day, at(day, 16, 19))
+
+
 def test_the_clock_must_carry_a_time_zone():
     with pytest.raises(prices.PriceError, match="time zone"):
         prices.closes(Bars([]), ["AAA"], D, dt.datetime(2026, 12, 1))

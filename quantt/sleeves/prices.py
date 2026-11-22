@@ -40,8 +40,10 @@ on 2026-11-20 (results/report/EVIDENCE_LOG.md). Measured the same evening on the
 keys, GET only [V 2026-11-20 17:43 ET]: `end=<day>` 403; `end=now-14min` 403; `end=now-16min`
 200 with the day's bar; the day before with `end=<day>` 200. So while `day` is not yet
 `SIP_DELAY` in the past, `end` is the instant `utcnow - SIP_DELAY`; once it is, `end` stays the
-date, as before. The bar is the same object either way (one precomputed daily bar, stamped
-midnight New York), and the date check below still refuses any other day's.
+date, as before. The bar is the same either way, and the date check below still refuses any
+other day's. Measured, GET only [V 2026-11-22]: for 2026-11-19 and 2026-11-20, eight symbols,
+`end` as the date, as 21:00Z and as 22:15Z of that day returned the same close and volume; and
+the IWM and EIM closes served at 17:43 ET on 2026-11-20 were unchanged two days later.
 
 A DAY THAT HAS NOT CLOSED HAS NO CLOSE. Before the fix the 403 also, by accident, stopped a read
 of today's bar at midday, when its `c` is only the last trade so far. That protection is now
@@ -49,8 +51,10 @@ explicit: a same-day read before `CLOSE_ET` + `SIP_DELAY` raises. 16:00 is the l
 exchange has; on a half day the bar is final earlier and the read simply waits longer than it
 must.
 
-NOT VERIFIED: that the daily bar served at 17:35 ET is never revised later that evening (a late
-correction to the closing print). VERIFY marks on what is served when it runs.
+NOT VERIFIED: that a daily bar is never revised after the evening it is first served (two symbols
+on one day is not a rule), and that the bar is final as early as 16:20 ET, the first minute a
+same-day read is allowed; the scheduled VERIFY runs at 17:35 ET. VERIFY marks on what is served
+when it runs.
 """
 from __future__ import annotations
 
