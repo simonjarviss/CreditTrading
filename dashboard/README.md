@@ -51,9 +51,13 @@ event-driven.quantt.ca  =  Cloudflare Worker `quantt-event-driven`, deployed fro
 - **The site has its own clone** on the VM, `/home/quantt/site/quantt-alpaca`, at a release
   tag. Releasing the site never moves the trading clone, so it never changes what the books
   trade; a trading release never moves the site.
-- **What changes only with a release**: the words (`dashboard/site.py`), the team
-  (`dashboard/content/team.json`), the slides and the deck PDF (`dashboard/public/static/`), the
-  library (`dashboard/content/library.json`).
+- **What changes with a site release** (the VM's site clone moves to a new tag): the words
+  (`dashboard/site.py`), the team (`dashboard/content/team.json`), the library
+  (`dashboard/content/library.json`). **What changes with every merge to `main`**: the files in
+  `dashboard/public/` (styles, script, slides, the deck PDF), which Cloudflare serves. A page from
+  an older site release that asks for a file `main` no longer has gets it from the VM instead
+  (`dashboard/worker/index.js`). Rename or remove a slide in the same pull request as the site
+  release that stops using it.
 
 ## 2. What a snapshot, and therefore the site, may never carry
 

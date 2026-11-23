@@ -43,29 +43,49 @@ function unavailable(why) {
   });
 }
 
+function originOf(env) {
+  // ORIGIN's scheme and host only. null when unset or not a URL (the visitor then gets the 503 page).
+  if (!env.ORIGIN) return null;
+  try { return new URL(env.ORIGIN).origin; } catch (e) { return null; }
+}
+
+function targetOn(origin, pathname) {
+  // The target's host is ORIGIN's, always: only the path is set, through the pathname setter, which
+  // cannot change the host. (Resolving the path against ORIGIN would let "//other.host/x" pick the host.)
+  const t = new URL(origin);
+  t.pathname = pathname;
+  return t;
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (url.pathname.startsWith("/static/") || url.pathname === "/robots.txt") {
-      const r = await env.ASSETS.fetch(request);
-      const h = withSecurity(r.headers);
-      h.set("Cache-Control", "public, max-age=3600");
-      return new Response(r.body, { status: r.status, headers: h });
-    }
     if (request.method !== "GET" && request.method !== "HEAD") {
       return new Response("Method not allowed", { status: 405, headers: withSecurity({ Allow: "GET, HEAD" }) });
     }
-    if (!env.ORIGIN) return unavailable("origin not configured");
+    const origin = originOf(env);
+    if (url.pathname.startsWith("/static/") || url.pathname === "/robots.txt") {
+      // From `main`. The pages come from the VM's release tag, which can be older than `main`: a file
+      // `main` has dropped or renamed since is fetched from the VM, which still has it. A 404 is not cached.
+      let r = await env.ASSETS.fetch(request);
+      if (r.status === 404 && origin) {
+        try {
+          const o = await fetch(targetOn(origin, url.pathname).toString(), { method: "GET", redirect: "manual" });
+          if (o.status === 200) r = o;
+        } catch (e) { /* the 404 from main stands, and is answered as a 404 below */ }
+      }
+      const h = withSecurity(r.headers);
+      h.set("Cache-Control", r.status === 200 ? "public, max-age=3600" : "no-store");
+      return new Response(r.body, { status: r.status, headers: h });
+    }
+    if (!origin) return unavailable(env.ORIGIN ? "origin is not a URL" : "origin not configured");
 
     const key = new Request(url.origin + url.pathname, { method: "GET" });
     const cache = caches.default;
     const hit = await cache.match(key);
     if (hit) return hit;
 
-    // The target's host is ORIGIN's, always: only the path is set, through the pathname setter, which
-    // cannot change the host. (Resolving the path against ORIGIN would let "//other.host/x" pick the host.)
-    const target = new URL(new URL(env.ORIGIN).origin);
-    target.pathname = url.pathname;
+    const target = targetOn(origin, url.pathname);
     let upstream;
     try {
       upstream = await fetch(target.toString(), {

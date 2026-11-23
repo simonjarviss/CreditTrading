@@ -10,7 +10,8 @@ to read. quantt.ca, the club's site, is the style reference only.
 WHAT IS LIVE AND WHAT IS FIXED. The performance page and the figures on the overview come
 from the night's snapshot (dashboard/export.py), so they are measured at build time. The
 words, the team, the slides and the library are files in this repository
-(dashboard/content/, dashboard/public/static/), so they change only with a release. The research
+(dashboard/content/, dashboard/public/static/), so they change only with a release; on the public
+address Cloudflare serves dashboard/public/ from `main` (dashboard/worker/index.js). The research
 ledger count is read from results/IDEA_LEDGER.md of the same release.
 
 PUBLISHING IS ATOMIC. Pages are written into a new directory beside the served one, then a
