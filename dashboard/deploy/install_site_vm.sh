@@ -5,8 +5,15 @@
 #   sudo sh install_site_vm.sh --hosts "<name> [<name> ...]"
 #   sudo sh install_site_vm.sh uninstall
 #
-# Run the copy inside the prod clone, so the installer and the site code are the same release.
-# The host names are arguments and never written in the repository (CLAUDE.md, "Where it runs").
+# Run the copy inside the SITE CLONE, /home/quantt/site/quantt-alpaca, checked out at a release
+# tag (docs/RUNBOOK.md 8.13 has the two git commands). The host names are arguments and never
+# written in the repository (CLAUDE.md, "Where it runs").
+#
+# WHY A SEPARATE CLONE. The site's code ships in this repository, but the trading clone
+# (/home/quantt/prod/quantt-alpaca) moves only with a trading release, and moving it is what changes
+# what the books trade. A clone of its own lets the site be released without moving the books,
+# and a trading release without moving the site. Both are at release tags: prod is this repository
+# at a tag and nothing else.
 #
 # WHAT IT MAKES (no unit, file or state of any trading book is written, started or stopped)
 #   caddy (Ubuntu package)          the web server, user `caddy`, static files only. Its Caddyfile
@@ -14,7 +21,7 @@
 #                                   certificates for each host name, automatically.
 #   /srv/quantt-site                what Caddy serves: builds/<stamp>/ and the link `current`.
 #                                   Owned by quantt (it writes builds), world-readable.
-#   quantt-site.service             as user quantt, from the prod clone at its release tag:
+#   quantt-site.service             as user quantt, from the site clone at its release tag:
 #                                   python3 -m dashboard.export  (records -> snapshot)
 #                                   python3 -m dashboard.site    (snapshot -> pages, atomic swap)
 #   quantt-site.timer               every 30 minutes, at :20 and :50 New York time.
@@ -45,7 +52,7 @@ set -eu
 
 RUN_USER="quantt"
 RUN_HOME="/home/${RUN_USER}"
-PROD="${RUN_HOME}/prod/quantt-alpaca"          # = quantt/deploy/install_vm.py Layout.prod_dir
+SITE_CLONE="${RUN_HOME}/site/quantt-alpaca"    # the site's own clone (WHY A SEPARATE CLONE)
 STATE_ROOT="${RUN_HOME}/quantt_state"
 SHADOW_SCOREBOARD="/home/quantt-shadow/shadow_state/SCOREBOARD.md"
 SITE_ROOT="/srv/quantt-site"
@@ -94,11 +101,17 @@ check_root() {
 }
 
 check_clone() {
-  [ -f "${PROD}/dashboard/site.py" ] || die "${PROD}/dashboard/site.py not found: install a release that has the site"
-  [ -f "${PROD}/dashboard/deploy/Caddyfile.tmpl" ] || die "Caddyfile template missing in ${PROD}"
+  [ -f "${SITE_CLONE}/dashboard/site.py" ] || die "${SITE_CLONE}/dashboard/site.py not found: clone and check out a release that has the site"
+  [ -f "${SITE_CLONE}/dashboard/deploy/Caddyfile.tmpl" ] || die "Caddyfile template missing in ${SITE_CLONE}"
   here="$(cd "$(dirname "$0")" && pwd -P)"
-  [ "${here}" = "$(cd "${PROD}/dashboard/deploy" && pwd -P)" ] \
-    || die "run the copy inside the prod clone (${PROD}/dashboard/deploy), not ${here}"
+  [ "${here}" = "$(cd "${SITE_CLONE}/dashboard/deploy" && pwd -P)" ] \
+    || die "run the copy inside the site clone (${SITE_CLONE}/dashboard/deploy), not ${here}"
+  tag="$(as_quantt git -C "${SITE_CLONE}" describe --tags --exact-match HEAD 2>/dev/null || true)"
+  case "${tag}" in
+    release-*) step "site clone at ${tag}" ;;
+    *) die "the site clone is not checked out at a release tag (HEAD $(as_quantt git -C "${SITE_CLONE}" rev-parse --short HEAD))" ;;
+  esac
+  [ -z "$(as_quantt git -C "${SITE_CLONE}" status --porcelain)" ] || die "the site clone has local changes"
 }
 
 unit_file() {
@@ -126,7 +139,8 @@ install_caddy() {
 write_units() {
   step "writing quantt-site.service and quantt-site.timer"
   unit_file quantt-site.service <<EOF
-# quantt-site.service: the public site's nightly build. READ ONLY on every trading record.
+# quantt-site.service: the public site's build, every 30 minutes. READ ONLY on every trading record.
+# Code: the site clone at ${tag}.
 # RENDERED by dashboard/deploy/install_site_vm.sh. Do not hand-edit the installed copy.
 [Unit]
 Description=QUANTT public site: snapshot of the books' records and the static pages
@@ -135,7 +149,7 @@ Description=QUANTT public site: snapshot of the books' records and the static pa
 Type=oneshot
 User=${RUN_USER}
 Group=${RUN_USER}
-WorkingDirectory=${PROD}
+WorkingDirectory=${SITE_CLONE}
 Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=PYTHONUNBUFFERED=1
 RuntimeDirectory=quantt-site
@@ -181,7 +195,7 @@ write_caddyfile() {
   [ -f "${CADDYFILE}.dist" ] || { [ -f "${CADDYFILE}" ] && cp -p "${CADDYFILE}" "${CADDYFILE}.dist"; } || true
   hosts_line="$(echo ${HOSTS} | sed 's/ /, /g')"
   tmp="${CADDYFILE}.tmp"
-  sed "s|{{HOSTS}}|${hosts_line}|" "${PROD}/dashboard/deploy/Caddyfile.tmpl" > "${tmp}"
+  sed "s|{{HOSTS}}|${hosts_line}|" "${SITE_CLONE}/dashboard/deploy/Caddyfile.tmpl" > "${tmp}"
   grep -q '{{' "${tmp}" && die "the Caddyfile still has an unfilled placeholder"
   caddy validate --adapter caddyfile --config "${tmp}" >/dev/null || die "caddy rejects the rendered Caddyfile (${tmp})"
   chmod 0644 "${tmp}"

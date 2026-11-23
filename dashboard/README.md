@@ -41,6 +41,9 @@ dashboard/static (at the release tag)
 - **Snapshots stay on the VM.** The 2026-10-26 plan to commit a nightly snapshot to
   `dashboard/snapshots/` is superseded (team lead, 2026-11-23): the page is built where the
   records are, and nothing about positions or P&L is committed to the repository.
+- **The site has its own clone** on the VM, `/home/quantt/site/quantt-alpaca`, at a release
+  tag. Releasing the site never moves the trading clone, so it never changes what the books
+  trade; a trading release never moves the site.
 - **What changes only with a release**: the words (`dashboard/site.py`), the team
   (`dashboard/content/team.json`), the slides and the deck PDF (`dashboard/static/`), the
   library (`dashboard/content/library.json`).

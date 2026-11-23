@@ -1455,9 +1455,16 @@ the VM, with the live paper results of every book. What it reads and why it cann
 book: `dashboard/README.md`. It runs beside the books and is installed on its own:
 
 ```bash
-# on the VM, after a release that carries dashboard/ is installed in the prod clone
-sudo sh /home/quantt/prod/quantt-alpaca/dashboard/deploy/install_site_vm.sh --hosts "<names>"
-sudo sh /home/quantt/prod/quantt-alpaca/dashboard/deploy/install_site_vm.sh uninstall
+# on the VM. The site runs from its OWN clone, so releasing it never moves the trading clone.
+# First time only (a local clone of the prod clone, then GitHub as its origin):
+sudo -u quantt git clone -q /home/quantt/prod/quantt-alpaca /home/quantt/site/quantt-alpaca
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca remote set-url origin https://github.com/quanttqueensu/CreditTrading.git
+# Each site release (T = a release tag that carries dashboard/):
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca fetch -q --tags origin
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca checkout -q --detach T
+sudo sh /home/quantt/site/quantt-alpaca/dashboard/deploy/install_site_vm.sh --hosts "<names>"
+# Remove:
+sudo sh /home/quantt/site/quantt-alpaca/dashboard/deploy/install_site_vm.sh uninstall
 ```
 
 `<names>`: the site's DNS names, space-separated (`eventdriven.quantt.ca` and the VM's Azure
