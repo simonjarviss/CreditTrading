@@ -177,8 +177,9 @@ def positions_block(r: dict) -> str:
                      "none" if mv is None else usd(mv),
                      "none" if mv is None or not gross else pct(abs(mv) / gross, dp=1)))
     unpriced = len(pos) - len(priced)
-    note = (f'<p class="meta">{unpriced} position(s) have no close on record and are left out of the gross total.</p>'
-            if unpriced else "")
+    one = unpriced == 1
+    note = (f'<p class="meta">{unpriced} {"position has" if one else "positions have"} no close on record and '
+            f'{"is" if one else "are"} left out of the gross total.</p>' if unpriced else "")
     return (f"<h3>Positions after the close, {fmt_date(v['date'])}</h3>"
             + tbl(["Symbol", "Side", "Shares", "Close", "Market value", "Share of gross"], body, right=(2, 3, 4, 5))
             + f'<p class="meta">Long {sum(1 for p in pos if p["qty"] > 0)}, short {sum(1 for p in pos if p["qty"] < 0)}. '
@@ -279,7 +280,8 @@ def combined_section(books: list) -> str:
             f'<h2>Combined paper results</h2>'
             f'<p class="narrow">The sum of the accounts with an official end-of-day history: {escape(names)}. '
             f'The combined figures use the {len(rows)} sessions every one of them has a record for'
-            + (f', leaving out {left_out} session(s) that only some of them have.' if left_out else '.') + '</p>'
+            + (f', leaving out {left_out} {"session" if left_out == 1 else "sessions"} that only some of them have.'
+               if left_out else '.') + '</p>'
             '<div class="figures">'
             + fig(usd(s["equity"]), f"Combined equity, {fmt_short(s['last_date'])}")
             + fig(usd(s["cum_pnl"], True), f"P&amp;L since {fmt_short(s['first_date'])} ({pct(s['cum_return'], True)})",
