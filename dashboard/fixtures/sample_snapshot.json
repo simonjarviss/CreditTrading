@@ -1,61 +1,352 @@
 {
-  "schema_version": "0.1-draft",
-  "synthetic": true,
-  "book": "cef",
-  "session_date": "2026-11-06",
-  "exported_at_utc": "2026-11-06T22:45:00Z",
-  "account": {
-    "equity": {"value": 100412.5, "source": "FIXTURE: invented number, not from the book", "read_at": "2026-11-06T21:30:00Z", "label": "broker-confirmed"},
-    "last_equity": {"value": 100250.0, "source": "FIXTURE: invented number, not from the book", "read_at": "2026-11-06T21:30:00Z", "label": "broker-confirmed"}
-  },
-  "pnl": {
-    "official_eod_change_usd": {"value": 162.5, "source": "FIXTURE: invented number (stands in for Alpaca end-of-day history)", "read_at": "2026-11-06T22:10:00Z", "label": "broker-confirmed"},
-    "snapshot_change_usd": {"value": 162.5, "source": "FIXTURE: invented number (stands in for equity - last_equity)", "read_at": "2026-11-06T21:30:00Z", "label": "broker-confirmed"},
-    "auction_pnl_usd": {"UNMEASURED": "FIXTURE: example of a gap, the closing-auction print was missing for one name"}
-  },
-  "equity_history": {
-    "value": [
-      {"date": "2026-10-30", "equity": 99880.0},
-      {"date": "2026-11-02", "equity": 100010.0},
-      {"date": "2026-11-03", "equity": 99940.0},
-      {"date": "2026-11-04", "equity": 100175.0},
-      {"date": "2026-11-05", "equity": 100250.0},
-      {"date": "2026-11-06", "equity": 100412.5}
-    ],
-    "source": "FIXTURE: invented series (stands in for eod_equity.csv)", "read_at": "2026-11-06T22:10:00Z", "label": "broker-confirmed"
-  },
-  "positions": {
-    "value": [
-      {"symbol": "AAA", "qty": 420},
-      {"symbol": "BBB", "qty": 310},
-      {"symbol": "CCC", "qty": -380},
-      {"symbol": "DDD", "qty": -250}
-    ],
-    "source": "FIXTURE: invented positions (stand in for reconcile.json positions_after)", "read_at": "2026-11-06T21:35:00Z", "label": "broker-confirmed"
-  },
-  "trades": {
+ "books": [
+  {
+   "execution": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-23T22:40:00Z",
+    "source": "cef/tca.csv",
     "value": {
-      "orders": [
-        {"symbol": "AAA", "side": "buy", "qty": 40, "type": "market", "status": "filled"},
-        {"symbol": "CCC", "side": "sell", "qty": 25, "type": "market", "status": "filled"},
-        {"symbol": "DDD", "side": "sell", "qty": 30, "type": "market", "status": "canceled"}
-      ],
-      "fills": [
-        {"symbol": "AAA", "side": "buy", "qty": 40, "price": 12.34, "time": "2026-11-06T20:55:10Z"},
-        {"symbol": "CCC", "side": "sell", "qty": 25, "price": 8.91, "time": "2026-11-06T20:55:12Z"}
-      ]
-    },
-    "source": "FIXTURE: invented trades (stand in for reconcile.json orders and fills)", "read_at": "2026-11-06T21:35:00Z", "label": "broker-confirmed"
-  },
-  "system": {
+     "basis": "fills against the primary exchange's official close, notional-weighted; + is worse",
+     "rows": [
+      {
+       "date": "2026-11-20",
+       "fill_rate": 1.0,
+       "n_full": 1.0,
+       "n_orders": 1.0,
+       "slip_bp": -1.0
+      }
+     ]
+    }
+   },
+   "name": "cef",
+   "official": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-21T08:40:04Z",
+    "source": "Alpaca end-of-day portfolio history, cef/eod_equity.csv (the P&L of record)",
     "value": {
-      "verdict": "FAIL",
-      "reason": "FIXTURE: example verdict; UNMEASURED auction print for one name | traded 3 order(s), 2 filled",
-      "problems": ["UNMEASURED auction print for DDD"],
-      "traded": true,
-      "n_orders": 3,
-      "n_filled": 2
-    },
-    "source": "FIXTURE: invented verdict (stands in for the verify.log line)", "read_at": "2026-11-06T22:10:00Z", "label": "modelled"
+     "rows": [
+      {
+       "change_usd": null,
+       "date": "2026-11-16",
+       "equity": 100000.0
+      },
+      {
+       "change_usd": 250.0,
+       "date": "2026-11-17",
+       "equity": 100250.0
+      },
+      {
+       "change_usd": -350.0,
+       "date": "2026-11-18",
+       "equity": 99900.0
+      },
+      {
+       "change_usd": 200.0,
+       "date": "2026-11-19",
+       "equity": 100100.0
+      },
+      {
+       "change_usd": -50.0,
+       "date": "2026-11-20",
+       "equity": 100050.0
+      }
+     ]
+    }
+   },
+   "risk": {
+    "label": "modelled",
+    "read_at": "2026-11-21T10:45:00Z",
+    "source": "cef/reports/risk/2026-11-20.json (nightly risk report, report only)",
+    "value": {
+     "asof": "2026-11-20",
+     "cap": 1.8,
+     "gross": 1.5,
+     "groups": {
+      "hy": 0.3,
+      "muni": 0.4
+     },
+     "halve_drawdown": 0.12,
+     "kill_drawdown": 0.18,
+     "largest": {
+      "share": 0.3,
+      "side": "long",
+      "symbol": "AAA"
+     },
+     "net": 0.05,
+     "severity": "WATCH",
+     "top3_share": 0.7
+    }
+   },
+   "session": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-20T22:30:00Z",
+    "source": "cef/2026-11-20/reconcile.json (written by the session's verify)",
+    "value": {
+     "close_basis": "official closing print (primary exchange)",
+     "date": "2026-11-20",
+     "equity_snapshot": {
+      "change_usd": -40.0,
+      "equity": 100060.0,
+      "kind": "account snapshot after the close (not the P&L of record)"
+     },
+     "orders": [
+      {
+       "avg_price": 10.0,
+       "filled_qty": 5.0,
+       "qty": 5.0,
+       "side": "buy",
+       "status": "filled",
+       "symbol": "AAA"
+      }
+     ],
+     "positions": [
+      {
+       "close": 10.0,
+       "qty": 100.0,
+       "symbol": "AAA"
+      },
+      {
+       "close": 20.0,
+       "qty": -50.0,
+       "symbol": "BBB"
+      }
+     ],
+     "problems": [],
+     "reason": "cef traded 1 order(s), 1 filled; official PENDING",
+     "verdict": "PASS"
+    }
+   },
+   "sleeves": {
+    "absent": "strategy-level scores are kept for the event book only"
+   },
+   "title": "Fixed Income Book"
+  },
+  {
+   "execution": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-23T22:40:00Z",
+    "source": "c4/tca.csv",
+    "value": {
+     "basis": "fills against the primary exchange's official close, notional-weighted; + is worse",
+     "rows": [
+      {
+       "date": "2026-11-20",
+       "fill_rate": 1.0,
+       "n_full": 1.0,
+       "n_orders": 1.0,
+       "slip_bp": -1.0
+      }
+     ]
+    }
+   },
+   "name": "c4",
+   "official": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-21T08:40:04Z",
+    "source": "Alpaca end-of-day portfolio history, c4/eod_equity.csv (the P&L of record)",
+    "value": {
+     "rows": [
+      {
+       "change_usd": null,
+       "date": "2026-11-17",
+       "equity": 0.0
+      },
+      {
+       "change_usd": 100000.0,
+       "date": "2026-11-18",
+       "equity": 100000.0
+      },
+      {
+       "change_usd": 400.0,
+       "date": "2026-11-19",
+       "equity": 100400.0
+      },
+      {
+       "change_usd": -100.0,
+       "date": "2026-11-20",
+       "equity": 100300.0
+      }
+     ]
+    }
+   },
+   "risk": {
+    "label": "modelled",
+    "read_at": "2026-11-21T10:45:00Z",
+    "source": "c4/reports/risk/2026-11-20.json (nightly risk report, report only)",
+    "value": {
+     "asof": "2026-11-20",
+     "cap": 1.8,
+     "gross": 1.5,
+     "groups": {
+      "hy": 0.3,
+      "muni": 0.4
+     },
+     "halve_drawdown": 0.12,
+     "kill_drawdown": 0.18,
+     "largest": {
+      "share": 0.3,
+      "side": "long",
+      "symbol": "AAA"
+     },
+     "net": 0.05,
+     "severity": "WATCH",
+     "top3_share": 0.7
+    }
+   },
+   "session": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-20T22:30:00Z",
+    "source": "c4/2026-11-20/reconcile.json (written by the session's verify)",
+    "value": {
+     "close_basis": "official closing print (primary exchange)",
+     "date": "2026-11-20",
+     "equity_snapshot": {
+      "change_usd": -40.0,
+      "equity": 100060.0,
+      "kind": "account snapshot after the close (not the P&L of record)"
+     },
+     "orders": [
+      {
+       "avg_price": 10.0,
+       "filled_qty": 5.0,
+       "qty": 5.0,
+       "side": "buy",
+       "status": "filled",
+       "symbol": "AAA"
+      }
+     ],
+     "positions": [
+      {
+       "close": 10.0,
+       "qty": 100.0,
+       "symbol": "AAA"
+      },
+      {
+       "close": 20.0,
+       "qty": -50.0,
+       "symbol": "BBB"
+      }
+     ],
+     "problems": [],
+     "reason": "c4 traded 1 order(s), 1 filled; official PENDING",
+     "verdict": "PASS"
+    }
+   },
+   "sleeves": {
+    "absent": "strategy-level scores are kept for the event book only"
+   },
+   "title": "Equity Cross-Asset Book"
+  },
+  {
+   "execution": {
+    "absent": "no fill-quality record is kept for this book yet"
+   },
+   "name": "events",
+   "official": {
+    "absent": "no end-of-day equity history is recorded for this account yet"
+   },
+   "risk": {
+    "absent": "no nightly risk report is scheduled for this book"
+   },
+   "session": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-23T22:35:04Z",
+    "source": "events/2026-11-23/verify.json (written by the event book's verify)",
+    "value": {
+     "close_basis": "daily bar close (consolidated feed)",
+     "date": "2026-11-23",
+     "equity_snapshot": {
+      "change_usd": 10.0,
+      "equity": 100010.0,
+      "kind": "account snapshot at verify (not the P&L of record)"
+     },
+     "orders": [
+      {
+       "avg_price": 30.5,
+       "filled_qty": 7.0,
+       "qty": 7.0,
+       "side": "sell",
+       "status": "filled",
+       "symbol": "CCC"
+      }
+     ],
+     "positions": [
+      {
+       "close": 30.0,
+       "qty": -7.0,
+       "symbol": "CCC"
+      }
+     ],
+     "problems": [],
+     "reason": "1 symbol(s) filled; ledger booked",
+     "verdict": "PASS"
+    }
+   },
+   "sleeves": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-23T22:40:00Z",
+    "source": "events/sleeve_scores.csv",
+    "value": {
+     "basis": "the book's ledger, marked at each session's daily bar close",
+     "rows": [
+      {
+       "capital_usd": 33000.0,
+       "date": "2026-11-23",
+       "day_change": 3.5,
+       "n_names": 1.0,
+       "pnl": 3.5,
+       "slug": "cef_exdate_after"
+      },
+      {
+       "capital_usd": 34750.0,
+       "date": "2026-11-23",
+       "day_change": 0.0,
+       "n_names": 0.0,
+       "pnl": 0.0,
+       "slug": "uit_termination"
+      },
+      {
+       "capital_usd": null,
+       "date": "2026-11-23",
+       "day_change": 3.5,
+       "n_names": 1.0,
+       "pnl": 3.5,
+       "slug": "_book"
+      }
+     ]
+    }
+   },
+   "title": "Event Book"
   }
+ ],
+ "exported_at_utc": "2026-11-23T23:20:00Z",
+ "schema_version": "0.2",
+ "shadow": {
+  "label": "simulated",
+  "read_at": "2026-11-23T22:40:00Z",
+  "source": "shadow runner SCOREBOARD.md",
+  "value": {
+   "asof": "2026-11-20",
+   "basis": "decisions on live data, filled at the next official close by assumption, with no cost, borrow or fill risk",
+   "rows": [
+    {
+     "book": "month_end_ief",
+     "flat": 8.0,
+     "max_drawdown": null,
+     "pnl_total": null,
+     "scored": 0.0,
+     "started": "2026-11-10"
+    },
+    {
+     "book": "units_exdate_after",
+     "flat": 2.0,
+     "max_drawdown": -0.0197,
+     "pnl_total": 20674.0,
+     "scored": 5.0,
+     "started": "2026-11-11"
+    }
+   ]
+  }
+ },
+ "synthetic": true
 }

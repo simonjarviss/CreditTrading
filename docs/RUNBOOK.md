@@ -1448,6 +1448,44 @@ RESULT).
 with its runtime directory), and delete the two pnl service files, the two pnl timer files
 and the two key-service unit files.
 
+### 8.13 The public site (eventdriven.quantt.ca)
+
+Team lead, 2026-11-23 (`docs/SYSTEM.md` §5, "the public site"): a public website served from
+the VM, with the live paper results of every book. What it reads and why it cannot touch a
+book: `dashboard/README.md`. It runs beside the books and is installed on its own:
+
+```bash
+# on the VM, after a release that carries dashboard/ is installed in the prod clone
+sudo sh /home/quantt/prod/quantt-alpaca/dashboard/deploy/install_site_vm.sh --hosts "<names>"
+sudo sh /home/quantt/prod/quantt-alpaca/dashboard/deploy/install_site_vm.sh uninstall
+```
+
+`<names>`: the site's DNS names, space-separated (`eventdriven.quantt.ca` and the VM's Azure
+DNS label). They are never written in a tracked file. Before the first install, from the
+laptop: the network security group allows TCP 80 and 443 from the internet (rule
+`site-http-https`), and `eventdriven.quantt.ca` is a DNS-only CNAME to the VM's Azure DNS
+label in the club's Cloudflare zone. Caddy fetches each name's certificate itself once its
+DNS points at the VM.
+
+What it installs: Caddy (Ubuntu's package, user `caddy`, static files only),
+`/srv/quantt-site` (builds and the `current` link, owned by quantt), and
+`quantt-site.service` + `quantt-site.timer` (every 30 minutes at :20 and :50; no network,
+state read-only). The unit names are registered in `quantt/deploy/install_vm.py`
+`SITE_UNIT_FILES`, so a C4 or `--reports` install does not refuse beside them.
+
+Checks:
+
+```bash
+systemctl status quantt-site.timer caddy --no-pager
+journalctl -u quantt-site.service -n 20 --no-pager      # "published .../builds/<stamp>"
+readlink /srv/quantt-site/current
+```
+
+A failed build leaves the last good site in place and marks only `quantt-site.service`
+failed. The usual causes are a record format change in a runner (the exporter names the file
+and field as UNMEASURED, which still builds) or a privacy refusal (`snapshot refused`: a
+record carried something §2 of `dashboard/README.md` forbids; read it before anything else).
+
 ## Open questions (for the TL)
 
 1. **Timezone:** set this Mac to `America/New_York`, or accept `America/Toronto`

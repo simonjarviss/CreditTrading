@@ -1,42 +1,41 @@
-"""The snapshot format (DRAFT 0.1, awaiting the team lead's approval) and its checks.
+"""The snapshot format (0.2: every book on one page) and its checks.
 
 Standard library only, on purpose: the dashboard imports nothing that can open a
 connection (dashboard/README.md section 1).
 
-A snapshot is one JSON object per night. Every section is a READING, the same
-three-key convention as ops/prod_state.py, so a renderer can never print a gap
-as if it were a value. A reading has exactly one of:
+A snapshot is one JSON object, written on the VM by `dashboard/export.py` from the
+records the runners have already written. Every section is a READING, the same
+three-key convention as ops/prod_state.py, so a renderer can never print a gap as if it
+were a value. A reading has exactly one of:
 
-    {"value": v, "source": "...", "read_at": "<ISO UTC>", "label": "broker-confirmed" | "modelled"}
+    {"value": v, "source": "...", "read_at": "<ISO UTC>", "label": "broker-confirmed" | "modelled" | "simulated"}
     {"absent": "why the thing does not exist"}
     {"UNMEASURED": "what was tried"}
 
-`validate` checks the shape. `find_private` checks what a snapshot may never
-carry (dashboard/README.md section 2). Both return a list of problems; empty
-means clean. Neither raises on bad data, so a test can show every problem.
+WHY 0.2 (team lead, 2026-11-23: "showing analytics for all our active books", served from
+the VM as a public site). 0.1-draft (Lucy, PR #62) described one book from one night's
+reconcile.json. The desk now runs three paper accounts whose runners write different
+records (the core and C4 write reconcile.json and eod_equity.csv; the events book writes
+verify.json and sleeve_scores.csv), plus the simulated shadow books. 0.2 keeps 0.1's
+reading convention and its privacy check unchanged and replaces the single-book body with
+a list of books.
+
+`validate` checks the shape. `find_private` checks what a snapshot may never carry
+(dashboard/README.md section 2). Both return a list of problems; empty means clean.
+Neither raises on bad data, so a test can show every problem.
 """
 from __future__ import annotations
 
 import re
 
-SCHEMA_VERSION = "0.1-draft"
-LABELS = ("broker-confirmed", "modelled")
+SCHEMA_VERSION = "0.2"
+LABELS = ("broker-confirmed", "modelled", "simulated")
 UNMEASURED = "UNMEASURED"
 
-# section path -> what its value must look like (None: any scalar number)
-SECTIONS = {
-    ("account", "equity"): "number",
-    ("account", "last_equity"): "number",
-    ("pnl", "official_eod_change_usd"): "number",
-    ("pnl", "snapshot_change_usd"): "number",
-    ("pnl", "auction_pnl_usd"): "number",
-    ("equity_history",): "equity_history",
-    ("positions",): "positions",
-    ("trades",): "trades",
-    ("system",): "system",
-}
-TOP_KEYS = ("schema_version", "synthetic", "book", "session_date", "exported_at_utc")
-SYMBOL = re.compile(r"^[A-Z][A-Z0-9.\-]{0,5}$")
+TOP_KEYS = ("schema_version", "synthetic", "exported_at_utc", "books", "shadow")
+BOOK_KEYS = ("name", "title", "official", "session", "risk", "execution", "sleeves")
+SYMBOL = re.compile(r"^[A-Z][A-Z0-9.\-]{0,6}$")
+BOOK_NAME = re.compile(r"^[a-z][a-z0-9_]{0,31}$")
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 ISO_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$")
 
@@ -45,41 +44,72 @@ def _num(x) -> bool:
     return isinstance(x, (int, float)) and not isinstance(x, bool) and x == x and abs(x) != float("inf")
 
 
+def _opt_num(x) -> bool:
+    return x is None or _num(x)
+
+
+def _rows(v, where, out, need: dict) -> None:
+    """A list of dicts; `need` maps key -> checker."""
+    if not isinstance(v, list):
+        out.append(f"{where}: must be a list")
+        return
+    for i, r in enumerate(v):
+        if not isinstance(r, dict):
+            out.append(f"{where}[{i}]: must be an object")
+            continue
+        for k, ok in need.items():
+            if not ok(r.get(k)):
+                out.append(f"{where}[{i}].{k}: bad value {r.get(k)!r}")
+
+
+_is_date = lambda x: isinstance(x, str) and bool(DATE.match(x))           # noqa: E731
+_is_sym = lambda x: isinstance(x, str) and bool(SYMBOL.match(x))          # noqa: E731
+_is_str = lambda x: isinstance(x, str)                                    # noqa: E731
+_is_side = lambda x: x in ("buy", "sell")                                 # noqa: E731
+
+
 def _check_value(kind: str, v, where: str, out: list) -> None:
-    if kind == "number":
-        if not _num(v):
-            out.append(f"{where}: value must be a finite number, got {v!r}")
-    elif kind == "equity_history":
-        if not isinstance(v, list) or not v:
-            out.append(f"{where}: value must be a non-empty list of {{date, equity}}")
-            return
-        for i, r in enumerate(v):
-            if not (isinstance(r, dict) and DATE.match(str(r.get("date", ""))) and _num(r.get("equity"))):
-                out.append(f"{where}[{i}]: needs a date (YYYY-MM-DD) and a numeric equity")
-    elif kind == "positions":
-        if not isinstance(v, list):
-            out.append(f"{where}: value must be a list of {{symbol, qty}}")
-            return
-        for i, r in enumerate(v):
-            if not (isinstance(r, dict) and SYMBOL.match(str(r.get("symbol", ""))) and _num(r.get("qty"))):
-                out.append(f"{where}[{i}]: needs a ticker symbol and a numeric qty (negative = short)")
-    elif kind == "trades":
-        if not (isinstance(v, dict) and isinstance(v.get("orders"), list) and isinstance(v.get("fills"), list)):
-            out.append(f"{where}: value must be {{orders: [...], fills: [...]}}")
-            return
-        for i, r in enumerate(v["orders"]):
-            if not (isinstance(r, dict) and SYMBOL.match(str(r.get("symbol", ""))) and r.get("side") in ("buy", "sell")
-                    and _num(r.get("qty")) and isinstance(r.get("status"), str)):
-                out.append(f"{where}.orders[{i}]: needs symbol, side buy|sell, numeric qty, status")
-        for i, r in enumerate(v["fills"]):
-            if not (isinstance(r, dict) and SYMBOL.match(str(r.get("symbol", ""))) and r.get("side") in ("buy", "sell")
-                    and _num(r.get("qty")) and _num(r.get("price"))):
-                out.append(f"{where}.fills[{i}]: needs symbol, side buy|sell, numeric qty and price")
-    elif kind == "system":
-        ok = (isinstance(v, dict) and v.get("verdict") in ("PASS", "FAIL")
-              and isinstance(v.get("reason"), str) and isinstance(v.get("problems"), list))
-        if not ok:
-            out.append(f"{where}: value must carry verdict PASS|FAIL, a reason string and a problems list")
+    if not isinstance(v, dict):
+        out.append(f"{where}: value must be an object")
+        return
+    if kind == "official":
+        _rows(v.get("rows"), f"{where}.rows", out, {"date": _is_date, "equity": _num, "change_usd": _opt_num})
+        if isinstance(v.get("rows"), list) and not v["rows"]:
+            out.append(f"{where}.rows: an official reading needs at least one row (else write it as absent)")
+    elif kind == "session":
+        if not _is_date(v.get("date")):
+            out.append(f"{where}.date: must be YYYY-MM-DD")
+        if v.get("verdict") not in ("PASS", "FAIL"):
+            out.append(f"{where}.verdict: must be PASS or FAIL")
+        if not isinstance(v.get("problems"), list):
+            out.append(f"{where}.problems: must be a list")
+        _rows(v.get("positions"), f"{where}.positions", out,
+              {"symbol": _is_sym, "qty": _num, "close": _opt_num})
+        _rows(v.get("orders"), f"{where}.orders", out,
+              {"symbol": _is_sym, "side": _is_side, "qty": _num, "status": _is_str, "filled_qty": _opt_num,
+               "avg_price": _opt_num})
+        snap = v.get("equity_snapshot")
+        if snap is not None and not (isinstance(snap, dict) and _num(snap.get("equity"))
+                                     and _opt_num(snap.get("change_usd"))):
+            out.append(f"{where}.equity_snapshot: needs a numeric equity and change_usd")
+    elif kind == "risk":
+        if v.get("severity") not in ("OK", "INFO", "WATCH", "ACT", "UNMEASURED"):
+            out.append(f"{where}.severity: unexpected {v.get('severity')!r}")
+        for k in ("gross", "net", "cap"):
+            if not _opt_num(v.get(k)):
+                out.append(f"{where}.{k}: must be a number or null")
+        if not _is_date(v.get("asof")):
+            out.append(f"{where}.asof: must be YYYY-MM-DD")
+    elif kind == "execution":
+        _rows(v.get("rows"), f"{where}.rows", out, {"date": _is_date, "n_orders": _num, "n_full": _num,
+                                                    "fill_rate": _opt_num, "slip_bp": _opt_num})
+    elif kind == "sleeves":
+        _rows(v.get("rows"), f"{where}.rows", out, {"slug": _is_str, "date": _is_date, "pnl": _opt_num,
+                                                    "day_change": _opt_num, "n_names": _num,
+                                                    "capital_usd": _opt_num})
+    elif kind == "shadow":
+        _rows(v.get("rows"), f"{where}.rows", out, {"book": _is_str, "started": _is_date, "scored": _num,
+                                                    "flat": _num, "pnl_total": _opt_num})
 
 
 def _check_reading(r, kind: str, where: str, out: list) -> None:
@@ -115,18 +145,33 @@ def validate(snap) -> list:
         out.append(f"schema_version must be {SCHEMA_VERSION!r}, got {snap.get('schema_version')!r}")
     if not isinstance(snap.get("synthetic"), bool):
         out.append("synthetic must be true or false")
-    if "session_date" in snap and not DATE.match(str(snap["session_date"])):
-        out.append("session_date must be YYYY-MM-DD")
     if "exported_at_utc" in snap and not ISO_UTC.match(str(snap["exported_at_utc"])):
         out.append("exported_at_utc must be ISO UTC (YYYY-MM-DDTHH:MM:SSZ)")
-    for path, kind in SECTIONS.items():
-        node = snap
-        for p in path:
-            node = node.get(p) if isinstance(node, dict) else None
-        if node is None:
-            out.append(f"missing section {'.'.join(path)}")
+    books = snap.get("books")
+    if not isinstance(books, list) or not books:
+        out.append("books must be a non-empty list")
+        books = []
+    seen = set()
+    for i, b in enumerate(books):
+        where = f"books[{i}]"
+        if not isinstance(b, dict):
+            out.append(f"{where}: must be an object")
             continue
-        _check_reading(node, kind, ".".join(path), out)
+        for k in BOOK_KEYS:
+            if k not in b:
+                out.append(f"{where}: missing {k!r}")
+        if not (isinstance(b.get("name"), str) and BOOK_NAME.match(b["name"])):
+            out.append(f"{where}.name: lower-case identifier required")
+        elif b["name"] in seen:
+            out.append(f"{where}.name: duplicate book {b['name']!r}")
+        seen.add(b.get("name"))
+        if not (isinstance(b.get("title"), str) and b["title"].strip()):
+            out.append(f"{where}.title: required")
+        for k in ("official", "session", "risk", "execution", "sleeves"):
+            if k in b:
+                _check_reading(b[k], k, f"{where}.{k}", out)
+    if "shadow" in snap:
+        _check_reading(snap["shadow"], "shadow", "shadow", out)
     return out
 
 
@@ -135,18 +180,21 @@ def validate(snap) -> list:
 FORBIDDEN_KEYS = re.compile(
     r"(api[_-]?key|secret|token|passw|credential|key[_-]?id|account[_-]?(number|id|no)|"
     r"cusip|permno|isin|sedol|crsp|trace|compustat|host(name)?|server|vm[_-]?(addr|ip|name)|"
-    r"vault|subscription|endpoint|bucket|client[_-]?order[_-]?id|\bssh\b)", re.I)
+    r"vault|subscription|endpoint|bucket|client[_-]?order[_-]?id|order[_-]?id|\bssh\b)", re.I)
 # Value patterns that never appear in any string.
 FORBIDDEN_VALUES = {
     "IPv4 address": re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b"),
     "IPv6 address": re.compile(r"\b(?:[0-9a-fA-F]{1,4}:){3,7}[0-9a-fA-F]{1,4}\b"),
     "long hex string (looks like a key or hash)": re.compile(r"\b[0-9a-fA-F]{32,}\b"),
+    "UUID (looks like an order or account id)": re.compile(
+        r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b"),
     "Alpaca key id": re.compile(r"\b(?:PK|AK|CK)[A-Z0-9]{16,}\b"),
     "Alpaca account number": re.compile(r"\bPA[0-9A-Z]{8,}\b"),
     "cloud hostname": re.compile(r"\b[\w-]+\.(?:cloudapp\.azure\.com|azure\.com|cloudflarestorage\.com|compute\.amazonaws\.com)\b", re.I),
     "URL": re.compile(r"https?://", re.I),
     "private key block": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "email address": re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.]+\b"),
+    "home directory path": re.compile(r"/home/[\w.-]+"),
 }
 
 

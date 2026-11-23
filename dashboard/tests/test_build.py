@@ -1,10 +1,11 @@
-"""The page generator: provenance shown, gaps shown as gaps, nothing active, nothing that can reach a broker."""
+"""The performance page: provenance shown, gaps shown as gaps, nothing that can reach a broker.
+
+Carried over from 0.1-draft (Lucy, PR #62): provenance on every figure, gaps never printed as
+numbers, markup from a record escaped, a dirty snapshot refused with no page written, and the
+AST checks that the dashboard code has no route to a broker or the network."""
 import ast
-import copy
-import datetime as dt
 import json
 import re
-import sys
 from pathlib import Path
 
 import pytest
@@ -13,7 +14,6 @@ from dashboard import build as B
 
 DASH = Path(__file__).resolve().parents[1]
 FIXTURE = DASH / "fixtures" / "sample_snapshot.json"
-NOW = dt.datetime(2026, 11, 7, 12, 0, tzinfo=dt.timezone.utc)
 
 
 @pytest.fixture
@@ -22,87 +22,97 @@ def snap():
 
 
 def page(snap):
-    return B.render(snap, NOW)
+    return B.render(snap)
 
 
-def test_page_shows_each_required_section(snap):
+def book(snap, name):
+    return next(b for b in snap["books"] if b["name"] == name)
+
+
+def test_every_book_has_its_section(snap):
     h = page(snap)
-    for text in ("System status", "Account value and daily P&amp;L", "Positions", "Last day's trades and fills", "Data freshness"):
-        assert text in h, text
-    for sym in ("AAA", "BBB", "CCC", "DDD"):
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Combined paper results",
+                  "Strategies in simulation"):
+        assert title in h, title
+    for sym in ("AAA", "BBB", "CCC"):
         assert sym in h
 
 
-def test_every_figure_shows_its_source_and_date(snap):
+def test_every_figure_shows_its_source_and_read_time(snap):
     h = page(snap)
-    assert h.count("FIXTURE: invented") >= 7
-    assert "read 2026-11-06T21:30:00Z" in h and "broker-confirmed" in h
+    assert "Alpaca end-of-day portfolio history, cef/eod_equity.csv" in h
+    assert "21 November 2026, 03:40 New York time" in h and "broker-confirmed" in h
 
 
 def test_synthetic_banner_only_when_synthetic(snap):
-    assert "SYNTHETIC FIXTURE" in page(snap)
+    assert "Synthetic data" in page(snap)
     snap["synthetic"] = False
-    assert "SYNTHETIC FIXTURE" not in page(snap)
+    assert "Synthetic data" not in page(snap)
 
 
-def test_a_gap_is_shown_as_missing_never_as_a_number(snap):
+def test_a_gap_is_shown_as_not_measured_never_as_a_number(snap):
+    book(snap, "cef")["official"] = {"UNMEASURED": "eod_equity.csv: read failed"}
     h = page(snap)
-    assert "MISSING (unmeasured)" in h  # the fixture's auction P&L
-    snap["account"]["equity"] = {"UNMEASURED": "Alpaca account read failed"}
-    h2 = page(snap)
-    assert "Alpaca account read failed" in h2
-    assert "$100,412.50" not in h2.split("Account value and daily")[1].split("P&amp;L, official")[0]
+    assert "not measured" in h and "read failed" in h
+    assert "$100,050" not in h                               # the book's equity is gone, not carried
 
 
-def test_absent_positions_read_as_none_not_empty_table(snap):
-    snap["positions"] = {"absent": "book is flat"}
-    assert "book is flat" in page(snap)
+def test_a_book_without_history_is_named_and_left_out_of_the_combined_figures(snap):
+    h = page(snap)
+    assert "Not yet in the combined figures: Event Book" in h
+    # the combined equity is the two books' sum on their common sessions: 100,050 + 100,300
+    assert "$200,350" in h
 
 
-def test_stale_snapshot_is_flagged(snap):
-    snap["exported_at_utc"] = "2026-11-01T22:45:00Z"
-    assert "STALE" in page(snap)
-    assert "STALE" not in page(json.loads(FIXTURE.read_text()))
+def test_the_newest_session_shows_its_after_close_reading_until_the_official_point_lands(snap):
+    s = book(snap, "cef")["session"]["value"]
+    s["date"] = "2026-11-23"
+    s["equity_snapshot"]["change_usd"] = 123.0
+    h = page(snap)
+    assert "23 Nov 2026 session, after-close reading" in h and "+$123" in h
+    s["date"] = "2026-11-20"                                 # official already covers it: no snapshot tile
+    assert "after-close reading" not in page(snap)
 
 
-def test_text_from_a_snapshot_cannot_inject_markup(snap):
-    snap["system"]["value"]["reason"] = "<script>alert(1)</script>"
+def test_text_from_a_record_cannot_inject_markup(snap):
+    book(snap, "cef")["session"]["value"]["problems"] = ["<script>alert(1)</script>"]
     h = page(snap)
     assert "<script>alert" not in h and "&lt;script&gt;" in h
 
 
-def test_page_has_no_script_and_loads_nothing_external(snap):
+def test_the_page_loads_nothing_from_another_origin(snap):
     h = page(snap)
-    assert "<script" not in h.lower()
     assert not re.search(r"(src|href)\s*=\s*[\"']?(https?:)?//", h, re.I)
-    assert "http" not in h.lower()
+    assert re.findall(r"<script[^>]*>", h) == ['<script src="/static/site.js" defer>']
 
 
 def test_build_refuses_a_snapshot_with_a_secret_and_writes_nothing(snap, tmp_path):
-    snap["system"]["value"]["reason"] = "key 24c4da2f21d9064a4c02b26e92046258"
+    book(snap, "cef")["session"]["value"]["reason"] = "key 24c4da2f21d9064a4c02b26e92046258"
     src, out = tmp_path / "s.json", tmp_path / "out" / "index.html"
     src.write_text(json.dumps(snap))
     with pytest.raises(SystemExit, match="refused"):
-        B.build(src, out, NOW)
+        B.build(src, out)
     assert not out.exists()
 
 
 def test_build_refuses_a_malformed_snapshot(snap, tmp_path):
-    del snap["pnl"]
+    del snap["shadow"]
     src = tmp_path / "s.json"
     src.write_text(json.dumps(snap))
-    with pytest.raises(SystemExit, match="missing section pnl"):
-        B.build(src, tmp_path / "i.html", NOW)
+    with pytest.raises(SystemExit, match="shadow"):
+        B.build(src, tmp_path / "i.html")
 
 
 def test_cli_builds_the_fixture(tmp_path):
     out = tmp_path / "index.html"
     assert B.main([str(FIXTURE), "-o", str(out)]) == 0
-    assert "Credit book" in out.read_text()
+    assert "Live performance" in out.read_text()
 
 
 # ------------------------------------------------------------ read-only ----
-ALLOWED = {"__future__", "argparse", "datetime", "json", "re", "sys", "html", "pathlib", "dashboard"}
+STDLIB = {"__future__", "argparse", "csv", "datetime", "json", "math", "os", "re", "shutil", "sys", "html",
+          "pathlib", "tempfile", "zoneinfo", "dashboard"}
+CODE = ["build.py", "snapshot.py", "export.py", "metrics.py", "charts.py", "layout.py", "site.py"]
 
 
 def _imports(path: Path) -> set:
@@ -115,9 +125,9 @@ def _imports(path: Path) -> set:
     return mods
 
 
-@pytest.mark.parametrize("name", ["build.py", "snapshot.py"])
+@pytest.mark.parametrize("name", CODE)
 def test_dashboard_code_imports_only_the_standard_library(name):
-    assert _imports(DASH / name) <= ALLOWED, _imports(DASH / name) - ALLOWED
+    assert _imports(DASH / name) <= STDLIB, _imports(DASH / name) - STDLIB
 
 
 def _identifiers(path: Path) -> set:
@@ -133,9 +143,10 @@ def _identifiers(path: Path) -> set:
     return ids
 
 
-@pytest.mark.parametrize("name", ["build.py", "snapshot.py"])
+@pytest.mark.parametrize("name", CODE)
 def test_dashboard_code_has_no_route_to_a_broker_or_the_network(name):
     bad = ("quantt", "ops", "alpaca", "socket", "urllib", "requests", "subprocess", "paramiko", "system",
-           "dotenv", "environ", "getenv", "submit_order", "place_order", "cancel_order", "replace_order", "post", "urlopen")
+           "dotenv", "environ", "getenv", "submit_order", "place_order", "cancel_order", "replace_order", "post",
+           "urlopen", "http")
     used = _identifiers(DASH / name)
     assert not [w for w in bad if w in used], [w for w in bad if w in used]
