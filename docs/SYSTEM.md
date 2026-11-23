@@ -915,9 +915,46 @@ followed is E-2026-11-18-25 to -28.
 | Arming the events book (2026-11-20) | **"Show me Monday's list, I say go."** After a clean dry session, this session shows the first armed day's order list, and on the team lead's go switches the send unit to DRY_RUN=0 and approves that one plan by its sha; AUTO_ARMED only after that day's VERIFY passes |
 | Email alerts from the risk report (2026-11-20) | **"Skip alerts for now."** The vault keeps no `alert-smtp-user` / `alert-smtp-pass`; `quantt-reports-secret.service` stays failed, by choice |
 | Two official closing prices from the primary exchange for one fund-day (2026-11-22; SCD on 2026-11-20: 14.348 at 16:00:02 ET and 14.28 at 16:10:00 ET, both NYSE condition M) | **"$14.28, the later print"** for that fund-day, and as the standing rule **"Take the later print if the daily bar agrees."** `AlpacaClient.closing_auction_prints` returns the latest print only when its price equals the close of that day's raw SIP daily bar, and names the earlier price under `superseded`; the collector flags it in the day's report. Any other case still stops and names the prints. The bar never supplies the price |
-| Who runs the steps, from 2026-11-19 afternoon | **This session runs them** ("Can you runt htose i dont want too"; "Do the next steps in full now"; "i dont know how to do any of it, can you do it"): merges, tags, VM installs. An order still needs the list shown and the team lead's go (CLAUDE.md order-path rule 1); credentials stay the team lead's |
-| Who runs the release steps (merge, tag, VM installs, arming) | **"You prepare, I run them"**: this session checks and writes the wrappers; the team lead runs each with `!` |
+| Who runs the steps, from 2026-11-19 afternoon (**superseded 2026-11-23**: "Agents release; arming is yours", below) | **This session runs them** ("Can you runt htose i dont want too"; "Do the next steps in full now"; "i dont know how to do any of it, can you do it"): merges, tags, VM installs. An order still needs the list shown and the team lead's go (CLAUDE.md order-path rule 1); credentials stay the team lead's |
+| Who runs the release steps (merge, tag, VM installs, arming) (**superseded 2026-11-23**: "Agents release; arming is yours", below) | **"You prepare, I run them"**: this session checks and writes the wrappers; the team lead runs each with `!` |
 | Not asked, and open | Whether the ladder's later stages change with the waiver; the cap and target the measurement will point to; whether Alpaca allows a third paper account at all (`docs/REFERENCES.md` 12pa: not stated) |
+
+### Team lead, 2026-11-22 — the standard: a clean platform first, then real money
+
+Answered through question prompts on 2026-11-22, after the team lead said the infrastructure and the strategy "are
+very disorganized and not done at the proper standard we need it to be done, we cant deploy capital on this
+infrastructure". The result is `docs/STANDARD.md`, with its sources in `docs/REFERENCES.md` §12st (`EVIDENCE_LOG`
+E-2026-11-22-04).
+
+| question | ruling |
+|---|---|
+| Whether new research pauses while the platform is brought to standard | **"Keep research as it is."** The standard gates changes to the platform and real money, not ideas (`docs/STANDARD.md` §0.2) |
+| What the first standard covers | **"Everything on the desk"**: every book, sleeve, shadow book, collector and report job |
+| What comes first | **"Draft the standard with you"**: `docs/STANDARD.md`, then an audit against it (§0.4) |
+| The main dev folder: branch `research-alpha-leakage`, 841 commits behind `origin/main`, 148 uncommitted files and an untracked `CLAUDE.md` from before 2026-11-09 | **"Save changes, then switch to main"**, and **"After the release finishes"**: not while another session is installing release-20261122-2 from that folder |
+| Alerting for real money | **"Dashboard and logs are enough."** Recorded as a departure from the sources (`docs/STANDARD.md` C.2) |
+| HALVE and KILL on a real-money book | **"Act automatically"**: HALVE halves the next plan's gross; KILL sends nothing new until a person re-arms. Paper stays in report mode (2026-10-19) |
+| A combined risk budget | **"Required before real capital."** For real money only; it narrows 2026-11-18's "Not yet", and the paper accounts keep their own limits |
+| A review of the order path by someone outside the desk | **"Agent review is enough"** |
+| The real-money broker | **"Keep waiting, write it broker-neutral."** The 2026-10-28 ruling stands; every runner sends through one broker interface (`docs/STANDARD.md` A2.6) |
+| CI on the live path | **"Types, coverage floor, import boundary"** (A2.1 to A2.3) |
+| Recovery from a VM failure on a trading day | **"Rehearsed procedure"**: written, rehearsed on paper each quarter and timed; a rebuild of the VM from scratch tested once (A9) |
+| A person acknowledging the last verdict before a real-money book sends | Not ruled: "we arnt deploying capital anytime soon, we need to clean our infrastructure up". Asked again at the first go-live proposal (A5.3) |
+| Three proposals in the draft (asked after it was written) | **"Keep all three"**: the stop-everything command rehearsed on paper every month (A4.2); a branch with no open pull request, not a lane branch and no commit in 14 days is tagged `archive/<branch>` and deleted (A1.2); at go-live, the variants of the idea tried are counted from `results/IDEA_LEDGER.md` and the Sharpe deflated for them (B7). B7 applies at the go-live proposal only; research keeps the 2026-11-09 rules |
+| The next steps | **"Run it now"** for the audit against `docs/STANDARD.md` (§0.4); **"Push and open the PR"** for this standard; **"Yes, switch it now"** for the dev folder, once the team lead confirmed release-20261122-2 was finished |
+| Not asked, and open | Approval of `docs/STANDARD.md` as written, at the pull request's review. An independent risk function (C.2) |
+
+### Team lead, 2026-11-23 — after the first standard audit
+
+Answered through question prompts on 2026-11-23, after the first audit against `docs/STANDARD.md`
+(`results/ops/STANDARD_AUDIT_2026-11-22.md`; `EVIDENCE_LOG` E-2026-11-22-05 and E-2026-11-23-01).
+
+| question | ruling |
+|---|---|
+| The `shadow` branch: the events runner trades decision files from the VM's shadow clone, which runs the head of `shadow`. It had no ruleset, six accounts could push to it, and the VM identity can read every vault secret (audit §2) | **"Protect it now."** A ruleset like main's, "shadow: only the team lead updates it" (update, deletion and non-fast-forward blocked; the team lead's account bypasses), active from 2026-11-23 11:48 ET. The rest of work order 7.1 (the events decision code under the release tag, a narrower vault reach) is not ruled; the audit keeps it open |
+| Whether arming the events book waits for its missing state pages, P&L of record, HALVE/KILL and corporate-action gate (work orders 7.2 to 7.5) | **"Arm Monday, build them next."** The 2026-11-20 ruling stands. Those four come first in the build |
+| Who runs a release. **Supersedes** the two 2026-11-19 rows "Who runs the steps" ("This session runs them") and "Who runs the release steps" ("You prepare, I run them"), and the 2026-11-02 standing authority still written in `docs/RUNBOOK.md` §8.6 | **"Agents release; arming is yours."** An agent in the team lead's session runs merges, tags and VM installs, after the release check. Arming or disarming a book, and any order, happens only on the team lead's go in the session, after the order list is shown (`CLAUDE.md` order-path rule 1). An analyst's session does none of these (`docs/TEAM.md`) |
+| The events book's first armed day (asked under the 2026-11-20 ruling, "Show me Monday's list, I say go") | **"Go"** for the plan of 2026-11-23, `plan_sha` dff7c378…12ad, 219 orders: `DRY_RUN=0` in `quantt-events-send.service` only, and that plan approved by its sha at 14:11 ET. `AUTO_ARMED` only after that day's VERIFY passes, on the team lead's word |
 
 ## 6. Governance — where each rule lives
 
@@ -931,6 +968,7 @@ followed is E-2026-11-18-25 to -28.
 | Ideas that have failed so far — check before proposing anything; nothing is banned (2026-11-08) | `/graveyard`, and the KILLED table |
 | External claims | `docs/REFERENCES.md` |
 | Work orders and the plan | `docs/ROADMAP.md`. The old work orders were deleted 2026-09-28 (tag `pre-clean-slate`). |
+| What "done properly" means for the platform and for real money; the audit against it | `docs/STANDARD.md` |
 | Which document owns which question | `docs/INDEX.md`, checked by `python3 -m ops.doc_audit` |
 | Who keeps which lane; how work reaches `main` and prod; the shared-ledger rules | `docs/TEAM.md` |
 
@@ -964,3 +1002,5 @@ followed is E-2026-11-18-25 to -28.
 | 2026-11-05 | §5 records the analysts' roles reopened as starting points, any analyst may propose a signal, and the end-of-November pitch. | analyst guide, for the team lead |
 | 2026-11-08 | §5 records that research is not pass or fail; §1's holdout sentence and the 2026-10-27 power and admission rows point at it. | research method, for the team lead |
 | 2026-11-09 | §5 records the mission (`docs/MISSION.md`): open scope, paper as the test, no costs in research, the research gates dropped, self-promotion to paper through a separate path, releases by the team lead only, alpha-only dropped. §1 and §6 point at it. | the mission, for the team lead |
+| 2026-11-22 | §5 records the standard's rulings (`docs/STANDARD.md`); §6 points at it. | the standard, for the team lead |
+| 2026-11-23 | §5 records the rulings after the first audit: the `shadow` ruleset, events arming kept for Monday, who runs a release (superseding the two 2026-11-19 rows), and the events book's first go. | the standard's audit, for the team lead |

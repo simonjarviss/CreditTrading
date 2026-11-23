@@ -5447,3 +5447,61 @@ that adds it does not exist when it is written.
 - source: `quantt/broker/alpaca.py` @ `a624e13`; `quantt/collect/collect.py` @ `a624e13`; `quantt/sleeves/run.py` @ `a624e13`; the VM's installer output, C4 data log and report, shadow log and events verify line, read on 2026-11-22
 - supports: §5
 - status: current
+
+### E-2026-11-22-04 · Ruling: the standard for a clean platform and for real money is written; research carries on; real capital still waits for a broker
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-22
+- figures:
+  - the team lead, 2026-11-22: the infrastructure and the strategy "are very disorganized and not done at the proper standard we need it to be done, we cant deploy capital on this infrastructure" [V]
+  - measured that day on the team lead's laptop: the main dev folder on branch `research-alpha-leakage`, 841 commits behind `origin/main`, 148 uncommitted files, with an untracked `CLAUDE.md` 179 changed lines from main's; 199 local branches, 102 remote branches and 143 worktrees, read with `git log`, `git status`, `git branch` and `git worktree list` [V]
+  - measured on `origin/main` a624e13: 681 commits from 2026-10-22, 132 merge commits from 2026-11-01; Python lines by top folder `scripts` 127,532, `quantt` 47,121, `src` 11,632, `ops` 8,989, `shadow` 5,023; `docs/SYSTEM.md` §5 holds 41 ruling sections in 654 lines; CI runs the tests and `ops.doc_audit` only; read with `git log`, `git ls-tree` and `wc -l`, and from `.github/workflows/checks.yml` [V]
+  - the team lead's answers, by question prompt: keep research as it is; everything on the desk; draft the standard first; save the dev folder and switch it to main after release-20261122-2 is installed; dashboard and logs for alerts; HALVE/KILL act on real money; a combined risk budget before real capital; agent review is enough; broker-neutral, the 2026-10-28 wait stands; types, coverage floor and import boundary in CI; a rehearsed recovery procedure; the daily acknowledgement not ruled ("we arnt deploying capital anytime soon"); then keep the draft's three proposals (monthly stop rehearsal, the 14-day branch rule, the go-live variant count), run the audit, push this standard as a pull request, switch the dev folder [V]
+  - external sources read through a fetch agent: SEC 15c3-5, FINRA 15-09, EU 2017/589 (RTS 6), FIA 2024, the SEC's Knight Capital order, Bailey and López de Prado 2014, Bailey et al. 2014, AIMA's DDQ topics. None binds the desk [S]
+  - what it does not change: no book, spec, gate or schedule; nothing on the VM [V]
+- source: `docs/SYSTEM.md` @ `a624e13` and `.github/workflows/checks.yml` @ `a624e13` (the base measured); `docs/STANDARD.md`, `docs/REFERENCES.md` §12st and the §5 standard ruling are in the commit that carries this entry
+- supports: §5
+- status: current
+
+### E-2026-11-22-05 · Result: the first audit against the standard's Part A finds 1 of 45 checks passing; the events book's orders can be changed by an unreviewed push to the `shadow` branch
+- kind: result
+- era: ALPACA
+- date: 2026-11-22
+- figures:
+  - 45 checks audited (A5.3, the deferred daily acknowledgement, names no measurer): auditors' verdicts 1 PASS, 24 PARTIAL, 19 GAP, 1 NOT MEASURABLE; the five verifiers agreed with all 45 [S]
+  - read strictly by `docs/STANDARD.md` §0.3, where a missing measurer counts as a gap: 1 PASS, 17 PARTIAL, 27 GAP [S]
+  - the one PASS is A3.4: shadow books never transmit an order [S]
+  - every verifier confirmed it: the events runner trades decision files written by the VM's shadow clone, which checks out the head of `shadow` before every run, and whose identity can read every secret in the vault [V]
+  - read from the GitHub API at 16:20 ET: `shadow` is not protected; the two rulesets cover the default branch and the release, spec and provenance tags; six accounts can push, four of them admins; `origin/shadow` a8e944e is 4 commits ahead of `main` and 87 behind [V]
+  - the events units are `DRY_RUN=1`, so the exposure is latent until the events book is armed [S]
+  - 34 ranked work orders, carried as `docs/ROADMAP.md` Phase 7; 18 findings outside the checks [S]
+  - method: five auditors and five verifiers, read-only, workflow run `wf_039a7231-1cb`, 732 tool calls; its first run stopped at the account's usage limit at 14:05 ET and was re-run from the start [V]
+  - what it does not change: no book, spec, gate, schedule or GitHub setting; nothing on the VM [V]
+- source: `docs/STANDARD.md` @ `877320c` (the standard audited); `shadow/deploy/nightly.sh` @ `07532f2`; `quantt/sleeves/inputs.py` @ `07532f2`; `shadow/deploy/install_shadow_vm.sh` @ `07532f2`; `results/ops/STANDARD_AUDIT_2026-11-22.md` and `results/ops/standard_audit_2026-11-22.json` are in the commit that carries this entry
+- supports: §5
+- status: current
+
+### E-2026-11-23-01 · Ruling: after the first standard audit, `shadow` gets a ruleset, the events book arms on Monday as planned, and one rule says who runs a release
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - none (a ruling). Through question prompts: "Protect it now" (a ruleset on `shadow` like main's); "Arm Monday, build them next" (work orders 7.2 to 7.5 come first in the build); "Agents release; arming is yours" (an agent in the team lead's session merges, tags and installs; arming, disarming and any order only on the team lead's go after the list is shown). The last supersedes the two 2026-11-19 rows on who runs releases and the 2026-11-02 standing authority still written in `docs/RUNBOOK.md` §8.6
+  - the ruleset "shadow: only the team lead updates it" (update, deletion and non-fast-forward blocked; the team lead's account bypasses), created through the GitHub API and read back active at 11:48 ET. The repository then held three rulesets: `main`, the protected tags, and `shadow` [V]
+- source: `docs/SYSTEM.md` @ `05ca236` (the 2026-11-19 rows superseded) and `results/ops/STANDARD_AUDIT_2026-11-22.md` @ `05ca236`; the §5 rows, `CLAUDE.md` order-path rule 1, `docs/RUNBOOK.md` §8.6 and `docs/TEAM.md` are in the commit that carries this entry
+- supports: §5
+- status: current
+
+### E-2026-11-23-02 · Release: the events book is armed for its first session: send unit DRY_RUN=0 and the 2026-11-23 plan approved by its sha, on the team lead's go after the list was shown
+- kind: release
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - the plan for 2026-11-23 (as of 2026-11-20), `plan_sha` dff7c3783eaff1b2ea5237ae3ba40ddd3a973aa3e0c015df7e63f09854bf12ad: 219 orders, 210 buys of $89,643 and 9 sells of $56,956 estimated; gross after $146,599.30 against the limit of 1.5 × the $100,000.00 equity; eight sleeves decided, two holding nothing; window 15:40 to 15:58 ET [V]
+  - before the go: the 12:00 ET preview printed the same sha with no "WOULD REFUSE AT SEND" line; the ledger held no shares in any of the eight sleeves (booked to 2026-11-20); no events or global halt file; the clone at `release-20261122-2`; the day's plan runs from 09:45 to 12:15 ET all printed the same sha [V]
+  - the team lead's answer to the question naming the sha, the order count, the two sides' totals and the window: "Go" [V]
+  - read back at 14:11 ET: `quantt-events-send` DRY_RUN=0, `quantt-events-plan` and `quantt-events-verify` DRY_RUN=1; `APPROVED` for that sha with 219 orders; AUTO_ARMED absent; the next send timer 15:41 ET; the 12:46 ET send run "before the send window ... nothing read, nothing written", exit 5 [V]
+  - not yet seen: whether the send passes every gate in the window, what fills, and the 17:35 ET VERIFY. AUTO_ARMED waits for that VERIFY to pass and the team lead's word [U]
+- source: `quantt/sleeves/run.py` @ `07532f2` (the approve and send rules); `quantt/sleeves/deploy/README.md` @ `07532f2` (the first-day checklist); the VM's events plan log, preview, ledger, unit environment and APPROVED file, read on 2026-11-23
+- supports: §1, §5
+- status: current

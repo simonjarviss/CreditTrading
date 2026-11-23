@@ -95,6 +95,74 @@ No copies of old trees, no IBKR software, no hand-edited files.
 | 6.6 | **Laptop Alpaca jobs disabled 2026-10-08** (cut-over); their plists still say `DRY_RUN=0` on disk and should be re-installed disarmed or deleted. Retire this laptop's leftovers: `~/prod/QUANTT` (old IBKR worktree), `~/Library/LaunchAgents/com.quantt.*.plist`, `~/Library/Application Support/quantt/`, `~/ibc`, IB Gateway. | TL decides, A runs |
 | 6.7 | Monitoring per the standing decision: dashboard and logs only (a dashboard rebuild is a later item). | A |
 
+## Phase 7 — the platform to the standard (`docs/STANDARD.md` Part A)
+
+From the first audit, `results/ops/STANDARD_AUDIT_2026-11-22.md`: of 45 checks, 1
+passes, 17 are partial and 27 are gaps, read strictly by §0.3. Each row is one ranked
+work order there (the `rank` column), and its details and file references are in
+that note. Who: **TL** = a ruling, a GitHub or Azure setting, a login, a release; **A**
+= an agent prepares it on a branch for a pull request. A work order that changes the
+live path follows `docs/TEAM.md` §2 and reaches the VM only in a release.
+
+**7a. These take effect on the day the events book is armed.** The team lead armed it for 2026-11-23 and ruled that 7.2 to 7.5 come first in the build ("Arm Monday, build them next").
+
+| # | work order | checks | rank | who | status |
+|---|---|---|---|---|---|
+| 7.1 | Decide who can change the events book's orders: a ruleset on `shadow`, a §0.5 waiver, a narrower vault reach, or the decision code under the release tag | A8.1, A10.1, A7.4 | 1 | TL, then A | ruleset on `shadow` active 2026-11-23 (TL, "Protect it now"); the decision code and the vault reach still open |
+| 7.2 | The events account on every state surface (`ops.prod_state` per account, the banner, `ops.daily_page`) | A8.5, A5.2 | 2 | A | open |
+| 7.3 | A P&L of record for the events account (collector, `pnl_report`, report units) | A6.2 | 3 | A | open |
+| 7.4 | HALVE and KILL defined and reported for the events account | A4.3 | 4 | A, TL sets levels | open |
+| 7.5 | A corporate-action gate in the events runner; correct `quantt/sleeves/ledger.py`'s claim | A7.3 | 5 | A | open |
+| 7.6 | One ruling on who may merge, tag, install and arm; then `docs/RUNBOOK.md:968` and `CLAUDE.md` point at it | A1.3, A10.4 | 6 | TL, then A | done 2026-11-23: "Agents release; arming is yours" (`docs/SYSTEM.md` §5); `CLAUDE.md`, RUNBOOK §8.6 and `docs/TEAM.md` follow it |
+
+**7b. Stopping and recovering.**
+
+| # | work order | checks | rank | who | status |
+|---|---|---|---|---|---|
+| 7.7 | A stop-all command (halt, cancel every open order, read back, optional flatten), from the VM and the laptop; then a monthly timed rehearsal, logged | A4.1, A4.2 | 7 | A; TL runs the rehearsal | open |
+| 7.8 | A VM-failure procedure per account; a quarterly timed rehearsal; one tested rebuild | A9.1, A9.2, A9.3 | 8 | A; TL runs the rehearsal | open |
+| 7.9 | A daily off-VM copy of every state directory, with its own verdict | A6.3 | 9 | A, TL chooses the storage | open |
+| 7.10 | One rollback command to an older tag, replay first, refused in send windows; rehearsed | A8.3 | 10 | A | open |
+| 7.11 | A verdict per job per run, MISSED for a timer that did not fire; then the dashboard page | A5.1, A5.2 | 11 | A | open |
+| 7.12 | Core and C4 verify against targets; a FAIL stops the next send until acknowledged; verify can run late; a broker outage reads MISSED | A6.1, A9.4 | 12 | A | open |
+
+**7c. Order and data controls.**
+
+| # | work order | checks | rank | who | status |
+|---|---|---|---|---|---|
+| 7.13 | Per-order limits (shares, notional, ADV share) as required book-file keys | A3.1 | 13 | A, TL sets levels | open |
+| 7.14 | Input checks: stale NAV, core spike guard, events jump guard, a generated input list | A7.1 | 14 | A | open |
+| 7.15 | A cross-source price and NAV gate, after a ruling that supersedes "Report only" and a chosen second NAV source | A7.2 | 15 | TL, then A | open |
+| 7.16 | Correct `docs/TEAM.md` §2's live-path list; an import-boundary test in CI | A2.1, A7.4 | 16 | A | open |
+
+**7d. Medium risk.**
+
+| # | work order | checks | rank | who | status |
+|---|---|---|---|---|---|
+| 7.17 | A rules-in-force table at the head of `docs/SYSTEM.md` §5, checked by `doc_audit` | A1.3 | 17 | A, TL confirms rows | open |
+| 7.18 | `CLAUDE.md` without stale facts; research rules to `.claude/rules/`; the first Part D review | A1.4 | 18 | A | open |
+| 7.19 | The events runner's controls in `docs/RUNNER.md`; gate 6 and 9 drift fixed; a gate-name test | A1.5 | 19 | A | open |
+| 7.20 | One shared send-time gate composite for the core and events | A2.8 | 20 | A | open |
+| 7.21 | A price collar on every non-auction order | A3.2 | 21 | A, TL sets the band | open |
+| 7.22 | A maximum order count for core and C4; a breach writes a halt only a person clears | A3.3 | 22 | A | open |
+| 7.23 | Core and C4 send only what the plan holds; verify FAILs otherwise | A3.6 | 23 | A | open |
+| 7.24 | Each book's account id hashed in its book file and checked before any order | A3.5 | 24 | A | open |
+| 7.25 | A stored release-check verdict per commit for every book; installers refuse a tag without GO; RUNBOOK §8.6 for every unit | A8.2 | 25 | A | open |
+| 7.26 | The release check proves each changed live-path test fails on the last tag; PR template updated | A2.4 | 26 | A | open |
+| 7.27 | An install and arming log written by every installer and read by `ops.prod_state` | A8.4 | 27 | A | open |
+| 7.28 | A `BrokerClient` interface and a broker-boundary test | A2.6 | 28 | A | open |
+| 7.29 | A generated switch inventory; CI fails on a key nothing reads | A2.7 | 29 | A | open |
+| 7.30 | CI: type checks, a coverage floor, a lint for silent excepts | A2.2, A2.3, A2.5 | 30 | A | open |
+| 7.31 | Access: a 2FA checklist, key rotation for every secret unit, one access table, Bash deny rules | A10.2, A10.3, A10.4 | 31 | TL (2FA, rotation), A | open |
+| 7.32 | Data terms per source, with a ruling each | A7.5 | 32 | A, TL rules | open |
+| 7.33 | Small document contradictions (the audit's F7, F8, F13, F15, F16), including phase 4 above | A1.5 | 33 | A | open |
+
+**7e. Already built.**
+
+| # | work order | checks | rank | who | status |
+|---|---|---|---|---|---|
+| 7.34 | Merge PR #99 (`ops/checkout.py`, `ops/branch_inventory.py`); then archive-tag and delete the "none" rows on the team lead's go for the list | A1.1, A1.2 | 34 | TL merges; A deletes on go | open |
+
 ## Later
 
 - A read-only dashboard, rebuilt fresh.

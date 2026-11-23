@@ -141,6 +141,7 @@ place, `scripts/research/inference.py`, as its backtests do in
 | `backtest-request` | one backtest question on the canonical harness, gross, independently re-derived |
 | `release-check` | go/no-go on one commit for a prod release tag; the team lead tags, installs and arms |
 | `daily-ops` | read-only morning/evening check of the live book |
+| `standard-audit` | the audit against `docs/STANDARD.md` Part A, each quarter and after an incident: one reader per area, a second reader per area trying to disprove each verdict; args `{repo}` |
 | `research-loop` | **retired 2026-11-09.** It ran the dropped pre-registration process unattended. The file is a stub that returns STOPPED and uses no agent, so that the launchd wrapper in `.claude/loop/` (installed only by the team lead, in its own clone) stops cleanly if it is still loaded. Its replacements, the nightly scoreboard and the weekly hunt, are proposed to the team before anything is scheduled |
 
 The event-census workflow was removed on 2026-11-09; `/hunt` covers its purpose.
