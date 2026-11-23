@@ -104,16 +104,16 @@ that note. Who: **TL** = a ruling, a GitHub or Azure setting, a login, a release
 = an agent prepares it on a branch for a pull request. A work order that changes the
 live path follows `docs/TEAM.md` §2 and reaches the VM only in a release.
 
-**7a. These take effect on the day the events book is armed.**
+**7a. These take effect on the day the events book is armed.** The team lead armed it for 2026-11-23 and ruled that 7.2 to 7.5 come first in the build ("Arm Monday, build them next").
 
 | # | work order | checks | rank | who | status |
 |---|---|---|---|---|---|
-| 7.1 | Decide who can change the events book's orders: a ruleset on `shadow`, a §0.5 waiver, a narrower vault reach, or the decision code under the release tag | A8.1, A10.1, A7.4 | 1 | TL, then A | open |
+| 7.1 | Decide who can change the events book's orders: a ruleset on `shadow`, a §0.5 waiver, a narrower vault reach, or the decision code under the release tag | A8.1, A10.1, A7.4 | 1 | TL, then A | ruleset on `shadow` active 2026-11-23 (TL, "Protect it now"); the decision code and the vault reach still open |
 | 7.2 | The events account on every state surface (`ops.prod_state` per account, the banner, `ops.daily_page`) | A8.5, A5.2 | 2 | A | open |
 | 7.3 | A P&L of record for the events account (collector, `pnl_report`, report units) | A6.2 | 3 | A | open |
 | 7.4 | HALVE and KILL defined and reported for the events account | A4.3 | 4 | A, TL sets levels | open |
 | 7.5 | A corporate-action gate in the events runner; correct `quantt/sleeves/ledger.py`'s claim | A7.3 | 5 | A | open |
-| 7.6 | One ruling on who may merge, tag, install and arm; then `docs/RUNBOOK.md:968` and `CLAUDE.md` point at it | A1.3, A10.4 | 6 | TL, then A | open |
+| 7.6 | One ruling on who may merge, tag, install and arm; then `docs/RUNBOOK.md:968` and `CLAUDE.md` point at it | A1.3, A10.4 | 6 | TL, then A | done 2026-11-23: "Agents release; arming is yours" (`docs/SYSTEM.md` §5); `CLAUDE.md`, RUNBOOK §8.6 and `docs/TEAM.md` follow it |
 
 **7b. Stopping and recovering.**
 

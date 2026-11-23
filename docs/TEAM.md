@@ -147,14 +147,19 @@ The variable names are in `docs/ONBOARDING.md` §2. Credentials are personal: ne
 share one, and never paste one into a chat, an issue or a Claude session.
 
 **What GitHub enforces** (rulesets on `quanttqueensu/CreditTrading`, set by the team
-lead, who is the only bypass actor; both active since 2026-10-26):
+lead, who is the only bypass actor; the first two active since 2026-10-26, the third
+since 2026-11-23):
 
 - on `main`: no update except by the team lead, so analysts' work arrives only
   through a PR the team lead merges; no force-push; no deletion. GitHub counts even
   the team lead's merge as a bypass, so it is made with `gh pr merge --admin`;
 - on the tags `release-*`, `spec-*`, `pre-clean-slate` and `ibkr-final`: no
   creation, move or deletion except by the team lead. A release tag is what prod
-  runs; the other two are the provenance of everything before 2026-09-28.
+  runs; the other two are the provenance of everything before 2026-09-28;
+- on `shadow`: no update, force-push or deletion except by the team lead (team lead,
+  2026-11-23, `docs/SYSTEM.md` §5). The VM's shadow clone runs the head of `shadow`
+  every night, and the events account trades its decision files, so a push there
+  reaches a paper account's orders without a release (`results/ops/STANDARD_AUDIT_2026-11-22.md` §2).
 
 **What it does not stop.** The QUANTT organisation's owners hold admin rights over
 every repository in the organisation, this one included, and can edit these

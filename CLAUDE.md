@@ -94,11 +94,13 @@ that cannot be undone.
    recorded in `docs/SYSTEM.md` §5, no agent starts a paper book. Rules 2–5 bind
    every transmission. **It never applies to a real-money account**: there, every
    order needs the team lead's go on the full list, in the session.
-   **Prod releases are the team lead's alone (2026-11-09).** Agents prepare a
-   release and run the release check; the team lead merges to `main`, tags,
-   installs on the VM, and arms or disarms. The 2026-11-02 standing authority
-   and the 2026-10-27 research-loop exception are withdrawn (`docs/SYSTEM.md` §5
-   keeps both as history).
+   **Who runs a prod release (team lead, 2026-11-23, `docs/SYSTEM.md` §5).** An
+   agent in the team lead's session runs the release check, then merges to
+   `main`, tags and installs on the VM. **Arming or disarming a book happens only
+   on the team lead's go in the session**, after the order list is shown. The
+   2026-11-02 standing authority (agents arming on their own) and the 2026-10-27
+   research-loop exception stay withdrawn (`docs/SYSTEM.md` §5 keeps both as
+   history).
 2. **The trade phase is not idempotent, and the broker does not dedupe.** Open
    positions exclude unfilled MOC orders, so a second armed run's orders fill in
    the same auction and the book doubles. At Alpaca, `client_order_id` is unique
