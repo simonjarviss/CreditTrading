@@ -62,9 +62,13 @@ export default {
     const hit = await cache.match(key);
     if (hit) return hit;
 
+    // The target's host is ORIGIN's, always: only the path is set, through the pathname setter, which
+    // cannot change the host. (Resolving the path against ORIGIN would let "//other.host/x" pick the host.)
+    const target = new URL(new URL(env.ORIGIN).origin);
+    target.pathname = url.pathname;
     let upstream;
     try {
-      upstream = await fetch(new URL(url.pathname, env.ORIGIN).toString(), {
+      upstream = await fetch(target.toString(), {
         method: "GET",
         redirect: "manual",
         headers: { "User-Agent": "quantt-event-driven-worker", Accept: "text/html" },
@@ -77,8 +81,9 @@ export default {
     const h = withSecurity(upstream.headers);
     const loc = h.get("Location");
     if (loc) {                                   // the origin's redirects (e.g. /performance -> /performance/) stay on this host
-      const l = new URL(loc, env.ORIGIN);
-      h.set("Location", url.origin + l.pathname + l.search);
+      const l = new URL(loc, target);
+      if (l.origin !== target.origin) return unavailable("origin redirected off-site");
+      h.set("Location", url.origin + l.pathname);
     }
     h.set("Cache-Control", upstream.status === 200 ? `public, max-age=${CACHE_SECONDS}` : "no-store");
     const resp = new Response(upstream.body, { status: upstream.status, headers: h });
