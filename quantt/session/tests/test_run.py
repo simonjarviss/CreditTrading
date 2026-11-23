@@ -106,6 +106,14 @@ class FakeClient:
         started = (self.state / D.isoformat() / "STARTED").exists()
         self.calls.append(("submit", client_order_id, started))
         what = self._submit.get(client_order_id, "ok")
+        if isinstance(what, list):                 # successive answers; the last repeats
+            what = what.pop(0) if len(what) > 1 else what[0]
+        if what == "429-created":                  # Alpaca made the order, then answered 429
+            o = {"id": f"id-{client_order_id}", "client_order_id": client_order_id,
+                 "symbol": symbol, "side": side, "qty": str(qty), "type": "market",
+                 "time_in_force": time_in_force, "status": "accepted", "filled_qty": "0"}
+            self.accepted[client_order_id] = o
+            raise OrderRejected("HTTP 429", status=429, client_order_id=client_order_id)
         if isinstance(what, Exception):
             raise what
         self.tifs = getattr(self, "tifs", []) + [time_in_force]
@@ -319,6 +327,96 @@ def test_every_order_rejected_sends_nothing_and_fails(tmp_path):
     assert rn.run_session(BOOK, SPEC, deps) == rn.EXIT_FAIL
     assert len(c.submits()) == 2
     assert "NOTHING was sent" in "".join(out)
+
+
+# ------------------------------------------- HTTP 429 to an order (2026-11-23)
+# The events book's first armed send: 173 of 219 orders answered 429 and each was booked as
+# a rejection. A 429 is now waited out and the id read before any resend (`_submit_one`).
+
+def _r429(cid):
+    return OrderRejected(f"POST /v2/orders {cid} rejected: HTTP 429: rate limit exceeded",
+                         status=429, client_order_id=cid)
+
+
+def _armed_with_sleeps(tmp_path, **ck):
+    import dataclasses
+    c, deps, state, seen, out = make(tmp_path, **ck)
+    (state / "AUTO_ARMED").touch()
+    sleeps = []
+    return c, dataclasses.replace(deps, sleep=sleeps.append), state, out, sleeps
+
+
+def _events(state, cid):
+    rows = [json.loads(x) for x in (state / D.isoformat() / "orders.jsonl").read_text().splitlines()]
+    return [r["event"] for r in rows if r.get("client_order_id") == cid]
+
+
+def test_a_429_is_waited_out_and_resent_when_alpaca_has_no_such_order(tmp_path):
+    """Failed before 2026-11-23: the 429 was booked as a rejection and BBB never went."""
+    bbb = "cef-20260929-BBB-1"
+    c, deps, state, out, sleeps = _armed_with_sleeps(tmp_path, submit={bbb: [_r429(bbb), "ok"]})
+    assert rn.run_session(BOOK, SPEC, deps) == rn.EXIT_SENT
+    assert [s[1] for s in c.submits()] == [bbb, bbb, "cef-20260929-AAA-1"]
+    assert sleeps[0] == rn.POST_429_WAITS_S[0]
+    assert ("lookup", bbb) in c.calls
+    assert _events(state, bbb)[:5] == ["submit", "rate_limited", "lookup", "submit", "accepted"]
+    assert "RATE-LIMITED" in "".join(out)
+
+
+def test_a_429_for_an_order_that_was_created_is_never_resent(tmp_path):
+    """The read after the wait finds the order: it counts as sent, and is not sent again."""
+    bbb = "cef-20260929-BBB-1"
+    c, deps, state, _, sleeps = _armed_with_sleeps(tmp_path, submit={bbb: "429-created"})
+    assert rn.run_session(BOOK, SPEC, deps) == rn.EXIT_SENT
+    assert [s[1] for s in c.submits()].count(bbb) == 1
+    run_rec = json.loads(sorted((state / D.isoformat() / "runs").glob("*.json"))[-1].read_text())
+    assert bbb in run_rec["sent"] and run_rec["rejected"] == []
+
+
+def test_a_429_that_never_clears_is_a_rejection_after_the_waits(tmp_path):
+    bbb = "cef-20260929-BBB-1"
+    c, deps, state, _, sleeps = _armed_with_sleeps(tmp_path, submit={bbb: _r429(bbb)})
+    assert rn.run_session(BOOK, SPEC, deps) == rn.EXIT_FAIL
+    assert [s[1] for s in c.submits()].count(bbb) == len(rn.POST_429_WAITS_S) + 1
+    assert sleeps[:len(rn.POST_429_WAITS_S)] == list(rn.POST_429_WAITS_S)
+    run_rec = json.loads(sorted((state / D.isoformat() / "runs").glob("*.json"))[-1].read_text())
+    assert run_rec["rejected"] == [bbb] and run_rec["sent"] == ["cef-20260929-AAA-1"]
+
+
+def test_a_429_whose_lookup_fails_stops_the_batch(tmp_path):
+    """Not knowing whether the order exists is the ambiguous case: stop, never resend."""
+    bbb = "cef-20260929-BBB-1"
+
+    def lookup(cid):
+        raise RuntimeError("GET failed after 5 attempts")
+    c, deps, state, out, _ = _armed_with_sleeps(tmp_path, submit={bbb: _r429(bbb)}, lookup=lookup)
+    assert rn.run_session(BOOK, SPEC, deps) == rn.EXIT_FAIL
+    assert [s[1] for s in c.submits()] == [bbb]             # no resend, AAA never sent
+    assert "the read that says whether it exists failed" in "".join(out)
+
+
+def test_a_resend_after_a_429_checks_the_window_again(tmp_path):
+    """The wait can carry the batch past the window's end: the resend is then not made."""
+    bbb = "cef-20260929-BBB-1"
+    inside = dt.datetime(2026, 9, 29, 15, 45, tzinfo=ET)
+    late = dt.datetime(2026, 9, 29, 15, 51, tzinfo=ET)
+    c, deps, state, out, _ = _armed_with_sleeps(tmp_path, submit={bbb: _r429(bbb)})
+
+    def clock():                                   # past the window once the wait is over
+        c.calls.append(("clock",))
+        ts = late if any(x[0] == "lookup" for x in c.calls) else inside
+        return {"timestamp": ts, "is_open": True, "next_open": ts, "next_close": ts}
+    c.clock = clock
+    o = Order(symbol="BBB", side="sell", qty=10, leg=1, client_order_id=bbb, current=0,
+              target=-10, est_price=20.0, reason="test")
+    log = tmp_path / "orders.jsonl"
+    code = rn._transmit(c, [o], log, {}, deps, SimpleNamespace(write=out.append, flush=lambda: None),
+                        in_window=lambda ts: ts < dt.datetime(2026, 9, 29, 15, 50, tzinfo=ET),
+                        window_text="test window")
+    assert code == rn.EXIT_FAIL
+    assert [s[1] for s in c.submits()] == [bbb]
+    assert [json.loads(x)["event"] for x in log.read_text().splitlines()] == [
+        "submit", "rate_limited", "lookup", "cutoff"]
 
 
 def test_confirm_miss_is_fail(tmp_path):

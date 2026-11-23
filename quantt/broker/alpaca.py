@@ -125,6 +125,20 @@ DATA_BASE = "https://data.alpaca.markets"
 # client that retries forever turns a broker outage into a silent miss.
 GET_BACKOFF_S = (2, 5, 15, 30)
 
+# PACING ON THE TRADING HOST (2026-11-23). The events book's first armed send POSTed 219
+# orders after reading 219 assets, with nothing pacing either, and Alpaca answered HTTP 429
+# "rate limit exceeded" to 173 of the orders (`docs/SYSTEM.md` §5, 2026-11-23; EVIDENCE_LOG
+# E-2026-11-23-03). The GETs survived on the retry above; the POSTs, which are never retried
+# here, did not. So every request to the trading host first takes a token from a bucket of
+# TRADING_BURST tokens refilled at TRADING_MAX_PER_MIN a minute: no 60 s window can hold
+# more than TRADING_BURST + TRADING_MAX_PER_MIN requests, 190, under Alpaca's 200 [S], with
+# room for a GET retry. A book that sends a few dozen orders never waits (the core and C4
+# are unchanged); a large set is smoothed to one request every 0.4 s. The data host is not
+# paced: the send path does not use it, and its jobs keep their timing. The limit is per
+# client object, and the runner makes one per process and account.
+TRADING_MAX_PER_MIN = 150
+TRADING_BURST = 40
+
 # (connect, read) timeout for every request. A read timeout on a GET is retried;
 # on the POST it is AmbiguousSubmit.
 TIMEOUT_S = (10, 30)
@@ -371,7 +385,8 @@ class AlpacaClient:
     """One book's Alpaca paper account. See the module docstring for the rules."""
 
     def __init__(self, book: str, env_file, base_url: str = PAPER_BASE,
-                 data_url: str = DATA_BASE, *, session=None, sleep=time.sleep):
+                 data_url: str = DATA_BASE, *, session=None, sleep=time.sleep,
+                 monotonic=time.monotonic):
         # Exact equality, not startswith: "https://paper-api.alpaca.markets.evil"
         # and a trailing path both start with the paper host.
         if base_url != PAPER_BASE:
@@ -385,6 +400,9 @@ class AlpacaClient:
         self._base = base_url
         self._data = data_url
         self._sleep = sleep
+        self._monotonic = monotonic
+        self._tokens = float(TRADING_BURST)       # the trading-host bucket (TRADING_MAX_PER_MIN)
+        self._last = monotonic()
         key_id, secret = _load_keys(book, Path(env_file))
         if session is None:
             import requests
@@ -435,6 +453,26 @@ class AlpacaClient:
                 text = text.replace(v, "<redacted>")
         return text
 
+    def _pace(self, base: str) -> None:
+        """Take one token for a request to `base`; sleep first if the bucket is empty.
+
+        Only the trading host is paced (TRADING_MAX_PER_MIN). After a wait the bucket holds
+        exactly the one token the wait refilled, and the clock is moved on by the wait even
+        if the injected `sleep` did not pass real time, so a test's fake sleep paces the same
+        way the real one does: one request every 60 / TRADING_MAX_PER_MIN seconds."""
+        if base != self._base:
+            return
+        rate = TRADING_MAX_PER_MIN / 60.0
+        now = self._monotonic()
+        self._tokens = min(float(TRADING_BURST), self._tokens + max(0.0, now - self._last) * rate)
+        self._last = max(now, self._last)
+        if self._tokens < 1.0:
+            wait = (1.0 - self._tokens) / rate
+            self._sleep(wait)
+            self._tokens = 1.0
+            self._last = max(self._monotonic(), self._last + wait)
+        self._tokens -= 1.0
+
     def _get(self, base: str, path: str, params: dict | None = None, *,
              allow_404: bool = False):
         """GET with bounded retry on 429, 5xx and transport errors.
@@ -453,6 +491,7 @@ class AlpacaClient:
         for i in range(attempts):
             if i:
                 self._sleep(GET_BACKOFF_S[i - 1])
+            self._pace(base)
             try:
                 r = self._session.get(url, params=params, timeout=TIMEOUT_S, allow_redirects=False)
             except requests.TooManyRedirects as e:      # `refuse_redirects`: a 3xx, not followed
@@ -681,6 +720,7 @@ class AlpacaClient:
                    "time_in_force": tif, "client_order_id": client_order_id}
         cid = client_order_id
         look = f"look it up with order_by_client_id({cid!r}); do NOT resend"
+        self._pace(PAPER_BASE)
         try:
             r = self._session.post(PAPER_BASE + "/v2/orders", json=payload, timeout=TIMEOUT_S,
                                    allow_redirects=False)

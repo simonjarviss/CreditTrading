@@ -127,6 +127,14 @@ settled these points. Alpaca facts, each with its source and status:
 - **A rejected order skips its symbol and the rest are sent** (team lead,
   2026-09-28); the day is FAIL naming it. Anything with an unknown outcome
   (ambiguous submit, unexpected error, clock) still stops the batch.
+- **Alpaca's rate limit** (2026-11-23, after the events book's first armed send had
+  173 of 219 orders answered HTTP 429). The client paces every request to the trading
+  host: a burst of `TRADING_BURST`, then `TRADING_MAX_PER_MIN` a minute, under Alpaca's
+  200 [S] (`quantt/broker/alpaca.py`). A 429 to an order is not a rejection at first:
+  `_submit_one` waits `POST_429_WAITS_S`, reads the order by its `client_order_id`, and
+  resends only if Alpaca has none. A found order counts as sent; a failed read stops the
+  batch; after the last wait it is a rejection, as above. The send window is checked
+  again before every resend.
 - **Gate 7** checks `shortable` only; hard-to-borrow is a preview warning (team
   lead, 2026-09-28).
 - **Gate 4** re-reads the Alpaca clock at the gate and again before every POST; the
