@@ -5,6 +5,7 @@ The fake records every call it receives, fills `day` market orders at once at a 
 and moves its own positions, so a test can run whole sessions. Each test names the failure it
 guards."""
 import csv
+import dataclasses
 import datetime as dt
 import io
 import json
@@ -1403,3 +1404,69 @@ def test_a_malformed_ledger_is_refused_before_a_share_of_it_is_trusted(w, bad, w
         sr.check_ledger(bad, "ledger.json")
     (w.state / "ledger.json").write_text(json.dumps(bad))
     assert do_plan(w) == core.EXIT_REFUSED and not (w.day / "plan.json").exists()
+
+
+# ------------------------------------- a 429 on the send, then VERIFY (release check of 81e1071)
+# A 429 to an order is waited out and the id read before any resend (core `_submit_one`, 2026-11-23).
+# Whatever then happens, the order must end with an event VERIFY accepts for an order Alpaca does not
+# hold, or VERIFY books nothing and the next PLAN refuses: the events book would stop until its
+# records were repaired by hand. 81e1071 left two paths with no terminal event; these pinned them.
+
+def _429_first(w, after_wait):
+    real = w.c.submit_order
+    hit = {"n": 0}
+
+    def submit(symbol, qty, side, cid, *, time_in_force):
+        if hit["n"] == 0:
+            hit["n"] += 1
+            w.c.calls.append("submit_order")
+            raise alpaca.OrderRejected(f"POST {cid}: HTTP 429: rate limit exceeded", status=429,
+                                       client_order_id=cid)
+        return real(symbol, qty, side, cid, time_in_force=time_in_force)
+    w.c.submit_order = submit
+    w.deps = dataclasses.replace(w.deps, sleep=lambda s: after_wait(w))
+
+
+def _books_and_next_plan_runs(w):
+    assert do_verify(w) == sr.VERIFY_FAIL                  # the day is FAIL, loudly
+    v = read(w.day / "verify.json")
+    assert v["problems"] == [] and v["ledger_applied"] is True, v["problems"]
+    assert read(w.state / "ledger.json")["session"] == str(F)
+    nxt = dt.date(2026, 11, 18)
+    decision(w.ddir, "a", {"AAA": 0.1, "IWM": -0.1}, asof=F)
+    decision(w.ddir, "b", {"BBB": 0.1, "IWM": -0.1}, asof=F)
+    assert do_plan(w, nxt) == core.EXIT_PLANNED, w.out.getvalue().splitlines()[-3:]
+
+
+def test_a_429_then_the_window_closing_still_books_the_day(w):
+    """The wait carries the batch to the window's end: the order is `rejected`, then the stop."""
+    assert do_plan(w) == core.EXIT_PLANNED
+    arm(w)
+    _429_first(w, lambda w: setattr(w.c, "now", at(F, 15, 58)))
+    assert do_send(w) == core.EXIT_FAIL
+    rows = [json.loads(x) for x in (w.day / "orders.jsonl").read_text().splitlines()]
+    first = rows[0]["client_order_id"]
+    assert [r["event"] for r in rows if r["client_order_id"] == first][-1] == "rejected"
+    _books_and_next_plan_runs(w)
+
+
+def test_a_429_then_a_failed_read_still_books_the_day(w):
+    """The read after the wait fails: a rejection (no resend), and the rest of the batch goes."""
+    assert do_plan(w) == core.EXIT_PLANNED
+    arm(w)
+    real_lookup = w.c.order_by_client_id
+    state = {"after_wait": False}
+
+    def after(w):
+        state["after_wait"] = True
+    _429_first(w, after)
+
+    def lookup(cid):
+        if state["after_wait"]:
+            state["after_wait"] = False
+            raise alpaca.AlpacaHTTPError("GET failed after 5 attempts", status=503)
+        return real_lookup(cid)
+    w.c.order_by_client_id = lookup
+    assert do_send(w) == core.EXIT_FAIL
+    assert len(w.c.submitted) >= 1                         # the rest of the batch went
+    _books_and_next_plan_runs(w)

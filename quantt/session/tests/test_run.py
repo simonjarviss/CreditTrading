@@ -383,16 +383,22 @@ def test_a_429_that_never_clears_is_a_rejection_after_the_waits(tmp_path):
     assert run_rec["rejected"] == [bbb] and run_rec["sent"] == ["cef-20260929-AAA-1"]
 
 
-def test_a_429_whose_lookup_fails_stops_the_batch(tmp_path):
-    """Not knowing whether the order exists is the ambiguous case: stop, never resend."""
+def test_a_429_whose_lookup_fails_is_a_rejection_and_the_rest_go(tmp_path):
+    """Release check of 81e1071: stopping here left the order with no terminal event, so the
+    events VERIFY could not book the day. A failed read after a 429 is a rejection (never a
+    resend), and the batch goes on, as a 429 did before 2026-11-23."""
     bbb = "cef-20260929-BBB-1"
 
     def lookup(cid):
-        raise RuntimeError("GET failed after 5 attempts")
+        if cid == bbb:
+            raise RuntimeError("GET failed after 5 attempts")
+        return c.accepted.get(cid)
     c, deps, state, out, _ = _armed_with_sleeps(tmp_path, submit={bbb: _r429(bbb)}, lookup=lookup)
     assert rn.run_session(BOOK, SPEC, deps) == rn.EXIT_FAIL
-    assert [s[1] for s in c.submits()] == [bbb]             # no resend, AAA never sent
-    assert "the read that says whether it exists failed" in "".join(out)
+    assert [s[1] for s in c.submits()] == [bbb, "cef-20260929-AAA-1"]   # no resend; AAA goes
+    assert _events(state, bbb) == ["submit", "rate_limited", "lookup_error", "rejected"]
+    run_rec = json.loads(sorted((state / D.isoformat() / "runs").glob("*.json"))[-1].read_text())
+    assert run_rec["rejected"] == [bbb] and run_rec["sent"] == ["cef-20260929-AAA-1"]
 
 
 def test_a_resend_after_a_429_checks_the_window_again(tmp_path):
@@ -416,7 +422,7 @@ def test_a_resend_after_a_429_checks_the_window_again(tmp_path):
     assert code == rn.EXIT_FAIL
     assert [s[1] for s in c.submits()] == [bbb]
     assert [json.loads(x)["event"] for x in log.read_text().splitlines()] == [
-        "submit", "rate_limited", "lookup", "cutoff"]
+        "submit", "rate_limited", "lookup", "cutoff", "rejected"]      # a terminal event
 
 
 def test_confirm_miss_is_fail(tmp_path):

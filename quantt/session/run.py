@@ -3451,28 +3451,47 @@ def _poll_final(c, sent, log: Path, record: dict, deps: Deps, out, until: dt.dat
 # Whether the by-id read can lag an order created a moment earlier is not documented [U]; the
 # wait before it is the margin. After the last wait the order is a rejection, as before.
 # The waits come out of the send window: `in_window` is checked again before every resend.
+#
+# EVERY ORDER THAT MET A 429 ENDS WITH A TERMINAL EVENT (release check of 81e1071, 2026-11-23).
+# The events VERIFY books the ledger only if each recorded order Alpaca does not hold has
+# `rejected`, `ambiguous` or `error` among its events (quantt/sleeves/run.py NOT_AT_BROKER_OK);
+# otherwise nothing is booked and the next PLAN refuses. So a batch that stops on the clock or the
+# window after a 429 first writes `rejected` for that order (it was last read as not at Alpaca),
+# and a read that fails after a 429 is a rejection (no resend) and the batch goes on, as a 429
+# did before 2026-11-23.
 POST_429_WAITS_S = (5.0, 15.0, 30.0)
 
 
 def _submit_one(c, o, log: Path, deps: Deps, out, *,
                 in_window: Callable[[dt.datetime], bool], window_text: str):
-    """Send one order to a known outcome: ("accepted", order dict), ("rejected", error), or
-    ("stop", reason) when its state is unknown or the window has closed (`_transmit`)."""
+    """Send one order to a known outcome: ("accepted", order dict), ("rejected", error),
+    ("stop", reason) when its state is unknown or the window has closed, or ("stop_rejected",
+    reason) when the batch stops while this order, after a 429, is known not to be at Alpaca
+    (`_transmit` counts it as rejected, then stops)."""
     from quantt.broker.alpaca import AmbiguousSubmit, OrderRejected
     now = deps.utcnow
     cid = o.client_order_id
+    last_429 = None
+
+    def stop(reason):
+        if last_429 is None:
+            return "stop", reason
+        rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                               "error": f"HTTP 429, read as not at Alpaca, not resent: {reason}"})
+        return "stop_rejected", reason
+
     for attempt in range(len(POST_429_WAITS_S) + 1):
         try:
             ts = c.clock()["timestamp"]
         except Exception as e:
             rec.append_jsonl(log, {"event": "clock_error", "at": now(), "client_order_id": cid,
                                    "error": f"{type(e).__name__}: {e}"})
-            return "stop", f"clock read failed before {cid}; batch stopped"
+            return stop(f"clock read failed before {cid}; batch stopped")
         if not in_window(ts):
             rec.append_jsonl(log, {"event": "cutoff", "at": now(), "clock": ts,
                                    "client_order_id": cid, "window": window_text})
-            return "stop", (f"Alpaca clock {ts.astimezone(gt.ET):%Y-%m-%d %H:%M:%S} ET is outside "
-                            f"the send window -- {window_text} -- before {cid}; batch stopped")
+            return stop(f"Alpaca clock {ts.astimezone(gt.ET):%Y-%m-%d %H:%M:%S} ET is outside "
+                        f"the send window -- {window_text} -- before {cid}; batch stopped")
         rec.append_jsonl(log, {"event": "submit", "at": now(), **o.wire()})
         try:
             return "accepted", c.submit_order(o.symbol, o.qty, o.side, cid,
@@ -3494,6 +3513,7 @@ def _submit_one(c, o, log: Path, deps: Deps, out, *,
                 rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
                                        "error": str(e)})
                 return "rejected", e
+            last_429 = e
             wait = POST_429_WAITS_S[attempt]
             rec.append_jsonl(log, {"event": "rate_limited", "at": now(), "client_order_id": cid,
                                    "attempt": attempt + 1, "wait_s": wait, "error": str(e)})
@@ -3505,8 +3525,10 @@ def _submit_one(c, o, log: Path, deps: Deps, out, *,
             except Exception as le:
                 rec.append_jsonl(log, {"event": "lookup_error", "at": now(), "client_order_id": cid,
                                        "error": f"{type(le).__name__}: {le}"})
-                return "stop", (f"HTTP 429 on {cid}, and the read that says whether it exists "
-                                "failed; batch stopped")
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": f"HTTP 429, and the read that says whether it exists "
+                                                f"failed ({type(le).__name__}); not resent"})
+                return "rejected", e
             rec.append_jsonl(log, {"event": "lookup", "at": now(), "client_order_id": cid,
                                    "found": found is not None,
                                    "order": _order_summary(found) if found else None})
@@ -3554,6 +3576,11 @@ def _transmit(c, orders, log: Path, record: dict, deps: Deps, out, *,
         kind, val = _submit_one(c, o, log, deps, out, in_window=in_window,
                                 window_text=window_text)
         if kind == "stop":
+            failed = val
+            break
+        if kind == "stop_rejected":
+            rejected.append((o.client_order_id, o.symbol))
+            print(f"  REJECTED {o.client_order_id}: HTTP 429, not resent; {val}", file=out)
             failed = val
             break
         if kind == "rejected":
