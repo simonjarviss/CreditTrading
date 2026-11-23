@@ -1,5 +1,5 @@
 #!/bin/sh
-# Root install of the public site (team lead, 2026-11-23: eventdriven.quantt.ca, "website all can
+# Root install of the public site (team lead, 2026-11-23: event-driven.quantt.ca, "website all can
 # see", served from the VM) on the prod VM.
 #
 #   sudo sh install_site_vm.sh --hosts "<name> [<name> ...]"

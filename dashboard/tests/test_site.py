@@ -113,11 +113,27 @@ def test_the_committed_content_is_complete():
     """What a release needs: slides for every caption, the deck, the font and the library."""
     slides = json.loads((DASH / "content" / "slides.json").read_text())
     for s in slides:
-        assert (DASH / "static" / "slides" / f"slide-{s['n']:02d}.webp").is_file(), s
-    assert (DASH / "static" / SITE.DECK_PDF).is_file()
-    assert (DASH / "static" / "fonts" / "inter-latin-wght.woff2").is_file()
+        assert (DASH / "public" / "static" / "slides" / f"slide-{s['n']:02d}.webp").is_file(), s
+    assert (DASH / "public" / "static" / SITE.DECK_PDF).is_file()
+    assert (DASH / "public" / "static" / "fonts" / "inter-latin-wght.woff2").is_file()
     lib = json.loads((DASH / "content" / "library.json").read_text())
     assert lib["entries"] and all(e["title"] and e["topic"] for e in lib["entries"])
     for e in lib["entries"]:
         for k in ("url", "oa_pdf_url"):
             assert e.get(k) is None or e[k].startswith("https://") or e[k].startswith("http://"), e
+
+
+def test_the_worker_config_names_the_worker_and_no_address():
+    """wrangler.jsonc is what Cloudflare Workers Builds deploys from `main`. It must name the Worker the
+    team lead created, point at dashboard/public, keep the dashboard's ORIGIN variable across deploys,
+    and carry no address of the VM (CLAUDE.md, "Where it runs")."""
+    root = DASH.parent
+    text = (root / "wrangler.jsonc").read_text()
+    body = json.loads("\n".join(ln for ln in text.splitlines() if not ln.lstrip().startswith("//")))
+    assert body["name"] == "quantt-event-driven"
+    assert (root / body["main"]).is_file() and (root / body["assets"]["directory"] / "static" / "site.css").is_file()
+    assert body["keep_vars"] is True and body["assets"]["run_worker_first"] is True
+    worker = (root / body["main"]).read_text()
+    for t in (text, worker):
+        assert not re.search(r"cloudapp\.azure\.com|\b\d{1,3}(\.\d{1,3}){3}\b", t)
+    assert "env.ORIGIN" in worker and 'request.method !== "GET"' in worker

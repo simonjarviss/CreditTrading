@@ -5506,12 +5506,12 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current
 
-### E-2026-11-23-10 · Ruling: a public investor site served from the VM at eventdriven.quantt.ca, built on Lucy's dashboard, with every active book's live paper results
+### E-2026-11-23-10 · Ruling: a public investor site served from the VM at event-driven.quantt.ca, built on Lucy's dashboard, with every active book's live paper results
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-23
 - figures:
-  - none (a ruling). Through question prompts and messages: the dashboard is a "website all can see", served from the VM, at `eventdriven.quantt.ca`; Lucy's PR #62 is built on in a new PR with her commits kept; snapshots stay on the VM ("VM only"), superseding 2026-10-26's repository route; an agent installs it after the release check
+  - none (a ruling). Through question prompts and messages: the dashboard is a "website all can see", served from the VM, at `event-driven.quantt.ca`; Lucy's PR #62 is built on in a new PR with her commits kept; snapshots stay on the VM ("VM only"), superseding 2026-10-26's repository route; an agent installs it after the release check
   - the content asked for: team overview with full names, bios and LinkedIn; the in-depth deck "with the same tweaks that were applied to make Event Driven Trading"; "our library (all literary sources)"; "anything any R&D website would have"; "connected to our live P&L and live updates ... presentable to VC / investors"; contact `simon.jarvis@queensu.ca`; quantt.ca is "just inspiration" [V]
   - the site's statistics reproduce `ops/orient.py` PNL on the VM's records of 2026-11-20 to the cent: core cumulative -$632.20, high-water $101,474.24 (2026-10-12), drawdown -2.08%, volatility 6.97%; C4 +$1,958.13, volatility 9.07%; the two accounts combined $201,325.93, +$1,325.95 on $199,999.98 over 38 common sessions [V]
 - source: `dashboard/README.md` @ `87728af` (the 2026-10-26 repository route it supersedes) and `ops/orient.py` @ `87728af` (the PNL figures it reproduces); `dashboard/` (export.py, metrics.py, build.py, site.py), `dashboard/tests/test_metrics.py` (parity with `ops.orient.official_pnl`), `docs/SYSTEM.md` §5 "the public site" and `docs/RUNBOOK.md` §8.13 are in the commit that carries this entry

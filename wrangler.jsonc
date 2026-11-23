@@ -1,0 +1,16 @@
+// The public site's Cloudflare Worker (dashboard/worker/index.js; dashboard/README.md section 1).
+// Deployed by Cloudflare Workers Builds from `main` with `npx wrangler deploy` at the repository root.
+// ORIGIN (the VM's address) is a variable set in the Cloudflare dashboard, never here: the repository is
+// public (CLAUDE.md, "Where it runs"). keep_vars keeps it across deploys.
+{
+  "name": "quantt-event-driven",
+  "main": "dashboard/worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "dashboard/public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "keep_vars": true,
+  "observability": { "enabled": true }
+}

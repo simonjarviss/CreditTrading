@@ -113,7 +113,7 @@ and build the dashboard. Counter XASSET for signals.
 Folders `dashboard/` and the research data platform (`scripts/data/` and its
 neighbours, listed in [`docs/TEAM.md`](docs/TEAM.md#1-the-lanes)). Branch `lucy`.
 
-The public site (eventdriven.quantt.ca) and its read-only dashboard: every book's live
+The public site (event-driven.quantt.ca) and its read-only dashboard: every book's live
 paper results, built on the VM every 30 minutes from the runners' own records. Nothing
 on it may be able to send an order, and nothing about positions or P&L is committed
 ([`dashboard/README.md`](dashboard/README.md)).

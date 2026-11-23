@@ -19,10 +19,17 @@ sources. quantt.ca, the club's site, is its style reference only.
 the VM (prod)                                                    the web
 quantt_state/<book>/  ─┐
 shadow SCOREBOARD.md  ─┼─► dashboard.export ─► snapshot.json ─► dashboard.site ─► /srv/quantt-site/current ─► Caddy (HTTPS)
-results/IDEA_LEDGER.md │   (read only, no network)              (pages, atomic swap)                          eventdriven.quantt.ca
+results/IDEA_LEDGER.md │   (read only, no network)              (pages, atomic swap)                          (the origin)
 dashboard/content,     ┘
-dashboard/static (at the release tag)
+dashboard/public (at the release tag)
+
+event-driven.quantt.ca  =  Cloudflare Worker `quantt-event-driven`, deployed from `main` (wrangler.jsonc):
+                           /static/* from dashboard/public in main; every page fetched from the origin above
 ```
+
+- **Cloudflare is the public face.** The Worker serves the front end from `main` and fetches
+  each page from the VM, caching it for 60 seconds. The VM's address is the Worker variable
+  `ORIGIN`, set in the Cloudflare dashboard, never in the repository.
 
 - **The build reads only files.** `dashboard/export.py` reads the records each runner has
   already written (`eod_equity.csv`, the newest `reconcile.json` or `verify.json`, `tca.csv`,
@@ -45,7 +52,7 @@ dashboard/static (at the release tag)
   tag. Releasing the site never moves the trading clone, so it never changes what the books
   trade; a trading release never moves the site.
 - **What changes only with a release**: the words (`dashboard/site.py`), the team
-  (`dashboard/content/team.json`), the slides and the deck PDF (`dashboard/static/`), the
+  (`dashboard/content/team.json`), the slides and the deck PDF (`dashboard/public/static/`), the
   library (`dashboard/content/library.json`).
 
 ## 2. What a snapshot, and therefore the site, may never carry

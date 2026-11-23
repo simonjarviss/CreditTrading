@@ -4,13 +4,13 @@
 
 WHY (team lead, 2026-11-23): "a site that shows team overview, a slideshow ... everything
 someone who would want to give us capital would see", "our library (all literary sources)",
-"anything any R&D website would have", hosted from the VM at eventdriven.quantt.ca for anyone
+"anything any R&D website would have", hosted from the VM at event-driven.quantt.ca for anyone
 to read. quantt.ca, the club's site, is the style reference only.
 
 WHAT IS LIVE AND WHAT IS FIXED. The performance page and the figures on the overview come
 from the night's snapshot (dashboard/export.py), so they are measured at build time. The
 words, the team, the slides and the library are files in this repository
-(dashboard/content/, dashboard/static/), so they change only with a release. The research
+(dashboard/content/, dashboard/public/static/), so they change only with a release. The research
 ledger count is read from results/IDEA_LEDGER.md of the same release.
 
 PUBLISHING IS ATOMIC. Pages are written into a new directory beside the served one, then a
@@ -35,7 +35,7 @@ from dashboard.layout import (BOOK_COLOURS, CONTACT_EMAIL, REPO_URL, fmt_date, f
 
 HERE = Path(__file__).resolve().parent
 CONTENT = HERE / "content"
-STATIC = HERE / "static"
+STATIC = HERE / "public" / "static"
 REPO = HERE.parent
 DECK_PDF = "QUANTT-Event-Driven-Trading.pdf"
 KEEP_BUILDS = 3

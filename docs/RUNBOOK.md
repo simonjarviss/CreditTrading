@@ -1448,7 +1448,7 @@ RESULT).
 with its runtime directory), and delete the two pnl service files, the two pnl timer files
 and the two key-service unit files.
 
-### 8.13 The public site (eventdriven.quantt.ca)
+### 8.13 The public site (event-driven.quantt.ca)
 
 Team lead, 2026-11-23 (`docs/SYSTEM.md` §5, "the public site"): a public website served from
 the VM, with the live paper results of every book. What it reads and why it cannot touch a
@@ -1467,12 +1467,17 @@ sudo sh /home/quantt/site/quantt-alpaca/dashboard/deploy/install_site_vm.sh --ho
 sudo sh /home/quantt/site/quantt-alpaca/dashboard/deploy/install_site_vm.sh uninstall
 ```
 
-`<names>`: the site's DNS names, space-separated (`eventdriven.quantt.ca` and the VM's Azure
-DNS label). They are never written in a tracked file. Before the first install, from the
-laptop: the network security group allows TCP 80 and 443 from the internet (rule
-`site-http-https`), and `eventdriven.quantt.ca` is a DNS-only CNAME to the VM's Azure DNS
-label in the club's Cloudflare zone. Caddy fetches each name's certificate itself once its
-DNS points at the VM.
+`<names>`: the VM's own DNS name (its Azure DNS label), never written in a tracked file.
+Before the first install, from the laptop: the network security group allows TCP 80 and 443
+from the internet (rule `site-http-https`). Caddy fetches the certificate itself.
+
+**The public address, `event-driven.quantt.ca`, is Cloudflare's**, not the VM's: the Worker
+`quantt-event-driven` (`dashboard/worker/index.js`, `wrangler.jsonc`) is deployed by Cloudflare
+Workers Builds from `main`. It serves `dashboard/public/` (styles, script, slides, font, PDF)
+itself and fetches every page from the VM, caching it for 60 seconds. Its variable `ORIGIN`
+(`https://` + the VM's DNS name) is set once in the Cloudflare dashboard (Worker, Settings,
+Variables and Secrets) and kept across deploys (`keep_vars`). If the VM cannot be reached,
+the Worker answers 503 with a page saying so.
 
 What it installs: Caddy (Ubuntu's package, user `caddy`, static files only),
 `/srv/quantt-site` (builds and the `current` link, owned by quantt), and
