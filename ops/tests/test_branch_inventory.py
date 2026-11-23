@@ -10,7 +10,11 @@ the cases where a wrong "none" would lose something:
     UNMEASURED, and the run does not crash on it;
   - the tree detached at the newest release tag is kept (a release wrapper
     replays from it);
-  - the lane list matches `docs/TEAM.md` §3.
+  - the lane list matches `docs/TEAM.md` §3;
+  - `shadow`, the branch the VM's shadow clone follows, is kept however old, locally
+    and on GitHub: the events book trades that clone's decisions (audit of
+    2026-11-22, `results/ops/STANDARD_AUDIT_2026-11-22.md` §2), and deleting the
+    branch would break the nightly job. Its name matches the installer's default.
 
 No network: a throwaway repository in `tmp_path`; remote refs are made with
 `git update-ref`; the pull-request list is passed in.
@@ -19,6 +23,7 @@ from __future__ import annotations
 
 import datetime as dt
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -57,6 +62,7 @@ def repo(tmp_path):
     _branch(r, "fresh", RECENT)         # recent commit
     _branch(r, "with-pr", OLD)          # old, but an open PR
     _branch(r, "has-work", OLD)         # old, but a dirty worktree
+    _branch(r, "shadow", OLD)           # old, but the VM's shadow clone follows it
     _git(r, "worktree", "add", "-q", str(tmp_path / "wt-work"), "has-work")
     (tmp_path / "wt-work" / "scratch.txt").write_text("unsaved")
     _git(r, "worktree", "add", "-q", str(tmp_path / "wt-stale"), "stale")
@@ -64,6 +70,7 @@ def repo(tmp_path):
     _git(r, "worktree", "add", "-q", "--detach", str(tmp_path / "wt-rel"), "release-20261122-2")
     _git(r, "update-ref", "refs/remotes/origin/old-feature", "main")
     _git(r, "update-ref", "refs/remotes/origin/with-pr", "with-pr")
+    _git(r, "update-ref", "refs/remotes/origin/shadow", "shadow")
     return r
 
 
@@ -129,3 +136,20 @@ def test_lane_list_matches_team_md():
     section = team[team.index("## 3."):team.index("## 4.")]
     for name in bi.LANE_BRANCHES:
         assert f"`{name}`" in section, f"{name} is not a branch named in docs/TEAM.md §3"
+
+
+def test_the_branch_a_vm_clone_follows_is_kept(repo):
+    """Failed before 2026-11-23: an old `shadow` read "none", locally and on GitHub."""
+    inv = bi.measure(repo, prs={}, now=NOW)
+    for key in ("branches", "remote_branches"):
+        sh = _by(inv[key], "name", "shadow")
+        assert sh["status"] == "keep", (key, sh)
+        assert any(r.startswith("a VM clone follows it") for r in sh["reasons"])
+
+
+def test_followed_branch_matches_the_shadow_installer():
+    text = (Path(bi.REPO) / "shadow" / "deploy" / "install_shadow_vm.sh").read_text()
+    m = re.search(r'^BRANCH="([^"]+)"', text, re.M)
+    assert m, "install_shadow_vm.sh no longer sets a default BRANCH"
+    assert m.group(1) in bi.VM_FOLLOWED_BRANCHES
+

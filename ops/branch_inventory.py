@@ -18,13 +18,15 @@ REASONS
 -------
 Local branch: `lane` (`docs/TEAM.md` §3), `open PR #n`, `commit within 14 days`,
 `uncommitted work in <worktree>` (deleting would lose it), `checked out in the
-main folder`.
+main folder`, `a VM clone follows it`.
 Worktree: `main folder`, `uncommitted work (n)`, `branch kept`, `newest release
 tree` (a release wrapper replays from it), `directory missing` (prunable, no
 work to lose). A worktree on a branch with no reason and nothing uncommitted has
 none.
-Remote branch: `lane` or `open PR #n` only. `docs/TEAM.md` §3: "GitHub holds five
-branches and no others", plus a pull request's own branch while it is open.
+Remote branch: `lane`, `open PR #n` or `a VM clone follows it`. `docs/TEAM.md` §3:
+"GitHub holds five branches and no others", plus a pull request's own branch while
+it is open, plus `shadow`, which the VM's shadow clone runs every night
+(`docs/STANDARD.md` A1.2, 2026-11-23).
 
 NO SILENT FALLBACKS
 -------------------
@@ -49,6 +51,15 @@ LANE_BRANCHES = ("main", "simon", "ryan", "james", "lucy")
 
 #: `docs/STANDARD.md` A1.2 (team lead, 2026-11-22): a policy choice, not a measurement.
 RECENT_DAYS = 14
+
+#: Branches a clone on the VM follows rather than a release tag. `shadow` is the default of
+#: shadow/deploy/install_shadow_vm.sh (`BRANCH="shadow"`, a test checks it), and the events
+#: book trades that clone's decision files, so deleting it would break the nightly job and
+#: the events plan (`results/ops/STANDARD_AUDIT_2026-11-22.md` §2). The installer takes
+#: `--branch`, so the branch the VM actually follows is not visible from the repository;
+#: if it was installed with another one, add that one here.
+VM_FOLLOWED_BRANCHES = ("shadow",)
+FOLLOWED_REASON = "a VM clone follows it (shadow/deploy/install_shadow_vm.sh)"
 
 
 def _git(repo: Path, *args: str, timeout: int = 60) -> str:
@@ -134,6 +145,8 @@ def measure(repo: Path = REPO, prs: dict[str, int] | None = None,
         reasons = []
         if name in LANE_BRANCHES:
             reasons.append("lane")
+        if name in VM_FOLLOWED_BRANCHES:
+            reasons.append(FOLLOWED_REASON)
         if prs is not None and name in prs:
             reasons.append(f"open PR #{prs[name]}")
         if when >= cutoff:
@@ -182,6 +195,7 @@ def measure(repo: Path = REPO, prs: dict[str, int] | None = None,
         if name == "HEAD" or ref == "origin":
             continue
         reasons = (["lane"] if name in LANE_BRANCHES else []) + (
+            [FOLLOWED_REASON] if name in VM_FOLLOWED_BRANCHES else []) + (
             [f"open PR #{prs[name]}"] if prs is not None and name in prs else [])
         remotes.append({"name": name, "last_commit": date, "reasons": reasons,
                         "status": "keep" if reasons else ("UNMEASURED" if prs is None else "none")})
@@ -202,7 +216,8 @@ def _counts(items: list[dict]) -> str:
 def render(inv: dict) -> str:
     out = [f"BRANCH INVENTORY  {inv['repo']}  measured {inv['measured_at']}",
            f"rule: keep if lane, open PR or a commit within {inv['recent_days']} days "
-           "(docs/STANDARD.md A1.2); uncommitted work is always kept",
+           "(docs/STANDARD.md A1.2); uncommitted work, the main folder, the newest "
+           "release tree and a branch a VM clone follows are always kept",
            "open PRs: " + ("UNMEASURED — " + str(inv["open_prs_error"]) if inv["open_prs"] is None
                            else ", ".join(f"#{n} {b}" for b, n in sorted(inv["open_prs"].items(),
                                                                           key=lambda x: x[1])) or "none"),
