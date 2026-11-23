@@ -286,7 +286,7 @@ def library(lib: dict) -> str:
             if e.get("url"):
                 links.append(f'<a href="{escape(e["url"])}" rel="noopener">Source</a>')
             if e.get("oa_pdf_url"):
-                links.append(f'<a href="{escape(e["oa_pdf_url"])}" rel="noopener">Open-access PDF</a>')
+                links.append(f'<a href="{escape(e["oa_pdf_url"])}" rel="noopener">Free copy</a>')
             rows.append(f'<div class="lib-item"><div class="t">{escape(e["title"])}</div>'
                         f'<div class="src">{escape(src)}</div>'
                         + (f'<div class="use">{escape(e["used_for"])}</div>' if e.get("used_for") else "")
@@ -297,8 +297,8 @@ def library(lib: dict) -> str:
                      f"The {len(entries)} sources our strategies rest on: academic papers, industry research and the "
                      "rules that govern the markets we trade, each with a note on how we use it.")
     body = (head + '<section class="section"><div class="wrap narrow">'
-            f'<p>Each entry links to the publisher or issuer. {n_pdf} have a free, open-access copy, linked as a PDF. '
-            'For the rest, the publisher\'s page offers access.</p>'
+            f'<p>Each entry links to the publisher or issuer, and {n_pdf} also link to a free, open-access copy. '
+            'Each link was matched to its citation by title, first author and year.</p>'
             f'<nav class="toc" aria-label="Topics">{toc}</nav>{"".join(groups)}</div></section>')
     return page("library", "Research library", body,
                 "The academic literature, industry research and regulation behind the Event Driven Trading strategies.")
