@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1-draft",
+  "synthetic": true,
+  "book": "cef",
+  "session_date": "2026-11-06",
+  "exported_at_utc": "2026-11-06T22:45:00Z",
+  "account": {
+    "equity": {"value": 100412.5, "source": "FIXTURE: invented number, not from the book", "read_at": "2026-11-06T21:30:00Z", "label": "broker-confirmed"},
+    "last_equity": {"value": 100250.0, "source": "FIXTURE: invented number, not from the book", "read_at": "2026-11-06T21:30:00Z", "label": "broker-confirmed"}
+  },
+  "pnl": {
+    "official_eod_change_usd": {"value": 162.5, "source": "FIXTURE: invented number (stands in for Alpaca end-of-day history)", "read_at": "2026-11-06T22:10:00Z", "label": "broker-confirmed"},
+    "snapshot_change_usd": {"value": 162.5, "source": "FIXTURE: invented number (stands in for equity - last_equity)", "read_at": "2026-11-06T21:30:00Z", "label": "broker-confirmed"},
+    "auction_pnl_usd": {"UNMEASURED": "FIXTURE: example of a gap, the closing-auction print was missing for one name"}
+  },
+  "equity_history": {
+    "value": [
+      {"date": "2026-10-30", "equity": 99880.0},
+      {"date": "2026-11-02", "equity": 100010.0},
+      {"date": "2026-11-03", "equity": 99940.0},
+      {"date": "2026-11-04", "equity": 100175.0},
+      {"date": "2026-11-05", "equity": 100250.0},
+      {"date": "2026-11-06", "equity": 100412.5}
+    ],
+    "source": "FIXTURE: invented series (stands in for eod_equity.csv)", "read_at": "2026-11-06T22:10:00Z", "label": "broker-confirmed"
+  },
+  "positions": {
+    "value": [
+      {"symbol": "AAA", "qty": 420},
+      {"symbol": "BBB", "qty": 310},
+      {"symbol": "CCC", "qty": -380},
+      {"symbol": "DDD", "qty": -250}
+    ],
+    "source": "FIXTURE: invented positions (stand in for reconcile.json positions_after)", "read_at": "2026-11-06T21:35:00Z", "label": "broker-confirmed"
+  },
+  "trades": {
+    "value": {
+      "orders": [
+        {"symbol": "AAA", "side": "buy", "qty": 40, "type": "market", "status": "filled"},
+        {"symbol": "CCC", "side": "sell", "qty": 25, "type": "market", "status": "filled"},
+        {"symbol": "DDD", "side": "sell", "qty": 30, "type": "market", "status": "canceled"}
+      ],
+      "fills": [
+        {"symbol": "AAA", "side": "buy", "qty": 40, "price": 12.34, "time": "2026-11-06T20:55:10Z"},
+        {"symbol": "CCC", "side": "sell", "qty": 25, "price": 8.91, "time": "2026-11-06T20:55:12Z"}
+      ]
+    },
+    "source": "FIXTURE: invented trades (stand in for reconcile.json orders and fills)", "read_at": "2026-11-06T21:35:00Z", "label": "broker-confirmed"
+  },
+  "system": {
+    "value": {
+      "verdict": "FAIL",
+      "reason": "FIXTURE: example verdict; UNMEASURED auction print for one name | traded 3 order(s), 2 filled",
+      "problems": ["UNMEASURED auction print for DDD"],
+      "traded": true,
+      "n_orders": 3,
+      "n_filled": 2
+    },
+    "source": "FIXTURE: invented verdict (stands in for the verify.log line)", "read_at": "2026-11-06T22:10:00Z", "label": "modelled"
+  }
+}
