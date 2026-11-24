@@ -1,6 +1,6 @@
-// Event Driven Trading: the only script on the site. Two jobs, both read-only and local: the chart
-// hover (a crosshair that snaps to the nearest session, with a tooltip), and the library's search,
-// which hides the sources that do not match. It fetches nothing.
+// Event Driven Trading: the only script on the site. Three jobs, all read-only and local: the chart
+// hover (a crosshair that snaps to the nearest session, with a tooltip), the performance page's
+// portfolio / by-book switch, and the library's search. It fetches nothing.
 (function () {
   "use strict";
 
@@ -33,7 +33,10 @@
       hair.setAttribute("x1", xs[best]); hair.setAttribute("x2", xs[best]);
       hair.style.visibility = "visible";
       var html = "<b>" + data.dates[best] + "</b>";
+      var view = box.getAttribute("data-view");
       data.series.forEach(function (s) {
+        if (view === "portfolio" && s.cls === "bk") return;
+        if (view === "books" && s.cls === "pf-only") return;
         var v = s.v[best];
         html += "<div><span class=\"sw\" style=\"background:" + s.color + "\"></span>" + s.name + ": " +
           (v === null ? "no row" : (data.fmt === "pct" ? fmtPct(v) : fmtUsd(v))) + "</div>";
@@ -49,6 +52,22 @@
     function hide() { hair.style.visibility = "hidden"; tip.style.visibility = "hidden"; }
     svg.addEventListener("pointermove", show);
     svg.addEventListener("pointerleave", hide);
+  });
+
+  // The performance page's view switch: the portfolio as one line, or split into its books.
+  var switches = Array.prototype.slice.call(document.querySelectorAll(".view-switch"));
+  switches.forEach(function (sw) {
+    sw.hidden = false;
+    var buttons = Array.prototype.slice.call(sw.querySelectorAll("button[data-view]"));
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var v = b.getAttribute("data-view");
+        document.querySelectorAll("[data-view].chart, [data-view].legend").forEach(function (el) {
+          el.setAttribute("data-view", v);
+        });
+        buttons.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      });
+    });
   });
 
   var q = document.getElementById("lib-search");

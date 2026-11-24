@@ -1,6 +1,9 @@
 {
  "books": [
   {
+   "after_close": {
+    "absent": "the official end-of-day history is this book's daily record"
+   },
    "execution": {
     "label": "broker-confirmed",
     "read_at": "2026-11-23T22:40:00Z",
@@ -109,9 +112,20 @@
    "sleeves": {
     "absent": "strategy-level scores are kept for the event book only"
    },
+   "start": {
+    "label": "recorded",
+    "read_at": "2026-11-23T22:40:00Z",
+    "source": "cef/2026-11-17/STARTED (written before a session's first order)",
+    "value": {
+     "first_send": "2026-11-17"
+    }
+   },
    "title": "Fixed Income Book"
   },
   {
+   "after_close": {
+    "absent": "the official end-of-day history is this book's daily record"
+   },
    "execution": {
     "label": "broker-confirmed",
     "read_at": "2026-11-23T22:40:00Z",
@@ -215,9 +229,37 @@
    "sleeves": {
     "absent": "strategy-level scores are kept for the event book only"
    },
+   "start": {
+    "label": "recorded",
+    "read_at": "2026-11-23T22:40:00Z",
+    "source": "c4/2026-11-19/STARTED (written before a session's first order)",
+    "value": {
+     "first_send": "2026-11-19"
+    }
+   },
    "title": "Equity Cross-Asset Book"
   },
   {
+   "after_close": {
+    "label": "broker-confirmed",
+    "read_at": "2026-11-23T22:35:04Z",
+    "source": "events/<day>/verify.json (account equity after each close)",
+    "value": {
+     "kind": "account equity read by verify after each close (not the end-of-day history)",
+     "rows": [
+      {
+       "change_usd": 0.0,
+       "date": "2026-11-20",
+       "equity": 100000.0
+      },
+      {
+       "change_usd": 10.0,
+       "date": "2026-11-23",
+       "equity": 100010.0
+      }
+     ]
+    }
+   },
    "execution": {
     "absent": "no fill-quality record is kept for this book yet"
    },
@@ -240,7 +282,6 @@
       "equity": 100010.0,
       "kind": "account snapshot at verify (not the P&L of record)"
      },
-     "first_send": "2026-11-23",
      "n_notes": 0,
      "orders": {
       "fill_rate_shares": 1.0,
@@ -296,11 +337,19 @@
      ]
     }
    },
+   "start": {
+    "label": "recorded",
+    "read_at": "2026-11-23T22:40:00Z",
+    "source": "events/2026-11-23/STARTED (written before a session's first order)",
+    "value": {
+     "first_send": "2026-11-23"
+    }
+   },
    "title": "Event Book"
   }
  ],
  "exported_at_utc": "2026-11-23T23:20:00Z",
- "schema_version": "0.3",
+ "schema_version": "0.4",
  "shadow": {
   "label": "simulated",
   "read_at": "2026-11-23T22:40:00Z",

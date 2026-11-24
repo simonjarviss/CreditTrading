@@ -68,21 +68,12 @@ def test_the_overview_leads_with_the_team_and_there_is_no_slideshow(snap, tmp_pa
     assert nav.index("/team/") < nav.index("/performance/")
 
 
-def test_the_overview_names_the_books_its_combined_figure_sums(snap, tmp_path, content):
-    """Release-check review, 2026-11-23: the figure was called "combined" while it left out a book."""
-    assert "value" not in next(b for b in snap["books"] if b["name"] == "events")["official"]
+def test_the_overviews_portfolio_figure_states_its_window(snap, tmp_path, content):
+    """Release-check review, 2026-11-23: without a start date the figure read as P&L since inception."""
+    from dashboard import build as B
+    pf = B.portfolio(snap)
     h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert "Paper P&amp;L of the Fixed Income and Equity Cross-Asset books, " in h
-    assert "Combined paper P&amp;L" not in h
-
-
-def test_the_overviews_combined_figure_states_its_window(snap, tmp_path, content):
-    """Release-check review, 2026-11-23: without a start date it read as P&L since inception."""
-    from dashboard import metrics as M
-    rows, _ = M.combined({b["name"]: b["official"]["value"]["rows"] for b in snap["books"] if "value" in b["official"]})
-    s = M.summary(rows)
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert f"books, {SITE.date_range(s['first_date'], s['last_date'])}<" in h
+    assert f"Portfolio return, {SITE.date_range(pf['first'], pf['p']['last_date'])}<" in h
     assert SITE.date_range("2026-09-29", "2026-11-20") == "29 Sep to 20 Nov 2026"
     assert SITE.date_range("2025-12-30", "2026-01-05") == "30 Dec 2025 to 5 Jan 2026"
 
@@ -91,19 +82,20 @@ def test_a_new_book_is_dated_by_its_first_send_not_its_newest_session(snap, tmp_
     """Release-check review, 2026-11-23: "Trading since" printed the newest session, a date that moved
     forward every session. The start is the first day the runner wrote STARTED."""
     ev = next(b for b in snap["books"] if b["name"] == "events")
-    assert ev["session"]["value"]["first_send"] == "2026-11-23"
+    assert ev["start"]["value"]["first_send"] == "2026-11-23"
     ev["session"]["value"]["date"] = "2026-11-25"           # two sessions later
     target = build(snap, tmp_path / "site", content)
+    assert "rading since 23 Nov 2026" in (target / "performance" / "index.html").read_text()
     for page in ("index.html", "performance/index.html"):
         h = (target / page).read_text()
-        assert "rading since 23 Nov 2026" in h and "rading since 25 Nov 2026" not in h, page
+        assert "since 25 Nov 2026" not in h, page
 
 
 def test_an_unreadable_session_is_not_called_new_or_missing(snap, tmp_path, content):
     ev = next(b for b in snap["books"] if b["name"] == "events")
     ev["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
-    assert "its session record could not be read tonight" in h.lower() and "no record yet" not in h
+    assert "Session record: not measured." in h and "no record yet" not in h
 
 
 def test_an_unmeasured_book_withholds_the_overviews_combined_figure(snap, tmp_path, content):

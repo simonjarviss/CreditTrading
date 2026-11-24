@@ -42,11 +42,12 @@ def usd_axis(v: float) -> str:
 
 
 def pct_axis(v: float) -> str:
+    """A percent tick with the decimals it needs: +2%, −0.5%, −12.5% (release-check review,
+    2026-11-24: rounding to a fixed precision printed the −12.5% gridline as −12%)."""
     if v == 0:
         return "0%"
-    a = abs(v) * 100
-    s = f"{a:.1f}%" if a < 10 else f"{a:.0f}%"
-    return ("−" if v < 0 else "+") + s.replace(".0%", "%")
+    s = f"{abs(v) * 100:.2f}".rstrip("0").rstrip(".")
+    return ("−" if v < 0 else "+") + s + "%"
 
 
 AXIS = {"usd": usd_axis, "pct": pct_axis}
@@ -126,19 +127,21 @@ def line_chart(series: list, label: str, fmt: str = "usd", height: int = H) -> s
         if cur:
             segs.append(cur)
         width = ' style="stroke-width:2.5"' if s.get("bold") else ""
+        cls = f' {s["cls"]}' if s.get("cls") else ""
         for seg in segs:
             if len(seg) == 1:
                 cx, cy = seg[0].split(",")
-                parts.append(f'<circle cx="{cx}" cy="{cy}" r="4" fill="{s["color"]}"/>')
+                parts.append(f'<circle class="dot-pt{cls}" cx="{cx}" cy="{cy}" r="4" fill="{s["color"]}"/>')
             else:
-                parts.append(f'<polyline class="series" stroke="{s["color"]}"{width} points="{" ".join(seg)}"/>')
-        hover.append({"name": s["name"], "color": s["color"],
+                parts.append(f'<polyline class="series{cls}" stroke="{s["color"]}"{width} points="{" ".join(seg)}"/>')
+        hover.append({"name": s["name"], "color": s["color"], "cls": s.get("cls", ""),
                       "v": [round(pts[d], 6 if fmt == "pct" else 2) if d in pts else None for d in dates]})
     parts.append(f'<line class="hair" x1="0" x2="0" y1="{PAD_T}" y2="{height - PAD_B}"/>')
     parts.append("</svg>")
     data = {"x": [round(x(i), 1) for i in range(len(dates))], "dates": dates, "fmt": fmt, "series": hover}
-    legend = "".join(f'<span><span class="sw" style="background:{s["color"]}"></span>{escape(s["name"])}</span>'
-                     for s in series)
-    return (f'<div class="chart" data-series="{escape(json.dumps(data, separators=(",", ":")))}">'
+    legend = "".join(f'<span class="{s.get("cls", "")}"><span class="sw" style="background:{s["color"]}"></span>'
+                     f'{escape(s["name"])}</span>' for s in series)
+    view = ' data-view="portfolio"' if any(s.get("cls") for s in series) else ""
+    return (f'<div class="chart"{view} data-series="{escape(json.dumps(data, separators=(",", ":")))}">'
             + "".join(parts) + '<div class="tip"></div></div>'
-            + (f'<div class="legend">{legend}</div>' if len(series) > 1 else ""))
+            + (f'<div class="legend"{view}>{legend}</div>' if len(series) > 1 else ""))

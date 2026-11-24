@@ -27,6 +27,12 @@ unpriced, gross and net), orders (filled in full, partly, not at all) and the nu
 The risk reading keeps the largest position's share of equity without its name. No symbol, share
 count, order line or note text is in a snapshot, and find_private refuses one that has any.
 
+WHY 0.4 (team lead, 2026-11-24: one portfolio line, the event book included automatically): each
+book carries `start`, the first session that sent an order (from STARTED, label "recorded"), so its
+statistics and its place in the portfolio begin there and not at its funding; and `after_close`, the
+event book's daily account equity read by verify, its daily record until it has an end-of-day
+history. A session no longer carries first_send.
+
 `validate` checks the shape. `find_private` checks what a snapshot may never carry
 (dashboard/README.md section 2). Both return a list of problems; empty means clean.
 Neither raises on bad data, so a test can show every problem.
@@ -35,12 +41,12 @@ from __future__ import annotations
 
 import re
 
-SCHEMA_VERSION = "0.3"
-LABELS = ("broker-confirmed", "modelled", "simulated")
+SCHEMA_VERSION = "0.4"
+LABELS = ("broker-confirmed", "modelled", "simulated", "recorded")
 UNMEASURED = "UNMEASURED"
 
 TOP_KEYS = ("schema_version", "synthetic", "exported_at_utc", "books", "shadow")
-BOOK_KEYS = ("name", "title", "official", "session", "risk", "execution", "sleeves")
+BOOK_KEYS = ("name", "title", "official", "session", "risk", "execution", "sleeves", "start", "after_close")
 SYMBOL = re.compile(r"^[A-Z][A-Z0-9.\-]{0,6}$")
 BOOK_NAME = re.compile(r"^[a-z][a-z0-9_]{0,31}$")
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -90,8 +96,6 @@ def _check_value(kind: str, v, where: str, out: list) -> None:
     elif kind == "session":
         if not _is_date(v.get("date")):
             out.append(f"{where}.date: must be YYYY-MM-DD")
-        if v.get("first_send") is not None and not _is_date(v.get("first_send")):
-            out.append(f"{where}.first_send: must be YYYY-MM-DD or null")
         if v.get("verdict") not in ("PASS", "FAIL"):
             out.append(f"{where}.verdict: must be PASS or FAIL")
         if not _is_count(v.get("n_notes")):
@@ -110,6 +114,13 @@ def _check_value(kind: str, v, where: str, out: list) -> None:
         if snap is not None and not (isinstance(snap, dict) and _num(snap.get("equity"))
                                      and _opt_num(snap.get("change_usd"))):
             out.append(f"{where}.equity_snapshot: needs a numeric equity and change_usd")
+    elif kind == "start":
+        if not _is_date(v.get("first_send")):
+            out.append(f"{where}.first_send: must be YYYY-MM-DD")
+    elif kind == "after_close":
+        _rows(v.get("rows"), f"{where}.rows", out, {"date": _is_date, "equity": _num, "change_usd": _opt_num})
+        if isinstance(v.get("rows"), list) and not v["rows"]:
+            out.append(f"{where}.rows: needs at least one row (else write it as absent)")
     elif kind == "risk":
         if v.get("severity") not in ("OK", "INFO", "WATCH", "ACT", "UNMEASURED"):
             out.append(f"{where}.severity: unexpected {v.get('severity')!r}")
@@ -185,7 +196,7 @@ def validate(snap) -> list:
         seen.add(b.get("name"))
         if not (isinstance(b.get("title"), str) and b["title"].strip()):
             out.append(f"{where}.title: required")
-        for k in ("official", "session", "risk", "execution", "sleeves"):
+        for k in ("official", "session", "risk", "execution", "sleeves", "start", "after_close"):
             if k in b:
                 _check_reading(b[k], k, f"{where}.{k}", out)
     if "shadow" in snap:

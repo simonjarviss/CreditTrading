@@ -194,9 +194,21 @@ table.months td.total { font-weight: 600; }
 .book-text { max-width: 72ch; color: var(--text); margin: 10px 0 18px; }
 .book-grid { display: grid; gap: 48px 56px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); margin-top: 40px; }
 .book-grid td { white-space: normal; }
-.latest th, .latest td { white-space: nowrap; padding-left: 18px; }
+.latest th, .latest td { white-space: normal; padding-left: 18px; }
+.latest td:nth-child(2), .latest td:nth-child(5), .latest td:nth-child(6) { white-space: nowrap; }
 .latest th:first-child, .latest td:first-child { padding-left: 0; }
 .book-grid h3 { margin-top: 0; }
+.chart-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 64px; }
+.chart-head .chart-title { margin: 0; }
+.view-switch { display: inline-flex; border: 1px solid var(--ink); }
+.view-switch button { font: 600 13px/1 var(--sans); padding: 9px 16px; background: #fff; color: var(--ink); border: 0; cursor: pointer; }
+.view-switch button + button { border-left: 1px solid var(--ink); }
+.view-switch button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.chart[data-view="portfolio"] .bk, .legend[data-view="portfolio"] .bk { display: none; }
+.legend[data-view="portfolio"] { display: none; }
+table.stats tr.grp td { font: 600 11.5px/1.4 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  padding-top: 28px; border-bottom: 1px solid var(--rule-2); }
+table.stats tr.grp:first-child td { padding-top: 14px; }
 .chart .bar-pos { fill: var(--pos); }
 .chart .bar-neg { fill: var(--neg); }
 

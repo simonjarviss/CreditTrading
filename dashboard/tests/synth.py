@@ -94,6 +94,9 @@ def make_state(root: Path) -> tuple:
         d = st / b
         (d / "2026-11-20").mkdir(parents=True)
         (d / "2026-11-24").mkdir()                       # tomorrow's plan directory: no reconcile yet
+        first = "2026-11-17" if b == "cef" else "2026-11-19"   # each book's first send (C4 is funded 2026-11-18)
+        (d / first).mkdir()
+        (d / first / "STARTED").write_text("{}")
         (d / "2026-11-24" / "plan.json").write_text("{}")
         (d / "eod_equity.csv").write_text(eod(rows))
         rec = json.loads(json.dumps(RECONCILE))
@@ -108,6 +111,7 @@ def make_state(root: Path) -> tuple:
     (ev / "2026-11-20").mkdir(parents=True)
     (ev / "2026-11-20" / "verify.json").write_text(json.dumps(
         {**VERIFY, "session_date": "2026-11-20", "reason": "no trade: send ended DRY", "orders": [],
+         "equity": {"equity": 100000.0, "last_equity": 100000.0, "change_usd": 0.0, "kind": "snapshot at verify"},
          "fills_by_symbol": {}, "positions_after": {}, "marks": {}}))
     (ev / "2026-11-23").mkdir(parents=True)
     (ev / "2026-11-23" / "verify.json").write_text(json.dumps(VERIFY))

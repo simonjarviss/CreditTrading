@@ -81,3 +81,50 @@ def test_combined_uses_only_common_sessions_and_says_how_many_it_left_out():
     assert left == 1
     assert rows[-1]["equity"] == pytest.approx(a[-1]["equity"] + b[-1]["equity"])
     assert rows[0]["change_usd"] is None
+
+
+def test_the_portfolio_composite_weights_by_equity_and_starts_each_book_at_its_first_send():
+    """Team lead, 2026-11-24: one portfolio line; release-check review: C4's idle sessions counted."""
+    a = [{"date": f"2026-11-0{i}", "equity": e, "change_usd": c} for i, e, c in
+         ((2, 100.0, None), (3, 110.0, 10.0), (4, 99.0, -11.0), (5, 99.0, 0.0))]
+    b = [{"date": f"2026-11-0{i}", "equity": e, "change_usd": c} for i, e, c in
+         ((2, 300.0, None), (3, 300.0, 0.0), (4, 330.0, 30.0), (5, 330.0, 0.0))]
+    ta, tb = M.trading_rows(a, "2026-11-03"), M.trading_rows(b, "2026-11-04")
+    assert [r["date"] for r in tb] == ["2026-11-03", "2026-11-04", "2026-11-05"]       # b's idle 11-03 is its base only
+    comp, left = M.composite({"a": ta, "b": tb})
+    assert left == 0
+    assert comp[0][:4] == ("2026-11-03", 0.10, 10.0, 100.0)                            # only a is trading
+    assert comp[1][1] == pytest.approx((-11.0 + 30.0) / (110.0 + 300.0))                # both, weighted by equity
+    assert M.trading_rows(a, None) == []
+    with pytest.raises(ValueError):
+        M.trading_rows(a, "2026-11-02")                                               # no base before the first send
+
+
+def test_a_session_a_trading_book_lacks_is_left_out_not_summed_over_part():
+    a = [{"date": d, "equity": 100.0, "change_usd": c} for d, c in (("2026-11-02", None), ("2026-11-03", 1.0), ("2026-11-04", 1.0))]
+    b = [{"date": d, "equity": 100.0, "change_usd": c} for d, c in (("2026-11-02", None), ("2026-11-03", 1.0))]
+    comp, left = M.composite({"a": M.trading_rows(a, "2026-11-03"), "b": M.trading_rows(b, "2026-11-03")})
+    assert [c[0] for c in comp] == ["2026-11-03"] and left == 1
+
+
+def test_the_profile_on_a_known_series():
+    rs = [0.01, -0.02, 0.015, -0.005, 0.0] * 5                                          # 25 sessions
+    dated = [(f"2026-10-{i + 1:02d}", r, r * 100) for i, r in enumerate(rs)]
+    p = M.profile(dated)
+    n, mean = 25, sum(rs) / 25
+    sd = (sum((r - mean) ** 2 for r in rs) / 24) ** 0.5
+    assert p["n"] == n and p["vol"] == pytest.approx(sd * 252 ** 0.5)
+    assert p["sharpe"] == pytest.approx(mean / sd * 252 ** 0.5)
+    dd = (sum(min(r, 0) ** 2 for r in rs) / n) ** 0.5
+    assert p["sortino"] == pytest.approx(mean / dd * 252 ** 0.5)
+    assert p["hit_rate"] == pytest.approx(10 / 20)                                       # zero sessions do not count
+    assert p["avg_gain"] == pytest.approx(0.0125) and p["avg_loss"] == pytest.approx(-0.0125)
+    assert p["profit_factor"] == pytest.approx(sum(r for r in rs if r > 0) / -sum(r for r in rs if r < 0))
+    assert p["var95"] == pytest.approx(0.02) and p["es95"] == pytest.approx(0.02)         # the 5th percentile is a -2% day
+    assert p["worst"] == ("2026-10-02", -0.02) and p["best"] == ("2026-10-03", 0.015)
+    assert p["cum_return"] == pytest.approx(math.prod(1 + r for r in rs) - 1)
+
+
+def test_ratios_need_twenty_sessions():
+    p = M.profile([(f"2026-10-{i + 1:02d}", 0.001 * (-1) ** i, 1.0) for i in range(19)])
+    assert all(p[k] is None for k in ("vol", "sharpe", "sortino", "calmar", "var95", "es95", "skew", "kurt"))
