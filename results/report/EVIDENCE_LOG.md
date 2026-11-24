@@ -5803,3 +5803,14 @@ that adds it does not exist when it is written.
 - source: `dashboard/site.py` and `dashboard/build.py` @ `866d5ba`; the VM's site clone, read 2026-11-24 ~14:06 ET; the fixes are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-16 · Ruling and release: release-20261124-12 live; the team page's four working rules taken out
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-12 on 0535b46, site only, was installed in the VM's site clone at 14:28 ET. The team page read "8 strategies around scheduled corporate events", counted from the event book's record. The trading clone stayed at release-20261123-2 [V]
+  - the team lead, quoting the team page's four working rules (Systematic, At the close, Reconciled daily, Tested first): "take out this shit on team page" (verbatim). The pod section keeps its line and the three book cards [V]
+- source: `dashboard/site.py` @ `0535b46` (`POD_RULES`); the change is in the commit that carries this entry
+- supports: §5
+- status: current

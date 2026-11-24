@@ -241,7 +241,7 @@ def test_the_team_page_shows_the_people_then_the_pod_and_its_books(snap, tmp_pat
     home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
     assert home.index('class="people"') < home.index("A multi-strategy pod")
     pod = home.split("A multi-strategy pod", 1)[1].split("</section>", 1)[0]
-    assert pod.count('class="pod-card"') == 3 and pod.count("<h4>") == len(SITE.POD_RULES)
+    assert pod.count('class="pod-card"') == 3 and "<h4>" not in pod and "Reconciled daily" not in pod
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
         assert title in pod, title
 

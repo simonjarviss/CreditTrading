@@ -254,16 +254,6 @@ POD_BOOKS = {
     "c4": "Equity, preferred and multi-asset closed-end funds, on discount and relative-value signals.",
     "events": "strategies around scheduled corporate events, from fund distributions to trust terminations.",
 }
-POD_RULES = (
-    ("Systematic", "Written rules decide every trade. Nothing is placed by hand."),
-    # Release-check review of b76a7f4: "set from the day's data" was wrong for the core books, which
-    # decide on the evening of one session and send near the close of the next.
-    ("At the close", "Every trade is decided from data already published and sent near the market close."),
-    ("Reconciled daily", "Every position is checked against the broker each evening."),
-    ("Tested first", "A new strategy runs in simulation on live data before it trades."),
-)
-
-
 def event_strategies(snap: dict):
     """How many strategies the event book runs, from its sleeve reading; None when that could not be read.
     WHY (release-check review of b76a7f4): "Eight strategies" was written into the text twice, and would
@@ -283,16 +273,16 @@ def pod_line(snap: dict, b: dict) -> str:
 
 
 def pod_overview(snap: dict) -> str:
-    """The pod under the team: one line, a card per book, four working rules."""
+    """The pod under the team: one line and a card per book (team lead, 2026-11-24: the four working rules
+    taken out)."""
     cards = "".join(
         f'<div class="pod-card"><h3><span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}">'
         f'</span>{escape(b["title"])}</h3><p>{escape(pod_line(snap, b))}</p></div>'
         for b in snap["books"])
-    rules = "".join(f'<div><h4>{escape(k)}</h4><p>{escape(v)}</p></div>' for k, v in POD_RULES)
     return ('<section class="section soft"><div class="wrap"><div class="eyebrow">The pod</div>'
             '<h2>A multi-strategy pod</h2>'
             '<p class="lede narrow">Three systematic books, managed as one portfolio.</p>'
-            f'<div class="pod-grid">{cards}</div><div class="pod-rules">{rules}</div>'
+            f'<div class="pod-grid">{cards}</div>'
             '<a class="link-arrow" href="/performance/">Live performance</a></div></section>')
 
 
