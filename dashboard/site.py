@@ -31,7 +31,7 @@ import sys
 from html import escape
 from pathlib import Path
 
-from dashboard import build as perf, charts, metrics as M, snapshot as S
+from dashboard import build as perf, charts, layout as L, metrics as M, snapshot as S
 from dashboard.layout import (BOOK_COLOURS, BOOK_TEXT, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
                               photo_style, tone, usd, when)
 
@@ -55,34 +55,19 @@ STAGES = (
 )
 
 
-def _official(snap: dict) -> dict:
-    return {b["name"]: b["official"]["value"]["rows"] for b in snap["books"] if "value" in b["official"]}
+def books_trading(snap: dict) -> tuple:
+    """(books that have sent an order, books whose start could not be read). WHY (release-check
+    review, 2026-11-24): counting any book with a session counted the event book's dry runs as trading
+    and dropped an unreadable book without a word. A book trades from its first STARTED record."""
+    started = sum(1 for b in snap["books"] if "value" in b.get("start", {}))
+    unread = sum(1 for b in snap["books"] if S.UNMEASURED in b.get("start", {}))
+    return started, unread
 
 
 def date_range(first: str, last: str) -> str:
     """"29 Sep to 20 Nov 2026"; both years when they differ."""
     a, b = fmt_short(first), fmt_short(last)
     return f"{a.rsplit(' ', 1)[0] if first[:4] == last[:4] else a} to {b}"
-
-
-def combined_label(snap: dict) -> str | None:
-    """The label of the overview's combined P&L figure, or None when that figure is withheld.
-
-    WHY (release-check review, 2026-11-23): the figure sums only the books with an official
-    history, and used to be called "combined" whatever it left out. A book that is new (no
-    end-of-day history yet, `absent`) is named out of it: the label says which books it sums. A
-    book whose history could not be read tonight (UNMEASURED) withholds the figure, because the sum
-    would change basis from one night to the next with nothing on the page to say so; the
-    performance page names the book and the reason."""
-    if not _official(snap) or any(S.UNMEASURED in b["official"] for b in snap["books"]):
-        return None
-    summed = [b["title"] for b in snap["books"] if "value" in b["official"]]
-    if len(summed) == len(snap["books"]):
-        return "Combined paper P&amp;L"
-    short = [escape(t[:-len(" Book")] if t.endswith(" Book") else t) for t in summed]
-    if len(short) == 1:
-        return f"Paper P&amp;L of the {short[0]} Book"
-    return f"Paper P&amp;L of the {', '.join(short[:-1])} and {short[-1]} books"
 
 
 def stages_html() -> str:
@@ -94,26 +79,23 @@ def stages_html() -> str:
 # ------------------------------------------------------------------- overview --
 
 def overview(snap: dict) -> str:
-    series = _official(snap)
+    """The front page. Its figures are the portfolio's (build.portfolio: each book from its first
+    traded session, the event book included once it trades; team lead, 2026-11-24). A portfolio
+    withheld because a book's record could not be read shows no portfolio figure at all."""
+    pf = perf.portfolio(snap)
     figs = []
-    n_books = sum(1 for b in snap["books"] if "value" in b["session"] or "value" in b["official"])
-    figs.append(perf.fig(str(n_books), "Books trading"))
+    n_books, n_unread = books_trading(snap)
+    figs.append(perf.fig(str(n_books), "Books trading" + (f" ({n_unread} not read tonight)" if n_unread else "")))
     ev = next((b for b in snap["books"] if b["name"] == "events"), None)
     if ev is not None and "value" in ev["sleeves"]:
         n_strat = len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
         figs.append(perf.fig(str(n_strat + sum(1 for b in snap["books"] if b["name"] != "events")),
                              "Systematic strategies"))
-    if "cef" in series:
-        s = M.summary(series["cef"])
-        figs.append(perf.fig(str(s["n_returns"]), f"Sessions traded since {fmt_short(series['cef'][1]['date'])}"))
-    label = combined_label(snap)
-    if label is not None:
-        rows, _ = M.combined(series)
-        c = M.summary(rows)
-        # The window is stated (release-check review, 2026-11-23): the sum runs over the sessions
-        # every summed book has, so it is not each account's P&L since inception.
-        figs.append(perf.fig(usd(c["cum_pnl"], True),
-                             f"{label}, {date_range(c['first_date'], c['last_date'])}", tone(c["cum_pnl"])))
+    if pf["p"] and not pf["blocked"]:
+        p = pf["p"]
+        figs.append(perf.fig(pct(p["cum_return"], True),
+                             f"Portfolio return, {date_range(pf['first'], p['last_date'])}"))
+        figs.append(perf.fig(usd(p["pnl"], True), f"Portfolio P&amp;L over {p['n']} sessions"))
     hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
             '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
             '<h1>Event Driven Trading</h1>'
@@ -125,18 +107,16 @@ def overview(snap: dict) -> str:
     kf = (f'<section class="kf"><div class="wrap"><div class="figures">{"".join(figs)}</div>'
           f'<p class="meta note">Live figures, updated {escape(when(snap["exported_at_utc"]))} from the trading '
           'system\'s records. Paper trading only.</p></div></section>')
+    traded = {x["b"]["name"]: x for x in pf["books"]}
     rows_html = []
     for i, b in enumerate(snap["books"], start=1):
-        stat = ""
-        if b["name"] in series:
-            s = M.summary(series[b["name"]])
-            stat = (f'<b class="{tone(s["cum_pnl"])}">{usd(s["cum_pnl"], True)}</b>'
-                    f'<span>Paper P&amp;L since {fmt_short(s["first_date"])}</span>')
-        elif S.UNMEASURED in b["official"]:
-            stat = '<span>Official history could not be read tonight</span>'
-        elif "value" in b["session"]:
-            started = perf.started_text(b)
-            stat = f'<b>New</b><span>{escape(started[:1].upper() + started[1:])}</span>'
+        if b["name"] in traded:
+            x = traded[b["name"]]
+            stat = (f'<b class="{tone(x["p"]["pnl"])}">{usd(x["p"]["pnl"], True)}</b>'
+                    f'<span>Paper P&amp;L since {fmt_short(x["first"])}</span>')
+        else:
+            why = next((w for bb, w in pf["excluded"] + pf["blocked"] if bb is b), perf.started_text(b))
+            stat = f'<span>{escape(why[:1].upper() + why[1:])}</span>'
         stat += f'<a class="link-arrow" href="/performance/#{escape(b["name"])}">Results</a>'
         rows_html.append(f'<div class="row"><div class="num">0{i}</div><div><h3>'
                          f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
@@ -149,18 +129,15 @@ def overview(snap: dict) -> str:
                 '<a class="link-arrow" href="/research/">How we research</a></div>'
                 f'<div class="sec-body"><div class="rows">{"".join(rows_html)}</div></div></div></section>')
     performance = ""
-    if series:
-        rows, _ = M.combined(series)
-        lines = [{"name": b["title"], "color": BOOK_COLOURS.get(b["name"], "#111418"),
-                  "points": perf.cum_points(series[b["name"]])} for b in snap["books"] if b["name"] in series]
-        if len(series) > 1 and combined_label(snap) is not None:
-            lines.append({"name": "Accounts combined", "color": "#111418", "points": perf.cum_points(rows), "bold": True})
+    if pf["p"] and not pf["blocked"]:
+        line = [{"name": "Portfolio", "color": "#111418", "bold": True,
+                 "points": M.index_points(pf["dated"], pf["base"])}]
         performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
                        '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'
-                       '<p class="lede">Cumulative profit and loss of each account, from Alpaca\'s official '
-                       'end-of-day records, gross of the costs a paper account does not charge.</p>'
+                       '<p class="lede">The portfolio\'s cumulative return, each book from its first traded session, '
+                       'from Alpaca\'s records, gross of the costs a paper account does not charge.</p>'
                        '<a class="link-arrow" href="/performance/">Performance and risk</a></div>'
-                       '<div class="sec-body">' + charts.line_chart(lines, "Cumulative P&L of each account and combined")
+                       '<div class="sec-body">' + charts.line_chart(line, "Cumulative return of the portfolio", fmt="pct")
                        + '</div><div class="sec-full">' + perf.summary_table(snap) + '</div></div></section>')
     opportunity = ('<section class="section"><div class="wrap split">'
                    '<img class="photo" src="/static/img/group-lights.webp" alt="QUANTT members at a firm visit, January 2026" loading="lazy">'
@@ -256,7 +233,7 @@ def research(snap: dict, ledger: tuple) -> str:
     label-and-content grid (team lead, 2026-11-24: "re organize the library / research")."""
     n_ledger, first = ledger
     since = dt.date.fromisoformat(first).strftime("%B %Y")
-    n_books = sum(1 for b in snap["books"] if "value" in b["session"] or "value" in b["official"])
+    n_books, n_unread = books_trading(snap)
     head = page_head("Research", "Research",
                      "How we find, test and promote trading strategies, and the infrastructure that runs them.")
     pipeline = _sec("", "Pipeline", "From idea to live capital",
@@ -276,7 +253,7 @@ def research(snap: dict, ledger: tuple) -> str:
               f'<a class="btn ghost" href="{REPO_URL}" rel="noopener">Source code on GitHub</a></div></div>'
               '<div class="sec-body"><div class="figures">'
               + perf.fig(str(n_ledger), f"Ideas recorded since {since}")
-              + perf.fig(str(n_books), "Books trading on paper")
+              + perf.fig(str(n_books), "Books trading on paper" + (f" ({n_unread} not read tonight)" if n_unread else ""))
               + perf.fig(str(len(STAGES)), "Stages from idea to live")
               + "</div></div></div></section>")
     day = _sec("", "Infrastructure", "The trading day",
@@ -414,13 +391,18 @@ def publish(snap: dict, out_root: Path, now: dt.datetime | None = None, *, stati
     problems = S.validate(snap) + S.find_private(snap)
     if problems:
         raise SystemExit("snapshot refused, no page written:\n  " + "\n  ".join(problems))
-    built = pages(snap, content=content, repo=repo)
     now = now or dt.datetime.now(dt.timezone.utc)
     builds = out_root / "builds"
     builds.mkdir(parents=True, exist_ok=True)
     target = builds / now.strftime("%Y%m%dT%H%M%S%fZ")
     tmp = builds / (".tmp-" + target.name)
-    shutil.copytree(static, tmp / "static")
+    shutil.copytree(static, tmp / "static")                # copied first: the pages hash this copy
+    try:
+        with L.assets_from(tmp / "static"):
+            built = pages(snap, content=content, repo=repo)
+    except BaseException:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
     for rel, html in built.items():
         p = tmp / rel
         p.parent.mkdir(parents=True, exist_ok=True)

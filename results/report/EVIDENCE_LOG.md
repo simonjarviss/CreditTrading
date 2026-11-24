@@ -5632,3 +5632,16 @@ that adds it does not exist when it is written.
 - source: `dashboard/layout.py` @ `b5c9913` (fixed stylesheet URL); `dashboard/worker/index.js` @ `b5c9913` (cache key without `v`); response headers of `event-driven.quantt.ca`, read 2026-11-24 00:02 ET; the VM's site journal, read 2026-11-23 23:59 ET; the versioning, the photographs and the two pages are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-02 · Release and ruling: release-20261124-1 on the VM; the performance page becomes one portfolio line over the books, each from its first traded session, with the event book included
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-1 on 89c145d (PR #107 merged `--admin --match-head-commit` b803b9e, trees equal), after the release check's pytest, doc_audit, orient and preview steps passed on b803b9e; the VM's site clone moved from release-20261123-5 and the build published; `event-driven.quantt.ca` served the page with the stylesheet of the same content hash. The trading clone still at release-20261123-2, cef and c4 AUTO_ARMED present [V]
+  - the release check of b8ee07e (wf_df1960fd-7e8) cleared the code; its quant review found C4's statistics counted 25 sessions in which the account held nothing (in the VM's STARTED records, read 2026-11-24, C4's first is 2026-11-04; its account was funded 2026-09-29) [V]
+  - ruled, through messages: one portfolio line that splits into the books, the analysis an institutional investor reads, the event book included automatically, the page kept current [V]
+  - on the VM's records read 2026-11-24 00:30 ET: portfolio from 29 Sep 2026, 39 sessions, +0.66%, P&L +$1,325.93 (cef −$632.20 + C4 +$1,958.13, the figures E-2026-11-23-10 reproduced from orient), annualised volatility 7.90%, Sharpe 0.57, Sortino 0.82, maximum drawdown −2.65%, one-day 95% VaR 0.77% and expected shortfall 1.01%; C4 13 sessions from 4 Nov 2026, so its ratios are not shown; the event book joins on 23 Nov 2026 from its after-close reading [V]
+- source: `dashboard/metrics.py` @ `89c145d` (statistics over each account's funded rows); the VM's `quantt_state/{cef,c4,events}` STARTED, eod_equity.csv and verify.json, read 2026-11-24; `dashboard/build.py` `portfolio`, `metrics.composite` and `metrics.profile` are in the commit that carries this entry
+- supports: §5
+- status: current

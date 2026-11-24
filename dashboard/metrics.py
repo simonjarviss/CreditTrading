@@ -173,3 +173,163 @@ def combined(series: dict) -> tuple:
             ch = eq - sum(by_book[b][prev]["equity"] for b in by_book)
         out.append({"date": d, "equity": eq, "change_usd": ch})
     return out, len(union) - len(common)
+
+
+# --------------------------------------------------------------- the portfolio --
+# Team lead, 2026-11-24: "overall portfolio (shown as one line), can split into 3 lines (our sleeves)
+# and analyze below (all things institutional investors would look at)". The portfolio is a
+# composite of the books, each from its first traded session: the day's return is the sum of the
+# active books' P&L over the sum of their equity at the previous close (asset-weighted, as a
+# composite of accounts is measured), so an account's idle cash before it trades never dilutes it.
+
+def trading_rows(rows: list, first_send) -> list:
+    """A book's daily rows from the close before its first send (the base) on. None: never traded."""
+    if first_send is None:
+        return []
+    rows = funded(rows)
+    before = [r for r in rows if r["date"] < first_send]
+    if not before:
+        raise ValueError(f"no row before the first send {first_send}: the base equity is unknown")
+    base = before[-1]
+    return [dict(base, change_usd=None)] + [r for r in rows if r["date"] >= first_send]
+
+
+def daily(rows: list) -> list:
+    """[(date, return, P&L in dollars)] after the base row; a row without a change raises."""
+    out = []
+    for prev, cur in zip(rows, rows[1:]):
+        if cur["change_usd"] is None:
+            raise ValueError(f"{cur['date']}: a row after the base has no change_usd")
+        out.append((cur["date"], cur["change_usd"] / prev["equity"], cur["change_usd"]))
+    return out
+
+
+def composite(books: dict) -> tuple:
+    """books: {name: trading rows}. Returns ([(date, return, P&L, capital, active names)], dates left
+    out). A session on which an active book has no row is left out whole, never summed over part
+    of the portfolio; the count says how many were."""
+    by = {b: {r["date"]: r for r in rows} for b, rows in books.items() if rows}
+    order = {b: [r["date"] for r in rows] for b, rows in books.items() if rows}
+    start = {b: d[0] for b, d in order.items()}                 # the base date of each book
+    dates = sorted({d for b in order for d in order[b][1:]})
+    out, left = [], 0
+    for d in dates:
+        active = [b for b in by if start[b] < d]
+        if not all(d in by[b] for b in active):
+            left += 1
+            continue
+        pnl = cap = 0.0
+        for b in active:
+            i = order[b].index(d)
+            prev = by[b][order[b][i - 1]]
+            pnl += by[b][d]["change_usd"]
+            cap += prev["equity"]
+        out.append((d, pnl / cap, pnl, cap, tuple(sorted(active))))
+    return out, left
+
+
+def _pct(xs: list, q: float) -> float:
+    """The q-quantile by linear interpolation between order statistics (numpy's default)."""
+    s = sorted(xs)
+    k = (len(s) - 1) * q
+    lo, hi = math.floor(k), math.ceil(k)
+    return s[lo] + (s[hi] - s[lo]) * (k - lo)
+
+
+def profile(dated: list) -> dict:
+    """Every statistic of a daily return series, from [(date, return, P&L)].
+
+    Returns and drawdowns compound the daily returns. Ratios, VaR, expected shortfall, skewness and
+    kurtosis need MIN_RETURNS_FOR_RATIOS sessions and are None below it. VaR and expected shortfall
+    are historical, one day, 95%: the 5th percentile of daily returns and the mean of the returns at
+    or below it, both shown as losses."""
+    n = len(dated)
+    rs = [r for _, r, _ in dated]
+    p = {"n": n, "first_date": dated[0][0] if dated else None, "last_date": dated[-1][0] if dated else None}
+    idx, peak, dd_series, under, longest = 1.0, 1.0, [], 0, 0
+    for d, r, _ in dated:
+        idx *= 1.0 + r
+        peak = max(peak, idx)
+        dd = idx / peak - 1.0
+        dd_series.append((d, dd))
+        under = under + 1 if dd < 0 else 0
+        longest = max(longest, under)
+    p["cum_return"] = idx - 1.0
+    p["pnl"] = sum(x for _, _, x in dated)
+    p["max_drawdown"] = min((x for _, x in dd_series), default=0.0)
+    p["max_drawdown_date"] = min(dd_series, key=lambda t: t[1])[0] if p["max_drawdown"] < 0 else None
+    p["drawdown"] = dd_series[-1][1] if dd_series else 0.0
+    p["longest_drawdown"] = longest
+    p["sessions_in_drawdown"] = under
+    p["last"] = dated[-1][1] if dated else None
+    p["last5"] = (math.prod(1 + r for r in rs[-5:]) - 1.0) if n >= 5 else None
+    if dated:
+        m = dated[-1][0][:7]
+        p["mtd"] = math.prod(1 + r for d, r, _ in dated if d[:7] == m) - 1.0
+    else:
+        p["mtd"] = None
+    p["best"] = max(dated, key=lambda t: t[1])[:2] if dated else None
+    p["worst"] = min(dated, key=lambda t: t[1])[:2] if dated else None
+    ups, downs = [r for r in rs if r > 0], [r for r in rs if r < 0]
+    p["hit_rate"] = len(ups) / (len(ups) + len(downs)) if ups or downs else None
+    p["avg_gain"] = sum(ups) / len(ups) if ups else None
+    p["avg_loss"] = sum(downs) / len(downs) if downs else None
+    p["gain_loss_ratio"] = (p["avg_gain"] / -p["avg_loss"]) if ups and downs else None
+    gp, gl = sum(x for _, _, x in dated if x > 0), -sum(x for _, _, x in dated if x < 0)
+    p["profit_factor"] = gp / gl if gl > 0 else None
+    for k in ("vol", "downside_dev", "sharpe", "sortino", "ann_return", "calmar", "var95", "es95", "skew", "kurt"):
+        p[k] = None
+    if n >= MIN_RETURNS_FOR_RATIOS:
+        mean = sum(rs) / n
+        sd = _sd(rs)
+        dd_dev = math.sqrt(sum(min(r, 0.0) ** 2 for r in rs) / n)
+        p["vol"] = sd * math.sqrt(TRADING_DAYS)
+        p["downside_dev"] = dd_dev * math.sqrt(TRADING_DAYS)
+        p["sharpe"] = mean / sd * math.sqrt(TRADING_DAYS) if sd > 0 else None
+        p["sortino"] = mean / dd_dev * math.sqrt(TRADING_DAYS) if dd_dev > 0 else None
+        p["ann_return"] = (1.0 + p["cum_return"]) ** (TRADING_DAYS / n) - 1.0
+        p["calmar"] = p["ann_return"] / -p["max_drawdown"] if p["max_drawdown"] < 0 else None
+        v = _pct(rs, 0.05)
+        tail = [r for r in rs if r <= v]
+        p["var95"], p["es95"] = -v, -sum(tail) / len(tail)
+        if sd > 0:
+            m3 = sum((r - mean) ** 3 for r in rs) / n
+            m2 = sum((r - mean) ** 2 for r in rs) / n
+            m4 = sum((r - mean) ** 4 for r in rs) / n
+            p["skew"] = m3 / m2 ** 1.5
+            p["kurt"] = m4 / m2 ** 2 - 3.0
+    return p
+
+
+def index_points(dated: list, base_date: str) -> list:
+    """[(date, cumulative return)] from 0 at the base session, for a growth chart."""
+    out, idx = [(base_date, 0.0)], 1.0
+    for d, r, _ in dated:
+        idx *= 1.0 + r
+        out.append((d, idx - 1.0))
+    return out
+
+
+def drawdown_index(dated: list, base_date: str) -> list:
+    """[(date, drawdown from the running peak of the compounded index)] from 0 at the base session."""
+    out, idx, peak = [(base_date, 0.0)], 1.0, 1.0
+    for d, r, _ in dated:
+        idx *= 1.0 + r
+        peak = max(peak, idx)
+        out.append((d, idx / peak - 1.0))
+    return out
+
+
+def corr_dated(a: list, b: list) -> tuple:
+    """(Pearson correlation of two dated return series on their common sessions, n); None below
+    MIN_RETURNS_FOR_RATIOS common sessions or when either is constant there."""
+    ra, rb = {d: r for d, r, _ in a}, {d: r for d, r, _ in b}
+    common = sorted(set(ra) & set(rb))
+    n = len(common)
+    if n < MIN_RETURNS_FOR_RATIOS:
+        return None, n
+    xs, ys = [ra[d] for d in common], [rb[d] for d in common]
+    mx, my = sum(xs) / n, sum(ys) / n
+    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    sxx, syy = sum((x - mx) ** 2 for x in xs), sum((y - my) ** 2 for y in ys)
+    return (None, n) if sxx == 0 or syy == 0 else (sxy / math.sqrt(sxx * syy), n)

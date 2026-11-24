@@ -201,9 +201,18 @@ def test_the_privacy_check_refuses_an_order_id():
 
 def test_the_first_send_is_the_oldest_day_with_started_not_a_dry_run(state):
     st, _ = state
-    assert book(snap_of(state), "events")["session"]["value"]["first_send"] == "2026-11-23"
+    s = snap_of(state)
+    assert book(s, "events")["start"]["value"]["first_send"] == "2026-11-23"
+    assert book(s, "cef")["start"]["value"]["first_send"] == "2026-11-17" and book(s, "cef")["start"]["label"] == "recorded"
     (st / "events" / "2026-11-23" / "STARTED").unlink()
-    assert book(snap_of(state), "events")["session"]["value"]["first_send"] is None
+    assert book(snap_of(state), "events")["start"] == {"absent": "no session has sent an order yet"}
+
+
+def test_the_event_books_after_close_readings_are_its_daily_record(state):
+    ev = book(snap_of(state), "events")
+    rows = ev["after_close"]["value"]["rows"]
+    assert [r["date"] for r in rows] == ["2026-11-20", "2026-11-23"] and rows[-1]["change_usd"] == 10.0
+    assert book(snap_of(state), "cef")["after_close"] == {"absent": "the official end-of-day history is this book's daily record"}
 
 
 def test_exposure_is_not_measured_when_a_close_is_missing(state):

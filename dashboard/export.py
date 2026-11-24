@@ -298,13 +298,7 @@ def session_sleeves(book: str, book_dir: Path) -> dict:
         equity = _float(eq.get("equity"), "the account's equity")
         holdings = [(_float(q, "a position's quantity"), _float(marks.get(s), "a position's close"))
                     for s, q in (r.get("positions_after") or {}).items()]
-        # The first session that sent an order: the oldest day with STARTED, which the runner writes
-        # before its first order (CLAUDE.md order-path rule 2). A dry-run day has a verify.json and no
-        # STARTED, so the book's start is never dated by a session that sent nothing (release-check
-        # review, 2026-11-23: "Trading since" used to print the newest session's date).
-        first = oldest_day_with(book_dir, "STARTED")
-        value = {"date": day.name, "first_send": first.name if first else None,
-                 "verdict": "PASS" if r.get("ok") else "FAIL",
+        value = {"date": day.name, "verdict": "PASS" if r.get("ok") else "FAIL",
                  "n_notes": len((r.get("problems") or []) + (r.get("fails") or [])),
                  "positions": _positions_summary(holdings, equity),
                  "close_basis": "daily bar close (consolidated feed)",
@@ -317,6 +311,62 @@ def session_sleeves(book: str, book_dir: Path) -> dict:
                        "broker-confirmed")
     except (Unreadable, OSError, AttributeError, TypeError) as e:
         return unmeasured(f"{book}/{day.name}/verify.json: {e}")
+
+
+def start(book: str, book_dir: Path) -> dict:
+    """The first session that sent an order: the oldest day directory holding STARTED, which every
+    runner writes before its first order (CLAUDE.md order-path rule 2). WHY (release-check review,
+    2026-11-24): C4's account was funded on 29 Sep 2026 and held nothing for 25 sessions, and its
+    volatility, Sharpe and Sortino counted those idle sessions. A book's statistics, and its place in
+    the portfolio, start here; a dry-run day writes no STARTED and so never starts a book."""
+    first = oldest_day_with(book_dir, "STARTED")
+    if first is None:
+        return absent("no session has sent an order yet")
+    return reading({"first_send": first.name}, f"{book}/{first.name}/STARTED (written before a session's first order)",
+                   mtime_z(first / "STARTED"), "recorded")
+
+
+def after_close(book: str, book_dir: Path, kind: str) -> dict:
+    """The event book's daily account equity, read by its verify after each close. It has no
+    end-of-day collector, so no official history; until it has one, these readings are its daily
+    record, labelled as such on the page (team lead, 2026-11-24: the event book "should be included
+    automatically" in the portfolio). The core books' daily record is their official history."""
+    if kind != "sleeves":
+        return absent("the official end-of-day history is this book's daily record")
+    days = sorted(d for d in book_dir.iterdir() if d.is_dir() and DAY_DIR.match(d.name) and (d / "verify.json").is_file())
+    if not days:
+        return absent("no session has been verified yet")
+    first = oldest_day_with(book_dir, "STARTED")
+    rows, newest = [], None
+    try:
+        for i, d in enumerate(days):
+            r = read_json(d / "verify.json")
+            if r.get("session_date") != d.name:
+                raise Unreadable(f"{d.name}/verify.json: session_date {r.get('session_date')!r} is not its directory's date")
+            eq = r.get("equity") or {}
+            equity = _float(eq.get("equity"), f"{d.name} equity")
+            if equity is None:
+                # A day before the first send (a dry run) may carry no account reading: nothing traded,
+                # so nothing is lost. From the first send on, a missing reading is a gap, never skipped.
+                if first is None or d.name < first.name:
+                    continue
+                raise Unreadable(f"{d.name}/verify.json: no account equity")
+            if not rows:
+                # The base: Alpaca's own equity at the previous close (`last_equity`), dated by the
+                # session directory before this one. Without both, the series has no start.
+                last = _float(eq.get("last_equity"), f"{d.name} last equity")
+                if last is not None and i > 0:
+                    rows.append({"date": days[i - 1].name, "equity": last, "change_usd": None})
+            rows.append({"date": d.name, "equity": equity,
+                         "change_usd": _float(eq.get("change_usd"), f"{d.name} change")})
+            t = iso_to_z(r["read_at"]) if r.get("read_at") else mtime_z(d / "verify.json")
+            newest = max(newest or t, t)
+        if not rows:
+            return absent("no verified session has an account reading yet")
+        return reading({"rows": rows, "kind": "account equity read by verify after each close (not the end-of-day history)"},
+                       f"{book}/<day>/verify.json (account equity after each close)", newest, "broker-confirmed")
+    except (Unreadable, OSError, AttributeError, TypeError) as e:
+        return unmeasured(f"{book} after-close readings: {e}")
 
 
 def risk(book: str, book_dir: Path) -> dict:
@@ -441,14 +491,16 @@ def export(state_root: Path, scoreboard: Path | None, now: dt.datetime | None = 
         if not d.is_dir():
             miss = unmeasured(f"state directory {name}/ not found")
             books.append({"name": name, "title": title, "official": miss, "session": miss, "risk": miss,
-                          "execution": miss, "sleeves": miss})
+                          "execution": miss, "sleeves": miss, "start": miss, "after_close": miss})
             continue
         books.append({"name": name, "title": title,
                       "official": official(name, d),
                       "session": session_core(name, d) if kind == "session" else session_sleeves(name, d),
                       "risk": risk(name, d),
                       "execution": execution(name, d),
-                      "sleeves": sleeves(name, d, kind)})
+                      "sleeves": sleeves(name, d, kind),
+                      "start": start(name, d),
+                      "after_close": after_close(name, d, kind)})
     return {"schema_version": S.SCHEMA_VERSION, "synthetic": False, "exported_at_utc": utc_z(now),
             "books": books, "shadow": shadow(scoreboard)}
 

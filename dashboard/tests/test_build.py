@@ -31,7 +31,7 @@ def book(snap, name):
 
 def test_every_book_has_its_section(snap):
     h = page(snap)
-    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Combined paper results",
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio results",
                   "Strategies in simulation"):
         assert title in h, title
     for sym in ("AAA", "BBB", "CCC"):                   # aggregates only (team lead, 2026-11-23)
@@ -58,11 +58,38 @@ def test_a_gap_is_shown_as_not_measured_never_as_a_number(snap):
     assert "$100,050" not in h                               # the book's equity is gone, not carried
 
 
-def test_a_book_without_history_is_named_and_left_out_of_the_combined_figures(snap):
+def test_the_portfolio_takes_each_book_from_its_first_send_and_the_event_book_on_its_readings(snap):
+    """Team lead, 2026-11-24: one portfolio line, the event book "included automatically". The event
+    book has no end-of-day history, so it joins on its after-close readings, labelled; a session a
+    trading book has no record for is left out and counted."""
     h = page(snap)
-    assert "Not yet in the combined figures: Event Book" in h
-    # the combined equity is the two books' sum on their common sessions: 100,050 + 100,300
-    assert "$200,350" in h
+    lede = h.split("Portfolio results", 1)[1].split("</p>", 1)[0]
+    assert "Fixed Income Book from 17 Nov 2026" in lede and "Equity Cross-Asset Book from 19 Nov 2026" in lede
+    assert "Event Book from 23 Nov 2026 (after-close readings until its end-of-day history begins)" in lede
+    assert "1 session is left out" in lede
+
+
+def test_the_portfolio_view_switch_hides_the_books_until_chosen(snap):
+    h = page(snap)
+    assert 'class="view-switch" role="group" aria-label="Chart view" hidden' in h
+    assert h.count('data-view="portfolio"') >= 4                  # growth and drawdown charts and their legends
+    assert 'class="series bk"' in h and "By book" in h
+
+
+def test_the_statistics_table_has_every_group_and_needs_twenty_sessions_for_ratios(snap):
+    h = page(snap)
+    for label in ("Returns", "Risk", "Risk-adjusted return", "Daily returns", "Value at risk, 95%, one day",
+                  "Expected shortfall, 95%, one day", "Sortino ratio", "Calmar ratio", "Profit factor", "Skewness",
+                  "Longest drawdown", "Month to date"):
+        assert f"<td>{label}</td>" in h or re.search(rf'colspan="\d+">{re.escape(label)}</td>', h), label
+    assert "needs 20 sessions, has 4" in h                       # the fixture's portfolio has 4 sessions
+
+
+def test_an_unreadable_book_withholds_the_portfolio_and_names_it(snap):
+    book(snap, "c4")["official"] = {"UNMEASURED": "eod_equity.csv: not a number"}
+    h = page(snap)
+    assert "The portfolio is not shown tonight" in h and "Equity Cross-Asset Book: its official history could not be read" in h
+    assert "Growth since inception" not in h
 
 
 def test_the_newest_session_shows_its_after_close_reading_until_the_official_point_lands(snap):
@@ -116,7 +143,7 @@ def test_cli_builds_the_fixture(tmp_path):
 
 # ------------------------------------------------------------ read-only ----
 STDLIB = {"__future__", "argparse", "csv", "datetime", "json", "math", "os", "re", "shutil", "sys", "html",
-          "pathlib", "tempfile", "zoneinfo", "hashlib", "dashboard"}
+          "pathlib", "tempfile", "zoneinfo", "hashlib", "contextlib", "dashboard"}
 CODE = ["build.py", "snapshot.py", "export.py", "metrics.py", "charts.py", "layout.py", "site.py"]
 
 
