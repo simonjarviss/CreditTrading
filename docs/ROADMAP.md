@@ -161,7 +161,7 @@ live path follows `docs/TEAM.md` §2 and reaches the VM only in a release.
 
 | # | work order | checks | rank | who | status |
 |---|---|---|---|---|---|
-| 7.34 | Merge PR #99 (`ops/checkout.py`, `ops/branch_inventory.py`); then archive-tag and delete the "none" rows on the team lead's go for the list | A1.1, A1.2 | 34 | TL merges; A deletes on go | open |
+| 7.34 | Merge PR #99 (`ops/checkout.py`, `ops/branch_inventory.py`); then archive-tag and delete the "none" rows on the team lead's go for the list | A1.1, A1.2 | 34 | TL merges; A deletes on go | done 2026-11-23: PR #99 merged; 116 worktrees, 147 local and 88 GitHub branches removed, each merged into `main` (E-2026-11-23-04). Left for a decision: 10 local and 3 GitHub branches holding commits not on `main` |
 
 ## Later
 

@@ -5517,3 +5517,29 @@ that adds it does not exist when it is written.
 - source: `dashboard/README.md` @ `87728af` (the 2026-10-26 repository route it supersedes) and `ops/orient.py` @ `87728af` (the PNL figures it reproduces); `dashboard/` (export.py, metrics.py, build.py, site.py), `dashboard/tests/test_metrics.py` (parity with `ops.orient.official_pnl`), `docs/SYSTEM.md` §5 "the public site" and `docs/RUNBOOK.md` §8.13 are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-23-03 · Incident: the events book's first armed send hit Alpaca's rate limit; 46 of 219 orders went, 173 were answered HTTP 429, and the book holds a partial, unhedged position
+- kind: incident
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - the send at 15:41 ET on plan dff7c378…12ad: 46 orders sent and all 46 fully filled; 173 answered HTTP 429 "rate limit exceeded" ("too many requests" for the last few) and booked as rejections, the index hedge among them; exit 20 FAIL [V]
+  - the later send runs that day refused (exit 11): a set had already started, the projected gross was over 1.5 × live equity, and positions had moved since the plan. Read at 15:54 ET by a second session as well: gross held $22,664.71, live equity $99,958.06 [V]
+  - cause: before its first order the send read every symbol's asset flags (219 GETs), then sent each order as a clock read and a POST, none of it paced, against Alpaca's "200 requests per minute, per account" [S: the support page cited in `quantt/broker/alpaca.py`]. GETs retry on 429 in the client; a POST never does, by design (the doubled-book rule). The core and C4 send a few dozen orders and never reached the limit [V]
+  - what it did not do: no order was doubled, nothing was sent outside the window, and the runner refused every retry that day [V]
+  - the team lead, through question prompts: "Disarm until the fix ships" (send unit DRY_RUN=1 again at 16:57 ET, read back); "Hold them" (the 46 positions); "Build it now and release" [V]
+  - the fix: the client paces the trading host (a burst of 40, then 150 a minute), and a 429 to an order is waited out and the id read before any resend; tests that fail against the old code [V]
+- source: `quantt/session/run.py` @ `87728af` (`_transmit`: a 4xx is a rejection, never retried); `quantt/broker/alpaca.py` @ `87728af` (`GET_BACKOFF_S` and the rate-limit note); the VM's events send log and unit environment, read on 2026-11-23; the fix is in the commit that carries this entry
+- supports: §1, §5
+- status: current
+
+### E-2026-11-23-04 · Ruling: the branch clean-up goes ahead with the caches kept; AUTO_ARMED for the events book only on a passing VERIFY
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - none (a ruling). "Go, keep the caches" on the list of 116 worktrees, 147 local and 88 GitHub branches, each fully merged into `main`; "Yes, if VERIFY passes" for AUTO_ARMED (not created: the session's send failed, E-2026-11-23-03)
+  - applied at 15:52 to 15:53 ET with no skips: 116 worktrees removed after their ignored files (research caches and one-off wrappers, 35 GB) were moved to a folder outside the repository; 147 local and 88 GitHub branches deleted; 185 `archive/*` tags kept on the laptop and not pushed. The inventory afterwards: 55 local branches (10 with no reason, each holding commits not on main), 28 worktrees, 16 GitHub branches [V]
+- source: `ops/branch_inventory.py` @ `87728af` (the inventory, read before and after); `docs/STANDARD.md` @ `87728af` (A1.2)
+- supports: §5
+- status: current
