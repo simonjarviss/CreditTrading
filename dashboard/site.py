@@ -96,7 +96,7 @@ def overview(snap: dict) -> str:
         not_read = "".join(f" (without the {escape(b['title'])}: not read tonight)" for b, _ in pf["blocked"])
         figs.append(perf.fig(pct(p["cum_return"], True),
                              f"Portfolio return, {date_range(pf['first'], p['last_date'])}{not_read}"))
-        figs.append(perf.fig(usd(p["pnl"], True), f"Portfolio P&amp;L over {p['n']} sessions"))
+        figs.append(perf.fig(usd(p["pnl"], True), f"Portfolio P&amp;L over {p['n']} sessions{not_read}"))
     hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
             '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
             '<h1>Event Driven Trading</h1>'
@@ -133,12 +133,16 @@ def overview(snap: dict) -> str:
     if pf["p"]:
         line = [{"name": "Portfolio", "color": "#111418", "bold": True,
                  "points": M.index_points(pf["dated"], pf["base"])}]
+        # A book left out because its record could not be read is named beside the chart and the
+        # table (release-check review of 455eff4: the overview showed both without saying so).
+        missing = "".join(f'<p class="gap">Not included tonight: {escape(b["title"])} ({escape(w)}).</p>'
+                          for b, w in pf["blocked"])
         performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
                        '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'
                        '<p class="lede">The portfolio\'s cumulative return, each book from its first traded session, '
                        'from Alpaca\'s records, gross of the costs a paper account does not charge.</p>'
                        '<a class="link-arrow" href="/performance/">Performance and risk</a></div>'
-                       '<div class="sec-body">' + charts.line_chart(line, "Cumulative return of the portfolio", fmt="pct")
+                       '<div class="sec-body">' + missing + charts.line_chart(line, "Cumulative return of the portfolio", fmt="pct")
                        + '</div><div class="sec-full">' + perf.summary_table(snap) + '</div></div></section>')
     opportunity = ('<section class="section"><div class="wrap split">'
                    '<img class="photo" src="/static/img/group-lights.webp" alt="QUANTT members at a firm visit, January 2026" loading="lazy">'

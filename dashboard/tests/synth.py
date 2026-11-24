@@ -113,8 +113,10 @@ def make_state(root: Path) -> tuple:
         {**VERIFY, "session_date": "2026-11-20", "reason": "no trade: send ended DRY", "orders": [],
          "equity": {"equity": 100000.0, "last_equity": 100000.0, "change_usd": 0.0, "kind": "snapshot at verify"},
          "fills_by_symbol": {}, "positions_after": {}, "marks": {}}))
+    (ev / "2026-11-20" / "plan.json").write_text(json.dumps({"session_date": "2026-11-20", "asof": "2026-11-19"}))
     (ev / "2026-11-23").mkdir(parents=True)
     (ev / "2026-11-23" / "verify.json").write_text(json.dumps(VERIFY))
+    (ev / "2026-11-23" / "plan.json").write_text(json.dumps({"session_date": "2026-11-23", "asof": "2026-11-20"}))
     (ev / "2026-11-23" / "STARTED").write_text("{}")
     (ev / "sleeve_scores.csv").write_text(SLEEVES)
     sb = root / "SCOREBOARD.md"

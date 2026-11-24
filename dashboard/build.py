@@ -470,8 +470,11 @@ def portfolio_section(snap: dict) -> str:
         warn = (f'<p class="gap">Not included tonight, because its record could not be read: {why}. The portfolio '
                 'below is the other books only.</p>')
     if not pf["p"]:
-        return ('<section class="section"><div class="wrap"><p class="gap">No book has a traded session on record '
-                'yet.</p></div></section>')
+        # Say why there is no portfolio (release-check review of 455eff4: with every book unreadable,
+        # "no traded session yet" was false and dropped the reason).
+        why = (warn if pf["blocked"] else '<p class="gap">No book has a traded session on record yet.</p>')
+        return ('<section class="section"><div class="wrap"><div class="eyebrow">Portfolio</div>'
+                f'<h2>Portfolio results</h2>{why}</div></section>')
     p = pf["p"]
     colour = lambda x: BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR)                    # noqa: E731
     members = "; ".join(f'{escape(x["b"]["title"])} from {fmt_short(x["first"])}'
