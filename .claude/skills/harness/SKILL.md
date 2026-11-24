@@ -1,103 +1,115 @@
 ---
 name: harness
-description: How to run a backtest or policy comparison correctly in this repo — the canonical evaluate(), the shift(2) convention, turnover matching, the cost grid, eras, and the reporting template. Use before writing any backtest, signal evaluation, or policy comparison, and when a result needs to be comparable to existing numbers.
+description: How to run a backtest correctly in this repo — the canonical harness, the shift(2) convention, the lookahead asserts, the early/late time split and regimes, eras, the exposure report, the capacity table, and the reporting template. Use before writing any backtest or signal evaluation, and when a result needs to be comparable to existing numbers.
 ---
 
 # The research harness
 
-**Do not build another backtester.** The canonical one is `scripts/research/harness.py`, restructured with the team lead's ruling of 2026-10-27 so every family and the ML pipeline share it. Extend it visibly.
+**Do not build another backtester.** The canonical one is
+`scripts/research/harness.py`, shared by every family and the ML pipeline.
+Extend it visibly, with a test.
+
+Research is judged on **gross signal** (team lead, 2026-11-09, `docs/SYSTEM.md`
+§5). This skill no longer carries a cost grid, turnover-matched net comparisons,
+trial counters and their bars, or sealed-holdout steps: all were dropped for
+research that day. `CLAUDE.md`, "Hard rules — research", is the authority.
 
 ```python
-from scripts.cef.band_frontier import build_targets, band, calendar, evaluate
-from scripts.cef.spec import BAND_WIDTH     # never write the width as a literal
+from scripts.research import harness
+H = harness.cross_sectional_weights(signal, eligible, ...)   # or harness.event_weights(...)
+res = harness.evaluate(H, R)       # applies H.shift(harness.EXEC_LAG): decide t, MOC fill t+1, earn t+2
+rep = harness.report(H, R)         # full, fit / holdout (one early/late split), eras
 
-T, R  = build_targets()        # frictionless daily targets as the sleeve builds them
-H_live = band(T, BAND_WIDTH)    # the live policy, read from the frozen spec
-H_old  = calendar(T, 2)        # the previous configuration
-res    = evaluate(H, R)        # applies H.shift(2): decide t, MOC fill t+1, earn t+2
+# the CEF sleeve's own builders
+from scripts.cef.band_frontier import build_targets, band, evaluate
+from scripts.cef.spec import BAND_WIDTH     # never write a live parameter as a literal
 ```
 
 | need | use |
 |---|---|
-| the table every result shows (gross headline, 5/15/30bp grid, H5 eras, fit and 2023 holdout rows) | `harness.report(H, R)` |
-| a non-CEF family | `harness.cross_sectional_weights(...)` or `harness.event_weights(...)`, then `report` |
+| the gross headline and the eras | `harness.report(H, R)`: read the gross columns of `full` and `eras` |
+| one early/late split | `report`'s `fit` and `holdout` rows split at `harness.HOLDOUT_START`. The names are from before the ruling; they are simply the early and late periods now. A different split point is stated with its reason |
+| a family other than the CEF sleeve | `harness.cross_sectional_weights(...)` or `harness.event_weights(...)`, then `report` |
 | prove a target builder reads no future | `harness.truncation_check(build, probes)` |
 | an ML model | `scripts/research/ml.py`: `label_panel`, `walk_forward_splits`, `walk_forward_predict`; `cpcv_splits` for the overfitting distribution only; `reversal_gate` before trusting a complex model |
-| store the trial's series (every trial) | `record(...)` in `scripts/research/registry.py`, with `judged=True` on the configuration the pre-registration selects when several are stored |
-| both deflated-Sharpe bars for a stored series | `python3 -m scripts.research.registry bars <counter> <trial> <variant> --declared-n <N>`: the desk's and the paper's with the 2026-10-28 safeguards (`paper_sr0`); `slate <counter>` gives the least N a trial may declare. Never build a bar from `bar_inputs`' raw `n_effective` and `sr_var` |
-| is variant A's Sharpe different from the book's | `sharpe_diff` in `scripts/research/resampling.py` (block from `calibrate_block`) |
+| a standard error under overlap or clustering | `newey_west_t`, `clustered_mean_diff` in `scripts/research/inference.py` |
+| is variant A's Sharpe different from B's | `sharpe_diff` in `scripts/research/resampling.py` (block from `calibrate_block`) |
 
-`harness.EXEC_LAG` is the one definition of the execution convention;
-`band_frontier.evaluate()` delegates to it, byte-identical on the live book. Anything scored differently is **not comparable to any
-number in this repo**.
+`harness.report` still returns net-of-cost columns and a `sign_flips` flag from
+before the ruling. **Do not put them in a research table.** The harness has no
+helper yet for regimes, exposures or the capacity table: compute them in the
+idea's script from `res["pnl"]` and the weight panel, or add a tested helper to
+the harness. Do not write a second scoring loop.
 
-## The rules, condensed
+## The rules that stay
 
 | # | rule |
 |---|---|
-| **H1** | Execution is **`shift(2)`**. Decide *t*, MOC fill *t+1*, earn *t+2*. |
-| **H2** | **Turnover-matched comparisons only** — match turn/yr within 5%, compare there. |
-| **H3** | **Cost grid 5/15/30bp** on every table. The answer must not flip sign across it. |
-| **H4** | **Borrow charged separately and labelled.** One day of fees on 21 years of history is a counterfactual — say so at the top of the table. |
-| **H5** | **Eras** 2005–09, 2010–14, 2015–19, 2020–22, 2023–26. Report era turnover sd/mean. |
-| **H6** | **IC** = Spearman(signal *t*, forward 2-day return from *t+2*), **non-overlapping**, expected negative, SEs **clustered by date**. |
-| **H7** | **No lookahead.** State the alignment in a comment; assert it at runtime. |
-| **H8** | **No sweeping and picking.** Derive, then verify it lands on a plateau. |
-| **H9** | **The 27 untouched names** are the comparison set. Trading one consumes it. |
-| **H10** | **Count trials** — CEF or GAMMA, each with its own √(2 ln N) bar; read both from `docs/RESEARCH_STATE.md`. |
-| **H11** | **Pre-register** before the session that trades it. |
-| **H12** | **Negative controls.** Test where the mechanism *cannot* operate. |
-| **H13** | **Time holdout** — fit before 2023-01-01, report a 2023–26 holdout row. |
+| **H1** | Execution is **`shift(2)`** for anything traded at the close. Decide *t*, MOC fill *t+1*, earn *t+2*. Another fill (an open, an intraday window) is stated in a comment and asserted. |
+| **H5** | **Eras** 2005–09, 2010–14, 2015–19, 2020–22, 2023–26 where the sample allows. |
+| **H6** | **IC** = Spearman(signal *t*, forward return from *t+2*), non-overlapping, standard errors **clustered by date**. |
+| **H7** | **No lookahead**, including in the data: NAV publication lags, filing acceptance times, index membership as of the day, first-release macro vintages. State the alignment in a comment; assert it at run time (`src/backtest/guard.py`). |
+| **H12** | **One control.** Test where the mechanism cannot operate. A bug check, not a gate. |
 | **H14** | **No decision rule keys on a number written in a document.** Re-measure. |
 | **H15** | **Total returns.** If the distribution panel cannot cover a name-date, **raise**. |
+| new | **One time split and two regimes** before paper. |
+| new | **Exposures reported**, never a veto. |
+| new | **Capacity shown** at $1M, $5M and $10M against ADV. |
 
 ## Why each convention exists
 
-**`shift(2)`** — the signal needs the fund's NAV, which does not exist until after
-the close, so the decision is necessarily made in the evening and the earliest
-possible fill is the *next* closing auction. `validate.py` once used `shift(1)`,
-entering at day *t*'s close on day *t*'s NAV: gross SR 1.26 → 0.95, net at hold=5
-**0.82 → 0.51**.
+**`shift(2)`** — a signal that needs the fund's NAV cannot be computed until
+after the close, so the decision is made in the evening and the earliest fill is
+the *next* closing auction. `validate.py` once used `shift(1)`, entering at day
+*t*'s close on day *t*'s NAV, and overstated the gross Sharpe materially
+(`pre-clean-slate:results/cef/EXECUTION_CONVENTION_2026-09-10.md`).
 
-**Turnover matching** — a construction that trades more looks better gross and
-worse net. Neither is the point. The band beat the calendar at *matched* turnover
-on *both*, which is what made it a real result.
+**The time split** — an effect that exists only in one half of the sample is
+usually a bug, a data change or a fluke. Reading both halves takes minutes.
 
-**The cost grid** — cost is the input we do not know (n=1 for the live method,
-dispersion ±93.8bp). Prefer the policy least sensitive to it. Every calendar
-configuration goes negative at 30bp; bands ≥4.8% never do. That robustness
-argument, not an argmax, is why the band is live.
+**Regimes** — say which state variable defines them before looking (a credit
+spread, a volatility index, the rate cycle), and build the label only from data
+available on each date. An effect that lives in one regime is a finding with a
+story, not a failure.
 
-**Deriving, not sweeping** — the band width came from the cube-root law
-`h* = (3cσ_w²/2κ_w)^(1/3)` on measured target-weight dynamics: 4.26% at 15bp,
-4.85% at 22bp, and the scaling verifies exactly (`h(30)/h(15) = 1.260` vs
-`2^(1/3) = 1.2599`). **6.4% topped the swept column and was deliberately not
-chosen.** `z_window = 63` was chosen the other way and failed out of sample.
+**Pre-2013 is thin on the CEF panel** — too few names clear the ADV filter, so
+full-sample turnover is diluted and full-sample Sharpes are depressed. Report by
+era (`CLAUDE.md` landmine 8).
 
-**Pre-2013 is thin** — 2411 dates are flat because fewer than `min_names` clear the
-ADV filter. Full-sample turnover is diluted ~44% and Sharpes depressed by
-√(3041/5452). This applies to every row equally, but know it before quoting.
+**Exploring parameters** — allowed. Show the neighbours of the value you chose,
+so the reader can see a plateau or a spike.
 
 ## Reporting template
 
-Every comparison table carries:
+```
+                 ann ret    vol    gross SR   max DD   hit rate   turn/yr
+---------------------------------------------------------------------------
+full sample       x.x%     x.x%     x.xx      -x.x%     xx%        xx.x
+early             ...
+late              ...
+regime A (named)  ...
+regime B (named)  ...
+control           ...
+```
+
+then:
 
 ```
-policy            gross SR   turn/yr   net@5bp   net@15bp   net@30bp
---------------------------------------------------------------------
-reference          x.xx       xx.x      x.xx      x.xx       x.xx
-candidate          x.xx       xx.x      x.xx      x.xx       x.xx      <- matched
+exposures     beta equity   beta rates   beta credit   corr with each sleeve held
+capacity      at $1M / $5M / $10M: largest position as % of ADV; share of positions above the stated participation
 ```
 
-plus an era block (five rows, with turnover sd/mean), a fit row and a **2023–26
-holdout row**, and a one-line note naming the panel and **its last date**. Borrow,
-if charged, gets its own labelled column and a counterfactual caveat.
+plus an era block where the sample allows, one equity-curve chart, the
+reproducing command, and a line naming each panel and **its last date**. Every
+figure labelled `[V]`/`[S]`/`[U]`. Capacity is a feasibility check, not a cost.
 
 ## Before you publish a number
 
-- Which counter did this spend, and what is that counter's bar now?
-- Does it survive the negative control?
-- Does it survive the holdout?
 - Is the panel current? *Stale is a form of wrong.*
-- Can someone reproduce it from the script you named? Run `/repro` on your own
-  result before you believe it.
+- Is the price one that could be traded (an official close, not a mid or a
+  stale NAV)?
+- Does the control score as well as the treatment?
+- Do the early and late halves agree?
+- Has `quant-reviewer` read the script?
+- Is the line in `results/IDEA_LEDGER.md`, in the same commit?
+- Can someone reproduce it from the command you named? Run `/repro`.

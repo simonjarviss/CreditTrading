@@ -1,9 +1,9 @@
 {
- "run_utc": "2026-11-03T17:53:18+00:00",
- "code_head": "ec3b01a891fcf9fb51a9e246e4b3bc1f1a13ffb8",
+ "run_utc": "2026-11-11T16:54:04+00:00",
+ "code_head": "c433265ed84c6ef8bf09b77c0fba78f481db4e12",
  "uncommitted_edits": true,
  "spec_id": "c4_families.v5.20261103",
- "spec_sha256": "6e131c14de08193597f79e52d549cf95e86099fd6729a7c06a5a635d0d26b48c",
+ "spec_sha256": "65c19a9e498fb917cf5d7ba4ca3cc87129d9ba4242ec3018455bce4ab55d1d10",
  "m": 1.26,
  "cap": 1.9,
  "band": 0.048,

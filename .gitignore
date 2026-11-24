@@ -23,6 +23,7 @@ results/cef/live_attribution/_cache/
 # Its analyse outputs carry the same account data (daily.csv holds the EOD equity
 # of every session); the tool refuses to write either where git can see it.
 results/cef/live_attribution/_out/
+results/cef/live_attribution/_out_c4/
 # The evidence pack's row-level live records (per name, per fill, positions). Team lead,
 # 2026-11-03: "Aggregates in repo, rows private". results/**/_cache_* covers it too; this line
 # says so by name, and scripts/report/tests pins it.
@@ -114,16 +115,24 @@ results/events/cef_corp_action_events_full.csv
 # This repository is public; the module also refuses any path git can see.
 results/cef/exposure_readout/_cache/
 results/cef/exposure_readout/_out/
+results/cef/exposure_readout/_out_c4/
+
+# Generated site pages (dashboard/build.py, dashboard/site.py); rebuilt from a snapshot, never committed.
+/dashboard/out/
 
 # Taken out of the tree on 2026-11-09 because this repository is public. The first four
 # patterns are row-level tables derived from licensed CRSP data (permnos, prices, share
 # codes, CRSP-based liquidity per name). The last two are the table and column listings
 # of the R2 mirror, which scripts/data/r2_catalog.py and
 # scripts/events/ssx/ssx_data_r2_inventory.py rebuild on disk. Patterns, not single
-# files, so that a re-run with a new date stays out of git as well.
+# files, so that a re-run with a new date stays out of git as well. Added 2026-11-24 (team lead's
+# go on this pull request): the C4 families names table, which carries per-fund CRSP share codes,
+# coverage dates and row counts (written by scripts/data/cef_families_quality.py; read only by
+# the research script scripts/cef/c4_feasibility.py, never by the live path).
 results/data/cef_crosscheck_crsp_*.nonagree.csv
 results/data/universe_*/universe_map.csv
 results/xasset/**/slate_feasibility_*.csv
 results/cef/c4/c4_crsp_identity_*.csv
 results/data/R2_CATALOG.md
 results/events/ssx/ssx_data/[Rr]2_[Ff][Uu][Ll][Ll]_[Ii][Nn][Vv][Ee][Nn][Tt][Oo][Rr][Yy]*
+results/cef/cef_families/names_*.csv

@@ -439,8 +439,8 @@ def _blend_unit_book(w_z: pd.Series, w_L: pd.Series, ret: pd.DataFrame,
     split would hand the risk to whichever book is more volatile that quarter.
 
     NO SILENT FALLBACK. A non-finite or zero vol for either book or for the blend
-    has no ratio to take, and raises naming which; the z path's `else 1.0` scalar
-    stays on the key-absent path only, where it has always been.
+    has no ratio to take, and raises naming which. The z path sized at scalar
+    1.0 in that case until 2026-11-19; it raises too now (`target_positions`).
     """
     if not w_z.index.equals(w_L.index):
         raise ValueError("cef level_signal: w_z and w_L are not on the same names in the same order")
@@ -1299,14 +1299,65 @@ class CEFDiscountSleeve(Sleeve):
                 f"finite (z {dict(sorted(row.items()))}): every eligible z is equal, so the "
                 f"book is 0/0. Nothing decided")
 
+        if not np.isfinite(w.to_numpy(dtype=float)).all():
+            # EVERY ELIGIBLE Z EQUAL ON A FULL SESSION: THE BOOK HOLDS, AND SAYS SO
+            # (team lead, 2026-11-19: "Hold, but say so"; PR #33 section 5.H's open
+            # question, answered). z - mean(z) is then zero for every name and the
+            # weights are 0/0. It has happened: on 2020-03-18 and 2025-04-07 every
+            # eligible z sat at the -4 clip. Until this block the NaN weights ran on:
+            # the trailing vol of a NaN book read 0.0, the scalar fell back to 1.0,
+            # every band comparison against NaN was False, and the book held its
+            # shares with reasons that read like an ordinary band hold. The outcome
+            # is kept (every name keeps its current shares, an unheld name stays
+            # unopened, nothing is sent) and is now written down: a qty target per
+            # held name, as `below_min_names = "hold"` builds, with this reason. A
+            # flat book on such a day opens nothing, where the old path handed NaN
+            # weights to the opening session. The reduced (te4) path above still
+            # refuses instead: its pre-registration says a raise there is a missed
+            # day. Any OTHER non-finite weight is not this case and raises.
+            zs = sorted(set(row.values()))
+            if len(zs) != 1:
+                raise ValueError(
+                    f"cef: the weights on {sorted(row)} for {last.date()} (as of "
+                    f"{pd.Timestamp(asof).date()}) are not finite although the eligible z are "
+                    f"not all equal (z {dict(sorted(row.items()))}). Nothing decided")
+            why = (f"book holds: every eligible z is equal ({zs[0]:+.2f} on {len(row)} names, "
+                   f"{last.date()}), so the weights are 0/0")
+            order_type = str(self._req("order_type")).upper()
+            # No `tag`: that marks a short-of-min_names session for the runner's
+            # missing-NAV refusal, and this is a full session.
+            return done([_held_target(t, market_state, why, order_type) for t in uni])
+
         # constant-risk sizing off the sleeve's own trailing realised vol
         ret = px.pct_change(fill_method=None).where(lambda x: x.abs() < 0.5)
         level = self._level_signal
         level_vols = None
         if level is None:
-            # TODAY'S PATH: the z book's own vol, and its scalar (with its `else 1.0`).
+            # THE Z BOOK'S OWN VOL, AND ITS SCALAR. NO SILENT FALLBACK (team lead,
+            # 2026-11-19, after the review of release-20261116-1). Until then a
+            # trailing vol that was zero or not a number sized the book at scalar
+            # 1.0: `... if rv > 0 else 1.0`. That is an invented size on a day the
+            # estimator has nothing to say (63 sessions of returns that are all
+            # missing, or a book whose past P&L never moved). The one case in which
+            # it is known to have fired, a 0/0 book on a day every eligible z is
+            # equal, is the explicit hold just above and never reaches this line. The level-signal path below has always raised
+            # for the same condition (`_blend_unit_book`); now both do, naming the
+            # date and the names. On every day the vol is a positive number the
+            # scalar is the expression it has always been, so those plans are
+            # unchanged byte for byte (src/deploy/tests/test_vol_scalar_no_fallback.py
+            # compares them with the old expression on the generated panel).
+            # DECLARED DIVERGENCE FROM THE HARNESS: `band_frontier.build_targets`
+            # keeps its `else 1.0`, because a backtest's first sessions have no
+            # 63-day history and it must return a number for them; live, the
+            # sleeve's warmup means that case is a data fault, never a start-up.
             rv = _book_vol(ret, w)
-            scal = float(np.clip(self._vol_target / rv, 0.2, 2.5)) if rv > 0 else 1.0
+            if not (np.isfinite(rv) and rv > 0):
+                raise ValueError(
+                    f"cef: the z book's trailing realised vol on {last.date()} (as of "
+                    f"{pd.Timestamp(asof).date()}) is {rv!r} over the last 63 sessions of returns "
+                    f"for {sorted(w.index)}; the vol scalar is vol_target_annual / that vol and "
+                    f"has no value. Nothing decided")
+            scal = float(np.clip(self._vol_target / rv, 0.2, 2.5))
         else:
             # ---- LEVEL SIGNAL (CEF trial 54; module docstring, steps 2-4) --------
             # ALIGNMENT (H7). Everything below is read from the date-t panel, t =

@@ -123,7 +123,11 @@ step_packages() {
   step "packages"
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -q
-  apt-get install -y -q git ca-certificates python3-venv unattended-upgrades
+  # `acl` (setfacl, getfacl): the events book's installer grants user quantt a read-only ACL on
+  # the shadow books' decisions and refuses without it (quantt/sleeves/deploy/install_events_vm.sh).
+  # The first VM was bootstrapped before that installer existed, so on 2026-11-20 the package
+  # was added there by hand (EVIDENCE_LOG E-2026-11-20-10); a new VM gets it here.
+  apt-get install -y -q git ca-certificates python3-venv unattended-upgrades acl
 }
 
 step_apt() {

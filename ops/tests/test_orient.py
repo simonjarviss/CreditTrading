@@ -411,7 +411,7 @@ class TestPnl:
         """eod_equity.csv absent (the state until its collector step is
         installed): the official column reads UNMEASURED on every row, and the
         snapshot's values appear only in their own column."""
-        scores = [["2026-01-05", "PASS", "777.77", "11.11"], ["2026-01-06", "PASS", "888.88", "22.22"]]
+        scores = [["2026-01-05", "PASS", "777.77", "11.11", "11.11"], ["2026-01-06", "PASS", "888.88", "22.22", "22.22"]]
         sec = orient.pnl(_prod_with_pnl(_pnl_files(scores=scores)))
         assert "UNMEASURED" in sec["official"]
         assert [r["official"] for r in sec["table"]["rows"]] == ["UNMEASURED", "UNMEASURED"]
@@ -423,17 +423,17 @@ class TestPnl:
 
     def test_the_record_is_unchanged_by_the_scores_beside_it(self):
         """Never blended: changing every score leaves every official figure alone."""
-        a = [["2026-01-05", "PASS", "1.00", "2.00"], ["2026-01-06", "PASS", "3.00", "4.00"]]
-        b = [[d, v, "9999.00", "-9999.00"] for d, v, _s, _a in a]
+        a = [["2026-01-05", "PASS", "1.00", "2.00", "2.00"], ["2026-01-06", "PASS", "3.00", "4.00", "4.00"]]
+        b = [[d, v, "9999.00", "-9999.00", "7777.00"] for d, v, _s, _a, _h in a]
         oa = orient.pnl(_prod_with_pnl(_pnl_files(eod=EOD_UP_DOWN, scores=a)))["official"]
         ob = orient.pnl(_prod_with_pnl(_pnl_files(eod=EOD_UP_DOWN, scores=b)))["official"]
         assert oa == ob
 
     def test_table_columns_come_from_their_own_files(self, capsys):
-        scores = [["2026-01-05", "PASS", "60.00", "49.00"],
-                  ["2026-01-06", "FAIL", "-10.00", "UNMEASURED"],
-                  ["2026-01-06", "PASS", "-12.00", "-31.00"],
-                  ["2026-01-07", "PASS", "15.00", "10.50"]]
+        scores = [["2026-01-05", "PASS", "60.00", "49.00", "49.00"],
+                  ["2026-01-06", "FAIL", "-10.00", "UNMEASURED", "UNMEASURED"],
+                  ["2026-01-06", "PASS", "-12.00", "-31.00", "-31.00"],
+                  ["2026-01-07", "PASS", "15.00", "10.50", "10.50"]]
         dist = [["2026-01-05", "48.50"], ["2026-01-07", "UNMEASURED"]]
         sec = orient.pnl(_prod_with_pnl(_pnl_files(eod=EOD_UP_DOWN, scores=scores, dist=dist)))
         rows = {r["date"]: r for r in sec["table"]["rows"]}
@@ -454,7 +454,7 @@ class TestPnl:
         assert "$1,050.00 at the 2026-01-05 close; drawdown from it -$20.00 (-1.90%)" in out
 
     def test_dates_before_a_cut_tail_are_not_read_never_no_row(self):
-        scores = [["2026-01-07", "PASS", "15.00", "10.50"]]
+        scores = [["2026-01-07", "PASS", "15.00", "10.50", "10.50"]]
         sec = orient.pnl(_prod_with_pnl(_pnl_files(eod=EOD_UP_DOWN, scores=scores, scores_n=40)))
         rows = {r["date"]: r for r in sec["table"]["rows"]}
         assert rows["2026-01-05"]["snapshot"] == "not read"
@@ -486,6 +486,58 @@ class TestPnl:
         d = orient.collect(run_tests=False)
         assert d["sections"]["PNL"]["official"]["cumulative_usd"] == pytest.approx(30.0)
         assert json.loads(json.dumps(d, default=str))["sections"]["PNL"]
+
+    def test_the_close_model_sums_its_own_column_beside_the_record_on_the_same_days(self, capsys):
+        """Team lead 2026-11-18: model the close for investors. Synthetic rows.
+        The score file starts a day after the record, so the official figure
+        beside the model is over the model's days only, and both say so."""
+        eod = [["2026-01-02", "1000.00", "0"], ["2026-01-05", "1050.00", "50.00"],
+               ["2026-01-06", "1020.00", "-30.00"], ["2026-01-07", "1030.00", "10.00"]]
+        scores = [["2026-01-06", "PASS", "-28.00", "-30.00", "-12.00"],
+                  ["2026-01-07", "PASS", "11.00", "10.00", "25.00"],
+                  ["2026-01-08", "PASS", "1.00", "1.00", "UNMEASURED"]]
+        sec = orient.pnl(_prod_with_pnl(_pnl_files(eod=eod, scores=scores)))
+        cm = sec["close_model"]
+        assert cm["model_usd"] == pytest.approx(13.0) and cm["n"] == 2
+        assert cm["official_same_sessions_usd"] == pytest.approx(-20.0)
+        assert (cm["first"], cm["last"], cm["not_comparable"]) == ("2026-01-06", "2026-01-07", ["2026-01-08"])
+        assert sec["official"]["cumulative_usd"] == pytest.approx(30.0), "the record is untouched"
+        out = _render_with(capsys, PNL=sec)
+        assert "+$13.00 over 2 session(s)" in out and "-$20.00 official on the same sessions" in out
+        assert "MODELLED, not the record" in out
+
+    def test_the_close_model_is_a_gap_when_two_rows_disagree_or_the_file_is_cut(self):
+        eod = [["2026-01-02", "1000.00", "0"], ["2026-01-05", "1050.00", "50.00"]]
+        two = [["2026-01-05", "PASS", "1.00", "1.00", "5.00"], ["2026-01-05", "PASS", "1.00", "1.00", "6.00"]]
+        cm = orient.pnl(_prod_with_pnl(_pnl_files(eod=eod, scores=two)))["close_model"]
+        assert "UNMEASURED" in cm, "a conflicting day is not summed, and it was the only day"
+        cut = orient.pnl(_prod_with_pnl(_pnl_files(eod=eod, scores=two[:1], scores_n=40)))["close_model"]
+        assert "window" in cut["UNMEASURED"]
+        none = orient.pnl(_prod_with_pnl(_pnl_files(eod=eod)))["close_model"]
+        assert "UNMEASURED" in none
+
+    def test_other_vm_books_get_their_own_record_never_summed(self, capsys):
+        """C4 is its own Alpaca account on the VM (team lead 2026-11-18: as
+        reachable as the core). Synthetic rows: they test the reader, not C4."""
+        c4 = _pnl_files(eod=[["2026-01-02", "500.00", "0"], ["2026-01-05", "493.00", "-7.00"]])
+        vm = {**_m("ARMED"), "pnl": _pnl_files(eod=EOD_UP_DOWN),
+              "books": {"c4": {**_m("ARMED"), "pnl": c4},
+                        "x9": {"UNMEASURED": "its reply was cut short"}}}
+        sec = orient.pnl(_prod_section(_m("OFF"), vm))
+        assert sec["official"]["cumulative_usd"] == pytest.approx(30.0), "the core's, unchanged"
+        b = sec["books"]["c4"]
+        assert b["official"]["cumulative_usd"] == pytest.approx(-7.0) and "vol_target" not in b
+        assert "cut short" in sec["books"]["x9"]["official"]["UNMEASURED"]
+        out = _render_with(capsys, PNL=sec)
+        assert "book c4: official P&L" in out and "-$7.00 over 1 session(s)" in out
+        assert "book x9: official P&L" in out and out.count("vol target (spec)") == 1
+        assert out.count("a SNAPSHOT, not the record") == 1, "one legend, under the core"
+
+    def test_the_laptop_as_prod_lists_no_vm_books(self):
+        vm = {**_m("OFF"), "pnl": _pnl_files(eod=EOD_UP_DOWN),
+              "books": {"c4": {**_m("ARMED"), "pnl": _pnl_files(eod=EOD_UP_DOWN)}}}
+        sec = orient.pnl(_prod_section({**_m("ARMED"), "pnl": _pnl_files(eod=EOD_UP_DOWN)}, vm))
+        assert sec["prod"] == "laptop" and sec["books"] == {}
 
 
 class TestPnlVolTargetIsReadFromTheSpec:

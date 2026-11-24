@@ -1,4 +1,4 @@
-C4 PAPER BENCHMARK (step 2 of C4_DEPLOY_PLAN_2026-10-27; zero trials). Run 2026-11-03T23:31 UTC. Spec c4_families.v5.20261103 (sha256 6e131c14de081935...); the trial's parameters from cef_discount.v9.20261102 (scripts/cef/spec.py). Fit window only, <= 2022-12-30: no 2023+ row is read.
+C4 PAPER BENCHMARK (step 2 of C4_DEPLOY_PLAN_2026-10-27; zero trials). Run 2026-11-11T16:54 UTC. Spec c4_families.v5.20261103 (sha256 65c19a9e498fb917...); the trial's parameters from cef_discount.v9.20261102 (scripts/cef/spec.py). Fit window only, <= 2022-12-30: no 2023+ row is read.
 panels: data/cef_families/ (last 2026-10-09) cut on read at 2022-12-30 into a temporary directory: {'cef_prices': {'rows': 775180, 'last': '2022-12-30'}, 'cef_nav': {'rows': 542205, 'last': '2022-12-30'}, 'cef_actions': {'rows': 19740, 'last': '2022-12-29'}}
 trial T: 74 frozen funds (65 with fit rows; zero columns for BSTZ, BTX, GUG, HGLB, IGA, KYN, NPFD, NXG, TBLD), 4531 sessions 2005-01-03..2022-12-30
 spec target: CEF trial 54's blend (level_signal, z_share 0.5), built by spec_targets from the same cut; fidelity and H11 read it, the reproduction gate and the cap rule read the trial's z T

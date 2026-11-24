@@ -1,4 +1,4 @@
-CEF trial 54 activation measures (2026-11-03T17:53:18+00:00); code ec3b01a + uncommitted edits; C4 spec c4_families.v5.20261103 (sha256 6e131c14de081935...): m 1.26, cap 1.9, band 0.048, z_share 0.5; fit only, <= 2022-12-30
+CEF trial 54 activation measures (2026-11-11T16:54:04+00:00); code c433265 + uncommitted edits; C4 spec c4_families.v5.20261103 (sha256 65c19a9e498fb917...): m 1.26, cap 1.9, band 0.048, z_share 0.5; fit only, <= 2022-12-30
   reproduction gate PASS: trial 52's fit gross SR 1.216957834377 (total), 1.359590762777 (price)
 
 §3.3 ON THE SLEEVE'S CONSTRUCTION (account x1.26, cap 1.9, band 0.048; fit sessions with a target):

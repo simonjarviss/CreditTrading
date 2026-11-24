@@ -524,7 +524,7 @@ def lines(rec: dict) -> list[str]:
 #                     unmeasured, so whether the label applies reads UNMEASURED.
 #   sent              (`_send_state`) whether a decision's targets went to the broker, read
 #                     from the session's own records: plan.json `orders` / `plan_sha` /
-#                     `execution`, send.json `plan_sha` / `exit` / `final` / `not_final`, and
+#                     `execution` / `bp_scale`, send.json `plan_sha` / `exit` / `final` / `not_final`, and
 #                     whether <D>/STARTED exists (run.py writes it before the first order of a
 #                     set, and never otherwise; CLAUDE.md order-path rule 2); and, for a FAIL
 #                     whose send.json records no order only, <D>/orders.jsonl and
@@ -547,7 +547,13 @@ def lines(rec: dict) -> list[str]:
 #                     THE RULE:
 #                       * no orders: nothing needed sending, and the account already held the
 #                         plan's targets when it was decided (a late-market decide with no
-#                         orders exits NOTHING_TO_SEND and no send runs): SENT;
+#                         orders exits NOTHING_TO_SEND and no send runs): SENT. EXCEPT when
+#                         plan.json carries `bp_scale` (the owner's release-check of 78e3483,
+#                         2026-11-09): the buying-power fit took every order out, so the
+#                         account did NOT move to the targets: NOT SENT, and only for the one
+#                         record run.py can write there (orders_in > 0, orders_out 0, no
+#                         STARTED); any other `bp_scale` beside an empty plan is UNMEASURED
+#                         (the independent review of PR #69, 2026-11-10);
 #                       * late market, SENT: STARTED exists AND send.json's `exit` is SENT
 #                         (the runner's rule-2 marker plus the send record), AND its `final` /
 #                         `not_final` record at least one of the plan's orders, AND at least
@@ -603,7 +609,10 @@ def lines(rec: dict) -> list[str]:
 #                         run writes no send.json, so STARTED is its only per-session record of
 #                         the set; a set that began counts as sent, including one that failed
 #                         part-way or whose every order was rejected (its run record, not read
-#                         here, says what went). Not a mode te4 trades in: paper is late_market.
+#                         here, says what went). Never reached for te4: run.py `thin_rule_for`
+#                         refuses the key under any mode but late_market (the owner's
+#                         release-check of 78e3483, 2026-11-09), because under cls an episode
+#                         could open on STARTED alone with no fill known.
 # READING BACK. Sessions are walked newest first from the one before this decide. A plan.json
 # with no `thin_session` was decided with the key absent, when no reduced build could run, and
 # ends the walk (the rule was off before it). A record that is there and cannot be read, a
@@ -719,6 +728,39 @@ def _send_state(d, day: dict) -> tuple[bool, str]:
         raise Unmeasured(f"{d}'s plan.json has no `orders` list ({orders!r}): whether its "
                          f"targets were sent cannot be read")
     if not orders:
+        # Empty for one of two reasons, and they differ (the owner's release-check of 78e3483,
+        # 2026-11-09). If the buying-power fit took every order out (`bp_scale` orders_in > 0,
+        # orders_out 0: run.py records them so verify can tell "a missed day" from "nothing to
+        # do"), the account did NOT move to the reduced build's targets.
+        # ONLY THAT SHAPE IS READ (the independent review of PR #69, 2026-11-10). run.py writes
+        # `bp_scale` only when the decide had orders (orders_in = their count, > 0) and makes the
+        # fitted set the plan's orders (orders_out = its length), so on an empty plan the one
+        # record it can write is orders_in > 0 with orders_out 0. Any other record beside an
+        # empty plan (a null, a bool, orders_in 0, orders_out > 0) is a file run.py did not write
+        # as it stands, and reads Unmeasured, never "already held its targets". A set with no
+        # orders never STARTS (STARTED precedes the first order, CLAUDE.md order-path rule 2),
+        # so STARTED beside a fit-emptied plan contradicts it too.
+        if "bp_scale" in plan:
+            fit = plan["bp_scale"]
+            n_in = fit.get("orders_in") if isinstance(fit, dict) else None
+            n_out = fit.get("orders_out") if isinstance(fit, dict) else None
+            if not all(isinstance(n, int) and not isinstance(n, bool) for n in (n_in, n_out)):
+                raise Unmeasured(f"{d}'s plan.json has no orders and a malformed `bp_scale` "
+                                 f"({fit!r}): whether its targets were sent cannot be read")
+            if not (n_in > 0 and n_out == 0):
+                raise Unmeasured(f"{d}'s plan.json has no orders and a `bp_scale` of orders_in "
+                                 f"{n_in}, orders_out {n_out}: run.py fits only a plan with orders "
+                                 f"and writes the fitted set as the plan's orders, so the records "
+                                 f"contradict each other")
+            started = day.get("started")
+            if started is not False:
+                raise Unmeasured(
+                    f"{d}'s buying-power fit scaled the plan's orders to none, and STARTED is "
+                    f"{started!r}: " + ("a set with no orders never starts, so the records "
+                                        "contradict each other" if started is True else
+                                        "whether a set STARTED was not read"))
+            return False, (f"{d}'s buying-power fit scaled the plan's {n_in} order(s) to none "
+                           f"({fit.get('binding')}): nothing was sent")
         return True, f"{d}'s plan had no orders: the account already held its targets"
     started = day.get("started")
     if not isinstance(started, bool):

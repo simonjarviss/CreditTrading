@@ -210,6 +210,16 @@ on the laptop, a systemd timer on the VM). The module docstring has the full des
   is still a failed step and an INCOMPLETE day, as before. Why: CEFConnect has refused
   every scripted request from the VM since 2026-10-21 (JSONDecodeError), so every
   slot exited 5 and systemd's `failed` said nothing.
+- **The nightly data QA says so (2026-11-18).** That status sat in the tail of a line
+  beginning `DATA COMPLETE`, and the core decided on single-source NAVs for three
+  weeks with no report naming it. `scripts/ops/data_qa.py` Q9 now reads the
+  collector's `report.json` for the as-of day and is FLAG whenever `nav_crosscheck`
+  had no second source or did not complete, with the count of consecutive trading
+  days and the first of them; no collector report is UNMEASURED, never OK. It has no
+  threshold and fetches nothing. C4 has no second source by ruling, so Q9 is NOT_RUN
+  there. The cause, measured from a residential address on 2026-11-18: CEFConnect
+  answers the fetcher's request with an HTTP 200 `text/html` block page
+  (`docs/REFERENCES.md`, the row beside the 2026-10-27 distribution-endpoint block).
 - **Report only (team lead, 2026-09-29).** A cross-check disagreement of more than
   $0.005 is a *flag*. The flag names both sources and both values. It never blocks
   trading and never fails a step, and the two values are never averaged. A value that one
