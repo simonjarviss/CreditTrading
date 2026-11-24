@@ -5705,3 +5705,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `13eb3a0` (`book_section` and `latest_sessions` read `equity_snapshot.change_usd`); the VM's site journal and both addresses, read 2026-11-24 ~04:40 ET; the fix is in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-08 · Release: release-20261124-7 on the VM; the release checks of release-20261124-6 and -7 returned GO, and the event book's tile caption is corrected
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-7 on a4385db (PR #113 merged `--admin --match-head-commit` 8daa34a, trees equal), tagged after its release check's pytest, doc_audit, orient and preview steps passed; its reviewers then returned GO (workflow run wf_989a2eb5-e7d). The VM's site clone moved to it and the build published; Cloudflare's build of a4385db succeeded. The trading clone still at release-20261123-2, cef and c4 AUTO_ARMED present [V]
+  - the release check of a62bce4, the content of release-20261124-6 (workflow run wf_f5f1f7ac-3d5), passed every check and found nothing in review [V]
+  - the one finding on 8daa34a, fixed in the commit that carries this entry: the event book's tile still carried the caption "account snapshot at verify (not the P&L of record)" under a session P&L now taken from the after-close record. The caption now says what each figure is [V]
+- source: `dashboard/build.py` @ `a4385db` (`book_section` printed `equity_snapshot.kind`); the VM's site journal, read 2026-11-24 ~05:00 ET; the caption is in the commit that carries this entry
+- supports: §5
+- status: current

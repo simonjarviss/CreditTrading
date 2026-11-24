@@ -204,3 +204,11 @@ def test_an_after_close_books_session_pnl_reads_the_same_in_its_tile_and_its_row
     assert "+$200" in row and "−$90" not in row
     section = h.split('id="events"', 1)[1]
     assert "+$200</div><div class=\"l\">That session" in section and "−$90" not in section.split("Session of", 1)[0]
+
+
+def test_the_event_books_tile_caption_says_what_its_figures_are(snap):
+    """Release-check review of 8daa34a: the caption still said "account snapshot at verify (not the
+    P&L of record)" under a figure taken from the after-close record."""
+    section = page(snap).split('id="events"', 1)[1].split("Session of", 1)[0]
+    assert "The session's P&amp;L is the change from the previous reading" in section
+    assert "account snapshot at verify" not in section
