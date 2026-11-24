@@ -5585,3 +5585,20 @@ that adds it does not exist when it is written.
 - source: `quantt/broker/alpaca.py` @ `df7f6fc`; `quantt/session/run.py` @ `df7f6fc`; `quantt/sleeves/run.py` @ `df7f6fc`; the VM's installer output, events VERIFY and `ops.prod_state`, read on 2026-11-23
 - supports: §1, §5
 - status: current
+
+### E-2026-11-23-13 · Release and incident: release-20261123-3 put the redesigned site on the VM; the event book's rejected order ids were on the public performance page from 19:06 ET and are withheld from the next release
+- kind: release
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - release-20261123-3 on 4ecc202, the merge of PR #101 (`--admin --match-head-commit` 76c477a; the merge's tree equal to 76c477a's). Since release-20261123-2 it changes only `dashboard/`, documents and this log [V]
+  - VM, 22:35 ET: the site clone moved from release-20261123-1 to release-20261123-3 and is clean; quantt-site.service built and published (`current` -> builds/20261124T033501756816Z); the timer active (every 30 minutes at :20 and :50); caddy active. The units' text is unchanged, so the installer was not re-run [V]
+  - read back after: the trading clone still at release-20261123-2; cef and c4 AUTO_ARMED present; cef DRY_RUN=0 [V]
+  - the release check (workflow run wf_f8af21e8-8df) returned GO on 76c477a, the same tree as the tag. The tag was pushed at 22:34 ET, before the verdict, on the team lead's "we need it deployed"; the verdict covers it [V]
+  - Cloudflare's Workers Builds of 4ecc202 failed, as on every commit before it, so `event-driven.quantt.ca` still answers with Cloudflare's default page. The site owner is fixing the build settings [V]
+  - incident: the event book's 2026-11-23 verify (written 17:35 ET) lists its 173 rejected orders by client order id in `reason` and `problems`; every site build from the first (19:06 ET) carried that list on the performance page, at the VM's own address only. `dashboard/README.md` §2 forbids order ids on the site. The exporter now withholds them ("order ids withheld") and `find_private` refuses a snapshot that still carries one; on a copy of tonight's records the built pages hold none [V]
+  - the release check's three findings, fixed in the same change: the overview's combined P&L states its window (29 Sep to 20 Nov 2026), a new book is dated by its first send (the oldest STARTED record: 23 Nov 2026 for the event book; 20 Nov was a dry run), and each Sharpe ratio shows its session count [V]
+  - correction to E-2026-11-23-11: its "the combined figure's start date" was fixed on the performance page in PR #101; the overview's headline figure gains it here [V]
+- source: `dashboard/deploy/install_site_vm.sh` @ `4ecc202`; `dashboard/export.py` @ `4ecc202` (`scrub`, which kept order ids); the VM's site journal, `/srv/quantt-site` and the event book's verify.json, read 2026-11-23 22:35 to 22:50 ET; the withholding, the privacy pattern and the three fixes are in the commit that carries this entry
+- supports: §5
+- status: current

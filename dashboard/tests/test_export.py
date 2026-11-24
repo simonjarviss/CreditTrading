@@ -155,3 +155,33 @@ def test_an_empty_change_after_funding_is_that_books_gap_not_a_failed_site(state
     assert "value" in book(s, "c4")["official"]
     from dashboard import build as B
     assert "Fixed Income Book" in B.render(s)
+
+
+def test_order_ids_in_a_verify_note_are_withheld(state):
+    """2026-11-23: the event book's first send listed its 173 rejected order ids in verify's reason and
+    problems, and the list reached the public page."""
+    st, _ = state
+    p = st / "events" / "2026-11-23" / "verify.json"
+    v = json.loads(p.read_text())
+    ids = ["events-20261123-WRLD-1", "events-20261123-BRK.B-2"]
+    v["ok"] = False
+    v["reason"] = f"the send ended FAIL: 2 order(s) rejected by Alpaca {ids!r}"
+    v["fails"] = [f"{ids[0]}: Alpaca says filled_qty 0"]
+    p.write_text(json.dumps(v))
+    s = snap_of(state)
+    sess = book(s, "events")["session"]["value"]
+    assert sess["reason"] == "the send ended FAIL: 2 order(s) rejected by Alpaca (order ids withheld)"
+    assert sess["problems"] == ["<order id>: Alpaca says filled_qty 0"]
+    assert "events-20261123" not in json.dumps(s) and E.check(s) == []
+
+
+def test_the_privacy_check_refuses_an_order_id():
+    assert any("client order id" in x for x in S.find_private({"note": "see c4-20261120-PDI-1"}))
+    assert S.find_private({"note": "events/2026-11-23/verify.json"}) == []
+
+
+def test_the_first_send_is_the_oldest_day_with_started_not_a_dry_run(state):
+    st, _ = state
+    assert book(snap_of(state), "events")["session"]["value"]["first_send"] == "2026-11-23"
+    (st / "events" / "2026-11-23" / "STARTED").unlink()
+    assert book(snap_of(state), "events")["session"]["value"]["first_send"] is None

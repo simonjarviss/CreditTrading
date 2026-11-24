@@ -80,9 +80,19 @@ def mtime_z(p: Path) -> str:
 _PATH = re.compile(r"/(?:home|run|srv|tmp|etc|var)/[^\s'\"),;]*")
 
 
+# A client order id, `<book>-<YYYYMMDD>-<SYMBOL>-<leg>` (quantt/session/decide.py client_order_id).
+# WHY (2026-11-23): the event book's first armed send failed with 173 rejections, and its verify
+# note lists every rejected id; the note reached the public page through `problems`. The README
+# forbids order ids on the site, so they are taken out of any text here, a quoted list of them
+# collapses to one phrase, and snapshot.find_private refuses a snapshot that still carries one.
+_ORDER_ID = re.compile(r"\b[a-z][a-z0-9_]*-\d{8}-[A-Z][A-Z0-9.]*-\d+\b")
+_ORDER_ID_LIST = re.compile(r"\[\s*(?:'<order id>'\s*,?\s*)+\]")
+
+
 def scrub(text: str) -> str:
-    """Paths out of any text that came from a record or an exception (the page is public)."""
-    return _PATH.sub("<path>", str(text))
+    """Paths and order ids out of any text that came from a record or an exception (the page is public)."""
+    s = _ORDER_ID.sub("<order id>", _PATH.sub("<path>", str(text)))
+    return _ORDER_ID_LIST.sub("(order ids withheld)", s)
 
 
 def reading(value, source: str, read_at: str, label: str) -> dict:
@@ -133,6 +143,15 @@ def read_json(p: Path):
         return json.loads(p.read_text())
     except json.JSONDecodeError as e:
         raise Unreadable(f"{p.name} is not valid JSON ({e.msg})") from e
+
+
+def oldest_day_with(book_dir: Path, name: str):
+    """The oldest YYYY-MM-DD directory holding `name`, or None."""
+    days = sorted(d for d in book_dir.iterdir() if d.is_dir() and DAY_DIR.match(d.name))
+    for d in days:
+        if (d / name).is_file():
+            return d
+    return None
 
 
 def newest_day_with(book_dir: Path, name: str):
@@ -242,7 +261,13 @@ def session_sleeves(book: str, book_dir: Path) -> dict:
         positions = [{"symbol": s, "qty": _float(q, f"position {s}"), "close": _float(marks.get(s), f"close {s}")}
                      for s, q in sorted((r.get("positions_after") or {}).items()) if _float(q, f"position {s}")]
         eq = r.get("equity") or {}
-        value = {"date": day.name, "verdict": "PASS" if r.get("ok") else "FAIL", "reason": scrub(r.get("reason", "")),
+        # The first session that sent an order: the oldest day with STARTED, which the runner writes
+        # before its first order (CLAUDE.md order-path rule 2). A dry-run day has a verify.json and no
+        # STARTED, so the book's start is never dated by a session that sent nothing (release-check
+        # review, 2026-11-23: "Trading since" used to print the newest session's date).
+        first = oldest_day_with(book_dir, "STARTED")
+        value = {"date": day.name, "first_send": first.name if first else None,
+                 "verdict": "PASS" if r.get("ok") else "FAIL", "reason": scrub(r.get("reason", "")),
                  "problems": [scrub(x) for x in (r.get("problems") or []) + (r.get("fails") or [])],
                  "positions": positions,
                  "close_basis": "daily bar close (consolidated feed)",

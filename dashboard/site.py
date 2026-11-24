@@ -69,6 +69,12 @@ def _official(snap: dict) -> dict:
     return {b["name"]: b["official"]["value"]["rows"] for b in snap["books"] if "value" in b["official"]}
 
 
+def date_range(first: str, last: str) -> str:
+    """"29 Sep to 20 Nov 2026"; both years when they differ."""
+    a, b = fmt_short(first), fmt_short(last)
+    return f"{a.rsplit(' ', 1)[0] if first[:4] == last[:4] else a} to {b}"
+
+
 def combined_label(snap: dict) -> str | None:
     """The label of the overview's combined P&L figure, or None when that figure is withheld.
 
@@ -114,8 +120,10 @@ def overview(snap: dict) -> str:
     if label is not None:
         rows, _ = M.combined(series)
         c = M.summary(rows)
-        figs.append(perf.fig(usd(c["cum_pnl"], True), f"{label} to {fmt_short(c['last_date'])}",
-                             tone(c["cum_pnl"])))
+        # The window is stated (release-check review, 2026-11-23): the sum runs over the sessions
+        # every summed book has, so it is not each account's P&L since inception.
+        figs.append(perf.fig(usd(c["cum_pnl"], True),
+                             f"{label}, {date_range(c['first_date'], c['last_date'])}", tone(c["cum_pnl"])))
     hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
             '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
             '<h1>Event Driven Trading</h1>'
@@ -134,8 +142,11 @@ def overview(snap: dict) -> str:
             s = M.summary(series[b["name"]])
             stat = (f'<b class="{tone(s["cum_pnl"])}">{usd(s["cum_pnl"], True)}</b>'
                     f'<span>Paper P&amp;L since {fmt_short(s["first_date"])}</span>')
+        elif S.UNMEASURED in b["official"]:
+            stat = '<span>Official history could not be read tonight</span>'
         elif "value" in b["session"]:
-            stat = f'<b>New</b><span>Trading since {fmt_short(b["session"]["value"]["date"])}</span>'
+            started = perf.started_text(b)
+            stat = f'<b>New</b><span>{escape(started[:1].upper() + started[1:])}</span>'
         stat += f'<a class="link-arrow" href="/performance/#{escape(b["name"])}">Results</a>'
         rows_html.append(f'<div class="row"><div class="num">0{i}</div><div><h3>'
                          f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'

@@ -19,7 +19,7 @@ Paths are under `<state>/<book>/`. Files are read by header name, never by posit
 |---|---|---|
 | `official.rows` (date, equity, change_usd) | `eod_equity.csv`, Alpaca's end-of-day history, the P&L of record; `read_at` = the newest row's `read_at_utc` | broker-confirmed |
 | `session` (core and C4) | the newest `YYYY-MM-DD/reconcile.json`: `verdict` (its date must be the directory's), `problems`, `positions_after`, the official closing prints `auction_prints_d.prices`, `orders` (symbol, side, qty, status, filled_qty, filled_avg_price only), `snapshot` (after-close equity and change) | broker-confirmed |
-| `session` (events) | the newest `YYYY-MM-DD/verify.json`: `ok`, `reason`, `problems` + `fails`, `positions_after`, `marks` (daily bar closes), `orders`, `fills_by_symbol` average prices, `equity` | broker-confirmed |
+| `session` (events) | the newest `YYYY-MM-DD/verify.json`: `ok`, `reason`, `problems` + `fails`, `positions_after`, `marks` (daily bar closes), `orders`, `fills_by_symbol` average prices, `equity`; and `first_send`, the oldest day directory holding `STARTED` (the first session that sent an order; a dry run writes none). Order ids in `reason` and `problems` are withheld | broker-confirmed |
 | `risk` | the newest `reports/risk/*.json`: severity, gross, net, cap, concentration, drawdown levels | modelled |
 | `execution` | `tca.csv`: n_orders, n_full, fill_rate_shares, slip_bp_all | broker-confirmed |
 | `sleeves` (events only) | `sleeve_scores.csv`: per-strategy P&L, day change, names, capital | broker-confirmed |

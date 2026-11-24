@@ -79,6 +79,8 @@ def _check_value(kind: str, v, where: str, out: list) -> None:
     elif kind == "session":
         if not _is_date(v.get("date")):
             out.append(f"{where}.date: must be YYYY-MM-DD")
+        if v.get("first_send") is not None and not _is_date(v.get("first_send")):
+            out.append(f"{where}.first_send: must be YYYY-MM-DD or null")
         if v.get("verdict") not in ("PASS", "FAIL"):
             out.append(f"{where}.verdict: must be PASS or FAIL")
         if not isinstance(v.get("problems"), list):
@@ -195,6 +197,7 @@ FORBIDDEN_VALUES = {
     "private key block": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "email address": re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.]+\b"),
     "home directory path": re.compile(r"/home/[\w.-]+"),
+    "client order id": re.compile(r"\b[a-z][a-z0-9_]*-\d{8}-[A-Z][A-Z0-9.]*-\d+\b"),
 }
 
 

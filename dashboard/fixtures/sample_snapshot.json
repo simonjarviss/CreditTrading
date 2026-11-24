@@ -260,6 +260,7 @@
       "equity": 100010.0,
       "kind": "account snapshot at verify (not the P&L of record)"
      },
+     "first_send": "2026-11-23",
      "orders": [
       {
        "avg_price": 30.5,

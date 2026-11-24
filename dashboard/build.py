@@ -259,16 +259,45 @@ def book_section(b: dict) -> str:
     return "".join(parts)
 
 
+def started_text(b: dict) -> str:
+    """How long a book without an official history has traded, in words, from its session record.
+
+    WHY (release-check review, 2026-11-23): this used to print the newest session's date as
+    "trading since", a date that moves forward every session, and called a book whose record could
+    not be read "no record yet". The start is the first session that sent an order (first_send,
+    from the runner's STARTED record); an unreadable record says so."""
+    s = b["session"]
+    if S.UNMEASURED in s:
+        return "its session record could not be read tonight"
+    if "value" not in s:
+        return "no session recorded yet"
+    v = s["value"]
+    if "first_send" not in v:
+        return f"latest session {fmt_short(v['date'])}"
+    if v["first_send"] is None:
+        return "no order sent yet"
+    return f"trading since {fmt_short(v['first_send'])}"
+
+
+def sharpe_cell(s: dict) -> str:
+    """The Sharpe ratio with the number of daily returns behind it (release-check review, 2026-11-23:
+    a ratio from a few weeks of sessions must not read like a long record's)."""
+    n = s["n_returns"]
+    if s["sharpe"] is None:
+        return f'n/a <span class="meta">({n} sessions)</span>'
+    return f'{s["sharpe"]:.2f}'.replace("-", "\u2212") + f' <span class="meta">({n} sessions)</span>'
+
+
 def summary_table(snap: dict) -> str:
     """One row per book with an official history: the figures an allocator reads first."""
     rows = []
     for b in snap["books"]:
         o = b["official"]
         if "value" not in o:
-            started = (f'trading since {fmt_short(b["session"]["value"]["date"])}' if "value" in b["session"]
-                       else "no record yet")
+            lead = ("Official history could not be read tonight" if S.UNMEASURED in o
+                    else "Official history to follow")
             rows.append((f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
-                         f'{escape(b["title"])}', f'<span class="meta">Official history to follow; {started}</span>',
+                         f'{escape(b["title"])}', f'<span class="meta">{lead}; {escape(started_text(b))}</span>',
                          "", "", "", "", ""))
             continue
         s = M.summary(o["value"]["rows"])
@@ -276,7 +305,7 @@ def summary_table(snap: dict) -> str:
                      f'{escape(b["title"])}', fmt_short(s["first_date"]), usd(s["equity"]),
                      f'<span class="{tone(s["cum_pnl"])}">{usd(s["cum_pnl"], True)}</span>',
                      f'<span class="{tone(s["cum_return"])}">{pct(s["cum_return"], True)}</span>',
-                     "n/a" if s["sharpe"] is None else f'{s["sharpe"]:.2f}', pct(s["max_drawdown"])))
+                     sharpe_cell(s), pct(s["max_drawdown"])))
     head = ["Book", "Since", "Equity", "P&L", "Return", "Sharpe", "Max drawdown"]
     th = "".join(f'<th class="{"r" if i >= 2 else ""}">{escape(h)}</th>' for i, h in enumerate(head))
     body = "".join("<tr>" + "".join(f'<td class="{"r" if i >= 2 else ""}">{c}</td>' for i, c in enumerate(r)) + "</tr>"
