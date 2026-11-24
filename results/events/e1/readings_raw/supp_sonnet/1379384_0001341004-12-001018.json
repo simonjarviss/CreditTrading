@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1379384,
+  "episode_accession": "0001341004-12-001018",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Credit Allocation Income Trust I, Inc.", "cik": 1229876, "ticker": "PSW"},
+      "acquirer": {"name": "BlackRock Credit Allocation Income Trust IV", "cik": 1379384, "ticker": "BTZ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-12-001018", "quote": "BlackRock Credit Allocation Income Trust I, Inc. (NYSE:PSW), Credit Allocation Income Trust II, Inc. (NYSE:PSY), Credit Allocation Income Trust III (NYSE:BPP) and Credit Allocation Income Trust IV (NYSE:BTZ) unanimously approved the reorganization of each of PSW, PSY and BPP into BTZ, with BTZ continuing as the surviving fund"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001341004-12-001016", "date": "2012-07-30", "quote": "BlackRock Announces Board Approval of the Reorganization of Four Taxable Fixed Income Closed-End Funds"},
+      "outcome_evidence": {"accession": "0001341004-12-001434", "date": "2012-12-11", "quote": "BlackRock Announces Closing of Closed-End Fund Reorganizations"},
+      "notes": "Outcome rests on the headline of the 2012-12-11 425 only (the body is not in the excerpt); the headline does not name the funds, but the filing is filed by BTZ for this subject company. The press release of 2012-07-27 says approval of each Reorganization is not contingent on any other."
+    },
+    {
+      "target": {"name": "BlackRock Credit Allocation Income Trust II, Inc.", "cik": 1215664, "ticker": "PSY"},
+      "acquirer": {"name": "BlackRock Credit Allocation Income Trust IV", "cik": 1379384, "ticker": "BTZ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-12-001018", "quote": "BlackRock Credit Allocation Income Trust I, Inc. (NYSE:PSW), Credit Allocation Income Trust II, Inc. (NYSE:PSY), Credit Allocation Income Trust III (NYSE:BPP) and Credit Allocation Income Trust IV (NYSE:BTZ) unanimously approved the reorganization of each of PSW, PSY and BPP into BTZ, with BTZ continuing as the surviving fund"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001341004-12-001017", "date": "2012-07-30", "quote": "BlackRock Announces Board Approval of the Reorganization of Four Taxable Fixed Income Closed-End Funds"},
+      "outcome_evidence": {"accession": "0001341004-12-001435", "date": "2012-12-11", "quote": "BlackRock Announces Closing of Closed-End Fund Reorganizations"},
+      "notes": "Same basis as PSW: headline of the closing 425 filed under PSY as subject company; body not shown."
+    },
+    {
+      "target": {"name": "BlackRock Credit Allocation Income Trust III", "cik": 1213169, "ticker": "BPP"},
+      "acquirer": {"name": "BlackRock Credit Allocation Income Trust IV", "cik": 1379384, "ticker": "BTZ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-12-001018", "quote": "BlackRock Credit Allocation Income Trust I, Inc. (NYSE:PSW), Credit Allocation Income Trust II, Inc. (NYSE:PSY), Credit Allocation Income Trust III (NYSE:BPP) and Credit Allocation Income Trust IV (NYSE:BTZ) unanimously approved the reorganization of each of PSW, PSY and BPP into BTZ, with BTZ continuing as the surviving fund"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001341004-12-001018", "date": "2012-07-30", "quote": "unanimously approved the reorganization of each of PSW, PSY and BPP into BTZ, with BTZ continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": {"accession": "0001341004-12-001436", "date": "2012-12-11", "quote": "BlackRock Announces Closing of Closed-End Fund Reorganizations"},
+      "notes": "Same basis as PSW: headline of the closing 425 filed under BPP as subject company; body not shown."
+    }
+  ],
+  "problems": "The closing 425s of 2012-12-11 are shown only by their headline; no excerpt names which reorganizations closed. No filing in the excerpts states a failure of any of the three."
+}

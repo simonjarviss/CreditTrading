@@ -1,0 +1,18 @@
+{
+  "episode_cik": 901243,
+  "episode_accession": "0001193125-10-210804",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Apex Municipal Fund, Inc.", "cik": 817998, "ticker": "APX"},
+      "acquirer": {"name": "BlackRock MuniAssets Fund, Inc.", "cik": 901243, "ticker": "MUA"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-10-002093", "quote": "at a special meeting of shareholders of BlackRock MuniAssets Fund, Inc. (NYSE:MUA) held today, shareholders of MUA have approved the reorganization of MUA with BlackRock Apex Municipal Fund, Inc (NYSE:APX) (the “Reorganization”)."},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-10-210804", "date": "2010-09-15", "quote": "approval of the Reorganization Agreement by the shareholders of APX, approval of the issuance of additional MUA common shares by the shareholders of MUA"},
+      "outcome_evidence": {"accession": "0001341004-11-000606", "date": "2011-02-28", "quote": "the reorganization of BlackRock Apex Municipal Fund, Inc. (NYSE:APX) with and into BlackRock MuniAssets Fund, Inc. (NYSE:MUA) (the “Reorganization”) is effective as of the opening for business of the New York Stock Exchange on February 28, 2011."},
+      "notes": "Shareholders of MUA approved on 2010-12-17 and of APX on 2011-01-14 (425s filed 2010-12-20 and 2011-01-18). The same press release was filed twice on 2011-02-28 (by MUA, 0001341004-11-000606, and by APX, 0001341004-11-000607). Only one target is named in the filings."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,9 @@
+{"episode_cik":1783515,"episode_accession":"0001398344-19-022802","episode_role":"acquirer",
+"deals":[{"target":{"name":"Aspiriant Defensive Allocation Fund (the Predecessor Fund), a series of Aspiriant Trust","cik":null,"ticker":null},
+"acquirer":{"name":"Aspiriant Defensive Allocation Fund (the Registrant)","cik":1783515,"ticker":null},
+"both_listed":false,"listed_quote":{"accession":"0001398344-19-022802","quote":"a series of Aspiriant Trust (the “Predecessor Trust”), an open-end management investment company"},
+"outcome":"not_a_listed_pair",
+"announcement":{"accession":"0001398344-19-022802","date":"2019-12-19","quote":"Shares of the Predecessor Fund, which have been previously registered and are currently outstanding, will be exchanged for newly registered and issued shares of the Registrant"},
+"outcome_evidence":null,
+"notes":"Predecessor is an open-end fund, so not a listed pair."}],
+"problems":""}

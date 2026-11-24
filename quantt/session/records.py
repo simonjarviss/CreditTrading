@@ -56,6 +56,28 @@ def state_dir_from_env(env) -> Path:
     return p
 
 
+# THE STATE DIRECTORY'S NAME, PER BOOK (C4 integration, 2026-10-29). Every book
+# keeps <state>/<D>/STARTED, plan.json and verify.log under the same names, so a
+# book run with another book's QUANTT_STATE_DIR would read that book's STARTED as
+# its own (gate 6 would refuse the real one, or pass a second set) and append to
+# its verify.log. A book listed here must run in a directory with this name, as
+# the collector already requires (collect.BOOKS[...]["state_dir_name"]). The core
+# is not listed: its state dir is checked exactly as before. Read by the session
+# (run.run_session, approve_main) and verify (verify.main), which never import
+# each other, so the rule lives here, beside state_dir_from_env.
+STATE_DIR_NAMES = {"c4": "c4"}
+
+
+def require_book_state_dir(book: str, state: Path) -> None:
+    """Raise StateDirError when `book` must run in a directory of its own name and
+    `state` is not one (STATE_DIR_NAMES). A book not listed: nothing is checked."""
+    want = STATE_DIR_NAMES.get(book)
+    if want is not None and Path(state).name != want:
+        raise StateDirError(f"--book {book} needs its own state directory, named {want!r}; "
+                            f"QUANTT_STATE_DIR={state} is not (another book's STARTED, "
+                            f"plan.json and verify.log for the same session live there)")
+
+
 def day_dir(state: Path, session_date: dt.date) -> Path:
     d = state / session_date.isoformat()
     d.mkdir(exist_ok=True)

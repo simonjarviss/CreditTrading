@@ -1,0 +1,78 @@
+{
+  "episode_cik": 883412,
+  "episode_accession": "0001193125-23-231636",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Virginia Municipal Bond Trust", "cik": 1169034, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-23-231636", "date": "2023-09-08", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Mergers New York, September 8, 2023 – BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of"},
+      "outcome_evidence": {"accession": "0001193125-23-268272", "date": "2023-11-01", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s common shares in connection with proposed merger transactions that are no longer contemplated"},
+      "notes": "2023 proposal: four target funds into MuniYield Quality Fund III (one N-14, one joint PRE 14A). Registration statement N-14 (File No. 333-274660) withdrawn by RW on 2023-11-01 saying the merger transactions are no longer contemplated. Exchange listing of this target and of the acquirer is not stated in the excerpts."
+    },
+    {
+      "target": {"name": "BlackRock Investment Quality Municipal Trust, Inc.", "cik": 894242, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-23-231638", "date": "2023-09-08", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Mergers New York, September 8, 2023 – BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of"},
+      "outcome_evidence": {"accession": "0001193125-23-268272", "date": "2023-11-01", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s common shares in connection with proposed merger transactions that are no longer contemplated"},
+      "notes": "2023 proposal, same N-14 withdrawal as the other three 2023 deals. The N-14 excerpt refers to a merger called the BKN Merger, but the excerpts do not tie that label to this fund by name, so no ticker is recorded. Exchange listing not stated."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield Michigan Quality Fund, Inc.", "cik": 890393, "ticker": "MIY"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-23-231639", "date": "2023-09-08", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Mergers New York, September 8, 2023 – BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of"},
+      "outcome_evidence": {"accession": "0001193125-23-268272", "date": "2023-11-01", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s common shares in connection with proposed merger transactions that are no longer contemplated"},
+      "notes": "2023 proposal, same N-14 withdrawal. The target is shown as NYSE ticker MIY in the 2023 N-14 (Common Shareholders of BlackRock MuniYield Michigan Quality Fund, Inc. (NYSE Ticker: MIY)), but the acquirer's exchange listing is not stated in the excerpts, so both_listed is null. The same target was proposed again in 2025 (see the 2025 MIY deal)."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield Pennsylvania Quality Fund", "cik": 891038, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-23-231640", "date": "2023-09-08", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Mergers New York, September 8, 2023 – BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of"},
+      "outcome_evidence": {"accession": "0001193125-23-268272", "date": "2023-11-01", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s common shares in connection with proposed merger transactions that are no longer contemplated"},
+      "notes": "2023 proposal, same N-14 withdrawal. Exchange listing not stated."
+    },
+    {
+      "target": {"name": "BlackRock MuniVest Fund II, Inc.", "cik": 897269, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": "MYI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-25-158887", "date": "2025-07-15", "quote": "BlackRock Announces Board Approvals Seeking to Deliver Significant Scale Benefits to Municipal CEF Shareholders New York, June 9, 2025 – BlackRock Advisors, LLC announced today that each of the Boards of Directors/Trustees of each of the closed-end funds named below"},
+      "outcome_evidence": null,
+      "notes": "2025 proposal (press release dated June 9, 2025, filed as 425 on 2025-07-15). The excerpts end with N-14/A (2025-09-02), a PRE 14A (2025-08-08) and 425 solicitation letters (2025-08-12) for joint special meetings; none states an outcome. Acquirer ticker MYI appears as 'BlackRock MuniYield Quality Fund III, Inc. (MYI)' in the 2025-07-15 tender-offer 425 (0001193125-25-159406). Exchange listing not stated."
+    },
+    {
+      "target": {"name": "BlackRock MuniVest Fund, Inc.", "cik": 835948, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": "MYI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-25-158889", "date": "2025-07-15", "quote": "BlackRock Announces Board Approvals Seeking to Deliver Significant Scale Benefits to Municipal CEF Shareholders New York, June 9, 2025 – BlackRock Advisors, LLC announced today that each of the Boards of Directors/Trustees of each of the closed-end funds named below"},
+      "outcome_evidence": null,
+      "notes": "2025 proposal; outcome not in the excerpts. A separate 425 filed 2025-07-15 (0001193125-25-159406) is an Offer to Purchase up to 2.5% of this target's shares at 98% of NAV, a tender offer that is not itself the merger. Exchange listing not stated."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield Michigan Quality Fund, Inc.", "cik": 890393, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": "MYI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-25-158891", "date": "2025-07-15", "quote": "Announces Board Approvals Seeking to Deliver Significant Scale Benefits to Municipal CEF Shareholders New York, June 9, 2025 – BlackRock Advisors, LLC announced today that each of the Boards of Directors/Trustees of each of the closed-end funds named below"},
+      "outcome_evidence": null,
+      "notes": "2025 proposal, the second time this target was proposed for merger into this acquirer (first in 2023, withdrawn). Outcome of the 2025 proposal not in the excerpts. Exchange listing not stated in the 2025 excerpts."
+    }
+  ],
+  "problems": "Most filings are compact excerpts; the excerpts for the 2025 proposals end before any vote or closing, so those outcomes are null. Exchange listing of the acquirer is never stated, so both_listed is null throughout. The 2024-2025 DEFA14A/DEF 14A/8-K filings in the window concern annual meetings and tender offers, not these mergers."
+}

@@ -110,6 +110,7 @@ if str(REPO) not in sys.path:  # run as a script, not -m
     sys.path.insert(0, str(REPO))
 
 OUT = REPO / "results" / "events"
+G1A_DIR = OUT / "g1a"                                # the gate's outputs: the note sits in OUT, its data here
 CACHE = OUT / "_cache_g1a"
 SAMPLE = OUT / "merger_ann_sample_edgar.csv"         # merger_pairs.py --edgar-dates (gitignored)
 BORROW_HISTORY = REPO / "data" / "cef" / "cef_borrow_history.parquet"
@@ -844,11 +845,11 @@ def main(argv=None) -> int:
     ap.add_argument("--today", default=date.today().isoformat(), help="the as-of date (YYYY-MM-DD)")
     a = ap.parse_args(argv)
     out = run(a.today, a.offline)
-    OUT.mkdir(parents=True, exist_ok=True)
-    out["pending"].to_csv(OUT / f"g1a_pending_{a.today}.csv", index=False)
-    out["historical"].to_csv(OUT / "g1a_historical_deals.csv", index=False)      # gitignored: CRSP-joined
-    (OUT / f"g1a_summary_{a.today}.json").write_text(json.dumps(out["summary"], indent=1, default=str))
-    (OUT / f"g1a_detail_{a.today}.json").write_text(json.dumps(out["detail"], indent=1, default=str))  # gitignored
+    G1A_DIR.mkdir(parents=True, exist_ok=True)
+    out["pending"].to_csv(G1A_DIR / f"g1a_pending_{a.today}.csv", index=False)
+    out["historical"].to_csv(G1A_DIR / "g1a_historical_deals.csv", index=False)      # gitignored: CRSP-joined
+    (G1A_DIR / f"g1a_summary_{a.today}.json").write_text(json.dumps(out["summary"], indent=1, default=str))
+    (G1A_DIR / f"g1a_detail_{a.today}.json").write_text(json.dumps(out["detail"], indent=1, default=str))  # gitignored
     pd.set_option("display.width", 250)
     pd.set_option("display.max_columns", 40)
     P = out["pending"]

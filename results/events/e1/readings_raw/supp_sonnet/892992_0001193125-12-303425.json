@@ -1,0 +1,38 @@
+{
+  "episode_cik": 892992,
+  "episode_accession": "0001193125-12-303425",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Arizona Dividend Advantage Municipal Fund", "cik": 1087783, "ticker": null},
+      "acquirer": {"name": "Nuveen Arizona Premium Income Municipal Fund, Inc.", "cik": 892992, "ticker": "NAZ"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-406414", "date": "2012-09-27", "quote": "Nuveen Arizona Dividend Advantage Municipal Fund Commission File No. 811-09459 Nuveen Arizona Dividend Advantage Municipal Fund 2 Commission File No. 811-10553 Nuveen Arizona Dividend Advantage Municipal Fund 3 Commission File No. 811-21157"},
+      "outcome_evidence": null,
+      "notes": "Rule 425 filings by NAZ (Sept 2012 to Feb 2013) name the three Arizona Dividend Advantage funds as subject companies; the excerpts never say in words that these are mergers, nor how it ended. The meeting was adjourned repeatedly ('Next Adjournment Ends ...' through Feb 8, 2013; Feb 12, 2013 notice: 'Due to low voter participation, the'). The RW of 2013-04-03 withdraws a Form 8-A (wrong exchange for a MuniFund Term Preferred series), not the merger registration."
+    },
+    {
+      "target": {"name": "Nuveen Arizona Dividend Advantage Municipal Fund 2", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen Arizona Premium Income Municipal Fund, Inc.", "cik": 892992, "ticker": "NAZ"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-406414", "date": "2012-09-27", "quote": "Nuveen Arizona Dividend Advantage Municipal Fund Commission File No. 811-09459 Nuveen Arizona Dividend Advantage Municipal Fund 2 Commission File No. 811-10553 Nuveen Arizona Dividend Advantage Municipal Fund 3 Commission File No. 811-21157"},
+      "outcome_evidence": null,
+      "notes": "See first deal."
+    },
+    {
+      "target": {"name": "Nuveen Arizona Dividend Advantage Municipal Fund 3", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen Arizona Premium Income Municipal Fund, Inc.", "cik": 892992, "ticker": "NAZ"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-406414", "date": "2012-09-27", "quote": "Nuveen Arizona Dividend Advantage Municipal Fund Commission File No. 811-09459 Nuveen Arizona Dividend Advantage Municipal Fund 2 Commission File No. 811-10553 Nuveen Arizona Dividend Advantage Municipal Fund 3 Commission File No. 811-21157"},
+      "outcome_evidence": null,
+      "notes": "See first deal."
+    }
+  ],
+  "problems": "Excerpts are cover pages and boilerplate; merger terms, listing and outcome are not stated, so those fields are null. Later 2014 filings concern advisory agreements of other funds, not these targets."
+}

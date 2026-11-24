@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1494530,
+  "episode_accession": "0001445546-18-001467",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "First Trust Strategic High Income Fund II", "cik": 1329388, "ticker": "FHY"},
+      "acquirer": {"name": "First Trust High Income Long/Short Fund", "cik": 1494530, "ticker": "FSD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001445546-18-002940", "quote": "the merger of First Trust Strategic High Income Fund II (NYSE: FHY), a closed-end fund managed by FTA, with and into First Trust High Income Long/Short Fund (NYSE: FSD), a closed-end fund managed by FTA, was completed prior to the open of the NYSE on June 25, 2018."},
+      "outcome": "completed",
+      "announcement": {"accession": "0001445546-18-001467", "date": "2018-03-20", "quote": "FHY and ultimately its shareholders will bear substantially all of the direct and indirect costs and expenses incurred in connection with the Merger."},
+      "outcome_evidence": {"accession": "0001445546-18-002940", "date": "2018-06-25", "quote": "the merger of First Trust Strategic High Income Fund II (NYSE: FHY), a closed-end fund managed by FTA, with and into First Trust High Income Long/Short Fund (NYSE: FSD), a closed-end fund managed by FTA, was completed prior to the open of the NYSE on June 25, 2018."},
+      "notes": "Only one target (FHY) is named in this episode's excerpts. The N-14 excerpt names the merger only as 'the Merger' between FSD and FHY; the 8-K of 2018-06-13 (0001445546-18-002698) announced the expected effective date."
+    }
+  ],
+  "problems": ""
+}

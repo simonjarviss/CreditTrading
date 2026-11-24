@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1011006,
+  "episode_accession": "0001193125-16-706578",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Yahoo! Inc. (operating business)", "cik": 1011006, "ticker": "YHOO"},
+      "acquirer": {"name": "Verizon Communications Inc.", "cik": null, "ticker": "VZ"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-17-049548", "quote": "Verizon and Yahoo amend terms of definitive agreement NEW YORK, NY and SUNNYVALE, CA – Verizon Communications Inc. (NYSE, Nasdaq: VZ) and Yahoo! Inc. (Nasdaq: YHOO) today announced that they have amended the existing terms of their agreement for the purchase of Yahoo’s operating business."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-16-706578", "date": "2016-09-09", "quote": "Verizon terminates the Stock Purchase Agreement because the Board changes or withdraws its recommendation of the Sale Transaction (including in response to a Superior Proposal), Yahoo is obligated to pay a $144,774,000 termination fee to Verizon (the “Termination Fee”)."},
+      "outcome_evidence": null,
+      "notes": "Not a fund merger: sale of an operating company's business by stock purchase agreement to an operating company. Verizon CIK is not printed in any FILING header. Completion is not stated in the excerpts (the registrant became Altaba Inc., a registered fund, from June 2017). No fund-to-fund merger appears in the excerpts."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,48 @@
+{
+  "episode_cik": 275309,
+  "episode_accession": "0000722574-12-000167",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Fidelity Advisor Stock Selector All Cap Fund", "cik": 722574, "ticker": null},
+      "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000722574-12-000167", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000722574-12-000167", "date": "2012-04-27", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity Advisor Stock Selector All Cap Fund to Fidelity Stock Selector All Cap Fund in exchange solely for shares of beneficial interest of Fidelity Stock Selector All Cap Fund"},
+      "outcome_evidence": {"accession": "0000722574-12-000167", "date": "2012-04-27", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "notes": "Fidelity funds sold at NAV through the Fidelity system (open-end mutual funds, no exchange listing shown). CIK 722574 is the trust (Fidelity Advisor Series I) of which the target is 'A SERIES OF'; the fund itself has no CIK in the headers. No outcome is stated in the excerpts."
+    },
+    {
+      "target": {"name": "Fidelity 130/30 Large Cap Fund", "cik": 707823, "ticker": null},
+      "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000722574-12-000167", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000275309-13-000008", "date": "2013-02-01", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of 130/30 Large Cap to Fidelity Stock Selector All Cap Fund in exchange solely for shares of beneficial interest of Fidelity Stock Selector All Cap Fund"},
+      "outcome_evidence": {"accession": "0000722574-12-000167", "date": "2012-04-27", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "notes": "CIK 707823 is the trust (Fidelity Mt. Vernon Street Trust) of which the target is a series. Meeting set for May 14, 2013; no outcome stated in excerpts."
+    },
+    {
+      "target": {"name": "Fidelity Large Cap Growth Fund", "cik": 35341, "ticker": null},
+      "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000722574-12-000167", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000275309-13-000028", "date": "2013-03-15", "quote": "In each case, a target fund is proposed to be acquired by Fidelity Stock Selector All Cap Fund."},
+      "outcome_evidence": {"accession": "0000722574-12-000167", "date": "2012-04-27", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "notes": "CIK 35341 is the trust (Fidelity Devonshire Trust) of which the target is a series. The 2013-02-01 N-14 also covers this deal but its excerpt does not show this target's passage. No outcome stated."
+    },
+    {
+      "target": {"name": "Fidelity Tax Managed Stock Fund", "cik": 311884, "ticker": null},
+      "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000722574-12-000167", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000275309-13-000028", "date": "2013-03-15", "quote": "In each case, a target fund is proposed to be acquired by Fidelity Stock Selector All Cap Fund."},
+      "outcome_evidence": {"accession": "0000722574-12-000167", "date": "2012-04-27", "quote": "To sell shares of a Fidelity money market fund and simultaneously to buy shares of a Fidelity fund that offers Advisor classes of shares."},
+      "notes": "CIK 311884 is the trust (Fidelity Beacon Street Trust) of which the target is a series. No outcome stated."
+    }
+  ],
+  "problems": "All funds appear to be open-end Fidelity mutual funds; the excerpts never use the words 'open-end', so the listed_quote is the best available text. The excerpts never state whether any merger was approved or completed. Episode role not stated: the registrant Fidelity Capital Trust is not tied in the text to either fund."
+}

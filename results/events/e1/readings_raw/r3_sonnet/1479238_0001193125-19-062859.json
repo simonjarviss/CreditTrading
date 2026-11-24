@@ -1,0 +1,29 @@
+{
+  "episode_cik": 1479238,
+  "episode_accession": "0001193125-19-062859",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund 2", "cik": 1479238, "ticker": "JMT"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062859", "date": "2019-03-05", "quote": "have approved a proposal that will allow shareholders to either continue their investment through a merger with a new fund or receive NAV through a 100 percent tender offer."},
+      "outcome_evidence": {"accession": "0001193125-19-155549", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal , asks shareholders of each fund to vote to amend the charter and eliminate the term structure."},
+      "notes": "Target JMT is shown as (NYSE: JMT) in the 425 and DEFA14A. The acquirer was a NEW fund, Nuveen Mortgage and Income Fund, described as 'a new fund' with no ticker, no CIK and no listing stated in any excerpt, so both_listed is null. The 2019-05-23 DEFA14A says the alternate proposals (charter amendment eliminating the term structure, then tender offer) replace the merger proposal. The later N-8F (2020-03-11) states Liquidation, not merger.",
+      "target_listed_quote": "Nuveen Mortgage Opportunity Term Fund 2 (NYSE: JMT)"
+    },
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund", "cik": null, "ticker": "JLS"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062859", "date": "2019-03-05", "quote": "have approved a proposal that will allow shareholders to either continue their investment through a merger with a new fund or receive NAV through a 100 percent tender offer."},
+      "outcome_evidence": {"accession": "0001193125-19-155549", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal , asks shareholders of each fund to vote to amend the charter and eliminate the term structure."},
+      "notes": "JLS is shown as (NYSE: JLS) in the 425 and DEFA14A. Its CIK does not appear in any FILING header of this episode. The acquirer was a NEW fund with no ticker or listing stated, so both_listed is null. Replaced by the alternate proposals in the 2019-05-23 DEFA14A."
+    }
+  ],
+  "problems": "The proposed acquirer, Nuveen Mortgage and Income Fund, was a new fund; no excerpt gives its listing, ticker or CIK. The listing of the two term funds (JLS, JMT) is stated, but both_listed for the pair is null."
+}

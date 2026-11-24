@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1222922,
+  "episode_accession": "0000950156-09-000158",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Eaton Vance Credit Opportunities Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Limited Duration Income Fund", "cik": 1222922, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950156-09-000158", "date": "2009-08-28", "quote": "Recourse for liabilities assumed from EOE by EVV in the Reorganization will be limited to the assets acquired by EVV."},
+      "outcome_evidence": null,
+      "notes": "N-14 registration by the acquirer for a reorganization of Eaton Vance Credit Opportunities Fund (EOE in the agreement) into EVV; only EVV's NYSE Amex listing condition is shown, the target's listing is not stated in the excerpts. The later filings shown (N-14 8C/A, two DEF 14A annual-meeting proxies) do not state how the merger ended."
+    }
+  ],
+  "problems": ""
+}

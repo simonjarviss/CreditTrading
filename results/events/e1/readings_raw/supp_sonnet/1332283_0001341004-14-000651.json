@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1332283,
+  "episode_accession": "0001341004-14-000651",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Dividend Income Trust", "cik": 1280936, "ticker": "BQY"},
+      "acquirer": {"name": "BlackRock Enhanced Equity Dividend Trust", "cik": 1332283, "ticker": "BDJ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000801", "quote": "the reorganization of BlackRock Dividend Income Trust (NYSE MKT:BQY) into BlackRock Enhanced Equity Dividend Trust (NYSE:BDJ)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000651", "date": "2014-07-31", "quote": "BlackRock Advisors, LLC announced today that the Boards of Trustees of several equity option closed-end funds approved the reorganizations outlined below."},
+      "outcome_evidence": null,
+      "notes": "Special meeting of BQY shareholders set for November 10, 2014; the last 425 (2014-10-24) is a third reminder. No excerpt states the vote result or completion. The same press release also lists BCF and BQR into BCX, which are not this acquirer's deals."
+    }
+  ],
+  "problems": "No outcome stated in the excerpts."
+}

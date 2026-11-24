@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1580166,
+  "episode_accession": "0000899681-15-000752",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "A&Q Equity Opportunity Fund LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "A&Q Masters Fund", "cik": 1580166, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000899681-15-000752", "quote": "Shares of the Acquiring Fund and Interests of the Fund are not traded on any securities exchange or other market and are subject to restrictions on transfer."},
+      "outcome": "not_a_listed_pair",
+      "announcement": null,
+      "outcome_evidence": {"accession": "0000899681-15-000752", "date": "2015-10-28", "quote": "Shares of the Acquiring Fund and Interests of the Fund are not traded on any securities exchange or other market and are subject to restrictions on transfer."},
+      "notes": "Roles inferred from the N-14 layout (letter headed A&Q EQUITY OPPORTUNITY FUND LLC; registrant A&Q Masters Fund), not stated in so many words. No excerpt names the merger in a sentence, so announcement is null. Outcome not stated."
+    }
+  ],
+  "problems": "Excerpts do not explicitly name which fund is target or acquirer."
+}

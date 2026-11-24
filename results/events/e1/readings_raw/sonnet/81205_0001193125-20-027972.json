@@ -1,0 +1,18 @@
+{
+  "episode_cik": 81205,
+  "episode_accession": "0001193125-20-027972",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Fidelity Event Driven Opportunities Fund (a series of Fidelity Concord Street Trust)", "cik": 819118, "ticker": null},
+      "acquirer": {"name": "Fidelity Low-Priced Stock Fund (a series of Fidelity Puritan Trust)", "cik": 81205, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-027972", "quote": "The price to sell one share is its NAV. Shares will be sold at the NAV next calculated after an order is received in proper form."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-027972", "date": "2020-02-07", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity ® Event Driven Opportunities Fund to Fidelity ® Low-Priced Stock Fund in exchange solely for corresponding shares of beneficial interest of Fidelity ® Low-Priced Stock Fund"},
+      "outcome_evidence": null,
+      "notes": "Open-end mutual fund series (sold at NAV), no exchange listing shown. The target CIK 819118 is the trust (Fidelity Concord Street Trust) from the seq=3 header; the acquirer CIK 81205 is the trust (Fidelity Puritan Trust) that is the episode registrant. The excerpts do not state how the May 20, 2020 meeting ended."
+    }
+  ],
+  "problems": ""
+}

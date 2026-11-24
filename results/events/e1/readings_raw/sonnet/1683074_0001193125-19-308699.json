@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1683074,
+  "episode_accession": "0001193125-19-308699",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Goldman Sachs Middle Market Lending Corp.", "cik": 1683074, "ticker": null},
+      "acquirer": {"name": "Goldman Sachs BDC, Inc.", "cik": 1572694, "ticker": "GSBD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-19-308681", "date": "2019-12-09", "quote": "Goldman Sachs BDC, Inc. and Goldman Sachs Middle Market Lending Corp. Announce Merger Agreement"},
+      "outcome_evidence": {"accession": "0001193125-20-267864", "date": "2020-10-13", "quote": "announced today that it has completed its previously announced merger with Goldman Sachs Middle Market Lending Corp. (“MMLC”)."},
+      "notes": "GSBD is printed as NYSE: GSBD; no excerpt shows MMLC on any exchange, so both_listed is null. Merger agreement was amended and restated on 2020-06-11; both sets of stockholders approved on 2020-10-02."
+    }
+  ],
+  "problems": ""
+}

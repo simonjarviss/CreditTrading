@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1360768,
+  "episode_accession": "0000902664-11-000023",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Old Mutual Emerging Managers Fund, L.L.C.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Old Mutual Absolute Return Fund, L.L.C.", "cik": 1360768, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000902664-11-000023", "quote": "Effective as of the first business day of the succeeding month, the Fund's records will reflect the issuance of Units to the investor, who will become a member of the Fund."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000902664-11-000023", "date": "2011-01-11", "quote": "At the Meeting, members of each EM Fund will vote on a proposal to reorganize each of the EM Funds into corresponding closed-end investment companies that, like the EM Funds, are advised by Larch Lane Advisors LLC"},
+      "outcome_evidence": null,
+      "notes": "Funds are LLC feeder/master funds sold through selected dealers (Units, members, periodic repurchases), no exchange listing shown. The excerpts do not name which 'corresponding' closed-end company receives each EM Fund; the registrant of the N-14 (Old Mutual Absolute Return Fund, L.L.C., CIK 1360768) is entered as acquirer as the issuer of the registered Interests. Also stated: the N-14 was withdrawn by RW filed 2011-02-14 (0000902664-11-000449): 'hereby respectfully requests withdrawal of the Company's Registration Statement on Form N-14 (Registration File No. 333-171638)'."
+    },
+    {
+      "target": {"name": "Old Mutual Emerging Managers Institutional Fund, L.L.C.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Old Mutual Absolute Return Fund, L.L.C.", "cik": 1360768, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000902664-11-000023", "quote": "Effective as of the first business day of the succeeding month, the Fund's records will reflect the issuance of Units to the investor, who will become a member of the Fund."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000902664-11-000023", "date": "2011-01-11", "quote": "At the Meeting, members of each EM Fund will vote on a proposal to reorganize each of the EM Funds into corresponding closed-end investment companies that, like the EM Funds, are advised by Larch Lane Advisors LLC"},
+      "outcome_evidence": null,
+      "notes": "Same filing and structure as the Emerging Managers Fund entry; pairing with the acquirer is not stated in the excerpts. N-14 withdrawn by RW 2011-02-14. The 2011-08-12 N-8F of this CIK (renamed Larch Lane Multi-Strategy Fund, L.L.C.) ticks Liquidation, not Merger."
+    },
+    {
+      "target": {"name": "Old Mutual Emerging Managers Master Fund, L.L.C.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Old Mutual Absolute Return Fund, L.L.C.", "cik": 1360768, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000902664-11-000023", "quote": "Effective as of the first business day of the succeeding month, the Fund's records will reflect the issuance of Units to the investor, who will become a member of the Fund."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000902664-11-000023", "date": "2011-01-11", "quote": "At the Meeting, members of each EM Fund will vote on a proposal to reorganize each of the EM Funds into corresponding closed-end investment companies that, like the EM Funds, are advised by Larch Lane Advisors LLC"},
+      "outcome_evidence": null,
+      "notes": "Same filing and structure as the Emerging Managers Fund entry; pairing with the acquirer is not stated in the excerpts. N-14 withdrawn by RW 2011-02-14."
+    }
+  ],
+  "problems": "The N-14 excerpts do not name the acquiring funds individually, so acquirer identification is a best fit from the registrant. Non-listing is shown by the unit-issuance and repurchase language, not by an explicit 'not listed' sentence."
+}

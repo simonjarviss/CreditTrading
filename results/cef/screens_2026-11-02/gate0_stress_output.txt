@@ -1,0 +1,10 @@
+====================================================================================================
+GATE 0 STRESS: the 42 never-covered dead funds, at adverse imputed levels (a bound)
+spec: cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13
+fit window only: <= 2022-12-30 (asserted)
+====================================================================================================
+B sample (primary cells): b_A -27.35, b_B -32.90 bp/pp, ratio +1.203; Sxx 129450, n 3241
+never-covered dead funds with a measured last-year return: 42; their excess -1196bp
+  imputed level = the 5th percentile of covered dead funds' last two levels (-8.63pp): b_B -28.19 bp/pp, ratio b_B/b_A +1.031
+  imputed level = the 25th percentile of covered dead funds' last two levels (-2.87pp): b_B -31.62 bp/pp, ratio b_B/b_A +1.156
+  imputed level = the 50th percentile of covered dead funds' last two levels (-0.28pp): b_B -32.79 bp/pp, ratio b_B/b_A +1.199

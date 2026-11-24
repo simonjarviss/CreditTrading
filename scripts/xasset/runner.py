@@ -74,16 +74,19 @@ class Spec:
 
 
 # ----------------------------------------------------------------------------- paths
+# The verdicts live in P.TRIALS (results/xasset/trials/, since 2026-10-22). These
+# three paths ARE the run-once guards: `refuse_rerun`, `counter_guard` and
+# `holdout_guard` decide that a trial is spent by finding its file here.
 def fit_json(key: str) -> Path:
-    return P.RESULTS / f"{key.lower()}_fit_{RUN_DATE}.json"
+    return P.TRIALS / f"{key.lower()}_fit_{RUN_DATE}.json"
 
 
 def holdout_json(key: str) -> Path:
-    return P.RESULTS / f"{key.lower()}_holdout_{RUN_DATE}.json"
+    return P.TRIALS / f"{key.lower()}_holdout_{RUN_DATE}.json"
 
 
 def unrun_json(key: str) -> Path:
-    return P.RESULTS / f"{key.lower()}_unrun_{RUN_DATE}.json"
+    return P.TRIALS / f"{key.lower()}_unrun_{RUN_DATE}.json"
 
 
 def fit_cache(key: str) -> Path:
@@ -269,6 +272,7 @@ def fit(spec: Spec, trial: int) -> dict:
     ser.to_parquet(fit_cache(spec.key))
     out["fit_series_cache"] = dict(path=P.rel(fit_cache(spec.key)), sha256=P.sha256(fit_cache(spec.key)))
     out["reported"] = "PENDING: stages 0b-5 are written first; the reported rows follow"
+    P.TRIALS.mkdir(parents=True, exist_ok=True)
     P.write_json(fit_json(spec.key), out)
     print(f"{spec.key} FIT VERDICT: {out['fit_verdict']}\nwrote {P.rel(fit_json(spec.key))} (decisions)")
     data.update(book=P.cef_book_pnl(), flags=pd.read_csv(P.QFLAGS, parse_dates=["date"]),
@@ -445,6 +449,7 @@ def holdout(spec: Spec) -> dict:
     data = dict(R=R, rf=rf, Rx=Rx, cal=cal, book=P.cef_book_pnl())
     out = evaluate_holdout(spec, fitres, pd.read_parquet(fit_cache(spec.key)), data)
     out.update(opened_utc=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), git_head=P.git_head())
+    P.TRIALS.mkdir(parents=True, exist_ok=True)
     P.write_json(holdout_json(spec.key), out)
     print(f"{spec.key} HOLDOUT: mean {out['ann_mean_pct']:.2f}%/yr, SR {out['sharpe']:.2f}, same sign "
           f"{out['same_sign_as_fit']} -> {out['final_verdict']}\nwrote {P.rel(holdout_json(spec.key))}")

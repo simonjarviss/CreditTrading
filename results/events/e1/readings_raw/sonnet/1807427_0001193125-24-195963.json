@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1807427,
+  "episode_accession": "0001193125-24-195963",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Blue Owl Capital Corporation III", "cik": 1807427, "ticker": "OBDE"},
+      "acquirer": {"name": "Blue Owl Capital Corporation", "cik": 1655888, "ticker": "OBDC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-24-195919", "quote": "Blue Owl Capital Corporation (NYSE: OBDC) and Blue Owl Capital Corporation III (NYSE: OBDE) today announced that they have entered into a definitive merger agreement, with OBDC as the surviving company"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-24-195919", "date": "2024-08-07", "quote": "Blue Owl Capital Corporation and Blue Owl Capital Corporation III Announce Merger Agreement"},
+      "outcome_evidence": {"accession": "0001628280-25-001248", "date": "2025-01-13", "quote": "Blue Owl Capital Corporation (NYSE: OBDC) today announced the closing of its merger with Blue Owl Capital Corporation III (\"OBDE\"), with OBDC as the surviving company."},
+      "notes": "Shareholder approvals announced 2025-01-08 (0001628280-25-000948); closing announced 2025-01-13. Several 425s were filed the same day as the 8-K announcement (2024-08-07)."
+    }
+  ],
+  "problems": ""
+}

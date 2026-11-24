@@ -1,0 +1,45 @@
+{
+ "sample_n": 10,
+ "sample_with_any_supplier": 5,
+ "sample_suppliers_total": 9,
+ "pool_large_listed_2020H2_2022": 16,
+ "seg_customer_company_rows_by_year": {
+  "2020": {
+   "rows": 9581,
+   "suppliers": 2619
+  },
+  "2021": {
+   "rows": 10533,
+   "suppliers": 2935
+  },
+  "2022": {
+   "rows": 10646,
+   "suppliers": 2987
+  },
+  "2023": {
+   "rows": 10897,
+   "suppliers": 3016
+  },
+  "2024": {
+   "rows": 10517,
+   "suppliers": 2920
+  },
+  "2025": {
+   "rows": 9172,
+   "suppliers": 2568
+  },
+  "2026": {
+   "rows": 248,
+   "suppliers": 85
+  }
+ },
+ "seg_customer_ctype_counts": {
+  "COMPANY": 61594,
+  "GEOREG": 50369,
+  "MARKET": 30914,
+  "GOVDOM": 3019,
+  "GOVFRN": 317,
+  "GOVSTATE": 279,
+  "GOVLOC": 34
+ }
+}

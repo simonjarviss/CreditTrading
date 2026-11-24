@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1675033,
+  "episode_accession": "0001104659-16-129185",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Full Circle Capital Corporation", "cik": 1490013, "ticker": null},
+      "acquirer": {"name": "Great Elm Capital Corp.", "cik": 1675033, "ticker": "GECC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001104659-16-129185", "date": "2016-06-24", "quote": "FULL CIRCLE CAPITAL CORPORATION TO MERGE"},
+      "outcome_evidence": {"accession": "0001104659-16-154983", "date": "2016-11-07", "quote": "BOSTON, November 3, 2016 - Great Elm Capital Corp. (NASDAQ:GECC) today announced the successful completion of the merger between GECC and Full Circle Capital Corporation"},
+      "notes": "Merger agreement dated June 23, 2016 between Full Circle and GECC (a newco formed for the merger). Special meeting date was set for October 25, 2016 (seq=6); completion announced in the 8-K exhibit 99.1 (event date 2016-11-03, filed 2016-11-07). GECC is shown as NASDAQ-listed; the excerpts show Full Circle only as a business development company (a BDC election), with no exchange listing printed, so both_listed is null."
+    }
+  ],
+  "problems": ""
+}

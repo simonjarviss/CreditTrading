@@ -1,0 +1,18 @@
+{
+  "episode_cik": 804116,
+  "episode_accession": "0000949377-11-000139",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Royce Value Trust, Inc.", "cik": 804116, "ticker": null},
+      "acquirer": {"name": "Royce Global Value Trust, Inc.", "cik": 1514490, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000949377-11-000139", "date": "2011-03-16", "quote": "Title of securities being registered: Shares of common stock, par value $0.001 per share, of Royce Global Value Trust, Inc."},
+      "outcome_evidence": null,
+      "notes": "N-14 8C: Value Trust stockholders would vote on a transaction with Global Trust. Excerpts mention a Cumulative Preferred Stock listed on the NYSE but do not state that the common shares of either fund are listed. Later filings in the window (2011 and 2012 DEF 14A and DEFA14A) show only annual-meeting director elections and do not mention the transaction."
+    }
+  ],
+  "problems": ""
+}

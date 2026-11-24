@@ -1,0 +1,15 @@
+{
+ "zip": "https://www.sec.gov/files/dera/data/financial-statement-data-sets/2022q1.zip",
+ "periodic_rows_matched": 5991,
+ "filed_equal_share": 0.9997,
+ "period_equal_share": 0.9412,
+ "api_minus_fsds_accepted_hours": {
+  "-0.0": 2184,
+  "5.0": 1520,
+  "-5.0": 910,
+  "-4.0": 805,
+  "4.0": 572
+ },
+ "tenk_filings": 4862,
+ "tenk_with_majorcustomer_member": 295
+}

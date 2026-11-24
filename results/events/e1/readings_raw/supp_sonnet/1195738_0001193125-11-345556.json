@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1195738,
+  "episode_accession": "0001193125-11-345556",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Insured California Premium Income Municipal Fund, Inc.", "cik": null, "ticker": "NPC"},
+      "acquirer": {"name": "Nuveen Insured California Tax-Free Advantage Municipal Fund", "cik": 1195738, "ticker": "NKX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-012166", "date": "2012-01-13", "quote": "However, the Board does not intend to remove the word “insured” from the names of the Acquired Funds pending the consummation of the Reorganizations."},
+      "outcome_evidence": null,
+      "notes": "Four insured California funds (NKX, NPC, NCL, NKL) proposed to merge, NKX as acquiring fund. Annual meeting set for February 24, 2012; a 2012-02-27 425 says the annual meeting was adjourned until March 30, 2012. No excerpt states the outcome. Exchange listing is not stated in the excerpts (tickers only)."
+    },
+    {
+      "target": {"name": "Nuveen Insured California Premium Income Municipal Fund 2, Inc.", "cik": null, "ticker": "NCL"},
+      "acquirer": {"name": "Nuveen Insured California Tax-Free Advantage Municipal Fund", "cik": 1195738, "ticker": "NKX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-012166", "date": "2012-01-13", "quote": "However, the Board does not intend to remove the word “insured” from the names of the Acquired Funds pending the consummation of the Reorganizations."},
+      "outcome_evidence": null,
+      "notes": "Same proposal as NPC; outcome not stated. Exchange listing not stated."
+    },
+    {
+      "target": {"name": "Nuveen Insured California Dividend Advantage Municipal Fund", "cik": null, "ticker": "NKL"},
+      "acquirer": {"name": "Nuveen Insured California Tax-Free Advantage Municipal Fund", "cik": 1195738, "ticker": "NKX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-012166", "date": "2012-01-13", "quote": "However, the Board does not intend to remove the word “insured” from the names of the Acquired Funds pending the consummation of the Reorganizations."},
+      "outcome_evidence": null,
+      "notes": "Same proposal as NPC; outcome not stated. Exchange listing not stated."
+    },
+    {
+      "target": {"name": "NUVEEN CALIFORNIA PREMIUM INCOME MUNICIPAL FUND", "cik": null, "ticker": "NCU"},
+      "acquirer": {"name": "Nuveen California AMT-Free Municipal Income Fund", "cik": 1195738, "ticker": "NKX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "A second, later filing: N-14 8C filed 2013-11-22 by NKX (now named Nuveen California AMT-Free Municipal Income Fund), addressed to shareholders of NKX and NCU. The excerpts show only the cover and boilerplate, so the merger direction and outcome are not stated; NKX is the registrant. Included because the filing names NCU alongside NKX."
+    }
+  ],
+  "problems": "No outcome stated in any excerpt. Target CIKs do not appear in FILING headers. The 2013 NCU deal is thinly evidenced (cover page only)."
+}

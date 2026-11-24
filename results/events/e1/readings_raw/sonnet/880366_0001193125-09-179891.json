@@ -1,0 +1,28 @@
+{
+  "episode_cik": 880366,
+  "episode_accession": "0001193125-09-179891",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Legg Mason Partners Convertible Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Legg Mason Partners Capital and Income Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-09-179891", "quote": "If your account application permits, you may be eligible to redeem shares by telephone."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-09-179891", "date": "2009-08-21", "quote": "You are being asked to vote on a proposed reorganization transaction related to one or more of the Legg Mason funds you own."},
+      "outcome_evidence": null,
+      "notes": "Open-end mutual funds (Class A/B/C/I shares, redemptions through Service Agents), no exchange listing shown. Meeting set for November 24, 2009; excerpts do not state the result."
+    },
+    {
+      "target": {"name": "Legg Mason Partners Equity Income Builder Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Legg Mason Partners Capital and Income Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-09-179891", "quote": "If your account application permits, you may be eligible to redeem shares by telephone."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-09-179891", "date": "2009-08-21", "quote": "You are being asked to vote on a proposed reorganization transaction related to one or more of the Legg Mason funds you own."},
+      "outcome_evidence": null,
+      "notes": "Same filing; second pair in the chart. Other N-14s in the window (2009, 2010, 2011) show only boilerplate and register further reorganizations whose fund names are not in the excerpts."
+    }
+  ],
+  "problems": "Later N-14 and DEFA14A filings show no fund pairs or outcomes in the excerpts."
+}

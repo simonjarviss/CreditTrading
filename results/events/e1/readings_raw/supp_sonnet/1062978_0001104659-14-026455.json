@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1062978,
+  "episode_accession": "0001104659-14-026455",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "HELIOS ADVANTAGE INCOME FUND, INC.", "cik": null, "ticker": null},
+      "acquirer": {"name": "BROOKFIELD HIGH INCOME FUND INC.", "cik": 1062978, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Inferred from the N-14 cover listing five funds and the registrant (Brookfield High Income Fund Inc.) registering its own common stock; the excerpts never describe who is target and who is acquirer, so the pairing is not stated in front of me."
+    },
+    {
+      "target": {"name": "HELIOS HIGH INCOME FUND, INC.", "cik": null, "ticker": null},
+      "acquirer": {"name": "BROOKFIELD HIGH INCOME FUND INC.", "cik": 1062978, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Same as the first deal."
+    },
+    {
+      "target": {"name": "HELIOS MULTI-SECTOR HIGH INCOME FUND, INC.", "cik": null, "ticker": null},
+      "acquirer": {"name": "BROOKFIELD HIGH INCOME FUND INC.", "cik": 1062978, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Same as the first deal."
+    },
+    {
+      "target": {"name": "HELIOS STRATEGIC INCOME FUND, INC.", "cik": null, "ticker": null},
+      "acquirer": {"name": "BROOKFIELD HIGH INCOME FUND INC.", "cik": 1062978, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Same as the first deal."
+    }
+  ],
+  "problems": "The excerpts (N-14 cover pages, form-of-agreement termination clause, voting scripts, later annual-meeting proxies) never describe the merger, state the parties' roles, listing or any outcome. Deals are listed from the cover page fund names only; every judgement field is null."
+}

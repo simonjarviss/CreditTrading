@@ -1,0 +1,58 @@
+{
+  "episode_cik": 1074540,
+  "episode_accession": "0000940394-18-001387",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Eaton Vance Michigan Municipal Income Trust", "cik": 1074688, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Income Trust", "cik": 1074540, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001387", "date": "2018-07-25", "quote": "Fund, and Merger Sub would acquire such assets and assume such liabilities upon delivery by Merger Sub to Acquired Fund of common shares of Acquiring Fund, which would be distributed proportionately on the basis of net asset value, in complete liquidation and dissolution of Acquired Fund, to Acquired Fund shareholders."},
+      "outcome_evidence": null,
+      "notes": "No excerpt states an outcome or that the funds are exchange listed. A 425 of 2018-10-12 says the Michigan Trust special meeting still needed votes; nothing later states the result."
+    },
+    {
+      "target": {"name": "Eaton Vance Ohio Municipal Income Trust", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Income Trust", "cik": 1074540, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001634", "date": "2018-10-02", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Ohio Municipal Income Trust, Eaton Vance Pennsylvania Municipal Income Trust and Eaton Vance Massachusetts Municipal Income Trust (each an “Acquired Fund” and collectively, the “Acquired Funds”)"},
+      "outcome_evidence": null,
+      "notes": "Joint proposal with the Pennsylvania and Massachusetts trusts; filing says each Acquired Fund has a separate and distinct vote. No outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Eaton Vance Pennsylvania Municipal Income Trust", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Income Trust", "cik": 1074540, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001634", "date": "2018-10-02", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Ohio Municipal Income Trust, Eaton Vance Pennsylvania Municipal Income Trust and Eaton Vance Massachusetts Municipal Income Trust (each an “Acquired Fund” and collectively, the “Acquired Funds”)"},
+      "outcome_evidence": null,
+      "notes": "Same joint proposal as Ohio and Massachusetts. No outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Eaton Vance Massachusetts Municipal Income Trust", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Income Trust", "cik": 1074540, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001634", "date": "2018-10-02", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Ohio Municipal Income Trust, Eaton Vance Pennsylvania Municipal Income Trust and Eaton Vance Massachusetts Municipal Income Trust (each an “Acquired Fund” and collectively, the “Acquired Funds”)"},
+      "outcome_evidence": null,
+      "notes": "Same joint proposal as Ohio and Pennsylvania. No outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Eaton Vance New Jersey Municipal Income Trust", "cik": 1074691, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Income Trust", "cik": 1074540, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001678", "date": "2018-10-15", "quote": "We cordially invite you to attend a Special Meeting of Shareholders of Eaton Vance New Jersey Municipal Income Trust (the “Acquired Fund”) on January 10, 2019, to consider a proposal to approve an Agreement and Plan of Reorganization (the “Plan”) providing for the reorganization (the “Reorganization”) of the Acquired Fund into Eaton Vance Municipal Income Trust (the “Acquiring Fund”"},
+      "outcome_evidence": null,
+      "notes": "CIK 1074691 taken from the FILER list of the 2019-02-22 DEF 14A. That annual-meeting proxy and the 2020-01-23 one are shown only by their cover text; neither excerpt states an outcome."
+    }
+  ],
+  "problems": "Excerpts never state the outcome of any of the five proposed mergers, nor that the funds are exchange listed. CIKs for the Ohio, Pennsylvania and Massachusetts targets do not appear in any FILING header."
+}

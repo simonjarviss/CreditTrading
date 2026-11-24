@@ -1,0 +1,61 @@
+{
+ "source": "R2 crsp_q_mutualfunds.holdings, PFF portno(s) in pff_crsp_portno.csv",
+ "report_dates": 48,
+ "first": "2018-12-31",
+ "last": "2022-12-31",
+ "median_gap_days_between_reports": 31.0,
+ "additions_per_year": {
+  "2019": 285,
+  "2020": 101,
+  "2021": 143,
+  "2022": 45
+ },
+ "removals_per_year": {
+  "2019": 95,
+  "2020": 75,
+  "2021": 153,
+  "2022": 53
+ },
+ "holdings_range": [
+  444,
+  517
+ ],
+ "additions_with_ticker": 570,
+ "additions_mapped_to_alpaca": 80,
+ "with_volume": 75,
+ "days_of_adv_median": 2.02,
+ "days_of_adv_quartiles": [
+  1.29,
+  2.02,
+  4.71
+ ],
+ "share_ge_1_day": 0.867,
+ "by_flag": {
+  "listed_inside_month": {
+   "n": 53,
+   "median": 1.79
+  },
+  "pre_event": {
+   "n": 22,
+   "median": 4.88
+  }
+ },
+ "by_year": {
+  "2019": {
+   "n": 30,
+   "median": 2.1
+  },
+  "2020": {
+   "n": 16,
+   "median": 1.8
+  },
+  "2021": {
+   "n": 21,
+   "median": 1.82
+  },
+  "2022": {
+   "n": 8,
+   "median": 3.1
+  }
+ }
+}

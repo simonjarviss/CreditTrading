@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1769901,
+  "episode_accession": "0001193125-19-082325",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund", "cik": null, "ticker": "JLS"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": 1769901, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-19-082325", "date": "2019-03-21", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN MORTGAGE OPPORTUNITY TERM FUND (JLS) AND NUVEEN MORTGAGE OPPORTUNITY TERM FUND 2 (JMT)"},
+      "outcome_evidence": {"accession": "0001193125-19-157215", "date": "2019-05-24", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s shares as part of a proposed merger transaction that is no longer contemplated; (2) no securities were sold or exchanged in connection with this offering; and (3) the filing did not become effective."},
+      "notes": "Acquiring fund is a new fund (the N-8F says it did not commence operations or issue shares), so it was never listed; the excerpts do not say the target funds' exchange, so both_listed is null. RW (Rule 477 withdrawal of the N-14) says the merger is no longer contemplated. The later N-8F is an abandonment of registration, not a merger."
+    },
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund 2", "cik": null, "ticker": "JMT"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": 1769901, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-19-082325", "date": "2019-03-21", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN MORTGAGE OPPORTUNITY TERM FUND (JLS) AND NUVEEN MORTGAGE OPPORTUNITY TERM FUND 2 (JMT)"},
+      "outcome_evidence": {"accession": "0001193125-19-157215", "date": "2019-05-24", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s shares as part of a proposed merger transaction that is no longer contemplated; (2) no securities were sold or exchanged in connection with this offering; and (3) the filing did not become effective."},
+      "notes": "Same joint N-14 as the JLS deal; the RW names the single registration statement covering both mergers."
+    }
+  ],
+  "problems": "Target CIKs do not appear in any FILING header (only the acquirer's), so they are null. Target fund names are as written in the notice (JLS and JMT)."
+}

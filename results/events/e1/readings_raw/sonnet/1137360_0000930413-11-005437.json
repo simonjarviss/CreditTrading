@@ -1,0 +1,68 @@
+{
+  "episode_cik": 1137360,
+  "episode_accession": "0000930413-11-005437",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Biotech HOLDRS Trust", "cik": 1099569, "ticker": null},
+      "acquirer": {"name": "Market Vectors ETF Trust", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-11-006492", "quote": "Market Vectors ® ETF Trust is planning an offer to exchange shares of soon to be created ETFs for underlying assets of"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-11-005385", "date": "2011-08-12", "quote": "Subject Companies: Biotech HOLDRS Trust (Commission File No. 001-15044) Oil Service HOLDRS Trust (Commission File No. 001-16311)"},
+      "outcome_evidence": null,
+      "notes": "An exchange offer of newly created ETF shares for HOLDRS (BBH), not a merger of two listed closed-end funds; the acquirer is an ETF trust."
+    },
+    {
+      "target": {"name": "Oil Service HOLDRS Trust", "cik": 1132338, "ticker": null},
+      "acquirer": {"name": "Market Vectors ETF Trust", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-11-006492", "quote": "Market Vectors ® ETF Trust is planning an offer to exchange shares of soon to be created ETFs for underlying assets of"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-11-005385", "date": "2011-08-12", "quote": "Subject Companies: Biotech HOLDRS Trust (Commission File No. 001-15044) Oil Service HOLDRS Trust (Commission File No. 001-16311)"},
+      "outcome_evidence": null,
+      "notes": "Exchange offer of ETF shares for HOLDRS (OIH), not a merger of two listed closed-end funds."
+    },
+    {
+      "target": {"name": "Pharmaceutical HOLDRS Trust", "cik": 1102290, "ticker": null},
+      "acquirer": {"name": "Market Vectors ETF Trust", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-11-006492", "quote": "Market Vectors ® ETF Trust is planning an offer to exchange shares of soon to be created ETFs for underlying assets of"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-11-005385", "date": "2011-08-12", "quote": "Pharmaceutical HOLDRS Trust (Commission File No. 001-15653) Regional Bank HOLDRS Trust (Commission File No. 001-15965) Retail HOLDRS Trust (Commission File No. 001-16369)"},
+      "outcome_evidence": null,
+      "notes": "Exchange offer of ETF shares for HOLDRS (PPH), not a merger of two listed closed-end funds."
+    },
+    {
+      "target": {"name": "Regional Bank HOLDRS Trust", "cik": null, "ticker": null},
+      "acquirer": {"name": "Market Vectors ETF Trust", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-11-006492", "quote": "Market Vectors ® ETF Trust is planning an offer to exchange shares of soon to be created ETFs for underlying assets of"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-11-005385", "date": "2011-08-12", "quote": "Pharmaceutical HOLDRS Trust (Commission File No. 001-15653) Regional Bank HOLDRS Trust (Commission File No. 001-15965) Retail HOLDRS Trust (Commission File No. 001-16369)"},
+      "outcome_evidence": null,
+      "notes": "Exchange offer of ETF shares for HOLDRS (RKH); its CIK does not appear in any FILING header shown."
+    },
+    {
+      "target": {"name": "Retail HOLDRS Trust", "cik": 1134636, "ticker": null},
+      "acquirer": {"name": "Market Vectors ETF Trust", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-11-006492", "quote": "Market Vectors ® ETF Trust is planning an offer to exchange shares of soon to be created ETFs for underlying assets of"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-11-005385", "date": "2011-08-12", "quote": "Pharmaceutical HOLDRS Trust (Commission File No. 001-15653) Regional Bank HOLDRS Trust (Commission File No. 001-15965) Retail HOLDRS Trust (Commission File No. 001-16369)"},
+      "outcome_evidence": null,
+      "notes": "Exchange offer of ETF shares for HOLDRS (RTH), not a merger of two listed closed-end funds."
+    },
+    {
+      "target": {"name": "Semiconductor HOLDRS Trust", "cik": 1110511, "ticker": null},
+      "acquirer": {"name": "Market Vectors ETF Trust", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-11-006492", "quote": "Market Vectors ® ETF Trust is planning an offer to exchange shares of soon to be created ETFs for underlying assets of"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-11-006488", "date": "2011-09-30", "quote": "Retail HOLDRS Trust (Commission File No. 001-16369) Semiconductor HOLDRS Trust (Commission File No. 001-15855)"},
+      "outcome_evidence": null,
+      "notes": "Exchange offer of ETF shares for HOLDRS (SMH), not a merger of two listed closed-end funds. Earlier August filings list this trust only in text cut off by the excerpt."
+    }
+  ],
+  "problems": "These are exchange offers of ETF shares for HOLDRS trust securities, not fund mergers; the excerpts do not state how any offer ended."
+}

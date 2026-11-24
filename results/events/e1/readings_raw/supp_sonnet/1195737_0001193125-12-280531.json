@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1195737,
+  "episode_accession": "0001193125-12-280531",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Premier Municipal Opportunity Fund, Inc.", "cik": 880843, "ticker": null},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-280531", "date": "2012-06-22", "quote": "Nuveen Closed-End Funds’ Board Approves Fund Mergers"},
+      "outcome_evidence": null,
+      "notes": "Named with NEA as a Subject Company (Commission File No. 811-06457) in the 425s of 2012-06-22, 2012-11-27 and 2012-12-17; the 2013-01-28, 2013-02-26 and 2013-03-15 425s list only NEA (811-21213) as subject company with 'Special Meeting - Next Adjournment Ends' dates (January 24, February 22, March 14, April 5, 2013). The excerpts do not say what happened to this target or why it dropped out; no outcome stated. The role split (NEA acquirer) rests on NEA being the N-14 registrant and the 'Filed by' fund; the excerpts do not spell out who merges into whom."
+    },
+    {
+      "target": {"name": "Nuveen Premium Income Municipal Opportunity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-280531", "date": "2012-06-22", "quote": "Nuveen Closed-End Funds’ Board Approves Fund Mergers"},
+      "outcome_evidence": null,
+      "notes": "Named with NEA as a Subject Company (Commission File No. 811-07792) in the 425s of 2012-06-22, 2012-11-27 and 2012-12-17; absent from the 425s from 2013-01-28 on. No CIK appears in any FILING header line, and no outcome is stated in the excerpts."
+    }
+  ],
+  "problems": "Compact excerpts show only the opening 800 characters of each filing, so no filing states what the merger proposal was in detail or how it ended. Later filings (2014 proxies and press releases) are about other Nuveen proposals. Exchange listing is not stated, so both_listed is null."
+}

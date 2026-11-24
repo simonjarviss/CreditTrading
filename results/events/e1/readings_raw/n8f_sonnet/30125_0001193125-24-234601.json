@@ -1,0 +1,18 @@
+{
+  "episode_cik": 30125,
+  "episode_accession": "0001193125-24-234601",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Insight Select Income Fund", "cik": 30125, "ticker": "INSI"},
+      "acquirer": {"name": "KKR Income Opportunities Fund", "cik": 1515940, "ticker": "KIO"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001133228-24-009370", "quote": "Insight Select Income Fund (“INSI”) (NYSE: INSI), a closed-end investment company, entered into a definitive agreement under which KKR Income Opportunities Fund (NYSE: KIO), a closed-end investment company advised by KKR Credit Advisors (US) LLC, will acquire the assets of INSI."},
+      "outcome": "completed",
+      "announcement": {"accession": "0001133228-24-009370", "date": "2024-10-09", "quote": "On October 8, 2024, it was announced that Insight Select Income Fund (“INSI”) (NYSE: INSI), a closed-end investment company, entered into a definitive agreement under which KKR Income Opportunities Fund (NYSE: KIO), a closed-end investment company advised by KKR Credit Advisors (US) LLC, will acquire the assets of INSI."},
+      "outcome_evidence": {"accession": "0001133228-25-002309", "date": "2025-03-07", "quote": "[X] Merger [ ] Liquidation"},
+      "notes": "Target's own N-8F (reason: Merger) names KKR Income Opportunities Fund as the surviving fund in item 26(a), so completed under the N-8F rule. N-8F also states shareholder approval on January 10, 2025 and distribution on February 13, 2025."
+    }
+  ],
+  "problems": ""
+}

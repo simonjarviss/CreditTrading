@@ -1,0 +1,42 @@
+families cut on read: {'cef_prices': {'rows': 775180, 'last': '2022-12-30'}, 'cef_nav': {'rows': 542205, 'last': '2022-12-30'}, 'cef_actions': {'rows': 19740, 'last': '2022-12-29'}}
+6f62527 c4_families.v1.20261029: gate passed (trial 1.216958 / 1.359591); unit spec book reproduces alloc4's series: max abs diff 0.0e+00
+
+C4 account, m = 1.41, TR, own 2005-02-22..2022-12-30
+  unit (x1.0)          SR 1.200 ann  7.12% vol 5.93% maxDD  8.90% turn  38.0/yr mean gross 1.366 at cap 6.9% | net +5.21 / +1.41 / -4.29 %/yr | breakeven 18.7bp
+  model                SR 1.199 ann  9.22% vol 7.69% maxDD 10.81% turn  51.7/yr mean gross 1.714 at cap 54.4% | net +6.64 / +1.47 / -6.29 %/yr | breakeven 17.8bp
+  B sizing_multiplier  SR 1.299 ann 10.13% vol 7.80% maxDD 11.39% turn  54.6/yr mean gross 1.634 at cap 31.8% | net +7.40 / +1.94 / -6.25 %/yr | breakeven 18.6bp | corr with model 0.9767, ann - model +0.91%/yr
+
+C4 account, m = 1.41, TR, W1 2013-06-25..2022-12-30
+  unit (x1.0)          SR 1.471 ann  8.54% vol 5.81% maxDD  8.61% turn  47.5/yr mean gross 1.447 at cap 9.8% | net +6.17 / +1.42 / -5.70 %/yr | breakeven 18.0bp
+  model                SR 1.451 ann 10.66% vol 7.35% maxDD 10.58% turn  63.8/yr mean gross 1.771 at cap 67.5% | net +7.47 / +1.09 / -8.48 %/yr | breakeven 16.7bp
+  B sizing_multiplier  SR 1.564 ann 11.80% vol 7.55% maxDD  7.49% turn  67.7/yr mean gross 1.683 at cap 37.6% | net +8.42 / +1.65 / -8.50 %/yr | breakeven 17.4bp | corr with model 0.9798, ann - model +1.14%/yr
+
+C4 account, m = 1.41, PR, own 2005-02-22..2022-12-30
+  unit (x1.0)          SR 1.344 ann  8.29% vol 6.17% maxDD  9.33% turn  38.0/yr mean gross 1.366 at cap 6.9% | net +6.39 / +2.59 / -3.12 %/yr | breakeven 21.8bp
+  model                SR 1.342 ann 10.72% vol 7.99% maxDD 11.22% turn  51.7/yr mean gross 1.714 at cap 54.4% | net +8.13 / +2.96 / -4.79 %/yr | breakeven 20.7bp
+  B sizing_multiplier  SR 1.441 ann 11.69% vol 8.11% maxDD 11.89% turn  54.6/yr mean gross 1.634 at cap 31.8% | net +8.96 / +3.49 / -4.70 %/yr | breakeven 21.4bp | corr with model 0.9777, ann - model +0.97%/yr
+
+C4 account, m = 1.41, PR, W1 2013-06-25..2022-12-30
+  unit (x1.0)          SR 1.574 ann  9.47% vol 6.02% maxDD  7.20% turn  47.5/yr mean gross 1.447 at cap 9.8% | net +7.10 / +2.35 / -4.77 %/yr | breakeven 20.0bp
+  model                SR 1.548 ann 11.77% vol 7.60% maxDD  8.53% turn  63.8/yr mean gross 1.771 at cap 67.5% | net +8.58 / +2.20 / -7.37 %/yr | breakeven 18.4bp
+  B sizing_multiplier  SR 1.680 ann 13.13% vol 7.82% maxDD  6.51% turn  67.7/yr mean gross 1.683 at cap 37.6% | net +9.75 / +2.98 / -7.17 %/yr | breakeven 19.4bp | corr with model 0.9804, ann - model +1.36%/yr
+
+C4 account, m = 1.39, TR, own 2005-02-22..2022-12-30
+  unit (x1.0)          SR 1.200 ann  7.12% vol 5.93% maxDD  8.90% turn  38.0/yr mean gross 1.366 at cap 6.9% | net +5.21 / +1.41 / -4.29 %/yr | breakeven 18.7bp
+  model                SR 1.198 ann  9.14% vol 7.63% maxDD 10.76% turn  51.3/yr mean gross 1.704 at cap 52.9% | net +6.58 / +1.45 / -6.25 %/yr | breakeven 17.8bp
+  B sizing_multiplier  SR 1.296 ann 10.01% vol 7.72% maxDD 11.29% turn  53.8/yr mean gross 1.624 at cap 30.4% | net +7.32 / +1.95 / -6.12 %/yr | breakeven 18.6bp | corr with model 0.9778, ann - model +0.87%/yr
+
+C4 account, m = 1.39, TR, W1 2013-06-25..2022-12-30
+  unit (x1.0)          SR 1.471 ann  8.54% vol 5.81% maxDD  8.61% turn  47.5/yr mean gross 1.447 at cap 9.8% | net +6.17 / +1.42 / -5.70 %/yr | breakeven 18.0bp
+  model                SR 1.449 ann 10.58% vol 7.30% maxDD 10.51% turn  63.4/yr mean gross 1.764 at cap 65.6% | net +7.42 / +1.08 / -8.42 %/yr | breakeven 16.7bp
+  B sizing_multiplier  SR 1.565 ann 11.70% vol 7.48% maxDD  7.36% turn  66.7/yr mean gross 1.675 at cap 35.8% | net +8.37 / +1.70 / -8.30 %/yr | breakeven 17.6bp | corr with model 0.9808, ann - model +1.12%/yr
+
+C4 account, m = 1.39, PR, own 2005-02-22..2022-12-30
+  unit (x1.0)          SR 1.344 ann  8.29% vol 6.17% maxDD  9.33% turn  38.0/yr mean gross 1.366 at cap 6.9% | net +6.39 / +2.59 / -3.12 %/yr | breakeven 21.8bp
+  model                SR 1.341 ann 10.63% vol 7.93% maxDD 11.16% turn  51.3/yr mean gross 1.704 at cap 52.9% | net +8.06 / +2.93 / -4.76 %/yr | breakeven 20.7bp
+  B sizing_multiplier  SR 1.437 ann 11.54% vol 8.03% maxDD 11.78% turn  53.8/yr mean gross 1.624 at cap 30.4% | net +8.85 / +3.47 / -4.60 %/yr | breakeven 21.5bp | corr with model 0.9787, ann - model +0.91%/yr
+
+C4 account, m = 1.39, PR, W1 2013-06-25..2022-12-30
+  unit (x1.0)          SR 1.574 ann  9.47% vol 6.02% maxDD  7.20% turn  47.5/yr mean gross 1.447 at cap 9.8% | net +7.10 / +2.35 / -4.77 %/yr | breakeven 20.0bp
+  model                SR 1.547 ann 11.69% vol 7.56% maxDD  8.52% turn  63.4/yr mean gross 1.764 at cap 65.6% | net +8.52 / +2.18 / -7.32 %/yr | breakeven 18.4bp
+  B sizing_multiplier  SR 1.680 ann 13.01% vol 7.75% maxDD  6.51% turn  66.7/yr mean gross 1.675 at cap 35.8% | net +9.68 / +3.01 / -6.99 %/yr | breakeven 19.5bp | corr with model 0.9814, ann - model +1.33%/yr

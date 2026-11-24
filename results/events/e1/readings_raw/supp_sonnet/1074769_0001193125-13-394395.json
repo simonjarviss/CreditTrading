@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1074769,
+  "episode_accession": "0001193125-13-394395",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen New York Performance Plus Municipal Fund, Inc.", "cik": 856226, "ticker": "NNP"},
+      "acquirer": {"name": "Nuveen New York Dividend Advantage Municipal Fund", "cik": 1074769, "ticker": "NAN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "2013-14 proposal (N-14 filed 2013-10-09 by NAN, Rule 425 filings from 2013-12-23 name NNP, NAN and NXK; annual meeting adjourned repeatedly 2014-01 to 2014-04). The 2014-04-07 425 lists only NAN as subject company, but no excerpt states how the NNP leg ended. Tickers are printed without an exchange name, so listing is not settled. No excerpt states the merger by name or its outcome."
+    },
+    {
+      "target": {"name": "Nuveen New York Dividend Advantage Municipal Fund 2", "cik": 1131063, "ticker": "NXK"},
+      "acquirer": {"name": "Nuveen New York Dividend Advantage Municipal Fund", "cik": 1074769, "ticker": "NAN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "2013-14 proposal, same filings as the NNP leg. The 2014-04-07 425 lists only NAN as subject company, but no excerpt states how the NXK leg ended."
+    },
+    {
+      "target": {"name": "Nuveen New York Performance Plus Municipal Fund, Inc.", "cik": 856226, "ticker": "NNP"},
+      "acquirer": {"name": "Nuveen New York Dividend Advantage Municipal Fund", "cik": 1074769, "ticker": "NAN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "2015 proposal (N-14 filed 2015-01-20, PRE 14A 2015-02-13, DEF 14A 2015-03-04, Rule 425 filings 2015-03-24 to 2015-05-04 with NNP as subject company filed by NAN; meeting adjourned until May 18, 2015). Excerpts do not show the meeting result or any completion."
+    },
+    {
+      "target": {"name": "Nuveen New York Dividend Advantage Municipal Fund 2", "cik": 1131063, "ticker": "NXK"},
+      "acquirer": {"name": "Nuveen New York Dividend Advantage Municipal Fund", "cik": 1074769, "ticker": "NAN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "2015 proposal, same filings as the NNP leg (NXK as subject company in 425s of 2015-03-24, 2015-04-29, 2015-05-04). Excerpts do not show the meeting result or any completion."
+    }
+  ],
+  "problems": "All excerpts are compact: cover pages and boilerplate only. No filing excerpt states a completion, failure or termination, and the excerpts name the funds only in header lists, so announcement is null for every deal. Whether the 2015 proposal supersedes the 2013-14 one is not stated."
+}

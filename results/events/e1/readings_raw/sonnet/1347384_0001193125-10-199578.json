@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1347384,
+  "episode_accession": "0001193125-10-199578",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "DCW Total Return Fund", "cik": 1347384, "ticker": null},
+      "acquirer": {"name": "DCA Total Return Fund", "cik": 1310445, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "The excerpts never describe the merger itself (the shareholder letter's proposal list is cut off after the trustee election). DCA is named only as the 425 filer with DCW as Subject Company; its role as acquirer is inferred from that header, not stated. The N-8F (reason: Merger, filed 2010-12-28) records shareholder approval on September 16, 2010 and a distribution, but does not state completion in the excerpt."
+    }
+  ],
+  "problems": "Merger terms, acquirer role, listing and completion are not stated in the excerpts."
+}

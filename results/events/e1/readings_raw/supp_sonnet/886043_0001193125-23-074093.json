@@ -1,0 +1,28 @@
+{
+  "episode_cik": 886043,
+  "episode_accession": "0001193125-23-074093",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "WESTERN ASSET MUNICIPAL PARTNERS FUND INC.", "cik": null, "ticker": "MNP"},
+      "acquirer": {"name": "WESTERN ASSET MANAGED MUNICIPALS FUND INC.", "cik": 886043, "ticker": "MMU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-142197", "quote": "Under Maryland law, stockholders of a corporation whose shares are traded publicly on a national securities exchange, such as the Funds’ Common Shares, are not entitled to demand the fair value of their shares upon a merger"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-074093", "date": "2023-03-17", "quote": "to approve the mergers of each of MNP and SBI (each a “Target Fund” and collectively, the “Target Funds”) with and into MMU in accordance with the Maryland General Corporation Law (each a “Merger” and collectively, the “Mergers”)."},
+      "outcome_evidence": null,
+      "notes": "Excerpts through the July 14, 2023 joint special meeting notice and the DEFA14A reminder state no outcome; later filings shown (annual-meeting DEF 14As, bylaws 8-K) do not mention the merger."
+    },
+    {
+      "target": {"name": "WESTERN ASSET INTERMEDIATE MUNI FUND INC.", "cik": null, "ticker": "SBI"},
+      "acquirer": {"name": "WESTERN ASSET MANAGED MUNICIPALS FUND INC.", "cik": 886043, "ticker": "MMU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-142197", "quote": "Under Maryland law, stockholders of a corporation whose shares are traded publicly on a national securities exchange, such as the Funds’ Common Shares, are not entitled to demand the fair value of their shares upon a merger"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-074093", "date": "2023-03-17", "quote": "to approve the mergers of each of MNP and SBI (each a “Target Fund” and collectively, the “Target Funds”) with and into MMU in accordance with the Maryland General Corporation Law (each a “Merger” and collectively, the “Mergers”)."},
+      "outcome_evidence": null,
+      "notes": "Same as MNP deal: no outcome stated in the excerpts."
+    }
+  ],
+  "problems": ""
+}

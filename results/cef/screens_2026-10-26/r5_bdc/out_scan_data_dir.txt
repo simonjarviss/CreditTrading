@@ -1,0 +1,2 @@
+BDC tickers 76 permnos 61
+HIT events/merger_targets/crsp_names_linked.csv: 3 BDC ids, nav-like cols=[], sample=['MAIN', 'ORCC', 'SSSS']

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1629071,
+  "episode_accession": "0001193125-20-219249",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Stone Ridge All Asset Variance Risk Premium Fund (Existing AVRPX)", "cik": 1629071, "ticker": null},
+      "acquirer": {"name": "Stone Ridge All Asset Variance Risk Premium Fund (New AVRPX), a series of Stone Ridge Trust", "cik": 1559992, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-219249", "quote": "a new open-end mutual fund series of Stone Ridge Trust"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-219249", "date": "2020-08-13", "quote": "will be reorganized with and into a new open-end mutual fund series of Stone Ridge Trust also called Stone Ridge All Asset Variance Risk Premium Fund"},
+      "outcome_evidence": {"accession": "0001193125-20-308282", "date": "2020-12-02", "quote": "shareholders voted in favor of reorganizing AVRPX into an open-end, daily liquid mutual fund with a 1.50% management fee"},
+      "notes": "Acquirer is an open-end mutual fund, so not a listed pair. Shareholders approved on the vote, and the N-8F of 2021-02-18 ticks Merger and states the shareholder vote took place December 2, 2020, so the reorganization appears to have been carried out, but that is not needed for the classification. The existing fund is described in the N-8F as closed-end; no exchange listing is stated."
+    }
+  ],
+  "problems": ""
+}

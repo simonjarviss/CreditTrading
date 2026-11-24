@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1379785,
+  "episode_accession": "0001193125-18-121220",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Triangle Capital Corporation", "cik": 1379785, "ticker": "TCAP"},
+      "acquirer": {"name": "BSP Asset Acquisition I, LLC (an affiliate of Benefit Street Partners L.L.C.)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-18-106888", "quote": "it has entered into an asset purchase agreement with an affiliate of Benefit Street Partners L.L.C."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-18-106888", "date": "2018-04-04", "quote": "TRIANGLE CAPITAL CORPORATION ANNOUNCES SALE OF INVESTMENT PORTFOLIO AND SIMULTANEOUS EXTERNALIZATION TRANSACTION"},
+      "outcome_evidence": null,
+      "notes": "Not a merger of two listed funds. Triangle Capital Corporation (NYSE: TCAP, a BDC) agreed to sell its portfolio to a Benefit Street Partners affiliate and, simultaneously, to externalize under Barings LLC (an investment adviser, not a fund); the filings show no share-exchange merger. For completeness: the Asset Sale closed on July 31, 2018 (8-K 0001379785-18-000050: 'The Asset Sale closed on July 31, 2018.') and the externalization closed on August 2, 2018 (8-K 0001379785-18-000067), after stockholders approved both on July 24, 2018 (8-K 0001379785-18-000045); the company was renamed Barings BDC, Inc. (NYSE: BBDC). The buyer's listing status is inferred only from its description as an LLC affiliate of an asset manager; no filing states it is unlisted."
+    }
+  ],
+  "problems": "No fund-to-fund merger is described; the only proposed transactions are an asset sale to an adviser's affiliate and an externalization. Recorded as one non-listed-pair deal; the buyer is not shown to be a closed-end fund or BDC."
+}

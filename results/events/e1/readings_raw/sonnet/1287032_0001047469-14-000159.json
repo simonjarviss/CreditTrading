@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1287032,
+  "episode_accession": "0001047469-14-000159",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nicholas Financial-Canada", "cik": null, "ticker": null},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": 1287032, "ticker": "PSEC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "terminated",
+      "announcement": {"accession": "0001047469-14-000159", "date": "2014-01-14", "quote": "by Nicholas Financial-Canada or Prospect, as the case may be, in certain events such as the Nicholas Financial-Canada's board of directors withdrawing or modifying in a manner adverse to the Prospect Parties its recommendation to approve the Arrangement Resolution or entering into a superior proposal."},
+      "outcome_evidence": {"accession": "0001287032-14-000126", "date": "2014-06-25", "quote": "The Company has elected to withdraw the N-14 Registration Statement because the Arrangement Agreement related to the transaction described in the N-14 Registration Statement has been terminate d."},
+      "notes": "Plan of arrangement (British Columbia court process) between Prospect and Nicholas Financial-Canada under an arrangement agreement; the excerpts show no listing for Nicholas Financial-Canada and its CIK is in no FILING header, so both_listed is null. Prospect is shown as NASDAQ: PSEC in the 8-Ks. The N-14 was withdrawn (RW, 2014-06-25) because the arrangement agreement was terminated; the termination date itself is not in the excerpts. Other filings in the window (convertible notes, dividends, earnings, proxies, a spin-off intention) are not mergers."
+    }
+  ],
+  "problems": ""
+}

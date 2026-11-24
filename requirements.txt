@@ -24,12 +24,6 @@ python-dotenv==1.1.0
 # had it). 1.5.2 is the version on the laptop; it has a cp313 aarch64 wheel.
 duckdb==1.5.2
 
-# The team's data/ copy in R2 (scripts/data/team_data.py, 2026-10-26; research only).
-# 1.36.3 matches the botocore range the laptop's aiobotocore (s3fs) requires. From 1.36
-# boto3 sends integrity-checksum headers by default, which R2 has rejected, so
-# team_data.make_client turns them off ("when_required"). Imported only there.
-boto3==1.36.3
-
 # Excel I/O for pandas (read_excel / to_excel), research only: the workbooks read by
 # scripts/cef/w10_partb.py (SIFMA), scripts/data/fetch_aqr_factors.py,
 # scripts/data/fetch_group_observables.py and scripts/xasset/slate_feasibility.py.

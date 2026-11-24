@@ -1,0 +1,24 @@
+ss-e1-hedge/results/events/_cache_crsp/dsf_72242dbb2c.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 6/61; with >=5y of rows: 5
+ss-e1-hedge/results/events/_cache_crsp/dsf_caffed83c1.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 6/61; with >=5y of rows: 5
+ss-e1-hedge/results/events/_cache_crsp/dsf_81ef409d68.parquet: no BDC rows
+ss-e1-hedge/results/events/_cache_crsp/dsf_bdb3669ade.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 18/61; with >=5y of rows: 14
+research-ss-expansion/results/events/_cache_crsp/dsf_44015b5199.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 54/61; with >=5y of rows: 44
+research-ss-expansion/results/events/_cache_crsp/dsf_71f42b22d4.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 53/61; with >=5y of rows: 44
+trial-events-navtender/results/events/_cache_crsp/dsf_c2f8d54bf4.parquet: no BDC rows
+trial-events-e1/results/events/_cache_crsp/dsf_26fa9ef44a.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 1/61; with >=5y of rows: 0
+trial-events-e1/results/events/_cache_crsp/dsf_a42d983e30.parquet: no BDC rows
+trial-events-e1/results/events/_cache_crsp/dsf_b76f43a56a.parquet: no BDC rows
+trial-events-e1/results/events/_cache_crsp/dsf_b07bc7c247.parquet: no BDC rows
+trial-events-e1/results/events/_cache_crsp/dsf_d2633781cf.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 10/61; with >=5y of rows: 7
+trial-events-e1/results/events/_cache_crsp/dsf_29efead87e.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 8/61; with >=5y of rows: 6
+trial-events-e1/results/events/_cache_crsp/dsf_1b9b242a04.parquet: no BDC rows
+trial-events-e1/results/events/_cache_crsp/dsf_2f469f764d.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 8/61; with >=5y of rows: 6
+trial-events-e1/results/events/_cache_crsp/dsf_ede348d640.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 9/61; with >=5y of rows: 7
+research-cef-events/results/events/_cache_crsp/dsf_b144cf3b02.parquet: no BDC rows
+research-cef-events/results/events/_cache_crsp/dsf_bdb3669ade.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 18/61; with >=5y of rows: 14
+ss-cef-events/results/events/_cache_crsp/dsf_b89d70619f.parquet: no BDC rows
+ss-cef-events/results/events/_cache_crsp/dsf_3167e2a2e5.parquet cols=['permno', 'date', 'prc', 'ret', 'retx', 'vol', 'shrout', 'cfacpr'] BDC permnos with 2012-22 rows: 7/61; with >=5y of rows: 6
+ss-cef-events/results/events/_cache_crsp/dsf_9b6be71c1c.parquet: no BDC rows
+ss-cef-events/results/events/_cache_crsp/dsf_f510ab61cd.parquet: no BDC rows
+ss-cef-events/results/events/_cache_crsp/dsf_f222c3fbd6.parquet: no BDC rows
+research-ss-expansion/results/events/ssx/ssx_pm/_cache_crsp/dsf.parquet cols=['permno', 'date', 'prc', 'ret', 'vol', 'shrout'] BDC permnos with 2012-22 rows: 47/61; with >=5y of rows: 36

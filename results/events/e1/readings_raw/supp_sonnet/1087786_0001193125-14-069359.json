@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1087786,
+  "episode_accession": "0001193125-14-069359",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen New Jersey Investment Quality Municipal Fund, Inc.", "cik": 870778, "ticker": null},
+      "acquirer": {"name": "Nuveen New Jersey Dividend Advantage Municipal Fund", "cik": 1087786, "ticker": "NXJ"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "The 425 filings are filed by the acquirer with this fund as subject company; the excerpts show only adjournment and voting reminders (next adjournment ends September 15, 2014) and no outcome. No excerpt announces the merger in words."
+    },
+    {
+      "target": {"name": "Nuveen New Jersey Dividend Advantage Municipal Fund 2", "cik": 1161070, "ticker": null},
+      "acquirer": {"name": "Nuveen New Jersey Dividend Advantage Municipal Fund", "cik": 1087786, "ticker": "NXJ"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "The 425 filed 2014-09-22 shows the shareholder meeting still adjourned (next adjournment ends October 20, 2014) with no outcome in the excerpts."
+    }
+  ],
+  "problems": "Excerpts are mostly boilerplate; no filing states an outcome or whether either fund is exchange-listed."
+}

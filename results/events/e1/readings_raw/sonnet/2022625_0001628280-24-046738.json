@@ -1,0 +1,18 @@
+{
+  "episode_cik": 2022625,
+  "episode_accession": "0001628280-24-046738",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Churchill Private Credit Fund", "cik": 2022625, "ticker": null},
+      "acquirer": {"name": "Nuveen Churchill Private Capital Income Fund", "cik": null, "ticker": "PCAP"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001628280-24-044008", "quote": "Title of each class Trading Symbol(s) Name of each exchange on which registered None N/A N/A"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001628280-24-044008", "date": "2024-10-29", "quote": "Nuveen Churchill Private Capital Income Fund (“PCAP”) and Nuveen Churchill Private Credit Fund (“NCPCF”) today announced that they have entered into a purchase and sale agreement pursuant to which NCPCF will sell to PCAP substantially all of its assets, PCAP will assume NCPCF’s liabilities"},
+      "outcome_evidence": {"accession": "0001628280-24-050967", "date": "2024-12-12", "quote": "On December 11, 2024, Nuveen Churchill Private Capital Income Fund, a Delaware statutory trust (the “PCAP”), completed its previously announced acquisition of substantially all of the assets of Nuveen Churchill Private Credit Fund (the “Fund”), a Delaware statutory trust (the “Transaction”)."},
+      "notes": "Structured as a sale of substantially all NCPCF assets to PCAP for cash equal to NAV, followed by NCPCF winding down, not a share-for-share merger. NCPCF's 8-K cover lists no exchange or trading symbol, so the pair is not listed. The transaction was completed on 2024-12-11 after shareholder approval on 2024-12-05 (8-K 0001628280-24-050351)."
+    }
+  ],
+  "problems": ""
+}

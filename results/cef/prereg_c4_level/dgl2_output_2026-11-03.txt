@@ -1,0 +1,4 @@
+CEF trial 54, DG-L2 (2026-11-03T14:02:03+00:00): C4 spec c4_families.v4.20261102: m 1.26, cap 1.9, band 0.048
+  level-only spec book on CRSP primary : gross SR +0.882  ann +7.45%  vol 8.45%  turn 34.5/yr  (from 2005-02-22)
+  level-only spec book on yfinance leg : gross SR +0.810  ann +6.93%  vol 8.55%  turn 34.5/yr  (from 2005-02-22)
+  |difference| 0.071 against 0.2: DG-L2 CLEAR

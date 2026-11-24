@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1177017,
+  "episode_accession": "0001741773-23-003187",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "T. Rowe Price Retirement I 2005 Fund—I Class through T. Rowe Price Retirement I 2065 Fund—I Class and T. Rowe Price Retirement Balanced I Fund—I Class (the Retirement I Funds)", "cik": null, "ticker": null},
+      "acquirer": {"name": "T. Rowe Price Retirement Funds, Inc. (Acquiring Funds, e.g. T. Rowe Price Retirement 2005 Fund—I Class)", "cik": 1177017, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001741773-23-003187", "date": "2023-09-19", "quote": "We are writing to inform you about reorganizations that will affect investments in T. Rowe Price Retirement I 2005 Fund—I Class, T. Rowe Price Retirement I 2010 Fund—I Class"},
+      "outcome_evidence": null,
+      "notes": "The excerpts never state whether these funds are exchange-listed or open-end (they mention redemptions and exchanges of fund shares and I Class shares, but never a listing), so both_listed is null. No completion, termination or vote result is stated. The only withdrawal (Form RW, 2024-05-31) withdraws a mistakenly filed duplicate N-14 (File No. 333-279704) and says the registrant intends to refile the tax opinion under File No. 333-274578; it is not a withdrawal of the merger. The excerpted text says the Board may terminate a Plan if a Reorganization has not closed on or before April 16, 2024. The Agreement and Plan of Reorganization is dated June 26, 2023. The excerpts name one pair of series only as a pattern (Retirement I series into corresponding Acquiring Fund series); the individual pairs are not listed."
+    }
+  ],
+  "problems": "Excerpts do not show which pairs exist individually, whether the funds are listed, or how the reorganizations ended."
+}

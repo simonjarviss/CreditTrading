@@ -1,0 +1,18 @@
+{
+ "episode_cik": 1825590,
+ "episode_accession": "0001104659-24-066161",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {"name": "SL Investment Corp.", "cik": 1825590, "ticker": null},
+   "acquirer": {"name": "North Haven Private Income Fund LLC", "cik": null, "ticker": null},
+   "both_listed": false,
+   "listed_quote": {"accession": "0001825590-24-000021", "quote": "Title of each class Trading Symbol(s) Name of each exchange on which registered None N/A N/A"},
+   "outcome": "not_a_listed_pair",
+   "announcement": {"accession": "0001104659-24-065594", "date": "2024-05-28", "quote": "North Haven Private Income Fund LLC and SL Investment Corp. Enter Into Merger Agreement"},
+   "outcome_evidence": {"accession": "0001825590-24-000021", "date": "2024-06-05", "quote": "Title of each class Trading Symbol(s) Name of each exchange on which registered None N/A N/A"},
+   "notes": "Cash merger of two externally managed BDCs. SLIC's filings show no exchange listing (exchange: None); the acquirer's listing is not shown. The 8-K filed 2024-07-15 states the merger was completed on July 15, 2024 (PIF completed its acquisition of SLIC; SLIC's separate existence ceased), so this deal completed but is not a listed pair."
+  }
+ ],
+ "problems": ""
+}

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1608742,
+  "episode_accession": "0001193125-14-211571",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Dow 30 SM Enhanced Premium & Income Fund Inc.", "cik": 1390840, "ticker": "DPO"},
+      "acquirer": {"name": "Nuveen Dow 30 SM Dynamic Overwrite Fund", "cik": 1608742, "ticker": "DIAX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-211571", "date": "2014-05-23", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF DOW 30 SM ENHANCED PREMIUM & INCOME FUND INC. (DPO) AND DOW 30 SM PREMIUM & DIVIDEND INCOME FUND INC. (DPD)"},
+      "outcome_evidence": {"accession": "0001193125-14-450512", "date": "2014-12-22", "quote": "Dow 30 SM Enhanced Premium & Income Fund Inc. (DPO) DPO was combined with Dow 30 SM Premium & Dividend Income Fund Inc. (DPD) The combined fund’s new name is Nuveen Dow 30 SM Dynamic Overwrite Fund (DIAX)"},
+      "notes": "The 8-K press release of 2014-12-22 states 'the restructuring of its family of covered call closed-end funds was completed prior to the opening of the New York Stock Exchange on December 22, 2014' and gives DPO an exchange ratio of 0.86404614. The first Annual Meeting (set for 2014-09-19) was adjourned repeatedly (to 2014-10-20, 2014-11-17, and 'for a final time' to 2014-11-21); a second N-14 was filed 2014-12-16 for 14,209,512 further shares. The text does not say whether the structure changed from the first proposal; the combined fund took the acquirer's name, so recorded as completed. Exchange listing of DIAX is not stated (ticker only)."
+    },
+    {
+      "target": {"name": "Dow 30 SM Premium & Dividend Income Fund Inc.", "cik": null, "ticker": "DPD"},
+      "acquirer": {"name": "Nuveen Dow 30 SM Dynamic Overwrite Fund", "cik": 1608742, "ticker": "DIAX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-211571", "date": "2014-05-23", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF DOW 30 SM ENHANCED PREMIUM & INCOME FUND INC. (DPO) AND DOW 30 SM PREMIUM & DIVIDEND INCOME FUND INC. (DPD)"},
+      "outcome_evidence": {"accession": "0001193125-14-450512", "date": "2014-12-22", "quote": "Dow 30 SM Premium & Dividend Income Fund Inc. (DPD) DPD was combined with Dow 30 SM Enhanced Premium & Income Fund Inc. (DPO) The combined fund’s new name is Nuveen Dow 30 SM Dynamic Overwrite Fund (DIAX)"},
+      "notes": "DPD's CIK does not appear in any FILING header shown, so it is null. The press release lists an exchange ratio for DPO (0.86404614) but none for DPD; the table says each of DPO and DPD was combined with the other into DIAX. Meeting adjournments as for DPO."
+    }
+  ],
+  "problems": "Both funds are described as combined into one fund named DIAX, and the press release does not separate which absorbed which. The exchange listing of the funds on a stock exchange is not stated in the excerpts (tickers only), so both_listed is null."
+}

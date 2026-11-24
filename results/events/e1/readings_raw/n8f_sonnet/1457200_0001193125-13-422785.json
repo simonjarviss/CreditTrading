@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1457200,
+  "episode_accession": "0001193125-13-422785",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Goldman Sachs Credit Strategies Fund", "cik": 1457200, "ticker": null},
+      "acquirer": {"name": "Goldman Sachs Long Short Credit Strategies Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-13-449899", "quote": "a newly-organized series of the Goldman Sachs Trust, an open-end management investment company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-13-444924", "date": "2013-11-18", "quote": "the proposed reorganization of the Fund with and into the Goldman Sachs Long Short Credit Strategies Fund, a newly-organized series of Goldman Sachs Trust (the “Reorganization”)."},
+      "outcome_evidence": {"accession": "0001193125-14-261863", "date": "2014-07-07", "quote": "26. (a) State the name of the fund surviving the Merger: Goldman Sachs Long Short Credit Strategies Fund, a series of the Goldman Sachs Trust"},
+      "notes": "Acquirer is a newly organized series of an open-end management investment company (Goldman Sachs Trust, CIK 822977 is the filer, but the series itself has no CIK in any FILING header, so acquirer cik is null). The target is described as providing only limited quarterly liquidity and no exchange listing is stated. Not a listed pair. For the record the target's N-8F (reason: Merger) names the open-end series as survivor, so the proposal was completed in that form."
+    }
+  ],
+  "problems": ""
+}

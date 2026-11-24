@@ -1,0 +1,31 @@
+looser basket rule (no own ex-date in [p-3, p+3]): median size 4, share < 3 0.331
+
+r6's statistic (short P&L = -CAR(+1..+3) vs same-date EW of the 17), cut finer [descriptive]:
+   2005-09: events 777, short P&L +16.6bp, month t +2.26
+   2010-14: events 866, short P&L +15.7bp, month t +3.58
+   2015-19: events 978, short P&L +18.4bp, month t +5.08
+   2020-22: events 605, short P&L +35.4bp, month t +4.21
+   taxable 11: events 1920, short P&L +29.3bp, month t +5.23
+   muni 6: events 1306, short P&L +7.5bp, month t +1.17
+   deployed 13: events 2352, short P&L +25.3bp, month t +6.15
+   without 2008-09-01..2009-06-30 and 2020-02-20..2020-06-30: events 3035, short P&L +18.2bp, month t +7.76
+
+HYG $1/$1 (DISPERSION ONLY): events 2876 from 2007-04-11, months 189; per-event sd 199.9bp; sd of monthly means 114.5bp; sd of monthly sums 1651.0bp; taxable sd 209.8bp, muni sd 183.0bp; r6 benchmark per-event sd on the same events 148.5bp
+
+POWER, HYG hedge, test set (752 events in 45 months, all 17; 575 on the 13):
+   names 17, true mean 20.5bp: expected month-clustered t 1.26; P(t >= 2) 0.23
+   names 13, true mean 20.5bp: expected month-clustered t 1.10; P(t >= 2) 0.18
+   sleeve SR [U arithmetic] 0.65: P(_dsr pass) N6 0.011, N7 0.009, N8 0.008
+   names 17, true mean 10.2bp: expected month-clustered t 0.63; P(t >= 2) 0.08
+   names 13, true mean 10.2bp: expected month-clustered t 0.55; P(t >= 2) 0.07
+   sleeve SR [U arithmetic] 0.33: P(_dsr pass) N6 0.002, N7 0.001, N8 0.001
+   names 17, true mean  5.1bp: expected month-clustered t 0.31; P(t >= 2) 0.05
+   names 13, true mean  5.1bp: expected month-clustered t 0.27; P(t >= 2) 0.04
+   sleeve SR [U arithmetic] 0.16: P(_dsr pass) N6 0.001, N7 0.000, N8 0.000
+   Sharpe needed at N 6, T 950: 1.825
+   Sharpe needed at N 7, T 950: 1.867
+   Sharpe needed at N 8, T 950: 1.901
+FORWARD paper, 13 names, 12 months: expected t 0.57, P(t >= 2) 0.08 (half effect 0.04)
+FORWARD paper, 13 names, 24 months: expected t 0.80, P(t >= 2) 0.12 (half effect 0.05)
+TEST + 12 forward months, 13 names: expected t 1.24, P(t >= 2) 0.22
+TEST + 24 forward months, 13 names: expected t 1.36, P(t >= 2) 0.26

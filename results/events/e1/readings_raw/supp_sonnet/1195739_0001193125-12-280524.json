@@ -1,0 +1,58 @@
+{
+  "episode_cik": 1195739,
+  "episode_accession": "0001193125-12-280524",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen New York Quality Income Municipal Fund, Inc.", "cik": 879819, "ticker": null},
+      "acquirer": {"name": "Nuveen New York AMT-Free Municipal Income Fund", "cik": 1195739, "ticker": "NRK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Subject company in 425s from 2012-06-22 to 2012-12-17; the 2012-12-17 425 says 'Special Meeting - Next Adjournment Ends January 24, 2013'. No outcome stated."
+    },
+    {
+      "target": {"name": "Nuveen New York Premium Income Municipal Fund, Inc.", "cik": 885712, "ticker": null},
+      "acquirer": {"name": "Nuveen New York AMT-Free Municipal Income Fund", "cik": 1195739, "ticker": "NRK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named in the 2012-06-22, 2012-11-09 and 2012-11-28 425s; absent from the subject list of the 2012-12-17 425s. No excerpt says why or how it ended."
+    },
+    {
+      "target": {"name": "Nuveen New York Investment Quality Municipal Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen New York AMT-Free Municipal Income Fund", "cik": 1195739, "ticker": "NRK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named in the 425s from 2012-06-22 to 2012-12-17 (still named in the 2012-12-17 list). No outcome stated."
+    },
+    {
+      "target": {"name": "Nuveen New York Select Quality Municipal Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen New York AMT-Free Municipal Income Fund", "cik": 1195739, "ticker": "NRK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named in the 2012-06-22, 2012-11-09 and 2012-11-28 425s; absent from the subject list of the 2012-12-17 425s. No excerpt says why or how it ended."
+    },
+    {
+      "target": {"name": "Nuveen New York Dividend Advantage Municipal Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen New York AMT-Free Municipal Income Fund", "cik": 1195739, "ticker": "NRK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named in the 425s from 2012-06-22 to 2012-12-17 (still named in the 2012-12-17 list). No outcome stated."
+    }
+  ],
+  "problems": "Excerpts are compact and contain no outcome language; the 425 excerpts do not use the word merger, so no announcement quote could be given. The acquirer's ticker NRK is printed only in the 2013-06-27 DEF 14A. Episode role 'acquirer' rests on the fund being the N-14 registrant and filer of the 425s."
+}

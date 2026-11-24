@@ -1,0 +1,28 @@
+{
+  "episode_cik": 895531,
+  "episode_accession": "0000950123-11-101291",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco California Insured Municipal Income Trust", "cik": 894146, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen California Value Municipal Income Trust", "cik": 895531, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101291", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "CIK 894146 is the subject company of the 2011-12-01 425 (0000950123-11-101278) under the name Invesco California Insured Municipal Income Trust; the 2012 PRE 14A and DEF 14A name the same CIK as Invesco California Municipal Income Trust. Roles inferred from 895531 being the N-14 registrant and from the three-fund PRE 14A / DEF 14A filer set; excerpts do not say which fund survives. No outcome or listing language in the excerpts."
+    },
+    {
+      "target": {"name": "Invesco California Quality Municipal Securities", "cik": 898618, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen California Value Municipal Income Trust", "cik": 895531, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101291", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Subject company of the 425 with accession 0000950123-11-101291. See the other deal's note."
+    }
+  ],
+  "problems": "Excerpts are cover pages and boilerplate only; the press release excerpt ends before naming the mergers; no outcome or listing language."
+}

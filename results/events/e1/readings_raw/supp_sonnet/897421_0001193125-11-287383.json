@@ -1,0 +1,28 @@
+{
+  "episode_cik": 897421,
+  "episode_accession": "0001193125-11-287383",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Virginia Dividend Advantage Municipal Fund", "cik": 1090122, "ticker": "NGB"},
+      "acquirer": {"name": "Nuveen Virginia Premium Income Municipal Fund", "cik": 897421, "ticker": "NPV"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-11-287298", "date": "2011-10-31", "quote": "Nuveen Closed-End Funds’ Board Approves Fund Mergers"},
+      "outcome_evidence": null,
+      "notes": "Meeting adjourned from 2011-11-15 to 2011-12-16 (DEFA14A 2011-11-16); N-14 filed 2011-12-06 and amended 2012-01-24 name this fund with NPV; the 2012-04-09 and 2012-05-22 425s name only NPV (and, in April, Virginia Dividend Advantage Municipal Fund 2) as subject companies, not this fund. No excerpt states how the proposal for this target ended."
+    },
+    {
+      "target": {"name": "Nuveen Virginia Dividend Advantage Municipal Fund 2", "cik": 1158728, "ticker": "NNB"},
+      "acquirer": {"name": "Nuveen Virginia Premium Income Municipal Fund", "cik": 897421, "ticker": "NPV"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-11-287332", "date": "2011-10-31", "quote": "Nuveen Closed-End Funds’ Board Approves Fund Mergers"},
+      "outcome_evidence": null,
+      "notes": "Same proposal as the other Virginia target. Adjournment 425s of 2012-04-09 ('Special Meeting - Next Adjournment Ends May 17, 2012') and 2012-05-22 ('Next Adjournment Ends June 22, 2012') say 'Unless sufficient shareholders vote by' those dates but the excerpts are cut off before any consequence or result is stated. No excerpt states completion or failure."
+    }
+  ],
+  "problems": ""
+}

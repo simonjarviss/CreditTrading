@@ -326,7 +326,7 @@ def test_verify_main_exits_0_on_a_pass_even_if_the_distribution_file_is_foreign(
 
 
 def test_verify_hook_skips_non_trading_days(tmp_path):
-    vf.run_distributions(FakeClient(), tmp_path, dt.date(2026, 10, 10))      # a Saturday
+    vf.run_distributions(FakeClient(), tmp_path, dt.date(2026, 10, 10), book="cef")  # a Saturday
     assert not (tmp_path / "distribution_scores.csv").exists()
 
 

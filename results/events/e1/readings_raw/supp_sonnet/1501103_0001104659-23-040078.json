@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1501103,
+  "episode_accession": "0001104659-23-040078",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Virtus Stone Harbor Emerging Markets Total Income Fund", "cik": null, "ticker": "EDI"},
+      "acquirer": {"name": "Virtus Stone Harbor Emerging Markets Income Fund", "cik": 1501103, "ticker": "EDF"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-23-040078", "date": "2023-03-31", "quote": "The Board of Trustees of the Acquired Fund has approved the reorganization of the Acquired Fund with and into Virtus Stone Harbor Emerging Markets Income Fund (the “Acquiring Fund” and, together with the Acquired Fund, the “Funds”)."},
+      "outcome_evidence": null,
+      "notes": "Shareholder vote on the share issuance was set for the May 22, 2023 annual meeting. An amended N-14 was filed 2023-11-07 and sets a termination date of February 4, 2024 for the agreement. The 2024-04-09 joint DEF 14A excerpts show only trustee elections and say nothing about EDI. No excerpt states how the reorganization ended. The text calls each fund a closed-end management investment company but does not state an exchange listing for either. EDI's CIK does not appear in any filing header; tickers are as abbreviated in the proxy text."
+    }
+  ],
+  "problems": ""
+}

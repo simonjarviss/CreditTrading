@@ -1,0 +1,5 @@
+date,book,verdict,traded,n_orders,n_filled,alpaca_equity,alpaca_last_equity,alpaca_equity_change_usd,auction_pnl_usd,auction_hold_pnl_usd,auction_fill_pnl_usd,fill_vs_auction_bp,unmeasured,auction_condition,cost_basis,read_at
+2026-11-03,c4,FAIL,False,0,0,100000.00,100000.00,0.00,0.00,0.00,0.00,no fills,,M,"gross; no borrow, no dividends, no fees (Alpaca paper charges and pays none; nothing added here)",2026-11-03T17:30:02.180324-05:00
+2026-11-04,c4,PASS,True,15,15,99910.90,100000.00,-89.10,-8.60,0.00,-8.60,0.66,,M,"gross; no borrow, no dividends, no fees (Alpaca paper charges and pays none; nothing added here)",2026-11-04T17:30:01.683648-05:00
+2026-11-05,c4,PASS,True,2,2,101268.04,99990.04,1278.00,1244.07,1279.07,-35.00,18.04,,M,"gross; no borrow, no dividends, no fees (Alpaca paper charges and pays none; nothing added here)",2026-11-05T17:30:01.368988-05:00
+2026-11-06,c4,PASS,True,3,3,100043.62,101233.72,-1190.10,-1225.80,-1181.63,-44.17,23.38,,M,"gross; no borrow, no dividends, no fees (Alpaca paper charges and pays none; nothing added here)",2026-11-06T17:30:01.356981-05:00

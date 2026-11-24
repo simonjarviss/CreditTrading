@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1259708,
+  "episode_accession": "0001193125-12-270372",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Floating Rate Income Strategies Fund II, Inc.", "cik": 1269143, "ticker": "FRB"},
+      "acquirer": {"name": "BlackRock Floating Rate Income Strategies Fund, Inc.", "cik": 1259708, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-12-270372", "date": "2012-06-14", "quote": "Letter to Stockholders of BlackRock Floating Rate Income Strategies Fund II, Inc. (“FRB”), BlackRock Diversified Income Strategies Fund, Inc."},
+      "outcome_evidence": {"accession": "0001193125-12-417889", "date": "2012-10-09", "quote": "Announces Closing of Closed-End Fund Reorganizations New York, October 8, 2012 – BlackRock Advisors, LLC today announced that the reorganization of each of BlackRock Diversified Income Strategies Fund, Inc. (NYSE:DVF) and BlackRock Floating Rate Income Strategies Fund II, Inc. (NYSE:FRB) with and into BlackRock Floating Rate Income Strategies Fund,"},
+      "notes": "The target is shown as NYSE-listed; the excerpts do not print a listing or exchange ticker for the acquirer, so both_listed is null. The closing press release is truncated in the excerpt after 'Fund,'; its title states the closing of the reorganizations."
+    },
+    {
+      "target": {"name": "BlackRock Diversified Income Strategies Fund, Inc.", "cik": 1303649, "ticker": "DVF"},
+      "acquirer": {"name": "BlackRock Floating Rate Income Strategies Fund, Inc.", "cik": 1259708, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-12-270372", "date": "2012-06-14", "quote": "Letter to Stockholders of BlackRock Floating Rate Income Strategies Fund II, Inc. (“FRB”), BlackRock Diversified Income Strategies Fund, Inc."},
+      "outcome_evidence": {"accession": "0001193125-12-417894", "date": "2012-10-09", "quote": "Announces Closing of Closed-End Fund Reorganizations New York, October 8, 2012 – BlackRock Advisors, LLC today announced that the reorganization of each of BlackRock Diversified Income Strategies Fund, Inc. (NYSE:DVF) and BlackRock Floating Rate Income Strategies Fund II, Inc. (NYSE:FRB) with and into BlackRock Floating Rate Income Strategies Fund,"},
+      "notes": "Same closing press release as for FRB, filed under the DVF subject-company header. The target is shown as NYSE-listed; no listing is printed for the acquirer, so both_listed is null."
+    }
+  ],
+  "problems": ""
+}

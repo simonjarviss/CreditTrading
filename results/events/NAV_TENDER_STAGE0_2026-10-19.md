@@ -242,3 +242,70 @@ lead would have to rule on it. On that read:
 - MUB was not, so the 11 muni fit events would route to IBKR at the file's fee.
 
 Recommendation: the same-day read inside `stage`, as declared.
+
+## 7. Stage 0 part B, 2026-10-20: one new flag stands between Stage 0 and the fit
+
+On 2026-10-20 the team lead accepted all 72 recommended rulings (commit `2dbf949`) and
+ran `stage --ibkr`, which exited 0. It wrote:
+
+- **CRSP:** names, delistings and one batch of fit `dsf` rows for 125 permnos, all of
+  them dated before 2023 (pulled 2026-10-20T20:17-20:19Z;
+  `results/events/_cache_crsp/_manifest.json`, gitignored).
+- **DG-NT-4:** Alpaca's flags for all 52 hedge ETFs, read 2026-10-20T20:19:40Z, beside
+  IBKR's file stamped 2026-10-20 16:10:37: one date, as §4.4 requires
+  (`results/events/nav_tender/dg_nt4_reads.json`). Five ETFs were not shortable at
+  Alpaca: HYD, MUB, PGX, TFI and VTEB. MUB's IBKR fee read 10.29%/yr; it was 7.73% in
+  the pre-registration's 2026-10-19 file. The borrow line uses DG-NT-4's date.
+- **French factors:** vintage 202608, to 2026-08-31.
+- **EDGAR:** the 82 filings the cache lacked. None is missing now.
+
+Then `python3 scripts/events/nav_tender_trial.py stage0` ran parts A and B on 2026-10-20
+and exited 2, at the rulings block.
+
+**Part A, re-read with every amendment: unchanged.**
+
+- The gate is still 26 of 134 fit events unread (19.4%): PASS.
+- Holdout count: 14 of 42 unread.
+- No expiry, pricing session, P_final, outcome or period moved.
+- The joint-release rule now runs on CRSP's ticker list. With it, the census's reader
+  reproduces the census's pro-ration reading on every census filing, to float
+  precision. That is the reader checked a second way.
+
+**Part B, on the 108 read fit events:**
+
+- the universe check passed (108 events, 44 tickers, 46 permnos);
+- no event fails the election cut-off, is blocked by one-position-per-fund, or lacks a
+  permno;
+- 4 are excluded for no beta history (§5.2), all funds listed within months of their
+  tender: DRA 2014-09, 2015-03 and 2015-10, and JGH 2014-11;
+- **104 events in 96 groups are traded;**
+- 8 events are hedged with MUB at IBKR;
+- beta's median is 0.90 (10th to 90th percentile 0.60 to 1.41);
+- no return inside a hold needed bridging, none exceeds 50%, and no fund delisted inside
+  a hold;
+- CRSP's SPY dates match the NYSE calendar from 2008;
+- the factors cover 2009-2022 (3,524 rows).
+
+No P&L, k or Sharpe was formed. Those come after the rulings block.
+
+**The one new flag** is `quality_no_close` for GGO on 2021-10-08:
+
+- CRSP has no closing trade on GGO's exit session and prices it at the bid/ask average;
+- the offer was for any and all shares, with 97% of those tendered accepted, so the
+  residual sold that day is 3% of the original notional;
+- **recommended:** genuine, no action. The event stays in the headline and is left out of
+  §4.4's quality-screen robustness row.
+
+The row is appended to the rulings file with `ruled_by` and `ruled_on` blank. The 72
+signed rows are unchanged, and `require_stage0_rulings` now refuses on that row alone.
+
+**Not a block, but before the fit:** the script still lacks some rows the
+pre-registration reports and never decides on. Recommendation: add them, tested on
+synthetic data, before the one fit run, so that run carries them:
+
+- R-BOOK (§9);
+- the mechanism slope (§8);
+- the capacity block (§10);
+- the residual-lag rows at 0 and 10 sessions;
+- the quality-screen-removed row;
+- the IEF-for-muni hedge row.

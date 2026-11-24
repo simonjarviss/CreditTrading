@@ -1,0 +1,132 @@
+{
+ "ran_utc": "2026-10-19T20:02:41+00:00",
+ "population": {
+  "2010": {
+   "filings": 70,
+   "bdcs": 25
+  },
+  "2011": {
+   "filings": 90,
+   "bdcs": 31
+  },
+  "2012": {
+   "filings": 99,
+   "bdcs": 34
+  },
+  "2013": {
+   "filings": 118,
+   "bdcs": 40
+  },
+  "2014": {
+   "filings": 142,
+   "bdcs": 48
+  },
+  "2015": {
+   "filings": 145,
+   "bdcs": 49
+  },
+  "2016": {
+   "filings": 145,
+   "bdcs": 49
+  },
+  "2017": {
+   "filings": 141,
+   "bdcs": 48
+  },
+  "2018": {
+   "filings": 140,
+   "bdcs": 47
+  },
+  "2019": {
+   "filings": 143,
+   "bdcs": 48
+  },
+  "2020": {
+   "filings": 142,
+   "bdcs": 48
+  },
+  "2021": {
+   "filings": 138,
+   "bdcs": 50
+  },
+  "2022": {
+   "filings": 143,
+   "bdcs": 48
+  },
+  "2023": {
+   "filings": 141,
+   "bdcs": 47
+  },
+  "2024": {
+   "filings": 152,
+   "bdcs": 51
+  },
+  "2025": {
+   "filings": 172,
+   "bdcs": 58
+  }
+ },
+ "sample_by_era": {
+  "2010-15": {
+   "k": 0,
+   "n": 12,
+   "share": 0.0,
+   "wilson95": [
+    0.0,
+    0.2425007574992425
+   ],
+   "any_repurchase_below_nav_text": 0,
+   "with_size": 0,
+   "with_expiry": 0,
+   "era_population_10q": 664,
+   "distinct_bdcs_in_sample": 10
+  },
+  "2016-19": {
+   "k": 1,
+   "n": 12,
+   "share": 0.08333333333333333,
+   "wilson95": [
+    0.014864709450773478,
+    0.35388592179859524
+   ],
+   "any_repurchase_below_nav_text": 1,
+   "with_size": 1,
+   "with_expiry": 0,
+   "era_population_10q": 569,
+   "distinct_bdcs_in_sample": 10
+  },
+  "2020-22": {
+   "k": 1,
+   "n": 12,
+   "share": 0.08333333333333333,
+   "wilson95": [
+    0.014864709450773478,
+    0.35388592179859524
+   ],
+   "any_repurchase_below_nav_text": 5,
+   "with_size": 1,
+   "with_expiry": 1,
+   "era_population_10q": 423,
+   "distinct_bdcs_in_sample": 10
+  },
+  "2023-25": {
+   "k": 4,
+   "n": 12,
+   "share": 0.3333333333333333,
+   "wilson95": [
+    0.13811783989736134,
+    0.609382412602386
+   ],
+   "any_repurchase_below_nav_text": 4,
+   "with_size": 3,
+   "with_expiry": 3,
+   "era_population_10q": 465,
+   "distinct_bdcs_in_sample": 11
+  }
+ },
+ "fetch": {
+  "live": 49,
+  "cache_hits": 0,
+  "seat_total": 443
+ }
+}

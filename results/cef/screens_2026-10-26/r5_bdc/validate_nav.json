@@ -1,0 +1,115 @@
+{
+ "exclusions": {
+  "rows_in": 2385,
+  "null_rdq": 124,
+  "null_ceqq_or_cshoq_after_rdq": 15,
+  "cshoq_nonpositive": 0,
+  "dup_keys_collapsed": 3,
+  "dup_keys_disagree_dropped": 0,
+  "rows_usable": 2243,
+  "gvkeys_usable": 61
+ },
+ "pit_175": {
+  "xbrl_values": 175,
+  "comparable_pairs": 175,
+  "no_compustat_row": 0,
+  "match_le_1pct": 0.9542857142857143,
+  "within_0p1pct": 0.9314285714285714,
+  "within_5pct": 0.9542857142857143,
+  "median_abs_rel": 0.00016845689660360819,
+  "p90_abs_rel": 0.0006051043179520654,
+  "max_abs_rel": 0.8999920590742723,
+  "n_over_1pct": 8,
+  "bdcs": 39,
+  "by_end_year_match": {
+   "2017": [
+    4,
+    1.0
+   ],
+   "2018": [
+    4,
+    1.0
+   ],
+   "2019": [
+    4,
+    1.0
+   ],
+   "2020": [
+    35,
+    0.8857142857142857
+   ],
+   "2021": [
+    79,
+    0.9493670886075949
+   ],
+   "2022": [
+    49,
+    1.0
+   ]
+  },
+  "misses_comp_above_xbrl": 0,
+  "misses_comp_below_xbrl": 8
+ },
+ "loose_505": {
+  "xbrl_values": 505,
+  "comparable_pairs": 485,
+  "no_compustat_row": 20,
+  "match_le_1pct": 0.9195876288659793,
+  "within_0p1pct": 0.9092783505154639,
+  "within_5pct": 0.9195876288659793,
+  "median_abs_rel": 0.00019322959065937173,
+  "p90_abs_rel": 0.0008347546001673765,
+  "max_abs_rel": 0.9499999539197344,
+  "n_over_1pct": 39,
+  "bdcs": 46,
+  "by_end_year_match": {
+   "2012": [
+    6,
+    1.0
+   ],
+   "2013": [
+    11,
+    1.0
+   ],
+   "2014": [
+    14,
+    0.9285714285714286
+   ],
+   "2015": [
+    14,
+    1.0
+   ],
+   "2016": [
+    17,
+    0.9411764705882353
+   ],
+   "2017": [
+    33,
+    0.8787878787878788
+   ],
+   "2018": [
+    39,
+    0.7948717948717948
+   ],
+   "2019": [
+    40,
+    0.825
+   ],
+   "2020": [
+    56,
+    0.875
+   ],
+   "2021": [
+    123,
+    0.9349593495934959
+   ],
+   "2022": [
+    132,
+    0.9772727272727273
+   ]
+  },
+  "misses_comp_above_xbrl": 0,
+  "misses_comp_below_xbrl": 39
+ },
+ "gate_pass": true
+}

@@ -119,6 +119,16 @@ QUERY_DAYS = 120
 SESSION_CLOSE = dt.time(16, 0)
 
 DEFAULT_PANEL = Path(__file__).resolve().parents[2] / "data" / "cef" / "cef_distributions.parquet"
+# EACH BOOK'S SECOND SOURCE (C4 deploy plan row 8, 2026-10-29). The yfinance panel
+# is the one its book's distribution fetcher writes: the core's
+# `scripts/fetch_cef_distributions.py` into data/cef/, C4's `--data-book c4` into
+# data/cef_c4/ (scripts/cef/data_books.py C4_DIR, the C4 spec's panel_source
+# directory; quantt/session/tests/test_c4_book.py pins all three). Scoring C4's
+# 74 against the core's panel would find "no rows for the name" for every fund and
+# leave every C4 day UNMEASURED; a book not listed raises rather than borrow a
+# panel that never covers its names.
+PANELS = {"cef": DEFAULT_PANEL,
+          "c4": Path(__file__).resolve().parents[2] / "data" / "cef_c4" / "cef_distributions.parquet"}
 
 
 class DistError(RuntimeError):
@@ -126,6 +136,14 @@ class DistError(RuntimeError):
 
 
 # ------------------------------------------------------------------ pure parts
+
+def panel_for(book: str) -> Path:
+    """The distributions panel `book`'s verify scores against (PANELS), or raise."""
+    if book not in PANELS:
+        raise DistError(f"no distributions panel for book {book!r}; the books are "
+                        f"{sorted(PANELS)}")
+    return PANELS[book]
+
 
 def score(held: dict, per_share: dict, gaps: dict) -> tuple[float | None, list, list]:
     """(distribution_pnl, rows, unmeasured). Pure.

@@ -1,0 +1,22 @@
+CEF trial 54, K2: within-family shuffle placebo (another fund's level, same family; seed 20261102; the level-only spec book on CRSP)
+  placebo  1: gross SR +0.199
+  placebo  2: gross SR -0.024
+  placebo  3: gross SR +0.461
+  placebo  4: gross SR +0.152
+  placebo  5: gross SR +0.604
+  placebo  6: gross SR -0.041
+  placebo  7: gross SR -0.237
+  placebo  8: gross SR +0.091
+  placebo  9: gross SR -0.350
+  placebo 10: gross SR +0.066
+  placebo 11: gross SR -0.076
+  placebo 12: gross SR -0.067
+  placebo 13: gross SR -0.261
+  placebo 14: gross SR -0.180
+  placebo 15: gross SR +0.289
+  placebo 16: gross SR +0.370
+  placebo 17: gross SR -0.166
+  placebo 18: gross SR -0.284
+  placebo 19: gross SR +0.117
+  placebo 20: gross SR +0.257
+  real level-only book +0.882 ranks above 20 of 20 (placebo mean +0.046, max +0.604); rule >= 19: PASS

@@ -1,0 +1,50 @@
+{
+ "census_date": "2026-10-19",
+ "volume_window": "2016-01-04..2022-12-30 (pre-2023 only)",
+ "bdc_baby_bond": {
+  "issues_today": 29,
+  "tradable": 29,
+  "shortable": 1,
+  "issuers": 15,
+  "with_pre2023_volume": 9,
+  "no_trade_share_median": 0.09,
+  "no_trade_share_p75": 0.221,
+  "thin_share_n_le_2_median": 0.122,
+  "thin_share_n_le_2_p75": 0.28,
+  "adv_shares_2022_median": 3675.0,
+  "adv_par_usd_2022_median": 91879.0
+ },
+ "other_baby_bond": {
+  "issues_today": 139,
+  "tradable": 138,
+  "shortable": 4,
+  "issuers": 74,
+  "with_pre2023_volume": 79,
+  "no_trade_share_median": 0.0,
+  "no_trade_share_p75": 0.004,
+  "thin_share_n_le_2_median": 0.002,
+  "thin_share_n_le_2_p75": 0.007,
+  "adv_shares_2022_median": 26459.0,
+  "adv_par_usd_2022_median": 661468.0
+ },
+ "preferred": {
+  "issues_today": 422,
+  "tradable": 407,
+  "shortable": 45,
+  "issuers": 198,
+  "with_pre2023_volume": 326,
+  "no_trade_share_median": 0.001,
+  "no_trade_share_p75": 0.015,
+  "thin_share_n_le_2_median": 0.003,
+  "thin_share_n_le_2_p75": 0.026,
+  "adv_shares_2022_median": 20252.0,
+  "adv_par_usd_2022_median": 506302.0
+ },
+ "bdc_equity_doc": {
+  "n_in_map": 53,
+  "shortable_2026_10_08": 27,
+  "median_adv63_usd": 3314314.0,
+  "label": "[doc] universe_map.csv adv63 (CRSP, window ending 2024-12-31)"
+ },
+ "bdc_issuers_with_listed_notes": 15
+}

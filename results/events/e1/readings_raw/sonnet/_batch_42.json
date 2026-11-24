@@ -1,0 +1,18 @@
+{
+ "batch": "42",
+ "model_id": "claude-sonnet-5-5",
+ "episodes": [
+  "24238_0000024238-10-000013",
+  "790202_0001099343-13-000049",
+  "896665_0001341004-13-000780",
+  "1157842_0001193125-10-040817",
+  "1165216_0001341004-13-000781",
+  "1509253_0001193125-23-101636",
+  "1606657_0001144204-15-072729",
+  "1847286_0001193125-23-183724",
+  "1847287_0001193125-23-183720",
+  "1847288_0001193125-23-183719"
+ ],
+ "parts_read": 10,
+ "problems": "Ran the JSON parse check over every file in the shared output directory (including other batches' files) via a glob loop; no files were read for content or changed."
+}

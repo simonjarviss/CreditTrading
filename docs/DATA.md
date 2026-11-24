@@ -22,6 +22,7 @@ on a panel whose last date is somebody else's choice.
 | **Live: NAV** | yfinance NAV symbol `X<TK>X`, with CEFConnect's dated row as an explicit, logged fallback (`--nav-fallback cefconnect`, every fill written to `data/cef/nav_fallback_log.csv`) | `scripts/cef/fetch_daily.py` → `data/cef/cef_nav.parquet` | The session runs it with `--require-asof`. Stale data never trades (`docs/RUNNER.md` step 1). **Correction 2026-10-12:** that holds for a missing date, not a stale value. Yahoo serves a row dated D carrying D−1's NAV, and `--require-asof` passes it; on the laptop's paper sessions 28 of 73 checkable name-days were decided on such a row (`results/cef/LIVE_NAV_QUALITY_2026-10-12.md` §5). **From 2026-10-13** the session can check the value too: the stale-NAV gate (`quantt/session/nav_gate.py`; `docs/RUNNER.md` "As built (2026-10-13)") checks a NAV(D) equal to the previous NAV or to CEFConnect's NAV(D−1). It replaces a stale copy with CEFConnect's NAV, logged as `cefconnect_stale_copy`, or defers an unverified name to the morning backstop and, from the final pre-send check, holds it at its current shares. `data.stale_nav` in the book json sets the mode: `report` only records, `on` acts. |
 | **Research / backtest** | Cloudflare R2 bucket, a WRDS mirror | `src/data/r2.py` (DuckDB over httpfs, read-only) | §3. Never live. |
 | **Research: equity, preferred and multi-asset CEFs** (plan trial C4; never live) | yfinance price and NAV (NAV symbol from CEFConnect's `NavTicker`, not assumed `X<TK>X`); CEFConnect `pricinghistory` (`1Y` daily, `All` weekly) as the NAV check; CRSP through R2 as the price check | `scripts/data/cef_families_universe.py`, `fetch_cef_families_yf.py`, `fetch_cef_families_cefconnect.py`, `stage_crsp_cef_families.py`, `cef_families_quality.py` → `data/cef_families/` (live schema; never `data/cef/`) | No `data/cef/cef_universe.csv` name enters it. Known vendor defects, measured 2026-10-12, are in `results/cef/CEF_FAMILIES_DATA_2026-10-12.md` and `docs/REFERENCES.md` §12h. |
+| **C4 on paper: prices, NAV, distributions** (DARK: plan step 3, 2026-10-29; nothing schedules it yet) | yfinance price and NAV for the 74 frozen funds, the NAV symbol from the committed map `results/cef/c4/c4_nav_symbols_2026-10-14.csv` (the symbol the families panel was built from: CEFConnect's `NavTicker` for 73, `X<TK>X` for EVT); yfinance actions for distributions. **No CEFConnect** (team lead, 2026-10-28): the sleeve's NAV-repeat mask M1 handles a stale NAV | `scripts/cef/fetch_daily.py --data-book c4`, `scripts/fetch_cef_distributions.py --data-book c4`, `python3 -m quantt.collect --book c4` → `data/cef_c4/` (live schema; its own lock `data/cef_c4/.fetch.lock`) | Books and paths in `scripts/cef/data_books.py`. First seeded from `data/cef_families/` by its `seed-c4` command (its docstring, SEED; not yet run). Without `--data-book` every fetcher is the core's, unchanged. |
 | **Broker truth** (positions, fills, tradability, shortability) | Alpaca Trading API, paper | `quantt/broker/` | The authority on our accounts (`CLAUDE.md` data rule 2). |
 | **Distributions for the third P&L line** | Alpaca Market Data API, corporate actions (`cash_dividend`, `capital_gains_distribution`), cross-checked against the yfinance panel | `AlpacaClient.distributions` → `quantt/session/dist_score.py` → `<state>/distribution_scores.csv` | Lists declared ex-dates weeks ahead (measured 2026-10-09: ex-dates to 2026-12-11 listed). Alpaca does not guarantee timeliness, so absence alone is not a zero: a zero also needs the yfinance panel file rewritten after the close of the session following D. Hence each day is scored two sessions late. |
 | **Official closes, cross-check** | Alpaca Market Data API, closing-auction prints (condition M, primary exchange) | `quantt/collect` → `data/cef/alpaca_official_close.parquet` (§5) | A second live-era price source beside yfinance. The auction prints are also the second P&L score (`docs/RUNNER.md`, verify step). CEF coverage on the Basic plan is **not yet measured** over any run. |
@@ -79,6 +80,16 @@ The following are consequences of those dates. Re-measure before you act on any 
 
 - The CRSP stock file stops at 2024-12-31. **It cannot check any price in 2025–26.**
   That covers most of the 2023-01-01 time holdout's live years.
+  *(Corrected 2026-10-19: true of the legacy SIZ file `dsf` only. CRSP's CIZ files in
+  the same schema (`dsf_v2`, `stkdlysecuritydata`, `stkdelists`, `stkdistributions`,
+  `stkshares`) run to **2025-12-31**: French's library says the legacy format was
+  "discontinued after the December 2024 data release". So CRSP can check 2025 prices,
+  on the CIZ files. The mirror also holds far more than this table: **1,146 tables in
+  81 schemas** (Compustat, IBES, Thomson insiders and 13F, SDC M&A and New Issues,
+  MSRB trades, OTC end-of-day, FJC bankruptcies and others), written as one snapshot
+  2026-06-26 → 07-03 and not refreshed since. Inventory:
+  `results/events/ssx/ssx_data/R2_FULL_INVENTORY_2026-10-19.md`, by
+  `python3 scripts/events/ssx/ssx_data_r2_inventory.py` [V]. `docs/REFERENCES.md` §12ssx.)*
 - The only options underlyings present are SPY, QQQ, TLT, IWM, GLD and SLV. **There is no
   HYG or LQD.** `docs/SYSTEM.md` names "the R2 trades source if it carries HYG/LQD/TLT"
   for options. As of this run, R2 carries only TLT of those three.
@@ -211,6 +222,26 @@ on the laptop, a systemd timer on the VM). The module docstring has the full des
 - **Exit codes.** 0 means complete or idle. 5 means incomplete and will be retried.
   20 means an unexpected error: it is recorded in data.log and the traceback goes to
   stderr.
+- **CEFConnect down is its own status (team lead, 2026-10-29).** When CEFConnect
+  refuses every request `nav_crosscheck` makes on a run (more than one name asked,
+  every one a read error), the step records `second source unavailable (cefconnect:
+  <error class>)`. It is retried next slot but does not make the day INCOMPLETE, so
+  the collector exits 0 when every other step is fine; the log line ends `;
+  nav_crosscheck: second source unavailable (...)` and report.json carries
+  `unavailable`. Nothing is compared, flagged or filled in its place. One name's error
+  is still a failed step and an INCOMPLETE day, as before. Why: CEFConnect has refused
+  every scripted request from the VM since 2026-10-21 (JSONDecodeError), so every
+  slot exited 5 and systemd's `failed` said nothing.
+- **The nightly data QA says so (2026-11-18).** That status sat in the tail of a line
+  beginning `DATA COMPLETE`, and the core decided on single-source NAVs for three
+  weeks with no report naming it. `scripts/ops/data_qa.py` Q9 now reads the
+  collector's `report.json` for the as-of day and is FLAG whenever `nav_crosscheck`
+  had no second source or did not complete, with the count of consecutive trading
+  days and the first of them; no collector report is UNMEASURED, never OK. It has no
+  threshold and fetches nothing. C4 has no second source by ruling, so Q9 is NOT_RUN
+  there. The cause, measured from a residential address on 2026-11-18: CEFConnect
+  answers the fetcher's request with an HTTP 200 `text/html` block page
+  (`docs/REFERENCES.md`, the row beside the 2026-10-27 distribution-endpoint block).
 - **Report only (team lead, 2026-09-29).** A cross-check disagreement of more than
   $0.005 is a *flag*. The flag names both sources and both values. It never blocks
   trading and never fails a step, and the two values are never averaged. A value that one

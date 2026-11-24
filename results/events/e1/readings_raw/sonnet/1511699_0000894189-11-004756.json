@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1511699,
+  "episode_accession": "0000894189-11-004756",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "CNI Charter CSC Small Cap Value Fund", "cik": 1026977, "ticker": null},
+      "acquirer": {"name": "CSC Small Cap Value Fund", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-11-004756", "quote": "The Acquiring Fund may redeem shares in an account if the total value of the account falls below $2,500 due to redemptions"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-11-004756", "date": "2011-10-26", "quote": "to vote on a proposal (the “Reorganization”) to reorganize the Fund into the CSC Small Cap Value Fund (the “Acquiring Fund”), a newly-created series of Managed Portfolio Series (“MPS”)"},
+      "outcome_evidence": null,
+      "notes": "Both are series of mutual fund trusts (CNI Charter Funds; Managed Portfolio Series) with redemption, automatic investment and systematic withdrawal features; no exchange listing is mentioned, so false is inferred from the redemption language, not from an explicit statement that the funds are open-end. Target CIK 1026977 is CNI Charter Funds (the trust, from the seq=4 header); acquirer CIK is Managed Portfolio Series (the trust). No completion result is in the excerpts."
+    }
+  ],
+  "problems": "Seq=10 (N-14 filed 2013-10-01) shows only its first 800 characters and two passages of boilerplate, so the parties and the nature of that proposal cannot be read and no deal is recorded for it. Seq=7 to 9 (Tortoise MLP & Pipeline Fund) concern a diversification change, not a merger."
+}

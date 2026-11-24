@@ -1,0 +1,78 @@
+{
+  "episode_cik": 846676,
+  "episode_accession": "0001104659-17-060895",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Aberdeen Emerging Markets Smaller Company Opportunities Fund, Inc.", "cik": 913662, "ticker": null},
+      "acquirer": {"name": "Aberdeen Chile Fund, Inc.", "cik": 846676, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-17-064997", "date": "2017-10-31", "quote": "The Asia Tigers Fund, Inc. to Join Six Aberdeen-advised Closed-end Funds in a Proposed Consolidation into a Restructured Existing Closed-end Fund to create Aberdeen Emerging Markets Equity Income Fund, Inc.;"},
+      "outcome_evidence": null,
+      "notes": "Named in the first filing (seq=1, 2017-10-04) as a subject company, but that excerpt has no sentence describing the merger; the 2017-10-31 headline is the first quoted text naming the consolidation. Seq=41 (2018-03-19) headline says shareholders approved the reorganization at a special meeting; no excerpt states the merger closed."
+    },
+    {
+      "target": {"name": "Aberdeen Latin America Equity Fund, Inc.", "cik": 862599, "ticker": null},
+      "acquirer": {"name": "Aberdeen Chile Fund, Inc.", "cik": 846676, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-17-064997", "date": "2017-10-31", "quote": "The Asia Tigers Fund, Inc. to Join Six Aberdeen-advised Closed-end Funds in a Proposed Consolidation into a Restructured Existing Closed-end Fund to create Aberdeen Emerging Markets Equity Income Fund, Inc.;"},
+      "outcome_evidence": null,
+      "notes": "Seq=39 (2018-03-19) headline says shareholders approved the reorganization at a special meeting; no excerpt states the merger closed."
+    },
+    {
+      "target": {"name": "Aberdeen Israel Fund, Inc.", "cik": 865277, "ticker": null},
+      "acquirer": {"name": "Aberdeen Chile Fund, Inc.", "cik": 846676, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-17-064997", "date": "2017-10-31", "quote": "The Asia Tigers Fund, Inc. to Join Six Aberdeen-advised Closed-end Funds in a Proposed Consolidation into a Restructured Existing Closed-end Fund to create Aberdeen Emerging Markets Equity Income Fund, Inc.;"},
+      "outcome_evidence": null,
+      "notes": "Special meeting postponed (seq=38, 2018-03-14); approval announced in seq=43 (2018-04-03). No excerpt states the merger closed."
+    },
+    {
+      "target": {"name": "Aberdeen Indonesia Fund, Inc.", "cik": 859120, "ticker": null},
+      "acquirer": {"name": "Aberdeen Chile Fund, Inc.", "cik": 846676, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-17-064997", "date": "2017-10-31", "quote": "The Asia Tigers Fund, Inc. to Join Six Aberdeen-advised Closed-end Funds in a Proposed Consolidation into a Restructured Existing Closed-end Fund to create Aberdeen Emerging Markets Equity Income Fund, Inc.;"},
+      "outcome_evidence": null,
+      "notes": "Special meeting postponed (seq=35, 2018-03-14); approval announced in seq=42 (2018-04-03). No excerpt states the merger closed."
+    },
+    {
+      "target": {"name": "Aberdeen Singapore Fund, Inc.", "cik": 864415, "ticker": null},
+      "acquirer": {"name": "Aberdeen Chile Fund, Inc.", "cik": 846676, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-17-064997", "date": "2017-10-31", "quote": "The Asia Tigers Fund, Inc. to Join Six Aberdeen-advised Closed-end Funds in a Proposed Consolidation into a Restructured Existing Closed-end Fund to create Aberdeen Emerging Markets Equity Income Fund, Inc.;"},
+      "outcome_evidence": null,
+      "notes": "Special meeting postponed (seq=37, 2018-03-14); approval announced in seq=44 (2018-04-03). No excerpt states the merger closed."
+    },
+    {
+      "target": {"name": "Aberdeen Greater China Fund, Inc.", "cik": 887546, "ticker": null},
+      "acquirer": {"name": "Aberdeen Chile Fund, Inc.", "cik": 846676, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-17-064997", "date": "2017-10-31", "quote": "The Asia Tigers Fund, Inc. to Join Six Aberdeen-advised Closed-end Funds in a Proposed Consolidation into a Restructured Existing Closed-end Fund to create Aberdeen Emerging Markets Equity Income Fund, Inc.;"},
+      "outcome_evidence": null,
+      "notes": "Seq=40 (2018-03-19) headline says shareholders approved the reorganization at a special meeting; no excerpt states the merger closed."
+    },
+    {
+      "target": {"name": "The Asia Tigers Fund, Inc.", "cik": 912729, "ticker": null},
+      "acquirer": {"name": "Aberdeen Chile Fund, Inc.", "cik": 846676, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-17-064997", "date": "2017-10-31", "quote": "The Asia Tigers Fund, Inc. to Join Six Aberdeen-advised Closed-end Funds in a Proposed Consolidation into a Restructured Existing Closed-end Fund to create Aberdeen Emerging Markets Equity Income Fund, Inc.;"},
+      "outcome_evidence": null,
+      "notes": "Special meeting postponed (seq=36, 2018-03-14); approval announced in seq=45 (2018-04-03). No excerpt states the merger closed. The final filing (seq=46, 2019-01-22) is under the name Aberdeen Emerging Markets Equity Income Fund, Inc. (CIK 846676) but its excerpt does not describe the outcome."
+    }
+  ],
+  "problems": "Excerpts are mostly headers; no excerpt states that any of the seven reorganizations closed or failed, so every outcome is null. Listing status of the funds is not stated in the excerpts (no exchange or ticker printed)."
+}

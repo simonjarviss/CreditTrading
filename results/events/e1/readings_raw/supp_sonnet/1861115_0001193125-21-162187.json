@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1861115,
+  "episode_accession": "0001193125-21-162187",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Diversified Dividend and Income Fund", "cik": 1255821, "ticker": "JDD"},
+      "acquirer": {"name": "Nuveen Multi-Asset Income Fund", "cik": 1861115, "ticker": "NMAI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-162187", "date": "2021-05-14", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN DIVERSIFIED DIVIDEND AND INCOME FUND (JDD), NUVEEN TAX-ADVANTAGED TOTAL RETURN STRATEGY FUND (JTA) AND NUVEEN TAX-ADVANTAGED DIVIDEND GROWTH FUND (JTD)"},
+      "outcome_evidence": null,
+      "notes": "NMAI is shown on the New York Stock Exchange (8-K 0001193125-21-357933), but no excerpt shows an exchange for JDD, so both_listed is null. The 425s show the special meeting of 2021-08-19 adjourned to 2021-09-30 and then to 2021-10-14; the 2021-09-27 letter says 'The shareholder meeting had to be adjourned to Thursday, September 30, 2021 due to lack of shareholder participation' and that JDD 'will not have sufficient votes to approve the proposal' without more participation. From 2021-09-27 the 425s name only JDD as subject company, while those through 2021-08-20 name JDD, JTD and JTA; the excerpts do not say why. No excerpt states a result for any target or that any merger closed or failed."
+    },
+    {
+      "target": {"name": "Nuveen Tax-Advantaged Total Return Strategy Fund", "cik": null, "ticker": "JTA"},
+      "acquirer": {"name": "Nuveen Multi-Asset Income Fund", "cik": 1861115, "ticker": "NMAI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-162187", "date": "2021-05-14", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN DIVERSIFIED DIVIDEND AND INCOME FUND (JDD), NUVEEN TAX-ADVANTAGED TOTAL RETURN STRATEGY FUND (JTA) AND NUVEEN TAX-ADVANTAGED DIVIDEND GROWTH FUND (JTD)"},
+      "outcome_evidence": null,
+      "notes": "Named with JDD and JTD in the N-14 notice and the 425s through 2021-08-20 (subject company list). No excerpt gives JTA's vote result or outcome. Its CIK is not in any header shown."
+    },
+    {
+      "target": {"name": "Nuveen Tax-Advantaged Dividend Growth Fund", "cik": null, "ticker": "JTD"},
+      "acquirer": {"name": "Nuveen Multi-Asset Income Fund", "cik": 1861115, "ticker": "NMAI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-162187", "date": "2021-05-14", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN DIVERSIFIED DIVIDEND AND INCOME FUND (JDD), NUVEEN TAX-ADVANTAGED TOTAL RETURN STRATEGY FUND (JTA) AND NUVEEN TAX-ADVANTAGED DIVIDEND GROWTH FUND (JTD)"},
+      "outcome_evidence": null,
+      "notes": "Named with JDD and JTA in the N-14 notice and the 425s through 2021-08-20. No excerpt gives JTD's vote result or outcome. Its CIK is not in any header shown."
+    }
+  ],
+  "problems": "No outcome or target listing stated in any excerpt. The N-14 excerpt does not itself say the funds are being merged; the three-fund notice header is the closest quotable text. Later filings (2021-12 to 2023) are NMAI-only items with no merger text."
+}

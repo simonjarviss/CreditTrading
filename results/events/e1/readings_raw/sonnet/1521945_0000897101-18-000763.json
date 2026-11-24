@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1521945,
+  "episode_accession": "0000897101-18-000763",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Pathway Capital Opportunity Fund, Inc.", "cik": 1570335, "ticker": null},
+      "acquirer": {"name": "Triton Pacific Investment Corporation, Inc.", "cik": 1521945, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000897101-19-000307", "quote": "has closed, creating a publicly registered non-traded business development company. With the closing of the merger, TPIC has been renamed TP Flexible Income Fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000897101-19-000110", "date": "2019-02-13", "quote": "If that proposal, or any other TPIC or PWAY proposal is not approved, the Merger will not be completed."},
+      "outcome_evidence": {"accession": "0000897101-19-000307", "date": "2019-04-01", "quote": "the merger between Triton Pacific Investment Corporation, Inc. (“TPIC”) and Pathway Capital Opportunity Fund, Inc. (“PWAY”) has closed"},
+      "notes": "The merger was completed on or about 2019-04-01 (TPIC renamed TP Flexible Income Fund, later Prospect Flexible Income Fund); shareholders of both approved on 2019-03-15. Both_listed is false because the surviving TPIC/FLEX is described as a non-traded BDC; no excerpt shows exchange listing for PWAY. Acquirer/target roles come from the 425 headers (filed by TPIC, subject company PWAY) and the renaming of TPIC. The N-14 8C of 2018-08-13 (seq 2) is the earliest registration filing of the Merger but its excerpts do not name PWAY, so the quote is taken from the later amendment."
+    }
+  ],
+  "problems": "Outcome label follows the rule that both_listed false gives not_a_listed_pair, although the text states the merger closed."
+}

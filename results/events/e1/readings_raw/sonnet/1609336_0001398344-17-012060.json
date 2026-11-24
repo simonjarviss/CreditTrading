@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1609336,
+  "episode_accession": "0001398344-17-012060",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Griffin Capital BDC Corp.", "cik": 1609336, "ticker": null},
+      "acquirer": {"name": "Griffin Institutional Access Credit Fund", "cik": 1676197, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-17-012060", "date": "2017-09-15", "quote": "The Special Meeting convened, as scheduled, on September 12, 2017, but is now adjourned until Monday, September 18, 2017 with respect to both the Company’s reorganization proposal and the related proposal to withdraw the Company’s election to be regulated as a Business Development Company under the Investment Company Act of 1940"},
+      "outcome_evidence": null,
+      "notes": "Stockholders approved the Agreement and Plan of Reorganization on 2017-09-18 (93.94% of votes cast), per the 8-K of that date (accession 0001609336-17-000026). Completion is not stated in the excerpts. No exchange listing is shown for either fund."
+    }
+  ],
+  "problems": ""
+}

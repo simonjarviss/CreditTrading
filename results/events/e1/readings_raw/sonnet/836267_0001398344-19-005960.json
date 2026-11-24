@@ -1,0 +1,28 @@
+{
+  "episode_cik": 836267,
+  "episode_accession": "0001398344-19-005960",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Cedar Ridge Unconstrained Credit Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Shelton Tactical Credit Fund", "cik": 836267, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001398344-19-005960", "quote": "Buy and sell requests are executed at the next NAV calculated after your request is received in good order by IMST II."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001398344-19-005960", "date": "2019-04-01", "quote": "A Special Meeting of Shareholders of the Cedar Ridge Unconstrained Credit Fund (the “Acquired Fund”), a series of Investment Managers Series Trust II (“IMST II”), has been scheduled for June __, 2019 (the “Special Meeting”)"},
+      "outcome_evidence": null,
+      "notes": "Series of mutual-fund trusts (priced at NAV, purchases and redemptions through the fund), not exchange-listed. Acquirer CIK given is SCM Trust's (the filer), the trust of which the Shelton Tactical Credit Fund is a series."
+    },
+    {
+      "target": {"name": "ICON International Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Shelton International Select Equity Fund", "cik": 836267, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001398344-20-003619", "quote": "The Funds require you to maintain a minimum of $1,000 per account unless you are investing under"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001398344-20-003619", "date": "2020-02-14", "quote": "A Special Meeting of Shareholders of the ICON International Equity Fund (the “Acquired Fund”), a series of ICON Funds trust (“ICON Funds”), has been scheduled for May __, 2020 (the “Special Meeting”)"},
+      "outcome_evidence": null,
+      "notes": "Series of mutual-fund trusts with account minimums, not exchange-listed. Acquirer CIK given is SCM Trust's (the filer). Meeting later shown as May 20, 2020 (N-14/A 0001398344-20-007823). No filing in the excerpts states the outcome."
+    }
+  ],
+  "problems": "Seq 2 (0001398344-20-003614) and seq 5 (0001398344-20-007828, 0001398344-20-008456) concern a combined meeting of ICON Fund, ICON Energy Fund, ICON Long/Short Fund, ICON Industrials Fund and further ICON funds, but the excerpts do not show which Shelton fund each target merges into, so no per-pair deals are recorded for them. All funds shown are mutual-fund series, so none would be a listed pair. No excerpt states any outcome."
+}

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 885601,
+  "episode_accession": "0000950123-11-101251",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco Value Municipal Bond Trust", "cik": 861185, "ticker": null},
+      "acquirer": {"name": "Invesco Value Municipal Income Trust", "cik": 885601, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101251", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "The 2011-12-01 425 header lists SUBJECT COMPANY CIK 861185 and FILED BY CIK 885601; in the 425 text the filer is called Invesco Insured Municipal Income Trust and the subject Invesco Insured Municipal Bond Trust, while the 2012 PRE 14A and DEF 14A call the registrants Invesco Value Municipal Income Trust, Invesco Value Municipal Bond Trust and Invesco Value Municipal Trust. Names differ between filings for the same CIKs. The excerpts do not say in words which fund is target or acquirer, and do not state any outcome."
+    },
+    {
+      "target": {"name": "Invesco Value Municipal Trust", "cik": 880161, "ticker": null},
+      "acquirer": {"name": "Invesco Value Municipal Income Trust", "cik": 885601, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101251", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Invesco Value Municipal Trust (CIK 880161) appears as a registrant with Value Municipal Income Trust and Value Municipal Bond Trust on the 2012 PRE 14A and DEF 14A; it is not named in the 425 subject-company list. Which fund survives is not stated in the excerpts; no outcome is stated."
+    }
+  ],
+  "problems": "Excerpts are cover pages and generic merger-agreement language only; no filing states a completion, termination or failure, and none shows exchange listing."
+}

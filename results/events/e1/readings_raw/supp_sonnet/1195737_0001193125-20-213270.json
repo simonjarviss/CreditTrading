@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1195737,
+  "episode_accession": "0001193125-20-213270",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Michigan Quality Municipal Income Fund", "cik": 878198, "ticker": "NUM"},
+      "acquirer": {"name": "Nuveen AMT-Free Quality Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-264142", "quote": "Nuveen Michigan Quality Municipal Income Fund (NYSE: NUM),"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213270", "date": "2020-08-07", "quote": "The Board of Trustees for eleven Nuveen municipal closed-end funds approved five reorganization proposals. The reorganizations are subject to customary conditions, including shareholder approval."},
+      "outcome_evidence": null,
+      "notes": "The 2020-08-07 release lists the pair in its table (NUM acquired, NEA acquiring). The same 2020-10-06 8-K exhibit lists 'Nuveen AMT-Free Quality Municipal Income Fund (NYSE: NEA),' and the 8-K cover shows NEA on the New York Stock Exchange. Shareholder meeting set for 2020-12-07 was adjourned (2020-12-14 425: 'The meeting has been adjourned to allow shareholder more time to vote.'; 2021-01-06 425: 'not enough votes were received to satisfy the vote requirement, your Nuveen Closed End Fund(s) shareholder meeting was adjourned to January 15, 2021.'). No excerpt states the result of the January 15, 2021 meeting or completion."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt: only adjournments (to 2021-01-15) are shown, and later filings (2021-06-25 and 2022-06-28 DEF 14A, 2022-02-25 8-K) are cover text only."
+}

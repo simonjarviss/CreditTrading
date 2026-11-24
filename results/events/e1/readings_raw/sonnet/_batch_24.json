@@ -1,0 +1,14 @@
+{
+  "batch": "24",
+  "model_id": "claude-sonnet-5-5",
+  "episodes": [
+    "854904_0000950123-10-116299",
+    "1281845_0001213900-22-080655",
+    "1318342_0001398344-17-005487",
+    "1490927_0001213900-23-081200",
+    "1511699_0000894189-17-001862",
+    "1617896_0001193125-19-164374"
+  ],
+  "parts_read": 12,
+  "problems": "Two episodes (1318342, 1511699) are mutual fund trusts with several reorganizations; only deals with both fund names in the excerpts were recorded, listing status and outcome left null. Episode 854904 both_listed=false is inferred from 'mutual fund platform' wording."
+}

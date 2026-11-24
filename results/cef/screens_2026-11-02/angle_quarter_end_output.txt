@@ -1,0 +1,132 @@
+discount leg (r_price - r_NAV) on calendar days, excess over 'other' days, bp; t across dates
+                  set              slice  day  dates  excess_bp     t
+            credit 17                all   QE     54      21.51  3.02
+            credit 17                all QE+1     54      24.12  2.48
+            credit 17                all   YE     18      24.48  2.11
+            credit 17                all YE+1     17      59.43  1.69
+            credit 17                all   ME    144       6.19  1.45
+            credit 17                all ME+1    144      11.93  1.97
+            credit 17 least liquid third   QE     54      15.56  2.34
+            credit 17 least liquid third QE+1     54      29.54  3.03
+            credit 17 least liquid third   YE     18      22.90  1.76
+            credit 17 least liquid third YE+1     17      48.27  1.70
+            credit 17 least liquid third   ME    144       6.03  1.32
+            credit 17 least liquid third ME+1    144       4.95  0.87
+            credit 17  most liquid third   QE     54      28.09  2.35
+            credit 17  most liquid third QE+1     54      14.16  1.16
+            credit 17  most liquid third   YE     18      26.98  1.81
+            credit 17  most liquid third YE+1     17      73.36  1.72
+            credit 17  most liquid third   ME    144       5.54  0.86
+            credit 17  most liquid third ME+1    144      17.40  2.17
+                C4 74                all   QE     54      12.76  2.51
+                C4 74                all QE+1     54      12.42  1.57
+                C4 74                all   YE     18      39.14  5.25
+                C4 74                all YE+1     17      33.81  1.56
+                C4 74                all   ME    144       6.20  1.65
+                C4 74                all ME+1    144       9.26  2.05
+                C4 74 least liquid third   QE     54      11.99  2.11
+                C4 74 least liquid third QE+1     54       6.65  0.92
+                C4 74 least liquid third   YE     18      33.91  4.57
+                C4 74 least liquid third YE+1     17      27.86  1.17
+                C4 74 least liquid third   ME    144       2.95  0.68
+                C4 74 least liquid third ME+1    144      10.53  2.07
+                C4 74  most liquid third   QE     54      15.95  2.72
+                C4 74  most liquid third QE+1     54      14.46  1.58
+                C4 74  most liquid third   YE     18      49.21  4.21
+                C4 74  most liquid third YE+1     17      40.90  2.09
+                C4 74  most liquid third   ME    144       9.32  2.39
+                C4 74  most liquid third ME+1    144       7.71  1.60
+CONTROL: iShares ETFs                all   QE     54       5.64  0.97
+CONTROL: iShares ETFs                all QE+1     54       2.68  0.80
+CONTROL: iShares ETFs                all   YE     18      -5.17 -3.74
+CONTROL: iShares ETFs                all YE+1     17      -0.52 -0.13
+CONTROL: iShares ETFs                all   ME    144      -0.81 -0.70
+CONTROL: iShares ETFs                all ME+1    144      -0.12 -0.09
+counts: {'credit17': {'name_days': 67321, 'dropped_bad': 15, 'dropped_ex_window': 16104}, 'c4': {'name_days': 243524, 'dropped_bad': 35, 'dropped_ex_window': 42109}}
+
+profile credit 17, month-ends: all (excess over days >= 6 sessions from any month-end)
+ k  excess_bp     t   n  cum_bp
+-3      11.00  1.93 216   11.00
+-2      14.79  3.25 216   25.79
+-1       1.33  0.23 216   27.12
+ 0      13.86  3.36 216   40.98
+ 1      21.06  3.56 215   62.04
+ 2      12.34  2.91 215   74.38
+ 3       0.40  0.09 215   74.78
+ 4      -9.13 -1.55 215   65.64
+ 5       6.52  1.74 215   72.16
+
+profile credit 17, month-ends: QE (excess over days >= 6 sessions from any month-end)
+ k  excess_bp     t  n  cum_bp
+-3      10.23  1.19 54   10.23
+-2      11.67  1.50 54   21.90
+-1     -19.21 -1.12 54    2.69
+ 0      23.83  3.23 54   26.52
+ 1      26.43  2.66 54   52.95
+ 2       7.02  0.80 54   59.97
+ 3      -8.88 -1.04 54   51.09
+ 4     -12.29 -0.76 54   38.80
+ 5       2.16  0.33 54   40.96
+
+profile C4 74, month-ends: all (excess over days >= 6 sessions from any month-end)
+ k  excess_bp     t   n  cum_bp
+-3       3.26  0.99 216    3.26
+-2       7.48  2.45 216   10.74
+-1       6.59  2.24 216   17.33
+ 0      11.59  3.71 216   28.92
+ 1      13.01  3.13 215   41.92
+ 2      -3.29 -1.06 215   38.63
+ 3      -0.64 -0.23 215   37.99
+ 4      -4.93 -1.42 215   33.07
+ 5       3.45  1.10 215   36.52
+
+profile C4 74, month-ends: QE (excess over days >= 6 sessions from any month-end)
+ k  excess_bp     t  n  cum_bp
+-3       3.28  0.69 54    3.28
+-2       6.08  1.14 54    9.36
+-1      -5.03 -0.76 54    4.32
+ 0      13.77  2.66 54   18.09
+ 1      13.43  1.68 54   31.52
+ 2      -8.51 -1.33 54   23.01
+ 3      -5.60 -1.05 54   17.41
+ 4      -7.85 -0.90 54    9.56
+ 5       2.16  0.26 54   11.72
+
+profile CONTROL ETFs, month-ends: all (excess over days >= 6 sessions from any month-end)
+ k  excess_bp     t   n  cum_bp
+-3      -0.67 -0.65 216   -0.67
+-2       0.54  0.42 216   -0.13
+-1      -0.19 -0.10 216   -0.33
+ 0       0.04  0.02 216   -0.29
+ 1       0.15  0.12 215   -0.14
+ 2      -1.47 -1.27 215   -1.61
+ 3      -0.23 -0.21 215   -1.84
+ 4      -2.55 -1.88 215   -4.39
+ 5      -1.64 -1.44 215   -6.03
+
+profile CONTROL ETFs, month-ends: QE (excess over days >= 6 sessions from any month-end)
+ k  excess_bp     t  n  cum_bp
+-3       2.86  1.51 54    2.86
+-2      -0.31 -0.17 54    2.54
+-1      -7.85 -1.15 54   -5.30
+ 0       5.23  0.90 54   -0.07
+ 1       2.28  0.68 54    2.22
+ 2      -3.34 -1.19 54   -1.12
+ 3       3.91  1.47 54    2.79
+ 4      -3.71 -1.15 54   -0.92
+ 5      -0.54 -0.21 54   -1.46
+
+credit 17, the two legs separately (same name-days), excess over 'other' days, bp
+  leg  day  dates  excess_bp     t
+price   QE     54      25.51  4.13
+price QE+1     54      21.76  1.65
+price   YE     18      31.78  2.51
+price YE+1     17      73.40  2.06
+price   ME    144      12.57  2.69
+price ME+1    144      12.62  1.85
+  NAV   QE     54       4.00  1.12
+  NAV QE+1     54      -2.35 -0.42
+  NAV   YE     18       7.30  2.11
+  NAV YE+1     17      13.96  5.56
+  NAV   ME    144       6.38  3.08
+  NAV ME+1    144       0.69  0.38

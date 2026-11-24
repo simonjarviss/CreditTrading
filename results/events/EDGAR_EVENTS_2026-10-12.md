@@ -270,7 +270,7 @@ are not in it.
 ## 4. Part 2(b) — gate G6
 
 **Method** (`scripts/events/g6_corporate_action_shorts.py`;
-`g6_summary.json`).
+`g6/g6_summary.json`).
 
 **The events.** For each of the 13 spec names (spec `cef_discount.v7.20260928`,
 read through `spec.py`), its full EDGAR history was taken from the submissions
@@ -412,10 +412,10 @@ Two observations, neither of which is G6 and neither tested:
   - `edgar_cef_bdc_episodes.csv` (EDGAR only);
   - `merger_edgar_dates_summary.json`;
   - `merger_ann_edgar_summary.json`;
-  - `g6_summary.json`.
+  - `g6/g6_summary.json`.
 - **Gitignored:**
   - `edgar_cef_bdc_filings.csv.gz` (rebuilt `--offline`);
   - `merger_edgar_dates.csv`, `merger_ann_sample_edgar.csv` and
-    `g6_events_13_names.csv` (CRSP-joined);
+    `g6/g6_events_13_names.csv` (CRSP-joined);
   - `_cache_edgar/`.
 - Sources: `docs/REFERENCES.md` §12g.

@@ -1,0 +1,98 @@
+{
+  "episode_cik": 914036,
+  "episode_accession": "0001193125-20-323472",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Delaware VIP Diversified Income Series", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-21-017598", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "You are cordially invited to a joint special meeting of shareholders of each of the following Delaware VIP Trust series: Delaware VIP Diversified Income Series, Delaware VIP High Yield Series, Delaware VIP Limited-Term Diversified Income Series, Delaware VIP REIT Series, Delaware VIP Smid Cap Core Series, Delaware VIP U.S. Growth Series, and Delaware VIP Value Series"},
+      "outcome_evidence": {"accession": "0001193125-21-017598", "date": "2021-01-26", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "notes": "One of seven Delaware VIP Trust series to be reorganized into 'Acquiring Funds' (names not in excerpts). Variable-insurance funds, not exchange listed."
+    },
+    {
+      "target": {"name": "Delaware VIP High Yield Series", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-21-017598", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "You are cordially invited to a joint special meeting of shareholders of each of the following Delaware VIP Trust series: Delaware VIP Diversified Income Series, Delaware VIP High Yield Series, Delaware VIP Limited-Term Diversified Income Series, Delaware VIP REIT Series, Delaware VIP Smid Cap Core Series, Delaware VIP U.S. Growth Series, and Delaware VIP Value Series"},
+      "outcome_evidence": {"accession": "0001193125-21-017598", "date": "2021-01-26", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "notes": "Same joint proxy as the other Delaware VIP series."
+    },
+    {
+      "target": {"name": "Delaware VIP Limited-Term Diversified Income Series", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-21-017598", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "You are cordially invited to a joint special meeting of shareholders of each of the following Delaware VIP Trust series: Delaware VIP Diversified Income Series, Delaware VIP High Yield Series, Delaware VIP Limited-Term Diversified Income Series, Delaware VIP REIT Series, Delaware VIP Smid Cap Core Series, Delaware VIP U.S. Growth Series, and Delaware VIP Value Series"},
+      "outcome_evidence": {"accession": "0001193125-21-017598", "date": "2021-01-26", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "notes": "Same joint proxy as the other Delaware VIP series."
+    },
+    {
+      "target": {"name": "Delaware VIP REIT Series", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-21-017598", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "You are cordially invited to a joint special meeting of shareholders of each of the following Delaware VIP Trust series: Delaware VIP Diversified Income Series, Delaware VIP High Yield Series, Delaware VIP Limited-Term Diversified Income Series, Delaware VIP REIT Series, Delaware VIP Smid Cap Core Series, Delaware VIP U.S. Growth Series, and Delaware VIP Value Series"},
+      "outcome_evidence": {"accession": "0001193125-21-017598", "date": "2021-01-26", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "notes": "Same joint proxy as the other Delaware VIP series."
+    },
+    {
+      "target": {"name": "Delaware VIP Smid Cap Core Series", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-21-017598", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "You are cordially invited to a joint special meeting of shareholders of each of the following Delaware VIP Trust series: Delaware VIP Diversified Income Series, Delaware VIP High Yield Series, Delaware VIP Limited-Term Diversified Income Series, Delaware VIP REIT Series, Delaware VIP Smid Cap Core Series, Delaware VIP U.S. Growth Series, and Delaware VIP Value Series"},
+      "outcome_evidence": {"accession": "0001193125-21-017598", "date": "2021-01-26", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "notes": "Same joint proxy as the other Delaware VIP series."
+    },
+    {
+      "target": {"name": "Delaware VIP U.S. Growth Series", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-21-017598", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "You are cordially invited to a joint special meeting of shareholders of each of the following Delaware VIP Trust series: Delaware VIP Diversified Income Series, Delaware VIP High Yield Series, Delaware VIP Limited-Term Diversified Income Series, Delaware VIP REIT Series, Delaware VIP Smid Cap Core Series, Delaware VIP U.S. Growth Series, and Delaware VIP Value Series"},
+      "outcome_evidence": {"accession": "0001193125-21-017598", "date": "2021-01-26", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "notes": "Same joint proxy as the other Delaware VIP series."
+    },
+    {
+      "target": {"name": "Delaware VIP Value Series", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-21-017598", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "You are cordially invited to a joint special meeting of shareholders of each of the following Delaware VIP Trust series: Delaware VIP Diversified Income Series, Delaware VIP High Yield Series, Delaware VIP Limited-Term Diversified Income Series, Delaware VIP REIT Series, Delaware VIP Smid Cap Core Series, Delaware VIP U.S. Growth Series, and Delaware VIP Value Series"},
+      "outcome_evidence": {"accession": "0001193125-21-017598", "date": "2021-01-26", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain variable annuity contracts and variable life insurance policies issued by such companies."},
+      "notes": "Same joint proxy as the other Delaware VIP series."
+    },
+    {
+      "target": {"name": "LVIP BlackRock Advantage Allocation Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-22-076231", "quote": "Dear Contract Owners and Shareholders:"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-22-076231", "date": "2022-03-15", "quote": "Enclosed is a notice and Combined Proxy Statement/Prospectus relating to a Special Meeting of Shareholders of LVIP BlackRock Advantage Allocation Fund and LVIP Franklin Templeton Multi-Asset Opportunities Fund (each an “Acquired Fund”)."},
+      "outcome_evidence": {"accession": "0001193125-22-076231", "date": "2022-03-15", "quote": "Dear Contract Owners and Shareholders:"},
+      "notes": "Variable-contract funds, series of the registrant trust, not exchange listed. Meeting scheduled June 6, 2022. No outcome stated."
+    },
+    {
+      "target": {"name": "LVIP Franklin Templeton Multi-Asset Opportunities Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "an Acquiring Fund (not named in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-22-076231", "quote": "Dear Contract Owners and Shareholders:"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-22-076231", "date": "2022-03-15", "quote": "Enclosed is a notice and Combined Proxy Statement/Prospectus relating to a Special Meeting of Shareholders of LVIP BlackRock Advantage Allocation Fund and LVIP Franklin Templeton Multi-Asset Opportunities Fund (each an “Acquired Fund”)."},
+      "outcome_evidence": {"accession": "0001193125-22-076231", "date": "2022-03-15", "quote": "Dear Contract Owners and Shareholders:"},
+      "notes": "Same proxy as LVIP BlackRock Advantage Allocation Fund. No outcome stated."
+    }
+  ],
+  "problems": "Acquiring fund names are not in the excerpts for any deal. Other filings (2022-03-15 N-14 0001193125-22-076245 of an unnamed target-date fund, 2022-06/07 proxies about a liquidation of 'the Funds', and 2022-12-22 N-14 0001193125-22-311201 for JPMorgan Portfolios) are not recorded as deals because the target or acquirer names are not in the excerpts. Episode role is mixed (the registrant trust holds both acquired and acquiring series) so left null. No outcome (completed, terminated, etc.) is stated anywhere."
+}

@@ -1,0 +1,28 @@
+{
+ "episode_cik": 1396092,
+ "episode_accession": "0001999371-24-008422",
+ "episode_role": "acquirer",
+ "deals": [
+  {
+   "target": {"name": "The Cook & Bynum Fund", "cik": null, "ticker": null},
+   "acquirer": {"name": "The Cook & Bynum Fund, a series of World Funds Trust", "cik": 1396092, "ticker": null},
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {"accession": "0001999371-24-008422", "date": "2024-07-09", "quote": "The Board of Trustees of the Trust has approved an Agreement and Plan of Reorganization (the “Agreement”) where The Cook & Bynum Fund, a series of Cook & Bynum Funds Trust (referenced herein as “The Cook & Bynum Fund” or the “Acquired Fund” as the context dictates) would"},
+   "outcome_evidence": null,
+   "notes": "N-14 title says shares of The Cook & Bynum Fund, a series of the Registrant (World Funds Trust), are being registered, so the acquiring series appears to be a same-named new series; the acquirer is not named in the excerpts beyond that. Meeting set for September 16, 2024; closing outside date October 4, 2024; N-14/A filed 2024-08-23. Outcome not stated in any excerpt. Listing status not stated (an NYSE reference appears but does not settle it)."
+  },
+  {
+   "target": {"name": "Altegris/AACA Opportunistic Real Estate Fund", "cik": null, "ticker": null},
+   "acquirer": {"name": "LDR Real Estate Value-Opportunity Fund", "cik": 1396092, "ticker": null},
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {"accession": "0001999371-25-008562", "date": "2025-06-30", "quote": "The Special Meeting has been called to vote on a proposal to reorganize the Target Fund into the LDR Real Estate Value-Opportunity Fund LDR (the “Acquiring Fund”), a series of World Funds Trust (the “WFT”)"},
+   "outcome_evidence": null,
+   "notes": "Target is a series of Northern Lights Fund Trust; special meeting set for September 10, 2025; DEFA14A solicitation letters dated 2025-08-27 and 2025-09-02. Outcome not stated in any excerpt. Listing status not stated. Acquirer CIK is the trust's (the episode CIK)."
+  }
+ ],
+ "problems": "Neither deal's outcome nor listing status is stated in the excerpts."
+}

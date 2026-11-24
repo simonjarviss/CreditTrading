@@ -1,0 +1,124 @@
+cef_discount.v7.20260928 | live policy: band 4.8% + gmax 1.80x | universe 13
+R1 macro-state screen -- FIT PERIOD ONLY (<= 2022-12-30); 2023+ sealed. Run 2026-10-26 22:40 UTC. Zero trials.
+panels: cef_prices last 2026-10-15, cef_nav last 2026-10-14 (read-only; truncated to 2022-12-30 before use)
+universe meta: {'extra_17name_dates_not_in_13_calendar': 0, 'sealed_names_excluded': 27, 'z_check_max_abs_diff': 0.0}
+observable meta: {'spreads_daily_last_date': '2026-07-16', 'hy_oas_xcheck_vs_fetcher_cache': {'n': 6787, 'max_abs_diff': 0.0}, 'sifma_last_used': '2022-12-28', 'repo_first': '2014-08-22'}
+
+states (first state date, stale observations dropped, share bottom/middle/top):
+  hy_oas         {'first_state': '2005-12-30', 'n_stale_dropped': 0, 'share': [0.3383177570093458, 0.42383177570093455, 0.23785046728971962]}
+  ccc_bb_ey      {'first_state': '2005-12-30', 'n_stale_dropped': 0, 'share': [0.2467289719626168, 0.2957943925233645, 0.4574766355140187]}
+  sifma          {'first_state': '2005-12-30', 'n_stale_dropped': 0, 'share': [0.580607476635514, 0.16425233644859813, 0.25514018691588786]}
+  repo_tri_corp  {'first_state': '2015-08-25', 'n_stale_dropped': 1, 'share': [0.2759179265658747, 0.05075593952483801, 0.6733261339092873]}
+  vol            {'first_state': '2006-03-01', 'n_stale_dropped': 0, 'share': [0.27311320754716983, 0.3858490566037736, 0.3410377358490566]}
+  share of sessions in the same tercile: {'hy_oas~vol': 0.595, 'sifma~vol': 0.251, 'hy_oas~sifma': 0.213, 'ccc_bb_ey~hy_oas': 0.555, 'repo_tri_corp~sifma': 0.625}
+
+regression check vs W10 item 6: DEP13 multi within IC (>= 4 names) phase 0 -0.0659 (t -2.78, n 522); W10 reported -0.066 (t -2.78)
+regression check vs W10 item 6: DEP13 hy pair, share IC = -1 (richer name underperforms) 0.520 on 271 dates; W10 reported 0.520 of 271
+
+unconditional within-group IC (min 2 names), phase 0 / phase 1:
+  DEP13  multi p0: n   522 IC -0.0659 t -2.78 NW -2.97 first 2013-06-24
+  DEP13  multi p1: n   520 IC -0.0741 t -3.03 NW -3.29 first 2013-06-21
+  DEP13  hy    p0: n   271 IC -0.0406 t -0.67 NW -0.70 first 2014-01-17
+  DEP13  hy    p1: n   267 IC -0.0112 t -0.18 NW -0.22 first 2014-01-21
+  DEP13  muni  p0: 0 dates -- no statistic
+  DEP13  muni  p1: 0 dates -- no statistic
+  DEP13  loan  p0: 0 dates -- no statistic
+  DEP13  loan  p1: 0 dates -- no statistic
+  WIDE17 multi p0: n  2263 IC -0.0670 t -6.04 NW -6.42 first 2005-01-03
+  WIDE17 multi p1: n  2263 IC -0.0669 t -5.91 NW -6.43 first 2005-01-04
+  WIDE17 hy    p0: n  2256 IC -0.0895 t -4.27 NW -4.50 first 2005-01-03
+  WIDE17 hy    p1: n  2254 IC -0.0657 t -3.12 NW -3.39 first 2005-01-04
+  WIDE17 muni  p0: n  2262 IC -0.1043 t -10.39 NW -10.56 first 2005-01-03
+  WIDE17 muni  p1: n  2262 IC -0.1050 t -10.57 NW -11.34 first 2005-01-04
+  WIDE17 loan  p0: 0 dates -- no statistic
+  WIDE17 loan  p1: 0 dates -- no statistic
+
+==============================================================================================================
+PRIMARY CELLS
+==============================================================================================================
+
+--- DEP13 multi   own = hy_oas, mismatch = sifma, variant = repo_tri_corp
+  own      p0  n   522 | bot -0.0328 ( 305, t -1.04) mid -0.1381 ( 159) top -0.0424 (  58, t -0.68) | Delta -0.0096 t_welch -0.14 t_nw -0.15
+  own      p1  n   520 | bot -0.0268 ( 299, t -0.85) mid -0.1381 ( 162) top -0.1381 (  59, t -2.06) | Delta -0.1113 t_welch -1.50 t_nw -1.87
+  mismatch p0  n   522 | bot -0.0689 ( 295, t -2.23) mid -0.0253 ( 138) top -0.1192 (  89, t -2.08) | Delta -0.0503 t_welch -0.77 t_nw -0.76
+  mismatch p1  n   520 | bot -0.0756 ( 294, t -2.25) mid -0.0343 ( 139) top -0.1326 (  87, t -2.44) | Delta -0.0570 t_welch -0.89 t_nw -0.94
+  variant  p0  n   357 | bot -0.0590 ( 130, t -1.34) mid -0.1069 (  39) top -0.0523 ( 188, t -1.23) | Delta +0.0067 t_welch +0.11 t_nw +0.12
+  variant  p1  n   356 | bot -0.0671 ( 131, t -1.44) mid -0.0150 (  42) top -0.0962 ( 183, t -2.37) | Delta -0.0291 t_welch -0.47 t_nw -0.50
+  vol      p0  n   522 | bot -0.0440 ( 166, t -0.98) mid -0.0765 ( 191) top -0.0758 ( 165, t -1.93) | Delta -0.0319 t_welch -0.53 t_nw -0.57
+  shuffle  p0  real |Delta| 0.0096 beats 1 of 20 draws (9 blocks); draw |Delta| mean 0.0575, max 0.1487
+  joint    p0  n 522: own top-bottom -0.0524 (t HC1 -0.55, NW -0.64); vol top-bottom +0.0515 (t HC1 +0.62, NW +0.71); univariate vol -0.0319 (t -0.53); same-tercile share 0.542
+               cells X(own)xV(vol) (n, mean IC): XbVb:161,-0.040  XbVm:123,-0.032  XbVt:21,+0.019  XmVb:5,-0.160  XmVm:66,-0.153  XmVt:88,-0.126  XtVb:0,  XtVm:2,-0.300  XtVt:56,-0.033
+  joint    p1  POST-HOC, not in the verdict: own top-bottom -0.1439 (t HC1 -1.41); vol top-bottom +0.0631 (t HC1 +0.72)
+  joint-mismatch p0: mismatch top-bottom -0.0482 (t HC1 -0.69); vol -0.0308 (t -0.50)
+  eras (own, p0): 2010-14: n 138 Delta +nan (t +nan; nb 88, nt 0) | 2015-19: n 176 Delta +0.024 (t +0.16; nb 96, nt 20) | 2020-22: n 208 Delta -0.028 (t -0.35; nb 121, nt 38)
+
+--- DEP13 hy   own = hy_oas, mismatch = sifma, variant = ccc_bb_ey
+  own      p0  n   271 | bot -0.0413 ( 121, t -0.45) mid -0.0800 ( 100) top +0.0400 (  50, t +0.28) | Delta +0.0813 t_welch +0.48 t_nw +0.54
+  own      p1  n   267 | bot -0.0175 ( 114, t -0.19) mid -0.0392 ( 102) top +0.0588 (  51, t +0.42) | Delta +0.0764 t_welch +0.45 t_nw +0.54
+  mismatch p0  n   271 | bot -0.0409 ( 171, t -0.53) mid -0.3333 (  30) top +0.0857 (  70, t +0.71) | Delta +0.1266 t_welch +0.89 t_nw +0.98
+  mismatch p1  n   267 | bot +0.0000 ( 170, t +0.00) mid -0.1034 (  29) top +0.0000 (  68, t +0.00) | Delta +0.0000 t_welch +0.00 t_nw -0.00
+  variant  p0  n   271 | bot +0.1837 (  49, t +1.29) mid -0.1753 (  97) top -0.0240 ( 125, t -0.27) | Delta -0.2077 t_welch -1.24 t_nw -1.20
+  variant  p1  n   267 | bot +0.1489 (  47, t +1.02) mid -0.0816 (  98) top -0.0164 ( 122, t -0.18) | Delta -0.1653 t_welch -0.96 t_nw -1.04
+  vol      p0  n   271 | bot -0.0707 (  99, t -0.70) mid -0.0909 (  88) top +0.0476 (  84, t +0.43) | Delta +0.1183 t_welch +0.79 t_nw +0.85
+  shuffle  p0  real |Delta| 0.0813 beats 13 of 20 draws (5 blocks); draw |Delta| mean 0.0975, max 0.3213
+  joint    p0  n 271: own top-bottom -0.1416 (t HC1 -0.51, NW -0.52); vol top-bottom +0.2540 (t HC1 +0.99, NW +0.96); univariate vol +0.1183 (t +0.79); same-tercile share 0.771
+               cells X(own)xV(vol) (n, mean IC): XbVb:96,-0.042  XbVm:21,-0.143  XbVt:4,+0.500  XmVb:3,-1.000  XmVm:65,-0.077  XmVt:32,+0.000  XtVb:0,  XtVm:2,+0.000  XtVt:48,+0.042
+  joint    p1  POST-HOC, not in the verdict: own top-bottom +0.1190 (t HC1 +0.40); vol top-bottom -0.0429 (t HC1 -0.15)
+  joint-mismatch p0: mismatch top-bottom +0.0897 (t HC1 +0.59); vol +0.1164 (t +0.76)
+  eras (own, p0): 2010-14: n 102 Delta +nan (t +nan; nb 68, nt 0) | 2015-19: n 123 Delta -0.176 (t -0.61; nb 46, nt 17) | 2020-22: n 46 Delta +0.580 (t +1.42; nb 7, nt 33)
+
+--- WIDE17 multi   own = hy_oas, mismatch = sifma, variant = repo_tri_corp
+  own      p0  n  2137 | bot -0.0346 ( 724, t -1.92) mid -0.0772 ( 906) top -0.0688 ( 507, t -2.70) | Delta -0.0342 t_welch -1.09 t_nw -1.21
+  own      p1  n  2138 | bot -0.0411 ( 724, t -2.22) mid -0.0854 ( 905) top -0.0754 ( 509, t -2.91) | Delta -0.0344 t_welch -1.08 t_nw -1.20
+  mismatch p0  n  2137 | bot -0.0659 (1243, t -4.58) mid -0.0755 ( 350) top -0.0396 ( 544, t -1.63) | Delta +0.0263 t_welch +0.93 t_nw +0.96
+  mismatch p1  n  2138 | bot -0.0667 (1242, t -4.44) mid -0.0924 ( 352) top -0.0554 ( 544, t -2.29) | Delta +0.0113 t_welch +0.40 t_nw +0.41
+  variant  p0  n   923 | bot -0.0433 ( 255, t -1.79) mid -0.1201 (  45) top -0.0665 ( 623, t -3.97) | Delta -0.0233 t_welch -0.79 t_nw -0.85
+  variant  p1  n   924 | bot -0.0694 ( 254, t -2.57) mid -0.0273 (  49) top -0.0723 ( 621, t -4.42) | Delta -0.0028 t_welch -0.09 t_nw -0.09
+  vol      p0  n  2117 | bot -0.0207 ( 578, t -1.02) mid -0.0718 ( 822) top -0.0808 ( 717, t -3.95) | Delta -0.0601 t_welch -2.09 t_nw -2.17
+  shuffle  p0  real |Delta| 0.0342 beats 15 of 20 draws (34 blocks); draw |Delta| mean 0.0220, max 0.0590
+  joint    p0  n 2117: own top-bottom -0.0060 (t HC1 -0.15, NW -0.17); vol top-bottom -0.0562 (t HC1 -1.60, NW -1.63); univariate vol -0.0601 (t -2.09); same-tercile share 0.593
+               cells X(own)xV(vol) (n, mean IC): XbVb:378,-0.013  XbVm:282,-0.023  XbVt:54,-0.169  XmVb:191,-0.035  XmVm:460,-0.098  XmVt:246,-0.093  XtVb:9,-0.032  XtVm:80,-0.094  XtVt:417,-0.062
+  joint    p1  POST-HOC, not in the verdict: own top-bottom -0.0323 (t HC1 -0.81); vol top-bottom +0.0074 (t HC1 +0.21)
+  joint-mismatch p0: mismatch top-bottom +0.0165 (t HC1 +0.57); vol -0.0591 (t -2.05)
+  eras (own, p0): 2005-09: n 504 Delta -0.045 (t -0.64; nb 143, nt 304) | 2010-14: n 629 Delta -0.019 (t -0.25; nb 124, nt 79) | 2015-19: n 629 Delta -0.041 (t -0.74; nb 279, nt 76) | 2020-22: n 375 Delta -0.068 (t -1.06; nb 178, nt 48)
+
+--- WIDE17 hy   own = hy_oas, mismatch = sifma, variant = ccc_bb_ey
+  own      p0  n  2131 | bot -0.0637 ( 722, t -1.71) mid -0.0939 ( 905) top -0.1627 ( 504, t -3.70) | Delta -0.0990 t_welch -1.72 t_nw -1.88
+  own      p1  n  2132 | bot -0.0347 ( 721, t -0.93) mid -0.0939 ( 905) top -0.0672 ( 506, t -1.51) | Delta -0.0325 t_welch -0.56 t_nw -0.63
+  mismatch p0  n  2131 | bot -0.0950 (1242, t -3.36) mid -0.1977 ( 349) top -0.0481 ( 540, t -1.12) | Delta +0.0469 t_welch +0.91 t_nw +1.03
+  mismatch p1  n  2132 | bot -0.0864 (1239, t -3.05) mid -0.0398 ( 352) top -0.0425 ( 541, t -0.99) | Delta +0.0438 t_welch +0.85 t_nw +0.95
+  variant  p0  n  2131 | bot -0.0337 ( 534, t -0.78) mid -0.0796 ( 628) top -0.1496 ( 969, t -4.71) | Delta -0.1159 t_welch -2.16 t_nw -2.31
+  variant  p1  n  2132 | bot -0.0944 ( 519, t -2.16) mid -0.0662 ( 634) top -0.0541 ( 979, t -1.70) | Delta +0.0403 t_welch +0.74 t_nw +0.84
+  vol      p0  n  2111 | bot -0.0988 ( 577, t -2.38) mid -0.1220 ( 820) top -0.0756 ( 714, t -2.03) | Delta +0.0232 t_welch +0.41 t_nw +0.45
+  shuffle  p0  real |Delta| 0.0990 beats 20 of 20 draws (34 blocks); draw |Delta| mean 0.0353, max 0.0770
+  joint    p0  n 2111: own top-bottom -0.1996 (t HC1 -2.70, NW -2.90); vol top-bottom +0.1366 (t HC1 +1.95, NW +2.13); univariate vol +0.0232 (t +0.41); same-tercile share 0.592
+               cells X(own)xV(vol) (n, mean IC): XbVb:377,-0.077  XbVm:281,-0.053  XbVt:54,+0.000  XmVb:191,-0.141  XmVm:459,-0.146  XmVt:246,+0.033  XtVb:9,-0.111  XtVm:80,-0.225  XtVt:414,-0.150
+  joint    p1  POST-HOC, not in the verdict: own top-bottom -0.1261 (t HC1 -1.69); vol top-bottom +0.1244 (t HC1 +1.77)
+  joint-mismatch p0: mismatch top-bottom +0.0461 (t HC1 +0.87); vol +0.0224 (t +0.40)
+  eras (own, p0): 2005-09: n 501 Delta -0.099 (t -0.98; nb 143, nt 301) | 2010-14: n 628 Delta -0.227 (t -1.61; nb 124, nt 79) | 2015-19: n 627 Delta -0.164 (t -1.28; nb 277, nt 76) | 2020-22: n 375 Delta +0.287 (t +1.78; nb 178, nt 48)
+
+--- WIDE17 muni   own = sifma, mismatch = hy_oas, variant = --
+  own      p0  n  2136 | bot -0.1233 (1243, t -9.17) mid -0.0905 ( 350) top -0.0768 ( 543, t -3.74) | Delta +0.0465 t_welch +1.90 t_nw +1.81
+  own      p1  n  2137 | bot -0.1131 (1242, t -8.51) mid -0.1070 ( 352) top -0.0876 ( 543, t -4.26) | Delta +0.0255 t_welch +1.04 t_nw +1.09
+  mismatch p0  n  2136 | bot -0.0761 ( 724, t -4.23) mid -0.1281 ( 906) top -0.1096 ( 506, t -5.25) | Delta -0.0334 t_welch -1.21 t_nw -1.28
+  mismatch p1  n  2137 | bot -0.0878 ( 724, t -4.94) mid -0.1176 ( 905) top -0.1095 ( 508, t -5.53) | Delta -0.0217 t_welch -0.82 t_nw -0.88
+  vol      p0  n  2116 | bot -0.0631 ( 578, t -3.16) mid -0.1272 ( 822) top -0.1229 ( 716, t -6.94) | Delta -0.0598 t_welch -2.24 t_nw -2.28
+  shuffle  p0  real |Delta| 0.0465 beats 16 of 20 draws (34 blocks); draw |Delta| mean 0.0258, max 0.0603
+  joint    p0  n 2116: own top-bottom +0.0277 (t HC1 +1.09, NW +1.08); vol top-bottom -0.0548 (t HC1 -2.03, NW -2.07); univariate vol -0.0598 (t -2.24); same-tercile share 0.250
+               cells X(own)xV(vol) (n, mean IC): XbVb:246,-0.085  XbVm:556,-0.152  XbVt:441,-0.108  XmVb:124,-0.043  XmVm:117,-0.088  XmVt:109,-0.148  XtVb:208,-0.049  XtVm:149,-0.064  XtVt:166,-0.147
+  joint    p1  POST-HOC, not in the verdict: own top-bottom +0.0119 (t HC1 +0.47); vol top-bottom -0.0396 (t HC1 -1.47)
+  joint-mismatch p0: mismatch top-bottom -0.0078 (t HC1 -0.23); vol -0.0549 (t -1.69)
+  eras (own, p0): 2005-09: n 502 Delta +0.053 (t +1.22; nb 232, nt 229) | 2010-14: n 629 Delta +nan (t +nan; nb 629, nt 0) | 2015-19: n 629 Delta +0.028 (t +0.56; nb 154, nt 253) | 2020-22: n 376 Delta -0.107 (t -1.51; nb 228, nt 61)
+
+==============================================================================================================
+VERDICT (declared rule)
+==============================================================================================================
+  DEP13  multi  (a) False (b) False (c) False (d) False (e) True  vol_sig False -> NOTHING
+  DEP13  hy     (a) False (b) False (c) False (d) False (e) True  vol_sig False -> NOTHING
+  WIDE17 multi  (a) False (b) True  (c) False (d) False (e) True  vol_sig False -> NOTHING
+  WIDE17 hy     (a) False (b) True  (c) True  (d) True  (e) True  vol_sig False -> NOTHING
+  WIDE17 muni   (a) False (b) True  (c) False (d) False (e) True  vol_sig True  -> NOTHING
+  untestable: DEP13 muni (never two eligible), loan (singleton JFR in every allowed set)
+  SCREEN VERDICT: NOTHING
+
+wrote /private/tmp/claude-501/-Users-simonjarvis-Downloads-2027-Projects-Quant---PM2027-2027/767b4ac8-7cb7-4bf6-953a-b785b037a5b4/scratchpad/r1_macro_state/r1_results.json

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1216583,
+  "episode_accession": "0001193125-23-140923",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Preferred and Income Fund", "cik": 1679033, "ticker": "JPT"},
+      "acquirer": {"name": "Nuveen Preferred & Income Opportunities Fund", "cik": 1216583, "ticker": "JPC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-140923", "date": "2023-05-11", "quote": "You are receiving the Joint Proxy Statement/Prospectus as a holder of common shares of Nuveen Preferred and Income Fund (“Preferred and Income” or a “Target Fund”), Nuveen Preferred & Income Securities Fund (“Preferred & Income Securities” or a “Target Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Three-fund merger: JPT and JPS into JPC. Only JPC is shown with an exchange (8-K, NYSE); exchange for JPT and JPS is not stated in the excerpts. The 2023-09-15 425s say the 2023-08-09 meeting was adjourned; no excerpt states the final result. The 2025-04-24 N-14 8C is excerpted only in unrelated passages."
+    },
+    {
+      "target": {"name": "Nuveen Preferred & Income Securities Fund", "cik": 1176433, "ticker": "JPS"},
+      "acquirer": {"name": "Nuveen Preferred & Income Opportunities Fund", "cik": 1216583, "ticker": "JPC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-140923", "date": "2023-05-11", "quote": "You are receiving the Joint Proxy Statement/Prospectus as a holder of common shares of Nuveen Preferred and Income Fund (“Preferred and Income” or a “Target Fund”), Nuveen Preferred & Income Securities Fund (“Preferred & Income Securities” or a “Target Fund”)"},
+      "outcome_evidence": null,
+      "notes": "See the JPT deal. Meeting adjourned per the 2023-09-15 425s; final result not stated in the excerpts."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt."
+}

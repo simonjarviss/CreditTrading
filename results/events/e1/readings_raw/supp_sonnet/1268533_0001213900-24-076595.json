@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1268533,
+  "episode_accession": "0001213900-24-076595",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Tortoise Midstream Energy Fund, Inc.", "cik": 1490286, "ticker": null},
+      "acquirer": {"name": "Tortoise Energy Infrastructure Corporation", "cik": 1268533, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001213900-24-076595", "date": "2024-09-06", "quote": "a very important matter affecting your investment in Tortoise Midstream Energy Fund, Inc. (the “Target Fund”) and/or Tortoise Energy Infrastructure Corporation (the “Acquiring Fund” and, together with the Target Fund, the “Funds” or each, individually, a “Fund”), each a Maryland corporation."},
+      "outcome_evidence": null,
+      "notes": "No filing excerpt states how this merger ended (the 2024-11-13 and 2024-11-25 8-Ks, the 425 and the later filings are shown only by their first 800 characters, with no outcome text). The 2024-08-07 DEFA14As (seq=1, 2) refer to proposed mergers of six Tortoise/Ecofin funds and a new ETF, but the excerpt does not say which funds merge into which."
+    },
+    {
+      "target": {"name": "Tortoise Sustainable & Social Impact Term Fund", "cik": 1704299, "ticker": null},
+      "acquirer": {"name": "Tortoise Energy Infrastructure Corporation", "cik": 1268533, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Recorded from the cover pages of DEFA14A seq=15 (0001140361-25-026212, filed 2025-07-17), which name Tortoise Energy Infrastructure Corporation and Tortoise Sustainable and Social Impact Term Fund as registrants, and the 2025-06-20 N-14 (seq=11), whose excerpt refers to a 'Target Fund' with a termination date and an 'Eligible Tender Offer' without naming it. The excerpts do not say the merger, its terms or its outcome in words."
+    }
+  ],
+  "problems": "Excerpts are compact: no outcome language in any filing; the 2024 and 2025 proposals are named only by cover pages or party lists. Other funds named in the 2024-08-07 DEFA14As (Tortoise Power and Energy Infrastructure Fund, Tortoise Pipeline & Energy Fund, Tortoise Energy Independence Fund) are not stated as targets of this acquirer, so not recorded as deals."
+}

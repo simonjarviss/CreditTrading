@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1452477,
+  "episode_accession": "0001104659-11-032687",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "RMR Asia Pacific Real Estate Fund", "cik": 1452477, "ticker": "RAP"},
+      "acquirer": {"name": "RMR Real Estate Income Fund", "cik": 1443387, "ticker": "RIF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001104659-11-032687", "quote": "RMR Asia Pacific Real Estate Fund (NYSE Amex: RAP) and RMR Real Estate Income Fund (NYSE Amex: RIF) today announced"},
+      "outcome": "completed_other_structure",
+      "announcement": {"accession": "0001104659-11-032687", "date": "2011-06-01", "quote": "RMR Asia Pacific Real Estate Fund (NYSE Amex: RAP) and RMR Real Estate Income Fund (NYSE Amex: RIF) today announced that their respective Boards of Trustees have approved the merger of RAP into RIF."},
+      "outcome_evidence": {"accession": "0001104659-12-003389", "date": "2012-01-23", "quote": "RMR Real Estate Income Fund Declares its Final Dividend and the Completion of its Merger into RMR Asia Pacific Real Estate Fund"},
+      "notes": "First proposed June 2011 as RAP merging into RIF. The 2011-08-01 425s say the structure was reversed so that RIF would merge into RAP (reason given: further consultation with the IRS). The 2012-01-23 425 reports the completion of RIF's merger into RAP, and the 2012-02-27 DEF 14A, filed under CIK 1452477 in the name RMR Real Estate Income Fund, refers to 'the closing of the Fund's merger with Old RIF'. The episode fund (CIK 1452477) is the surviving acquirer in the completed form but the target in the form first proposed."
+    }
+  ],
+  "problems": ""
+}

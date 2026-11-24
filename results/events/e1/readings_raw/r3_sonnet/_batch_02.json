@@ -1,0 +1,7 @@
+{
+  "batch": "02",
+  "model_id": "claude-sonnet-5-5",
+  "episodes": ["1564216_0001193125-21-106099", "1736035_0001193125-20-318980"],
+  "parts_read": 9,
+  "problems": "Neither episode describes a fund merger, so both have empty deals lists. 1564216 is a liquidation and dissolution (N-8F checks Liquidation); 1736035 is note exchange offers (N-14 8C) and routine 8-Ks."
+}

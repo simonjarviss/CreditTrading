@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1137392,
+  "episode_accession": "0001341004-15-000928",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Municipal Bond Investment Trust", "cik": 1169028, "ticker": "BIE"},
+      "acquirer": {"name": "BlackRock Municipal Income Investment Trust", "cik": 1137392, "ticker": "BBF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-15-000928", "quote": "the Board of Trustees of each of BlackRock Municipal Bond Investment Trust (NYSE:BIE) and BlackRock Municipal Income Investment Trust (NYSE:BBF)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-15-000928", "date": "2015-12-18", "quote": "approved the reorganization of BIE into BBF, with BBF being the surviving Fund (the “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "The 2016-03-21 425 (seq=10) is titled as announcing the results of the joint special shareholder meeting, but only its title is in the excerpt; the result itself is not shown. The two later DEF 14As are annual proxies and show nothing on this merger."
+    }
+  ],
+  "problems": ""
+}

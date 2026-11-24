@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1570335,
+  "episode_accession": "0001570335-19-000007",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Pathway Capital Opportunity Fund, Inc.", "cik": 1570335, "ticker": null},
+      "acquirer": {"name": "Triton Pacific Investment Corporation, Inc.", "cik": 1521945, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000897101-19-000248", "quote": "The Fund will be a publicly registered and offered non-traded business development company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000897101-19-000248", "date": "2019-03-20", "quote": "Triton Pacific and Prospect Capital Announce Shareholder Approval of Merger Between Triton Pacific Investment Corporation and Pathway Capital Opportunity Fund to Create TP Flexible Income Fund"},
+      "outcome_evidence": null,
+      "notes": "Shareholders of both funds approved the merger on March 15, 2019 (96.2% and 96.0% of votes cast); the surviving fund is described as a non-traded BDC, so the pair is not listed. The excerpted filings do not state completion; the N-8F filed 2020-11-04 ticks 'Merger' as the reason for deregistration. The earlier 425s (seq 1-6) are shareholder-contact notices that do not name the merger. PWAY and TPIC appear only as defined abbreviations, not exchange tickers."
+    }
+  ],
+  "problems": ""
+}

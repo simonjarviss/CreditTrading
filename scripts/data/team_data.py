@@ -177,7 +177,7 @@ def status(client, bucket: str) -> None:
 def make_client():
     """An S3 client for the bucket in the env file. Imported here: no socket at import.
 
-    From boto3 1.36 (pinned at 1.36.3 in requirements.txt) the client sends
+    From boto3 1.36 (pinned at 1.36.3 in requirements-research.txt) the client sends
     integrity-checksum headers on every request by default, which R2 has rejected;
     "when_required" sends them only where the S3 API requires one.
     """

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1515324,
+  "episode_accession": "0001104659-15-026313",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Ares Multi-Strategy Credit Fund, Inc.", "cik": 1572280, "ticker": null},
+      "acquirer": {"name": "Ares Dynamic Credit Allocation Fund, Inc.", "cik": 1515324, "ticker": "ARDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-15-026313", "date": "2015-04-08", "quote": "ARES MULTI-STRATEGY CREDIT FUND, INC. ARES DYNAMIC CREDIT ALLOCATION FUND, INC."},
+      "outcome_evidence": null,
+      "notes": "The N-14 (seq 1) is headed by both fund names as a joint proxy statement/prospectus; the clearer statement is in the 2015-06-11 N-14/A (accession 0001104659-15-044849): The Reorganization will be consummated only if the stockholders of ARMF approve Proposal 1 and the stockholders of ARDC approve the ARDC Proposals. The target is called ARMF there; its exchange listing is not shown in the excerpts (ARDC is shown as NYSE: ARDC), so both_listed is null. The excerpts show a special meeting for 14 July 2015 and later 8-Ks with only headers or unrelated exhibits (investment policy change, director appointment); none states how the reorganization ended."
+    }
+  ],
+  "problems": ""
+}

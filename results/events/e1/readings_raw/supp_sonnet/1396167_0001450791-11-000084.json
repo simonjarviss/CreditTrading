@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1396167,
+  "episode_accession": "0001450791-11-000084",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Delaware Investments Global Dividend and Income Fund, Inc.", "cik": 916713, "ticker": "DGF"},
+      "acquirer": {"name": "Delaware Enhanced Global Dividend and Income Fund", "cik": 1396167, "ticker": "DEX"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001206774-11-001756", "quote": "Each Fund is registered as a closed-end investment company under the Investment Company Act of 1940, and each Fund’s shares are listed and trade on the New York Stock Exchange."},
+      "outcome": null,
+      "announcement": {"accession": "0001450791-11-000084", "date": "2011-05-19", "quote": "DELAWARE INVESTMENTS GLOBAL DIVIDEND AND INCOME FUND, INC. AND DELAWARE ENHANCED GLOBAL DIVIDEND AND INCOME FUND ANNOUNCE PROPOSED REORGANIZATION"},
+      "outcome_evidence": null,
+      "notes": "Special meeting expected September 21, 2011; closing expected in the fourth quarter of 2011. No excerpt states the outcome; the 2012 annual proxy excerpts do not mention the reorganization."
+    }
+  ],
+  "problems": ""
+}

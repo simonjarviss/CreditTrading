@@ -1,0 +1,18 @@
+{
+  "episode_cik": 804116,
+  "episode_accession": "0000949377-11-000139",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Royce Value Trust, Inc.", "cik": 804116, "ticker": null},
+      "acquirer": {"name": "Royce Global Value Trust, Inc.", "cik": 1514490, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000949377-11-000139", "date": "2011-03-16", "quote": "Combined Prospectus/Proxy Statement regarding the proposed Transaction"},
+      "outcome_evidence": null,
+      "notes": "N-14 registers shares of Global Trust and is organized around a letter to stockholders of Value Trust, so Value Trust is read as target. No excerpt states the outcome; the later filings (2011 and 2012 DEF 14A and DEFA14A) are annual-meeting proxy materials for Value Trust that show only director elections in the excerpts. No tickers printed. The NYSE mention in the excerpts concerns Value Trust's Cumulative Preferred Stock only, which does not settle whether both funds' common shares are listed."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt. Listing of both funds not stated; no tickers printed."
+}

@@ -1,0 +1,91 @@
+acquirer_cik,acquirer,first_n14,last_n14,acquirer_listed,n_bdc_targets,targets,n_unlisted_targets
+1356115,NEXPOINT DIVERSIFIED REAL ESTATE TRUST,2008-02-28,2008-04-17,True,0,,0
+1452477,Seven Hills Realty Trust,2008-12-23,2009-03-30,True,0,,0
+1356115,NEXPOINT DIVERSIFIED REAL ESTATE TRUST,2008-12-24,2009-03-03,True,1,"Highland Distressed Opportunities, Inc. (1373641, listed)",0
+1287032,PROSPECT CAPITAL CORP,2009-09-04,2009-10-22,True,1,"ALLIED CAPITAL CORP (3906, listed)",0
+1287750,ARES CAPITAL CORP,2009-12-16,2010-02-11,True,1,"ALLIED CAPITAL CORP (3906, listed)",0
+1495584,"Firsthand Technology Value Fund, Inc.",2010-07-19,2011-01-05,True,0,,0
+1452477,Seven Hills Realty Trust,2011-07-29,2011-10-24,True,0,,0
+1287032,PROSPECT CAPITAL CORP,2014-01-14,2014-02-28,True,0,,0
+1587987,"NewtekOne, Inc.",2014-05-15,2014-09-30,True,0,,0
+1527385,"VII Peaks Co-Optivist Income BDC II, Inc.",2015-04-20,2015-04-20,False,0,,0
+1504619,PennantPark Floating Rate Capital Ltd.,2015-05-18,2015-06-16,True,1,"MCG CAPITAL CORP (1141299, listed)",0
+1287750,ARES CAPITAL CORP,2016-07-20,2016-10-13,True,1,"AMERICAN CAPITAL, LTD (817473, unlisted)",1
+1675033,Great Elm Capital Corp.,2016-08-01,2016-09-27,True,1,"Full Circle Capital Corp (1490013, listed)",0
+1422183,FS KKR Capital Corp,2018-07-30,2018-09-18,True,1,"Corporate Capital Trust, Inc. (1494538, listed)",0
+1521945,"Prospect Floating Rate & Alternative Income Fund, Inc.",2018-08-13,2018-08-13,False,0,,0
+1523526,Sierra Income Corp,2018-11-06,2018-12-21,False,1,"PhenixFIN Corp (1490349, listed)",0
+1476765,"GOLUB CAPITAL BDC, Inc.",2018-12-21,2018-12-21,True,1,"GOLUB CAPITAL INVESTMENT Corp (1627515, listed)",0
+1521945,"Prospect Floating Rate & Alternative Income Fund, Inc.",2019-02-13,2019-02-13,False,0,,0
+1525759,FS KKR Capital Corp. II,2019-07-03,2019-08-08,True,3,"FS Investment Corp III (1579412, unlisted); Corporate Capital Trust II (1617896, unlisted); FS Investment Corp IV (1637417, unlisted)",3
+1476765,"GOLUB CAPITAL BDC, Inc.",2019-07-11,2019-07-11,True,1,"GOLUB CAPITAL INVESTMENT Corp (1627515, listed)",0
+1372807,BCP Investment Corp,2019-09-06,2019-11-04,True,1,"OHA Investment Corp (1297704, listed)",0
+1788280,"Crescent Reincorporation Sub, Inc.",2019-09-30,2019-12-09,False,0,,0
+1572694,"Goldman Sachs BDC, Inc.",2020-01-08,2020-01-08,True,1,"Goldman Sachs Middle Market Lending Corp. (1683074, unlisted)",1
+1572694,"Goldman Sachs BDC, Inc.",2020-07-13,2020-07-13,True,1,"Goldman Sachs Middle Market Lending Corp. (1683074, unlisted)",1
+1372807,BCP Investment Corp,2020-07-17,2021-11-23,True,2,"Garrison Capital Inc. (1509892, listed); Harvest Capital Credit Corp (1559909, listed)",0
+1379785,"Barings BDC, Inc.",2020-09-15,2020-11-20,True,1,"MVC CAPITAL, INC. (1099941, listed)",0
+1414932,Oaktree Specialty Lending Corp,2020-11-23,2021-01-19,True,1,"Oaktree Strategic Income Corp (1577791, listed)",0
+1736035,Blackstone Secured Lending Fund,2020-12-16,2021-06-04,True,0,,0
+1422183,FS KKR Capital Corp,2020-12-23,2021-02-25,True,1,"FS KKR Capital Corp. II (1525759, listed)",0
+1490927,Franklin BSP Lending Corp,2021-06-23,2021-08-03,False,0,,0
+1379785,"Barings BDC, Inc.",2021-10-29,2021-12-23,True,1,"Sierra Income Corp (1523526, unlisted)",1
+1418076,SLR Investment Corp.,2021-12-16,2022-01-31,True,1,"SLR Senior Investment Corp. (1508171, listed)",0
+1571329,Logan Ridge Finance Corp.,2022-02-18,2022-06-01,True,0,,0
+1143513,GLADSTONE CAPITAL CORP,2022-02-23,2022-02-23,True,0,,0
+1736035,Blackstone Secured Lending Fund,2022-03-07,2022-05-20,True,0,,0
+1782524,Morgan Stanley Direct Lending Fund,2022-05-06,2022-06-13,True,0,,0
+1812554,Blue Owl Credit Income Corp.,2022-05-16,2022-07-21,False,0,,0
+1807427,Blue Owl Capital Corp III,2022-05-20,2022-08-24,True,0,,0
+1803498,Blackstone Private Credit Fund,2022-05-20,2022-06-30,False,0,,0
+1379785,"Barings BDC, Inc.",2022-09-16,2022-10-19,True,0,,0
+1414932,Oaktree Specialty Lending Corp,2022-10-24,2022-11-29,True,1,"Oaktree Strategic Income II, Inc. (1744179, unlisted)",1
+1633336,"Crescent Capital BDC, Inc.",2022-11-04,2023-01-19,True,1,"First Eagle Alternative Capital BDC, Inc. (1464963, listed)",0
+1803498,Blackstone Private Credit Fund,2023-02-10,2023-03-24,False,0,,0
+1812554,Blue Owl Credit Income Corp.,2023-05-26,2023-07-12,False,0,,0
+1825248,Franklin BSP Capital Corp,2023-10-06,2023-10-20,True,1,"Franklin BSP Lending Corp (1490927, unlisted)",1
+1370755,BlackRock TCP Capital Corp.,2023-10-06,2023-11-14,True,1,"BlackRock Capital Investment Corp (1326003, listed)",0
+1278752,MidCap Financial Investment Corp,2023-11-17,2024-04-01,True,0,,0
+1803498,Blackstone Private Credit Fund,2024-02-14,2025-03-24,False,0,,0
+1476765,"GOLUB CAPITAL BDC, Inc.",2024-02-23,2024-04-12,True,1,"Golub Capital BDC 3, Inc. (1715268, unlisted)",1
+1812554,Blue Owl Credit Income Corp.,2024-02-28,2024-04-03,False,0,,0
+1843162,"Chicago Atlantic BDC, Inc.",2024-04-15,2024-08-30,True,0,,0
+1655887,Blue Owl Capital Corp II,2024-07-02,2024-09-04,False,0,,0
+1872371,Oaktree Strategic Credit Fund,2024-07-26,2024-09-26,False,0,,0
+1655888,Blue Owl Capital Corp,2024-08-16,2024-10-11,True,1,"Blue Owl Capital Corp III (1807427, listed)",0
+1807427,Blue Owl Capital Corp III,2024-08-16,2024-08-16,True,1,"Blue Owl Capital Corp (1655888, listed)",0
+1918712,ARES STRATEGIC INCOME FUND,2024-08-21,2024-08-21,False,0,,0
+1544206,"Carlyle Secured Lending, Inc.",2024-10-07,2025-01-03,True,1,"Carlyle Secured Lending III (1851277, unlisted)",1
+1889668,Blue Owl Technology Finance Corp. II,2024-11-01,2024-12-13,False,1,"Blue Owl Technology Finance Corp. (1747777, listed)",0
+1925309,Sixth Street Lending Partners,2024-11-04,2024-12-10,False,0,,0
+1747777,Blue Owl Technology Finance Corp.,2024-11-22,2025-01-06,True,1,"Blue Owl Technology Finance Corp. II (1889668, unlisted)",1
+1837532,Apollo Debt Solutions BDC,2024-11-22,2025-01-17,False,0,,0
+1782524,Morgan Stanley Direct Lending Fund,2024-12-06,2025-01-08,True,0,,0
+1838126,HPS Corporate Lending Fund,2024-12-09,2025-02-19,False,0,,0
+1825248,Franklin BSP Capital Corp,2025-01-14,2025-03-06,True,0,,0
+1851322,North Haven Private Income Fund LLC,2025-01-27,2025-02-26,False,0,,0
+1812554,Blue Owl Credit Income Corp.,2025-02-12,2025-03-20,False,0,,0
+1372807,BCP Investment Corp,2025-02-25,2025-05-06,True,1,"Logan Ridge Finance Corp. (1571329, listed)",0
+1918712,ARES STRATEGIC INCOME FUND,2025-03-13,2025-04-23,False,0,,0
+1930087,Golub Capital Private Credit Fund,2025-03-21,2025-05-08,False,0,,0
+1747777,Blue Owl Technology Finance Corp.,2025-08-20,2025-11-25,True,0,,0
+1925309,Sixth Street Lending Partners,2025-08-28,2025-11-21,False,0,,0
+1487428,Horizon Technology Finance Corp,2025-09-08,2026-01-14,True,1,"MONROE CAPITAL Corp (1512931, listed)",0
+1837532,Apollo Debt Solutions BDC,2025-09-12,2026-09-09,False,0,,0
+1918712,ARES STRATEGIC INCOME FUND,2025-10-24,2026-04-21,False,0,,0
+1653384,Runway Growth Finance Corp.,2025-11-18,2026-02-27,True,0,,0
+1849894,MSD Investment Corp.,2025-12-19,2026-02-12,False,0,,0
+1872371,Oaktree Strategic Credit Fund,2025-12-22,2026-01-30,False,0,,0
+1838126,HPS Corporate Lending Fund,2026-02-02,2026-03-06,False,0,,0
+1920145,Goldman Sachs Private Credit Corp.,2026-02-02,2026-03-27,False,0,,0
+1812554,Blue Owl Credit Income Corp.,2026-02-09,2026-03-10,False,0,,0
+1859919,Barings Private Credit Corp,2026-03-13,2026-04-29,False,0,,0
+1930087,Golub Capital Private Credit Fund,2026-03-20,2026-05-01,False,0,,0
+1726548,BC Partners Lending Corp,2026-03-25,2026-03-31,False,0,,0
+1825248,Franklin BSP Capital Corp,2026-05-18,2026-06-26,True,0,,0
+1851322,North Haven Private Income Fund LLC,2026-06-08,2026-07-01,False,0,,0
+1987221,John Hancock Comvest Private Income Fund,2026-06-23,2026-09-04,False,0,,0
+1513363,FIDUS INVESTMENT Corp,2026-06-30,2026-09-09,True,0,,0
+1843162,"Chicago Atlantic BDC, Inc.",2026-07-31,2026-09-23,True,0,,0
+1849894,MSD Investment Corp.,2026-08-27,2026-09-28,False,0,,0
+2144472,New Carlyle Credit Solutions,2026-09-09,2026-09-22,False,1,"Carlyle Credit Solutions, Inc. (1702510, unlisted)",1

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1195738,
+  "episode_accession": "0001193125-13-450220",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen California Premium Income Municipal Fund", "cik": 905000, "ticker": "NCU"},
+      "acquirer": {"name": "Nuveen California AMT-Free Municipal Income Fund", "cik": 1195738, "ticker": "NKX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Only the header of seq=5/6/7 (425 filed by NKX, subject company Nuveen California Premium Income Municipal Fund, CIK 905000) names this target; the excerpts (800 characters of each document and the N-14 cover) never describe a merger, its terms or its outcome. The 425s' excerpts mention an annual meeting and adjournments for several California funds (NAC, NCP, NQC, NCU, NCO, NUC, NVC), but the text does not say these are merger targets, so only the header-named subject company is recorded. The 2014-05 to 2014-07 PRE 14A/DEF 14A/DEFA14A name NKX and Nuveen California Dividend Advantage Municipal Fund (NAC) and show only advisory-agreement text in the excerpts. The ticker NCU is printed in seq=5 as Nuveen CA Premium Income Municipal Fund (NCU)."
+    }
+  ],
+  "problems": "The excerpts are compact and do not describe any merger in words; the deal is recorded only from the seq=5-7 filing headers."
+}

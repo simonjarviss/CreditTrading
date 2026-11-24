@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1615905,
+  "episode_accession": "0001193125-14-305175",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Global Income Opportunities Fund", "cik": null, "ticker": "JGG"},
+      "acquirer": {"name": "Nuveen Global High Income Fund", "cik": 1615905, "ticker": "JGH"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-14-425312", "quote": "the combination of the Nuveen Global Income Opportunities Fund (NYSE: JGG) and Nuveen Diversified Currency Opportunities Fund (NYSE: JGT) into a single new fund, Nuveen Global High Income Fund (NYSE: JGH),"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-305175", "date": "2014-08-12", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN GLOBAL INCOME OPPORTUNITIES FUND (JGG) AND NUVEEN DIVERSIFIED CURRENCY OPPORTUNITIES FUND (JGT)"},
+      "outcome_evidence": {"accession": "0001193125-14-425312", "date": "2014-11-25", "quote": "was completed prior to the opening of the New York Stock Exchange on November 24, 2014."},
+      "notes": "Press release (Exhibit 99.1 to the 8-K filed 2014-11-25, dated November 24, 2014) says JGH acquired substantially all the assets and liabilities of JGG and JGT for newly issued common shares, with exchange ratios given for each. The earlier 425 (2014-10-24) shows the meeting date of October 31, 2014 and mentions further adjournments. JGG's CIK does not appear in any filing header."
+    },
+    {
+      "target": {"name": "Nuveen Diversified Currency Opportunities Fund", "cik": 1390109, "ticker": "JGT"},
+      "acquirer": {"name": "Nuveen Global High Income Fund", "cik": 1615905, "ticker": "JGH"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-14-425312", "quote": "the combination of the Nuveen Global Income Opportunities Fund (NYSE: JGG) and Nuveen Diversified Currency Opportunities Fund (NYSE: JGT) into a single new fund, Nuveen Global High Income Fund (NYSE: JGH),"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-305175", "date": "2014-08-12", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN GLOBAL INCOME OPPORTUNITIES FUND (JGG) AND NUVEEN DIVERSIFIED CURRENCY OPPORTUNITIES FUND (JGT)"},
+      "outcome_evidence": {"accession": "0001193125-14-425312", "date": "2014-11-25", "quote": "was completed prior to the opening of the New York Stock Exchange on November 24, 2014."},
+      "notes": "Same press release as the JGG deal; it gives JGT's exchange ratio as 0.58838000. No filing in the excerpts states that either target failed."
+    }
+  ],
+  "problems": ""
+}

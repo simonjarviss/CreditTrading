@@ -1,0 +1,39 @@
+{
+ "bdc_spells_n54a": 345,
+ "coverage_own_period_2012_22_all": 0.0163,
+ "coverage_own_period_2012_22_listed": 0.0206,
+ "coverage_own_period_2023_25_all": 0.8902,
+ "lag_report_days_10q": {
+  "n": 4722,
+  "p10": 34.0,
+  "median": 40.0,
+  "p90": 45.0
+ },
+ "lag_report_days_10k": {
+  "n": 1516,
+  "p10": 53.0,
+  "median": 70.0,
+  "p90": 89.0
+ },
+ "lag_202_days_listed": {
+  "n": 2256,
+  "p10": 13.0,
+  "median": 37.0,
+  "p90": 60.0
+ },
+ "share_listed_reports_with_202_before": 0.8297,
+ "days_202_to_report_listed": {
+  "n": 2256,
+  "p10": 0.0,
+  "median": 0.0,
+  "p90": 28.0
+ },
+ "borrow_today_2025_bdc_filers": {
+  "alpaca_clock": "2026-10-19T11:37:12.811168-04:00",
+  "filers": 178,
+  "listed_today": 47,
+  "at_alpaca": 47,
+  "shortable": 29,
+  "etb": 29
+ }
+}

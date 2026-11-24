@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1689873,
+  "episode_accession": "0001387131-17-005048",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Master Income ETF, a series of ETF Series Solutions", "cik": null, "ticker": null},
+      "acquirer": {"name": "GraniteShares HIPS US High Income ETF, a series of GraniteShares ETF Trust", "cik": 1689873, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001387131-17-005048", "quote": "For the Reorganization of Master Income ETF a series of ETF Series Solutions"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001387131-17-005048", "date": "2017-10-13", "quote": "COMBINED PROXY STATEMENT AND PROSPECTUS For the Reorganization of Master Income ETF a series of ETF Series Solutions"},
+      "outcome_evidence": {"accession": "0001387131-17-005048", "date": "2017-10-13", "quote": "For the Reorganization of Master Income ETF a series of ETF Series Solutions"},
+      "notes": "ETF-to-ETF reorganization; both are ETFs, not closed-end funds."
+    }
+  ],
+  "problems": ""
+}

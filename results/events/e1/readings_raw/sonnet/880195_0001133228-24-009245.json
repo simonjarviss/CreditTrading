@@ -1,0 +1,28 @@
+{
+  "episode_cik": 880195,
+  "episode_accession": "0001133228-24-009245",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Fidelity Simplicity RMD Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Freedom Blend Income", "cik": 880195, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001133228-24-009245", "date": "2024-10-01", "quote": "NOTICE IS HEREBY GIVEN that a Special Meeting of Shareholders (the Fidelity Simplicity RMD Income Fund SM Meeting) of Fidelity Simplicity RMD Income Fund SM will be held on December 19, 2024, at 10:00 a.m. Eastern Time (ET)."},
+      "outcome_evidence": null,
+      "notes": "The 2024 N-14 and DEFA14A (2024-11-14) propose six reorganizations of Fidelity Simplicity RMD funds (Income, 2010, 2015, 2020, 2025, 2030) into Fidelity Freedom Blend funds; only the first pairing is legible in the excerpts (the name is cut off after 'Freedom Blend Income'), so the other five pairs are not recorded as separate deals. Filing 2024-11-14 says: 'If a proposal is not approved by shareholders, the fund proposed to be acquired will liquidate on or about January 10, 2025.' No excerpt states the vote result. Listing status is not stated in the excerpts."
+    },
+    {
+      "target": {"name": "Fidelity Managed Retirement Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Freedom Blend", "cik": 880195, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001133228-26-000230", "date": "2026-01-09", "quote": "NOTICE IS HEREBY GIVEN that a Special Meeting of Shareholders of Fidelity Managed Retirement Income Fund SM (the Fidelity Managed Retirement Income Fund SM Meeting) will be held on April 16, 2026, at 8:00 A.M. Eastern Time (ET)."},
+      "outcome_evidence": null,
+      "notes": "The 2026 N-14 and DEFA14As (2026-03-06, 2026-03-24) propose seven reorganizations of Fidelity Managed Retirement funds (Income, 2010, 2015, 2020, 2025, 2030, 2035) into Fidelity Freedom Blend funds; the name of the acquiring fund for this first pair is cut off after 'Freedom Blend' (2026-03-06: '(1) to merge Fidelity Managed Retirement Income Fund into Fidelity Freedom Blend'), and the other pairings are not legible. Meeting date April 16, 2026; the last excerpt (2026-03-24) is a vote solicitation. No excerpt states the outcome or whether the funds are exchange-listed."
+    }
+  ],
+  "problems": "Only two of thirteen proposed pairings could be named from the excerpts; no excerpt states outcomes or listing status."
+}

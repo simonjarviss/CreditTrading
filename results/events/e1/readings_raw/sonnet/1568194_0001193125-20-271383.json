@@ -1,0 +1,18 @@
+{
+ "episode_cik": 1568194,
+ "episode_accession": "0001193125-20-271383",
+ "episode_role": null,
+ "deals": [
+  {
+   "target": {"name": "the Feeder Funds (names not shown in the excerpts)", "cik": null, "ticker": null},
+   "acquirer": {"name": "the Master Fund (name not shown in the excerpts)", "cik": null, "ticker": null},
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {"accession": "0001193125-20-270327", "date": "2020-10-15", "quote": "master-feeder structure and replace it with a single fund, the Master Fund. The Funds have identical objectives and substantially similar policies."},
+   "outcome_evidence": null,
+   "notes": "Master-feeder collapse: the Feeder Funds are reorganized into the Master Fund. The N-14 (2020-10-19) and its amendments (2020-11-24, 2020-12-02) say the Plan terminates automatically if not consummated by June 30, 2021 (a [DATE] placeholder in the first filing). The excerpts never state completion; the 2022 8-Ks cover a conversion to a Maryland corporation and a planned NYSE listing, not this reorganization. Listing status of the Feeder Funds is not stated, so both_listed is null."
+  }
+ ],
+ "problems": "Compact excerpts only; fund names, which fund this CIK is in the reorganization, listing status and the outcome are not stated in what was shown."
+}

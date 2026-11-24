@@ -1,0 +1,28 @@
+{
+  "episode_cik": 835333,
+  "episode_accession": "0000950123-11-101264",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco Municipal Income Opportunities Trust II", "cik": 847593, "ticker": null},
+      "acquirer": {"name": "Invesco Municipal Income Opportunities Trust", "cik": 835333, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101264", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "The 425 (filed by 835333, subject company 847593) lists many funds and its excerpt does not say which merges into which; the N-14 8C (registrant 835333, 2012-04-05) names Trust, Trust II and Trust III on its cover and the fee table is priced off Trust II and Trust III common shares. No excerpt states an outcome; excerpts are mostly cover pages and boilerplate."
+    },
+    {
+      "target": {"name": "Invesco Municipal Income Opportunities Trust III", "cik": 861069, "ticker": null},
+      "acquirer": {"name": "Invesco Municipal Income Opportunities Trust", "cik": 835333, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101264", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Trust III is listed as a subject company in the 425 (SEC File No. 811-06052) and named on the N-14 cover; same limits as Trust II. No excerpt states an outcome."
+    }
+  ],
+  "problems": "Excerpts are thin (cover pages, boilerplate); the 2013 DEF 14A / DEFA14A for Trust, Quality Municipal Income Trust and Value Municipal Income Trust show only headers, so any later merger is not readable."
+}

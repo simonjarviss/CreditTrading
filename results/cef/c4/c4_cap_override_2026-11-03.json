@@ -1,0 +1,14 @@
+{
+ "what": "a team-lead override of the frozen margin rule's max_gross_stress for C4: the spec's cap stands by ruling, not by the rule (scripts/cef/c4_paper_benchmark.py recap)",
+ "spec_id": "c4_families.v5.20261103",
+ "w5": 0.05360827081145146,
+ "rule_cap": 1.8,
+ "spec_cap": 1.9,
+ "ruled": "2026-11-03",
+ "ruled_by": "team lead",
+ "words": "Keep 1.90, install tonight.",
+ "citation": "docs/SYSTEM.md §5, 'Team lead, 2026-11-03 — C4 v5's gross cap (after the release-check of e41f10b)' (PR #48, branch journal-20261103b): an override of the rule's 1.80, made with the blend's w5 0.0536 against the z book's 0.0261 in front of the team lead",
+ "revert": "delete this file; the spec then takes the rule's cap through /spec-change, or a new ruling",
+ "key": "40b909aceb820baf4c49971919b5a0e6c8922a04125ff8feb4bb7f306cafbe94",
+ "w5_source": "scripts/cef/c4_paper_benchmark.py run on c4_families.v5.20261103 (cap.w5 in results/cef/c4/c4_paper_benchmark_2026-11-03.json, derived on the blended spec book; the release-check of e41f10b measured 0.0536 total return, 0.0560 price only)"
+}

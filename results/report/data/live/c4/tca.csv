@@ -1,0 +1,4 @@
+date,book,n_orders,n_full,shares_ordered,shares_filled,fill_rate_shares,slip_bp_buy,slip_bp_sell,slip_bp_all,slip_unmeasured,residual_gross_usd,residual_net_usd,basis
+2026-11-04,c4,15,15,9789,9789,1.0000,-11.78,13.19,0.66,,0.00,0.00,"fills vs primary-exchange official close (condition M), notional-weighted; residual = positions after the close vs the plan's ORDER targets at the official close"
+2026-11-05,c4,2,2,1854,1854,1.0000,-7.75,19.96,18.04,,0.00,0.00,"fills vs primary-exchange official close (condition M), notional-weighted; residual = positions after the close vs the plan's ORDER targets at the official close"
+2026-11-06,c4,3,3,1455,1455,1.0000,0.99,73.80,23.38,,0.00,0.00,"fills vs primary-exchange official close (condition M), notional-weighted; residual = positions after the close vs the plan's ORDER targets at the official close"

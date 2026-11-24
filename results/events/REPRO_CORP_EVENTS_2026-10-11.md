@@ -203,15 +203,15 @@ that broadcasts over a wide CRSP or TRACE frame can be silently wrong.
 ## 4. Listed mandatory convertibles (row 5) and gate G4
 
 `python3 scripts/events/mandatory_census.py` (output:
-`results/events/mandatory_census_2026-10-11.txt`).
+`results/events/mandatory/mandatory_census_2026-10-11.txt`).
 
 **Files written:**
 
-- `alpaca_convertible_assets_2026-10-11.csv`, with `.meta.json`: every
+- `mandatory/alpaca_convertible_assets_2026-10-11.csv`, with `.meta.json`: every
   convertible-named asset on the active and inactive lists, with today's flags;
-- `mandatory_liquidity.csv`;
-- `mandatory_hedged_vol.csv`;
-- `mandatory_g4_history.csv`.
+- `mandatory/mandatory_liquidity.csv`;
+- `mandatory/mandatory_hedged_vol.csv`;
+- `mandatory/mandatory_g4_history.csv`.
 
 **Shortability (2026-10-11, true on that date only).** 8 of the 24 active
 mandatories are shortable, all easy to borrow: GOOGM, GOOGN, HPE.PRC, MCHPP,

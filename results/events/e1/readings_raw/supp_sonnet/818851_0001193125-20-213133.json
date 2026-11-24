@@ -1,0 +1,18 @@
+{
+  "episode_cik": 818851,
+  "episode_accession": "0001193125-20-213133",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen California Municipal Value Fund 2", "cik": 1454979, "ticker": "NCB"},
+      "acquirer": {"name": "Nuveen California Municipal Value Fund, Inc.", "cik": 818851, "ticker": "NCA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213133", "date": "2020-08-07", "quote": "NEW YORK, August 7, 2020 – The Board of Trustees for eleven Nuveen municipal closed-end funds approved five reorganization proposals."},
+      "outcome_evidence": null,
+      "notes": "Meeting of 2020-12-07 adjourned to 2021-01-15, then a further reminder (2021-01-15) names an adjourned meeting date of 2021-02-17; no excerpt states how the NCA/NCB reorganization ended. The 2021-10 DEF 14A and 2022-02 8-K excerpts do not mention it. Exchange listing of NCB is not stated in the excerpts (tickers only)."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts."
+}

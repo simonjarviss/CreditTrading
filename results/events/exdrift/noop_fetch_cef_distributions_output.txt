@@ -1,0 +1,11 @@
+no-op proof, scripts/fetch_cef_distributions.py: 66ec3df (from git) vs the working tree; fake yfinance, frozen clock
+files written: old ['_fetch_diagnostics.json', '_raw_info.json', 'cef_dist_features.parquet', 'cef_distributions.parquet', 'cef_facts.csv', 'cef_prices.parquet', 'cef_splits.parquet']; new ['_fetch_diagnostics.json', '_raw_info.json', 'cef_dist_features.parquet', 'cef_distributions.parquet', 'cef_facts.csv', 'cef_prices.parquet', 'cef_splits.parquet']
+  _fetch_diagnostics.json      old eb92d31fe906e4e3  new eb92d31fe906e4e3  IDENTICAL
+  _raw_info.json               old 075328bd29b3f994  new 075328bd29b3f994  IDENTICAL
+  cef_dist_features.parquet    old c97f7efc004fe7eb  new c97f7efc004fe7eb  IDENTICAL
+  cef_distributions.parquet    old 68e1dd7e102e495f  new 68e1dd7e102e495f  IDENTICAL
+  cef_facts.csv                old b81c9c8c3ad94537  new b81c9c8c3ad94537  IDENTICAL
+  cef_prices.parquet           old 7cdefe333d2df751  new 7cdefe333d2df751  IDENTICAL
+  cef_splits.parquet           old bf226017e76b986e  new bf226017e76b986e  IDENTICAL
+stdout: IDENTICAL (17 lines)
+RESULT: PASS, a bare run is byte-for-byte unchanged

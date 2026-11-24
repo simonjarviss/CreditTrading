@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1109697,
+  "episode_accession": "0001615774-17-007381",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "IDGlobal Corp. a/k/a IDGreen Corp.", "cik": 1391143, "ticker": null},
+      "acquirer": {"name": "Encounter Technologies, Inc.", "cik": 1109697, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001615774-17-007381", "quote": "Farallon has been in the business of marketing high-quality coffee beans to various specialty retailers and foodservice operations."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001615774-17-007381", "date": "2017-12-18", "quote": "ENTI will purchase 71,000,000.00 shares of the Series A Preferred Stock owned by you in IDGlobal Corp, a Colorado corporation a/k/a IDGreen Corp."},
+      "outcome_evidence": null,
+      "notes": "Not a fund merger: a letter of intent to buy preferred stock of an operating company (coffee and CBD businesses) for ENTI common stock. Single filing; no outcome stated."
+    }
+  ],
+  "problems": ""
+}

@@ -46,7 +46,7 @@ run from the caches. Its tests are in
 | EDGAR N-PORT-P filings | 28 targets' filings with windows reaching 2019+; fetched 2026-10-15 |
 | Alpaca `GET /v2/assets/{symbol}` (paper, cef key) | 19 ETFs, read 2026-10-15 20:38–20:43 UTC |
 | Alpaca daily bars (SIP, raw) | 63 sessions, 2026-07-17 → 2026-10-14 |
-| earlier Alpaca read on file | `results/xasset/slate_feasibility_2026-10-12.csv` (2026-10-12 22:42 UTC) |
+| earlier Alpaca read on file | `results/xasset/feasibility/slate_feasibility_2026-10-12.csv` (2026-10-12 22:42 UTC) |
 | IBKR shortstock file | `#BOF\|2026.10.13\|18:03:03`, cached by G1a |
 
 **Labels.** Figures produced on 2026-10-15 by the reproducer are [V]. Each

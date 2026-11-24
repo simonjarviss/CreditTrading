@@ -1,0 +1,118 @@
+{
+ "missing_files": [
+  "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202002a.zip",
+  "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202002b.zip",
+  "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202003a.zip",
+  "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202003b.zip",
+  "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202004a.zip",
+  "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202004b.zip"
+ ],
+ "fails_rows_2019_2022": 4903117,
+ "settlement_days": 938,
+ "matched_rows_cef_bdc": 205762,
+ "matched_rows_without_crsp_shrout": 0,
+ "names_with_any_fail": {
+  "bdc": 45,
+  "equity": 274,
+  "muni": 146,
+  "taxable_bond": 131
+ },
+ "threshold_like_episodes": {
+  "all": 30,
+  "by_group": {
+   "equity": 10,
+   "muni": 4,
+   "taxable_bond": 16
+  },
+  "distinct_names_by_group": {
+   "equity": 10,
+   "muni": 4,
+   "taxable_bond": 14
+  },
+  "by_year": {
+   "2019": 12,
+   "2020": 4,
+   "2021": 9,
+   "2022": 5
+  },
+  "close_out_proxy_runs": 3,
+  "close_out_proxy_by_group": {
+   "equity": 2,
+   "muni": 1
+  }
+ },
+ "record_date_profile": {
+  "bdc": {
+   "-6": 0.0975,
+   "-5": 0.1044,
+   "-4": 0.1113,
+   "-3": 0.1319,
+   "-2": 0.1594,
+   "-1": 0.1791,
+   "0": 0.2311,
+   "1": 0.0862,
+   "2": 0.0655,
+   "3": 0.0695,
+   "4": 0.0685,
+   "5": 0.0716,
+   "6": 0.0578
+  },
+  "equity": {
+   "-6": 0.0342,
+   "-5": 0.0375,
+   "-4": 0.0398,
+   "-3": 0.049,
+   "-2": 0.0582,
+   "-1": 0.063,
+   "0": 0.0769,
+   "1": 0.0278,
+   "2": 0.0251,
+   "3": 0.0238,
+   "4": 0.0256,
+   "5": 0.0253,
+   "6": 0.0252
+  },
+  "muni": {
+   "-6": 0.0186,
+   "-5": 0.0195,
+   "-4": 0.0266,
+   "-3": 0.0327,
+   "-2": 0.0364,
+   "-1": 0.0386,
+   "0": 0.0455,
+   "1": 0.0098,
+   "2": 0.0115,
+   "3": 0.0127,
+   "4": 0.0132,
+   "5": 0.0136,
+   "6": 0.0129
+  },
+  "taxable_bond": {
+   "-6": 0.0404,
+   "-5": 0.0413,
+   "-4": 0.0463,
+   "-3": 0.051,
+   "-2": 0.0582,
+   "-1": 0.0567,
+   "0": 0.0794,
+   "1": 0.0286,
+   "2": 0.0315,
+   "3": 0.0285,
+   "4": 0.0294,
+   "5": 0.031,
+   "6": 0.0341
+  }
+ },
+ "record_date_baseline": {
+  "bdc": 0.0595,
+  "equity": 0.027,
+  "muni": 0.0166,
+  "taxable_bond": 0.0345
+ },
+ "record_events_by_group": {
+  "muni": 5911,
+  "taxable_bond": 5255,
+  "equity": 9106,
+  "bdc": 1017
+ }
+}

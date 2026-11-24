@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1825248,
+  "episode_accession": "0001213900-23-081189",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Franklin BSP Lending Corporation", "cik": 1490927, "ticker": null},
+      "acquirer": {"name": "Franklin BSP Capital Corporation", "cik": 1825248, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001213900-23-081185", "date": "2023-10-06", "quote": "Franklin BSP Capital Corp. and Franklin BSP Lending Corp. Announce Merger Agreement"},
+      "outcome_evidence": {"accession": "0001213900-24-006162", "date": "2024-01-24", "quote": "today announced the completion of their previously announced merger. FBCC is the surviving company in the merger"},
+      "notes": "Both are described as business development companies, but no excerpt shows an exchange listing or ticker for either, so both_listed is null. The N-14 8C filings of 2025-01-14 onward in this window concern an exchange offer for 7.200% Notes, not a fund merger."
+    }
+  ],
+  "problems": ""
+}

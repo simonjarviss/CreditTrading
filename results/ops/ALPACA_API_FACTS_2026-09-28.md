@@ -366,7 +366,9 @@ RFC-3339 with offset (example `"2025-06-24T16:00:00-04:00"`). There is a newer
 - **FILL activities for `cls` orders on paper**: no page says so either way. [U]
   (roadmap 3.5). Paper does not simulate dividends, so no `DIV` records are expected.
   Whether paper emits `FEE` records is [U]. The docs say regulatory fees are not
-  accounted for.
+  accounted for. **Corrected 2026-11-08: it does.** The cef paper account shows 37 FEE
+  activities (SEC and CAT) over 2026-09-29..10-30 [V:
+  `results/cef/LIVE_ATTRIBUTION_2026-11-02.md`].
 
 ---
 

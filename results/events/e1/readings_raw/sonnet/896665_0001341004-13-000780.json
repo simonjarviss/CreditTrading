@@ -1,0 +1,62 @@
+{
+ "episode_cik": 896665,
+ "episode_accession": "0001341004-13-000780",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "BlackRock Senior High Income Fund, Inc.",
+    "cik": 896665,
+    "ticker": "ARK"
+   },
+   "acquirer": {
+    "name": "BlackRock Debt Strategies Fund, Inc.",
+    "cik": 1051003,
+    "ticker": "DSU"
+   },
+   "both_listed": true,
+   "listed_quote": {
+    "accession": "0001341004-13-000780",
+    "quote": "BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU)"
+   },
+   "outcome": "completed",
+   "announcement": {
+    "accession": "0001341004-13-000780",
+    "date": "2013-07-22",
+    "quote": "have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"
+   },
+   "outcome_evidence": {
+    "accession": "0001341004-13-001317",
+    "date": "2013-12-17",
+    "quote": "which was terminated as of the effective date of the Merger. All of the Fund’s indebtedness under the Credit Facility were assumed by the Surviving Fund in connection with the Merger."
+   },
+   "notes": "Completion read from this fund's own N-8F (Merger box checked, shareholder vote Oct 25, 2013, all assets distributed; merger-effective language)."
+  },
+  {
+   "target": {
+    "name": "BlackRock Strategic Bond Trust",
+    "cik": null,
+    "ticker": "BHD"
+   },
+   "acquirer": {
+    "name": "BlackRock Debt Strategies Fund, Inc.",
+    "cik": 1051003,
+    "ticker": "DSU"
+   },
+   "both_listed": true,
+   "listed_quote": {
+    "accession": "0001341004-13-000780",
+    "quote": "BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU)"
+   },
+   "outcome": null,
+   "announcement": {
+    "accession": "0001341004-13-000780",
+    "date": "2013-07-22",
+    "quote": "have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"
+   },
+   "outcome_evidence": null,
+   "notes": "Companion reorganization in the same joint meeting; this episode's excerpts do not state how it ended."
+  }
+ ],
+ "problems": ""
+}

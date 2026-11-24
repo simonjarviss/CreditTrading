@@ -32,7 +32,7 @@ WHAT IT DOES (PREREG_XASSET_SLATE_2026-10-12 §1.1, §1.3, §1.11 stage 0a)
    check and period only (the coordinator's run instruction, 2026-10-14, which
    overrides §1.1's "listed ... in its committed result note" on that point).
 6. The manifest: the SHA-256 of every input file a trial reads, written to
-   `results/xasset/STAGE0A_MANIFEST_2026-10-14.json`. Committing it ends Stage 0a.
+   `results/xasset/stage0a/STAGE0A_MANIFEST_2026-10-14.json`. Committing it ends Stage 0a.
 
 READINGS OF THE SCREEN'S RULES, STATED (flags only; nothing is altered)
 -----------------------------------------------------------------------
@@ -69,7 +69,7 @@ from scripts.xasset import protocol as P  # noqa: E402
 
 SEAMS = ["2024-12-31", "2025-01-02", "2026-07-20", "2026-07-21"]
 REBUILD2 = P.CACHE / "etf_daily_xasset_rebuild2.parquet"   # a second fresh build, evidence only
-SUMMARY = P.RESULTS / "stage0a_summary_2026-10-14.json"
+SUMMARY = P.STAGE0A_DIR / "stage0a_summary_2026-10-14.json"
 EXPECTED_22 = ["HYG", "JNK", "ANGL", "FALN", "SHY", "BIL", "IEF", "LQD", "TLT", "EFA", "EEM",
                "GLD", "DBC", "SPY", "EMB", "PFF", "MUB", "BKLN", "CWB", "IEI", "TLH", "AGG"]
 TSMOM_COLS = ["TSMOM", "TSMOM^CM", "TSMOM^EQ", "TSMOM^FI", "TSMOM^FX"]
@@ -330,6 +330,7 @@ def main(argv=None) -> int:
         dg3="PASS" if out["dg3"]["covers"] else "FAIL",
         q1="PASS" if summ["q1_clean"] else "HALT")
     files = manifest_files()
+    P.STAGE0A_DIR.mkdir(parents=True, exist_ok=True)
     P.write_json(P.MANIFEST, dict(written_utc=out["run_utc"], stage="0a", files=files,
                                   pins=dict(vol_target_annual=P.PINNED_VOL_TARGET,
                                             max_gross_stress=P.PINNED_MAX_GROSS,

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 895574,
+  "episode_accession": "0001450791-11-000043",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Delaware Investments Arizona Municipal Income Fund, Inc.", "cik": 895577, "ticker": "VAZ"},
+      "acquirer": {"name": "Delaware Investments National Municipal Income Fund", "cik": 895574, "ticker": "VFL"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001137439-11-000035", "quote": "Delaware Investments National Municipal Income Fund (NYSE Amex: VFL) (the “National Muni Fund”) and Delaware Investments Arizona Municipal Income Fund, Inc. (NYSE Amex: VAZ) (the “Arizona Muni Fund”)"},
+      "outcome": null,
+      "announcement": {"accession": "0001137439-11-000035", "date": "2011-02-23", "quote": "DELAWARE INVESTMENTS NATIONAL MUNICIPAL INCOME FUND AND DELAWARE INVESTMENTS ARIZONA MUNICIPAL INCOME FUND, INC. ANNOUNCE UPDATED TERMS FOR PROPOSED REORGANIZATION"},
+      "outcome_evidence": null,
+      "notes": "Joint special meeting was set for May 23, 2011 and closing was expected July 2011 (DEFA14A 0001206774-11-000782). The July 2011 and July 2012 DEF 14As in the window are annual-meeting director elections and state no merger outcome in the excerpts."
+    }
+  ],
+  "problems": "No excerpt states whether the Arizona Muni Fund reorganization closed, failed or was withdrawn."
+}

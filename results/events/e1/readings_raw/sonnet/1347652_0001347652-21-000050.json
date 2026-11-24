@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1347652,
+  "episode_accession": "0001347652-21-000050",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Corridor InfraTrust Management, Inc", "cik": null, "ticker": null},
+      "acquirer": {"name": "CorEnergy Infrastructure Trust, Inc.", "cik": 1347652, "ticker": "CORR"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-22-049692", "quote": "Mr. Schulte was an employee of, and held an ownership interest in, our former manager until our acquisition of the Manager and the internalization of management (the “Internalization”) which closed on July 6, 2021"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001347652-21-000050", "date": "2021-05-21", "quote": "Accordingly, the approval of the Contribution Agreement and the Internalization will require the approval of the majority of the votes cast on the matter at the Annual Meeting by the remaining 13,599,552 shares of the outstanding Common Stock of the Company."},
+      "outcome_evidence": {"accession": "0001140361-21-024081", "date": "2021-07-12", "quote": "In connection with the closing of the Internalization, the Management Agreement effective as of May 1, 2015 between the Company and Corridor, as amended (the “Management Agreement”) was terminated effective July 6, 2021."},
+      "notes": "This is the internalization of CorEnergy's external manager (Corridor), not a fund-to-fund merger; the manager is not shown to be listed. The internalization closed on 2021-07-06 per the filings. The Crimson Midstream Holdings acquisition (effective 2021-02-01) is an operating-company acquisition that predates the episode window and is not recorded as a deal."
+    }
+  ],
+  "problems": "No fund-to-fund merger of CorEnergy appears in the excerpts. The parties line in the excerpts gives no CIK for Corridor."
+}

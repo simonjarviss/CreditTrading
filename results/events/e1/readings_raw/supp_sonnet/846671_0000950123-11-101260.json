@@ -1,0 +1,18 @@
+{
+  "episode_cik": 846671,
+  "episode_accession": "0000950123-11-101260",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco High Yield Investments Fund, Inc.", "cik": 912734, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen High Income Trust II", "cik": 846671, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101260", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Roles inferred from the N-14 8C: registrant 846671 issues new Common Shares (Merger involves 'the issuance of new Common Shares by the Acquiring Fund'), fee based on price of Invesco High Yield Investments Fund shares; the excerpts never print which fund is Target by name. Excerpts show the N-14 proxy filings and DEFA14A/DEF 14A starts only; no excerpt states a vote result, closing or termination. Later 2013 filings list 'Invesco High Income Trust II' (846671) with other funds but excerpts show no merger outcome. The 425 lists many muni funds as subject companies (redemption/redomestication/mergers) but the text shown does not tie any to 846671 except High Yield Investments Fund (the 425 subject company)."
+    }
+  ],
+  "problems": "No outcome stated in any excerpt; listing on an exchange not shown."
+}

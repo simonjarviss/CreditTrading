@@ -1,0 +1,188 @@
+{
+ "full": {
+  "first": "2006-02-08",
+  "last": "2025-12-31",
+  "n_days": 5006,
+  "n_active_days": 4108,
+  "ann_ret": 0.0030476034823074764,
+  "ann_vol": 0.06479213063766014,
+  "sharpe": 0.04703663010174373,
+  "t": 0.209643475930626,
+  "mean_bp_per_active_day": 0.14737313790002501,
+  "hit_rate_active_days": 0.48880233690360275,
+  "max_drawdown": -0.309443708044215
+ },
+ "split_date": "2016-01-20",
+ "early_half": {
+  "first": "2006-02-08",
+  "last": "2016-01-20",
+  "n_days": 2504,
+  "n_active_days": 2154,
+  "ann_ret": 0.015376083344874848,
+  "ann_vol": 0.0668710058185614,
+  "sharpe": 0.2299364748093397,
+  "t": 0.7248109749454775,
+  "mean_bp_per_active_day": 0.7093062868558795,
+  "hit_rate_active_days": 0.48978644382544106,
+  "max_drawdown": -0.1744396602361476
+ },
+ "late_half": {
+  "first": "2016-01-20",
+  "last": "2025-12-31",
+  "n_days": 2503,
+  "n_active_days": 1955,
+  "ann_ret": -0.008976822887293538,
+  "ann_vol": 0.06264160421387495,
+  "sharpe": -0.14330448589158573,
+  "t": -0.45163744290741564,
+  "mean_bp_per_active_day": -0.45607493376559355,
+  "hit_rate_active_days": 0.48797953964194374,
+  "max_drawdown": -0.3094437080442148
+ },
+ "eras": {
+  "2002-2008": {
+   "first": "2006-02-08",
+   "last": "2008-12-31",
+   "n_days": 730,
+   "n_active_days": 700,
+   "ann_ret": 0.024908155044448595,
+   "ann_vol": 0.08439436962534978,
+   "sharpe": 0.29514000939900215,
+   "t": 0.5023301511814692,
+   "mean_bp_per_active_day": 1.030779658868905,
+   "hit_rate_active_days": 0.47285714285714286,
+   "max_drawdown": -0.10530119533691532
+  },
+  "2009-2015": {
+   "first": "2009-01-02",
+   "last": "2015-12-31",
+   "n_days": 1762,
+   "n_active_days": 1442,
+   "ann_ret": 0.008861546739962685,
+   "ann_vol": 0.05809213824293315,
+   "sharpe": 0.15254296033836703,
+   "t": 0.4033618794865314,
+   "mean_bp_per_active_day": 0.42968444829200686,
+   "hit_rate_active_days": 0.49653259361997226,
+   "max_drawdown": -0.15667821054278117
+  },
+  "2016-2019": {
+   "first": "2016-01-04",
+   "last": "2019-12-31",
+   "n_days": 1006,
+   "n_active_days": 815,
+   "ann_ret": 0.04242333760569657,
+   "ann_vol": 0.044567853150465166,
+   "sharpe": 0.9518820092695848,
+   "t": 1.9018744259955924,
+   "mean_bp_per_active_day": 2.077995794689393,
+   "hit_rate_active_days": 0.5128834355828221,
+   "max_drawdown": -0.048775077342155915
+  },
+  "2020-2022": {
+   "first": "2020-01-02",
+   "last": "2022-12-30",
+   "n_days": 756,
+   "n_active_days": 596,
+   "ann_ret": -0.05499701867807745,
+   "ann_vol": 0.08014036685103512,
+   "sharpe": -0.6862586339329577,
+   "t": -1.188634821104694,
+   "mean_bp_per_active_day": -2.7683063092992013,
+   "hit_rate_active_days": 0.4697986577181208,
+   "max_drawdown": -0.26441548353276645
+  },
+  "2023-2025": {
+   "first": "2023-01-03",
+   "last": "2025-12-31",
+   "n_days": 752,
+   "n_active_days": 555,
+   "ann_ret": -0.026118121032625934,
+   "ann_vol": 0.06331248504035475,
+   "sharpe": -0.41252718189751203,
+   "t": -0.7126252722087664,
+   "mean_bp_per_active_day": -1.404320536002768,
+   "hit_rate_active_days": 0.47387387387387386,
+   "max_drawdown": -0.1722484718294312
+  }
+ },
+ "controls": {
+  "events 126 sessions late": {
+   "first": "2006-02-08",
+   "last": "2025-12-31",
+   "n_days": 5006,
+   "n_active_days": 3936,
+   "ann_ret": -0.02034977515375004,
+   "ann_vol": 0.06133643376113245,
+   "sharpe": -0.33177304101180477,
+   "t": -1.4787210177969445,
+   "mean_bp_per_active_day": -1.0270576689297886,
+   "hit_rate_active_days": 0.4804369918699187,
+   "max_drawdown": -0.44688199495508407
+  },
+  "losers, no insider data": {
+   "first": "2006-02-08",
+   "last": "2025-12-31",
+   "n_days": 5006,
+   "n_active_days": 5006,
+   "ann_ret": 0.011833769490301769,
+   "ann_vol": 0.07467963148739626,
+   "sharpe": 0.15846046980425937,
+   "t": 0.7062624090098965,
+   "mean_bp_per_active_day": 0.4695940273929274,
+   "hit_rate_active_days": 0.48961246504194966,
+   "max_drawdown": -0.21757361212171417
+  },
+  "held 60 sessions (shown, not chosen)": {
+   "first": "2006-02-08",
+   "last": "2025-12-31",
+   "n_days": 5006,
+   "n_active_days": 5006,
+   "ann_ret": -0.006222991942607998,
+   "ann_vol": 0.05414022862167201,
+   "sharpe": -0.11494210684062335,
+   "t": -0.5122999406363584,
+   "mean_bp_per_active_day": -0.2469441247066666,
+   "hit_rate_active_days": 0.47223332001598084,
+   "max_drawdown": -0.36406687850322034
+  },
+  "book less its loading on the losers control": {
+   "first": "2006-02-08",
+   "last": "2025-12-31",
+   "n_days": 5006,
+   "n_active_days": 5006,
+   "ann_ret": 0.0004613552577838918,
+   "ann_vol": 0.06270280761567643,
+   "sharpe": 0.007357808610607537,
+   "t": 0.03279394312525102,
+   "mean_bp_per_active_day": 0.018307748324757612,
+   "hit_rate_active_days": 0.49380743108270075,
+   "max_drawdown": -0.35240075310428426
+  }
+ },
+ "panel_last_date": "2025-12-31",
+ "clean_clusters": 14421,
+ "clusters_in_panel_dates": 14421,
+ "clusters_matched": 3725,
+ "match_share": 0.2583038624228556,
+ "cluster_stocks_per_day_mean": 13.768677586895725,
+ "flat_day_share": 0.17938473831402318,
+ "turnover_per_year": 20.25825067715705,
+ "beta_to_equal_weight_market": 0.08565145685190136,
+ "corr_with_losers_control": 0.2518993255700124,
+ "loading_on_losers_control": 0.21854813266754206,
+ "capacity_long_leg_2024_on": {
+  "pct_of_adv_at_1M": {
+   "median": 0.07873011990899001,
+   "p95": 1.2256527479412427
+  },
+  "pct_of_adv_at_5M": {
+   "median": 0.3936505995449501,
+   "p95": 6.128263739706212
+  },
+  "pct_of_adv_at_10M": {
+   "median": 0.7873011990899001,
+   "p95": 12.256527479412425
+  }
+ }
+}

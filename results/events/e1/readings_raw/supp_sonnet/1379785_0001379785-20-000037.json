@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1379785,
+  "episode_accession": "0001379785-20-000037",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "MVC Capital, Inc.", "cik": 1099941, "ticker": null},
+      "acquirer": {"name": "Barings BDC, Inc.", "cik": 1379785, "ticker": "BBDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001379785-20-000037", "date": "2020-08-11", "quote": "MVC CAPITAL, INC. TO MERGE WITH BARINGS BDC, INC. Combined Company To Be Managed by Barings LLC"},
+      "outcome_evidence": {"accession": "0001140361-20-029416", "date": "2020-12-23", "quote": "BARINGS BDC, INC. COMPLETES MERGER WITH MVC CAPITAL, INC. CHARLOTTE, N.C., December 23, 2020 - Barings BDC, Inc. (NYSE: BBDC) (\"Barings BDC\") announced today the closing of the previously announced merger with MVC Capital, Inc. (\"MVC Capital\")."},
+      "notes": "Barings BDC is shown as NYSE: BBDC. No excerpt prints a ticker or exchange for MVC's own shares (only its 6.25% Senior Notes due 2022 are said to be delisted from NYSE), so both_listed is null. The merger is a single pair; no other target is named for this proposal in the excerpts."
+    },
+    {
+      "target": {"name": "Sierra Income Corporation", "cik": 1523526, "ticker": null},
+      "acquirer": {"name": "Barings BDC, Inc.", "cik": 1379785, "ticker": "BBDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001140361-21-031958", "date": "2021-09-21", "quote": "SIERRA INCOME CORPORATION TO MERGE WITH BARINGS BDC, INC. AND COMBINED COMPANY TO BE MANAGED BY BARINGS LLC"},
+      "outcome_evidence": {"accession": "0001140361-22-007670", "date": "2022-03-03", "quote": "BARINGS BDC, INC. COMPLETES MERGER WITH SIERRA INCOME CORPORATION CHARLOTTE, N.C., February 25, 2022 - Barings BDC, Inc. (NYSE: BBDC) (“Barings BDC”) announced today the closing of the previously announced merger with Sierra Income Corporation (“Sierra”)."},
+      "notes": "Barings BDC is shown as NYSE: BBDC. No excerpt states that Sierra's shares trade on an exchange, so both_listed is null. The 8-K filed 2022-02-25 (0001140361-22-006820) reports the special meeting vote; the completion press release is exhibit 99.1 of the 8-K filed 2022-03-03 (event date 2022-02-25)."
+    }
+  ],
+  "problems": "No failed deal in this episode: both proposals (MVC Capital 2020, Sierra Income 2021) are shown completed. Listing status of the targets is not stated in the excerpts."
+}

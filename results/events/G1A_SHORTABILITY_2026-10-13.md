@@ -107,10 +107,10 @@ python3 -m pytest scripts/events/tests/test_g1a_shortability.py
 ```
 
 Outputs:
-- `g1a_pending_2026-10-13.csv`: tracked. It holds only EDGAR, Alpaca and
+- `g1a/g1a_pending_2026-10-13.csv`: tracked. It holds only EDGAR, Alpaca and
   IBKR data.
-- `g1a_summary_2026-10-13.json`: tracked. Counts only.
-- `g1a_historical_deals.csv` and `g1a_detail_2026-10-13.json`: gitignored,
+- `g1a/g1a_summary_2026-10-13.json`: tracked. Counts only.
+- `g1a/g1a_historical_deals.csv` and `g1a/g1a_detail_2026-10-13.json`: gitignored,
   because they carry CRSP names and permnos.
 
 **The script raises rather than guess.**
@@ -142,7 +142,7 @@ IAE and IHD close, expected on or about 2026-10-16.
    - the other candidate is the second Voya fund: IAE and IHD are separate
      components under one reading.
 
-**The pending deals, 2026-10-13** (`g1a_pending_2026-10-13.csv`):
+**The pending deals, 2026-10-13** (`g1a/g1a_pending_2026-10-13.csv`):
 
 | target → acquirer | segment | announced | status (source) | acquirer at Alpaca | acquirer at IBKR (fee %/yr, shares) | target at Alpaca |
 |---|---|---|---|---|---|---|
@@ -338,11 +338,11 @@ not change this verdict.
   broken rule: ≥ ½ counted as most; unmeasured counted as not shortable;
   `last_before` inclusive; share-code change ignored.
 - Tracked outputs:
-  - `results/events/g1a_pending_2026-10-13.csv`;
-  - `results/events/g1a_summary_2026-10-13.json`.
+  - `results/events/g1a/g1a_pending_2026-10-13.csv`;
+  - `results/events/g1a/g1a_summary_2026-10-13.json`.
 - Gitignored:
-  - `results/events/g1a_historical_deals.csv`;
-  - `results/events/g1a_detail_2026-10-13.json`;
+  - `results/events/g1a/g1a_historical_deals.csv`;
+  - `results/events/g1a/g1a_detail_2026-10-13.json`;
   - `results/events/_cache_g1a/`, which holds the Alpaca reads, the feed, the
     IBKR file and the FINRA files.
 - Sources: `docs/REFERENCES.md` §12p.

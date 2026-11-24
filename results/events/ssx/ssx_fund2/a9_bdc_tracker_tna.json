@@ -1,0 +1,106 @@
+{
+ "BIZD": {
+  "tna_musd_at_2022": [
+   "2022-12-30",
+   515.8
+  ],
+  "tna_musd_latest": [
+   "2026-03-31",
+   1460.9
+  ]
+ },
+ "BDCZ": {
+  "tna_musd_at_2022": [
+   "2022-12-30",
+   48.0
+  ],
+  "tna_musd_latest": [
+   "2026-03-31",
+   11.3
+  ]
+ },
+ "BDCX": {
+  "tna_musd_at_2022": [
+   "2022-12-30",
+   28.5
+  ],
+  "tna_musd_latest": [
+   "2026-03-31",
+   6.1
+  ]
+ },
+ "VPC": {
+  "tna_musd_at_2022": [
+   "2022-12-30",
+   19.3
+  ],
+  "tna_musd_latest": [
+   "2026-03-31",
+   36.1
+  ]
+ },
+ "PBDC": {
+  "tna_musd_at_2022": [
+   "2022-12-30",
+   6.1
+  ],
+  "tna_musd_latest": [
+   "2026-03-31",
+   253.3
+  ]
+ },
+ "LOAIX(Shelton BDC inst)": {
+  "tna_musd_at_2022": [
+   "2021-09-30",
+   0.3
+  ],
+  "tna_musd_latest": [
+   "2021-09-30",
+   0.3
+  ]
+ },
+ "LOANX": {
+  "tna_musd_at_2022": [
+   "2021-09-30",
+   3.5
+  ],
+  "tna_musd_latest": [
+   "2021-09-30",
+   3.5
+  ]
+ },
+ "Forum BDC Income inst": {
+  "tna_musd_at_2022": [
+   "2015-12-31",
+   4.9
+  ],
+  "tna_musd_latest": [
+   "2015-12-31",
+   4.9
+  ]
+ },
+ "FBDC": {
+  "tna_musd_at_2022": null,
+  "tna_musd_latest": [
+   "2026-03-31",
+   33.3
+  ]
+ },
+ "HBDC": {
+  "tna_musd_at_2022": null,
+  "tna_musd_latest": [
+   "2026-03-31",
+   85.0
+  ]
+ },
+ "ETRACS WF BDC ETN (BDCS)": {
+  "tna_musd_at_2022": [
+   "2020-09-30",
+   26.3
+  ],
+  "tna_musd_latest": [
+   "2020-09-30",
+   26.3
+  ]
+ }
+}

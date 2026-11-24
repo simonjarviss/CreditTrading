@@ -1,0 +1,12 @@
+{
+ "built_utc": "2026-10-19T19:50:10+00:00",
+ "frame_accessions": 5569,
+ "n": 30,
+ "seed": 20261019,
+ "advisory_proposal": 2,
+ "sub_advisory": 1,
+ "joint_ge5_in_sample": 3,
+ "advisory_among_joint_ge5": 1,
+ "live_requests": 30,
+ "seat_total": 95
+}

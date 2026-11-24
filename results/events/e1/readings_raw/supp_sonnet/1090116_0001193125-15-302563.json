@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1090116,
+  "episode_accession": "0001193125-15-302563",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Quality Municipal Fund, Inc.", "cik": 869405, "ticker": "NQI"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Income Fund", "cik": 1090116, "ticker": "NVG"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-302563", "date": "2015-08-26", "quote": "today announced that the Board of Trustees of the Nuveen closed-end funds approved a plan to merge eight national municipal closed-end funds and to reposition the portfolios of the two acquiring funds."},
+      "outcome_evidence": null,
+      "notes": "Joint proxy/N-14 covers NVG, NQI, NQU and NIO. The 2016-02-11 425s show Quality Municipal Fund (NQI) as subject company of a press release headed 'Nuveen Closed-End Funds Provide Update on Fund Mergers' (0001193125-16-460120), but the excerpt stops at the heading, while the other 2016-02-11 425 (0001193125-16-459075) names only Quality Income (NQU) and Municipal Opportunity (NIO) with 'Shareholder Meeting Adjourned until March 2, 2016'. No outcome is stated in the excerpts."
+    },
+    {
+      "target": {"name": "Nuveen Quality Income Municipal Fund, Inc.", "cik": 874506, "ticker": "NQU"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Income Fund", "cik": 1090116, "ticker": "NVG"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-302563", "date": "2015-08-26", "quote": "today announced that the Board of Trustees of the Nuveen closed-end funds approved a plan to merge eight national municipal closed-end funds and to reposition the portfolios of the two acquiring funds."},
+      "outcome_evidence": null,
+      "notes": "Meeting adjourned until March 2, 2016 (0001193125-16-459075); no outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Nuveen Municipal Opportunity Fund, Inc.", "cik": 878242, "ticker": "NIO"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Income Fund", "cik": 1090116, "ticker": "NVG"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-302563", "date": "2015-08-26", "quote": "today announced that the Board of Trustees of the Nuveen closed-end funds approved a plan to merge eight national municipal closed-end funds and to reposition the portfolios of the two acquiring funds."},
+      "outcome_evidence": null,
+      "notes": "NIO is named with NVG, NQI and NQU as a Fund in the N-14 cover notice and as a Subject Company in every 425, but the jumbled merger table in the press release does not make clear whether NIO is NVG's target or merges with Nuveen Municipal Advantage Fund (NMA) as a separate pairing; the pairing is inferred from the joint N-14 notice. Meeting adjourned until March 2, 2016 (0001193125-16-459075); no outcome stated."
+    }
+  ],
+  "problems": "No excerpt states how any proposed merger ended. The 2016-06-24 DEF 14A is filed under the name 'Nuveen Enhanced AMT-Free Municipal Credit Opportunities Fund (NVG)' and the 2017-06-23 DEF 14A under 'Nuveen AMT-Free Municipal Credit Income Fund (NVG)', but the excerpts do not say whether any merger closed. Exchange listing is not stated in the excerpts (tickers only), so both_listed is null. The press-release table's pairing of acquired and acquiring funds is garbled by the extraction (Nuveen Municipal Advantage Fund, NMA, is named but its acquirer is unclear)."
+}

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1332283,
+  "episode_accession": "0000891092-11-006766",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Strategic Equity Dividend Trust", "cik": 1277350, "ticker": "BDT"},
+      "acquirer": {"name": "BlackRock Enhanced Equity Dividend Trust", "cik": 1332283, "ticker": "BDJ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-11-002281", "quote": "shareholders of BlackRock Strategic Equity Dividend Trust (NYSE:BDT) held today, shareholders of BDT have approved the reorganization of BDT with and into BlackRock Enhanced Equity Dividend Trust (NYSE:BDJ)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-11-002281", "date": "2011-12-22", "quote": "shareholders of BDT have approved the reorganization of BDT with and into BlackRock Enhanced Equity Dividend Trust (NYSE:BDJ) (the “BDT Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Earliest filing in the window is the N-14 8C of 2011-10-05 (0000891092-11-006766), whose shown excerpts list BDV, BDT and BDJ and describe reorganization agreements but do not themselves name this pair in a quotable sentence; the 2011-12-22 425 is the earliest excerpt that names the BDT reorganization. BDT shareholders approved on 2011-12-22. The same 425 says the BDT and BDV reorganizations are not contingent on each other. No excerpt states that the BDT merger closed."
+    },
+    {
+      "target": {"name": "BlackRock Equity Dividend Trust", "cik": 1265316, "ticker": "BDV"},
+      "acquirer": {"name": "BlackRock Enhanced Equity Dividend Trust", "cik": 1332283, "ticker": "BDJ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-11-002281", "quote": "(NYSE:BDJ) (the “BDT Reorganization”). Special meetings of shareholders of BlackRock Equity Dividend Trust (NYSE:BDV)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-11-002281", "date": "2011-12-22", "quote": "the proposed reorganization of BDV with and into BDJ (with respect to BDV shareholders) (the “BDV Reorganization” and, together with the BDT Reorganization, the “Reorganizations”)"},
+      "outcome_evidence": null,
+      "notes": "On 2011-12-22 the BDV and BDJ special meetings were adjourned to January 26, 2012 to solicit more votes; BDV proxy reminders of 2012-01-06 say the meeting was adjourned until January 26, 2012. The 425s filed 2012-01-13 and 2012-01-27 are shown only by their first lines, so no result of the January 26 meeting is in front of me. The 2012 and 2013 DEF 14As shown are fund-wide annual-meeting proxies with no merger result."
+    }
+  ],
+  "problems": "Neither deal's outcome is stated in any excerpt; the January 2012 filings that may carry the result are shown only as headers."
+}

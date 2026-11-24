@@ -1,0 +1,17 @@
+# quantt-c4-verify.timer : 17:30 ET Mon-Fri, the core's verify time (derived:
+# install_vm._book_job). The runner, not this schedule, knows NYSE holidays.
+#
+# RENDERED by quantt/deploy/install_vm.py --book c4 from release tag ${TAG}.
+# Local time (the system zone must be America/New_York); Persistent=false;
+# AccuracySec=1s. See quantt-cef-session.timer for why.
+[Unit]
+Description=QUANTT C4 verify schedule (release ${TAG})
+
+[Timer]
+OnCalendar=Mon,Tue,Wed,Thu,Fri *-*-* 17:30:00
+AccuracySec=1s
+Persistent=false
+Unit=quantt-c4-verify.service
+
+[Install]
+WantedBy=timers.target

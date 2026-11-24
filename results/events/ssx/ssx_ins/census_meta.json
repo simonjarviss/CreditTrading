@@ -1,0 +1,151 @@
+{
+ "fundset": {
+  "ran_utc": "2026-10-19T15:34:55+00:00",
+  "index_quarters": "2008Q1-2025Q4 (offline cache)",
+  "live_requests": 0,
+  "n_fund_ciks": 2299,
+  "by_rule_kind": {
+   "marker_form|BDC": 313,
+   "marker_form|CEF": 1187,
+   "marker_form|fund_other": 537,
+   "ncsr_insider|CEF": 262
+  }
+ },
+ "census": {
+  "ran_utc": "2026-10-19T15:38:36+00:00",
+  "diag": {
+   "p_rows_x_owner_all_docs": 1292460,
+   "p_trans_by_doctype": {
+    "4": 807280,
+    "4/A": 25066,
+    "5": 17840,
+    "5/A": 700
+   },
+   "form4_p_trans": 807280,
+   "after_A_shares_price_gt0": 787486,
+   "date_error_rows_dropped": 14988
+  },
+  "d1_rule": {
+   "window_d": 30,
+   "min_insiders": 3,
+   "cooldown_d": 90
+  },
+  "d1_events_total": 17732,
+  "d1_clean_total": 14421,
+  "d1_trigger_lag_bd_p50_p90": [
+   1.0,
+   2.0
+  ],
+  "a2_qualifying_purchase_usd_by_kind": {
+   "BDC": {
+    "n": 22961,
+    "p10": 81.0,
+    "p25": 538.1999999999999,
+    "p50": 4970.0,
+    "p75": 33750.0,
+    "p90": 149760.0,
+    "p99": 4396640.96
+   },
+   "CEF": {
+    "n": 24852,
+    "p10": 1418.0,
+    "p25": 3324.0,
+    "p50": 10045.630000000001,
+    "p75": 32073.415500000003,
+    "p90": 101093.6000000001,
+    "p99": 1673436.171099947
+   },
+   "fund_other": {
+    "n": 259,
+    "p10": 432.88176,
+    "p25": 2736.5,
+    "p50": 14132.52,
+    "p75": 96600.0,
+    "p90": 498221.82124,
+    "p99": 12707463.020643992
+   }
+  },
+  "a2_owner_class_trans": {
+   "DO": 40173,
+   "ten_pct_only": 11264,
+   "adviser": 6425,
+   "other_person": 4846,
+   "other_entity": 618
+  },
+  "a2_events_total": 7332,
+  "a2_events_on_cef_universe_symbols_COUNT_ONLY": 347,
+  "a2_universe_symbols_with_events_COUNT_ONLY": 40
+ },
+ "crsp": {
+  "ran_utc": "2026-10-19T19:43:58+00:00",
+  "d1": {
+   "events_2010_2022": 10629,
+   "matched_2010_2022": 9190,
+   "match_rate_2010_2022": 0.8646156740991626,
+   "matched_common_clean_2010_2022": 6750,
+   "adv_ge_1m_2010_2022": 3485,
+   "stage_counts": {
+    "exact": 14640,
+    "none": 2485,
+    "class_suffix": 30,
+    "ambiguous": 12
+   },
+   "shrcd_counts": {
+    "11.0": 13447,
+    "18.0": 643,
+    "12.0": 426,
+    "48.0": 126,
+    "71.0": 11,
+    "31.0": 11,
+    "14.0": 4,
+    "41.0": 2
+   }
+  },
+  "a2": {
+   "events_2010_2022": 4790,
+   "matched_2010_2022": 4221,
+   "match_rate_2010_2022": 0.8812108559498956,
+   "matched_common_clean_2010_2022": 4221,
+   "adv_ge_1m_2010_2022": 2143,
+   "stage_counts": {
+    "exact": 6039,
+    "none": 847,
+    "class_suffix": 41
+   },
+   "shrcd_counts": {
+    "14.0": 3614,
+    "44.0": 2200,
+    "11.0": 189,
+    "18.0": 40,
+    "15.0": 17,
+    "48.0": 13,
+    "12.0": 3,
+    "73.0": 2,
+    "31.0": 2
+   }
+  },
+  "a2floor": {
+   "events_2010_2022": 3596,
+   "matched_2010_2022": 3118,
+   "match_rate_2010_2022": 0.8670745272525028,
+   "matched_common_clean_2010_2022": 3118,
+   "adv_ge_1m_2010_2022": 1710,
+   "stage_counts": {
+    "exact": 4346,
+    "none": 711,
+    "class_suffix": 40
+   },
+   "shrcd_counts": {
+    "14.0": 2643,
+    "44.0": 1564,
+    "11.0": 125,
+    "18.0": 24,
+    "48.0": 12,
+    "15.0": 11,
+    "12.0": 3,
+    "73.0": 2,
+    "31.0": 2
+   }
+  }
+ }
+}

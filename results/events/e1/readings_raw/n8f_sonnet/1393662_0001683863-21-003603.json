@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1393662,
+  "episode_accession": "0001683863-21-003603",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Invesco Dynamic Credit Opportunities Fund", "cik": 1393662, "ticker": "VTA"},
+      "acquirer": {"name": "Invesco Dynamic Credit Opportunity Fund", "cik": 1860151, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001683863-21-003603", "quote": "The Fund's Board of Trustees has approved a proposal to reorganize the Fund into a newly created closed-end interval fund (the \"Interval Fund\")."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001683863-21-003603", "date": "2021-05-07", "quote": "The Fund's Board of Trustees has approved a proposal to reorganize the Fund into a newly created closed-end interval fund (the \"Interval Fund\")."},
+      "outcome_evidence": {"accession": "0001137439-21-001093", "date": "2021-11-01", "quote": "announced today the completion of the reorganization (the “Reorganization”) of Invesco Dynamic Credit Opportunities Fund (NYSE: VTA) (the “Fund”) into a newly created closed-end interval fund, Invesco Dynamic Credit Opportunity Fund (the “Interval Fund”)."},
+      "notes": "Acquirer is a newly created closed-end interval fund (not exchange-listed; its share classes are priced daily at NAV), so the pair is not a listed pair. For the record the reorganization was completed effective November 1, 2021 after shareholder approval on September 3, 2021; VTA delisted from the NYSE at the close on October 28, 2021."
+    }
+  ],
+  "problems": ""
+}

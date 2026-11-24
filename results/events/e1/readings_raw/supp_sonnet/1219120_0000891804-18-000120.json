@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1219120,
+  "episode_accession": "0000891804-18-000120",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Advent Claymore Convertible Securities and Income Fund II", "cik": 1391461, "ticker": "AGC"},
+      "acquirer": {"name": "Advent Claymore Convertible Securities and Income Fund", "cik": 1219120, "ticker": "AVK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001219120-18-000010", "date": "2018-05-31", "quote": "Proposal 1: The mergers of AGC and LCM with and into AVK and the issuance of AVK’s common shares, as follows:"},
+      "outcome_evidence": null,
+      "notes": "The N-14 of 2018-04-12 (0000891804-18-000120) is the first filing and names AGC, LCM and AVK in the heading but the excerpt has no sentence describing the merger. Meeting set for July 20, 2018. No excerpt states a result. The 2019 DEF 14A and 8-K show AVK renamed Advent Convertible and Income Fund with only a trustee election, and say nothing about AGC. Only AVK is shown with an exchange ticker (NYSE: AVK); the excerpts call each fund a closed-end fund without stating AGC's listing."
+    },
+    {
+      "target": {"name": "Advent/Claymore Enhanced Growth & Income Fund", "cik": null, "ticker": "LCM"},
+      "acquirer": {"name": "Advent Claymore Convertible Securities and Income Fund", "cik": 1219120, "ticker": "AVK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001219120-18-000010", "date": "2018-05-31", "quote": "Proposal 1: The mergers of AGC and LCM with and into AVK and the issuance of AVK’s common shares, as follows:"},
+      "outcome_evidence": null,
+      "notes": "LCM's CIK does not appear in any filing header in the excerpts. No excerpt states a result for the LCM merger. Listing of LCM not stated."
+    }
+  ],
+  "problems": ""
+}

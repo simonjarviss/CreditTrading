@@ -137,12 +137,18 @@ def holdout_sets() -> tuple[set, set, set]:
 
 # --------------------------------------------------------------------- census
 
-def build_events(nm: pd.DataFrame, dl: pd.DataFrame, start=START, end=END) -> pd.DataFrame:
-    """Every CRSP merger delisting (dlstcd 2xx) of a share-code 14/44 security."""
+def build_events(nm: pd.DataFrame, dl: pd.DataFrame, start=START, end=END, extra_codes: tuple = ()) -> pd.DataFrame:
+    """Every CRSP merger delisting (dlstcd 2xx) of a share-code 14/44 security.
+
+    `extra_codes` (added 2026-10-21 for E1's amendment 4; default empty, so every existing caller
+    and published figure is unchanged) admits further delisting codes, each with an acquirer
+    permno: CRSP codes many CEF reorganisations 331 (an exchange), not 231. A 331 with an acquirer
+    permno is kind "stock" (the shareholders receive the acquirer's shares), so E1's universe can
+    take it; test_merger_pairs_extra_codes.py pins the no-op."""
     d = dl[(dl["dlstdt"] >= start) & (dl["dlstdt"] <= end)]
     last = ce.last_name(nm)[["permno", "shrcd", "ticker", "comnam", "siccd"]]
     x = d.merge(last, on="permno", how="left")
-    x = x[x["shrcd"].isin(ce.CEF_SHRCD) & (x["dlstcd"] // 100 == 2)].copy()
+    x = x[x["shrcd"].isin(ce.CEF_SHRCD) & ((x["dlstcd"] // 100 == 2) | x["dlstcd"].isin(list(extra_codes)))].copy()
     rows = []
     for r in x.itertuples():
         a = {"a_ticker": None, "a_comnam": None, "a_shrcd": np.nan, "a_name_source": "no acquirer permno"}
@@ -160,8 +166,9 @@ def build_events(nm: pd.DataFrame, dl: pd.DataFrame, start=START, end=END) -> pd
     x = pd.concat([x.reset_index(drop=True), pd.DataFrame(rows)], axis=1)
     x["kind"] = np.select(
         [x["ticker"] == x["a_ticker"], x["dlstcd"] == 232, x["dlstcd"] == 241,
-         (x["dlstcd"] == 231) & ~(x["nwperm"] > 0), x["dlstcd"] == 231],
-        ["shell", "cash", "stock+cash", "stock_noacq", "stock"], default="other_2xx")
+         (x["dlstcd"] == 231) & ~(x["nwperm"] > 0), x["dlstcd"] == 231,
+         x["dlstcd"].isin(list(extra_codes)) & (x["nwperm"] > 0)],
+        ["shell", "cash", "stock+cash", "stock_noacq", "stock", "stock"], default="other_2xx")
     return x
 
 
@@ -347,7 +354,8 @@ ANNOUNCEMENTS = (
 BDC_TARGETS = ("OCSI", "SUNS", "FSKR")
 
 
-def _announcement_row(e: pd.Series, a: pd.Timestamp, rec: dict, px: dict, skips: dict) -> dict:
+def _announcement_row(e: pd.Series, a: pd.Timestamp, rec: dict, px: dict, skips: dict,
+                      stock_codes: tuple = (231,)) -> dict:
     """One event's at-announcement measurement: entry at the close of A+1, held
     to completion. Shared by the agent-dated sample (`announcement_sample`) and
     the EDGAR-dated one (`announcement_sample_edgar`, added 2026-10-12, plan
@@ -361,8 +369,10 @@ def _announcement_row(e: pd.Series, a: pd.Timestamp, rec: dict, px: dict, skips:
     td = T.index
     rec["days_to_close_cal"] = (e["dlstdt"] - a).days
     rec["tdays_to_close"] = int(((td > a) & (td <= e["dlstdt"])).sum())
-    if A is None or e["dlstcd"] != 231 or e["dlpdt"] not in A.index or pd.isna(e["dlret"]):
-        why = ("not a stock-only merger (dlstcd %d)" % e["dlstcd"]) if e["dlstcd"] != 231 else "no acquirer price at payment"
+    # `stock_codes` (added 2026-10-21, default (231,): unchanged) lets E1's amendment 4 price a 331
+    # reorganisation into an acquirer permno by this same code; nothing else differs.
+    if A is None or e["dlstcd"] not in stock_codes or e["dlpdt"] not in A.index or pd.isna(e["dlret"]):
+        why = ("not a stock-only merger (dlstcd %d)" % e["dlstcd"]) if e["dlstcd"] not in stock_codes else "no acquirer price at payment"
         skips[why] = skips.get(why, 0) + 1
         rec["skip"] = why
         return rec

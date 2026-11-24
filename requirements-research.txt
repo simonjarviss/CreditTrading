@@ -1,0 +1,14 @@
+# Research-only packages: installed by CI so scripts/research tests run, NEVER on the VM.
+# The VM's venv is built from requirements.txt alone (docs/RUNBOOK.md 8.6 step 3); keeping
+# research packages out of it means a research dependency never forces a prod venv rebuild.
+# arch: the prewhitened QS-kernel HAC in scripts/research/resampling.py (main's CI red since 2026-10-29).
+arch==8.0.0
+
+# boto3: the team's data/ copy in R2 (scripts/data/team_data.py, 2026-10-26; research only).
+# Moved here from requirements.txt on 2026-11-24, before merge: the VM's installer refuses a
+# venv built from a requirements.txt other than the tag's (quantt/deploy/install_vm.py,
+# REQUIREMENTS_RECORD), so a research package there would force a prod venv rebuild.
+# 1.36.3 matches the botocore range the laptop's aiobotocore (s3fs) requires. From 1.36
+# boto3 sends integrity-checksum headers by default, which R2 has rejected, so
+# team_data.make_client turns them off ("when_required"). Imported only there.
+boto3==1.36.3

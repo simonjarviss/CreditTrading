@@ -1,0 +1,28 @@
+{
+  "episode_cik": 878198,
+  "episode_accession": "0001193125-12-304821",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Michigan Premium Income Municipal Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen Michigan Quality Income Municipal Fund, Inc.", "cik": 878198, "ticker": "NUM"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named as a subject company in the 2012-09-27 Rule 425 (seq=5) with the acquirer and the Dividend Advantage fund; absent from the subject-company list of the 2012-10-15 Rule 425 (seq=8). No excerpt states why or how it ended. Excerpts of the N-14 and 425s do not describe the merger terms or an outcome."
+    },
+    {
+      "target": {"name": "Nuveen Michigan Dividend Advantage Municipal Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen Michigan Quality Income Municipal Fund, Inc.", "cik": 878198, "ticker": "NUM"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named as a subject company in the 2012-09-27 and 2012-10-15 Rule 425 filings (seq=5, seq=8; the latter says an annual meeting adjournment ends November 16, 2012). No excerpt states an outcome."
+    }
+  ],
+  "problems": "Excerpts are compact and show no merger-outcome language; the 425 excerpts do not use the word merger or reorganization, so no announcement quote could be given. Episode role 'acquirer' rests on the fund being the N-14 registrant and the filer of the 425s."
+}

@@ -1,0 +1,32 @@
+{
+ "m6_last_event": "2025-10-31",
+ "alpaca_listed_pref_or_baby_bond_issues": 547,
+ "issues_whose_issuer_had_an_I_to_H_flip": 224,
+ "distinct_issuers": 83,
+ "issuer_flip_months_2010_2025": 668,
+ "issuer_flip_months_by_year": {
+  "2003": 3,
+  "2004": 2,
+  "2005": 7,
+  "2006": 3,
+  "2007": 6,
+  "2008": 11,
+  "2009": 19,
+  "2010": 16,
+  "2011": 6,
+  "2012": 33,
+  "2013": 24,
+  "2014": 17,
+  "2015": 11,
+  "2017": 4,
+  "2018": 19,
+  "2019": 71,
+  "2020": 95,
+  "2021": 109,
+  "2022": 71,
+  "2023": 44,
+  "2024": 69,
+  "2025": 79
+ },
+ "matched_issues_shortable_today": 36
+}

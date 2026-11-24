@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1195737,
+  "episode_accession": "0001193125-16-452467",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Performance Plus Municipal Fund, Inc.", "cik": 849998, "ticker": "NPP"},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452467", "date": "2016-02-05", "quote": "Additionally, the funds’ Board of Trustees approved plans to merge the funds in order to enhance the funds’ trading appeal and lower operating expenses by creating single, larger funds with distinct mandates."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show no completion or failure statement. The July 2016 425 (0001193125-16-652233) is headed 'Shareholder Meeting - Next Adjournment Ends August 19, 2016' and lists NPP and NPM as subject companies, so the NPP vote was being adjourned then; no result shown."
+    },
+    {
+      "target": {"name": "Nuveen Municipal Market Opportunity Fund, Inc.", "cik": 860188, "ticker": "NMO"},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452467", "date": "2016-02-05", "quote": "Additionally, the funds’ Board of Trustees approved plans to merge the funds in order to enhance the funds’ trading appeal and lower operating expenses by creating single, larger funds with distinct mandates."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show no outcome. The July 2016 425 lists only NPP and NPM among its subject companies (NMO is absent), but no text states why."
+    },
+    {
+      "target": {"name": "Nuveen Premium Income Municipal Fund 2, Inc.", "cik": 885734, "ticker": "NPM"},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452467", "date": "2016-02-05", "quote": "Additionally, the funds’ Board of Trustees approved plans to merge the funds in order to enhance the funds’ trading appeal and lower operating expenses by creating single, larger funds with distinct mandates."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show no outcome; see NPP note on the July 2016 adjournment notice."
+    }
+  ],
+  "problems": "Excerpts of the N-14 and proxy statements are boilerplate and contain no outcome. The text gives tickers in parentheses and calls the funds 'closed-end funds' but never names an exchange, so both_listed is null. The same press release also lists another set of mergers (NAD acquiring NPF, NPI, NQS, NQM), which is not a deal of this acquirer and is not recorded."
+}

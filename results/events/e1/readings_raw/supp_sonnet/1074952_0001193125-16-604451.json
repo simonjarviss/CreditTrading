@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1074952,
+  "episode_accession": "0001193125-16-604451",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen California Dividend Advantage Municipal Fund 2", "cik": 1127706, "ticker": "NVX"},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-604451", "date": "2016-05-26", "quote": "IMPORTANT NOTICE TO COMMON SHAREHOLDERS OF NUVEEN CALIFORNIA DIVIDEND ADVANTAGE MUNICIPAL FUND (NAC) NUVEEN CALIFORNIA DIVIDEND ADVANTAGE MUNICIPAL FUND 2 (NVX) AND NUVEEN CALIFORNIA DIVIDEND ADVANTAGE MUNICIPAL FUND 3 (NZH)"},
+      "outcome_evidence": null,
+      "notes": "Roles inferred from the N-14 8C filed by 1074952 (registrant issuing common shares; 'the Acquiring Fund' appears in the risk text). Shareholder meeting September 12, 2016 per the 425 reminders. No excerpt states a vote result, closing or termination. Tickers are printed but no exchange is named in the excerpts."
+    },
+    {
+      "target": {"name": "Nuveen California Dividend Advantage Municipal Fund 3", "cik": 1137888, "ticker": "NZH"},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-604451", "date": "2016-05-26", "quote": "IMPORTANT NOTICE TO COMMON SHAREHOLDERS OF NUVEEN CALIFORNIA DIVIDEND ADVANTAGE MUNICIPAL FUND (NAC) NUVEEN CALIFORNIA DIVIDEND ADVANTAGE MUNICIPAL FUND 2 (NVX) AND NUVEEN CALIFORNIA DIVIDEND ADVANTAGE MUNICIPAL FUND 3 (NZH)"},
+      "outcome_evidence": null,
+      "notes": "CIK 1137888 from the 2016-08-25 425 header (subject company). Same proposal as the NVX deal; no excerpt states a result for NZH separately. The 2017-10-04 DEF 14A shows the registrant renamed Nuveen California Quality Municipal Income Fund (NAC) but its excerpt is only a cover page and does not state what happened to NVX or NZH."
+    }
+  ],
+  "problems": "No outcome stated in any excerpt for either target; exchange listing not shown."
+}

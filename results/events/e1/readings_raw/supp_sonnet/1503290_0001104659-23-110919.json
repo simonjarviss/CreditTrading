@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1503290,
+  "episode_accession": "0001104659-23-110919",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "First Trust High Income Long/Short Fund", "cik": 1494530, "ticker": "FSD"},
+      "acquirer": {"name": "abrdn Income Credit Strategies Fund", "cik": 1503290, "ticker": "ACP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-23-110919", "date": "2023-10-24", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by First Trust Advisors, L.P. into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "ACP shareholder special meeting to approve the share issuance was set for 2024-01-19 (PRE 14A and DEF 14A); each Reorganization was stated not to be contingent on the other. No excerpt states the result of any vote or whether the reorganization closed. The 2024-2025 DEF 14A and 8-K excerpts (compact) show no outcome language. The press release table gives tickers only, no exchange, so listing of FSD is not settled by the excerpts."
+    },
+    {
+      "target": {"name": "First Trust/abrdn Global Opportunity Income Fund", "cik": null, "ticker": "FAM"},
+      "acquirer": {"name": "abrdn Income Credit Strategies Fund", "cik": 1503290, "ticker": "ACP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-23-110919", "date": "2023-10-24", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by First Trust Advisors, L.P. into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "Named with FSD in the ACP proxy materials ('the reorganization of First Trust High Income Long/Short Fund and First Trust/abrdn Global Opportunity Income Fund, each a closed-end fund, with and into the Fund'). FAM's CIK does not appear in any FILING header line, so it is null. Outcome not stated in any excerpt."
+    }
+  ],
+  "problems": "Outcome of neither deal is stated in the excerpts; FAM's CIK is not in any header."
+}

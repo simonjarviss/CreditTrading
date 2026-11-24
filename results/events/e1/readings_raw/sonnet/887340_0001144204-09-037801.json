@@ -1,0 +1,28 @@
+{
+  "episode_cik": 887340,
+  "episode_accession": "0001144204-09-037801",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "MainStay VP Mid Cap Value Portfolio", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay VP ICAP Select Equity Portfolio", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-047034", "quote": "As the owner of a variable annuity contract or a variable universal life insurance policy (“Policy”) issued by New York Life Insurance and Annuity Corporation (“NYLIAC”), you have the right to instruct NYLIAC how to vote your shares of the Mid Cap Value Portfolio and/or the Mid Cap Growth Portfolio."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-037801", "date": "2009-07-17", "quote": "If the transactions described in the Mid Cap Value Reorganization and the Mid Cap Growth Reorganization"},
+      "outcome_evidence": null,
+      "notes": "Series of an insurance-product (variable annuity / life) fund, not exchange-listed. Pairing of Value into ICAP Select Equity is stated in the DEFA14A (0001144204-09-047034). Outcome not stated in the excerpts. Episode fund (the registrant, MainStay VP Series Fund, Inc.) contains both the acquired and the surviving portfolios."
+    },
+    {
+      "target": {"name": "MainStay VP Mid Cap Growth Portfolio", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay VP Mid Cap Core Portfolio", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-047034", "quote": "As the owner of a variable annuity contract or a variable universal life insurance policy (“Policy”) issued by New York Life Insurance and Annuity Corporation (“NYLIAC”), you have the right to instruct NYLIAC how to vote your shares of the Mid Cap Value Portfolio and/or the Mid Cap Growth Portfolio."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-037801", "date": "2009-07-17", "quote": "the assumption of all of the liabilities of the Mid Cap Growth Portfolio by the MainStay VP Mid Cap Core Portfolio (the “Mid Cap Core Portfolio”), in exchange for shares of common stock of the Mid Cap Core Portfolio"},
+      "outcome_evidence": null,
+      "notes": "Same as the Value deal: variable-product portfolios, outcome not stated in the excerpts."
+    }
+  ],
+  "problems": "Filings seq=2 and seq=3 (PRE 14A, DEF 14A) are about an unrelated Capital Appreciation Portfolio subadvisory vote."
+}

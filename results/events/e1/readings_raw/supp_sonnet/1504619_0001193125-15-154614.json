@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1504619,
+  "episode_accession": "0001193125-15-154614",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "MCG Capital Corporation", "cik": 1141299, "ticker": "MCGC"},
+      "acquirer": {"name": "PennantPark Floating Rate Capital Ltd.", "cik": 1504619, "ticker": "PFLT"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-15-154481", "date": "2015-04-29", "quote": "PennantPark Floating Rate Capital Ltd. (NASDAQ: PFLT) and MCG Capital Corporation (NASDAQ: MCGC) announced today that they have entered into a definitive agreement under which PFLT will acquire MCGC in a stock and cash transaction"},
+      "outcome_evidence": {"accession": "0001193125-15-294572", "date": "2015-08-18", "quote": "the merger pursuant to the merger agreement dated April 28, 2015 among MCG, PFLT, two of PFLT’s wholly-owned subsidiaries and PFLT’s investment adviser, has closed."},
+      "notes": "Both funds are shown as Nasdaq-listed, but the excerpts never state that MCGC is a closed-end fund or BDC (they only give its Nasdaq ticker and an 814- file number), so both_listed is left null. Stockholders of both approved on 2015-08-14 (8-K 0001193125-15-293225). Only MCGC is named as a target."
+    }
+  ],
+  "problems": ""
+}

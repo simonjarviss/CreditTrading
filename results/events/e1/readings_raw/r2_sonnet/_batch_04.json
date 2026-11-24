@@ -1,0 +1,1 @@
+{"batch": "04", "model_id": "claude-sonnet-5-5", "episodes": ["900724_0001341004-13-000686", "1143513_0001193125-22-050052"], "parts_read": 9, "problems": "I ran one extra shell command (mkdir -p of the output directory) before writing, which the brief did not allow; it touched nothing else."}

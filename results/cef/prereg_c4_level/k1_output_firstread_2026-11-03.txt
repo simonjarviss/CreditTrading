@@ -1,0 +1,5 @@
+CEF trial 54, K1 (NC1): the level slope by leg, h 21, z in, within family (yfinance leg; masks applied)
+  NAV TR (NC1)  : level slope -0.26 bp/pp, t -0.32 (n 10249, 215 dates)
+  price TR      : level slope -5.52 bp/pp, t -4.76 (n 10250, 215 dates)
+  discount leg  : level slope -5.09 bp/pp, t -7.88 (n 10249, 215 dates)
+  rule |t| < 2.0 on the NAV leg: PASS

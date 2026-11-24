@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1414932,
+  "episode_accession": "0001193125-20-280363",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Oaktree Strategic Income Corporation", "cik": 1577791, "ticker": "OCSI"},
+      "acquirer": {"name": "Oaktree Specialty Lending Corporation", "cik": 1414932, "ticker": "OCSL"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-280356", "quote": "Oaktree Specialty Lending Corporation (NASDAQ:OCSL) (“OCSL”) and Oaktree Strategic Income Corporation (NASDAQ:OCSI) (“OCSI”) today announced that they have entered into an agreement to merge together with OCSL as the surviving company"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-280356", "date": "2020-10-29", "quote": "Oaktree Specialty Lending Corporation (NASDAQ:OCSL) (“OCSL”) and Oaktree Strategic Income Corporation (NASDAQ:OCSI) (“OCSI”) today announced that they have entered into an agreement to merge together with OCSL as the surviving company, subject to stockholder approval and customary closing conditions."},
+      "outcome_evidence": {"accession": "0001193125-21-086896", "date": "2021-03-19", "quote": "Oaktree Specialty Lending Corporation (NASDAQ:OCSL) (“OCSL”) is pleased to announce the closing of the previously announced merger with Oaktree Strategic Income Corporation (“OCSI”), with OCSL as the surviving company."},
+      "notes": "Same 8-K also states: On March 19, 2021, OCSL completed its previously announced acquisition of Oaktree Strategic Income Corporation (“OCSI”)."
+    },
+    {
+      "target": {"name": "Oaktree Strategic Income II, Inc.", "cik": 1744179, "ticker": null},
+      "acquirer": {"name": "Oaktree Specialty Lending Corporation", "cik": 1414932, "ticker": "OCSL"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-22-245119", "date": "2022-09-15", "quote": "Oaktree Specialty Lending Corporation (NASDAQ:OCSL) (“OCSL”) and Oaktree Strategic Income II, Inc. (“OSI II”) today announced that they have entered into an agreement to merge together with OCSL as the surviving company, subject to stockholder approval and customary closing conditions."},
+      "outcome_evidence": null,
+      "notes": "Announced 2022-09-15; N-14 filed 2022-10-24 is the last filing in the window. OSI II is shown with no exchange or ticker in any excerpt, so listing is not settled. No excerpt states the outcome."
+    }
+  ],
+  "problems": ""
+}

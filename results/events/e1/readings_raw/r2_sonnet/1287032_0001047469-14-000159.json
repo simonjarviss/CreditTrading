@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1287032,
+  "episode_accession": "0001047469-14-000159",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nicholas Financial-Canada", "cik": null, "ticker": null},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": 1287032, "ticker": "PSEC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "terminated",
+      "announcement": {"accession": "0001047469-14-000159", "date": "2014-01-14", "quote": "The rights of Nicholas Financial-Canada's shareholders are currently governed by British Columbia law and Nicholas Financial-Canada's Articles. When the proposed arrangement is completed,"},
+      "outcome_evidence": {"accession": "0001287032-14-000126", "date": "2014-06-25", "quote": "The Company has elected to withdraw the N-14 Registration Statement because the Arrangement Agreement related to the transaction described in the N-14 Registration Statement has been terminate d."},
+      "notes": "Prospect (NASDAQ: PSEC, a BDC) proposed a British Columbia plan of arrangement with Nicholas Financial-Canada; the excerpts never say whether Nicholas Financial-Canada is a listed fund or an operating company, so both_listed is null. The RW (2014-06-25) withdrew the N-14 and says the arrangement agreement was terminated. All other filings in the window (earnings, dividends, notes offering, annual meetings, spin-off plans) describe no other merger of this fund."
+    }
+  ],
+  "problems": ""
+}

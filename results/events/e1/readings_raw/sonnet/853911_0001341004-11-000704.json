@@ -1,0 +1,28 @@
+{
+  "episode_cik": 853911,
+  "episode_accession": "0001341004-11-000704",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Senior Floating Rate Fund, Inc.", "cik": 853911, "ticker": null},
+      "acquirer": {"name": "BlackRock Floating Rate Income Portfolio, a series of BlackRock Funds II", "cik": 1398078, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001341004-11-000704", "date": "2011-03-15", "quote": "shareholders of the Senior Floating Rate Funds have approved the reorganization of each of the Senior Floating Rate Funds with and into the BlackRock Floating Rate Income Portfolio (the “Floating Rate Income Fund”), a series of BlackRock Funds II"},
+      "outcome_evidence": null,
+      "notes": "Shareholder approval on March 11, 2011 after the joint meeting was adjourned from February 14, 2011 (DEFA14A seq=1). The press release says completion was expected on or about March 18, 2011; the N-8F (reason: Merger) shows board and shareholder approval and a distribution but the excerpt does not state completion, so outcome left null. Acquirer is a series of BlackRock Funds II (CIK 1398078 is the subject company in the 425 header); the excerpts do not say the acquirer is exchange listed."
+    },
+    {
+      "target": {"name": "BlackRock Senior Floating Rate Fund II, Inc.", "cik": 1078659, "ticker": null},
+      "acquirer": {"name": "BlackRock Floating Rate Income Portfolio, a series of BlackRock Funds II", "cik": 1398078, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001341004-11-000704", "date": "2011-03-15", "quote": "shareholders of the Senior Floating Rate Funds have approved the reorganization of each of the Senior Floating Rate Funds with and into the BlackRock Floating Rate Income Portfolio (the “Floating Rate Income Fund”), a series of BlackRock Funds II"},
+      "outcome_evidence": null,
+      "notes": "Second target in the same joint reorganization; only the first fund (CIK 853911) is this episode's fund."
+    }
+  ],
+  "problems": "Acquirer's exchange listing is not stated in the excerpts; completion not stated."
+}

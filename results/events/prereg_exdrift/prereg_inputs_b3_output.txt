@@ -1,0 +1,4 @@
+H-E basket (no own ex in [p+1,p+8]), fit: events 3226, size median 12, p10 4, share < 3 0.067
+  H-E DISPERSION ONLY: events 3009, per-event sd 150.3bp, sd of monthly means 41.4bp over 216 months, sd of monthly sums 555.8bp
+  H-D (EW all 17, same date) DISPERSION ONLY: events 3226, per-event sd 142.6bp, sd of monthly means 42.2bp over 216 months, sd of monthly sums 619.4bp
+test (dates only): events 752, H-E size median 15, share < 3 0.051, traded 714 (537 on the 13)

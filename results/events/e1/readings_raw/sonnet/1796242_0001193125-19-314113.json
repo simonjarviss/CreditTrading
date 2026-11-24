@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1796242,
+  "episode_accession": "0001193125-19-314113",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Resource Real Estate Diversified Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Goldman Sachs Real Estate Diversified Income Fund", "cik": 1796242, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-19-314113", "date": "2019-12-16", "quote": "On behalf of the Board of Trustees (the “Board”) of Resource Real Estate Diversified Income Fund (the “Acquired Fund”), we are pleased to invite you to a special meeting of shareholders"},
+      "outcome_evidence": null,
+      "notes": "The 2020-02-19 amendment refers to the 'Acquired Fund (and thus ultimately the Acquiring Fund, following the consummation of the Reorganization)', which confirms the roles but not the outcome. The 2021-09-22 DEF 14A is a joint proxy about electing trustees and does not state an outcome. Listing status is not stated."
+    }
+  ],
+  "problems": "Outcome and listing status not stated in the excerpts."
+}

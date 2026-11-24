@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1083839,
+  "episode_accession": "0001193125-19-168288",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Texas Quality Municipal Income Fund", "cik": 878201, "ticker": "NTX"},
+      "acquirer": {"name": "Nuveen Quality Municipal Income Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-011166", "quote": "Shareholders of Nuveen Texas Quality Municipal Income Fund (NYSE: NTX) have approved the fund’s reorganization into Nuveen Quality Municipal Income Fund (NYSE: NAD)."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-19-168288", "date": "2019-06-07", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN QUALITY MUNICIPAL INCOME FUND (NAD) AND NUVEEN TEXAS QUALITY MUNICIPAL INCOME FUND (NTX) (EACH, A “FUND” AND TOGETHER, THE “FUNDS”)"},
+      "outcome_evidence": null,
+      "notes": "Meeting adjourned repeatedly (to Oct 25 2019, Nov 25 2019, Jan 21 2020); the 2020-01-21 release says shareholders approved and the transaction was 'expected to become effective before the market opens on February 18, 2020'. No excerpt states it was completed, so outcome is left null (likely completed but not stated). The 2019-08-16 and 2019-09-24 425s also list NTC and NNC in their headers, but no excerpt says those funds were targets of this acquirer."
+    },
+    {
+      "target": {"name": "Nuveen Maryland Quality Municipal Income Fund", "cik": 897424, "ticker": "NMY"},
+      "acquirer": {"name": "Nuveen Quality Municipal Income Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213215", "date": "2020-08-07", "quote": "Nuveen Maryland Quality Municipal Income Fund NMY Nuveen Quality Municipal Income Fund NAD"},
+      "outcome_evidence": null,
+      "notes": "Special meeting of 2020-12-07 was adjourned repeatedly: to 2021-01-15 ('not enough votes were received to satisfy the vote requirement'), then to 2021-02-17, then to 2021-03-17. The last excerpt (2021-02-18 425) is a reminder that the meeting has been adjourned; no excerpt states the final outcome, so null. The listing of NMY and NAD is shown only as symbols in a table, with no exchange named in the excerpts."
+    }
+  ],
+  "problems": "Outcomes for both deals are not stated in the excerpts. NMY vote was still being solicited as of the last filing (2021-02-18)."
+}

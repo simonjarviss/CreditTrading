@@ -1,0 +1,28 @@
+{
+  "episode_cik": 897419,
+  "episode_accession": "0001193125-13-354110",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Massachusetts Dividend Advantage Municipal Fund", "cik": 1090120, "ticker": "NMB"},
+      "acquirer": {"name": "Nuveen Massachusetts Premium Income Municipal Fund", "cik": 897419, "ticker": "NMT"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Subject company in 425s of 2013-11-06 (seq=4), 2014-01-06 and 2014-02-10; absent from the subject lists of the 2014-03-19, 2014-04-07 and 2014-04-14 425s, which name only NMT and NGX. No excerpt says why or how it ended."
+    },
+    {
+      "target": {"name": "Nuveen Massachusetts AMT-Free Municipal Income Fund", "cik": 1196366, "ticker": "NGX"},
+      "acquirer": {"name": "Nuveen Massachusetts Premium Income Municipal Fund", "cik": 897419, "ticker": "NMT"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Subject company in all 425s from 2013-11-06 to 2014-04-14 (annual meeting adjourned repeatedly, next adjournment ending May 2, 2014 in the 2014-04-07 filing). The 2014-04-14 425 begins 'On April 14, 2014, TIAA-CREF, a national financial services organization, announced that it had entered into an agreement' (truncated). No outcome stated."
+    }
+  ],
+  "problems": "Excerpts show tickers but no exchange, so both_listed is null. No excerpt uses the word merger or states an outcome; no announcement quote could be given."
+}

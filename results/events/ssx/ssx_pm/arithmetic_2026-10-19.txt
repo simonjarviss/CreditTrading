@@ -1,0 +1,235 @@
+== DOC inputs (copied, not re-run) ==
+  r_g_gross                0.0515   [results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md §0.1/§6.2: return per unit gross, 2013-06..2022, gross of costs]
+  r_g_net15                0.0347   [results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md §6.2: the same, net of 15bp]
+  sigma1_c                 0.0565   [results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md §6.2: CEF book vol per unit gross]
+  ir_c_gross               0.96   [results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md §6.1: gross Sharpe, live 2013-06..2022]
+  ir_c_net15               0.64   [results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md §6.1: net Sharpe at 15bp]
+  g_stress                 1.8   [ops spec max_gross_stress (docs/SYSTEM.md §5, 2026-09-28)]
+  rho_c4_21d               0.145   [results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md §2.4: C4 vs book, 21-session sums]
+  rho_c4_stress            0.317   [results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md §2.4: C4 vs book, HY-stress blocks]
+  e1_muni_mean_bp          126.0   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §3: muni acquirer pair, mean, 92 deals / 47 groups]
+  e1_muni_median_bp        167.0   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §3: median]
+  e1_muni_sd_bp            336.0   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §3: sd across deals]
+  e1_muni_hold             168   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §2: muni median hold, sessions]
+  e1_tax_sd_bp             750.0   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §4: taxable pair sd]
+  e1_tax_hold              95   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §2]
+  e1_eq_sd_bp              617.0   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §4: equity pair sd]
+  e1_eq_hold               116   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §2]
+  e1_muni_etf_resid_bp     789.0   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §3: muni target, MUB-hedged residual over 168 sessions]
+  e1_eq_spy_resid_bp       829.0   [results/events/E1_ETF_HEDGE_GATE_2026-10-15.md §4: equity CEF target, SPY-hedged residual over 116 sessions]
+  cef_cross_share          0.0057   [results/cef/EXEC_CAPACITY_OPEN_CROSS_2026-10-13.md §2: closing cross / day's volume]
+
+== Q1a  per position: gross per unit of idio vol, sigma1, and the both-binding IR bar ==
+  sleeve sigma1 = sigma_e / (gross per long) / sqrt(K_eff); bar = max(rho*IR_c, nu*r_g,c/sigma1_sleeve), nu = 1
+  the per-position IR bar (A) is r_g,c / sigma1_pos; a sleeve of K independent positions has IR and bar both
+  x sqrt(K), so (A) does not depend on K. (B), today's regime (vol binds, gross slack on average), is rho * IR_c.
+  archetype                          sigma_e     p25-p75 gross/long gross/vol  s1 K=1    K=4   K=16 (A) gross (A) net15
+  (i)/(iii) small cap, IWM hedge       0.335   0.24-0.47       2.01       6.0   0.167  0.083  0.042      0.31      0.21
+  (i)/(iii) mid cap, SPY               0.265   0.20-0.38       2.18       8.2   0.121  0.061  0.030      0.42      0.29
+  (i)/(iii) large cap, SPY             0.212   0.16-0.28       2.05       9.7   0.103  0.052  0.026      0.50      0.34
+  (i)/(iii) micro cap, IWM             0.518   0.37-0.72       2.09       4.0   0.248  0.124  0.062      0.21      0.14
+  (i)/(iii) BDC, HYG [survivors]       0.195   0.14-0.25       2.38      12.2   0.082  0.041  0.020      0.63      0.42
+  (i)/(iii) BDC, SPY [survivors]       0.185   0.14-0.24       1.80       9.8   0.102  0.051  0.026      0.50      0.34
+  (ii) E1 muni pair [doc]              0.041           -       2.00      48.6   0.021  0.010  0.005      2.50      1.69
+  (ii) taxable CEF pair [doc]          0.122           -       2.00      16.4   0.061  0.031  0.015      0.84      0.57
+  (ii) equity CEF pair [doc]           0.091           -       2.00      22.0   0.045  0.023  0.011      1.13      0.76
+  (B) bars, today's regime: rho 0.0: 0.00 gross / 0.00 net15, rho 0.145: 0.14 gross / 0.09 net15, rho 0.317: 0.30 gross / 0.20 net15
+  CEF book: gross/vol 17.7, sigma1 0.0565
+
+== Q1b  per-event breakeven edge mu* (bp of the long leg, over the hold): earns the CEF book's return per unit gross ==
+  gross basis uses r_g 5.15%; net columns use r_g 3.47% plus a round trip 2*c*(gross per long) at c = 5/15/30bp
+   gross per long  hold   gross   net@5  net@15  net@30
+              1.0     1       2      11      31      61
+              1.0     5      10      17      37      67
+              1.0    20      41      38      58      88
+              1.0    60     123      93     113     143
+              1.0   168     343     241     261     291
+              1.5     1       3      17      47      92
+              1.5     5      15      25      55     100
+              1.5    20      61      56      86     131
+              1.5    60     184     139     169     214
+              1.5   168     515     362     392     437
+              2.0     1       4      23      63     123
+              2.0     5      20      34      74     134
+              2.0    20      82      75     115     175
+              2.0    60     245     185     225     285
+              2.0   168     687     483     523     583
+              2.2     1       4      25      69     135
+              2.2     5      22      37      81     147
+              2.2    20      90      83     127     193
+              2.2    60     270     204     248     314
+              2.2   168     755     531     575     641
+  E1 muni pair, gross, per unit gross per year: mean 0.0095, median 0.0125  vs CEF 0.0515  (ratio 5.4x / 4.1x)
+
+== Q1d  (iii) short event + ETF long: borrow added to mu* (bp of the short leg) and the IR drag fee/sigma_e ==
+  fee  0.5%/yr: +1 / +4 / +12bp at 5 / 20 / 60 sessions; IR drag on a median small cap 0.01
+  fee  5.0%/yr: +10 / +40 / +119bp at 5 / 20 / 60 sessions; IR drag on a median small cap 0.15
+  fee 20.0%/yr: +40 / +159 / +476bp at 5 / 20 / 60 sessions; IR drag on a median small cap 0.60
+
+== Q1c  (iv) subtract-only flags ==
+  forgone CEF alpha per flagged session per unit gross held: 2.04bp gross (1.38bp net@15)
+  a flag that forces an exit and re-entry pays 2c = 10bp per unit gross: needs avoided loss > 12.0bp for a 1-session flag at 5bp
+  a flag that forces an exit and re-entry pays 2c = 30bp per unit gross: needs avoided loss > 32.0bp for a 1-session flag at 15bp
+  a flag that forces an exit and re-entry pays 2c = 60bp per unit gross: needs avoided loss > 62.0bp for a 1-session flag at 30bp
+
+== Q2  shared hedge overlay: E|net hedge| / sum E|per-sleeve hedge|  (saving = 1 - ratio) ==
+    N longs shorts  m/s  rho 0.0  rho 0.2  rho 0.5
+    2     2      0  0.0    0.707    0.775    0.866
+    2     2      0  1.0    0.900    0.919    0.949
+    2     2      0  2.0    0.992    0.993    0.995
+    4     4      0  0.0    0.500    0.632    0.791
+    4     4      0  1.0    0.864    0.884    0.924
+    4     4      0  2.0    0.992    0.992    0.993
+    8     8      0  0.0    0.354    0.548    0.750
+    8     8      0  1.0    0.858    0.870    0.912
+    8     8      0  2.0    0.992    0.992    0.992
+    4     2      2  1.0    0.342    0.433    0.541
+    4     2      2  2.0    0.198    0.250    0.313
+    8     4      4  1.0    0.242    0.375    0.513
+    8     4      4  2.0    0.140    0.217    0.297
+    8     6      2  1.0    0.450    0.521    0.623
+    8     6      2  2.0    0.496    0.503    0.527
+   12    12      0  0.0    0.289    0.516    0.736
+   12    12      0  1.0    0.857    0.866    0.908
+   12    12      0  2.0    0.992    0.992    0.992
+   12     6      6  1.0    0.197    0.353    0.503
+   12     6      6  2.0    0.114    0.204    0.291
+  m/s = 0: demands with no fixed sign (closed form sqrt((1+(N-1)rho)/N)); m/s = 2: every long-biased sleeve's hedge is nearly always short
+  small-cap (i) with hedge saving 0%: gross per long 2.01, sigma1 K=1 0.167, round trip at 15bp 60bp, mu* 20-session net@15 116bp
+  small-cap (i) with hedge saving 25%: gross per long 1.76, sigma1 K=1 0.191, round trip at 15bp 53bp, mu* 20-session net@15 101bp
+  small-cap (i) with hedge saving 50%: gross per long 1.50, sigma1 K=1 0.223, round trip at 15bp 45bp, mu* 20-session net@15 87bp
+
+== Q3  capacity: share of 2018-22 events whose pre-event ADV >= book size (5% of book per name, 5% of ADV) ==
+  family                                            n  $0.1m    $1m   $10m  $100m*  fit err
+  forward_split_ge_2for1/COM                       84   0.96   0.83   0.70    0.43    0.052
+  non_ordinary_security_distribution/COM           23   1.00   0.78   0.52    0.23    0.047
+  partial_liquidation/COM                           9   1.00   0.67   0.22    0.16    0.179
+  reverse_split/CEF                                24   1.00   0.33   0.04    0.00    0.041
+  reverse_split/COM                               633   0.82   0.33   0.10    0.00    0.050
+  rights_distribution/CEF                          46   0.98   0.72   0.07    0.00    0.057
+  rights_distribution/COM                          23   0.83   0.61   0.26    0.15    0.074
+  special_dividend/CEF                            251   0.98   0.64   0.10    0.00    0.015
+  special_dividend/COM                            749   0.92   0.74   0.44    0.15    0.015
+  spin_off/COM                                     78   0.97   0.92   0.78    0.41    0.040
+  etf_liquidation/ETF                             561   0.31   0.06   0.01    0.00    0.027
+  dual_class_thinner_line_2022H2/COM               41   0.61   0.46   0.22    0.01    0.178
+  * $100m is a lognormal extrapolation from (median, p25); 'fit err' is its worst miss on the three measured columns
+  all price>=$5 common stocks at year-end 2009-21 (median of 13 snapshots, measured): ge_0.1m 0.924, ge_1m 0.784, ge_10m 0.475, ge_100m 0.137
+  hedge ETFs: notional one session can absorb at 5% of 2022 ADV (measured, CRSP)
+    SPY   ADV 2022 $38,841m -> $1,942.1m per session
+    IWM   ADV 2022 $5,648m -> $282.4m per session
+    HYG   ADV 2022 $3,152m -> $157.6m per session
+    IEF   ADV 2022 $816m -> $40.8m per session
+    PFF   ADV 2022 $155m -> $7.8m per session
+    BKLN  ADV 2022 $239m -> $12.0m per session
+  MOC caveat: the cross is 0.57% of a CEF's day [doc]; at P_max 10% of the cross a position is 0.057% of ADV, 88x below the 5%-of-ADV rule
+
+== Q4  minimum detectable mean edge, MDE = 2.80 * sigma / sqrt(N), two-sided 5%, 80% power ==
+  sigma source                                     sigma bp    N=50   N=100   N=250   N=500
+  small cap, IWM-hedged, 1d (raw sd)                    289     114      81      51      36   [measured]
+  small cap, IWM-hedged, 1d (robust sd)                 155      61      43      27      19   [measured]
+  small cap, IWM-hedged, 3d (raw sd)                    497     197     139      88      62   [measured]
+  small cap, IWM-hedged, 3d (robust sd)                 280     111      78      50      35   [measured]
+  small cap, IWM-hedged, 5d (raw sd)                    642     254     180     114      80   [measured]
+  small cap, IWM-hedged, 5d (robust sd)                 371     147     104      66      47   [measured]
+  small cap, IWM-hedged, 20d (raw sd)                  1281     507     359     227     160   [measured]
+  small cap, IWM-hedged, 20d (robust sd)                824     327     231     146     103   [measured]
+  small cap, IWM-hedged, 60d (raw sd)                  2239     887     627     397     281   [measured]
+  small cap, IWM-hedged, 60d (robust sd)               1573     623     441     279     197   [measured]
+  mid cap, SPY-hedged, 1d (raw sd)                      231      92      65      41      29   [measured]
+  mid cap, SPY-hedged, 1d (robust sd)                   131      52      37      23      16   [measured]
+  mid cap, SPY-hedged, 3d (raw sd)                      389     154     109      69      49   [measured]
+  mid cap, SPY-hedged, 3d (robust sd)                   235      93      66      42      29   [measured]
+  mid cap, SPY-hedged, 5d (raw sd)                      504     200     141      89      63   [measured]
+  mid cap, SPY-hedged, 5d (robust sd)                   312     124      87      55      39   [measured]
+  mid cap, SPY-hedged, 20d (raw sd)                     965     382     270     171     121   [measured]
+  mid cap, SPY-hedged, 20d (robust sd)                  684     271     192     121      86   [measured]
+  mid cap, SPY-hedged, 60d (raw sd)                    1685     668     472     299     211   [measured]
+  mid cap, SPY-hedged, 60d (robust sd)                 1301     516     365     231     163   [measured]
+  large cap, SPY-hedged, 1d (raw sd)                    185      73      52      33      23   [measured]
+  large cap, SPY-hedged, 1d (robust sd)                 105      42      29      19      13   [measured]
+  large cap, SPY-hedged, 3d (raw sd)                    316     125      89      56      40   [measured]
+  large cap, SPY-hedged, 3d (robust sd)                 189      75      53      34      24   [measured]
+  large cap, SPY-hedged, 5d (raw sd)                    410     162     115      73      51   [measured]
+  large cap, SPY-hedged, 5d (robust sd)                 253     100      71      45      32   [measured]
+  large cap, SPY-hedged, 20d (raw sd)                   762     302     214     135      96   [measured]
+  large cap, SPY-hedged, 20d (robust sd)                551     218     154      98      69   [measured]
+  large cap, SPY-hedged, 60d (raw sd)                  1289     511     361     228     162   [measured]
+  large cap, SPY-hedged, 60d (robust sd)               1037     411     291     184     130   [measured]
+  micro cap, IWM-hedged, 1d (raw sd)                    465     184     130      82      58   [measured]
+  micro cap, IWM-hedged, 1d (robust sd)                 231      92      65      41      29   [measured]
+  micro cap, IWM-hedged, 3d (raw sd)                    806     319     226     143     101   [measured]
+  micro cap, IWM-hedged, 3d (robust sd)                 414     164     116      73      52   [measured]
+  micro cap, IWM-hedged, 5d (raw sd)                    982     389     275     174     123   [measured]
+  micro cap, IWM-hedged, 5d (robust sd)                 549     218     154      97      69   [measured]
+  micro cap, IWM-hedged, 20d (raw sd)                  1882     746     527     334     236   [measured]
+  micro cap, IWM-hedged, 20d (robust sd)               1202     476     337     213     151   [measured]
+  micro cap, IWM-hedged, 60d (raw sd)                  3250    1288     910     576     407   [measured]
+  micro cap, IWM-hedged, 60d (robust sd)               2330     923     653     413     292   [measured]
+  BDC, HYG-hedged [survivors], 1d (raw sd)              194      77      54      34      24   [measured]
+  BDC, HYG-hedged [survivors], 1d (robust sd)            98      39      28      17      12   [measured]
+  BDC, HYG-hedged [survivors], 3d (raw sd)              278     110      78      49      35   [measured]
+  BDC, HYG-hedged [survivors], 3d (robust sd)           169      67      47      30      21   [measured]
+  BDC, HYG-hedged [survivors], 5d (raw sd)              373     148     104      66      47   [measured]
+  BDC, HYG-hedged [survivors], 5d (robust sd)           221      87      62      39      28   [measured]
+  BDC, HYG-hedged [survivors], 20d (raw sd)             605     240     169     107      76   [measured]
+  BDC, HYG-hedged [survivors], 20d (robust sd)          442     175     124      78      55   [measured]
+  BDC, HYG-hedged [survivors], 60d (raw sd)            1056     418     296     187     132   [measured]
+  BDC, HYG-hedged [survivors], 60d (robust sd)          750     297     210     133      94   [measured]
+  E1 muni pair, 168d                                    336     133      94      60      42   [doc]
+  taxable CEF pair, 95d                                 750     297     210     133      94   [doc]
+  equity CEF pair, 116d                                 617     244     173     109      77   [doc]
+  muni CEF target MUB-hedged, 168d                      789     313     221     140      99   [doc]
+  equity CEF target SPY-hedged, 116d                    829     328     232     147     104   [doc]
+  N required for a stated effect (literature or doc), N = 7.85*(sigma/mu)^2:
+    lock-up -1.5% over 3d [S], small cap 3d raw sd                 N = 86
+    lock-up, small cap 3d robust sd                                N = 27
+    SEO 2.5% recovery over ~5d [V abstract], mid cap 5d raw sd     N = 32
+    spin-off >2% over 30d [S], mid cap 20d raw sd                  N = 183
+    E1 muni mean 126bp, sd 336bp [doc]                             N = 56
+    E1 muni median 167bp, sd 336bp [doc]                           N = 32
+
+== Q4b  N needed to detect the BREAKEVEN edge mu* itself (net@15, gross per long 2.0): 7.85*(sigma_h/mu*)^2 ==
+  small cap       1d mu* 63bp: N 166 (robust 48)  5d mu* 74bp: N 594 (robust 199)  20d mu* 115bp: N 972 (robust 403)  60d mu* 225bp: N 776 (robust 383)
+  mid cap         1d mu* 63bp: N 106 (robust 34)  5d mu* 74bp: N 366 (robust 140)  20d mu* 115bp: N 552 (robust 277)  60d mu* 225bp: N 439 (robust 262)
+  large cap       1d mu* 63bp: N 68 (robust 22)  5d mu* 74bp: N 242 (robust 92)  20d mu* 115bp: N 344 (robust 180)  60d mu* 225bp: N 257 (robust 166)
+  BDC [survivors] 1d mu* 63bp: N 75 (robust 19)  5d mu* 74bp: N 201 (robust 70)  20d mu* 115bp: N 217 (robust 116)  60d mu* 225bp: N 173 (robust 87)
+  E1 muni pair: mu* 523bp vs mean 126bp; N to detect mu* 3.2
+
+== Q4c  families: years to the D7 floor (250 independent), live positions K = n*h/252, and the edge that adds 1%/yr of NAV at 5% per event ==
+  family                                 arch   n/yr indep/yr yrs to 250 (indep)  hold  K live gross@5% mu for 1%
+  B1 spin-off removal close               (i)   21.0      9.0       11.9    27.8    20     1.7     0.17       95bp
+  G3 forward split >= 2:1                 (i)   22.6      9.7       11.1    25.8    60     5.4     0.54       88bp
+  E1c special dividend, common            (i)  191.9    144.6        1.3     1.7     2     1.5     0.15       10bp
+  D1 CEF rights offering                (iii)    6.7      4.7       37.3    53.2    15     0.4     0.04      299bp
+  merger arb, all listed targets     (ii)/(i)  210.0     12.0        1.2    20.8   120   100.0    10.00       10bp
+  E1 CEF merger pair, muni               (ii)    7.1      3.6       35.3    69.1   168     4.7     0.47      283bp
+  macro event days (flag)                (iv)   31.5     31.5        7.9     7.9     1     0.1     0.01       63bp
+  gross@5% assumes 2.0 gross per long (a hedged long or a pair); the flag row uses none
+
+== Q7  slate bar sqrt(2 ln N) against single-test 1.96 and one-sided Bonferroni z(1-0.05/N) ==
+  N=  4  bar 1.665   Bonferroni 2.241
+  N=  6  bar 1.893   Bonferroni 2.394
+  N=  7  bar 1.973   Bonferroni 2.450
+  N=  8  bar 2.039   Bonferroni 2.498
+  N= 10  bar 2.146   Bonferroni 2.576
+  N= 12  bar 2.229   Bonferroni 2.638
+  N= 16  bar 2.355   Bonferroni 2.734
+  N= 20  bar 2.448   Bonferroni 2.807
+  N= 52  bar 2.811   Bonferroni 3.102
+
+== Q5  two brokers: a short book with its hedge at the OTHER broker ==
+  k_max = short MV / account equity that survives a uniform rally u (FINRA 4210(c)(3), 30%): 1/(0.30 + 1.30u)
+  x_max = largest single short (x equity) surviving its own rally while the rest of a k x equity short book is flat, capped at k
+  rally u                                       u  k_max  x k=1.0  x k=1.5  x k=2.0 G=1/(0.5+u)
+  SPY 5d p99.9 (2008-22)                    0.112   2.25     1.00     1.50     2.00        1.63
+  IWM 5d p99.9                              0.147   2.04     1.00     1.50     2.00        1.55
+  IWM 5d max (2008-11)                      0.229   1.67     1.00     1.50     1.35        1.37
+  large-cap single name 5d p99.9            0.261   1.57     1.00     1.50     1.18        1.31
+  mid-cap single name 5d p99.9              0.347   1.33     1.00     1.22     0.89        1.18
+  small-cap single name 5d p99.9            0.472   1.09     1.00     0.90     0.65        1.03
+  micro-cap single name 5d p99.9            0.712   0.82     0.76     0.59     0.43        0.82
+  BDC single name 5d p99.9 [survivors]      0.396   1.23     1.00     1.07     0.78        1.12
+  small-cap pair in one account, 5d residual p99.9 / 2     w5 0.224 -> G 1.38
+  mid-cap pair in one account                              w5 0.160 -> G 1.52
+  CEF book's own G_stress 1.8 implies m + w5 = 0.556 at m = 0.5

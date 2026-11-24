@@ -1,0 +1,484 @@
+{
+ "spec_id": "c4_families.v5.20261103",
+ "spec_sha256": "65c19a9e498fb917cf5d7ba4ca3cc87129d9ba4242ec3018455bce4ab55d1d10",
+ "core_spec_id": "cef_discount.v9.20261102",
+ "run_utc": "2026-11-11T16:54:04.234788+00:00",
+ "families_cut": {
+  "cef_prices": {
+   "rows": 775180,
+   "last": "2022-12-30"
+  },
+  "cef_nav": {
+   "rows": 542205,
+   "last": "2022-12-30"
+  },
+  "cef_actions": {
+   "rows": 19740,
+   "last": "2022-12-29"
+  }
+ },
+ "fidelity": {
+  "spec_id": "c4_families.v5.20261103",
+  "sessions": 907,
+  "first": "2005-01-03",
+  "last": "2022-12-30",
+  "trade_sessions": 829,
+  "hold_sessions": 78,
+  "sessions_matched": 907,
+  "session_match_rate": 1.0,
+  "cells_compared": 61346,
+  "cells_matched": 61346,
+  "cell_match_rate": 1.0,
+  "largest_gap": 5.551115123125783e-16,
+  "tolerance": 1e-12,
+  "largest_unexplained_gap": null,
+  "kind_breaks": 0,
+  "breaks": [],
+  "n_breaks": 0,
+  "item5_sub_min_abs_names": 393,
+  "item5_of_held_names": 10092,
+  "item5_sessions": 270,
+  "min_abs_weight": 0.005
+ },
+ "controls": [
+  {
+   "control": "nav_repeat_mask off",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 5.925e-03 on JPC (sleeve -0.116787, trial -0.110861)"
+  },
+  {
+   "control": "zero_volume_mask off",
+   "broke": false,
+   "first": null,
+   "note": "no break, and none can arise here: M2 masks 10 paired fund-days of the 74 in the fit panel (AIO, GCV, GLU, PDT, RFI), 0 of them on a fund-day whose ADV clears the floor, so it moves no compared target (PREREG_C4 \u00a74.3: a guard). The synthetic test injects a zero-volume day and shows the break"
+  },
+  {
+   "control": "below_min_names flatten",
+   "broke": true,
+   "first": "2005-01-03",
+   "note": "kind: the trial holds and the sleeve does neither (cef: only 5 eligible names)"
+  },
+  {
+   "control": "z_window 252 -> 251",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 6.316e-04 on RNP (sleeve -0.301893, trial -0.301261)"
+  },
+  {
+   "control": "vol_target_annual x 1.1",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 3.158e-02 on EVT (sleeve +0.347402, trial +0.315820)"
+  },
+  {
+   "control": "min_adv_usd x 0.9",
+   "broke": true,
+   "first": "2005-01-03",
+   "note": "kind: the trial holds and the sleeve trades (cef discount z=-0.21 w=-0.4069 volscal=1.24 gmax=1.9000 smult=1.2600 level z_share=0.5000 s_z=0.0515 s_L="
+  },
+  {
+   "control": "min_names 6 -> 7",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "kind: the trial trades and the sleeve holds (cef: not opened, book holds: only 6 eligible names, under min_names 7 (below_min_names=hold))"
+  },
+  {
+   "control": "gross_leverage x 1.1",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 3.158e-02 on EVT (sleeve +0.347402, trial +0.315820)"
+  },
+  {
+   "control": "band_width dropped (the rebalance_days calendar)",
+   "broke": true,
+   "refused": true,
+   "first": null,
+   "note": "REFUSED by the registry: cef_discount level_signal is set but band_width is not; the level blend is defined on the daily signal through the band (PRER"
+  },
+  {
+   "control": "level_signal dropped (the z book alone)",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 2.670e-01 on CSQ (sleeve +0.251380, trial -0.015645)"
+  },
+  {
+   "control": "level_signal.risk_share 0.5 x 1.1",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 3.134e-02 on CSQ (sleeve +0.015693, trial -0.015645)"
+  }
+ ],
+ "cap": {
+  "method_check": {
+   "w5_13": 0.04258140437339241,
+   "end": "2020-03-18",
+   "recorded": [
+    0.0425814,
+    "2020-03-18"
+   ],
+   "traded_start": "2013-06-14"
+  },
+  "w5": 0.05360827081145146,
+  "w5_window_end": "2020-03-18",
+  "traded_start": "2005-02-22",
+  "traded_end": "2022-12-30",
+  "w5_second_method": "direct sum agrees to 1e-12",
+  "worst_windows": [
+   [
+    "2020-03-18",
+    0.05360827081145146
+   ],
+   [
+    "2008-07-23",
+    0.03412478151962817
+   ],
+   [
+    "2011-08-08",
+    0.024626335691845382
+   ]
+  ],
+  "w5_for_next_step_down": 0.05555555555555558,
+  "w5_headroom": 0.0019472847441041191,
+  "inputs": {
+   "nlv_usd": [
+    100000.0,
+    "ruled, not probe-read: C4's own $100k (team lead 2026-10-26, docs/SYSTEM.md \u00a75), the paper default in an account never traded (created 2026-09-29) [U until a probe reads it]"
+   ],
+   "m_other_usd": [
+    0.0,
+    "C4's own account (team lead 2026-10-26). Since 2026-10-28 the agent lab shares it; the lab book is not built and holds nothing there [U until a probe reads it]"
+   ],
+   "m": [
+    0.5,
+    "Reg T initial (team lead 2026-09-28; the core's input, scripts/cef/alpaca_v7_derivation.py MARGIN)"
+   ],
+   "e_book_usd": [
+    100000.0,
+    "capital_usd of c4_families.v5.20261103"
+   ],
+   "mark_sensitivity": [
+    0.0,
+    "no other book's margin moves this account today; the core's reading (PREREG_ALPACA_V7 \u00a73b)"
+   ]
+  },
+  "margin_at_frozen_read": {
+   "read_utc": "2026-10-14T21:40:33Z",
+   "funds": 74,
+   "all_marginable": true,
+   "maintenance_margin_pct": [
+    30.0
+   ],
+   "exchanges": {
+    "NYSE": 65,
+    "AMEX": 5,
+    "NASDAQ": 4
+   }
+  },
+  "g_stress": 1.8063313948222806,
+  "max_gross_stress": 1.8,
+  "uncapped_max_gross": 4.035314550549265,
+  "uncapped_mean_gross": 2.1191110471802728,
+  "uncapped_share_above_cap": 0.6786746720035579,
+  "spec_value": 1.9,
+  "plateau": [
+   {
+    "cap": 1.6,
+    "sr": 1.5237110199000568,
+    "ann_pct": 10.422371572838388,
+    "turn": 51.69686290356787,
+    "max_gross": 1.6000000000000012
+   },
+   {
+    "cap": 1.7,
+    "sr": 1.5087344202441608,
+    "ann_pct": 10.576088214869356,
+    "turn": 51.51780338027793,
+    "max_gross": 1.7000000000000008
+   },
+   {
+    "cap": 1.8,
+    "sr": 1.4879429567919393,
+    "ann_pct": 10.651070464599531,
+    "turn": 51.327714990567465,
+    "max_gross": 1.8000000000000012
+   },
+   {
+    "cap": 1.8063,
+    "sr": 1.4868888940138711,
+    "ann_pct": 10.656134066676184,
+    "turn": 51.316177480748856,
+    "max_gross": 1.806300000000001
+   },
+   {
+    "cap": 1.9,
+    "sr": 1.481314654350013,
+    "ann_pct": 10.757132418768043,
+    "turn": 51.15890904816472,
+    "max_gross": 1.9000000000000008
+   },
+   {
+    "cap": 2.0,
+    "sr": 1.4789666769726273,
+    "ann_pct": 10.848390660671383,
+    "turn": 50.99320068593063,
+    "max_gross": 2.000000000000001
+   },
+   {
+    "cap": null,
+    "sr": 1.4062862854478082,
+    "ann_pct": 11.870119938049687,
+    "turn": 50.35395405809558,
+    "max_gross": 4.035314550549265
+   }
+  ],
+  "derived_on": {
+   "book": "blend: CEF trial 54's level_signal (z_share 0.5), spec_targets, x sizing_multiplier 1.26, uncapped band",
+   "spec_id": "c4_families.v5.20261103",
+   "spec_sha256": "65c19a9e498fb917cf5d7ba4ca3cc87129d9ba4242ec3018455bce4ab55d1d10"
+  },
+  "override": {
+   "ruled": "2026-11-03",
+   "ruled_by": "team lead",
+   "words": "Keep 1.90, install tonight.",
+   "citation": "docs/SYSTEM.md \u00a75, 'Team lead, 2026-11-03 \u2014 C4 v5's gross cap (after the release-check of e41f10b)' (PR #48, branch journal-20261103b): an override of the rule's 1.80, made with the blend's w5 0.0536 against the z book's 0.0261 in front of the team lead",
+   "_file": "results/cef/c4/c4_cap_override_2026-11-03.json",
+   "key": "40b909aceb820baf4c49971919b5a0e6c8922a04125ff8feb4bb7f306cafbe94"
+  }
+ },
+ "lines": {
+  "spec_book": {
+   "role": "H11 REFERENCE (team lead 2026-10-29): the book paper trades",
+   "policy": "band 0.048 + cap 1.9 x sizing_multiplier 1.26 + level_signal (z_share 0.5) (c4_families.v5.20261103)",
+   "total": {
+    "label": "spec book, CRSP ret (total return)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.481314654350013,
+    "ann_pct": 10.757132418768043,
+    "vol_pct": 7.261882130969785,
+    "turn": 51.15890904816472,
+    "net5": 1.1290718877675932,
+    "net15": 0.4245863546027533,
+    "net30": -0.6321419451445065,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -7.514972745403825,
+    "max_dd_trough": "2014-12-15",
+    "eras": {
+     "2005-09": {
+      "sr": 1.6616940018524817,
+      "ann_pct": 13.085129550085082,
+      "turn": 27.69475640558826,
+      "net15": 1.1341461801922172,
+      "net30": 0.6065983585319527,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 1.3232401449371578,
+      "ann_pct": 9.474290176463741,
+      "turn": 59.58627630949925,
+      "net15": 0.07490990438909838,
+      "net30": -1.173420336158961,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.4244844422216498,
+      "ann_pct": 9.162246598993375,
+      "turn": 76.53161603810197,
+      "net15": -0.3603086520234007,
+      "net30": -2.145101746268451,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.5300324322571126,
+      "ann_pct": 11.773515244471705,
+      "turn": 32.93548785644016,
+      "net15": 0.8880105269953135,
+      "net30": 0.24598862173351432,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "price": {
+    "label": "spec book, CRSP retx (price only)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.664581667458916,
+    "ann_pct": 12.65798224736328,
+    "vol_pct": 7.604302327014362,
+    "turn": 51.15890904816472,
+    "net5": 1.3282003214252227,
+    "net15": 0.6554376293578364,
+    "net30": -0.3537064087432431,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -7.903530944628678,
+    "max_dd_trough": "2011-12-28",
+    "eras": {
+     "2005-09": {
+      "sr": 1.928916214163688,
+      "ann_pct": 15.809734549988377,
+      "turn": 27.69475640558826,
+      "net15": 1.422068380863804,
+      "net30": 0.9152205475639196,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 1.5390958629687963,
+      "ann_pct": 11.79003522872172,
+      "turn": 59.58627630949925,
+      "net15": 0.37231828879005036,
+      "net30": -0.7944592853886957,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.430985054759762,
+      "ann_pct": 9.607436759414592,
+      "turn": 76.53161603810197,
+      "net15": -0.27887161423916385,
+      "net30": -1.9887282832380893,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.7790937158699618,
+      "ann_pct": 14.071430663467494,
+      "turn": 32.93548785644016,
+      "net15": 1.1544736518991705,
+      "net30": 0.5298535879283792,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "distribution_leg_pct_per_yr": -1.900849828595237,
+   "price_minus_total_sr": 0.18326701310890292
+  },
+  "trial_book": {
+   "role": "the trial's own book: the reproduction gate only, NOT read by H11",
+   "policy": "band 0.048 + cap 1.8 (scripts/cef/spec.py, as the trial read them)",
+   "total": {
+    "label": "trial book, CRSP ret (total return)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.216957834377122,
+    "ann_pct": 7.164335203125429,
+    "vol_pct": 5.887085814104944,
+    "turn": 38.082282348979426,
+    "net5": 0.8935186698100147,
+    "net15": 0.24664034067580035,
+    "net30": -0.7236771530255212,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -8.775534137877539,
+    "max_dd_trough": "2011-05-25",
+    "eras": {
+     "2005-09": {
+      "sr": 1.1353182631250593,
+      "ann_pct": 7.1839705414467785,
+      "turn": 16.194100543534926,
+      "net15": 0.7514332375138043,
+      "net30": 0.3675482119025494,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 1.0038925867715143,
+      "ann_pct": 5.691226662153966,
+      "turn": 42.08071768660849,
+      "net15": -0.10951906521555134,
+      "net30": -1.222930717202617,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.217060910829531,
+      "ann_pct": 6.6008069662271325,
+      "turn": 59.02187077657255,
+      "net15": -0.41531249837023365,
+      "net30": -2.0476859075699982,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.6863014373028502,
+      "ann_pct": 10.521525384496467,
+      "turn": 32.05184427360911,
+      "net15": 0.9157515062096484,
+      "net30": 0.14520157511644646,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "price": {
+    "label": "trial book, CRSP retx (price only)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.3595907627768347,
+    "ann_pct": 8.32847466161133,
+    "vol_pct": 6.125721716879874,
+    "turn": 38.082282348979426,
+    "net5": 1.0487516150888088,
+    "net15": 0.42707331971275675,
+    "net30": -0.5054441233513212,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -9.2006430009838,
+    "max_dd_trough": "2011-05-25",
+    "eras": {
+     "2005-09": {
+      "sr": 1.3132929914794689,
+      "ann_pct": 8.524371301596304,
+      "turn": 16.194100543534926,
+      "net15": 0.9390554437235017,
+      "net30": 0.5648178959675348,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 1.1458831832404175,
+      "ann_pct": 6.948319693897079,
+      "turn": 42.08071768660849,
+      "net15": 0.10492100403632158,
+      "net30": -0.9360411751677743,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.2136465000643237,
+      "ann_pct": 6.856916420265685,
+      "turn": 59.02187077657255,
+      "net15": -0.3533483961442963,
+      "net30": -1.9203432923529162,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.999825790642293,
+      "ann_pct": 12.756360684118953,
+      "turn": 32.05184427360911,
+      "net15": 1.2461064532475803,
+      "net30": 0.4923871158528679,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "distribution_leg_pct_per_yr": -1.1641394584859015,
+   "price_minus_total_sr": 0.14263292839971276
+  }
+ },
+ "h11_reference": "spec_book"
+}

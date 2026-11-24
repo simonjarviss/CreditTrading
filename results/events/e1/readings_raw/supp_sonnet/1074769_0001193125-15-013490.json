@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1074769,
+  "episode_accession": "0001193125-15-013490",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen New York Dividend Advantage Municipal Fund 2", "cik": 1131063, "ticker": "NXK"},
+      "acquirer": {"name": "Nuveen New York Dividend Advantage Municipal Fund", "cik": 1074769, "ticker": "NAN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-013490", "date": "2015-01-20", "quote": "IMPORTANT NOTICE TO COMMON SHAREHOLDERS OF NUVEEN NEW YORK DIVIDEND ADVANTAGE MUNICIPAL FUND (NAN) NUVEEN NEW YORK PERFORMANCE PLUS MUNICIPAL FUND, INC. (NNP) AND NUVEEN NEW YORK DIVIDEND ADVANTAGE MUNICIPAL FUND 2 (NXK) (EACH, A “FUND” AND COLLECTIVELY, THE “FUNDS”)"},
+      "outcome_evidence": null,
+      "notes": "Tickers are printed but no exchange is named in the excerpts. The 425s of 2015-05-04 say the shareholder meeting was adjourned until May 18, 2015; no excerpt states a vote result, completion or termination."
+    },
+    {
+      "target": {"name": "Nuveen New York Performance Plus Municipal Fund, Inc.", "cik": 856226, "ticker": "NNP"},
+      "acquirer": {"name": "Nuveen New York Dividend Advantage Municipal Fund", "cik": 1074769, "ticker": "NAN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-013490", "date": "2015-01-20", "quote": "IMPORTANT NOTICE TO COMMON SHAREHOLDERS OF NUVEEN NEW YORK DIVIDEND ADVANTAGE MUNICIPAL FUND (NAN) NUVEEN NEW YORK PERFORMANCE PLUS MUNICIPAL FUND, INC. (NNP) AND NUVEEN NEW YORK DIVIDEND ADVANTAGE MUNICIPAL FUND 2 (NXK) (EACH, A “FUND” AND COLLECTIVELY, THE “FUNDS”)"},
+      "outcome_evidence": null,
+      "notes": "Tickers are printed but no exchange is named in the excerpts. The 425s of 2015-05-04 say the shareholder meeting was adjourned until May 18, 2015; no excerpt states a vote result, completion or termination."
+    }
+  ],
+  "problems": "Excerpts end with the meetings adjourned to 2015-05-18; the later 2016 filings (DEF 14A, 8-K) show only cover text. Outcome unstated for both targets. Excerpt text for the merger terms was mostly risk-factor boilerplate."
+}

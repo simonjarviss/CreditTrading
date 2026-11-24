@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1380936,
+  "episode_accession": "0001821268-21-000189",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Guggenheim Enhanced Equity Income Fund", "cik": 1310709, "ticker": "GPM"},
+      "acquirer": {"name": "Guggenheim Strategic Opportunities Fund", "cik": 1380936, "ticker": "GOF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001683863-21-004611", "quote": "Guggenheim Strategic Opportunities Fund (NYSE: GOF), Guggenheim Enhanced Equity Income Fund (NYSE: GPM) and Guggenheim Credit Allocation Fund (NYSE: GGM), each a closed-end fund"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001683863-21-004611", "date": "2021-08-25", "quote": "to approve the mergers of GPM and GGM with and into GOF (each, a \"Merger\" and together, the \"Mergers\")."},
+      "outcome_evidence": {"accession": "0001821268-21-000430", "date": "2021-10-25", "quote": "the mergers (each, a “Merger” and together, the “Mergers”) of Guggenheim Enhanced Equity Income Fund (NYSE: GPM) and Guggenheim Credit Allocation Fund (NYSE: GGM) with and into Guggenheim Strategic Opportunities Fund (NYSE: GOF), each a closed-end fund (each, a “Fund” and together, the “Funds”), were completed prior to the open of the New York Stock Exchange on October 25, 2021."},
+      "notes": "The earlier filings (N-14 8C, 2021-04-30 and 2021-06-21) show the three funds and a joint special meeting but their excerpts do not state the merger in words, so the announcement quote is from the 2021-08-25 DEFA14A. Special meeting adjourned for GOF on 2021-08-24 for quorum."
+    },
+    {
+      "target": {"name": "Guggenheim Credit Allocation Fund", "cik": 1551949, "ticker": "GGM"},
+      "acquirer": {"name": "Guggenheim Strategic Opportunities Fund", "cik": 1380936, "ticker": "GOF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001683863-21-004611", "quote": "Guggenheim Strategic Opportunities Fund (NYSE: GOF), Guggenheim Enhanced Equity Income Fund (NYSE: GPM) and Guggenheim Credit Allocation Fund (NYSE: GGM), each a closed-end fund"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001683863-21-004611", "date": "2021-08-25", "quote": "to approve the mergers of GPM and GGM with and into GOF (each, a \"Merger\" and together, the \"Mergers\")."},
+      "outcome_evidence": {"accession": "0001821268-21-000430", "date": "2021-10-25", "quote": "the mergers (each, a “Merger” and together, the “Mergers”) of Guggenheim Enhanced Equity Income Fund (NYSE: GPM) and Guggenheim Credit Allocation Fund (NYSE: GGM) with and into Guggenheim Strategic Opportunities Fund (NYSE: GOF), each a closed-end fund (each, a “Fund” and together, the “Funds”), were completed prior to the open of the New York Stock Exchange on October 25, 2021."},
+      "notes": "Same filings as the GPM deal."
+    }
+  ],
+  "problems": ""
+}

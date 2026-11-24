@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1913724,
+  "episode_accession": "0001913724-23-000056",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "AGTB", "cik": null, "ticker": null},
+      "acquirer": {"name": "TCAP", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001913724-23-000056", "date": "2023-05-19", "quote": "will thereafter look only to TCAP as the surviving company, as directed by TCAP, for payment of the Per Share Consideration, in respect of such shares of AGTB Common Stock without any interest thereon."},
+      "outcome_evidence": null,
+      "notes": "Merger of AGTB into TCAP (TCAP surviving). The excerpts do not give full names of AGTB or TCAP or say which one CIK 1913724 is, nor whether either is exchange-listed. The 8-Ks and DEFA14As of 2023-05-17 and 2023-05-19 may announce it earlier but show no text. PREM14A 2023-05-19 and DEFM14A 2023-06-16 say the merger is subject to approvals and 'if the Transaction is consummated'; no excerpt states completion or failure."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt; most later filings show only cover pages."
+}

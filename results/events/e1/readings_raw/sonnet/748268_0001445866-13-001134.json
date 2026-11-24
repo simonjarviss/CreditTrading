@@ -1,0 +1,18 @@
+{
+  "episode_cik": 748268,
+  "episode_accession": "0001445866-13-001134",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Sustained Release, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Broadleaf Capital Partners, Inc.", "cik": 748268, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001445866-13-001428", "date": "2013-12-04", "quote": "On December 1, 2013, Broadleaf Capital Partners, Inc. acquired Sustained Release, Inc. by exchanging with Sustained Release, Inc. shareholders one share of Broadleaf Capital Partners, Inc. Class A Preferred Share for each share they held of Sustained Release, Inc. common stock."},
+      "outcome_evidence": null,
+      "notes": "The only share-exchange acquisition in the window that fits a merger-like deal. The 2014-04-04 8-K has a section headed 'Sustained Release, Inc. Rescission' (an 'SRI Rescission Agreement'), saying the Series A Preferred Stock 'were never issued', but the excerpt starts mid-sentence and does not state the rescission terms, so outcome left null. Neither party's listing status is stated. Not a fund merger; other 8-Ks are asset purchases, a spin-off proposal and officer changes."
+    }
+  ],
+  "problems": "No closed-end fund merger described. DEFM14A excerpt is an annual meeting proxy (directors, preferred shares). Company later renamed EnergyTEK Corp."
+}

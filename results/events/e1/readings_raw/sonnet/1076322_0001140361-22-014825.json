@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1076322,
+  "episode_accession": "0001140361-22-014825",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Zazove Convertible Securities Fund, Inc.", "cik": 1076322, "ticker": null},
+      "acquirer": {"name": "Zazove Convertible Securities Fund, L.P.", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001140361-22-014825", "quote": "As a closed end interval fund registered under the Investment Company Act, it is a policy of the Fund to offers to repurchase up to 25% of its outstanding shares at the close of each calendar quarter at net asset value."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001140361-22-012260", "date": "2022-03-31", "quote": "To approve the reorganization of Zazove Convertible Securities Fund, Inc. (the “Fund”) with Zazove Convertible Securities Fund, L.P (the “New Fund”)"},
+      "outcome_evidence": {"accession": "0001140361-22-014825", "date": "2022-04-18", "quote": "As a closed end interval fund registered under the Investment Company Act, it is a policy of the Fund to offers to repurchase up to 25% of its outstanding shares at the close of each calendar quarter at net asset value."},
+      "notes": "Fund is an interval fund and the New Fund is a private limited partnership relying on a 100-holder exclusion (de-registration), so not a listed pair. N-8F filed 2022-07-05 (reason: Merger; shareholder vote May 18, 2022); a second N-8F filed 2022-11-30 checks Abandonment of Registration instead."
+    }
+  ],
+  "problems": ""
+}

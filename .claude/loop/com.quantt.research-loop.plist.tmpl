@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  com.quantt.research-loop : the daily research cycle (.claude/workflows/research-loop.js).
+
+  THE TEAM LEAD INSTALLS THIS BY HAND. Replace ${LOOP_WORKTREE}, ${PYTHON} and
+  ${HOME_DIR}, save it as ~/Library/LaunchAgents/com.quantt.research-loop.plist,
+  then `launchctl load` it.
+  - ${LOOP_WORKTREE}: the loop's own clone, on branch research-loop, NOT under
+    ~/Desktop, ~/Documents or ~/Downloads (macOS refuses launchd jobs there;
+    2026-07-31, exit 126). A worktree of the dev repo is not enough.
+  - ${PYTHON}: the absolute interpreter with requirements.txt installed (the one
+    the test suite passes under). launchd's login shell finds a python3 with no
+    numpy (2026-10-28). It is not prod: it never transmits, and it is separate from the
+  com.quantt.alpaca.* jobs, which install_prod.py manages.
+
+  Schedule: 17:45 local (the laptop keeps America/Toronto, which is Eastern time) on every day. The wrapper
+  skips non-sessions using ops/schedule/nyse_calendar.py. 17:45 leaves the close and the data
+  collection behind it.
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.quantt.research-loop</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/zsh</string>
+		<string>-l</string>
+		<string>${LOOP_WORKTREE}/.claude/loop/run_research_loop.sh</string>
+	</array>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>QUANTT_LOOP_WORKTREE</key>
+		<string>${LOOP_WORKTREE}</string>
+		<key>QUANTT_LOOP_PYTHON</key>
+		<string>${PYTHON}</string>
+		<key>QUANTT_LOOP_LOGS</key>
+		<string>${HOME_DIR}/quantt_state/research-loop</string>
+	</dict>
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>17</integer>
+		<key>Minute</key>
+		<integer>45</integer>
+	</dict>
+	<key>StandardOutPath</key>
+	<string>${HOME_DIR}/quantt_state/research-loop/launchd.out</string>
+	<key>StandardErrorPath</key>
+	<string>${HOME_DIR}/quantt_state/research-loop/launchd.err</string>
+</dict>
+</plist>

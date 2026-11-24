@@ -1,0 +1,5 @@
+figure,reproduced,published,tolerance,ok,source
+"r6 events (17, 2005-22)",3226.0,3226.0,0.0,True,r6 check_credit.py via prereg_inputs.py
+"r6 CAR(+1..+3), bp",-20.45417974249565,-20.454,0.001,True,r6 check_credit.py via prereg_inputs.py
+r6 month-clustered t,-6.765470670740928,-6.765,0.001,True,r6 check_credit.py via prereg_inputs.py
+"H-E per-event sd, bp",150.27995061126146,150.3,0.05,True,prereg_inputs_b3.py

@@ -1,0 +1,38 @@
+{
+  "episode_cik": 313212,
+  "episode_accession": "0000313212-18-000076",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "T. Rowe Price Institutional International Bond Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "T. Rowe Price International Bond Fund", "cik": 313212, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-18-000076", "quote": "Redemptions or exchanges of fund shares and distributions by the fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-18-000076", "date": "2018-07-27", "quote": "The purpose of the meeting is to vote on a proposed transaction pursuant to which the Institutional Fund will be merged into the T. Rowe Price International Bond Fund"},
+      "outcome_evidence": null,
+      "notes": "Mutual fund reorganization (redeemable fund shares, I Class shares), no exchange listing shown. The registrant of the N-14 is T. Rowe Price International Funds, Inc. (CIK 313212); the acquirer fund is a series of it, so the CIK given for the acquirer is the registrant's. Excerpts do not state the vote result or completion."
+    },
+    {
+      "target": {"name": "T. Rowe Price Institutional Global Focused Growth Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Global Stock Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-19-000123", "quote": "into a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-19-000123", "date": "2019-08-01", "quote": "each Institutional Fund will be reorganized (each, a “ Reorganization ” and together, the “ Reorganizations ”) into a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome_evidence": null,
+      "notes": "2019 N-14 covers three reorganizations; the acquiring fund for Institutional Global Growth Equity Fund is not named in the excerpts, so no deal entry for it. A June 2020 N-14 (seq 7) has parties not shown in the excerpts."
+    },
+    {
+      "target": {"name": "T. Rowe Price Institutional U.S. Structured Research Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "U.S. Equity Research Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-19-000123", "quote": "into a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-19-000123", "date": "2019-08-01", "quote": "each Institutional Fund will be reorganized (each, a “ Reorganization ” and together, the “ Reorganizations ”) into a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome_evidence": null,
+      "notes": "Acquirer name taken from the 2019-09-10 N-14/A text 'into the U.S. Equity Research Fund'."
+    }
+  ],
+  "problems": "Excerpts are mostly boilerplate; no filing states a vote result or completion. The 2020 N-14 filings show no party names."
+}

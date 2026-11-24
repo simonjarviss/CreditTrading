@@ -1,0 +1,54 @@
+HALVE 0.12, KILL 0.18 (core spec risk, fractions); caps core 1.8, C4 1.9; W1 2013-06-25..2022-12-30, W2 2005-02-22..2022-12-30; 10 core books 2013-12-31..2022-12-30
+
+=== today: core x1.0, C4 x1.0
+  core account      W1 gross TR  6.21%/yr vol 6.50% SR 0.955 maxDD 12.78% | PR  6.43% SR 0.959 maxDD 13.64% | turn  13.5/yr | net +5.54 / +4.19 / +2.17 %/yr at 5/15/30bp | breakeven 46.1bp
+  C4 account        W1 gross TR  8.54%/yr vol 5.81% SR 1.471 maxDD  8.61% | PR  9.47% SR 1.574 maxDD  7.20% | turn  47.5/yr | net +6.17 / +1.42 / -5.70 %/yr at 5/15/30bp | breakeven 18.0bp
+  combined ($200k)  W1 gross TR  7.38%/yr vol 4.38% SR 1.683 maxDD  6.15% | PR  7.95% SR 1.754 maxDD  5.84% | turn  30.5/yr | net +5.85 / +2.81 / -1.76 %/yr at 5/15/30bp | breakeven 24.2bp
+  cap binds W1: core 2.5%, C4 3.6% (C4 on W2 2.5%); mean uncapped gross core 1.206 / C4 1.447; held core 1.206 / C4 1.447
+  W1 odds, zero edge (worst method, worse of TR/PR): core H 10.58% K  0.68% | c4 H  6.19% K  0.25% | comb H  1.01% K  0.01%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  1.80% K  0.04% | c4 H  0.23% K  0.00% | comb H  0.01% K  0.00%
+  W2 odds, zero edge: core account H 3.84/10.38/49.64% K 0.09/1.16/16.07% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 7.06% K 0.35% | combined H 0.43/1.27/8.74% K 0.00/0.00/0.48%
+  W2 odds, fit edge: core account H 1.16/5.95/40.43% K 0.01/0.48/10.69% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 0.51% K 0.00% | combined H 0.00/0.06/4.02% K 0.00/0.00/0.08%
+  W2 worst drawdown (worse of TR/PR): core account 13.6/20.1/36.0% (GFC window 6.6/15.1/31.4%) | C4 account 9.3% (trough 2011-05-25) | combined 6.1/7.2/14.0% (GFC 2.4/6.7/13.9%)
+
+=== ruled: core x1.24, C4 x1.41
+  core account      W1 gross TR  7.41%/yr vol 7.79% SR 0.950 maxDD 14.90% | PR  7.74% SR 0.964 maxDD 15.59% | turn  16.6/yr | net +6.58 / +4.91 / +2.42 %/yr at 5/15/30bp | breakeven 44.5bp
+  C4 account        W1 gross TR 10.66%/yr vol 7.35% SR 1.451 maxDD 10.58% | PR 11.77% SR 1.548 maxDD  8.53% | turn  63.8/yr | net +7.47 / +1.09 / -8.48 %/yr at 5/15/30bp | breakeven 16.7bp
+  combined ($200k)  W1 gross TR  9.04%/yr vol 5.40% SR 1.672 maxDD  7.29% | PR  9.75% SR 1.748 maxDD  6.85% | turn  40.2/yr | net +7.02 / +3.00 / -3.03 %/yr at 5/15/30bp | breakeven 22.5bp
+  cap binds W1: core 32.2%, C4 67.5% (C4 on W2 54.4%); mean uncapped gross core 1.496 / C4 2.040; held core 1.418 / C4 1.771
+  W1 odds, zero edge (worst method, worse of TR/PR): core H 20.32% K  2.52% | c4 H 17.20% K  1.78% | comb H  3.89% K  0.09%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  5.02% K  0.31% | c4 H  1.25% K  0.03% | comb H  0.09% K  0.00%
+  W2 odds, zero edge: core account H 10.60/20.14/52.70% K 0.67/3.64/18.45% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 20.05% K 2.50% | combined H 2.62/4.74/13.23% K 0.04/0.15/1.49%
+  W2 odds, fit edge: core account H 3.50/10.99/42.18% K 0.14/2.94/11.43% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 2.55% K 0.13% | combined H 0.12/0.40/5.81% K 0.00/0.00/0.23%
+  W2 worst drawdown (worse of TR/PR): core account 15.6/24.4/39.4% (GFC window 8.1/18.4/31.4%) | C4 account 11.2% (trough 2011-05-25) | combined 7.3/8.7/17.1% (GFC 2.8/8.1/15.5%)
+  stops, core account (W1): D_R 12.00% (fit-edge p95 of 12m maxDD, max method: TR 11.73% PR 12.00%; capped at HALVE) | R2 p5 of 120-session PR return -3.77% | R3 p95 of 60-session vol 13.19% | zero-edge P(KILL) 2.52% -> 1.52% with R1 acting
+  stops, c4 account (W2): D_R 10.72% (fit-edge p95 of 12m maxDD, max method: TR 10.72% PR 10.65%; capped at HALVE) | R2 p5 of 120-session PR return -3.20% | R3 p95 of 60-session vol 10.79% | zero-edge P(KILL) 2.50% -> 0.79% with R1 acting
+  stops, core account on W2 at the median book 2022-12-30: zero-edge P(KILL) 3.69% -> 2.90% with R1 acting
+
+=== spec-derived: core x1.24, C4 x1.39
+  core account      W1 gross TR  7.41%/yr vol 7.79% SR 0.950 maxDD 14.90% | PR  7.74% SR 0.964 maxDD 15.59% | turn  16.6/yr | net +6.58 / +4.91 / +2.42 %/yr at 5/15/30bp | breakeven 44.5bp
+  C4 account        W1 gross TR 10.58%/yr vol 7.30% SR 1.449 maxDD 10.51% | PR 11.69% SR 1.547 maxDD  8.52% | turn  63.4/yr | net +7.42 / +1.08 / -8.42 %/yr at 5/15/30bp | breakeven 16.7bp
+  combined ($200k)  W1 gross TR  9.00%/yr vol 5.39% SR 1.670 maxDD  7.28% | PR  9.71% SR 1.746 maxDD  6.84% | turn  40.0/yr | net +7.00 / +3.00 / -3.00 %/yr at 5/15/30bp | breakeven 22.5bp
+  cap binds W1: core 32.2%, C4 65.6% (C4 on W2 52.9%); mean uncapped gross core 1.496 / C4 2.012; held core 1.418 / C4 1.764
+  W1 odds, zero edge (worst method, worse of TR/PR): core H 20.32% K  2.52% | c4 H 16.84% K  1.72% | comb H  3.86% K  0.09%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  5.02% K  0.31% | c4 H  1.20% K  0.03% | comb H  0.09% K  0.00%
+  W2 odds, zero edge: core account H 10.60/20.14/52.70% K 0.67/3.64/18.45% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 19.71% K 2.36% | combined H 2.54/4.69/13.14% K 0.04/0.15/1.47%
+  W2 odds, fit edge: core account H 3.50/10.99/42.18% K 0.14/2.94/11.43% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 2.43% K 0.12% | combined H 0.10/0.39/5.78% K 0.00/0.00/0.23%
+  W2 worst drawdown (worse of TR/PR): core account 15.6/24.4/39.4% (GFC window 8.1/18.4/31.4%) | C4 account 11.2% (trough 2011-05-25) | combined 7.3/8.7/17.1% (GFC 2.8/8.1/15.5%)
+  stops, core account (W1): D_R 12.00% (fit-edge p95 of 12m maxDD, max method: TR 11.73% PR 12.00%; capped at HALVE) | R2 p5 of 120-session PR return -3.77% | R3 p95 of 60-session vol 13.19% | zero-edge P(KILL) 2.52% -> 1.52% with R1 acting
+  stops, c4 account (W2): D_R 10.64% (fit-edge p95 of 12m maxDD, max method: TR 10.64% PR 10.57%; capped at HALVE) | R2 p5 of 120-session PR return -3.20% | R3 p95 of 60-session vol 10.68% | zero-edge P(KILL) 2.36% -> 0.78% with R1 acting
+  stops, core account on W2 at the median book 2022-12-30: zero-edge P(KILL) 3.69% -> 2.90% with R1 acting
+
+=== rule-2026-10-29: core x1.13, C4 x1.27
+  core account      W1 gross TR  6.91%/yr vol 7.23% SR 0.956 maxDD 14.05% | PR  7.19% SR 0.965 maxDD 14.83% | turn  15.2/yr | net +6.15 / +4.62 / +2.34 %/yr at 5/15/30bp | breakeven 45.3bp
+  C4 account        W1 gross TR 10.10%/yr vol 6.97% SR 1.449 maxDD 10.06% | PR 11.17% SR 1.549 maxDD  8.46% | turn  59.7/yr | net +7.11 / +1.15 / -7.80 %/yr at 5/15/30bp | breakeven 16.9bp
+  combined ($200k)  W1 gross TR  8.50%/yr vol 5.06% SR 1.681 maxDD  6.83% | PR  9.18% SR 1.756 maxDD  6.46% | turn  37.4/yr | net +6.63 / +2.88 / -2.73 %/yr at 5/15/30bp | breakeven 22.7bp
+  cap binds W1: core 20.6%, C4 47.4% (C4 on W2 38.0%); mean uncapped gross core 1.363 / C4 1.838; held core 1.329 / C4 1.704
+  W1 odds, zero edge (worst method, worse of TR/PR): core H 15.94% K  1.53% | c4 H 14.23% K  1.17% | comb H  2.67% K  0.05%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  3.24% K  0.16% | c4 H  0.87% K  0.01% | comb H  0.04% K  0.00%
+  W2 odds, zero edge: core account H 7.24/15.17/51.35% K 0.35/2.39/17.38% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 16.34% K 1.60% | combined H 1.60/3.37/11.73% K 0.00/0.07/0.92%
+  W2 odds, fit edge: core account H 2.20/8.62/41.15% K 0.06/1.57/11.08% (min/median/max over 10 books; worst 2017-12-29) | C4 account H 1.74% K 0.05% | combined H 0.05/0.20/4.30% K 0.00/0.00/0.14%
+  W2 worst drawdown (worse of TR/PR): core account 14.8/22.5/36.4% (GFC window 7.4/16.9/31.4%) | C4 account 10.8% (trough 2011-05-25) | combined 6.8/7.9/15.6% (GFC 2.6/7.4/14.2%)
+  stops, core account (W1): D_R 11.17% (fit-edge p95 of 12m maxDD, max method: TR 10.90% PR 11.17%; capped at HALVE) | R2 p5 of 120-session PR return -3.52% | R3 p95 of 60-session vol 12.12% | zero-edge P(KILL) 1.53% -> 1.08% with R1 acting
+  stops, c4 account (W2): D_R 10.09% (fit-edge p95 of 12m maxDD, max method: TR 10.09% PR 10.02%; capped at HALVE) | R2 p5 of 120-session PR return -3.04% | R3 p95 of 60-session vol 9.96% | zero-edge P(KILL) 1.60% -> 0.68% with R1 acting
+  stops, core account on W2 at the median book 2022-12-30: zero-edge P(KILL) 2.79% -> 2.13% with R1 acting

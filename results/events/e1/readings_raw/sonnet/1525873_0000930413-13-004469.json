@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1525873,
+  "episode_accession": "0000930413-13-004469",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Lazard Alternative Strategies Fund, L.L.C.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Lazard Alternative Strategies 1099 Fund", "cik": 1525873, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000930413-13-004469", "date": "2013-09-03", "quote": "members of LAS (“Members”) are being asked to approve an Agreement and Plan of Acquisition (the “Plan”) pursuant to which LAS will be reorganized into Lazard Alternative Strategies 1099 Fund (the “1099 Fund” and together with LAS, the “Funds”)."},
+      "outcome_evidence": null,
+      "notes": "Listing status and outcome are not stated in the excerpts of either filing (original and pre-effective amendment 2013-10-17, accession 0000930413-13-004980)."
+    }
+  ],
+  "problems": ""
+}

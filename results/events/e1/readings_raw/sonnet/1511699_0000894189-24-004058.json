@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1511699,
+  "episode_accession": "0000894189-24-004058",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Prospector Funds, Inc. (Prospector Capital Appreciation Fund and Prospector Opportunity Fund)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Prospector Capital Appreciation Fund and Prospector Opportunity Fund, series of Managed Portfolio Series", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-24-004058", "quote": "No filing fee is required under the Securities Act of 1933, as amended, because an indefinite number of shares of beneficial interest have previously been registered pursuant to Section 24(f) of the Investment Company Act of 1940, as amended."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-24-004058", "date": "2024-07-12", "quote": "The total costs of the Reorganizations are estimated to be approximately $130,000."},
+      "outcome_evidence": null,
+      "notes": "Open-end fund trust (Section 24(f) registration) is the acquiring registrant; the excerpt does not name the exact acquiring/target pairing, so names are from the title-of-securities and cover lines. No excerpt states an outcome."
+    },
+    {
+      "target": {"name": "Leuthold Select Industries Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Leuthold Select Industries ETF", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-24-005753", "quote": "If you do not wish to exchange your shares of the Target Select Industries Fund for ETF shares of the Target Select Industries ETF, you must liquidate your shares of the Target Select Industries Fund prior to the consummation of the Reorganization."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-24-005753", "date": "2024-09-24", "quote": "The total costs of the Reorganizations are estimated to be approximately $380,000."},
+      "outcome_evidence": null,
+      "notes": "Mutual fund into an ETF per the excerpt; other Leuthold pairings (Core Investment Fund, Global Fund, Grizzly Short Fund) are not shown in the excerpts. No outcome stated."
+    },
+    {
+      "target": {"name": "Tortoise Global Water ESG Fund", "cik": 1511699, "ticker": null},
+      "acquirer": {"name": "Tortoise Global Water Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-24-004058", "quote": "No filing fee is required under the Securities Act of 1933, as amended, because an indefinite number of shares of beneficial interest have previously been registered pursuant to Section 24(f) of the Investment Company Act of 1940, as amended."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-25-004067", "date": "2025-05-27", "quote": "To approve the reorganization of Tortoise Global Water ESG Fund, a series of Managed Portfolio Series, into Tortoise Global Water Fund, a newly organized series of Tortoise Capital Series Trust."},
+      "outcome_evidence": null,
+      "notes": "Series of a trust (Managed Portfolio Series) into a newly organized series of another trust; the listed_quote is the trust's own Section 24(f) registration statement from the first filing, not text about this fund. Meeting adjourned a second time to June 11, 2025 for insufficient responses; no outcome stated in the excerpts."
+    }
+  ],
+  "problems": "Other filings in the window are not fund mergers as excerpted: Muhlenkamp Fund and Reinhart funds proxies (0000894189-25-004502, -004693, -004928, -005058, -010709, -011419) seek new advisory agreements after adviser changes of control; 0000894189-25-010921 is a shareholder contact letter for Jackson Square Partners Funds (subject Manager Directed Portfolios); the 2026 425s (0001580642-26-001760, -003275) announce Easterly Asset Management acquiring Olstein's fund management business and a proxy reminder, without naming a fund-into-fund merger in the excerpts. Episode role set to other because Managed Portfolio Series is acquirer in some deals and target in the Tortoise deal."
+}

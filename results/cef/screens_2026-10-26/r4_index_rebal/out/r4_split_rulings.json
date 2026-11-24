@@ -1,0 +1,121 @@
+{
+ "trial": "none (R4 zero-trial screen)",
+ "ruled_by": "R4 screen agent, report-only, mirroring the team lead's 2026-10-20 drop_split ruling; NOT a team-lead ruling",
+ "ruled_on": "2026-10-27",
+ "record": "SCRATCH/r4_index_rebal/NOTE.md Part 2",
+ "ruling": "drop_split on every cell the guard labels adjusted",
+ "splits": [
+  {
+   "ticker": "BTO",
+   "ex_date": "2008-12-30",
+   "factor": 0.25,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "team lead 2026-10-20: the close/NAV was already on the post-split basis, so k is not applied again (was book_as_is: reproduces the committed computation; yfinance's close is already on the post-split basis here (raw ratio 1.013 against 1/k = 4), so the committed formula booked -74.7%)"
+  },
+  {
+   "ticker": "TYG",
+   "ex_date": "2020-05-01",
+   "factor": 0.25,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "team lead 2026-10-20: the close/NAV was already on the post-split basis, so k is not applied again (was book_as_is: reproduces the committed computation; yfinance's close is already on the post-split basis here (raw ratio 0.931 against 1/k = 4), so the committed formula booked -76.7%)"
+  },
+  {
+   "ticker": "NXG",
+   "ex_date": "2020-06-15",
+   "factor": 0.25,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "team lead 2026-10-20: the close/NAV was already on the post-split basis, so k is not applied again (was book_as_is: reproduces the committed computation; yfinance's close is already on the post-split basis here (raw ratio 1.005 against 1/k = 4), so the committed formula booked -74.9%)"
+  },
+  {
+   "ticker": "EMO",
+   "ex_date": "2020-07-28",
+   "factor": 0.2,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "team lead 2026-10-20: the close/NAV was already on the post-split basis, so k is not applied again (was book_as_is: reproduces the committed computation; yfinance's close is already on the post-split basis here (raw ratio 0.985 against 1/k = 5), so the committed formula booked -80.3%)"
+  },
+  {
+   "ticker": "BTO",
+   "ex_date": "2008-12-30",
+   "factor": 0.25,
+   "series": "nav",
+   "treatment": "drop_split",
+   "reason": "team lead 2026-10-20: the close/NAV was already on the post-split basis, so k is not applied again (was book_as_is: reproduces the committed NAV catch-up diagnostic; the families NAV is already on the post-split basis here (raw ratio 1.032 against 1/k = 4))"
+  },
+  {
+   "ticker": "EMO",
+   "ex_date": "2020-07-28",
+   "factor": 0.2,
+   "series": "nav",
+   "treatment": "drop_split",
+   "reason": "team lead 2026-10-20: the close/NAV was already on the post-split basis, so k is not applied again (was book_as_is: reproduces the committed NAV catch-up diagnostic; the families NAV is already on the post-split basis here (raw ratio 0.998 against 1/k = 5))"
+  },
+  {
+   "ticker": "ASA",
+   "ex_date": "2010-05-04",
+   "factor": 3.0,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 0.990, booked 2.970); same defect and treatment as the team lead's 2026-10-20 ruling"
+  },
+  {
+   "ticker": "ZTR",
+   "ex_date": "2012-06-27",
+   "factor": 0.25,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 0.994, booked 0.249); same defect and treatment as the team lead's 2026-10-20 ruling"
+  },
+  {
+   "ticker": "AGD",
+   "ex_date": "2014-01-21",
+   "factor": 0.5,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 1.004, booked 0.502); same defect and treatment as the team lead's 2026-10-20 ruling"
+  },
+  {
+   "ticker": "AOD",
+   "ex_date": "2014-01-21",
+   "factor": 0.5,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 1.006, booked 0.503); same defect and treatment as the team lead's 2026-10-20 ruling"
+  },
+  {
+   "ticker": "CLM",
+   "ex_date": "2014-12-29",
+   "factor": 0.25,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 1.000, booked 0.250); same defect and treatment as the team lead's 2026-10-20 ruling"
+  },
+  {
+   "ticker": "CRF",
+   "ex_date": "2014-12-29",
+   "factor": 0.25,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 1.002, booked 0.251); same defect and treatment as the team lead's 2026-10-20 ruling"
+  },
+  {
+   "ticker": "SRV",
+   "ex_date": "2015-09-14",
+   "factor": 0.2,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 0.979, booked 0.196); same defect and treatment as the team lead's 2026-10-20 ruling"
+  },
+  {
+   "ticker": "SRV",
+   "ex_date": "2020-06-15",
+   "factor": 0.25,
+   "series": "close",
+   "treatment": "drop_split",
+   "reason": "R4 screen 2026-10-27: house guard labels this cell `adjusted` (raw ratio 0.986, booked 0.246); same defect and treatment as the team lead's 2026-10-20 ruling"
+  }
+ ]
+}

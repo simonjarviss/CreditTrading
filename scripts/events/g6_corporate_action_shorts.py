@@ -1,7 +1,7 @@
 """Gate G6: did the live book short funds under a pending NAV tender, merger or liquidation, and what did it cost?
 
     export QUANTT_ENV_FILE=/abs/path/config/.env
-    python3 scripts/events/g6_corporate_action_shorts.py            # -> results/events/g6_*.json|csv
+    python3 scripts/events/g6_corporate_action_shorts.py            # -> results/events/g6/g6_*.json|csv
     python3 scripts/events/g6_corporate_action_shorts.py --offline  # EDGAR from the cache only
 
 ZERO TRIALS. REPORT ONLY. `results/cef/RESEARCH_PLAN_2026-10-09.md` §2, G6: "from
@@ -90,8 +90,9 @@ if str(REPO) not in sys.path:  # run as a script, not -m
     sys.path.insert(0, str(REPO))
 
 OUT = REPO / "results" / "events"
-SUMMARY_OUT = OUT / "g6_summary.json"
-EVENTS_OUT = OUT / "g6_events_13_names.csv"       # EDGAR facts only (public): tracked
+G6_DIR = OUT / "g6"                               # the gate's outputs: the note sits in OUT, its data here
+SUMMARY_OUT = G6_DIR / "g6_summary.json"
+EVENTS_OUT = G6_DIR / "g6_events_13_names.csv"    # EDGAR facts only (public): tracked
 COST_GRID_BP = (5, 15, 30)
 ERAS = [("2013-14", "2013-01-01", "2014-12-31"), ("2015-19", "2015-01-01", "2019-12-31"),
         ("2020-22", "2020-01-01", "2022-12-31")]
@@ -443,6 +444,7 @@ def main(argv=None) -> int:
                                           .astype(str).to_dict(orient="records"))
     res["funds"] = funds.astype(str).to_dict(orient="records")
     res["edgar_fetch"] = {"requests": client.n_requests, "cache_hits": client.n_cache_hits}
+    G6_DIR.mkdir(parents=True, exist_ok=True)
     windows.to_csv(EVENTS_OUT, index=False)
     SUMMARY_OUT.write_text(json.dumps(res, indent=1, default=str))
     print(json.dumps({k: res[k] for k in ("spec", "panel_first_trade", "book", "measures", "crsp_check")},

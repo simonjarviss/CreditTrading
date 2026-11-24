@@ -1,0 +1,346 @@
+{
+ "N": 7,
+ "cap": 1.8,
+ "events": 375,
+ "events_13": 280,
+ "exclusions": {
+  "candidates": 412,
+  "outside_window": 0,
+  "placebo_near_real_ex": 0,
+  "rule1_not_declared": 0,
+  "rule2_next_ex": 5,
+  "rule3_split_mask": 0,
+  "rule4_no_return": 0,
+  "rule5_basket_lt3": 32
+ },
+ "k": 0.16482568436435574,
+ "label": "FIT data 2021-01-01..2022-12-30 (not the test set), amendment 1 (MUB/IEF hedge)",
+ "limitation": "Stated limitation (team lead's ruling R10, 2026-10-28: KEEP): a basket fund whose ex-date in [e+1, e+8] has no declaration found stays in the basket, so the hedge basket's exclusion window uses ex-dates that may not have been public at decide time.",
+ "notes": [
+  "rule 1 cannot exclude in the fit (no declaration dates): the realised calendar is used",
+  "X4 fills and X5 exclusions are test-cell rulings and do not apply to the fit",
+  "the rich/cheap split is not computed in the rehearsal",
+  "amendment 1's betas were estimated on 2007-09-11..2022-12-30, which contains this rehearsal window: the rehearsal is IN-SAMPLE for the hedge ratios"
+ ],
+ "report_only": {
+  "R10_alternative_basket": {
+   "events": 375,
+   "exclusions": {
+    "candidates": 412,
+    "outside_window": 0,
+    "placebo_near_real_ex": 0,
+    "rule1_not_declared": 0,
+    "rule2_next_ex": 5,
+    "rule3_split_mask": 0,
+    "rule4_no_return": 0,
+    "rule5_basket_lt3": 32
+   },
+   "mean_bp": 23.947951076732057,
+   "months": 24,
+   "t_month": 2.7856173635048247,
+   "unknown": "exclude"
+  },
+  "amendment1_hedge": {
+   "gross_per_event_unit_max": 1.1537587045957534,
+   "gross_per_event_unit_mean": 0.5902574946819434,
+   "mean_h_IEF": -0.08904425829532436,
+   "mean_h_MUB": 0.09649376263061883,
+   "share_long_IEF": 0.376,
+   "share_long_MUB": 0.5626666666666666,
+   "unhedged_stage1": {
+    "events": 375,
+    "mean_bp": 23.876756689888207,
+    "months": 24,
+    "t_month": 2.9094842326575945
+   }
+  },
+  "calendar_surprise_cells": 0,
+  "capacity": {
+   "1,000,000": {
+    "median_participation_short_leg": 0.041131649560095546,
+    "median_rounding_short_leg": 3.814076816700855e-05,
+    "p95_participation": 0.1234389362296315
+   },
+   "10,000,000": {
+    "median_participation_short_leg": 0.4113164956009554,
+    "median_rounding_short_leg": 4.308253866772724e-06,
+    "p95_participation": 1.234389362296315
+   },
+   "100,000": {
+    "median_participation_short_leg": 0.0041131649560095535,
+    "median_rounding_short_leg": 0.00037608325690537527,
+    "p95_participation": 0.012343893622963146
+   }
+  },
+  "declared_by_e_minus_2": {
+   "events": 375,
+   "mean_bp": 23.947951076732057,
+   "months": 24,
+   "t_month": 2.7856173635048247
+  },
+  "eras": {
+   "2021": {
+    "events": 186,
+    "mean_bp": 24.63349540311935,
+    "months": 12,
+    "t_month": 2.5721060786023497
+   },
+   "2022": {
+    "events": 189,
+    "mean_bp": 23.27328840631916,
+    "months": 12,
+    "t_month": 1.5981883876446923
+   }
+  },
+  "hedge_HD": {
+   "events": 375,
+   "mean_bp": 28.598453528326154,
+   "months": 24,
+   "t_month": 3.2238087337854235
+  },
+  "hedge_HYG": {
+   "events": 375,
+   "mean_bp": 76.30982571928043,
+   "months": 24,
+   "t_month": 3.4998666289658726
+  },
+  "inverse_vol_unit": {
+   "events": 374,
+   "events_without_sd": 1,
+   "mean_bp": 21.708086266980732,
+   "months": 24,
+   "t_month": 2.3359160767387452
+  },
+  "muni": {
+   "events": 141,
+   "mean_bp": 34.79981217496786,
+   "months": 24,
+   "t_month": 1.188568336791469
+  },
+  "price_only_minus_total_bp": 0.0,
+  "size_quartiles": {
+   "Q1": {
+    "events": 94,
+    "mean_bp": 18.33880984886784,
+    "months": 21,
+    "t_month": 1.1616230207492522
+   },
+   "Q2": {
+    "events": 94,
+    "mean_bp": 37.45916363131577,
+    "months": 24,
+    "t_month": 0.9189422936247047
+   },
+   "Q3": {
+    "events": 93,
+    "mean_bp": 9.229333733597038,
+    "months": 21,
+    "t_month": 0.549530909473085
+   },
+   "Q4": {
+    "events": 94,
+    "mean_bp": 30.607916057582308,
+    "months": 19,
+    "t_month": 2.204104131655392
+   }
+  },
+  "specials": {
+   "events": 0,
+   "mean_bp": NaN,
+   "months": 0,
+   "t_month": NaN
+  },
+  "taxable": {
+   "events": 234,
+   "mean_bp": 17.409009132923302,
+   "months": 24,
+   "t_month": 1.9238390986227245
+  }
+ },
+ "sleeve": {
+  "ann": 0.06644842735469263,
+  "borrow": {
+   "B-meas": {
+    "ann": 0.018429863823709224,
+    "covered_share": 0.5006159269902233,
+    "lower_bound": true,
+    "net_ann": 0.048018563530983396
+   },
+   "B0": {
+    "ann": 0.0
+   }
+  },
+  "cap_binding_rows": 62,
+  "cap_binding_share": 0.4161073825503356,
+  "grid": {
+   "15bp": {
+    "ann": -0.029070310853098857,
+    "sr": -1.0498259039251514
+   },
+   "30bp": {
+    "ann": -0.12458904906089034,
+    "sr": -4.4993261926396455
+   },
+   "5bp": {
+    "ann": 0.03460884795209546,
+    "sr": 1.2498409552178444
+   }
+  },
+  "grid_sign_flips": true,
+  "gross_sr": 2.3996743847893423,
+  "max_sized_gross": 2.4404371023927736,
+  "max_sized_gross_cef_only": 1.7581406332197946,
+  "rows_on": 149,
+  "turn_yr": 63.67915880519432,
+  "vol": 0.02769060159823553
+ },
+ "stage1_event_mean": {
+  "boot": {
+   "hi_bp": 41.52149805394088,
+   "lo_bp": 8.274497074274214,
+   "p_le_0": 0.0009
+  },
+  "events": 375,
+  "mean_bp": 23.947951076732057,
+  "months": 24,
+  "pass": true,
+  "t_date": 3.2955753600994875,
+  "t_month": 2.7856173635048247
+ },
+ "stage2_placebo": {
+  "by_shift": {
+   "+10": {
+    "events": 350,
+    "exclusions": {
+     "candidates": 375,
+     "outside_window": 15,
+     "placebo_near_real_ex": 8,
+     "rule1_not_declared": 0,
+     "rule2_next_ex": 0,
+     "rule3_split_mask": 0,
+     "rule4_no_return": 0,
+     "rule5_basket_lt3": 2
+    },
+    "mean_bp": 17.23187052225111,
+    "months": 23,
+    "t_month": 1.888557134305353
+   },
+   "+5": {
+    "events": 367,
+    "exclusions": {
+     "candidates": 375,
+     "outside_window": 0,
+     "placebo_near_real_ex": 5,
+     "rule1_not_declared": 0,
+     "rule2_next_ex": 0,
+     "rule3_split_mask": 0,
+     "rule4_no_return": 0,
+     "rule5_basket_lt3": 3
+    },
+    "mean_bp": 11.64340034364671,
+    "months": 24,
+    "t_month": 1.8592598588764087
+   },
+   "-10": {
+    "events": 352,
+    "exclusions": {
+     "candidates": 375,
+     "outside_window": 13,
+     "placebo_near_real_ex": 6,
+     "rule1_not_declared": 0,
+     "rule2_next_ex": 0,
+     "rule3_split_mask": 0,
+     "rule4_no_return": 0,
+     "rule5_basket_lt3": 4
+    },
+    "mean_bp": -4.751977152956467,
+    "months": 23,
+    "t_month": -0.7989048319591542
+   }
+  },
+  "pass": true,
+  "pooled_events": 719,
+  "pooled_mean_bp": 3.616734309148354
+ },
+ "stage3_nav_leg": {
+  "beside_full_set_price_mean_bp": 23.876756689888207,
+  "beside_full_set_would_kill": false,
+  "events": 375,
+  "excluded_by_ruling_X5": 0,
+  "mean_bp": 4.471056564313467,
+  "months": 24,
+  "no_nav_return": 0,
+  "pass": true,
+  "price_mean_same_events_bp": 23.876756689888207,
+  "t_month": 1.5606309033724246
+ },
+ "stage4_13": {
+  "events": 280,
+  "mean_bp": 19.79051305210975,
+  "months": 24,
+  "pass": true,
+  "t_month": 3.7554877663440434
+ },
+ "stage5_d4": {
+  "alpha_ann": 0.05651023343733895,
+  "alpha_t": 2.590287724678465,
+  "betas_summed_at_target": {
+   "HY": 0.03176323991424363,
+   "MUNI": -0.3690285741777599,
+   "TERM": -0.3861017294210703,
+   "cma": -0.015172694907117703,
+   "hml": 0.022413937050424257,
+   "mktrf": 0.08473877350881592,
+   "rmw": 0.0008583116704072858,
+   "smb": -0.022835845798786402,
+   "umd": -0.009690640108184377
+  },
+  "betas_summed_raw": {
+   "HY": 0.014659053698908223,
+   "MUNI": -0.17031038709868765,
+   "TERM": -0.17818981942980988,
+   "cma": -0.007002350830742893,
+   "hml": 0.010344256685187143,
+   "mktrf": 0.03910779361926228,
+   "rmw": 0.00039611944187273665,
+   "smb": -0.010538971802882248,
+   "umd": -0.004472327574460261
+  },
+  "max_abs_beta_at_target": 0.3861017294210703,
+  "max_abs_beta_raw": 0.17818981942980988,
+  "n": 503,
+  "pass": false,
+  "scale_to_vol_target": 2.166800160955089,
+  "se_at_target_report_only": {
+   "HY": 0.11750415503558113,
+   "MUNI": 0.15423785040119548,
+   "TERM": 0.14918074804139717,
+   "cma": 0.07070663084491113,
+   "hml": 0.03376129077826407,
+   "mktrf": 0.04591731364771497,
+   "rmw": 0.057075814046470635,
+   "smb": 0.03411991688570449,
+   "umd": 0.021052997637335914
+  },
+  "window": [
+   "2021-01-04",
+   "2022-12-30"
+  ]
+ },
+ "stage6_dsr": {
+  "N": 7,
+  "T": 503,
+  "dsr": 0.9613404923513251,
+  "e_max": 1.9727697022487511,
+  "kurt": 37.19726679074765,
+  "pass": true,
+  "skew": 3.731821169456455,
+  "sr": 2.3996743847893427,
+  "sr0": 1.3963447846794668
+ },
+ "verdict": "KILL D4",
+ "window": [
+  "2021-01-04",
+  "2022-12-30"
+ ]
+}

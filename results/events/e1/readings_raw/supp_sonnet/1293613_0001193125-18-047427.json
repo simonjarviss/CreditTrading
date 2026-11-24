@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1293613,
+  "episode_accession": "0001193125-18-047427",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Kayne Anderson Energy Development Company", "cik": null, "ticker": "KED"},
+      "acquirer": {"name": "Kayne Anderson MLP Investment Company", "cik": 1293613, "ticker": "KYN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-18-047427", "quote": "announced the proposed merger of Kayne Anderson Energy Development Company (NYSE: KED) with and into Kayne Anderson MLP Investment Company (NYSE: KYN) in a non-taxable transaction"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-047413", "date": "2018-02-15", "quote": "Kayne Anderson Energy Development Company (KED) to merge with and into Kayne Anderson MLP Investment Company (KYN) in a non-taxable transaction (the “Merger”)"},
+      "outcome_evidence": null,
+      "notes": "Only one target is named. No excerpt states a vote result, completion or termination. The last filing shown (DEF 14A 2019-05-23) is a combined annual-meeting proxy of KYN (renamed Kayne Anderson MLP/Midstream Investment Company) and Kayne Anderson Midstream/Energy Fund, Inc. (NYSE: KMF); the excerpts do not mention KED or the merger. No CIK for KED appears in any filing header."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt."
+}

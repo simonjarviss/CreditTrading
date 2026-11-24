@@ -28,15 +28,15 @@ python3 -m pytest scripts/events/tests/test_spac_trust_census.py
 
 Outputs, all under `results/events/`:
 
-- `spac_trust_census_universe_2026-10-15.csv`: one row per SPAC, 1,489 rows. Each
+- `spac/spac_trust_census_universe_2026-10-15.csv`: one row per SPAC, 1,489 rows. Each
   row records which rule admitted it, its dates, its status (from forms and from
   text) and its Alpaca common.
-- `spac_trust_census_years_2026-10-15.csv`: the per-year table in §1.
-- `spac_trust_census_live_2026-10-15.csv`: one row per live or delisted-but-filing
+- `spac/spac_trust_census_years_2026-10-15.csv`: the per-year table in §1.
+- `spac/spac_trust_census_live_2026-10-15.csv`: one row per live or delisted-but-filing
   SPAC (345 rows). Columns: trust per share with every source beside it,
   deadlines, Alpaca listing and ADV, discount, yields, the accrual model's
   columns, and the screens.
-- `spac_trust_census_summary_2026-10-15.json`: every figure in this note.
+- `spac/spac_trust_census_summary_2026-10-15.json`: every figure in this note.
 - The CRSP rows behind §3.2 stay in the gitignored `_cache_spac/` (CRSP is
   licensed and this repository is public).
 

@@ -1,0 +1,27 @@
+# quantt-c4-verify.service : C4's post-close verification, one line per trading
+# day in C4's own verify.log, pass or fail.
+#
+# RENDERED by quantt/deploy/install_vm.py --book c4 from release tag ${TAG}. Do
+# not hand-edit the installed copy. Started only by quantt-c4-verify.timer.
+# Read-only at the broker. It reads C4's own state (QUANTT_STATE_DIR, which
+# verify refuses unless it is named c4), C4's account (ALPACA_C4_* keys), and
+# C4's distributions panel, data/cef_c4/cef_distributions.parquet
+# (quantt/session/dist_score.py PANELS). A FAIL day exits non-zero.
+[Unit]
+Description=QUANTT C4 verify (release ${TAG})
+Wants=quantt-c4-secret.service
+After=quantt-c4-secret.service
+
+[Service]
+Type=oneshot
+User=${USER}
+Group=${USER}
+WorkingDirectory=${PROD_DIR}
+Environment=DRY_RUN=${DRY_RUN}
+Environment=QUANTT_STATE_DIR=${STATE_DIR}
+Environment=QUANTT_ENV_FILE=${ENV_FILE}
+Environment=PATH=${PATH}
+Environment=PYTHONUNBUFFERED=1
+ExecStart=${PYTHON} -m quantt.session verify --book c4
+StandardOutput=append:${LOG_DIR}/verify.out.log
+StandardError=append:${LOG_DIR}/verify.err.log

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1160469,
+  "episode_accession": "0001341004-13-000688",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Corporate High Yield Fund V, Inc.", "cik": 1160469, "ticker": "HYV"},
+      "acquirer": {"name": "BlackRock Corporate High Yield Fund VI, Inc.", "cik": 1222401, "ticker": "HYT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-001059", "quote": "BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000683", "date": "2013-06-27", "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Shareholders of all funds approved on 2013-10-11 (accession 0001341004-13-001059), with the reorganizations expected effective Nov 18, 2013. The target's N-8F (0001341004-13-001258, filed 2013-12-06) checks Merger and says assets were distributed, but in the excerpt it refers only to 'the Surviving Fund' without naming HYT, so under the N-8F rule it settles nothing. No excerpt states completion. The same filings also propose BHY, COY, CYE and HIS into HYT; those are other funds' deals and are not recorded here."
+    }
+  ],
+  "problems": "Outcome left null: approval is stated, completion is not, and the N-8F excerpt does not name the surviving fund."
+}

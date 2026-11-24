@@ -1,0 +1,4 @@
+$ python3 results/cef/prereg_voltarget/stops.py --scratch <unused with --only c4 --c4-exact> --m-core 1.30 --m-c4 1.26 --only c4 --c4-exact results/cef/c4/_cache_c4/h11_spec_book_c4_families.v5.20261103.parquet
+# run 2026-11-03T18:08Z, code ec3b01a + the activation's uncommitted spec (the series' sidecar names its sha256)
+c4: the exact spec-book series h11_spec_book_c4_families.v5.20261103.parquet (c4_families.v5.20261103, band 0.048 + cap 1.9 x sizing_multiplier 1.26 + level_signal (z_share 0.5) (c4_families.v5.20261103))
+c4 account x1.26 (from 2005-02-22): R1 D_R 9.34% (p95 TR 9.34%, PR 9.25%, HALVE 12%) | R2 -1.72% | R3 10.36%

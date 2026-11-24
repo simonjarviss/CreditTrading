@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1049549,
+  "episode_accession": "0001341004-13-000682",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Corporate High Yield Fund III, Inc.", "cik": 1049549, "ticker": "CYE"},
+      "acquirer": {"name": "BlackRock Corporate High Yield Fund VI, Inc.", "cik": 1222401, "ticker": "HYT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000682", "quote": "BlackRock Corporate High Yield Fund III, Inc. (NYSE:CYE), BlackRock High Income Shares (NYSE:HIS), BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT) have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000682", "date": "2013-06-27", "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Shareholders of all six funds approved the reorganizations on 2013-10-11 (press release 0001341004-13-001058, filed 2013-10-15), expected effective 2013-11-18. The CYE N-8F (0001341004-13-001255, filed 2013-12-06) checks Merger, shows shareholder approval on October 11, 2013 and refers to 'the effective date of the Merger' and 'the Surviving Fund', but the excerpt never names the surviving fund, so under the N-8F rule it settles nothing. No filing excerpt states completion by name. The same filings also propose BHY, COY, HIS and HYV into HYT; only the pair for this episode's fund (CYE) is recorded."
+    }
+  ],
+  "problems": "Other target-acquirer pairs in the same press release (BHY, COY, HIS, HYV into HYT) not recorded as they are not this episode's fund."
+}

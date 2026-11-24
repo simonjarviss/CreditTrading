@@ -1,0 +1,28 @@
+{
+  "episode_cik": 35315,
+  "episode_accession": "0001562565-24-000052",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Fidelity Municipal Bond Index Fund", "cik": 35315, "ticker": "FMBIX"},
+      "acquirer": {"name": "Fidelity Systematic Municipal Bond Index ETF", "cik": 1562565, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001562565-24-000052", "quote": "In April 2025, Fidelity® Municipal Bond Index Fund will be converted from a mutual fund to an ETF."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000035315-24-000762", "date": "2024-10-03", "quote": "Fidelity Investments announced plans to convert Fidelity® Municipal Bond Index Fund and Fidelity® Municipal Core Plus Bond Fund into exchange traded funds (ETFs)."},
+      "outcome_evidence": {"accession": "0001562565-24-000052", "date": "2024-10-03", "quote": "In April 2025, Fidelity® Municipal Bond Index Fund will be converted from a mutual fund to an ETF."},
+      "notes": "Mutual fund to ETF conversion (reorganization into a newly created ETF), not a merger of two listed closed-end funds. Target CIK shown is the trust (Fidelity Salem Street Trust) from the filing header; the fund is a series. Acquirer CIK is the trust (Fidelity Merrimack Street Trust)."
+    },
+    {
+      "target": {"name": "Fidelity Municipal Core Plus Bond Fund", "cik": 35315, "ticker": "FMBAX"},
+      "acquirer": {"name": "Fidelity Municipal Bond Opportunities ETF", "cik": 1562565, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001562565-24-000054", "quote": "If shareholders approve the Conversion, Fidelity® Municipal Core Plus Bond Fund will be converted from a mutual fund to an ETF in April 2025."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000035315-24-000762", "date": "2024-10-03", "quote": "Fidelity Investments announced plans to convert Fidelity® Municipal Bond Index Fund and Fidelity® Municipal Core Plus Bond Fund into exchange traded funds (ETFs)."},
+      "outcome_evidence": {"accession": "0001562565-24-000054", "date": "2024-10-03", "quote": "If shareholders approve the Conversion, Fidelity® Municipal Core Plus Bond Fund will be converted from a mutual fund to an ETF in April 2025."},
+      "notes": "Mutual fund to ETF conversion subject to shareholder approval at a meeting on March 12, 2025; the excerpts do not say whether it was approved or completed. Target and acquirer CIKs shown are the trusts from the filing headers."
+    }
+  ],
+  "problems": ""
+}

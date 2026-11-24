@@ -53,6 +53,7 @@ class FakeClient:
         self.extra, self.missing = set(extra_days), set(missing_days)
         self.prints = {"AAA": 9.50, "BBB": 19.00, "CCC": 5.00} if prints is None else prints
         self.calls = []
+        self.superseded = {}
 
     def clock(self):
         self.calls.append("clock")
@@ -81,8 +82,10 @@ class FakeClient:
         p = self.prints.get(symbols[0])
         if p is None:
             raise al.MissingAuctionPrint(f"no print for {symbols}", symbols=list(symbols))
-        return {symbols[0]: {"price": p, "exchange": "N", "condition": "M",
-                             "t": "2026-09-29T20:00:01Z"}}
+        out = {"price": p, "exchange": "N", "condition": "M", "t": "2026-09-29T20:00:01Z"}
+        if symbols[0] in self.superseded:
+            out["superseded"] = self.superseded[symbols[0]]
+        return {symbols[0]: out}
 
     def account(self):
         self.calls.append("account")
@@ -401,6 +404,94 @@ def test_cefconnect_unreadable_fails_the_step_so_it_is_retried(env):
     assert not d["ok"] and d["detail"]["fetch_errors"] == ["AAA: ConnectionError"]
 
 
+# ------------------------------------------------- CEFConnect down (2026-10-29)
+
+def refused(ticker, cause=None):
+    """A CefConnectError exactly as the shared reader raises it (`nav_gate._wrap`,
+    `from` the cause): by default the JSONDecodeError CEFConnect has answered
+    every scripted request from the VM with since 2026-10-21."""
+    from quantt.session import nav_gate as ng
+    cause = cause if cause is not None else json.JSONDecodeError("Expecting value", "<html>", 0)
+
+    def boom():
+        raise cause
+    try:
+        ng._wrap(ticker, boom)
+    except co.CefConnectError as e:
+        return e
+    raise AssertionError("nav_gate._wrap did not raise")
+
+
+def test_cefconnect_refusing_every_name_is_second_source_unavailable_not_incomplete(env):
+    """Every request refused: a distinct status, the collector exits 0, nothing is
+    compared, flagged or filled; the step is retried, and compares the slot
+    CEFConnect answers again. On bd87144 this run exited 5 (INCOMPLETE)."""
+    ctx = make_ctx(env, cc={"AAA": refused("AAA"), "BBB": refused("BBB")})
+    assert co.collect(ctx) == co.EXIT_OK
+    want = "second source unavailable (cefconnect: JSONDecodeError)"
+    st = status(env)["steps"]["nav_crosscheck"]
+    assert not st["ok"] and st["unavailable"] == want and st["err"] == want
+    assert st["detail"]["second_source"] == want
+    assert st["detail"]["flags"] == [] and st["detail"]["gaps"] == []      # nothing faked
+    assert [e.split(":")[0] for e in st["detail"]["fetch_errors"]] == ["AAA", "BBB"]
+    report = json.loads((env[0] / "data" / D.isoformat() / "report.json").read_text())
+    assert report["complete"] and report["failed_steps"] == []
+    assert report["unavailable"] == {"nav_crosscheck": want}
+    # (the arrival WATCH reads the same refusing CEFConnect, so it is still watching)
+    assert log_lines(env)[-1] == (f"{D} DATA COMPLETE flags=0 gaps=0 watching=cefconnect_arrival"
+                                  f"; nav_crosscheck: {want}")
+    # Retried next slot: CEFConnect is back, and disagrees on AAA -- a real flag.
+    assert co.collect(make_ctx(env, cc={"AAA": 10.02, "BBB": 20.00})) == co.EXIT_OK
+    st = status(env)["steps"]["nav_crosscheck"]
+    assert st["ok"] and "unavailable" not in st
+    assert [(f["fund"], f["value_a"], f["value_b"]) for f in st["detail"]["flags"]] == \
+        [("AAA", 10.00, 10.02)]
+    report = json.loads((env[0] / "data" / D.isoformat() / "report.json").read_text())
+    assert "unavailable" not in report
+    assert log_lines(env)[-1] == f"{D} DATA COMPLETE flags=1 gaps=0"
+
+
+def test_a_mixed_outage_names_every_error_class(env):
+    import requests
+    ctx = make_ctx(env, cc={"AAA": refused("AAA"),
+                            "BBB": refused("BBB", requests.ConnectionError("reset"))})
+    assert co.collect(ctx) == co.EXIT_OK
+    assert status(env)["steps"]["nav_crosscheck"]["unavailable"] == \
+        "second source unavailable (cefconnect: ConnectionError, JSONDecodeError)"
+
+
+def test_one_name_refused_is_still_a_failed_step_as_today(env):
+    """One fund's error is not an outage: the step fails and the day is
+    INCOMPLETE, exactly as before (same error class as the outage's)."""
+    ctx = make_ctx(env, cc={"AAA": refused("AAA"), "BBB": 20.00})
+    assert co.collect(ctx) == co.EXIT_INCOMPLETE
+    st = status(env)["steps"]["nav_crosscheck"]
+    assert not st["ok"] and "unavailable" not in st and "second_source" not in st["detail"]
+    assert st["err"] == "CEFConnect unreadable for 1 fund(s)"
+    assert log_lines(env)[-1].startswith(f"{D} DATA INCOMPLETE nav_crosscheck ")
+
+
+def test_a_lone_name_asked_and_refused_is_not_read_as_an_outage(env):
+    """Only one name reached CEFConnect (the other is a panel gap): one error is
+    one error, never an outage."""
+    state, cef = env
+    write_panels(cef, nav={"BBB": 20.00})                  # AAA: no NAV dated D
+    ctx = make_ctx(env, cc={"AAA": 10.00, "BBB": refused("BBB")})
+    assert co.collect(ctx) == co.EXIT_INCOMPLETE
+    st = status(env)["steps"]["nav_crosscheck"]
+    assert not st["ok"] and "unavailable" not in st
+    assert [g["fund"] for g in st["detail"]["gaps"]] == ["AAA"]
+
+
+def test_a_real_disagreement_beside_an_error_is_still_flagged_and_still_incomplete(env):
+    ctx = make_ctx(env, cc={"AAA": 10.02, "BBB": refused("BBB")})
+    assert co.collect(ctx) == co.EXIT_INCOMPLETE
+    st = status(env)["steps"]["nav_crosscheck"]
+    assert "unavailable" not in st
+    assert [(f["fund"], f["value_a"], f["value_b"]) for f in st["detail"]["flags"]] == \
+        [("AAA", 10.00, 10.02)]
+
+
 def test_a_nav_the_panel_took_from_cefconnect_is_not_counted_as_agreement(env):
     state, cef = env
     pd.DataFrame([{"date": D.isoformat(), "nav": 10.0, "ticker": "AAA", "source": "cefconnect",
@@ -474,6 +565,42 @@ def test_official_close_file_is_deduplicated_and_not_refetched(env):
     queried = [c[1] for c in client.calls if isinstance(c, tuple) and c[0] == "prints"]
     assert queried == ["BBB", "CCC"], "AAA already had D's print and was queried again"
     assert f.loc[(f.ticker == "AAA") & (f.date == pd.Timestamp(D)), "fetched_at_utc"].item() == "old"
+
+
+def test_a_later_print_the_client_chose_is_stored_and_flagged_in_the_days_report(env):
+    """Two prices from the primary, the later one confirmed by the daily bar (ruling 2026-11-22):
+    the price is stored like any other and the day's report names the fund and what was set aside."""
+    state, cef = env
+    client = FakeClient()
+    client.superseded = {"BBB": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}
+    assert co.collect(make_ctx(env, client)) == co.EXIT_OK
+    f = pd.read_parquet(cef / co.OFFICIAL_CLOSE_FILE)
+    assert f.loc[(f.ticker == "BBB") & (f.date == pd.Timestamp(D)), "price"].item() == client.prints["BBB"]
+    rep = json.loads((state / "data" / D.isoformat() / "report.json").read_text())
+    flags = [x for x in rep["steps"]["official_closes"]["detail"]["flags"]]
+    assert flags == [{"fund": "BBB", "check": "two_primary_prints_later_used", "price": client.prints["BBB"],
+                      "t": "2026-09-29T20:00:01Z", "superseded": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}]
+
+
+def test_the_later_print_flag_survives_a_retry_that_does_not_ask_for_that_fund_again(env):
+    """Review 2026-11-22: BBB is resolved and stored on the first slot while CCC errors, so the
+    step fails; on the next slot BBB is not asked for again. Its flag must still be in the record."""
+    client = FakeClient()
+    client.superseded = {"BBB": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}
+    real = client.closing_auction_prints
+
+    def flaky(symbols, date, **kw):
+        if symbols[0] == "CCC":
+            raise al.AlpacaHTTPError("GET /v2/stocks/auctions -> HTTP 503", status=503)
+        return real(symbols, date, **kw)
+    client.closing_auction_prints = flaky
+    assert co.collect(make_ctx(env, client)) == co.EXIT_INCOMPLETE
+    client.closing_auction_prints = real
+    client.calls.clear()
+    co.collect(make_ctx(env, client))
+    d = status(env)["steps"]["official_closes"]
+    assert d["ok"] and ("prints", "BBB") not in client.calls
+    assert [(f["fund"], f["check"]) for f in d["detail"]["flags"]] == [("BBB", "two_primary_prints_later_used")]
 
 
 # ------------------------------------------------------------------ account
@@ -818,3 +945,133 @@ def test_an_unexpected_error_in_eod_equity_leaves_every_other_step_done(env):
     steps = status(env)["steps"]
     assert all(steps[s]["ok"] for s in co.STEPS if s != "eod_equity"), steps
     assert co.STEPS[-1] == "eod_equity"
+
+
+# ------------------------------------------------------------------ empty rows (2026-10-28)
+# fetch_daily wrote price rows with every price NaN until 2026-10-28 (its
+# docstring, EMPTY ROWS: 15 good 2026-09-15 bars on the laptop panel had become
+# such rows), and the panel still holds them. A NaN compares False against
+# everything, so `_compare` returned None: a deployed name whose panel value for
+# D was empty was neither a flag nor a gap. Each of these failed on 4487383.
+
+NAN = float("nan")
+
+
+def test_an_empty_panel_close_is_a_gap_naming_the_fund_and_date(env):
+    state, cef = env
+    write_panels(cef, close={"AAA": 9.50, "BBB": NAN})
+    assert co.collect(make_ctx(env)) == co.EXIT_OK
+    d = status(env)["steps"]["close_crosscheck"]["detail"]
+    assert d["flags"] == []
+    (g,) = d["gaps"]
+    assert g["fund"] == "BBB" and D.isoformat() in g["reason"] and "empty" in g["reason"], g
+    assert "cef_prices.parquet" in g["reason"], g
+
+
+@pytest.mark.parametrize("cc_aaa", [10.02, None], ids=["cefconnect_has_d", "cefconnect_has_no_d"])
+def test_an_empty_panel_nav_is_a_gap_naming_the_fund_and_date(env, cc_aaa):
+    """Whatever CEFConnect says, an empty panel NAV for D is a gap that says the
+    row is empty: never a pass, and never the 'CEFConnect has no NAV' gap, which
+    would blame the other source."""
+    state, cef = env
+    write_panels(cef, nav={"AAA": NAN, "BBB": 20.00})
+    assert co.collect(make_ctx(env, cc={"AAA": cc_aaa, "BBB": 20.00})) == co.EXIT_OK
+    d = status(env)["steps"]["nav_crosscheck"]["detail"]
+    assert d["flags"] == []
+    (g,) = d["gaps"]
+    assert g["fund"] == "AAA" and D.isoformat() in g["reason"] and "is empty" in g["reason"], g
+    assert "cef_nav.parquet" in g["reason"], g
+
+
+def test_a_cefconnect_nav_that_is_not_finite_is_unreadable_not_agreement(env):
+    """The other side of the same comparison: a CEFConnect value that is not
+    finite is unreadable, as the session's gate treats it (`nav_gate.read_cc`),
+    so the step fails and is retried. It used to compare False and pass."""
+    ctx = make_ctx(env, cc={"AAA": NAN, "BBB": 20.00})
+    assert co.collect(ctx) == co.EXIT_INCOMPLETE
+    d = status(env)["steps"]["nav_crosscheck"]
+    assert not d["ok"]
+    (e,) = d["detail"]["fetch_errors"]
+    assert e.startswith("AAA:") and D.isoformat() in e and "not a finite" in e, e
+
+
+@pytest.mark.parametrize("a, b", [(NAN, 1.0), (1.0, NAN), (float("inf"), 1.0)])
+def test_compare_refuses_a_value_that_is_not_finite(a, b):
+    """For the caller that forgets: a value that is not finite raises, naming
+    the fund, rather than reading as agreement."""
+    with pytest.raises(ValueError, match="AAA.*not finite"):
+        co._compare("AAA", "source a", a, "source b", b)
+
+
+def _fresh_env(root):
+    state, cef = root / "state", root / "cef"
+    state.mkdir(parents=True)
+    cef.mkdir()
+    return state, cef
+
+
+def test_with_no_empty_rows_the_crosschecks_are_unchanged(tmp_path):
+    """The no-op proof. (a) A clean panel -- one flag and one missing row in
+    each cross-check -- gives exactly the details the pre-fix code gave, pinned
+    here and passing on 4487383 too: the same flags, the same gap reasons, the
+    same counts. (b) The same day with BBB's rows present but EMPTY instead of
+    missing, and a CEFConnect NAV for BBB that would flag if a NaN could be
+    compared: the flags are unchanged and BBB is a gap in both checks, its
+    reason naming the empty row. Part (b) is what the old code fails."""
+    want_nav_flags = [{"fund": "AAA", "source_a": "cef_nav.parquet (yfinance)", "value_a": 10.00,
+                       "source_b": "cefconnect", "value_b": 10.02, "diff": -0.02}]
+    want_close_flags = [{"fund": "AAA", "source_a": "alpaca official close (M, primary)",
+                         "value_a": 9.50, "source_b": "cef_prices.parquet (yfinance)",
+                         "value_b": 9.52, "diff": -0.02}]
+
+    a = _fresh_env(tmp_path / "a")
+    write_panels(a[1], nav={"AAA": 10.00, "BBB": 20.00}, close={"AAA": 9.52})
+    assert co.collect(make_ctx(a, cc={"AAA": 10.02, "BBB": None})) == co.EXIT_OK
+    s = status(a)["steps"]
+    assert s["nav_crosscheck"]["detail"] == {
+        "flags": want_nav_flags,
+        "gaps": [{"fund": "BBB", "reason": f"CEFConnect has no NAV dated {D}"}],
+        "fetch_errors": []}
+    assert s["close_crosscheck"]["detail"] == {
+        "flags": want_close_flags,
+        "gaps": [{"fund": "BBB", "reason": f"no panel close dated {D}"}]}
+    # BBB has no CEFConnect row yet, so the arrival watch is still running.
+    assert log_lines(a) == [f"{D} DATA COMPLETE flags=2 gaps=2 watching=cefconnect_arrival"]
+
+    b = _fresh_env(tmp_path / "b")
+    write_panels(b[1], nav={"AAA": 10.00, "BBB": NAN}, close={"AAA": 9.52, "BBB": NAN})
+    assert co.collect(make_ctx(b, cc={"AAA": 10.02, "BBB": 20.03})) == co.EXIT_OK
+    s = status(b)["steps"]
+    assert s["nav_crosscheck"]["detail"] == {
+        "flags": want_nav_flags,
+        "gaps": [{"fund": "BBB", "reason": f"cef_nav.parquet's row dated {D} is empty "
+                                           f"(nav nan): no NAV to compare"}],
+        "fetch_errors": []}
+    assert s["close_crosscheck"]["detail"] == {
+        "flags": want_close_flags,
+        "gaps": [{"fund": "BBB", "reason": f"cef_prices.parquet's close dated {D} is empty (nan)"}]}
+    assert log_lines(b) == [f"{D} DATA COMPLETE flags=2 gaps=2"]
+
+
+@pytest.mark.parametrize("bad", [NAN, float("inf"), 0.0], ids=["nan", "inf", "zero"])
+def test_a_cefconnect_value_that_is_no_nav_is_not_an_arrival(env, bad):
+    """Review of the NAV half (2026-10-28): the arrival watch logged any value
+    CEFConnect returned as the row's first sighting, NaN included, so the
+    arrival time of a real NAV was lost and the file carried a NaN. A value
+    that is not a finite positive number (`read_cc`'s test) is now an error,
+    read again next slot, and the arrival is logged when a real NAV appears.
+    Failed on 377fe41."""
+    state, cef = env
+    cc = {"AAA": bad, "BBB": 20.00}
+    co.collect(make_ctx(env, cc=cc))
+    st = status(env)["steps"]["cefconnect_arrival"]
+    assert not st["ok"] and "AAA" not in st["detail"]["first_seen"]
+    (e,) = st["detail"]["fetch_errors"]
+    assert e.startswith("AAA:") and "not recorded as an arrival" in e, e
+    rows = pd.read_csv(state / co.ARRIVAL_FILE, keep_default_na=False)
+    assert rows["ticker"].tolist() == ["BBB"]
+    cc["AAA"] = 10.00                                                # the real row
+    co.collect(make_ctx(env, cc=cc))
+    rows = pd.read_csv(state / co.ARRIVAL_FILE, keep_default_na=False)
+    assert rows["ticker"].tolist() == ["BBB", "AAA"] and rows.iloc[1]["nav"] == 10.0
+    assert status(env)["steps"]["cefconnect_arrival"]["ok"]

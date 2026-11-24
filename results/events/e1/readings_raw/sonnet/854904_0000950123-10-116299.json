@@ -1,0 +1,18 @@
+{
+  "episode_cik": 854904,
+  "episode_accession": "0000950123-10-116299",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Invesco Prime Income Trust", "cik": 854904, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Senior Loan Fund", "cik": 853180, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000950123-11-014167", "quote": "The proposed reorganization is part of a larger group of reorganizations across Invesco’s mutual fund platform."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000950123-10-116299", "date": "2010-12-23", "quote": "The Invesco Funds Board of Trustees has approved a reorganization of Invesco Prime Income Trust into Invesco Van Kampen Senior Loan Fund, pending shareholder approval."},
+      "outcome_evidence": {"accession": "0000950123-11-014167", "date": "2011-02-15", "quote": "The proposed reorganization is part of a larger group of reorganizations across Invesco’s mutual fund platform."},
+      "notes": "Listing status is inferred from the filing describing the reorganization as part of Invesco's mutual fund platform (symbols shown under a 'Nasdaq Symbol' heading are not exchange tickers of listed shares). Independently of that, the merger's own outcome is not stated: the shareholder meeting of April 14, 2011 was adjourned repeatedly (May 11, June 30, Sept 14, Sept 22, Oct 19, 2011) and the last filing in the window (2011-09-23) still shows the vote pending."
+    }
+  ],
+  "problems": "Whether the funds are exchange-listed is not stated outright; false is inferred from the 'mutual fund platform' wording. If that inference is rejected, both_listed should be null and the outcome null (merger outcome is not stated in any excerpt)."
+}

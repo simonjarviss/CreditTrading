@@ -1,32 +1,74 @@
 {
- "run_utc": "2026-10-20T16:02:40+00:00",
- "head": "9d978cb",
- "verdict": "STAGE 0: HALT",
+ "run_utc": "2026-10-22T15:44:06+00:00",
+ "head": "732fc9d",
+ "verdict": "STAGE 0: CLEAR",
  "gates": {
   "DG-E1-6": {
    "status": "PASS",
    "detail": "numexpr off; the denormal assertion runs on every P&L built (identity check 2 here)"
   },
   "DG-E1-2": {
-   "status": "FAIL",
-   "detail": "the name- and time-holdout deals are undated: 299 EDGAR documents are not cached and fetching needs the team lead's SEC contact (`fetch-edgar`)",
-   "missing_documents": 299
+   "status": "PASS",
+   "detail": "holdout dates cover the 231 holdout deals: True; dated 63, undatable and excluded 2 (EDI, MGB); amendment 4's 331 deals without a date row: 0 ()",
+   "dated": 63,
+   "undatable": 2,
+   "basis_by_set": {
+    "name_holdout": {
+     "merger communication": 29,
+     "registration (upper bound)": 6
+    },
+    "time_holdout": {
+     "merger communication": 14,
+     "registration (upper bound)": 14
+    }
+   },
+   "groups_by_set": {
+    "name_holdout": {
+     "muni": 15,
+     "taxable_income": 4
+    },
+    "time_holdout": {
+     "equity_other": 11,
+     "muni": 3,
+     "taxable_income": 7
+    }
+   }
   },
   "DG-E1-3": {
-   "status": "FAIL",
-   "detail": "results/events/e1/e1_failed_deal_readings.csv does not exist: 273 candidate episode(s) unread",
-   "candidates": 273,
-   "first_filing_cached": 10
+   "status": "PASS",
+   "detail": "754 readings, every quote re-found",
+   "candidates": 255,
+   "first_filing_cached": 255,
+   "supp_episodes": 155,
+   "in_trial_deals_ruled": 13,
+   "in_trial_deal_list": [
+    "AFT->AIF",
+    "ALD->PSEC",
+    "BHV->MYI",
+    "BKN->MYI",
+    "FGB->AOD",
+    "MIY->MYI",
+    "MPA->MYI",
+    "NCU->NKX",
+    "NMT->NEA",
+    "NQP->NVG",
+    "NXJ->NAD",
+    "RAA->BFZ",
+    "SBI->MMU"
+   ],
+   "exempt_rows": 733,
+   "moot_rows": 35,
+   "crsp_settled": 223
   },
   "DG-E1-1": {
-   "status": "FAIL",
-   "detail": "fit reader PASS; holdout guard PASS; control-2 pool missing 9; the failed deals' parties wait on DG-E1-3",
-   "pool": 323,
-   "pool_missing": 9
+   "status": "PASS",
+   "detail": "fit reader PASS; holdout guard PASS; control-2 pool missing 0; 331 fit parties missing 0; the fit reader's set (results/events/e1/_cache_e1/fit_reader_permnos.txt) includes the 4 failed fit deals' parties",
+   "pool": 338,
+   "pool_missing": 0
   },
   "DG-E1-4": {
-   "status": "INCOMPLETE",
-   "detail": "completed fit deals checked ({\"missing return on the leg's last earned session\": 19}); failed deals wait on DG-E1-3"
+   "status": "PASS",
+   "detail": "completed fit deals {\"missing return on the leg's last earned session\": 19}; failed fit deals {}"
   },
   "DG-E1-7": {
    "status": "PASS",
@@ -44,8 +86,8 @@
     "check2": {
      "deals": 167,
      "excluded": {},
-     "median_abs_diff": 0.0023039391444344345,
-     "p95_abs_diff": 0.01424065765982574
+     "median_abs_diff": 0.0023039391444344623,
+     "p95_abs_diff": 0.014240657659825719
     }
    }
   },
@@ -57,9 +99,9 @@
  "counts_equal_prereg": true,
  "fit_groups_by_segment": {
   "bdc": 4,
-  "equity_other": 30,
-  "muni": 49,
-  "taxable_income": 35
+  "equity_other": 31,
+  "muni": 51,
+  "taxable_income": 39
  },
  "n_flags": 19,
  "crsp_pulled": {

@@ -1,0 +1,11 @@
+{
+ "source": "Alpaca GET /v1/corporate-actions types=redemption,partial_call, read 2026-10-19",
+ "rows": 16,
+ "by_year_type_all": {
+  "2023": {
+   "redemptions": 16
+  }
+ },
+ "by_year_type_nyse_pref_symbols": {},
+ "note": "NYSE '.PR' symbols only: a lower bound on preferred calls"
+}

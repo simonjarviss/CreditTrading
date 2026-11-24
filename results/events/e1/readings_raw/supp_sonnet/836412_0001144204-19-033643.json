@@ -1,0 +1,18 @@
+{
+  "episode_cik": 836412,
+  "episode_accession": "0001144204-19-033643",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Virtus Total Return Fund Inc.", "cik": null, "ticker": "ZF"},
+      "acquirer": {"name": "Virtus Global Dividend & Income Fund Inc.", "cik": 836412, "ticker": "ZTR"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001144204-19-033643", "quote": "Virtus Global Dividend & Income Fund Inc. (NYSE: ZTR) and Virtus Total Return Fund Inc. (NYSE: ZF)"},
+      "outcome": null,
+      "announcement": {"accession": "0001144204-19-033643", "date": "2019-07-02", "quote": "The Reorganization will not be consummated unless it is approved by the shareholders of ZF and the shareholders of ZTR approve the issuance of additional shares of common stock of ZTR in connection with the Reorganization (the “Issuance”)."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show only the proxy/N-14 and reminder letters for the 1 Nov 2019 meeting. The 2020 and 2021 DEF 14A excerpts are annual-meeting notices (VGI and ZTR) and state nothing about the ZF reorganization, so the outcome is not stated in the text provided."
+    }
+  ],
+  "problems": ""
+}

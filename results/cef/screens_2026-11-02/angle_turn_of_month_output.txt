@@ -1,0 +1,71 @@
+1. credit 17 leg on SPY/HYG: beta SPY +0.240, HYG +0.347; baseline raw -1.52 bp/day
+   profile, raw vs residual (excess over days >= 6 sessions from a month-end):
+    raw_excess_bp  raw_t  raw_cum_bp  resid_excess_bp  resid_t  resid_cum_bp
+k                                                                           
+-3          11.00   1.93       11.00             5.32     0.98          5.32
+-2          14.79   3.25       25.79             8.56     1.91         13.88
+-1           1.33   0.23       27.12            -2.78    -0.67         11.11
+ 0          13.86   3.36       40.98            14.60     3.46         25.71
+ 1          21.06   3.56       62.04            16.35     2.97         42.06
+ 2          12.34   2.91       74.38             9.16     2.06         51.22
+ 3           0.40   0.09       74.78            -1.01    -0.25         50.21
+ 4          -9.13  -1.55       65.64            -8.63    -1.84         41.58
+ 5           6.52   1.74       72.16             7.68     1.83         49.26
+
+2. discount at t-1 (share of name-days 0.67): k -2..+2 excess sum +55.9bp
+ k  excess_bp     t   n  cum_bp
+-3       7.35  1.56 216    7.35
+-2      15.47  3.54 216   22.82
+-1       3.84  0.72 216   26.65
+ 0      14.07  3.59 216   40.72
+ 1      17.53  3.45 215   58.25
+ 2       5.00  1.29 215   63.25
+ 3      -4.36 -1.15 215   58.89
+ 4     -10.73 -1.92 215   48.16
+ 5       3.63  1.00 215   51.78
+
+2. premium at t-1 (share of name-days 0.33): k -2..+2 excess sum +54.0bp
+ k  excess_bp     t   n  cum_bp
+-3      19.23  1.81 211   19.23
+-2       5.22  0.61 213   24.45
+-1     -12.27 -1.28 214   12.19
+ 0       8.09  0.96 213   20.27
+ 1      29.58  3.03 213   49.85
+ 2      23.39  2.68 213   73.24
+ 3       6.66  0.76 214   79.90
+ 4     -11.78 -1.36 205   68.12
+ 5       9.98  1.36 178   78.10
+
+2b. by sponsor, discount-leg excess summed over k -2..+2: {'ALLIANCEBERNSTEIN': (['AWF'], 27.3), 'BLACKROCK': (['BIT', 'HYT', 'MHD', 'MQY'], 26.8), 'DOUBLELINE': (['DSL'], 87.5), 'NUVEEN': (['JFR', 'NAD', 'NEA', 'NVG', 'NZF'], 28.1), 'PIMCO': (['PCN', 'PDI', 'PDO', 'PFN', 'PHK', 'PTY'], 45.0)}
+
+3. turn-of-month (k -2..+2): months 187; CEF EW total return +81.6bp (t +5.87); minus HYG +48.7bp (t +5.13); by era {'2005-09': 66.2, '2010-14': 23.3, '2015-19': 42.4, '2020-22': 87.0}
+
+3. PLACEBO: 10 sessions earlier: months 188; CEF EW total return -37.2bp (t -2.19); minus HYG -43.3bp (t -3.72); by era {'2005-09': -50.2, '2010-14': -34.0, '2015-19': -20.9, '2020-22': -89.9}
+
+4a. median ex-date day of month: {'AWF': 5.0, 'BIT': 13.0, 'DSL': 14.0, 'HYT': 13.0, 'JFR': 12.0, 'MHD': 13.0, 'MQY': 13.0, 'NAD': 12.0, 'NEA': 12.0, 'NVG': 12.0, 'NZF': 12.0, 'PCN': 9.0, 'PDI': 10.0, 'PDO': 10.0, 'PFN': 10.0, 'PHK': 9.0, 'PTY': 9.0}
+4b. ex-clean name-months (no ex-date k-8..k+2): months 187, mean names 14.3; minus HYG +50.8bp (t +5.44)
+5. monthly corr(calendar trade, fit book gross TR) = +0.105 over 114 active months
+   robust: {'median_bp': 57.366, 'share_positive': 0.759, 'trimmed_5pct_mean_bp': 56.675, 'trimmed_t': 8.867, 'ex_2008_09_and_2020_H1_bp': 55.826}
+6. CRSP turn-of-month (k -2..+2): months 187; minus HYG +54.6bp (t +5.06, sd 147); by era {'2005-09': 75.1, '2010-14': 28.6, '2015-19': 46.4, '2020-22': 94.1}
+   robust: {'median_bp': -25.964, 'share_positive': 0.383, 'trimmed_5pct_mean_bp': -34.748, 'trimmed_t': -4.753, 'ex_2008_09_and_2020_H1_bp': -37.709}
+6. CRSP PLACEBO: 10 sessions earlier: months 188; minus HYG -42.4bp (t -3.28, sd 177); by era {'2005-09': -49.5, '2010-14': -31.2, '2015-19': -20.3, '2020-22': -91.9}
+6b. CRSP, munis vs MUB and the rest vs HYG (from 2007-10, MUB's start): +59.0bp (t +2.96); beta to IEF's window return +0.49, intercept +45.6bp
+7. HYG ex-date at k=+1 in 92% of 96 months (2015-22); mean distribution 42.1bp: a short HYG over k=+1 books that on paper
+
+9. fit book gross TR P&L (bp of capital per day) in event time; mean net weight k-2..+2 +0.020 vs all active days +0.039
+ k  excess_bp     t   n  cum_bp
+-3      -2.65 -0.78 115   -2.65
+-2       3.06  0.75 115    0.41
+-1      -3.01 -0.70 115   -2.60
+ 0      -8.44 -2.14 115  -11.04
+ 1      -0.28 -0.06 114  -11.32
+ 2      -0.02 -0.00 114  -11.34
+ 3       3.94  1.05 114   -7.40
+ 4      -3.43 -0.95 114  -10.83
+ 5      -1.50 -0.40 114  -12.34
+8. power
+                                                 design      effect  expected_t  P(t>=2.039) EVENTS, declared N=8  P(t>=2.825) CEF, N=54
+               2023-01..2026-09 time holdout, the 13/17 100% of fit       2.484                             0.672                  0.367
+               2023-01..2026-09 time holdout, the 13/17  50% of fit       1.242                             0.213                  0.057
+27 untouched names, 2007-05..2022-12 (sd assumed equal) 100% of fit       5.064                             0.999                  0.987
+27 untouched names, 2007-05..2022-12 (sd assumed equal)  50% of fit       2.532                             0.689                  0.385

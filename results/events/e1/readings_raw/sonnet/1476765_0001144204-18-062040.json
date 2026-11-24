@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1476765,
+  "episode_accession": "0001144204-18-062040",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Golub Capital Investment Corporation", "cik": 1627515, "ticker": null},
+      "acquirer": {"name": "Golub Capital BDC, Inc.", "cik": 1476765, "ticker": "GBDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001144204-18-062031", "date": "2018-11-28", "quote": "Golub Capital BDC, Inc. Announces Merger Agreement With Golub Capital Investment Corporation"},
+      "outcome_evidence": {"accession": "0001144204-19-044647", "date": "2019-09-16", "quote": "has completed its previously announced merger with Golub Capital Investment Corporation (“GCIC”), with GBDC as the surviving company."},
+      "notes": "GBDC is shown as NASDAQ-listed, but the excerpts never state whether GCIC (a BDC, Commission File No. 814-01128) is exchange-listed, so both_listed is null. GBDC stockholder approval announced 2019-09-04 (0001476765-19-000083)."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 923184,
+  "episode_accession": "0001193125-21-048962",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Matthews Emerging Asia Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Matthews Asia Small Companies Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-048962", "date": "2021-02-19", "quote": "You are receiving the enclosed Combined Prospectus/Information Statement because you owned interests in the Matthews Emerging Asia Fund (the “Target Fund”), a series of Matthews International Funds d/b/a Matthews Asia Funds (the “Trust”)"},
+      "outcome_evidence": null,
+      "notes": "Registrant is the Trust (CIK 923184); the target and acquirer are series of it, so the episode fund is neither party itself (role recorded as other). The excerpts show no exchange listing for either fund; the acquirer is named only in the agreement excerpt (cash delivered to custodian for Matthews Asia Small Companies Fund). Neither excerpt states an outcome."
+    }
+  ],
+  "problems": "Excerpts do not state whether the funds are listed or how the reorganization ended."
+}

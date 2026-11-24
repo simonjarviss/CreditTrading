@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1293613,
+  "episode_accession": "0001213900-21-054259",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Fiduciary/Claymore Energy Infrastructure Fund", "cik": 1305197, "ticker": "FMO"},
+      "acquirer": {"name": "Kayne Anderson Energy Infrastructure Fund, Inc.", "cik": 1293613, "ticker": "KYN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001213900-22-003361", "quote": "Kayne Anderson Energy Infrastructure Fund, Inc. (NYSE: KYN) and Fiduciary/Claymore Energy Infrastructure Fund (NYSE: FMO)"},
+      "outcome": null,
+      "announcement": {"accession": "0001213900-22-003361", "date": "2022-01-24", "quote": "You are being asked whether you would like to approve the merger of FMO"},
+      "outcome_evidence": null,
+      "notes": "The N-14 filed 2021-10-25 and 2021-12-22 are the earliest filings in the window but their excerpts do not describe the merger. FMO special meeting was scheduled for February 4, 2022. No excerpt in the window states the result of the vote or whether the merger closed; the later DEF 14A/DEFA14A filings (2022-02-28, 2022-04-05, 2022-04-07) are shown only as header text."
+    },
+    {
+      "target": {"name": "Kayne Anderson NextGen Energy & Infrastructure, Inc.", "cik": 1500096, "ticker": "KMF"},
+      "acquirer": {"name": "Kayne Anderson Energy Infrastructure Fund, Inc.", "cik": 1293613, "ticker": "KYN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001213900-23-023260", "date": "2023-03-27", "quote": "Overview of KYN & KMF Merger March 27, 2023"},
+      "outcome_evidence": null,
+      "notes": "Updated terms for the proposed merger were announced 2023-04-24 (seq=18 headline). The window ends with shareholder reminder letters on 2023-10-12 and 2023-10-20 about the combined special meeting; no excerpt states a vote result, termination or closing. KYN is shown as NYSE-listed (seq=18), but the excerpts do not show KMF's exchange listing."
+    }
+  ],
+  "problems": "Excerpts of the key filings are mostly headers, so neither deal has a stated outcome. The FMO merger is shown in 2022 and the KMF merger in 2023; no filing in the excerpts reports either ending."
+}

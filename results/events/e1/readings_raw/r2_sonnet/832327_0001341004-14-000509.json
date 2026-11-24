@@ -1,0 +1,28 @@
+{
+  "episode_cik": 832327,
+  "episode_accession": "0001341004-14-000509",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Income Trust, Inc.", "cik": 832327, "ticker": "BKT"},
+      "acquirer": {"name": "BlackRock Core Bond Trust", "cik": 1160864, "ticker": "BHK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000509", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000509", "date": "2014-06-09", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund"},
+      "outcome_evidence": null,
+      "notes": "Latest merger-related filings are vote-solicitation reminders for a joint special meeting on 2014-09-30 (filed 2014-08-29 and 2014-09-18); no filing excerpted states the result of that meeting. The 2015-06-12 DEF 14A excerpts cover only a board election and state no merger outcome."
+    },
+    {
+      "target": {"name": "BlackRock Income Opportunity Trust, Inc.", "cik": 880280, "ticker": "BNA"},
+      "acquirer": {"name": "BlackRock Core Bond Trust", "cik": 1160864, "ticker": "BHK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000509", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000509", "date": "2014-06-09", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund"},
+      "outcome_evidence": null,
+      "notes": "Same joint announcement and same 2014-09-30 joint special meeting reminders as the BKT deal; no excerpt states an outcome. BNA's CIK is taken from the DEF 14A filer list (BLACKROCK INCOME OPPORTUNITY TRUST INC., CIK 880280)."
+    }
+  ],
+  "problems": ""
+}

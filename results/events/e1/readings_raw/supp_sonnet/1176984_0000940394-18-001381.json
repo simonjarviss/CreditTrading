@@ -1,0 +1,68 @@
+{
+  "episode_cik": 1176984,
+  "episode_accession": "0000940394-18-001381",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Eaton Vance Massachusetts Municipal Bond Fund", "cik": 1196871, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Bond Fund", "cik": 1176984, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001381", "date": "2018-07-23", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Massachusetts Municipal Bond Fund and Eaton Vance Michigan Municipal Bond Fund (each an “Acquired Fund” and together, the “Acquired Funds”) on October 12, 2018, to consider a proposal to approve"},
+      "outcome_evidence": null,
+      "notes": "Separate vote from the Michigan fund. No excerpt states an outcome or exchange listing."
+    },
+    {
+      "target": {"name": "Eaton Vance Michigan Municipal Bond Fund", "cik": 1196872, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Bond Fund", "cik": 1176984, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001381", "date": "2018-07-23", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Massachusetts Municipal Bond Fund and Eaton Vance Michigan Municipal Bond Fund (each an “Acquired Fund” and together, the “Acquired Funds”) on October 12, 2018, to consider a proposal to approve"},
+      "outcome_evidence": null,
+      "notes": "Separate vote from the Massachusetts fund. No excerpt states an outcome or exchange listing."
+    },
+    {
+      "target": {"name": "Eaton Vance Ohio Municipal Bond Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Bond Fund", "cik": 1176984, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001633", "date": "2018-10-02", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Ohio Municipal Bond Fund (“OH Acquired Fund”), Eaton Vance New Jersey Municipal Bond Fund (the “NJ Acquired Fund”), Eaton Vance Pennsylvania Municipal Bond Fund (\"PA Acquired Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Joint proposal with New Jersey, Pennsylvania and Municipal Bond Fund II; each fund has a separate vote. No excerpt states an outcome."
+    },
+    {
+      "target": {"name": "Eaton Vance New Jersey Municipal Bond Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Bond Fund", "cik": 1176984, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001633", "date": "2018-10-02", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Ohio Municipal Bond Fund (“OH Acquired Fund”), Eaton Vance New Jersey Municipal Bond Fund (the “NJ Acquired Fund”), Eaton Vance Pennsylvania Municipal Bond Fund (\"PA Acquired Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Joint proposal with Ohio, Pennsylvania and Municipal Bond Fund II. No excerpt states an outcome."
+    },
+    {
+      "target": {"name": "Eaton Vance Pennsylvania Municipal Bond Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Bond Fund", "cik": 1176984, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001633", "date": "2018-10-02", "quote": "We cordially invite you to attend a Joint Special Meeting of Shareholders of Eaton Vance Ohio Municipal Bond Fund (“OH Acquired Fund”), Eaton Vance New Jersey Municipal Bond Fund (the “NJ Acquired Fund”), Eaton Vance Pennsylvania Municipal Bond Fund (\"PA Acquired Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Joint proposal with Ohio, New Jersey and Municipal Bond Fund II. No excerpt states an outcome."
+    },
+    {
+      "target": {"name": "Eaton Vance Municipal Bond Fund II", "cik": 1196867, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Municipal Bond Fund", "cik": 1176984, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001633", "date": "2018-10-02", "quote": "Vance Pennsylvania Municipal Bond Fund Eaton Vance Municipal Bond Fund II Two International Place"},
+      "outcome_evidence": null,
+      "notes": "Announcement quote is the cover-page fund list of the joint proxy (excerpt cut off before the sentence naming the fourth fund); the 2019-01-04 425 (0000940394-19-000018) says its Joint Special Meeting to consider reorganizing the Fund into Eaton Vance Municipal Bond Fund 'was adjourned until January 24, 2019'. That is an adjournment, not an outcome; nothing later states the result."
+    }
+  ],
+  "problems": "Excerpts never state the outcome of any of the six proposed reorganizations (only that the Municipal Bond Fund II meeting was adjourned to January 24, 2019), nor that the funds are exchange listed. CIKs for the Ohio, New Jersey and Pennsylvania targets do not appear in any FILING header."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1100663,
+  "episode_accession": "0001193125-17-351454",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "iShares Edge U.S. Fixed Income Balanced Risk ETF, a series of iShares U.S. ETF Trust", "cik": null, "ticker": null},
+      "acquirer": {"name": "iShares Edge U.S. Fixed Income Balanced Risk ETF, a newly created series of iShares Trust", "cik": 1100663, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-17-351454", "quote": "Letter to Shareholders of the iShares Edge U.S. Fixed Income Balanced Risk ETF, a series of iShares U.S. ETF Trust, a Delaware statutory trust (the “Target Fund”)."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-17-351454", "date": "2017-11-24", "quote": "The Board of Trustees (the “Board”) of iShares U.S. ETF Trust, a Delaware statutory trust (the “ETF Trust”), is pleased to announce the reorganization (the “Reorganization”) of iShares Edge U.S. Fixed Income Balanced Risk ETF, a series of the ETF"},
+      "outcome_evidence": {"accession": "0001193125-17-351454", "date": "2017-11-24", "quote": "Letter to Shareholders of the iShares Edge U.S. Fixed Income Balanced Risk ETF, a series of iShares U.S. ETF Trust, a Delaware statutory trust (the “Target Fund”)."},
+      "notes": "ETF-to-ETF trust reorganization into a newly created series; not closed-end funds."
+    }
+  ],
+  "problems": ""
+}

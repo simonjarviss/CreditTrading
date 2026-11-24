@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1083839,
+  "episode_accession": "0001193125-16-452452",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Premier Municipal Income Fund, Inc.", "cik": null, "ticker": "NPF"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452452", "date": "2016-02-05", "quote": "Nuveen Premier Municipal Income Fund, Inc. NPF Nuveen Dividend Advantage Municipal Fund, to be renamed Nuveen Enhanced Quality Municipal Fund NAD Nuveen Premium Income Municipal Fund, Inc. NPI Nuveen Select Quality Municipal Fund, Inc. NQS Nuveen Investment Quality Municipal Fund, Inc. NQM"},
+      "outcome_evidence": null,
+      "notes": "The 2016-04-22 PRE 14A and 2016-05-04 DEF 14A excerpts are addressed to holders of VMTP shares of NAD, NPI and NQM only; the 2016-03-11 N-14 and its 2016-04-21 amendment name all five funds. From 2016-05-20 the 425s list a different set of subject companies; no excerpt states an outcome. Tickers are shown without an exchange name."
+    },
+    {
+      "target": {"name": "Nuveen Premium Income Municipal Fund, Inc.", "cik": 833251, "ticker": "NPI"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452452", "date": "2016-02-05", "quote": "Nuveen Premier Municipal Income Fund, Inc. NPF Nuveen Dividend Advantage Municipal Fund, to be renamed Nuveen Enhanced Quality Municipal Fund NAD Nuveen Premium Income Municipal Fund, Inc. NPI Nuveen Select Quality Municipal Fund, Inc. NQS Nuveen Investment Quality Municipal Fund, Inc. NQM"},
+      "outcome_evidence": null,
+      "notes": "CIK 833251 is from the header of the 2016-05-20 425 (subject company). No excerpt states an outcome."
+    },
+    {
+      "target": {"name": "Nuveen Select Quality Municipal Fund, Inc.", "cik": null, "ticker": "NQS"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452452", "date": "2016-02-05", "quote": "Nuveen Premier Municipal Income Fund, Inc. NPF Nuveen Dividend Advantage Municipal Fund, to be renamed Nuveen Enhanced Quality Municipal Fund NAD Nuveen Premium Income Municipal Fund, Inc. NPI Nuveen Select Quality Municipal Fund, Inc. NQS Nuveen Investment Quality Municipal Fund, Inc. NQM"},
+      "outcome_evidence": null,
+      "notes": "No excerpt states an outcome."
+    },
+    {
+      "target": {"name": "Nuveen Investment Quality Municipal Fund, Inc.", "cik": 862716, "ticker": "NQM"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452452", "date": "2016-02-05", "quote": "Nuveen Premier Municipal Income Fund, Inc. NPF Nuveen Dividend Advantage Municipal Fund, to be renamed Nuveen Enhanced Quality Municipal Fund NAD Nuveen Premium Income Municipal Fund, Inc. NPI Nuveen Select Quality Municipal Fund, Inc. NQS Nuveen Investment Quality Municipal Fund, Inc. NQM"},
+      "outcome_evidence": null,
+      "notes": "CIK 862716 is from the header of the 2016-02-05 425. No excerpt states an outcome. The 2017-06-23 DEF 14A is filed under the name Nuveen Quality Municipal Income Fund (NAD) and is an annual proxy whose excerpt does not mention the mergers."
+    }
+  ],
+  "problems": "No excerpt states the outcome of any of the four mergers. The Feb 2016 release also proposes a second, separate merger group (NEA as acquirer) that does not involve this episode's fund and is not recorded."
+}

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1793855,
+  "episode_accession": "0001104659-22-089398",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Macquarie Global Infrastructure Total Return Fund Inc.", "cik": 1326390, "ticker": "MGU"},
+      "acquirer": {"name": "abrdn Global Infrastructure Income Fund", "cik": 1793855, "ticker": "ASGI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-22-089398", "date": "2022-08-11", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by one or more affiliates of Delaware Management Company into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "The N-14 (0001104659-22-089428) states the special meeting of MGU was set for November 9, 2022 to vote on its reorganization into abrdn Global Infrastructure Income Fund. The later DEFA14A filings (to 2022-11-16) are shown only by their headers and a press-release label, so no result is in the excerpts."
+    },
+    {
+      "target": {"name": "Macquarie/First Trust Global Infrastructure/Utilities Dividend & Income Fund", "cik": 1276469, "ticker": null},
+      "acquirer": {"name": "abrdn Global Infrastructure Income Fund", "cik": 1793855, "ticker": "ASGI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-23-111037", "date": "2023-10-24", "quote": "abrdn enters agreement to acquire the assets of four closed-end funds from First Trust Advisors L.P."},
+      "outcome_evidence": null,
+      "notes": "Pairing of this target with ASGI comes only from the FILING header (subject company CIK 1276469, filed by ASGI); the excerpted text lists three acquirers and four acquired funds without showing which target goes to which. Meeting was targeted for February 2024; no outcome in the excerpts."
+    }
+  ],
+  "problems": "The 2023 press release names four First Trust target funds (Macquarie/First Trust Global Infrastructure/Utilities Dividend & Income Fund, First Trust High Income Long/Short Fund, First Trust/abrdn Global Opportunity Income Fund, First Trust Specialty Finance and Financial Opportunities Fund) against three acquirers; the excerpted text does not pair them, so only the one pairing supported by a FILING header is recorded. No outcome stated for any deal."
+}

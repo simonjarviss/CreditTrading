@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1745059,
+  "episode_accession": "0000894189-20-001031",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Vivaldi Opportunities Fund", "cik": 1703117, "ticker": "VAM"},
+      "acquirer": {"name": "Angel Oak Financial Strategies Income Term Trust", "cik": 1745059, "ticker": "FINS"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000894189-20-001031", "quote": "Angel Oak Financial Strategies Income Term Trust (NYSE: FINS) and Vivaldi Opportunities Fund (NYSE: VAM), each a closed-end fund, announced today"},
+      "outcome": null,
+      "announcement": {"accession": "0000894189-20-001031", "date": "2020-02-07", "quote": "Angel Oak and Vivaldi Closed-End Funds Announce Boards’ Approval of Proposed Merger"},
+      "outcome_evidence": null,
+      "notes": "Special meeting first set for April 7, 2020, then the 2020-04-27 DEF 14A sets it for May 27, 2020 (reorganization of Vivaldi Opportunities Fund with and into the Fund). The N-14/A of 2020-04-29 still shows the merger as pending. The 2021 DEF 14A and 8-K excerpts (annual meeting items, a rights offering) say nothing about VAM. No excerpt states how the merger ended."
+    }
+  ],
+  "problems": ""
+}

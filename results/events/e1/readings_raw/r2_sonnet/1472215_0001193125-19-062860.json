@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1472215,
+  "episode_accession": "0001193125-19-062860",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund", "cik": 1472215, "ticker": "JLS"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062860", "date": "2019-03-05", "quote": "As part of the proposal, shareholders will be asked to vote on a merger of their fund with a new fund, Nuveen Mortgage and Income Fund."},
+      "outcome_evidence": {"accession": "0001193125-19-155544", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal , asks shareholders of each fund to vote to amend the charter and eliminate the term structure."},
+      "notes": "Acquirer was a new fund not yet shown as listed. The May 2019 alternate proposals (charter amendment removing the term, then a tender offer) replaced the merger proposal."
+    },
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund 2", "cik": null, "ticker": "JMT"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062860", "date": "2019-03-05", "quote": "As part of the proposal, shareholders will be asked to vote on a merger of their fund with a new fund, Nuveen Mortgage and Income Fund."},
+      "outcome_evidence": {"accession": "0001193125-19-155544", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal , asks shareholders of each fund to vote to amend the charter and eliminate the term structure."},
+      "notes": "Same joint proposal, second target fund; its CIK does not appear in a FILING header."
+    }
+  ],
+  "problems": ""
+}

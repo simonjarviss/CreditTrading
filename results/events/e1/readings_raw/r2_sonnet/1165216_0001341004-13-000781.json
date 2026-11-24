@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1165216,
+  "episode_accession": "0001341004-13-000781",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Strategic Bond Trust", "cik": 1165216, "ticker": "BHD"},
+      "acquirer": {"name": "BlackRock Debt Strategies Fund, Inc.", "cik": 1051003, "ticker": "DSU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000781", "quote": "BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU) have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000781", "date": "2013-07-22", "quote": "BlackRock Announces Board Approval of the Reorganization of Three Taxable Fixed Income Closed-End Funds"},
+      "outcome_evidence": null,
+      "notes": "Joint special meeting set for Oct 25, 2013. BHD's N-8F (2013-12-17) ticks Merger, says shareholder vote took place October 25, 2013 and refers to 'the Merger' and a 'Surviving Fund', but the excerpt never names the surviving fund, so by rule the outcome is null."
+    },
+    {
+      "target": {"name": "BlackRock Senior High Income Fund, Inc.", "cik": null, "ticker": "ARK"},
+      "acquirer": {"name": "BlackRock Debt Strategies Fund, Inc.", "cik": 1051003, "ticker": "DSU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000781", "quote": "BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU) have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000781", "date": "2013-07-22", "quote": "BlackRock Announces Board Approval of the Reorganization of Three Taxable Fixed Income Closed-End Funds"},
+      "outcome_evidence": null,
+      "notes": "Separate deal in the same filing; nothing in the excerpts states its outcome."
+    }
+  ],
+  "problems": ""
+}

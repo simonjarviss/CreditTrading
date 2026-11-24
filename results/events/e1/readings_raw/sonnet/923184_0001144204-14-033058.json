@@ -1,0 +1,18 @@
+{
+  "episode_cik": 923184,
+  "episode_accession": "0001144204-14-033058",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nomura Partners Funds, Inc. The Japan Fund (NPF Japan Fund)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Matthews Japan Fund", "cik": 923184, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-14-044115", "quote": "The advisor to the Funds, Nomura Asset Management USA, has decided to exit the U.S. retail open-end mutual fund business."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-14-033058", "date": "2014-05-22", "quote": "The Reorganization Agreement may be terminated and the Japan Fund Reorganization abandoned at any time prior to the Closing Date by a determination of either the NPF Board or the Matthews Board that the Japan Fund Reorganization is no longer in the best interests of shareholders."},
+      "outcome_evidence": null,
+      "notes": "Target is an open-end mutual fund per the quote; Matthews Japan Fund is a series of the registrant Matthews International Funds (CIK 923184 is the registrant's CIK, not a separate series CIK). The September 10, 2014 meeting outcome is not stated in the excerpts. The 2015 proxy filings (seq 12-16) are compact and do not show what they concern. The N-14 also names a High Yield Fund of Nomura Partners Funds but no merger of it is described in the excerpts."
+    }
+  ],
+  "problems": "Outcome not stated. Compact excerpts of the 2014-08 to 2015-12 DEFA14A and proxy filings show only headers."
+}

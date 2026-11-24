@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1278752,
+  "episode_accession": "0001193125-23-272573",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Apollo Senior Floating Rate Fund Inc.", "cik": 1502573, "ticker": "AFT"},
+      "acquirer": {"name": "MidCap Financial Investment Corporation", "cik": 1278752, "ticker": "MFIC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-272413", "quote": "MidCap Financial Investment Corporation (NASDAQ: MFIC), Apollo Senior Floating Rate Fund Inc. (NYSE: AFT) and Apollo Tactical Income Fund Inc. (NYSE: AIF)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-23-272413", "date": "2023-11-07", "quote": "MidCap Financial Investment Corporation Announces Merger Agreements with Apollo Senior Floating Rate Fund Inc. and Apollo Tactical Income Fund Inc."},
+      "outcome_evidence": {"accession": "0001193125-24-182213", "date": "2024-07-22", "quote": "MidCap Financial Investment Corporation (NASDAQ: MFIC) today announced that it has completed its previously announced mergers with Apollo Senior Floating Rate Fund Inc. (NYSE: AFT) and Apollo Tactical Income Fund Inc. (NYSE: AIF)"},
+      "notes": "MFIC is the acquirer (a BDC). Stockholder approval announced 2024-06-21 (accession 0001193125-24-165342). Both targets merged; no failed target among those named."
+    },
+    {
+      "target": {"name": "Apollo Tactical Income Fund Inc.", "cik": null, "ticker": "AIF"},
+      "acquirer": {"name": "MidCap Financial Investment Corporation", "cik": 1278752, "ticker": "MFIC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-272413", "quote": "MidCap Financial Investment Corporation (NASDAQ: MFIC), Apollo Senior Floating Rate Fund Inc. (NYSE: AFT) and Apollo Tactical Income Fund Inc. (NYSE: AIF)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-23-272413", "date": "2023-11-07", "quote": "MidCap Financial Investment Corporation Announces Merger Agreements with Apollo Senior Floating Rate Fund Inc. and Apollo Tactical Income Fund Inc."},
+      "outcome_evidence": {"accession": "0001193125-24-182213", "date": "2024-07-22", "quote": "MidCap Financial Investment Corporation (NASDAQ: MFIC) today announced that it has completed its previously announced mergers with Apollo Senior Floating Rate Fund Inc. (NYSE: AFT) and Apollo Tactical Income Fund Inc. (NYSE: AIF)"},
+      "notes": "AIF's CIK does not appear in any FILING header in this episode, so it is null."
+    }
+  ],
+  "problems": ""
+}

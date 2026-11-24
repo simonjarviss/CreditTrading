@@ -53,9 +53,44 @@ def flag_legs(nm, dl) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _names():
+    """EDGAR's name table for these zero-trial facts, read from the cache AS CACHED. The open
+    quarter's index is otherwise re-fetched daily (`quarter_is_closed`, max_age one day), which only
+    a credentialed run can do. Here, unlike Stage 0, a stale copy is used and its fetch time printed:
+    it can lack only filings after that time, and no census window reaches 2026. Stage 0 keeps the
+    strict rule (`e1_merger_pair.refresh_edgar_index`)."""
+    from scripts.data.edgar_client import EdgarClient, cache_path
+
+    class AsCached(EdgarClient):
+        def get(self, url, max_age_s=None):
+            p = cache_path(url, self.cache)
+            if max_age_s is not None and p.exists():
+                print(f"  (as cached: {url.rsplit('/edgar/', 1)[-1]} fetched {date.fromtimestamp(p.stat().st_mtime)})")
+                return p.read_bytes()
+            return super().get(url, max_age_s)
+    names, _ = emd.name_table(AsCached(offline=True, cache=e1.EDGAR_UNION), date(2026, 10, 19))
+    return names
+
+
+def own_listed(nm, names=None) -> dict:
+    """episode id -> True if the episode's own CIK maps to a CRSP CEF listed on its first filing date,
+    or its EDGAR name is BDC-like (the R10 count's two tests, per episode)."""
+    cmap = e1.crsp_cik_map(nm, _names() if names is None else names)
+    inv: dict[int, set] = {}
+    for p, c in cmap.items():
+        inv.setdefault(c, set()).add(p)
+    cen = pd.read_csv(e1.CENSUS)
+    cen["first_date"] = pd.to_datetime(cen["first_date"])
+    out = {}
+    for r in cen.itertuples():
+        ok = any(len(x := nm[(nm["permno"] == p) & (nm["namedt"] <= r.first_date) & (nm["nameendt"] >= r.first_date)])
+                 and x["exchcd"].isin([1, 2, 3]).any() for p in inv.get(int(r.episode_cik), ()))
+        out[f"{int(r.episode_cik)}_{r.episode_accession}"] = bool(ok or mp.classify(str(r.company_last).upper()) == "bdc")
+    return out
+
+
 def r10(nm) -> dict:
-    names, _ = emd.name_table(e1.edgar_client(online=False), date(2026, 10, 19))
-    cmap = e1.crsp_cik_map(nm, names)
+    cmap = e1.crsp_cik_map(nm, _names())
     inv: dict[int, set] = {}
     for p, c in cmap.items():
         inv.setdefault(c, set()).add(p)

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1715268,
+  "episode_accession": "0001104659-24-004325",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Golub Capital BDC 3, Inc.", "cik": 1715268, "ticker": null},
+      "acquirer": {"name": "Golub Capital BDC, Inc.", "cik": 1476765, "ticker": "GBDC"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-127305", "quote": "Name of each exchange on which registered None N/A N/A"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-24-004324", "date": "2024-01-17", "quote": "Golub Capital BDC, Inc. Announces Merger Agreement With Golub Capital BDC 3, Inc."},
+      "outcome_evidence": null,
+      "notes": "GBDC is shown as Nasdaq: GBDC; GBDC 3 reports no securities registered under Section 12(b) (no exchange listing). Stockholder meetings were set for May 29, 2024; the excerpts do not state the result. The December 2023 proxy was a joint one with other Golub BDC entities and is not described as this merger."
+    }
+  ],
+  "problems": ""
+}

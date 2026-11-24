@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1515940,
+  "episode_accession": "0001193125-24-234601",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Insight Select Income Fund", "cik": 30125, "ticker": "INSI"},
+      "acquirer": {"name": "KKR Income Opportunities Fund", "cik": 1515940, "ticker": "KIO"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-24-234601", "quote": "(“KIO”) (NYSE: KIO) and the Board of Trustees of Insight Select Income Fund (“INSI”) (NYSE: INSI)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-24-234601", "date": "2024-10-09", "quote": "today announced the signing of a definitive agreement under which KIO will acquire the assets of INSI."},
+      "outcome_evidence": null,
+      "notes": "Press release dated October 8, 2024, filed as 425 on 2024-10-09. Special meeting first set for December 20, 2024, then rescheduled to January 10, 2025 (N-14 8C/A of 2024-12-06; DEF 14A of 2024-12-23). The shown excerpts of the later filings (DEF 14A 2025-02-14 is an annual meeting for trustee elections; 8-K 2025-10-31 is an officer change; DEF 14A 2026-02-13) do not state whether the vote passed or the reorganization closed, so the outcome is null."
+    }
+  ],
+  "problems": "No excerpt states how the proposed reorganization ended."
+}

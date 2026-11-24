@@ -391,7 +391,9 @@ def guard_closes(close: pd.DataFrame, *, cols, lo, hi, nav: pd.DataFrame | None,
 # `series` is "close" or "nav". The two can sit on different bases for one fund (AWP 2026-02-09:
 # yfinance's close is adjusted, its NAV is not), so a ruling names the one it was made on.
 SPLIT_DECIDABLE = 2 * SPLIT_TOL
-SPLIT_TREATMENTS = ("drop_split", "book_as_is")
+# `to_nav_basis` (2026-11-04) is the LIVE FETCH's treatment only (THE LIVE FETCH'S PRICE BASIS,
+# below): `guard_split_basis`, the research path, refuses a file that carries one.
+SPLIT_TREATMENTS = ("drop_split", "book_as_is", "to_nav_basis")
 SPLIT_SERIES = ("close", "nav")
 SPLIT_COLUMNS = ["ticker", "ex_date", "factor", "raw_ratio", "booked_ratio", "basis"]
 
@@ -520,6 +522,9 @@ def guard_split_basis(R: pd.DataFrame, k: pd.DataFrame, *, rulings: Path | str |
     hk = {(t, d): r for t, d, r in zip(C["ticker"], C["ex_date"], C.itertuples())}
     out = k
     for r in Rl.itertuples():
+        if r.treatment == "to_nav_basis":
+            raise SplitBasisError(f"{context}: ruling ({r.ticker}, {_iso(r.ex_date)}) in {src} is `to_nav_basis`, "
+                                  "the live fetch's treatment (load_fetch_split_rulings), not a return treatment")
         if r.ticker not in k.columns or r.ex_date not in k.index:
             continue
         kf = float(k.at[r.ex_date, r.ticker])
@@ -538,6 +543,191 @@ def guard_split_basis(R: pd.DataFrame, k: pd.DataFrame, *, rulings: Path | str |
                 out = k.copy()
             out.at[r.ex_date, r.ticker] = 1.0
     return out
+
+
+# --------------------------------------------------------------------------- the live fetch's price basis (C4)
+#
+# THE DEFECT (2026-11-03, C4's first nightly fetch at release-20261103-5). yfinance's `Close` with
+# `auto_adjust=False` is split-adjusted after the fact, and Yahoo applies the adjustment LATE and
+# all at once: IGR's 1:3 reverse split of 2026-09-08 was not yet in the families build of
+# 2026-10-12 (raw closes about 4.7, bar four), and by 2026-11-03 every pre-split close in the
+# fetch's six-month window was served times 3.0 (14.04 on 05-04). IGR's NAV symbol was NOT
+# adjusted (4.64 on 05-04). `fetch_daily --data-book c4` replaced the window with the adjusted
+# closes, so IGR's discount read about +200% for four months, its 252-day z went to -0.79 on the
+# artifact, and the 11-04 plan bought 520 IGR on it (team lead 2026-11-03: "Hold C4 one day, fix
+# IGR"). The spike guard did not see it: the closes did not jump and revert, they STEPPED at the
+# window's start and then ran flat across the split while the NAV stepped.
+#
+# THE RULE. Price and NAV must sit on ONE share basis for the discount. C4's panels are on the
+# raw, as-traded basis, the NAV's: the seed's closes are raw, and the NAV symbols are served
+# unadjusted. So a fetched close on a split's pre-ex dates that Yahoo has split-adjusted is put
+# back on the NAV's basis, times the split's yfinance multiplier f (0.3333 for IGR: raw =
+# adjusted x f; the volume / f), and ONLY under a recorded ruling (`load_fetch_split_rulings`:
+# the split rulings file's schema, treatment `to_nav_basis`). Whether a given row is adjusted is
+# MEASURED on every fetch, never assumed, because Yahoo's timing varies: each pre-ex row's
+# ln(close / NAV) is compared with the fund's own on its first post-ex rows (`ref`, the same on
+# either basis): a raw row sits near ref, an adjusted one near ref - ln f, and the row takes the
+# nearer. A row nearer neither (within tau of the midpoint), and a split whose factor the NAV
+# cannot decide (|ln f| <= 2 tau, `SPLIT_DECIDABLE`), refuse unless ruled `book_as_is` (accept the
+# rows as served). A split Yahoo declares in the fetched window with no ruling refuses
+# (`unruled_declared_splits`). Every converted row is logged.
+#
+# THE STEP GUARD (`basis_steps`). After the ruled conversion, a fetched close or NAV whose ratio to
+# the STORED value of the same date is split-like (|ln r| > 2 tau = SPLIT_DECIDABLE) refuses the
+# panel write, naming the series, the fund and the dates: the step the spike guard cannot see. A
+# vendor's revision of a bar is a few percent at most; a ratio past x1.32 is a change of basis.
+
+FETCH_SPLIT_TREATMENTS = ("to_nav_basis", "book_as_is")
+BASIS_REF_ROWS = 10           # the first post-ex rows the reference ratio is the median of
+
+
+class PriceBasisError(ValueError):
+    """A fetched price that cannot be put on its NAV's share basis under a recorded ruling."""
+
+
+def load_fetch_split_rulings(path: Path | str) -> pd.DataFrame:
+    """The live fetch's split rulings: `load_split_rulings`' file and schema, every entry on
+    the `close` series with treatment `to_nav_basis` or `book_as_is`. Anything else raises."""
+    R, _doc = load_split_rulings(path)
+    bad = R[(R["series"] != "close") | ~R["treatment"].isin(FETCH_SPLIT_TREATMENTS)]
+    if len(bad):
+        raise PriceBasisError(f"{Path(path).name}: the live fetch reads only `close` rulings treated "
+                              f"{FETCH_SPLIT_TREATMENTS}; got {bad[['ticker', 'ex_date', 'series', 'treatment']].to_dict('records')}")
+    return R
+
+
+def unruled_declared_splits(declared: list, rulings: pd.DataFrame) -> list:
+    """The (ticker, date, multiplier) splits Yahoo declares in a fetch (its `Stock Splits`
+    column) that no ruling names on that ex-date with that multiplier (1e-6 relative)."""
+    out = []
+    for t, d, v in declared:
+        m = rulings[(rulings["ticker"] == t) & (pd.to_datetime(rulings["ex_date"]) == pd.Timestamp(d))]
+        if not len(m) or abs(float(m["factor"].iloc[0]) - float(v)) > 1e-6 * max(1.0, abs(float(v))):
+            out.append((t, pd.Timestamp(d), float(v)))
+    return out
+
+
+def to_nav_basis(px: pd.DataFrame, nav: pd.DataFrame, rulings: pd.DataFrame, *,
+                 context: str) -> tuple[pd.DataFrame, list]:
+    """`px` (date, open, high, low, close, volume, ticker[, grp]) with each ruled split's
+    adjusted pre-ex rows put back on the NAV's basis, and the log (THE LIVE FETCH'S PRICE
+    BASIS, above). `nav` (date, nav, ticker) judges each row. A ruling applies to a fund
+    only when its ex-date falls inside that fund's rows here (some row before it, some on
+    or after it); otherwise it is not this frame's split. Raises `PriceBasisError`, naming
+    the rows, on an undecidable row or factor not ruled `book_as_is`, or a ruled split with
+    no post-ex row that has a NAV to judge against. Pure: no clock, no network."""
+    out = px.copy()
+    log = []
+    if out.empty or rulings is None or rulings.empty:
+        return out, log
+    navs = nav.dropna(subset=["nav"]).drop_duplicates(["ticker", "date"], keep="last")
+    navs = navs.set_index(["ticker", "date"])["nav"]
+    for r in rulings.itertuples():
+        t, ex, f = r.ticker, pd.Timestamp(r.ex_date), float(r.factor)
+        m = out["ticker"] == t
+        dates = pd.to_datetime(out.loc[m, "date"])
+        if not len(dates) or not (dates.min() < ex <= dates.max()):
+            continue
+        pre = m & (pd.to_datetime(out["date"]) < ex)
+        post = m & (pd.to_datetime(out["date"]) >= ex)
+        if r.treatment == "book_as_is":
+            log.append({"ticker": t, "ex_date": ex, "factor": f, "treatment": "book_as_is",
+                        "converted": 0, "as_served": int(pre.sum())})
+            continue
+        lf = math.log(f)
+        if abs(lf) <= SPLIT_DECIDABLE:
+            raise PriceBasisError(f"{context}: {t}'s split of {_iso(ex)} (factor {_factor_label(f)}) is too small "
+                                  "for the NAV to tell an adjusted close from a raw one; rule it `book_as_is` "
+                                  "to keep the rows as served")
+        def ratio(i):
+            n = navs.get((t, pd.Timestamp(out.at[i, "date"])))
+            c = out.at[i, "close"]
+            if n is None or not (np.isfinite(c) and c > 0 and np.isfinite(n) and n > 0):
+                return None
+            return math.log(c / n)
+        post_r = [x for x in (ratio(i) for i in out.index[post][:BASIS_REF_ROWS]) if x is not None]
+        if not post_r:
+            raise PriceBasisError(f"{context}: {t}'s split of {_iso(ex)} has no post-ex row with a close and a "
+                                  "NAV to judge the pre-ex rows against")
+        ref = float(np.median(post_r))
+        adjusted, raw, undecided, unknown = [], [], [], []
+        for i in out.index[pre]:
+            y = ratio(i)
+            if y is None:
+                unknown.append(i)
+                continue
+            d_raw, d_adj = abs(y - ref), abs(y - ref + lf)
+            if abs(d_raw - d_adj) <= SPLIT_TOL:
+                undecided.append(i)
+            elif d_adj < d_raw:
+                adjusted.append(i)
+            else:
+                raw.append(i)
+        if undecided:
+            raise PriceBasisError(f"{context}: {t} ({_iso(ex)} split, factor {_factor_label(f)}): "
+                                  f"{len(undecided)} pre-ex row(s) sit between the raw and the adjusted "
+                                  f"basis against their NAV: " + ", ".join(_iso(out.at[i, 'date']) for i in undecided[:10]))
+        if unknown:
+            if adjusted and raw:
+                raise PriceBasisError(f"{context}: {t}: {len(unknown)} pre-ex row(s) have no NAV to judge them, "
+                                      f"and the judged rows are on both bases: "
+                                      + ", ".join(_iso(out.at[i, 'date']) for i in unknown[:10]))
+            if not adjusted and not raw:
+                raise PriceBasisError(f"{context}: {t}: no pre-ex row of the {_iso(ex)} split has a NAV to judge "
+                                      f"its basis: " + ", ".join(_iso(out.at[i, 'date']) for i in unknown[:10]))
+            (adjusted if adjusted else raw).extend(unknown)
+        if adjusted:
+            idx = sorted(adjusted)
+            for c in ("open", "high", "low", "close"):
+                if c in out.columns:
+                    out.loc[idx, c] = out.loc[idx, c].astype(float) * f
+            if "volume" in out.columns:
+                out.loc[idx, "volume"] = (out.loc[idx, "volume"].astype(float) / f).round().astype("int64")
+        d = pd.to_datetime(out.loc[sorted(adjusted), "date"]) if adjusted else None
+        log.append({"ticker": t, "ex_date": ex, "factor": f, "treatment": "to_nav_basis",
+                    "converted": len(adjusted), "raw": len(raw), "judged_by_neighbours": len(unknown),
+                    "first": None if d is None else d.min(), "last": None if d is None else d.max(),
+                    "ref_premium": math.expm1(ref)})
+    if "volume" in px.columns:
+        out["volume"] = out["volume"].astype(px["volume"].dtype)
+    return out, log
+
+
+def basis_steps(new_px: pd.DataFrame, old_px: pd.DataFrame, new_nav: pd.DataFrame,
+                old_nav: pd.DataFrame, *, tol: float = SPLIT_DECIDABLE) -> list:
+    """Every run of dates on which a fetched close or NAV differs from the STORED value of the
+    same (ticker, date) by a split-like ratio, |ln(new / old)| > tol: [{"series", "ticker",
+    "first", "last", "rows", "ratio_lo", "ratio_hi"}]. Rows missing or non-positive on either
+    side are not compared (the merge's own guards judge those)."""
+    hits = []
+    for series, col, new, old in (("close", "close", new_px, old_px), ("nav", "nav", new_nav, old_nav)):
+        if new is None or old is None or new.empty or old.empty:
+            continue
+        a = new[["ticker", "date", col]].drop_duplicates(["ticker", "date"], keep="last")
+        b = old[["ticker", "date", col]].drop_duplicates(["ticker", "date"], keep="last")
+        j = a.merge(b, on=["ticker", "date"], suffixes=("_new", "_old"))
+        x, y = j[f"{col}_new"].astype(float), j[f"{col}_old"].astype(float)
+        ok = np.isfinite(x) & np.isfinite(y) & (x > 0) & (y > 0)
+        j = j[ok].copy()
+        j["lr"] = np.log(j[f"{col}_new"].astype(float) / j[f"{col}_old"].astype(float))
+        j = j.sort_values(["ticker", "date"])
+        for t, g in j.groupby("ticker", sort=True):
+            flag = (g["lr"].abs() > tol).to_numpy()
+            run = []
+            for k, (d, lr) in enumerate(zip(g["date"], g["lr"])):
+                if flag[k]:
+                    run.append((pd.Timestamp(d), float(lr)))
+                if run and (not flag[k] or k == len(g) - 1):
+                    rs = [math.exp(v) for _, v in run]
+                    hits.append({"series": series, "ticker": t, "first": run[0][0], "last": run[-1][0],
+                                 "rows": len(run), "ratio_lo": min(rs), "ratio_hi": max(rs)})
+                    run = []
+    return hits
+
+
+def describe_basis_steps(hits: list) -> str:
+    return "; ".join(f"({h['series']} {h['ticker']} {_iso(h['first'])}..{_iso(h['last'])}, {h['rows']} row(s), "
+                     f"fetched/stored x{h['ratio_lo']:.4f}..x{h['ratio_hi']:.4f})" for h in hits)
 
 
 # --------------------------------------------------------------------------- Stage-0 flags block P&L

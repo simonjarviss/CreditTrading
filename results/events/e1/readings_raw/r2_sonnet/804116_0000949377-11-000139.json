@@ -1,0 +1,18 @@
+{
+  "episode_cik": 804116,
+  "episode_accession": "0000949377-11-000139",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Royce Value Trust, Inc.", "cik": 804116, "ticker": null},
+      "acquirer": {"name": "Royce Global Value Trust, Inc.", "cik": 1514490, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000949377-11-000139", "date": "2011-03-16", "quote": "Combined Prospectus/Proxy Statement regarding the proposed Transaction"},
+      "outcome_evidence": null,
+      "notes": "The excerpts of the N-14 never describe the Transaction itself. Direction (Value Trust as target, Global Trust as acquirer) is inferred from the registrant being Global Trust registering its shares and the letter being addressed to Value Trust stockholders. Later filings (2011 and 2012 DEF 14A and DEFA14A) are annual-meeting director-election proxies and say nothing about the Transaction."
+    }
+  ],
+  "problems": "Excerpts do not state the transaction terms, listing status or outcome."
+}

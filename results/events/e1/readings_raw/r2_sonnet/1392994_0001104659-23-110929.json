@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1392994,
+  "episode_accession": "0001104659-23-110929",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "First Trust Specialty Finance and Financial Opportunities Fund", "cik": 1392994, "ticker": "FGB"},
+      "acquirer": {"name": "abrdn Total Dynamic Dividend Fund", "cik": 1379400, "ticker": "AOD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "vote_failed",
+      "announcement": {"accession": "0001104659-23-110929", "date": "2023-10-24", "quote": "ABRDN’S U.S. CLOSED-END FUNDS ANNOUNCE PROPOSED ACQUISITION OF ASSETS OF FOUR FIRST TRUST ADVISED CLOSED-END FUNDS"},
+      "outcome_evidence": {"accession": "0001445546-24-006044", "date": "2024-08-29", "quote": "The affirmative vote of less than a majority of the Fund’s outstanding voting securities was received, and therefore the Proposal was not approved. The Fund will continue to operate and pursue its current investment objectives and policies, and the Board will take such action as it deems in the best interest of the Fund."},
+      "notes": "FGB is shown on the NYSE (8-K cover page) but no excerpt states that AOD's shares trade on an exchange, so both_listed is null. The special meeting set for 2024-02-20 was adjourned repeatedly (to Mar 7, Apr 18, May 30, Jun 18, Jul 11, Jul 25, Aug 22 and Aug 29 2024) amid an opposing solicitation by Saba Capital; the 2024-08-29 8-K press release reports the proposal not approved. FGB then proposed a different reorganization (into an ETF, see the second deal) and later filed an N-8F stating Merger, which names no acquirer in the excerpt and settles nothing for this deal."
+    },
+    {
+      "target": {"name": "First Trust Specialty Finance and Financial Opportunities Fund", "cik": 1392994, "ticker": "FGB"},
+      "acquirer": {"name": "FT Confluence BDC & Specialty Finance Income ETF", "cik": null, "ticker": "FBDC"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001445546-24-006248", "quote": "FT Confluence BDC & Specialty Finance Income ETF, a newly created exchange-traded fund (“ETF”) that will be traded on the NYSE and will be an actively managed ETF managed by FTA and sub-advised by Confluence Investment Management LLC"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001445546-24-006248", "date": "2024-09-10", "quote": "The press release was issued by First Trust Advisors L.P. (“FTA”) approving the reorganization (the “Reorganization”) of FGB into FT Confluence BDC & Specialty Finance Income ETF, a newly created exchange-traded fund (“ETF”)"},
+      "outcome_evidence": null,
+      "notes": "Acquirer is an exchange-traded fund, not a closed-end fund, so the pair is not a listed pair. For information only: shareholders approved it on 2025-05-05 (8-K 0001445546-25-003205) and the 8-K of 2025-06-30 (0001445546-25-004410) states the reorganization 'was completed prior to the open of the NYSE on June 30, 2025'. The 2025-08-04 N-8F ticks Merger with board vote Sept 8-9, 2024 and shareholder vote May 5, 2025. This is a separate deal from the failed 2023 FGB-into-AOD proposal; the FBDC CIK does not appear in any FILING header, so it is null."
+    }
+  ],
+  "problems": ""
+}

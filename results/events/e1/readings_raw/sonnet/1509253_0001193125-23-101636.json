@@ -1,0 +1,30 @@
+{
+ "episode_cik": 1509253,
+ "episode_accession": "0001193125-23-101636",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "Nuveen Short Duration Credit Opportunities Fund",
+    "cik": 1509253,
+    "ticker": "JSD"
+   },
+   "acquirer": {
+    "name": "Nuveen Floating Rate Income Fund",
+    "cik": 1276533,
+    "ticker": "JFR"
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {
+    "accession": "0001193125-23-101641",
+    "date": "2023-04-14",
+    "quote": "If enough shareholders fail to cast their votes, a Fund may not be able to hold its Meeting or the vote on the Reorganization or other proposals and will be required to incur additional solicitation costs"
+   },
+   "outcome_evidence": null,
+   "notes": "Roles inferred from the headers only (JSD is subject company, JFR is filer under Commission File No. 333-269484); no excerpt spells out the structure. NSL and JRO are named in the same materials but their pairing is not stated, so no deals are listed for them. Latest filing (2023-05-09) says the May 8, 2023 meeting was adjourned to June 8, 2023; no outcome shown."
+  }
+ ],
+ "problems": "Excerpts never describe the merger terms or say which fund merges into which; target/acquirer roles come from the EDGAR header. Tickers are printed without an exchange name, so listing is not settled."
+}

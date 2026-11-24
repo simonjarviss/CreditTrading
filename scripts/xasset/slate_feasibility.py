@@ -79,7 +79,7 @@ NYSE session from 1993-02-01).
 
 OUTPUT
 ------
-`results/xasset/slate_feasibility_<date>.csv`, one row per instrument: panel,
+`results/xasset/feasibility/slate_feasibility_<date>.csv`, one row per instrument: panel,
 first and last non-missing `ret_total` date, interior gap count against the
 master calendar, the CRSP-panel first date where it exists, and (with
 `--alpaca`) name / status / tradable / shortable / easy_to_borrow / borrow_status /
@@ -106,6 +106,7 @@ HOLDOUT_START = pd.Timestamp("2023-01-01")       # H13: sealed; nothing here rea
 # run, so its length is not chosen by when a test happens to be run. Used only to
 # COUNT sessions (the false-kill arithmetic); no return in it is read.
 HOLDOUT_END = pd.Timestamp("2026-09-30")
+FEASIBILITY_DIR = REPO / "results/xasset/feasibility"   # the snapshot's folder (note on top, data below)
 PANELS = {
     "etf_panel": REPO / "data/rv/etf_panel.parquet",
     "etf_ohlc_extended": REPO / "data/rv/etf_ohlc_extended.parquet",
@@ -360,7 +361,7 @@ def main(argv=None) -> int:
     ap.add_argument("--alpaca", action="store_true", help="also read Alpaca asset flags (read-only)")
     ap.add_argument("--crsp", action="store_true", help="also read CRSP coverage counts from the R2 mirror")
     ap.add_argument("--factors", action="store_true", help="also check the AQR factor files are reachable")
-    ap.add_argument("--out", default=None, help="CSV path (default results/xasset/slate_feasibility_<today>.csv)")
+    ap.add_argument("--out", default=None, help="CSV path (default results/xasset/feasibility/slate_feasibility_<today>.csv)")
     a = ap.parse_args(argv)
 
     frames = {}
@@ -439,7 +440,9 @@ def main(argv=None) -> int:
         for line in factor_file_coverage():
             print("  " + line)
 
-    out = Path(a.out) if a.out else REPO / "results/xasset" / f"slate_feasibility_{dt.date.today():%Y-%m-%d}.csv"
+    if not a.out:
+        FEASIBILITY_DIR.mkdir(parents=True, exist_ok=True)
+    out = Path(a.out) if a.out else FEASIBILITY_DIR / f"slate_feasibility_{dt.date.today():%Y-%m-%d}.csv"
     cov.to_csv(out, index=False)
     print(f"\nwrote {out.relative_to(REPO) if out.is_relative_to(REPO) else out}")
     return 0

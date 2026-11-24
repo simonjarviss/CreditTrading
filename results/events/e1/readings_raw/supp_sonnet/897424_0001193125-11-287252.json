@@ -1,0 +1,38 @@
+{
+  "episode_cik": 897424,
+  "episode_accession": "0001193125-11-287252",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Maryland Dividend Advantage Municipal Fund", "cik": 1090119, "ticker": "NFM"},
+      "acquirer": {"name": "Nuveen Maryland Premium Income Municipal Fund", "cik": 897424, "ticker": "NMY"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-11-287252", "date": "2011-10-31", "quote": "• Nuveen Maryland Dividend Advantage Municipal Fund • Nuveen Maryland Dividend Advantage Municipal Fund 2 • Nuveen Maryland Dividend Advantage Municipal Fund 3 NFM NZR NWI Nuveen Maryland Premium Income Municipal Fund NMY"},
+      "outcome_evidence": null,
+      "notes": "Board approved the mergers on 2011-10-28. Meetings were adjourned repeatedly (2011-11-15 annual meeting adjourned to 2011-12-16; special meeting adjournments to 2012-05-17, 2012-06-22 and 2012-07-17). The 2012-04-09 425 lists all four funds; the 2012-05-22 425 omits Dividend Advantage Fund 2 (NZR) from its subject companies; the 2012-06-26 425 lists only NMY and Dividend Advantage Fund 3 (NWI). No excerpt states an outcome for any target. Tickers appear in a table with no exchange named."
+    },
+    {
+      "target": {"name": "Nuveen Maryland Dividend Advantage Municipal Fund 2", "cik": 1137885, "ticker": "NZR"},
+      "acquirer": {"name": "Nuveen Maryland Premium Income Municipal Fund", "cik": 897424, "ticker": "NMY"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-11-287252", "date": "2011-10-31", "quote": "• Nuveen Maryland Dividend Advantage Municipal Fund • Nuveen Maryland Dividend Advantage Municipal Fund 2 • Nuveen Maryland Dividend Advantage Municipal Fund 3 NFM NZR NWI Nuveen Maryland Premium Income Municipal Fund NMY"},
+      "outcome_evidence": null,
+      "notes": "Dropped from the subject-company list of the 2012-05-22 425 (0001193125-12-242985) and the 2012-06-26 425; the excerpts do not say why (completion, failure or otherwise), so no outcome is recorded."
+    },
+    {
+      "target": {"name": "Nuveen Maryland Dividend Advantage Municipal Fund 3", "cik": 1177214, "ticker": "NWI"},
+      "acquirer": {"name": "Nuveen Maryland Premium Income Municipal Fund", "cik": 897424, "ticker": "NMY"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-11-287252", "date": "2011-10-31", "quote": "• Nuveen Maryland Dividend Advantage Municipal Fund • Nuveen Maryland Dividend Advantage Municipal Fund 2 • Nuveen Maryland Dividend Advantage Municipal Fund 3 NFM NZR NWI Nuveen Maryland Premium Income Municipal Fund NMY"},
+      "outcome_evidence": null,
+      "notes": "Still a named subject company in the 2012-06-26 425 (special meeting next adjournment ends July 17, 2012). No later excerpt states the outcome."
+    }
+  ],
+  "problems": "No excerpt states the outcome of any of the three mergers."
+}

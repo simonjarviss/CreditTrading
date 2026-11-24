@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1178839,
+  "episode_accession": "0000898432-23-000196",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Neuberger Berman California Municipal Fund Inc.", "cik": 1178840, "ticker": "NBW"},
+      "acquirer": {"name": "Neuberger Berman Municipal Fund Inc.", "cik": 1178839, "ticker": "NBH"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000898432-23-000195", "quote": "Neuberger Berman Municipal Fund Inc. (NYSE American: NBH), Neuberger Berman California Municipal Fund Inc. (NYSE American: NBW), and Neuberger Berman New York Municipal Fund Inc. (NYSE American: NBO)"},
+      "outcome": null,
+      "announcement": {"accession": "0000898432-23-000195", "date": "2023-04-04", "quote": "have approved proposals to reorganize each of NBW and NBO into NBH."},
+      "outcome_evidence": null,
+      "notes": "The 2023-07-26 press release titled 'ANNOUNCE STOCKHOLDER APPROVAL OF PROPOSED REORGANIZATIONS' (accession 0000898432-23-000530) is shown only to its first lines; no excerpt states completion, so outcome is null. Meeting adjourned 2023-07-10 (accession 0000898432-23-000477). Later 2024 DEFA14A filings by the acquirer show no outcome text in the excerpts."
+    },
+    {
+      "target": {"name": "Neuberger Berman New York Municipal Fund Inc.", "cik": 1178841, "ticker": "NBO"},
+      "acquirer": {"name": "Neuberger Berman Municipal Fund Inc.", "cik": 1178839, "ticker": "NBH"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000898432-23-000196", "quote": "Neuberger Berman Municipal Fund Inc. (NYSE American: NBH), Neuberger Berman California Municipal Fund Inc. (NYSE American: NBW), and Neuberger Berman New York Municipal Fund Inc. (NYSE American: NBO)"},
+      "outcome": null,
+      "announcement": {"accession": "0000898432-23-000196", "date": "2023-04-04", "quote": "have approved proposals to reorganize each of NBW and NBO into NBH."},
+      "outcome_evidence": null,
+      "notes": "Same as the NBW deal: stockholder approval press release of 2023-07-26 (accession 0000898432-23-000531) is cut off in the excerpt; no excerpt states completion or failure."
+    }
+  ],
+  "problems": ""
+}

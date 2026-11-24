@@ -1,0 +1,225 @@
+symbol,issuer_ticker,name,tags,shortable
+ABXL,ABX,"Abacus Global Management, Inc. 9.875% Fixed Rate Senior Notes due 2028",baby_bond,False
+AFGB,AFG,"American Financial Group, Inc. 5.875% Subordinated Debentures due 2059",baby_bond,False
+AFGC,AFG,"American Financial Group, Inc. 5.125% Subordinated Debentures due 2059",baby_bond,False
+AFGD,AFG,"American Financial Group, Inc. 5.625% Subordinated Debentures due 2060",baby_bond,False
+AFGE,AFG,"American Financial Group, Inc. 4.500% Subordinated Debentures due 2060",baby_bond,False
+AIZN,AIZ,"Assurant, Inc. 5.25% Subordinated Notes due 2061",baby_bond,False
+ALL.PRB,ALL,The Allstate Corporation 5.100%  Fixed-To-Floating Rate Subordinated Debentures due 2053,baby_bond,False
+ASBA,ASB,Associated Banc-Corp 6.625% Fixed-Rate Reset Subordinated Notes due 2033,baby_bond,False
+ATHS,AT,Athene Holding Ltd. 7.250% Fixed-Rate Reset Junior Subordinated Debentures due 2064,baby_bond,False
+BC.PRC,BC,Brunswick Corporation 6.375% Notes due 2049,baby_bond,False
+BHFAL,BHF,"Brighthouse Financial, Inc. 6.25% Junior Subordinated Debentures due 2058",baby_bond,False
+CCZ,C,"Comcast Holdings Corp. 2.0% Exchangeable Subordinated Debentures due October 15, 2029 (ZONES)",baby_bond,False
+CICB,CI,CION Investment Corporation 7.50% Notes due 2029,baby_bond,False
+CICC,CI,CION Investment Corporation 7.50% Notes due 2031,baby_bond,False
+CIMN,CI,Chimera Investment Corporation 9.000% Senior Notes due 2029,baby_bond,False
+CIMO,CI,Chimera Investment Corporation 9.250% Senior Notes due 2029,baby_bond,False
+CIMP,CI,Chimera Investment Corporation 8.875% Senior Notes due 2030,baby_bond,False
+CMSA,CMS,CMS Energy Corporation 5.625% Junior Subordinated Notes due 2078,baby_bond,False
+CMSC,CMS,CMS Energy Corporation 5.875% Junior Subordinated Notes due 2078,baby_bond,False
+CMSD,CMS,CMS Energy Corporation 5.875% Junior Subordinated Notes due 2079,baby_bond,False
+CRBD,CR,"Corebridge Financial, Inc. 6.375% Junior Subordinated Notes due 2064",baby_bond,True
+DTB,D,DTE Energy Company 2020 Series G 4.375% Junior Subordinated Debentures due 2080,baby_bond,False
+DTK,D,DTE Energy Company 2025 Series H 6.25% Junior Subordinated Debentures due 2085,baby_bond,False
+DTW,D,DTE Energy Company 2017 Series E 5.25% Junior Subordinated Debentures due 2077,baby_bond,False
+DUKB,DUK,Duke Energy Corporation 5.625% Junior Subordinated Debentures due 2078,baby_bond,False
+F.PRB,F,"Ford Motor Company 6.20% Notes due June 1, 2059",baby_bond,False
+F.PRC,F,"Ford Motor Company 6.000% Notes due December 1, 2059",baby_bond,False
+F.PRD,F,"Ford Motor Company 6.500% Notes due August 15, 2062",baby_bond,False
+FGN,F,"F&G Annuities & Life, Inc. 7.950% Senior Notes due 2053",baby_bond,False
+JSM,J,"Navient Corporation 6% Senior Notes due December 15, 2043",baby_bond,False
+KKRS,KKR,KKR Group Finance Co. IX LLC 4.625% Subordinated Notes due 2061,baby_bond,False
+KKRT,KKR,KKR & Co. Inc. 6.875% Subordinated Notes due 2065,baby_bond,False
+KMPB,KMP,Kemper Corporation 5.875% Fixed-Rate Reset Junior Subordinated Debentures due 2062,baby_bond,False
+METCI,MET,"Ramaco Resources, Inc. 8.250% Senior Notes due 2030",baby_bond,False
+METCZ,MET,"Ramaco Resources, Inc. 8.375% Senior Notes due 2029",baby_bond,False
+MGR,M,"Affiliated Managers Group, Inc. 5.875% Junior Subordinated Notes due 2059",baby_bond,False
+MITN,MIT,"TPG Mortgage Investment Trust, Inc. 9.500% Senior Notes due 2029",baby_bond,False
+MITP,MIT,"TPG Mortgage Investment Trust, Inc. 9.500% Senior Notes due 2029",baby_bond,False
+NEE.PRN,NEE,"NextEra Energy Capital Holdings, Inc. Series N Junior Subordinated Debentures due March 1, 2079",baby_bond,False
+NEE.PRU,NEE,"NextEra Energy Capital Holdings, Inc. Series U Junior Subordinated Debentures due June 1, 2085",baby_bond,False
+NEE.PRW,NEE,"NextEra Energy Capital Holdings, Inc. Series Z Junior Subordinated Debentures due April 15, 2086",baby_bond,False
+PBI.PRB,PBI,"PITNEY BOWES INC .6.70% Notes Due 2043,",baby_bond,False
+RCD,R,Ready Capital Corporation 9.00% Senior Notes due 2029,baby_bond,False
+RZC,R,"Reinsurance Group of America, Incorporated 7.125% Fixed-Rate Reset Subordinated Debentures due 2052",baby_bond,False
+SAJ,S,Saratoga Investment Corp. 8.00% Notes due 2027,baby_bond,False
+SAV,S,Saratoga Investment Corp. 7.50% Notes due 2031,baby_bond,False
+SAX,S,Saratoga Investment Corp. 8.00% Notes due 2031,baby_bond,False
+SAY,S,Saratoga Investment Corp. 8.125% Notes due 2027,baby_bond,False
+SAZ,S,Saratoga Investment Corp. 8.50% Notes due 2028,baby_bond,True
+SFB,SF,Stifel Financial Corp.5.20 percent Senior Notes due 2047,baby_bond,False
+SOJC,SO,"The Southern Company Series 2017B 5.25% Junior Subordinated Notes due December 1, 2077",baby_bond,False
+SOJD,SO,"The Southern Company Series 2020A 4.95% Junior Subordinated Notes due January 30, 2080",baby_bond,False
+SOJE,SO,"The Southern Company Series 2020C 4.20% Junior Subordinated Notes due October 15, 2060",baby_bond,False
+SOJF,SO,"The Southern Company Series 2025A 6.50% Junior Subordinated Notes due March 15, 2085",baby_bond,False
+SREA,SRE,Sempra 5.750% Junior Subordinated Notes due 2079,baby_bond,False
+SRJN,SR,Spire Inc. 6.375% Junior Subordinated Notes due 2086,baby_bond,False
+SWKHL,SWK,SWK Holdings Corporation 9.00% Senior Notes due 2027,baby_bond,False
+TBB,T,AT&T Inc. 5.350 Percent Global Notes due 2066,baby_bond,False
+TMUSI,TMUS,"T-Mobile US, Inc. 5.500% Senior Notes due June 2070",baby_bond,False
+TMUSL,TMUS,"T-Mobile US, Inc. 6.250% Senior Notes due 2069",baby_bond,False
+TMUSZ,TMUS,"T-Mobile US, Inc. 5.500% Senior Notes due March 2070",baby_bond,False
+TRNI,TRN,Trinity Capital Inc. 7.875% Notes Due 2029,baby_bond,False
+TRNZ,TRN,Trinity Capital Inc. 7.875% Notes due 2029,baby_bond,False
+UNMA,UNM,Unum Group 6.250% Junior Subordinated Notes due 2058,baby_bond,False
+AGNCL,AGN,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1,000th Interest in a Share of 7.75% Series G Fixed-Rate Reset Cumulative Redeemable Preferred Stock",preferred,False
+AGNCM,AGN,AGNC Investment Corp. Depositary Shares rep 6.875% Series D Fixed-to-Floating Cumulative Redeemable Preferred Stock,preferred,False
+AGNCN,AGN,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1,000th Interest in a Share of 7.00% Series C Fixed-To-Floating Rate Cumulative Redeemable Preferred Stock",preferred,True
+AGNCO,AGN,"AGNC Investment Corp. Depositary Shares, each representing a 1/1,000th interest in a share of 6.50% Series E Fixed-to-Floating Cumulative Redeemable Preferred Stock",preferred,False
+AGNCP,AGN,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1,000th Interest in a Share of 6.125% Series F Fixed-to-Floating Rate Cumulative Redeemable Preferred Stock",preferred,False
+AGNCZ,AGN,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1,000th Interest in a Share of 8.75% Series H Fixed-Rate Cumulative Redeemable Preferred Stock",preferred,False
+AIRTP,AIR,"Air T, Inc. Air T Funding Alpha Income Trust Preferred Securities",preferred,False
+ALL.PRJ,ALL,"The Allstate Corporation Depositary Shares each representing a 1/1,000th interest in a share of Fixed Rate Noncumulative Perpetual Preferred Stock, Series J",preferred,False
+ASB.PRE,ASB,"Associated Banc-Corp Depositary Shares, each representing a 1/40th interest in a share of 5.875% Non-Cumulative Perpetual Preferred Stock, Series E",preferred,False
+ASB.PRF,ASB,"Associated Banc-Corp Depositary Shares, each representing a 1/40th interest in a share of Associated Banc-Corp 5. 625% Non-Cumulative Perpetual Preferred Stock, Series F",preferred,False
+BAC.PRB,BAC,"Bank of America Corporation Depositary Shares, each representing a 1/1,000th interest in a share of 6.000% Non-Cumulative Preferred Stock, Series GG",preferred,False
+BAC.PRE,BAC,"Bank of America Corporation Depositary Shares (representing 1/1,000th of a share of Floating Rate Non-Cumalative Preferred Stock, Series E)",preferred,False
+BAC.PRK,BAC,"Bank of America Corporation Depositary Shares, each representing a 1/1,000th interest in a share of 5.875% Non- Cumulative Preferred Stock, Series HH",preferred,False
+BAC.PRM,BAC,"Bank of America Corporation Depositary Shares, each representing a 1/1,000th interest in a share of 5.375% Non-Cumulative Preferred Stock, Series KK",preferred,False
+BAC.PRN,BAC,"Bank of America Corporation Depositary shares, each representing 1/1,000th interest in a share of 5.000% Non-Cumulative Preferred Stock, Series LL",preferred,True
+BAC.PRO,BAC,"Bank of America Corporation Depositary shares, each representing 1/1,000th interest in a share of 4.375% Non-Cumulative Preferred Stock, Series NN",preferred,True
+BAC.PRP,BAC,"Bank of America Corporation Depositary Shares, each representing a 1/1,000th interest in a share of 4.125% Non- Cumulative Preferred Stock, Series PP",preferred,True
+BAC.PRQ,BAC,"Bank of America Corporation Depositary shares, each representing 1/1,000th interest in a share of 4.250% Non-Cumulative Preferred Stock, Series QQ",preferred,True
+BAC.PRS,BAC,"Bank of America Corporation Depositary shares, each representing 1/1,000th interest in a share of 4.750% Non-Cumulative Preferred Stock, Series SS",preferred,False
+BAK,BA,Braskem S.A. American Depositary Shares (Each representing Two Class A  Preferred Shares),preferred,False
+BHFAM,BHF,"Brighthouse Financial, Inc. Depositary shares each representing a 1/1,000th Interest in a Share of 4.625% Non-Cumulative Preferred Stock, Series D",preferred,False
+BHFAN,BHF,"Brighthouse Financial, Inc. Depositary shares, each representing a 1/1,000th interest in a share of 5.375% Non-Cumulative Preferred Stock, Series C",preferred,False
+BHFAO,BHF,"Brighthouse Financial, Inc. Depositary Shares 6.75% Non-Cumulative Preferred Stock, Series B",preferred,False
+BHFAP,BHF,"Brighthouse Financial, Inc. Depositary Shares 6.6% Non-Cumulative Preferred Stock, Series A",preferred,False
+BPOPM,BPOP,"Popular, Inc. Popular Capital Trust II - 6.125% Cumulative Monthly Income Trust Preferred Securities",preferred,False
+C.PRN,C,Citigroup Capital XIII 7.875% Fixed Rate/Floating Rate Trust Preferred Securities,preferred,True
+C.PRR,C,"Citigroup Inc. Depositary Shares, Each Representing a 1/1,000th Interest in a Share of 6.250% Noncumulative Preferred Stock, Series II",preferred,False
+CHTRP,CHTR,"Charter Communications, Inc. Series A Cumulative Redeemable Preferred Stock",preferred,False
+CIB,CI,Grupo Cibest S.A. American Depositary Shares (each representing four (4) Preferred Shares),preferred,True
+CMS.PRB,CMS,Consumers Energy Company $4.50 Cumulative Preferred,preferred,False
+CMS.PRC,CMS,"CMS Energy Corporation Depositary Shares, each representing a 1/1, 000th interest in a share of 4.200% Cumulative Redeemable Perpetual Preferred Stock, Series C",preferred,False
+COF.PRI,COF,"Capital One Financial Corporation Depositary shares each representing a 1/40th interest in a share of Fixed Rate Non-Cumulative Perpetual Preferred Stock, Series I",preferred,True
+COF.PRJ,COF,"Capital One Financial Corporation Depositary Shares, Each Representing a 1/40th Interest in a Share of Fixed Rate Non- Cumulative Perpetual Preferred Stock, Series J",preferred,True
+COF.PRK,COF,"Capital One Financial Corporation Depositary Shares, Each Representing a 1/40th Ownership Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock, Series K",preferred,False
+COF.PRL,COF,"Capital One Financial Corporation Depositary Shares, Each Representing a 1/40th Interest in a Share of Fixed Rate Non- Cumulative Perpetual Preferred Stock, Series L",preferred,False
+COF.PRN,COF,"Capital One Financial Corporation Depositary Shares, Each Representing a 1/40th Ownership Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock, Series N",preferred,False
+DCOM.PR,DCOM,"Dime Commercial Bancshares, Inc. Preferred Stock, Series A",preferred,False
+DLR.PRJ,DLR,"Digital Realty Trust, Inc. 5.250% Series J Cumulative Redeemable Preferred Stock",preferred,False
+DLR.PRK,DLR,"Digital Realty Trust, Inc. 5.850% Series K Cumulative Redeemable Preferred Stock, par value $0.01 per share",preferred,False
+DLR.PRL,DLR,"Digital Realty Trust, Inc. 5.200% Series L Cumulative Redeemable Preferred Stock",preferred,False
+DUK.PRA,DUK,"Duke Energy Corporation Depositary Shares, each representing a 1/1,000th interest in a share of 5.75% Series A Cumulative Redeemable Perpetual Preferred Stock",preferred,True
+EPR.PRG,EPR,EPR Properties 5.750% Series G Cumulative Redeemable Preferred Shares,preferred,False
+EQH.PRA,EQH,"Equitable Holdings, Inc. Depositary Shares, each representing a 1/1000th interest in a share of Fixed Rate Noncumulative Perpetual Preferred Stock, Series A",preferred,True
+EQH.PRC,EQH,"Equitable Holdings, Inc. Depositary Shares, each representing a 1/1, 000th interest in a share of Fixed Rate Noncumulative Perpetual Preferred Stock, Series C",preferred,False
+FCNCN,FCNC,"First Citizens BancShares, Inc. Depositary Shares, each representing a 1/40th interest in a share of 6.625% Non-Cumulative Perpetual Preferred Stock, Series E",preferred,False
+FCNCO,FCNC,"First Citizens BancShares, Inc. 5.625% Non-Cumulative Perpetual Preferred Stock, Series C",preferred,False
+FHN.PRE,FHN,"First Horizon Corporation Depositary Shares, Each Representing a 1/ 4000th Interest in a Share of Non-cumulative Perpetual Series E Preferred Stock",preferred,False
+FHN.PRF,FHN,"First Horizon Corporation Depositary Shares, each representing 1/4000th Interest in a Share of Non-Cumulative Perpetual Preferred Stock, Series F",preferred,False
+FHN.PRH,FHN,"First Horizon Corporation Depositary Shares each representing a 1/4,000th interest in a share of Non-Cumulative Perpetual Preferred Stock, Series H",preferred,False
+FITB.PRA,FITB,"Fifth Third Bancorp Depositary Shares Representing a 1/40th Ownership Interest in a Share of 6.00% Non-Cumulative Perpetual Class B Preferred Stock, Series A",preferred,False
+FITB.PRI,FITB,"Fifth Third Bancorp Depositary Shares Representing a 1/1000th Ownership Interest in a Share of 6.625% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series I",preferred,False
+FITB.PRK,FITB,"Fifth Third Bancorp Depositary Shares Representing a 1/1000th Ownership Interest in a Share of 4.95% Non-Cumulative Perpetual Preferred Stock, Series K",preferred,False
+FITB.PRM,FITB,"Fifth Third Bancorp Depositary Shares Representing a 1/40th Ownership Interest in a Share of 6.875% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock, Series M",preferred,False
+FRCIL,FRC,FIRST REP BK SAN FRANCISCO CALIF DEP SHS REPSTG 1/40TH INT PERP PFD SER I,preferred,False
+FRCJL,FRC,FIRST REP BK SAN FRANCISCO CALIF NEW DEPOSITARY SHS REPSTG 1/40TH INT SH NONCUMULATIVE PERPETUAL (SER J PFD STK),preferred,False
+FRT.PRC,FRT,"Federal Realty Investment Trust Depositary Shares, each representing a 1/1000th interest in a 5.000 percent Series C Cumulative Redeemable Preferred Share",preferred,False
+FULTP,FULT,"Fulton Financial Corporation Depositary Shares, Each Representing a 1/40th Interest in a Share of Fixed Rate Non-Cumulative Perpetual Preferred Stock, Series A",preferred,True
+GNL.PRA,GNL,"Global Net Lease, Inc. 7.25% Series A Cumulative Redeemable Preferred Stock, $0.01 par value per share",preferred,False
+GNL.PRB,GNL,"Global Net Lease, Inc. 6.875% Series B Cumulative Redeemable Perpetual Preferred Stock",preferred,False
+GNL.PRD,GNL,"Global Net Lease, Inc. 7.50% Series D Cumulative Redeemable Perpetual Preferred Stock",preferred,False
+GNL.PRE,GNL,"Global Net Lease, Inc. 7.375% Series E Cumulative Redeemable Perpetual Preferred Stock",preferred,False
+GS.PRD,GS,"Goldman Sachs Group, Inc. (Each representing 1/1000th Interest in a Share of Floating Rate Non-cumulative Preferred Stock Series D, $1.01 par value",preferred,True
+HBANL,HBAN,"Huntington Bancshares Incorporated Depositary Shares, Each Representing a 1/40th Interest in a Share of 6.875% Series J Non-Cumulative Perpetual Preferred Stock",preferred,False
+HBANM,HBAN,Huntington Bancshares Incorporated Depositary Shares each representing a 1/1000th interest in a share of Huntington Series I Preferred Stock,preferred,False
+HBANP,HBAN,Huntington Bancshares Incorporated Depositary Shares 4.500% Series H Non-Cumulative Perpetual Preferred Stock,preferred,False
+HBANZ,HBAN,"Huntington Bancshares Incorporated Depositary Shares, Each Representing a 1/1000th Interest in a Share of 5.50% Series L Non-Cumulative Perpetual Preferred Stock",preferred,False
+HIG.PRG,HIG,"The Hartford Insurance Group, Inc. Depositary Shares each representing a 1/1,000th interest in a share of 6.000% Non-Cumulative Preferred Stock, Series G, $0.01 par value",preferred,False
+JPM.PRC,JPM,"JPMorgan Chase & Co. Depositary Shares, each representing a 1/400th interest in a share of 6.00% Non-Cumulative Preferred Stock, Series EE",preferred,False
+JPM.PRD,JPM,"JPMorgan Chase & Co. Depositary Shares, each representing a 1/400th interest in a share of 5.75% Non-Cumulative Preferred Stock, Series DD",preferred,False
+JPM.PRJ,JPM,"JPMorgan Chase & Co. Depositary Shares, each representing a 1/400th interest in a share of JPMorgan Chase & Co. 4.75% Non-Cumulative Preferred Stock, Series GG",preferred,False
+JPM.PRK,JPM,"JPMorgan Chase & Co. Depositary Shares, each representing a 1/400th interest in a share of 4.55% Non-Cumulative Preferred Stock, Series JJ",preferred,True
+JPM.PRL,JPM,"JPMorgan Chase & Co. Depositary Shares, each representing a 1/400th interest in a share of 4.625% Non-Cumulative Preferred Stock, Series LL",preferred,True
+JPM.PRM,JPM,"JPMorgan Chase & Co. Depositary Shares, each representing a 1/400th interest in a share of 4.20% Non-Cumulative Preferred Stock, Series MM",preferred,True
+KEY.PRI,KEY,"KeyCorp Depositary Shares each representing a 1/40th ownership interest in a share of Fixed-to-Floating Rate Perpetual Non-Cumulative Preferred Stock, Series E",preferred,False
+KEY.PRJ,KEY,"KeyCorp Depositary Shares each representing a 1/40th ownership interest in a share of Fixed Rate Perpetual Non-Cumulative Preferred Stock, Series F",preferred,True
+KEY.PRK,KEY,"KeyCorp Depositary Shares, each representing a 1/40th ownership interest in a share of Fixed Rate Perpetual Non-Cumulative Preferred Stock, Series G",preferred,False
+KEY.PRL,KEY,"KeyCorp Depositary Shares each representing a 1/40th ownership interest in a share of Fixed Rate Perpetual Non-Cumulative Preferred Stock, Series H",preferred,False
+KIM.PRL,KIM,"Kimco Realty Corporation Class L Depositary Shares, each of which represents a one-one thousandth fractional interest in a share of 5.125% Class L Cumulative Redeemable Preferred Stock, liquidation preference $25,000.00 per share",preferred,False
+KIM.PRM,KIM,"Kimco Realty Corporation Class M Depositary Shares, each of which represents a one-one thousandth fractional interest in a share of 5.25% Class M Cumulative Redeemable Preferred Stock",preferred,False
+LNC.PRD,LNC,"Lincoln National Corporation Depositary Shares Each Representing a 1/1,000th Interest in a Share of 9.000% Non-Cumulative Preferred Stock, Series D",preferred,True
+MBINL,MBI,"Merchants Bancorp Depositary Shares, Each Representing a 1/40thInterest in a Share of 7.25% Fixed Rate Series E Non-CumulativePerpetual Preferred Stock, without par value",preferred,False
+MBINM,MBI,"Merchants Bancorp Depositary Shares, Each Representing a 1/40th Interest in a Share of 8.25% Fixed-Rate Reset Series D Non-Cumulative Perpetual Preferred Stock",preferred,False
+MBINN,MBI,Merchants Bancorp Depositary Shares Preferred Series C,preferred,False
+MET.PRE,MET,"MetLife, Inc. Depositary Shares, each representing a 1/1,000th interest in a share of 5.625% Non-Cumulative Preferred Stock, Series E",preferred,False
+MET.PRF,MET,"MetLife, Inc. Depositary Shares, each representing a 1/1,000th interest in a share of 4.75% Non-Cumulative Preferred Stock, Series F",preferred,False
+MS.PRA,MS,Morgan Stanley Floating Rate non-cumulative Preferred Series A,preferred,True
+MS.PRI,MS,"MORGAN STANLEY Depositary Shares, each representing 1/1,000th of a share of Fixed-to-Floating Rate Non-Cumulative Preferred Stock, Series I",preferred,True
+MS.PRK,MS,"Morgan Stanley Depositary Shares, each representing 1/1,000th of a share of Fixed-to-Floating Rate Non-Cumulative Preferred Stock, Series K",preferred,False
+MS.PRL,MS,"Morgan Stanley Depositary Shares, each representing 1/1,000th of a share of 4.875% Non-Cumulative Preferred Stock, Series L",preferred,False
+MS.PRO,MS,"Morgan Stanley Depositary Shares, each representing 1/1,000th of a share of 4.250% Non-Cumulative Preferred Stock, Series O",preferred,True
+MS.PRP,MS,"Morgan Stanley Depositary Shares, each representing 1/1,000th of a share of 6.500% Non-Cumulative Preferred Stock, Series P",preferred,False
+MS.PRQ,MS,"Morgan Stanley Depositary Shares, each representing 1/1,000th of a share of 6.625% Non-Cumulative Preferred Stock, Series Q",preferred,False
+MTB.PRH,MTB,"M&T Bank Corporation Perpetual Fixed-to-Floating Rate Non- Cumulative Preferred Stock, Series H",preferred,True
+MTB.PRJ,MTB,"M&T Bank Corporation Depositary Shares each representing a 1/400th ownership interest in a share of Perpetual 7.500% Non-Cumulative Preferred Stock, Series J",preferred,True
+MTB.PRK,MTB,"M&T Bank Corporation Depositary Shares each representing a 1/400th interest in a share of Perpetual 6.350% Non-Cumulative Preferred Stock, Series K",preferred,False
+MTB.PRL,MTB,"M&T Bank Corporation Depositary Shares each representing a 1/400th ownership interest in a share of Perpetual 6.625% Non-Cumulative Preferred Stock, Series L",preferred,True
+NTRSO,NTRS,"Northern Trust Corporation Depositary Shares Each Representing a 1/1,000th Interest in a Share of Series E Non-Cumulative Perpetual Preferred Stock",preferred,False
+PDPA,PD,Pearl Diver Credit Company Inc. 8.00% Series A Preferred Stock Due 2029,preferred,False
+PSA.PRF,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 5.15% Cumulative Preferred Share of Beneficial Interest, Series F, par value $0.01 per share",preferred,False
+PSA.PRG,PSA,"Public Storage Depositary Shares, Each Representing 1/1,000 of a 5.05% Cumulative Preferred Share of Beneficial Interest, Series G",preferred,False
+PSA.PRH,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 5.60% Cumulative Preferred Share of Beneficial Interest, Series H",preferred,False
+PSA.PRI,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.875% Cumulative Preferred Share of Beneficial Interest, Series I, par value $0.01 per share",preferred,False
+PSA.PRJ,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.700% Cumulative Preferred Share of Beneficial Interest, Series J",preferred,False
+PSA.PRK,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.75% Cumulative Preferred Share of Beneficial Interest, Series K",preferred,False
+PSA.PRL,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.625% Cumulative Preferred Share of Beneficial Interest, Series L, par value $0.01 per share",preferred,False
+PSA.PRM,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.125% Cumulative Preferred Share of Beneficial Interest, Series M",preferred,False
+PSA.PRN,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 3.875% Cumulative Preferred Share of Beneficial Interest, Series N",preferred,True
+PSA.PRO,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 3.900% Cumulative Preferred Share of Beneficial Interest, Series O",preferred,False
+PSA.PRP,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.000% Cumulative Preferred Share of Beneficial Interest, Series P",preferred,False
+PSA.PRQ,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 3.950% Cumulative Preferred Share of Beneficial Interest, Series Q",preferred,False
+PSA.PRR,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.00% Cumulative Preferred Share of Beneficial Interest, Series R",preferred,True
+PSA.PRS,PSA,"Public Storage Depositary Shares Each Representing 1/1,000 of a 4.100% Cumulative Preferred Share of Beneficial Interest, Series S",preferred,False
+PSA.PRT,PSA,"Public Storage 6.000% Cumulative Preferred Shares of Beneficial Interest, Series T",preferred,False
+PSA.PRU,PSA,"Public Storage 6.000% Cumulative Preferred Shares of Beneficial Interest, Series U",preferred,False
+PSEC.PRA,PSEC,Prospect Capital Corporation 5.35% Series A Fixed Rate Cumulative Perpetual Preferred Stock,preferred,False
+REGCO,REG,Regency Centers Corporation 5.875% Series B Cumulative Redeemable Preferred Stock,preferred,False
+REGCP,REG,Regency Centers Corporation 6.25% Series A Cumulative Redeemable Preferred Stock,preferred,False
+RF.PRC,RF,"Regions Financial Corporation Depositary Shares, each Representing a 1/40th Interest in a Share of 5.700% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series C",preferred,True
+RF.PRE,RF,"Regions Financial Corporation Depositary Shares, Each Representing a 1/40th Interest in a Share of 4.45% Non-Cumulative Perpetual Preferred Stock, Series E",preferred,False
+RF.PRF,RF,"Regions Financial Corporation Depositary Shares Each Representing a 1/40th Interest in a Share of Non-Cumulative Perpetual Preferred Stock, Series F",preferred,False
+SCHW.PRD,SCHW,"Charles Schwab Corporation Depositary Shares each representing 1/40th interest in a share of 5.95% Non-Cumulative Perpetual Preferred Stock, Series D",preferred,False
+SCHW.PRJ,SCHW,"The Charles Schwab Corporation Depositary Shares, Each Representing a 1/40th Interest in a Share of 4.450% Non-Cumulative Perpetual Preferred Stock, Series J",preferred,False
+SF.PRB,SF,"Stifel Financial Corp. Depositary Shares, Each Representing 1/1,000th Interest in a Share of 6.25% Non-Cumulative Preferred Stock, Series B",preferred,False
+SF.PRC,SF,"Stifel Financial Corp. Depositary Shares, Each Representing 1/1, 000th Interest in a Share of 6.125% Non Cumulative Preferred Stock, Series C",preferred,False
+SF.PRD,SF,"Stifel Financial Corp. Depositary Shares, Each Representing 1/1,000th Interest in a Share of 4.50% Non- Cumulative Preferred Stock, Series D",preferred,False
+SIGIP,SIG,"Selective Insurance Group, Inc. Depositary Shares, each representing a 1/1,000th interest in a share of 4.60% Non-Cumulative Preferred Stock, Series B",preferred,False
+SLG.PRI,SLG,SL GREEN REALTY CORP 6.50% Series I Cumulative Redeemable Preferred Stock,preferred,False
+SLMBP,SLM,"SLM Corporation Floating Rate Non-Cumulative Preferred Stock, Series B",preferred,False
+STRC,STR,Strategy Inc Variable Rate Series A Perpetual Stretch Preferred Stock,preferred,True
+STRD,STR,Strategy Inc 10.00% Series A Perpetual Stride Preferred Stock,preferred,True
+STRF,STR,Strategy Inc 10.00% Series A Perpetual Strife Preferred Stock,preferred,False
+STRK,STR,Strategy Inc 8.00% Series A Perpetual Strike Preferred Stock,preferred,False
+STRRP,STR,"Star Equity Holdings, Inc. 10% Series A Cumulative Perpetual Preferred Stock",preferred,False
+STT.PRG,STT,"State Street Corporation Depositary shares, each representing a 1/4,000th ownership interest in a share of Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series G",preferred,False
+T.PRA,T,"AT&T Inc. Depositary Shares, each representing a 1/1,000th interest in a share of 5.000% Perpetual Preferred Stock, Series A",preferred,True
+T.PRC,T,"AT&T Inc. Depositary Shares, each representing a 1/1,000th interest in a share of 4.750% Perpetual Preferred Stock, Series C",preferred,True
+TDS.PRU,TDS,"Telephone and Data Systems, Inc. Depositary Shares, Each Representing a 1/1,000th Interest in a 6.625% Series UU Cumulative Redeemable Perpetual Preferred Stock",preferred,False
+TDS.PRV,TDS,"Telephone and Data Systems, Inc. Depositary Shares, Each Representing a 1/1,000th Interest in a 6.000% Series VV Cumulative Redeemable Perpetual Preferred Stock",preferred,False
+TFC.PRI,TFC,"Truist Financial Corporation Depositary Shares, each representing 1/4,000th interest in a share of Series I Non-Cumulative Perpetual Preferred Stock",preferred,False
+TFC.PRO,TFC,"Truist Financial Corporation Depositary Shares, Each Representing a 1/1,000th Interest in a Share of Series O Non-Cumulative Perpetual Preferred Stock",preferred,False
+TFC.PRR,TFC,"Truist Financial Corporation Depositary Shares, each representing 1/1,000th interest in a share of Series R Non-Cumulative Perpetual Preferred Stock",preferred,True
+USB.PRA,USB,U.S. Bancorp Depositary Shares (each representing a 1/100th interest in a share of Series A Non-Cumulative Preferred Stock),preferred,False
+USB.PRP,USB,"U.S. Bancorp Depositary Shares each representing a 1/1,000th interest in a share of Series K Non-Cumulative Perpetual Preferred Stock",preferred,False
+USB.PRQ,USB,"U.S. Bancorp Depositary Shares, Each Representing a 1/1, 000th Interest in a Share of Series L Non- Cumulative Perpetual Preferred Stock",preferred,False
+USB.PRR,USB,"U.S. Bancorp Depositary Shares, Each Representing a 1/1, 000th Interest in a Share of Series M Non- Cumulative Perpetual Preferred Stock",preferred,False
+USB.PRS,USB,"U.S. Bancorp Depositary Shares, each representing a 1/1, 000th interest in a share of Series O Non- Cumulative Perpetual Preferred Stock",preferred,False
+VLYPN,VLY,"Valley National Bancorp 8.250% Fixed-Rate Reset Non-Cumulative Perpetual Preferred Stock, Series C",preferred,False
+VLYPO,VLY,"Valley National Bancorp 5.50% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series B",preferred,False
+VLYPP,VLY,"Valley National Bancorp 6.25% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series A",preferred,False
+VNO.PRL,VNO,"VORNADO REALTY TRUST 5.40% Series L Cumulative Redeemable Preferred Shares of Beneficial Interest, liquidation preference $25.00 per share",preferred,False
+VNO.PRM,VNO,"Vornado Realty Trust 5.25% Series M Cumulative Redeemable Preferred Shares of Beneficial Interest, liquidation preference $25.00 per share, no par value per share",preferred,False
+VNO.PRN,VNO,"Vornado Realty Trust 5.25% Series N Cumulative Redeemable Preferred Shares of Beneficial Interest, liquidation preference $25.00 per share",preferred,False
+VNO.PRO,VNO,"Vornado Realty Trust 4.45% Series O Cumulative Redeemable Preferred Shares, Liquidation Preference $25.00 Per Share",preferred,False
+WAL.PRA,WAL,"Western Alliance Bancorporation Depositary Shares, Each Representing a 1/ 400th Interest in a Share of 4.250% Fixed-Rate Non-Cumulative Perpetual Preferred Stock, Series A",preferred,False
+WFC.PRA,WFC,"Wells Fargo & Company Depositary Shares, each representing a 1/1, 000th interest in a share of Non-Cumulative Perpetual Class A Preferred Stock, Series AA",preferred,True
+WFC.PRC,WFC,"Wells Fargo & Company Depositary Shares, each representing a 1/1, 000th interest in a share of Non-Cumulative Perpetual Class A Preferred Stock, Series CC",preferred,False
+WFC.PRD,WFC,"Wells Fargo & Company Depositary Shares, each representing a 1/1, 000th interest in a share of Non-Cumulative Perpetual Class A Preferred Stock, Series DD",preferred,True
+WFC.PRZ,WFC,"Wells Fargo & Company Depositary Shares, each representing a 1/1,000th interest in a share of Non-Cumulative Perpetual Class A Preferred Stock, Series Z",preferred,False
+XELAP,XEL,EXELA TECHNOLOGIES INC PERP CUM PFD CONV SER B 6% Preferred Stock,preferred,False
+ZIONP,ZION,"Zions Bancorporation, N.A. Depositary Shares (Each representing 1/40th Interest in a Share of Series A Floating-Rate Non-Cumulative Perpetual Preferred Stock)",preferred,False

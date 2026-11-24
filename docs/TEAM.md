@@ -6,8 +6,8 @@ from a branch to `main` to prod. The standing decision behind it is
 `docs/ONBOARDING.md`. What is true right now: `python3 -m ops.orient`, never this file.
 
 The pod is the team lead (the PM) and three analysts, each on a branch named for
-them: `simon` (PM), `ryan` (MACRO, fixed income), `james` (equities and ETFs) and
-`lucy` (dashboard and data). **This repository is public**: first names appear only
+them: `simon` (PM), `ryan` (FICC risk), `james` (equity risk) and
+`lucy` (cross-asset signals, dashboard and data). These are starting points, not limits (team lead, 2026-11-05; `docs/SYSTEM.md` §5). **This repository is public**: first names appear only
 as those branch names (team lead, 2026-10-26); nothing else here names a person.
 Each analyst is a collaborator on this repository with Write access (§6).
 
@@ -17,10 +17,10 @@ Each analyst is a collaborator on this repository with Write access (§6).
 
 | lane | trial counter(s) | keeps | the queue it works from |
 |---|---|---|---|
-| **PM** (team lead) | CEF, EVENTS, GAMMA | The core CEF book, its execution and costs (TC), everything in §2, prod, release tags, approving pre-registrations, `docs/SYSTEM.md` §5, `docs/ROADMAP.md`. The corporate-event work (`scripts/events/`, `results/events/`), including the special-situations slate and its ETF hedge overlay, and the options test (`scripts/gamma/`, `results/gamma/`). CI (`.github/`, `pytest.ini`, `conftest.py`). Installing the dashboard's snapshot exporter on the VM | `docs/ROADMAP.md`; `results/cef/RESEARCH_PLAN_2026-10-09.md` §1, §2, §3 and §5 |
-| **MACRO** (fixed income) | MACRO | `scripts/macro/`, `results/macro/` | New fixed-income signals: macro events, credit events and fixed-income instruments, each as an overlay or conditioner on the CEF book, a sleeve, or a hedge. Not the PM's EVENTS rows. Start from the KILLED and WATCH tables of `docs/RESEARCH_STATE.md` |
-| **Equities and ETFs** | XASSET | `scripts/xasset/`, `results/xasset/` | New equity and ETF signals, single names included, each slate declared up front. Not the PM's EVENTS rows. The XASSET rows of `docs/RESEARCH_STATE.md` |
-| **Dashboard and data** | none | The read-only dashboard and its snapshot (`dashboard/`, `dashboard/snapshots/`), and the spec and tests of the snapshot exporter. The research data platform: `scripts/data/`, `scripts/rv/`, `scripts/holdings/`, `scripts/build_etf_daily.py`, `src/data/`, `results/data/`, and the event store once the EVENTS work on `simon` is merged into `main`. Whatever else the team lead assigns case by case | `dashboard/README.md`; `docs/DATA.md`; the other lanes' data requests |
+| **PM** (team lead) | CEF, EVENTS, GAMMA, MACRO, XASSET | **Approves every test, on every counter. Any analyst may propose a signal (team lead, 2026-11-05).** The core CEF book and C4, its execution and costs (TC), everything in §2, prod, release tags, approving pre-registrations, `docs/SYSTEM.md` §5, `docs/ROADMAP.md`. The corporate-event work (`scripts/events/`, `results/events/`), including the special-situations slate and its ETF hedge overlay, and the options test (`scripts/gamma/`, `results/gamma/`). CI (`.github/`, `pytest.ini`, `conftest.py`). Installing the dashboard's snapshot exporter on the VM | `docs/ROADMAP.md`; `results/cef/RESEARCH_PLAN_2026-10-09.md` §1, §2, §3 and §5 |
+| **FICC risk** (was MACRO) | MACRO, or the counter the idea's data belongs to | `scripts/macro/`, `results/macro/` | The credit, rates and muni risk of the deployed book, both accounts: the factor exposures (MUNI, TERM, credit, loan; `scripts/cef/exposure_readout.py` is the starting point, kept by the PM), the NAV component of live P&L (`scripts/cef/live_attribution.py`), and stress readings on the deployed spec books from committed data. A weekly readout is a suggested first output, and a finding may become a proposed signal |
+| **Equity risk** (was Equities and ETFs) | XASSET, or the counter the idea's data belongs to | `scripts/xasset/`, `results/xasset/` | The equity risk of the deployed book, first C4 (74 non-credit CEFs whose NAVs hold equities): its market, sector and factor exposures (`scripts/xasset/book_profile.py` and `specialist_betas.py` are the starting point), the correlation between the two accounts live against the fit, and stress readings from committed data. A weekly readout is a suggested first output, and a finding may become a proposed signal |
+| **Cross-asset signals, dashboard and data** | XASSET, or the counter the idea's data belongs to | The public site and its read-only dashboard (`dashboard/`), and the spec and tests of the snapshot exporter. The research data platform: `scripts/data/`, `scripts/rv/`, `scripts/holdings/`, `scripts/build_etf_daily.py`, `src/data/`, `results/data/`, and the event store once the EVENTS work on `simon` is merged into `main`. Whatever else the team lead assigns case by case | Signals from other markets (`results/xasset/XASSET_RESULTS_2026-10-14.md` says what has failed); `dashboard/README.md`; `docs/DATA.md`; the other lanes' data requests |
 
 What the table means:
 
@@ -31,7 +31,9 @@ What the table means:
 - **The dashboard is read-only.** No code path from it may send, replace or cancel
   an order (`CLAUDE.md`, "Hard rules: code"). `quantt/` and every file in §2 stay
   with the PM; a change that would touch one is proposed by PR like any other.
-- Each lane keeps its own counter rows in `docs/RESEARCH_STATE.md` (§4).
+- The PM keeps every counter's rows in `docs/RESEARCH_STATE.md` (§4). **The lanes are starting points, not limits (team
+  lead, 2026-11-05):** any analyst may propose a signal or any other addition, and the team lead approves every test
+  before it runs (§4). Each analyst pitches one idea to the execs at the end of November.
 - **Every lane feeds one book** (team lead, 2026-10-26). A passing signal joins the
   CEF book and the EVENTS sleeves as a sleeve of its own, an overlay or conditioner
   on the CEF book, or a hedge, and is weighed at book level
@@ -145,14 +147,19 @@ The variable names are in `docs/ONBOARDING.md` §2. Credentials are personal: ne
 share one, and never paste one into a chat, an issue or a Claude session.
 
 **What GitHub enforces** (rulesets on `quanttqueensu/CreditTrading`, set by the team
-lead, who is the only bypass actor; both active since 2026-10-26):
+lead, who is the only bypass actor; the first two active since 2026-10-26, the third
+since 2026-11-23):
 
 - on `main`: no update except by the team lead, so analysts' work arrives only
   through a PR the team lead merges; no force-push; no deletion. GitHub counts even
   the team lead's merge as a bypass, so it is made with `gh pr merge --admin`;
 - on the tags `release-*`, `spec-*`, `pre-clean-slate` and `ibkr-final`: no
   creation, move or deletion except by the team lead. A release tag is what prod
-  runs; the other two are the provenance of everything before 2026-09-28.
+  runs; the other two are the provenance of everything before 2026-09-28;
+- on `shadow`: no update, force-push or deletion except by the team lead (team lead,
+  2026-11-23, `docs/SYSTEM.md` §5). The VM's shadow clone runs the head of `shadow`
+  every night, and the events account trades its decision files, so a push there
+  reaches a paper account's orders without a release (`results/ops/STANDARD_AUDIT_2026-11-22.md` §2).
 
 **What it does not stop.** The QUANTT organisation's owners hold admin rights over
 every repository in the organisation, this one included, and can edit these

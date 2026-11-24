@@ -1,0 +1,18 @@
+{
+  "episode_cik": 882300,
+  "episode_accession": "0001193125-23-062665",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Western Asset Intermediate Muni Fund Inc.", "cik": 882300, "ticker": "SBI"},
+      "acquirer": {"name": "Western Asset Managed Municipals Fund Inc.", "cik": null, "ticker": "MMU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-197469", "quote": "On February 13, 2023, the Fund and Western Asset Managed Municipals Fund Inc. (NYSE: MMU) announced approval by each fund’s Board of Directors of a proposal to merge the Fund with and into MMU, subject to approval by the stockholders of each fund."},
+      "outcome": "vote_failed",
+      "announcement": {"accession": "0001193125-23-197469", "date": "2023-07-28", "quote": "On February 13, 2023, the Fund and Western Asset Managed Municipals Fund Inc. (NYSE: MMU) announced approval by each fund’s Board of Directors of a proposal to merge the Fund with and into MMU, subject to approval by the stockholders of each fund."},
+      "outcome_evidence": {"accession": "0001193125-24-018855", "date": "2024-01-30", "quote": "Shareholders of SBI did not approve the proposal to merge into MMU. Therefore, the merger of SBI into MMU did not proceed."},
+      "notes": "Earliest excerpted filing announcing the merger is the N-CSRS of 2023-07-28 (the Feb 13, 2023 announcement itself is not in the excerpts). SBI is shown as NYSE-listed in the DEF 14A of 2023-03-07 ('(NYSE: SBI)'). The vote table in the N-CSR filed 2024-01-30 shows FOR 5,324,099, AGAINST 1,735,675, ABSTAIN 149,317. MMU CIK not in any FILING header."
+    }
+  ],
+  "problems": ""
+}

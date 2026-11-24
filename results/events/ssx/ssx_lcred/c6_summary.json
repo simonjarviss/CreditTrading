@@ -1,0 +1,98 @@
+{
+ "snapshot_taken_utc": "2026-10-19T19:42:31+00:00",
+ "session": "2026-10-16",
+ "symbols_in_snapshot": 574,
+ "label": "single cross-section: Alpaca SIP daily close of the last completed session; used only to count today's C6 set; no return formed. The real-time SIP snapshot was refused (HTTP 403)",
+ "shortable_today": 50,
+ "shortable_with_close": 50,
+ "shortable_above_par": 12,
+ "shortable_above_par_symbols": [
+  [
+   "SAZ",
+   25.37,
+   25.0,
+   false,
+   "baby_bond"
+  ],
+  [
+   "AGNCN",
+   25.38,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "C.PRN",
+   26.71,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "CHSCO",
+   25.4,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "CHSCP",
+   25.73,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "LNC.PRD",
+   25.82,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "MTB.PRH",
+   25.1,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "MTB.PRJ",
+   25.48,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "STRC",
+   97.72,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "STRD",
+   70.86,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "SYF.PRB",
+   25.7,
+   25.0,
+   false,
+   "preferred"
+  ],
+  [
+   "XRN.PRB",
+   25.55,
+   25.0,
+   false,
+   "preferred"
+  ]
+ ],
+ "shortable_nonstd_par_in_name": [],
+ "all_tradable_above_par": 108,
+ "all_tradable_with_price": 574
+}

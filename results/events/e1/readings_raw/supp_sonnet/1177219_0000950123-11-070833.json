@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1177219,
+  "episode_accession": "0000950123-11-070833",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Georgia Premium Income Municipal Fund", "cik": 899758, "ticker": "NPG"},
+      "acquirer": {"name": "Nuveen Georgia Dividend Advantage Municipal 2 Fund", "cik": 1177219, "ticker": "NKG"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070833", "date": "2011-08-01", "quote": "today announced the Board of Trustees of Nuveen’s closed-end funds approved a series of mergers of single-state Nuveen municipal closed-end funds."},
+      "outcome_evidence": null,
+      "notes": "Acquired/acquiring pairing is read from the press-release table (Acquired Fund NPG and NZX, Acquiring Fund NKG) and the N-14 notice to shareholders of the three Georgia funds. Annual meeting adjourned to March 5, 2012, then to April 13, 2012, then to May 14, 2012 (425s of 2012-02-07, 2012-03-13, 2012-04-18); no outcome stated. The RW of 2012-07-06 withdraws a Form 8-A about preferred shares, not a merger registration."
+    },
+    {
+      "target": {"name": "Nuveen Georgia Dividend Advantage Municipal Fund", "cik": 1097668, "ticker": "NZX"},
+      "acquirer": {"name": "Nuveen Georgia Dividend Advantage Municipal 2 Fund", "cik": 1177219, "ticker": "NKG"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070833", "date": "2011-08-01", "quote": "today announced the Board of Trustees of Nuveen’s closed-end funds approved a series of mergers of single-state Nuveen municipal closed-end funds."},
+      "outcome_evidence": null,
+      "notes": "Same adjournment sequence as the NPG deal; the 2012-04-18 425 (0001193125-12-167706) still lists both Georgia targets as subject companies. No outcome stated."
+    }
+  ],
+  "problems": "No excerpt states how either Georgia merger ended. Exchange listing is not stated in the excerpts (tickers only, no exchange name), so both_listed is null."
+}

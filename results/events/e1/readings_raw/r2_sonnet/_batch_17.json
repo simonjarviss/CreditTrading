@@ -1,0 +1,7 @@
+{
+  "batch": "17",
+  "model_id": "claude-sonnet-5-5",
+  "episodes": ["896665_0001341004-13-000780", "1157842_0001193125-10-040817", "1165216_0001341004-13-000781", "1260729_0001193125-14-116706", "1310445_0001193125-10-148738", "1360768_0000902664-11-000023", "1384358_0000902664-11-000021", "1515940_0001193125-24-234601"],
+  "parts_read": 10,
+  "problems": "No outcome stated in any excerpt for 896665, 1165216, 1310445, 1515940 (N-8Fs for 896665/1165216 tick Merger but do not name the surviving fund). 1157842 has no merger described (empty deals). 1260729 is an asset contribution to a newly formed fund, not a merger of two funds. 1360768 and 1384358 are unlisted LLC funds; N-14s withdrawn by RW, recorded as not_a_listed_pair with the RW in notes."
+}

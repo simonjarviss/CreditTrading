@@ -1,0 +1,59 @@
+{
+ "episode_cik": 1169034,
+ "episode_accession": "0001193125-23-231636",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "BlackRock Virginia Municipal Bond Trust",
+    "cik": 1169034,
+    "ticker": "BHV"
+   },
+   "acquirer": {
+    "name": "BlackRock MuniYield Quality Fund III, Inc.",
+    "cik": 883412,
+    "ticker": "MYI"
+   },
+   "both_listed": true,
+   "listed_quote": {
+    "accession": "0001193125-23-231636",
+    "quote": "BlackRock Virginia Municipal Bond Trust (NYSE: BHV), BlackRock Investment Quality Municipal Trust, Inc. (NYSE: BKN) and BlackRock MuniYield Quality Fund III, Inc. (NYSE: MYI)"
+   },
+   "outcome": "superseded",
+   "announcement": {
+    "accession": "0001193125-23-231636",
+    "date": "2023-09-08",
+    "quote": "have approved the mergers of each of MIY, MPA, BHV and BKN with and into MYI, with MYI continuing as the surviving Fund (collectively, the “Mergers”)."
+   },
+   "outcome_evidence": {
+    "accession": "0001193125-25-137900",
+    "date": "2025-06-09",
+    "quote": "Reorganizations of BlackRock MuniYield Fund, Inc. (MYD), BlackRock MuniYield Quality Fund II, Inc. (MQT), BlackRock Investment Quality Municipal Trust, Inc. (BKN), BlackRock Virginia Municipal Bond Trust (BHV) and BlackRock MuniYield Pennsylvania Quality Fund (MPA) with and into BlackRock MuniYield Quality Fund, Inc. (MQY)"
+   },
+   "notes": "Superseded is inferred from the 2025 filings showing BHV proposed to merge into MQY while MYI's 2025 targets are MVF, MVT and MIY only; no excerpt states the MYI merger was terminated. The 2023 merger was expected in the first half of 2024; no completion is stated."
+  },
+  {
+   "target": {
+    "name": "BlackRock Virginia Municipal Bond Trust",
+    "cik": 1169034,
+    "ticker": "BHV"
+   },
+   "acquirer": {
+    "name": "BlackRock MuniYield Quality Fund, Inc.",
+    "cik": 890196,
+    "ticker": "MQY"
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {
+    "accession": "0001193125-25-137900",
+    "date": "2025-06-09",
+    "quote": "Reorganizations of BlackRock MuniYield Fund, Inc. (MYD), BlackRock MuniYield Quality Fund II, Inc. (MQT), BlackRock Investment Quality Municipal Trust, Inc. (BKN), BlackRock Virginia Municipal Bond Trust (BHV) and BlackRock MuniYield Pennsylvania Quality Fund (MPA) with and into BlackRock MuniYield Quality Fund, Inc. (MQY)"
+   },
+   "outcome_evidence": null,
+   "notes": "Shareholder meeting set for October 15, 2025 (PRE 14A filed 2025-08-08); the excerpts end before any result. Exchange listing of MQY and BHV in these 2025 filings is not stated (tickers appear without an exchange)."
+  }
+ ],
+ "problems": ""
+}

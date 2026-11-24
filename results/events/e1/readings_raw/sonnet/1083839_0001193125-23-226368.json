@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1083839,
+  "episode_accession": "0001193125-23-226368",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen New Jersey Quality Municipal Income Fund", "cik": null, "ticker": "NXJ"},
+      "acquirer": {"name": "Nuveen Quality Municipal Income Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-23-226368", "date": "2023-08-31", "quote": "You are receiving the Joint Proxy Statement/Prospectus as a holder of common shares of Nuveen New Jersey Quality Municipal Income Fund (the “Target Fund”) or as a holder of preferred shares of Nuveen Quality Municipal Income Fund (the “Acquiring Fund” and together with the Target Fund, the “Funds” or each individually, a"},
+      "outcome_evidence": {"accession": "0001193125-23-274359", "date": "2023-11-09", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s shares as part of a proposed merger transaction that is no longer contemplated; (2) no securities were sold or exchanged in connection with this offering; and (3) the filing did not become effective."},
+      "notes": "Form RW filed 2023-11-09 withdraws the N-14 (File No. 333-274287). NAD is shown as a New York Stock Exchange common share in the 2023-10-13 8-K; NXJ appears only as a ticker in the N-14 excerpt with no exchange named, so both_listed is left null. Later 2024 and 2025 filings are annual-meeting proxy statements, not merger filings."
+    }
+  ],
+  "problems": ""
+}

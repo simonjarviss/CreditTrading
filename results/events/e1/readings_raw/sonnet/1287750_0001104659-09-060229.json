@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1287750,
+  "episode_accession": "0001104659-09-060229",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Allied Capital Corporation", "cik": 3906, "ticker": "ALD"},
+      "acquirer": {"name": "Ares Capital Corporation", "cik": 1287750, "ticker": "ARCC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001104659-09-060213", "quote": "Ares Capital Corporation (NASDAQ: ARCC) and Allied Capital Corporation (NYSE: ALD) announced today that they have entered into a definitive agreement under which Ares Capital will acquire Allied Capital in an all stock transaction currently valued at $648 million, or approximately $3.47 per Allied Capital share."},
+      "outcome": "completed",
+      "announcement": {"accession": "0001104659-09-060213", "date": "2009-10-26", "quote": "Ares Capital Corporation (NASDAQ: ARCC) and Allied Capital Corporation (NYSE: ALD) announced today that they have entered into a definitive agreement under which Ares Capital will acquire Allied Capital in an all stock transaction currently valued at $648 million, or approximately $3.47 per Allied Capital share."},
+      "outcome_evidence": {"accession": "0001104659-10-018070", "date": "2010-04-01", "quote": "Ares Capital Corporation (NASDAQ: ARCC) announced today that it has completed its merger with Allied Capital Corporation, becoming the largest business development company measured by market capitalization and total portfolio companies under management."},
+      "notes": "Both funds described as business development companies in the excerpts (Allied withdrawing its BDC election after the merger; Ares 'the largest business development company'). N-14 amendments mention a competing offer from Prospect Capital, which terminated its solicitation on March 5, 2010 (425 of 2010-03-09); Ares shareholders approved the share issuance on 2010-03-26."
+    }
+  ],
+  "problems": ""
+}

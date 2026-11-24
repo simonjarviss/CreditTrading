@@ -16,7 +16,10 @@ What is pinned:
 * the kill rules at their boundaries, f_max's arithmetic, the stage order in `fit_core`;
 * the gates: the fit reader never pulls, the holdout reader refuses an uncommitted fit
   verdict, the census keeps only unexplained episodes, a reading's quote must be re-found,
-  and `stage_crsp` refuses sources that disagree.
+  and `stage_crsp` refuses sources that disagree;
+* found 2026-10-22, before the fit ran, each checked to fail against the old code: one missing
+  party fails DG-E1-1 while the other gates are still evaluated; the fit trades the ruled
+  failed deals Stage 0 cleared, not the round-1 file; control 2 is keyed by deal, not permno.
 
 The lookahead test (test_deal_window_alignment) was checked to fail against a deal_window
 that set the decision row to the fill session itself (shift(1)), 2026-10-19.
@@ -260,6 +263,7 @@ def test_readings_must_cover_every_candidate_and_quotes_must_be_found(tmp_path, 
     assert probs and "does not exist" in probs[0]
     row = {c: "" for c in e1.READING_COLUMNS}
     row.update(episode_cik="20", episode_accession="0000000020-15-000001", outcome="terminated", in_trial="Y",
+               deal_id="20>30", both_listed="Y", acquirer_cik="30",
                target_cik="20", target_ticker="TGT", acquirer_ticker="ACQ", ann_date="2015-01-05",
                ann_accession="0000000020-15-000001", ann_quote="the Boards approved the reorganization",
                fail_date="2015-06-01", fail_accession="0000000020-15-000009", fail_quote="the reorganization was terminated")
@@ -271,6 +275,18 @@ def test_readings_must_cover_every_candidate_and_quotes_must_be_found(tmp_path, 
     assert any("quote not found" in p for p in probs)
     _, probs = e1.check_readings(pd.concat([cen, cen.assign(episode_accession="x")]), _FakeClient(""))
     assert any("no reading" in p for p in probs)
+    # the acquirer's episode reads the same deal with another outcome: a disagreement fails the gate
+    two = pd.DataFrame([row, {**row, "episode_cik": "30", "episode_accession": "0000000030-15-000002",
+                              "outcome": "completed", "in_trial": "N"}])
+    two.to_csv(tmp_path / "r.csv", index=False)
+    cen2 = pd.concat([cen, pd.DataFrame({"episode_cik": [30], "episode_accession": ["0000000030-15-000002"]})])
+    _, probs = e1.check_readings(cen2, _FakeClient("The Boards approved the reorganization. Later the "
+                                                   "reorganization was terminated."))
+    assert any("disagree" in p for p in probs)
+    # a blank outcome blocks
+    pd.DataFrame([{**row, "outcome": "", "in_trial": "N"}]).to_csv(tmp_path / "r.csv", index=False)
+    _, probs = e1.check_readings(cen, _FakeClient("The Boards approved the reorganization."))
+    assert any("blank outcome" in p for p in probs)
 
 
 def _src(tmp_path, name, df):
@@ -318,3 +334,93 @@ def test_holdout_opens_per_reading_r12(verdict, opens):
     """R12, ruled 2026-10-20: every committed verdict but a HALT opens the holdout (report-only
     after a KILL or NEITHER). Checked to fail on the KILL/NEITHER cases with the pre-ruling None."""
     assert e1.holdout_opens(verdict) is opens
+
+
+# --------------------------------------------------------------------------- found 2026-10-22, before the fit
+
+def _reader_missing(missing: int, rows: pd.DataFrame):
+    """A fit reader that refuses, as `fit_daily` does, any set holding a permno with no cached rows."""
+    def read(perms):
+        if missing in set(perms):
+            raise e1.GateError(f"DG-E1-1: no cached CRSP extract for these {len(perms)} permnos")
+        return rows[rows["permno"].isin(perms)]
+    return read
+
+
+def test_stage0_one_missing_party_fails_dg1_and_still_checks_the_other_gates():
+    """2026-10-22: ALD (a failed fit deal's party) had no CRSP rows. DG-E1-1 must FAIL on the full
+    set, and a fallback read must never pass it; DG-E1-4's completed deals, -5 and -7 are still
+    evaluated on the completed deals' extract, and DG-E1-4 stays INCOMPLETE, naming the failed
+    deal it could not check. Checked to fail against the behaviour before b5e2130 (no fallback
+    read: one missing party left no extract, so DG-E1-4/5/7 all failed with DG-E1-1's cause)."""
+    rows = pd.DataFrame({"permno": [1, 9], "date": pd.to_datetime(["2021-01-04", "2021-01-04"]), "prc": 10.0})
+    read = _reader_missing(5, rows)
+    d, loaded, text = e1.fit_extract({1, 9, 5}, {1, 9}, reader=read)
+    assert text.startswith("FAIL") and "evaluated on the completed fit deals' extract" in text
+    assert d is not None and loaded == {1, 9} and set(d["permno"]) == {1, 9}
+    assert e1.dg1_status(text, "PASS (refuses)", [], [], True) == "FAIL"
+    ff = pd.DataFrame([{"ticker": "ALD", "a_ticker": "PSEC", "permno": 5, "nwperm": 9},
+                       {"ticker": "RAA", "a_ticker": "BFZ", "permno": 1, "nwperm": 9}])
+    px = {1: _px(["2021-01-04"], 0.0), 9: _px(["2021-01-04"], 0.0)}
+    unchecked = e1.unpriced_failed(ff, px)
+    assert unchecked == ["ALD -> PSEC"]
+    g = e1.dg4_gate({}, {}, unchecked)
+    assert g["status"] == "INCOMPLETE" and "ALD -> PSEC" in g["detail"]
+    # failed deals not yet known (DG-E1-3 open): nothing is read in the full set's place
+    d, loaded, text = e1.fit_extract({1, 9, 5}, None, reader=read)
+    assert d is None and text.startswith("FAIL")
+    # every party present: DG-E1-1 and DG-E1-4 pass
+    d, loaded, text = e1.fit_extract({1, 9}, {1, 9}, reader=read)
+    assert text.startswith("PASS") and loaded == {1, 9}
+    assert e1.dg1_status(text, "PASS (refuses)", [], [], True) == "PASS"
+    assert e1.dg1_status(text, "PASS (refuses)", [], [], False) == "INCOMPLETE"
+    assert e1.dg1_status(text, "PASS (refuses)", [123], [], True) == "FAIL"    # a control-2 fund lacks rows
+    assert e1.dg4_gate({}, {}, [])["status"] == "PASS"
+
+
+def test_fit_trades_the_ruled_failed_deals_stage0_cleared(tmp_path, monkeypatch):
+    """The fit and the holdout read the RULED readings Stage 0 wrote, checked against the
+    Stage-0 record; before 2026-10-22 `_load_trial_deals` read the round-1 file (3 in-trial
+    deals of the 13 Stage 0 cleared). Checked to fail against that code."""
+    cols = {"target_ticker": "ticker", "acquirer_ticker": "a_ticker"}
+    pd.DataFrame({"target_ticker": ["OLD"], "acquirer_ticker": ["ONE"]}).to_csv(tmp_path / "r1.csv", index=False)
+    ruled = tmp_path / "ruled.csv"
+    pd.DataFrame({"target_ticker": ["AAA", "CCC"], "acquirer_ticker": ["BBB", "DDD"]}).to_csv(ruled, index=False)
+    rec = tmp_path / "stage0.json"
+    rec.write_text(json.dumps({"gates": {"DG-E1-3": {"in_trial_deal_list": ["AAA->BBB", "CCC->DDD"]}}}))
+    hd = tmp_path / "hd.csv"
+    pd.DataFrame({"permno": []}).to_csv(hd, index=False)
+    monkeypatch.setattr(e1, "READINGS", tmp_path / "r1.csv")
+    monkeypatch.setattr(e1, "READINGS_RULED", ruled)
+    monkeypatch.setattr(e1, "STAGE0_JSON", rec)
+    monkeypatch.setattr(e1, "HOLDOUT_DATES", hd)
+    monkeypatch.setattr(e1, "failed_deal_rows", lambda r, nm: r.rename(columns=cols).assign(part="fit_seen"))
+    monkeypatch.setattr(e1, "deal_table", lambda nm, dl: pd.DataFrame({"permno": [1]}))
+    monkeypatch.setattr(e1, "load_fit_dates", lambda x: pd.DataFrame({"permno": [1]}))
+    monkeypatch.setattr(e1, "attach_dates", lambda x, d: x)
+    _, fail = e1._load_trial_deals(None, None, None)
+    assert sorted(fail["ticker"] + "->" + fail["a_ticker"]) == ["AAA->BBB", "CCC->DDD"]
+    rec.write_text(json.dumps({"gates": {"DG-E1-3": {"in_trial_deal_list": ["AAA->BBB"]}}}))
+    with pytest.raises(e1.GateError, match="only here"):
+        e1._load_trial_deals(None, None, None)
+    rec.write_text(json.dumps({"gates": {"DG-E1-3": {}}}))
+    with pytest.raises(e1.GateError, match="no in-trial deal list"):
+        e1._load_trial_deals(None, None, None)
+    ruled.unlink()
+    with pytest.raises(e1.GateError, match="run stage0"):
+        e1._load_trial_deals(None, None, None)
+
+
+def test_control2_is_keyed_by_the_deal_not_the_target_permno():
+    """NCU is the target of two fit deals (failed 2011, completed 2013-14). Control 2 is attached
+    by the deal's row in the deal table; a permno key gave both deals one value. `price_deals`
+    carries that row and the deal's set. Checked to fail against the permno key."""
+    P = pd.DataFrame({"row": [3, 8, 9], "permno": [7, 7, 4], "pair": [0.01, 0.02, 0.0]})
+    out = e1.attach_ctrl2(P, {3: 0.005, 8: -0.001})
+    assert out["ctrl2"].iloc[0] == 0.005 and out["ctrl2"].iloc[1] == -0.001 and np.isnan(out["ctrl2"].iloc[2])
+    with pytest.raises(ValueError, match="one `row` per deal"):
+        e1.attach_ctrl2(P.assign(row=[3, 3, 9]), {})
+    cal, px, e = _world()
+    D = pd.DataFrame([{**e.to_dict(), "part": "fit_seen"}], index=[5])
+    Pd, excl = e1.price_deals(D, px, cal, e1.returns_matrix(px, cal, D))
+    assert excl == {} and Pd["row"].tolist() == [5] and Pd["part"].tolist() == ["fit_seen"]

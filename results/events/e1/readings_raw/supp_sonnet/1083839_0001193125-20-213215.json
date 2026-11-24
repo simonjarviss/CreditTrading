@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1083839,
+  "episode_accession": "0001193125-20-213215",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Maryland Quality Municipal Income Fund", "cik": 897424, "ticker": "NMY"},
+      "acquirer": {"name": "Nuveen Quality Municipal Income Fund", "cik": 1083839, "ticker": "NAD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-264109", "quote": "Nuveen Maryland Quality Municipal Income Fund (NYSE: NMY),"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213215", "date": "2020-08-07", "quote": "The Board of Trustees for eleven Nuveen municipal closed-end funds approved five reorganization proposals."},
+      "outcome_evidence": null,
+      "notes": "The announcement table pairs Nuveen Maryland Quality Municipal Income Fund (NMY) as Acquired Fund with Nuveen Quality Municipal Income Fund (NAD) as Acquiring Fund. NAD's NYSE listing is shown on the cover of the same 8-K (0001193125-20-264109): 'Common Stock NAD New York Stock Exchange'. The special meeting of 2020-12-07 was adjourned (425s filed 2020-12-08 and 2020-12-14, 2021-01-06: 'because not enough votes were received to satisfy the vote requirement, your Nuveen Closed End Fund(s) shareholder meeting was adjourned to January 15, 2021'), then adjourned again to 2021-02-17 and to 2021-03-17 (425s filed 2021-01-15, 2021-02-17, 2021-02-18). No excerpted filing states the final result of the vote or whether the merger was completed; the last 425 in the window is dated 2021-02-18."
+    }
+  ],
+  "problems": "Outcome is not stated in the excerpts; the repeated adjournments suggest a vote shortfall but no filing in front of me says the vote failed or the merger was completed or terminated. The later DEF 14As (2021-06-25, 2022-06-28) show only cover pages."
+}

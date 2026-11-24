@@ -1,0 +1,18 @@
+{
+  "episode_cik": 787441,
+  "episode_accession": "0001144204-16-132427",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "MainStay High Yield Opportunities Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay High Yield Corporate Bond Fund", "cik": 787441, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-16-132427", "quote": "Generally, Class A shares have a minimum initial investment amount of $25,000 per MainStay Fund."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-16-132427", "date": "2016-11-08", "quote": "has approved the reorganization of your fund with and into MainStay High Yield Corporate Bond Fund, series of The MainStay Funds (the “Acquiring Fund”)."},
+      "outcome_evidence": null,
+      "notes": "Both are series of MainStay trusts with share classes (Class A, Investor Class) and redemption fees, shown as non-exchange-listed funds; no ticker or exchange appears. The excerpts never state the outcome of this reorganization. Acquirer CIK is the filer trust (MainStay Funds, 787441); the target is a series of MainStay Funds Trust, whose CIK does not appear. Later filings in the window (PRE 14A, DEF 14A, DEFA14A) concern an unrelated MAP Fund subadvisory vote and a trustee election."
+    }
+  ],
+  "problems": ""
+}

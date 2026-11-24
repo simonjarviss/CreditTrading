@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1637417,
+  "episode_accession": "0001193125-19-164380",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "FS Investment Corporation IV", "cik": 1637417, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164193", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164193", "date": "2019-06-03", "quote": "FS/KKR Advisor, LLC (FS/KKR), a partnership between FS Investments and KKR Credit Advisors (US) LLC, today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome_evidence": {"accession": "0001193125-19-164193", "date": "2019-06-03", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "notes": "Non-traded BDCs. The mergers were completed: 8-K 0001193125-19-317716 filed 2019-12-18 says FS/KKR 'today announced the closing of the mergers of four non-traded business development companies (BDCs)'; shareholder approval 8-K 0001193125-19-298806 filed 2019-11-25. outcome_evidence here is the evidence for the non-traded status."
+    },
+    {
+      "target": {"name": "FS Investment Corporation III", "cik": null, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164193", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164193", "date": "2019-06-03", "quote": "FS/KKR Advisor, LLC (FS/KKR), a partnership between FS Investments and KKR Credit Advisors (US) LLC, today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome_evidence": {"accession": "0001193125-19-164193", "date": "2019-06-03", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "notes": "Same as the FSIC IV deal; closing stated in 8-K 0001193125-19-317716 (2019-12-18)."
+    },
+    {
+      "target": {"name": "Corporate Capital Trust II", "cik": null, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164193", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164193", "date": "2019-06-03", "quote": "FS/KKR Advisor, LLC (FS/KKR), a partnership between FS Investments and KKR Credit Advisors (US) LLC, today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome_evidence": {"accession": "0001193125-19-164193", "date": "2019-06-03", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "notes": "Same as the FSIC IV deal; closing stated in 8-K 0001193125-19-317716 (2019-12-18)."
+    }
+  ],
+  "problems": "Funds are non-traded, so outcome follows the both_listed rule; the actual outcome was completion, stated in the 2019-12-18 8-K. The combined company's listing on the NYSE was planned for a later step, not at the merger."
+}

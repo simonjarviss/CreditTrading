@@ -1,0 +1,77 @@
+EXDRIFT STAGE 0 (2026-10-27; EVENTS trial 3, N = 7; run 2026-10-28T20:40:19+00:00)
+spec cef_discount.v7.20260928; the 17: AWF, BIT, DSL, HYT, JFR, MHD, MQY, PCN, PDI, PDO, PFN, PHK, PTY, NAD, NEA, NVG, NZF. 2023+: dates, counts, presence and flags only.
+
+price panel sessions (17): 1992-07-20..2026-10-15; test 2023-01-03..2026-10-15 = 950 sessions
+  against ops/schedule/nyse_calendar.py: panel days NYSE closed none; NYSE sessions missing from the panel none
+
+[DG-X1] distribution history, refreshed outside data/ (fetch_cef_distributions.py --out, 17 names)
+  refreshed panel: 4616 rows, last ex-date 2026-10-15, written 2026-10-27T20:56:43+00:00 (sha 9656cc3d4c536b19)
+  against data/cef/cef_distributions.parquet (yfinance, last ex-date 2026-09-03): fit rows IDENTICAL (3831 in both, 0 in one only); 2023+ overlap 752 ex-dates identical; 2023+ only in data/ 0, only in the refresh 33
+  test set end (R7): earlier of the last ex-date 2026-10-15 and the session 3 before 2026-10-15 (2026-10-12) = 2026-10-12
+  splits in the test window (refreshed splits panel): [('BIT', '2025-08-19', 1.029)]
+
+  §5.1's counts (dates only), re-measured beside the pre-registration's (H14: they decide nothing):
+  | | events | on the 13 | dates | months | H-E >= 3 (calendar) | on the 13 |
+  |---|---:|---:|---:|---:|---:|---:|
+  | prereg §5.1 | 752 | 575 | 169 | 45 | 714 | 537 |
+  | data/ panel, as §5.1 counted it | 751 | 574 | 169 | 45 | 713 | 536 |
+  | refreshed panel, to the frozen end | 768 | 587 | 173 | 46 | 729 | 548 |
+  refreshed: by year {2023: 205, 2024: 205, 2025: 204, 2026: 154}; T+2 290, T+1 478; excluded by rule 2 0, by rule 3 (R1) 1; ex-dates not a session 0
+  (the §5.1 basket count used presence of an ex-date only; this one also needs a bar on e..e+3 and no split-masked row, so it can be lower)
+
+[DG-X1] second source, Alpaca v1 (fetched 2026-10-27T21:38:45Z): {'yf_ex_dates': 769, 'alpaca_ex_dates': 769, 'agree': 737, 'agree_exact': 254}
+  amount mismatches by fund (count, first, last ex-date): BIT 32 2023-01-12..2025-08-15
+[DG-X3] record dates and the regime arithmetic: {'events': 768, 'regime_ok': 768}
+[DG-X2] is Alpaca's declaration_date a declaration date? {'announcements': 785, 'record_minus_declaration_weekdays': {-1: 6, 1: 86, 2: 688, 3: 5}, 'notices': 6, 'notices_agree': 0, 'notices_contradict': 6, 'contradictions': ['PCN ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12', 'PTY ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12', 'PHK ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12', 'PFN ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12', 'PDI ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12', 'PDO ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12']}
+[DG-X2] declaration dates on Alpaca's field (superseded: the gate rests on the sponsor-release table below): {'declared_by_e_minus_1': 736, 'declared_on_e_minus_1': 273, 'declared_by_e_minus_2': 410}
+  FAIL (superseded: the gate rests on the sponsor-release table below): Alpaca's announcement declaration_date is not a declaration date: 6 of 6 verified sponsor notice(s) contradict it, and it sits {-1: 6, 1: 86, 2: 688, 3: 5} weekdays before the record date. No valid declaration source; the per-event test below is printed, not flagged
+  events 'not declared by e-1' on Alpaca's field (printed only: the field is invalid): 32; by ex-date: 2023-01-12 BIT,HYT,JFR,MHD,MQY,NAD,NEA,NVG,NZF,PCN,PDI,PDO,PFN,PHK,PTY; 2023-01-18 DSL; 2023-02-02 AWF; 2023-08-14 BIT,HYT,JFR,MHD,MQY,NAD,NEA,NVG,NZF; 2025-04-11 PCN,PDI,PDO,PFN,PHK,PTY
+
+[DG-X2] declarations from the sponsors' own releases (exdrift_sponsor_declarations_2026-10-28.csv; the team lead's ruling of 2026-10-28): every quote re-found offline
+  not-found events recovered from CRSP dsedist.dclrdt (ruling of 2026-10-28, 2023-24 only): {'crsp_rows': 412, 'attempted': 86, 'recovered': 86, 'recovered_late': 0, 'no_crsp_row': 0, 'record_mismatch': 0, 'how': 'pull (R2, live)', 'pulled_utc': '2026-10-28T20:39:10+00:00', 'crsp_vs_release_where_both': {'events': 324, 'same_day': 319, 'within_1_day': 320, 'crsp_later': 4, 'crsp_earlier': 0}}
+  Alpaca's declaration_date against the sponsor table: 0 agree, 679 contradict, of 679
+  coverage of the test events by sponsor:
+    col                by_e-1_release  by_e-1_crsp  declared_late  not_found
+    sponsor                                                                 
+    AllianceBernstein              48            0              0          0
+    BlackRock                     177            2              0          0
+    DoubleLine                     45            0              0          0
+    Nuveen                         42           84              0        100
+    PIMCO                         270            0              0          0
+  {'events': 768, 'declared_by_e_minus_1': 668, 'of_which_from_crsp': 86, 'declared_on_e_minus_1': 0, 'declared_by_e_minus_2': 668, 'not_found': 100, 'declared_late': 0, 'lead_sessions_min_median_max': [4, 8.0, 74], 'by_sponsor': {'AllianceBernstein': {'by_e-1_release': 48, 'by_e-1_crsp': 0, 'declared_late': 0, 'not_found': 0}, 'BlackRock': {'by_e-1_release': 177, 'by_e-1_crsp': 2, 'declared_late': 0, 'not_found': 0}, 'DoubleLine': {'by_e-1_release': 45, 'by_e-1_crsp': 0, 'declared_late': 0, 'not_found': 0}, 'Nuveen': {'by_e-1_release': 42, 'by_e-1_crsp': 84, 'declared_late': 0, 'not_found': 100}, 'PIMCO': {'by_e-1_release': 270, 'by_e-1_crsp': 0, 'declared_late': 0, 'not_found': 0}}, 'releases': 191}
+  O4 basis check of the X4 fills (Alpaca vs yfinance on e-1 and e+1, within $0.01; presence and basis only): {'cells': 24, 'pass': 24, 'fail': 0, 'largest_gap_cents': 0.0, 'tolerance_usd': 0.01}
+  every missing close in the 17's test-window panel: 24 cell(s), 24 of them on the fund's own ex-date; dates ['2026-02-12', '2026-02-13', '2026-02-18', '2026-03-18', '2026-09-15']
+
+[DG-X4] bars: event-fund bars on e..e+3 and fill-day volume; the spike-and-revert guard ({'spike_revert': 0, 'unreverted': 0}); 25 flag(s)
+[DG-X5] NAV on e..e+3: 0 missing cell flag(s); repeats on e+1..e+3: event funds 552 of 2304 (0.240); fit, same rows 1758 of 9600 (0.183); basket funds in the test 8865 of 36864 (0.240, counted, not flagged: R6)
+  repeat rate by fit era {'2005-09': 0.17, '2010-14': 0.165, '2015-19': 0.212, '2020-22': 0.179}; by test year, event funds {2023: 0.223, 2024: 0.263, 2025: 0.243, 2026: 0.225}, basket funds {2023: 0.249, 2024: 0.247, 2025: 0.251, 2026: 0.206}
+  NAV(e) = NAV(e-1) on the ex-date itself (a stale cum-distribution NAV): test 37 of 768 events; fit 98 of 3197 (0.0307)
+
+  the eligible set on the DECLARED calendar (sponsor releases), rules 1-5 (dates only):
+    as ruled: X4 cells filled; no-declaration basket legs KEPT (R10, team lead 2026-10-28): {'events': 649, 'events_13': 548, 'dates': 152, 'months': 46, 'excluded_declaration': 100, 'excluded_no_bar': 0, 'basket_lt3': 19, 'calendar_surprise_legs': {'declared_after_e_minus_1_legs_kept': 69, 'no_release_legs': 690, 'no_release_treatment': 'keep'}}
+    beside: no-declaration basket legs excluded: {'events': 631, 'events_13': 530, 'dates': 135, 'months': 46, 'excluded_declaration': 100, 'excluded_no_bar': 0, 'basket_lt3': 37, 'calendar_surprise_legs': {'declared_after_e_minus_1_legs_kept': 69, 'no_release_legs': 690, 'no_release_treatment': 'exclude'}}
+    beside: X4 cells not filled: {'events': 635, 'events_13': 534, 'dates': 147, 'months': 46, 'excluded_declaration': 100, 'excluded_no_bar': 14, 'basket_lt3': 19, 'calendar_surprise_legs': {'declared_after_e_minus_1_legs_kept': 69, 'no_release_legs': 690, 'no_release_treatment': 'keep'}}
+
+[DG-X6] factor coverage on the test window 2023-01-13..2026-10-06 (935 sessions):
+  French FF5+UMD (fetch_ff_factors.py): {'first': '1963-07-01', 'last': '2026-09-30', 'missing_in_window': 4, 'first_missing': '2026-10-01', 'last_missing': '2026-10-06'}
+  IEF in data/etf_daily.parquet: {'first': '2002-07-29', 'last': '2026-10-09', 'missing_in_window': 0, 'first_missing': None, 'last_missing': None}
+  HYG in data/etf_daily.parquet: {'first': '2007-04-12', 'last': '2026-10-09', 'missing_in_window': 0, 'first_missing': None, 'last_missing': None}
+  MUB in data/etf_daily.parquet: {'first': None, 'last': None, 'missing_in_window': 935, 'first_missing': '2023-01-13', 'last_missing': '2026-10-06'}
+  MUB yfinance (fetch_exdrift_mub.py): {'first': '2007-09-10', 'last': '2026-10-27', 'missing_in_window': 0, 'first_missing': None, 'last_missing': None}
+  IEF yfinance (fetch_exdrift_mub.py): {'first': '2007-09-04', 'last': '2026-10-27', 'missing_in_window': 0, 'first_missing': None, 'last_missing': None}
+  HYG yfinance (fetch_exdrift_mub.py): {'first': '2007-09-04', 'last': '2026-10-27', 'missing_in_window': 0, 'first_missing': None, 'last_missing': None}
+
+[DG-X7] identity gate, fit 2005-01-01..2022-12-30 only (published figures, reproduced)
+  r6 events (17, 2005-22)      reproduced  3226.0000  published    3226.0  tol 0.0    PASS
+  r6 CAR(+1..+3), bp           reproduced   -20.4542  published   -20.454  tol 0.001  PASS
+  r6 month-clustered t         reproduced    -6.7655  published    -6.765  tol 0.001  PASS
+  H-E per-event sd, bp         reproduced   150.2800  published     150.3  tol 0.05   PASS
+  beside (not gated): {'r6_months': 216, 'he_events_with_return': 3226, 'he_events_traded': 3009, 'he_share_basket_lt3': 0.06726596404215747, 'he_median_basket': 12.0, 'he_sd_month_mean_bp': 41.44744324191998, 'he_sd_month_mean_published_bp': 41.4}
+  on the refreshed panel's fit rows: identical rows, so the same result
+
+[DG-X8] numexpr: {'use_numexpr_option': False, 'numexpr': '2.10.1', 'fault_with_numexpr_on': True, 'numpy_path_clean': True, 'fault_any': True, 'status': 'PASS'}
+
+GATES: DG-X1 FLAGGED; DG-X2 FLAGGED; DG-X3 PASS; DG-X4 FLAGGED; DG-X5 FLAGGED; DG-X6 FLAGGED; DG-X7 PASS (identity; k committed by fit-k); DG-X8 PASS
+FLAGS: 757 -> results/events/exdrift/exdrift_stage0_flags_2026-10-27.csv {"R1": 1, "R10": 1, "R2": 1, "R3": 1, "R4": 1, "R5": 1, "R6": 1, "R7": 1, "R8": 1, "R9": 1, "X1_amount_mismatch": 32, "X2_not_found": 100, "X4_no_bar": 24, "X4_split": 1, "X5_nav_repeat": 552, "X5_nav_repeat_on_e": 37, "X6_FF6_uncovered": 1}
+STAGE 0: CLEAR. No 2023+ return, P&L, price change or NAV change was computed.
+rulings file exists with rulings in it (results/events/exdrift/exdrift_stage0_rulings_2026-10-27.csv); never overwritten

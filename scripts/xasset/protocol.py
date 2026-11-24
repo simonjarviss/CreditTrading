@@ -24,7 +24,7 @@ to set. N = 4 is the approved slate size (the approval block of the prereg).
 
 INPUTS ARE PINNED BY HASH (§1.1)
 --------------------------------
-Stage 0a ends with a commit of `results/xasset/STAGE0A_MANIFEST_2026-10-14.json`,
+Stage 0a ends with a commit of `results/xasset/stage0a/STAGE0A_MANIFEST_2026-10-14.json`,
 the SHA-256 of every file a trial reads. `verify_inputs` re-hashes each before a
 stage reads it and raises on any mismatch. After Stage 0a nothing is repaired,
 dropped or substituted.
@@ -59,7 +59,15 @@ from scripts.cef.band_frontier import HOLDOUT_START, _stats, evaluate  # noqa: E
 
 CACHE = REPO / "results" / "xasset" / "_cache_xasset"
 RESULTS = REPO / "results" / "xasset"
-MANIFEST = RESULTS / "STAGE0A_MANIFEST_2026-10-14.json"
+# The dated notes sit in RESULTS; each stage's data sits in a folder under it
+# (the results/cef/ convention, team lead 2026-10-22). The trial verdicts moved
+# with their files: `runner.refuse_rerun` and `runner.holdout_guard` look for a
+# spent trial in TRIALS, so a guard pointed anywhere else would find nothing and
+# let a spent test run again (`tests/test_spent_trials.py` holds them to the
+# committed files).
+STAGE0A_DIR = RESULTS / "stage0a"
+TRIALS = RESULTS / "trials"
+MANIFEST = STAGE0A_DIR / "STAGE0A_MANIFEST_2026-10-14.json"
 
 # ---- the approved pins (revision 3 §1.3; approval block) ----------------------
 PINNED_VOL_TARGET = 0.06

@@ -1,0 +1,48 @@
+{
+  "episode_cik": 862716,
+  "episode_accession": "0001193125-14-206389",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "American Municipal Income Portfolio Inc.", "cik": 902750, "ticker": "XAA"},
+      "acquirer": {"name": "Nuveen Investment Quality Municipal Fund, Inc.", "cik": 862716, "ticker": "NQM"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-290987", "date": "2014-08-01", "quote": "Subject Company: American Municipal Income Portfolio Inc. Commission File No. 811-07678 American Municipal Income Portfolio Inc. (XAA) Minnesota Municipal Income Portfolio Inc. (MXA) First American Minnesota Municipal Income Fund II, Inc. (MXN)"},
+      "outcome_evidence": null,
+      "notes": "Excerpts never state a merger in words; the Rule 425 filed by NQM naming XAA, MXA and MXN as subject companies is the only sign. Role inferred from Rule 425 and N-14 registrant. Vote adjournments to Sept 15, 2014 shown; outcome not in excerpts."
+    },
+    {
+      "target": {"name": "Minnesota Municipal Income Portfolio Inc.", "cik": null, "ticker": "MXA"},
+      "acquirer": {"name": "Nuveen Investment Quality Municipal Fund, Inc.", "cik": 862716, "ticker": "NQM"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-290987", "date": "2014-08-01", "quote": "Subject Company: American Municipal Income Portfolio Inc. Commission File No. 811-07678 American Municipal Income Portfolio Inc. (XAA) Minnesota Municipal Income Portfolio Inc. (MXA) First American Minnesota Municipal Income Fund II, Inc. (MXN)"},
+      "outcome_evidence": null,
+      "notes": "Same filing as XAA; relationship to NQM inferred from the Rule 425 header only."
+    },
+    {
+      "target": {"name": "First American Minnesota Municipal Income Fund II, Inc.", "cik": null, "ticker": "MXN"},
+      "acquirer": {"name": "Nuveen Investment Quality Municipal Fund, Inc.", "cik": 862716, "ticker": "NQM"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-290987", "date": "2014-08-01", "quote": "Subject Company: American Municipal Income Portfolio Inc. Commission File No. 811-07678 American Municipal Income Portfolio Inc. (XAA) Minnesota Municipal Income Portfolio Inc. (MXA) First American Minnesota Municipal Income Fund II, Inc. (MXN)"},
+      "outcome_evidence": null,
+      "notes": "Same filing as XAA; relationship to NQM inferred from the Rule 425 header only."
+    },
+    {
+      "target": {"name": "Nuveen Investment Quality Municipal Fund, Inc.", "cik": 862716, "ticker": "NQM"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund", "cik": 1083839, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-452452", "date": "2016-02-05", "quote": "Nuveen Fund Board Approves Closed-End Fund Investment Policy Changes and Recommends Fund Mergers"},
+      "outcome_evidence": null,
+      "notes": "2016 Rule 425 filed by Nuveen Dividend Advantage Municipal Fund lists four subject companies including NQM (also Premium Income Municipal Fund, Select Quality Municipal Fund, Premier Municipal Income Fund); excerpt does not say which fund survives. Pairing NQM with the filer is inferred. Other named funds not recorded as deals since the excerpt does not state their pairing. NQM filed PRE 14A and DEF 14A in April-May 2016; no outcome stated."
+    }
+  ],
+  "problems": "Excerpts are mostly cover pages and boilerplate; merger terms, listing status and outcomes are not stated in front of me, so most fields are null."
+}

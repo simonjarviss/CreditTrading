@@ -1,0 +1,4 @@
+CEF trial 54, P2: registry bars CEF CEF-54 blend --declared-n 54 (T 4497, SR 1.481/yr, skew 0.28, kurt 6.28)
+  desk bar: SR0 0.669/yr, DSR 0.9997
+  paper bar REFUSED: CEF does not qualify: 3 of its 54 trials have a stored series (not_qualified)
+  rule: DSR >= 0.95 on the bar(s) that gate CEF: PASS (the desk bar gates CEF: docs/SYSTEM.md §5, 2026-10-28; the paper bar is refused by construction, not_qualified)

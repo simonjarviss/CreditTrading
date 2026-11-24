@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1476765,
+  "episode_accession": "0001104659-24-004324",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Golub Capital BDC 3, Inc.", "cik": 1715268, "ticker": null},
+      "acquirer": {"name": "Golub Capital BDC, Inc.", "cik": 1476765, "ticker": "GBDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001104659-24-004323", "date": "2024-01-17", "quote": "Golub Capital BDC, Inc. (“GBDC,” or the “Company”), a business development company (Nasdaq: GBDC), announced today that it entered into a definitive merger agreement with Golub Capital BDC 3, Inc. (“GBDC 3”), with GBDC as the surviving company"},
+      "outcome_evidence": {"accession": "0001104659-24-067549", "date": "2024-06-03", "quote": "announced today that it has completed its previously announced merger with Golub Capital BDC 3, Inc. (“GBDC 3”), with GBDC as the surviving company."},
+      "notes": "GBDC is shown as Nasdaq-listed; the excerpts do not state that GBDC 3 is or is not exchange-listed, so both_listed is null. Merger Agreement dated January 16, 2024; completed June 3, 2024. Proxy materials mention an 'Initial Merger' and 'Second Merger'."
+    }
+  ],
+  "problems": ""
+}

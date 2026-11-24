@@ -1,7 +1,7 @@
 """Live term-CEF candidates: dated price, NAV and discount from CEFConnect, borrow flags from Alpaca.
 
     QUANTT_ENV_FILE=<path to config/.env> python3 scripts/events/fetch_term_cef_live.py
-        # writes results/events/term_cef_live_<today>.csv (the last 30 dated rows per fund)
+        # writes results/events/term_cef/term_cef_live_<today>.csv (the last 30 dated rows per fund)
 
 WHY THIS EXISTS
 ---------------
@@ -36,6 +36,7 @@ if str(REPO) not in sys.path:  # run as a script, not -m
     sys.path.insert(0, str(REPO))
 
 OUT = REPO / "results" / "events"
+TERM_CEF_DIR = OUT / "term_cef"        # the term-CEF outputs (term_pull_to_par.py's too); the notes sit in OUT
 CC_URL = "https://www.cefconnect.com/api/v3/pricinghistory/{t}/1Y"
 CC_HEADERS = {"User-Agent": "Mozilla/5.0", "Accept": "application/json"}  # as scripts/cef/fetch_daily.py
 # ticker, stated termination date, maximum board extension (months), label (agent, 2026-10-09)
@@ -90,8 +91,9 @@ def main(argv=None) -> int:
                      "alpaca_shortable": a.at[t, "shortable"] if t in a.index else None,
                      "alpaca_read_utc": a.at[t, "read_utc"] if t in a.index else None})
     summ = pd.DataFrame(rows)
-    hist.to_csv(OUT / f"term_cef_live_{today.isoformat()}.csv", index=False)
-    summ.to_csv(OUT / f"term_cef_live_summary_{today.isoformat()}.csv", index=False)
+    TERM_CEF_DIR.mkdir(parents=True, exist_ok=True)
+    hist.to_csv(TERM_CEF_DIR / f"term_cef_live_{today.isoformat()}.csv", index=False)
+    summ.to_csv(TERM_CEF_DIR / f"term_cef_live_summary_{today.isoformat()}.csv", index=False)
     pd.set_option("display.width", 220)
     print(f"CEFConnect fetched {fetched}; Alpaca read the same run")
     print(summ.to_string(index=False))

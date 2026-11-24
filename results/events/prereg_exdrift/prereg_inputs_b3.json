@@ -1,0 +1,16 @@
+{
+ "fit_events": 3226,
+ "fit_share_lt3": 0.06726596404215747,
+ "fit_median": 12.0,
+ "he_sd": 150.27995061126146,
+ "he_sd_month_mean": 41.44744324191998,
+ "he_months": 216,
+ "he_events": 3009,
+ "he_sd_month_sum": 555.8204451977915,
+ "hd_sd": 142.56280366860247,
+ "hd_sd_month_mean": 42.17571291613407,
+ "hd_months": 216,
+ "test_events": 752,
+ "test_traded": 714,
+ "test_traded_13": 537
+}

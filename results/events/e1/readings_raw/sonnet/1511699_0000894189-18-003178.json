@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1511699,
+  "episode_accession": "0000894189-18-003178",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Olstein All Cap Value Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Olstein All Cap Value Fund (newly created series of Managed Portfolio Series)", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-18-003178", "quote": "our two mutual funds, the Olstein All Cap Value Fund and the Olstein Strategic Opportunities Fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-18-003178", "date": "2018-05-31", "quote": "Proposal for Olstein All Cap Value Fund : To approve an Agreement and Plan of Reorganization between The Olstein Funds and Managed Portfolio Series which provides for the reorganization of the Olstein All Cap Value Fund into a newly created mutual fund within Managed Portfolio Series which is also called the Olstein All Cap Value Fund."},
+      "outcome_evidence": null,
+      "notes": "Mutual fund moved into a new same-named mutual fund in a different trust (a trust re-domicile, not a merger of two existing funds). Completion not stated in excerpts."
+    },
+    {
+      "target": {"name": "Olstein Strategic Opportunities Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Olstein Strategic Opportunities Fund (newly created series of Managed Portfolio Series)", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-18-003178", "quote": "our two mutual funds, the Olstein All Cap Value Fund and the Olstein Strategic Opportunities Fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-18-003178", "date": "2018-05-31", "quote": "Proposal for Olstein Strategic Opportunities Fund : To approve an Agreement and Plan of Reorganization between The Olstein Funds and Managed Portfolio Series which provides for the reorganization of the Olstein Strategic Opportunities Fund into a newly created mutual fund within Managed Portfolio Series which is also called the Olstein Strategic Opportunities Fund."},
+      "outcome_evidence": null,
+      "notes": "Same as the previous deal."
+    },
+    {
+      "target": {"name": "Target Fund 1 of 2 (Advisory Research Inc. fund; name not shown in the excerpts)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund (name not shown in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-19-006222", "quote": "The Target Trust and Acquiring Trust are separate registered open-end management investment"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-19-003952", "date": "2019-06-28", "quote": "If the shareholders of one of the Target Funds approve the Reorganization but the shareholders of the other Target Fund do not approve the Reorganization, then the Reorganization will be implemented with regard to the Target Fund that received shareholder approval of the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Reorganization of two Target Funds into Acquiring Funds in the Managed Portfolio Series, tied to Advisory Research Inc. selling its midstream energy business to Tortoise. Fund names are not in the excerpts. Completion not stated."
+    },
+    {
+      "target": {"name": "Target Fund 2 of 2 (Advisory Research Inc. fund; name not shown in the excerpts)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund (name not shown in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-19-006222", "quote": "The Target Trust and Acquiring Trust are separate registered open-end management investment"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-19-003952", "date": "2019-06-28", "quote": "If the shareholders of one of the Target Funds approve the Reorganization but the shareholders of the other Target Fund do not approve the Reorganization, then the Reorganization will be implemented with regard to the Target Fund that received shareholder approval of the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Second of the two Target Funds in the 2019 reorganization; see previous deal."
+    }
+  ],
+  "problems": "Several later filings (Nuance Funds solicitation script 2018-11, Tortoise sub-adviser proxies 2019-2020, Tortoise Global Water ESG Fund meeting adjourned to April 24, 2020) are not shown to concern a merger and were not recorded as deals."
+}

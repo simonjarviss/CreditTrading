@@ -1,0 +1,88 @@
+{
+  "episode_cik": 787441,
+  "episode_accession": "0001144204-09-037810",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "MainStay Mid Cap Core Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay MAP Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-045854", "date": "2009-08-27", "quote": "MainStay Mid Cap Core Fund , a series of Eclipse Funds (an “Acquired Fund”), to be merged with MainStay MAP Fund (a “Surviving Fund”), a series of The MainStay Funds (the “Mid Cap Core Reorganization”)"},
+      "outcome_evidence": null,
+      "notes": "Funds sell multiple share classes directly to investors with minimum investments and exchange privileges (open-end mutual funds); no exchange listing stated. Completion not stated in the excerpts."
+    },
+    {
+      "target": {"name": "MainStay Income Manager Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay Total Return Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-045854", "date": "2009-08-27", "quote": "MainStay Income Manager Fund , a series of Eclipse Funds Inc. (an “Acquired Fund”), to be merged with MainStay Total Return Fund (a “Surviving Fund”), a series of The MainStay Funds (the “Income Manager Reorganization”)"},
+      "outcome_evidence": null,
+      "notes": "Open-end judgement as above. Outcome not stated."
+    },
+    {
+      "target": {"name": "MainStay Mid Cap Growth Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay Large Cap Growth Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-045854", "date": "2009-08-27", "quote": "MainStay Mid Cap Growth Fund , a series of The MainStay Funds (an “Acquired Fund”), to be merged with MainStay Large Cap Growth Fund (a “Surviving Fund”), also a series of The MainStay Funds (the “Mid Cap Growth Reorganization”)"},
+      "outcome_evidence": null,
+      "notes": "Meeting scheduled for October 16, 2009 was adjourned to October 21, 2009 for lack of quorum (seq 8). Outcome not stated."
+    },
+    {
+      "target": {"name": "MainStay Institutional Bond Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay Intermediate Term Bond Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-047026", "date": "2009-09-03", "quote": "Thank you for voting your proxy in favor of the proposed merger of MainStay Institutional Bond Fund with and into MainStay Intermediate Term Bond Fund."},
+      "outcome_evidence": null,
+      "notes": "Meeting adjourned from August 21 to September 28, 2009 for lack of quorum, then to October 5, 2009 to obtain consents (seq 8). Outcome not stated in the excerpts."
+    },
+    {
+      "target": {"name": "MainStay Mid Cap Value Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay ICAP Select Equity Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-053945", "date": "2009-10-21", "quote": "The shareholder meeting scheduled for October 16, 2009 regarding the proposed reorganization of the MainStay Mid Cap Value Fund into the MainStay ICAP Select Equity Fund"},
+      "outcome_evidence": null,
+      "notes": "Adjourned for quorum. This proposal's earlier announcement is not in the excerpts. Outcome not stated."
+    },
+    {
+      "target": {"name": "MainStay Value Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay ICAP Select Equity Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-053945", "date": "2009-10-21", "quote": "The shareholder meeting scheduled for October 16, 2009 regarding the proposed reorganization of the MainStay Value Fund into the MainStay ICAP Select Equity Fund was adjourned until October 22, 2009 at noon Eastern time."},
+      "outcome_evidence": null,
+      "notes": "Adjourned for quorum. Outcome not stated."
+    },
+    {
+      "target": {"name": "MainStay Small Cap Growth Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay Small Company Value Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-053945", "date": "2009-10-21", "quote": "The shareholder meeting scheduled for October 16, 2009 regarding the proposed reorganization of the MainStay Small Cap Growth Fund into the MainStay Small Company Value Fund was adjourned until October 22, 2009 at 12:30 p.m. Eastern time."},
+      "outcome_evidence": null,
+      "notes": "Adjourned repeatedly (to November 5, then November 16, 2009, per seq 10). Outcome not stated."
+    },
+    {
+      "target": {"name": "MainStay Capital Appreciation Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "MainStay Growth Equity Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-09-044724", "quote": "When you buy and sell shares directly from a Fund, you will receive confirmation statements that describe your transaction."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-09-060736", "date": "2009-11-19", "quote": "regarding the proposed reorganization of the MainStay Capital Appreciation Fund into the MainStay Growth Equity Fund has been adjourned until November 18, 2009 at 4:00 p.m. Eastern time."},
+      "outcome_evidence": null,
+      "notes": "Adjourned several times for quorum (Oct 16, Oct 22, Nov 16, to Nov 18, 2009). Outcome not stated. Seq 8 also mentions a Growth Equity Fund adjournment whose opening is cut off."
+    }
+  ],
+  "problems": "Many separate fund proposals appear in later DEFA14As; only those with named target and acquirer are recorded. The N-14 excerpt does not state a merger sentence. CIKs of individual series are not printed. Open-end status inferred from share class and purchase language, not stated outright."
+}

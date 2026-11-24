@@ -1,0 +1,39 @@
+HALVE 0.12, KILL 0.18 (core spec); caps core 1.8, C4 1.9; p* 0.05; 10 core books 2013-12-31..2022-12-30
+
+CORE ACCOUNT, the other at its approved multiplier (1.27); zero-edge odds, % (HALVE / KILL)
+  m 1.00: acct PR  6.43% (TR  6.21%) SR 0.959 vol 6.70% | uncapped gross 1.206 above cap  2.5% | zero edge W1 H 10.6 K 0.68 | W2 H 3.8/10.4/49.6 K 0.1/1.2/16.1 | maxDD W1 13.6% | combined PR 8.80% SR 1.774, W2 median H 2.2 K 0.03
+  m 1.05: acct PR  6.75% (TR  6.51%) SR 0.963 vol 7.00% | uncapped gross 1.267 above cap 10.1% | zero edge W1 H 12.8 K 1.01 | W2 H 5.0/12.0/50.3 K 0.1/1.5/16.6 | maxDD W1 14.1% | combined PR 8.96% SR 1.768, W2 median H 2.6 K 0.04
+  m 1.10: acct PR  7.03% (TR  6.76%) SR 0.965 vol 7.28% | uncapped gross 1.327 above cap 19.9% | zero edge W1 H 14.8 K 1.27 | W2 H 6.3/13.8/50.9 K 0.3/2.1/17.2 | maxDD W1 14.6% | combined PR 9.10% SR 1.761, W2 median H 3.2 K 0.07
+  m 1.13: acct PR  7.19% (TR  6.91%) SR 0.965 vol 7.45% | uncapped gross 1.363 above cap 20.6% | zero edge W1 H 15.9 K 1.53 | W2 H 7.2/15.2/51.3 K 0.4/2.4/17.4 | maxDD W1 14.8% | combined PR 9.18% SR 1.756, W2 median H 3.4 K 0.07
+  m 1.15: acct PR  7.30% (TR  7.00%) SR 0.966 vol 7.56% | uncapped gross 1.387 above cap 21.3% | zero edge W1 H 16.8 K 1.72 | W2 H 7.7/16.0/51.6 K 0.4/3.0/17.6 | maxDD W1 15.0% | combined PR 9.23% SR 1.753, W2 median H 3.5 K 0.09
+  m 1.20: acct PR  7.55% (TR  7.23%) SR 0.965 vol 7.83% | uncapped gross 1.448 above cap 22.4% | zero edge W1 H 18.9 K 2.15 | W2 H 9.4/18.3/52.2 K 0.6/3.3/18.1 | maxDD W1 15.3% | combined PR 9.36% SR 1.744, W2 median H 3.9 K 0.10
+  m 1.25: acct PR  7.79% (TR  7.45%) SR 0.965 vol 8.07% | uncapped gross 1.508 above cap 33.3% | zero edge W1 H 20.7 K 2.65 | W2 H 10.8/20.6/52.8 K 0.7/3.7/18.5 | maxDD W1 15.6% | combined PR 9.48% SR 1.736, W2 median H 4.2 K 0.12
+  m 1.30: acct PR  8.03% (TR  7.67%) SR 0.971 vol 8.26% | uncapped gross 1.568 above cap 38.4% | zero edge W1 H 22.5 K 3.07 | W2 H 12.2/22.7/53.4 K 0.9/5.1/18.9 | maxDD W1 15.7% | combined PR 9.60% SR 1.734, W2 median H 4.6 K 0.16
+  m 1.35: acct PR  8.25% (TR  7.88%) SR 0.977 vol 8.44% | uncapped gross 1.629 above cap 41.5% | zero edge W1 H 24.1 K 3.50 | W2 H 13.4/24.6/53.8 K 1.1/5.7/19.2 | maxDD W1 15.7% | combined PR 9.71% SR 1.732, W2 median H 5.1 K 0.19
+  m 1.40: acct PR  8.44% (TR  8.08%) SR 0.983 vol 8.59% | uncapped gross 1.689 above cap 48.3% | zero edge W1 H 25.4 K 3.84 | W2 H 14.7/26.7/54.2 K 1.2/6.3/19.5 | maxDD W1 15.7% | combined PR 9.81% SR 1.731, W2 median H 5.6 K 0.24
+  m 1.45: acct PR  8.60% (TR  8.25%) SR 0.986 vol 8.73% | uncapped gross 1.749 above cap 50.9% | zero edge W1 H 26.7 K 4.28 | W2 H 15.8/28.6/54.5 K 1.5/7.1/19.7 | maxDD W1 15.7% | combined PR 9.89% SR 1.728, W2 median H 6.0 K 0.25
+  m 1.50: acct PR  8.75% (TR  8.41%) SR 0.988 vol 8.86% | uncapped gross 1.810 above cap 57.7% | zero edge W1 H 27.7 K 4.69 | W2 H 17.0/30.1/54.9 K 1.7/7.6/19.9 | maxDD W1 15.7% | combined PR 9.96% SR 1.725, W2 median H 6.3 K 0.29
+  m 1.55: acct PR  8.87% (TR  8.53%) SR 0.991 vol 8.95% | uncapped gross 1.870 above cap 59.3% | zero edge W1 H 28.5 K 4.97 | W2 H 17.9/31.0/55.1 K 2.0/7.8/20.1 | maxDD W1 15.7% | combined PR 10.02% SR 1.724, W2 median H 6.5 K 0.30
+  m 1.60: acct PR  8.98% (TR  8.65%) SR 0.994 vol 9.03% | uncapped gross 1.930 above cap 60.8% | zero edge W1 H 29.4 K 5.24 | W2 H 18.9/32.0/55.7 K 2.1/8.3/20.5 | maxDD W1 15.7% | combined PR 10.08% SR 1.723, W2 median H 6.7 K 0.31
+
+C4 ACCOUNT, the other at its approved multiplier (1.13); zero-edge odds, % (HALVE / KILL)
+  m 1.00: acct PR  9.47% (TR  8.54%) SR 1.574 vol 6.02% | uncapped gross 1.447 above cap  3.6% | zero edge W1 H 6.2 K 0.25 | W2 H 7.1 K 0.4 | maxDD W1 8.6% | combined PR 8.33% SR 1.728, W2 median H 2.2 K 0.02
+  m 1.10: acct PR 10.24% (TR  9.24%) SR 1.571 vol 6.52% | uncapped gross 1.592 above cap 22.2% | zero edge W1 H 9.4 K 0.58 | W2 H 10.7 K 0.7 | maxDD W1 9.2% | combined PR 8.72% SR 1.748, W2 median H 2.6 K 0.04
+  m 1.20: acct PR 10.83% (TR  9.78%) SR 1.557 vol 6.96% | uncapped gross 1.737 above cap 36.2% | zero edge W1 H 12.4 K 0.95 | W2 H 14.1 K 1.1 | maxDD W1 9.8% | combined PR 9.01% SR 1.754, W2 median H 3.1 K 0.06
+  m 1.27: acct PR 11.17% (TR 10.10%) SR 1.549 vol 7.21% | uncapped gross 1.838 above cap 47.4% | zero edge W1 H 14.2 K 1.17 | W2 H 16.3 K 1.6 | maxDD W1 10.1% | combined PR 9.18% SR 1.756, W2 median H 3.4 K 0.07
+  m 1.30: acct PR 11.32% (TR 10.23%) SR 1.548 vol 7.31% | uncapped gross 1.881 above cap 51.6% | zero edge W1 H 14.9 K 1.33 | W2 H 17.3 K 1.8 | maxDD W1 10.1% | combined PR 9.25% SR 1.758, W2 median H 3.5 K 0.09
+  m 1.35: acct PR 11.52% (TR 10.43%) SR 1.545 vol 7.46% | uncapped gross 1.954 above cap 59.9% | zero edge W1 H 16.0 K 1.54 | W2 H 18.7 K 2.1 | maxDD W1 10.4% | combined PR 9.35% SR 1.760, W2 median H 3.7 K 0.09
+  m 1.40: acct PR 11.73% (TR 10.63%) SR 1.547 vol 7.58% | uncapped gross 2.026 above cap 66.5% | zero edge W1 H 17.0 K 1.75 | W2 H 19.9 K 2.4 | maxDD W1 10.5% | combined PR 9.46% SR 1.765, W2 median H 3.9 K 0.09
+  m 1.50: acct PR 12.04% (TR 10.93%) SR 1.547 vol 7.78% | uncapped gross 2.171 above cap 75.3% | zero edge W1 H 18.6 K 2.08 | W2 H 22.4 K 3.0 | maxDD W1 10.9% | combined PR 9.61% SR 1.769, W2 median H 4.2 K 0.11
+
+  core limits (m, linear between grid points): term (d) 1.4920695815494966; term (c) W1 1.5555555555555556; term (c) W2 (decision: median book) 1.2977358490566038; W2 worst book None; P(HALVE) W1 reaches 20% at 1.2304347826086957
+
+  c4 limits (m, linear between grid points): term (d) 1.3129419028349216; term (c) W1 inf; term (c) W2 (decision: own) inf; P(HALVE) W1 reaches 20% at inf
+
+EXACT BUILD, core at its binding limit 1.2977 -> 1.29 (2 dp, rounded down), C4 at 1.27; W1; gross headline, grid beside
+  approved               m core 1.13 PR: combined  9.65%/yr SR 1.840 turn 38.0 | net +7.75 / +3.95 / -1.75 at 5/15/30bp | core account 7.25% SR 0.974 maxDD 15.1%
+  approved               m core 1.13 TR: combined  8.75%/yr SR 1.724 turn 38.0 | net +6.86 / +3.06 / -2.64 at 5/15/30bp | core account 6.66% SR 0.923 maxDD 14.8%
+                         core held at cap 19.5%
+  core at its own limit  m core 1.29 PR: combined 10.06%/yr SR 1.803 turn 39.2 | net +8.09 / +4.17 / -1.71 at 5/15/30bp | core account 8.06% SR 0.969 maxDD 16.4%
+  core at its own limit  m core 1.29 TR: combined  8.99%/yr SR 1.663 turn 39.2 | net +7.03 / +3.11 / -2.77 at 5/15/30bp | core account 7.13% SR 0.883 maxDD 16.3%
+                         core held at cap 22.7%

@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1287032,
+  "episode_accession": "0000950123-09-041353",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Allied Capital Corporation", "cik": 3906, "ticker": null},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": 1287032, "ticker": "PSEC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "terminated",
+      "announcement": {"accession": "0000950123-10-003591", "date": "2010-01-20", "quote": "On January 20, 2010, Prospect Capital Corporation issued a press release containing a copy of a letter delivered to the Board of Directors of Allied Capital Corporation (“Allied”) in connection with its offer to acquire Allied"},
+      "outcome_evidence": {"accession": "0000950123-10-021519", "date": "2010-03-05", "quote": "we have decided that it is not in the interest of Prospect and its shareholders to expend further resources on a solicitation in opposition to the proposed Allied-Ares combination. Accordingly, we have terminated our solicitation."},
+      "notes": "This was an unsolicited, never-agreed offer by Prospect (0.385 then 0.40 then a 'final and best offer' of Prospect shares per Allied share, Jan 20 - Feb 9, 2010) made while Allied already had a merger agreement with Ares Capital Corporation; Prospect also filed a preliminary proxy in opposition to the Ares/Allied merger (8-K 2010-02-01). On 2010-03-05 Prospect terminated that solicitation after an Allied special dividend; the release adds 'Should the proposed Allied-Ares combination not be consummated and the Allied board wish to engage in a productive dialogue with us, we would welcome that opportunity.' No excerpt shows Allied's board ever accepting or entering an agreement with Prospect. Prospect is shown as a BDC listed on NASDAQ (NASDAQ: PSEC; 'elected to be treated as a business development company'). No excerpt prints an exchange or ticker for Allied, so both_listed is null. Allied's CIK 3906 comes from the SUBJECT COMPANY header of the 425 filings."
+    },
+    {
+      "target": {"name": "Patriot Capital Funding, Inc.", "cik": null, "ticker": "PCAP"},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": 1287032, "ticker": "PSEC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001102624-09-000367", "date": "2009-08-05", "quote": "On August 3, 2009, Prospect Capital Corporation (“Prospect Capital”) and Patriot Capital Funding, Inc. (“Patriot”) entered into an Agreement and Plan of Merger (the “Merger Agreement”), pursuant to which Patriot will merge with and into Prospect Capital"},
+      "outcome_evidence": {"accession": "0001102624-09-000565", "date": "2009-12-04", "quote": "Effective December 2, 2009, Patriot Capital Funding, Inc. (“Patriot”) was merged with and into Prospect Capital Corporation (“Prospect” or the “Company”) pursuant to the Agreement and Plan of Merger"},
+      "notes": "Completed merger, not a failure. The 2009-08-05 press release exhibit prints 'Prospect Capital Corporation (NASDAQ: PSEC ) ... Patriot Capital Funding, Inc. (NASDAQ: PCAP )', so both traded on NASDAQ, but no excerpt states that Patriot was a closed-end fund or BDC (it is described as a company in default on its facility, with a lender-driven liquidity problem), so both_listed is left null. Patriot's CIK does not appear in any FILING header."
+    },
+    {
+      "target": {"name": "Allied Capital Corporation", "cik": 3906, "ticker": null},
+      "acquirer": {"name": "Ares Capital Corporation", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-10-007247", "date": "2010-02-01", "quote": "Prospect Capital Corporation issued a press release announcing it filed a preliminary proxy statement with the Securities and Exchange Commission in opposition to the proposed merger between Allied Capital Corporation and Ares Capital Corporation."},
+      "outcome_evidence": null,
+      "notes": "Third-party deal described in Prospect's filings (Allied agreed with Ares in 'October' per the Feb 9 2010 letter, which says the Ares/Allied proxy statement/prospectus was filed in preliminary form). Not this episode's fund; recorded for completeness. The latest filing mentioning it (2010-03-05) says only 'Should the proposed Allied-Ares combination not be consummated', so no outcome is stated. No listing or ticker for Allied or Ares is printed in the excerpts."
+    }
+  ],
+  "problems": "Focus: the failed deal is Allied Capital Corporation (CIK 3906) into Prospect (PSEC). Prospect's listing is shown (NASDAQ: PSEC, a BDC). No excerpt states an exchange or ticker for Allied, so both_listed is null for that deal; the excerpts also show no agreement between Allied and Prospect (an unsolicited offer, ended by Prospect's termination of its proxy solicitation on 2010-03-05), so 'terminated' reflects Prospect ending its pursuit, as the quote states. The excerpt of the 2010-03-05 8-K (accession 0000950123-10-021519) and the 425 copy (0000950123-10-021524) carry identical text; the 8-K is cited as the earlier seq."
+}

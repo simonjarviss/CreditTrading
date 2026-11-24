@@ -1,0 +1,18 @@
+{
+  "episode_cik": 30125,
+  "episode_accession": "0001193125-24-234601",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Insight Select Income Fund", "cik": 30125, "ticker": "INSI"},
+      "acquirer": {"name": "KKR Income Opportunities Fund", "cik": 1515940, "ticker": "KIO"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001133228-24-009370", "quote": "Insight Select Income Fund (“INSI”) (NYSE: INSI), a closed-end investment company, entered into a definitive agreement under which KKR Income Opportunities Fund (NYSE: KIO), a closed-end investment company advised by KKR Credit Advisors (US) LLC, will acquire the assets of INSI."},
+      "outcome": null,
+      "announcement": {"accession": "0001133228-24-009370", "date": "2024-10-09", "quote": "On October 8, 2024, it was announced that Insight Select Income Fund (“INSI”) (NYSE: INSI), a closed-end investment company, entered into a definitive agreement under which KKR Income Opportunities Fund (NYSE: KIO), a closed-end investment company advised by KKR Credit Advisors (US) LLC, will acquire the assets of INSI."},
+      "outcome_evidence": null,
+      "notes": "The N-8F (2025-03-07, reason: Merger) shows board approval 2024-10-03, shareholder approval 2025-01-10 and a distribution of assets in connection with the Merger, but the excerpt does not itself state that the merger was completed, so outcome is null."
+    }
+  ],
+  "problems": ""
+}

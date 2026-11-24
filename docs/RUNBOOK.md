@@ -244,6 +244,180 @@ and that is how 2026-10-09 went unseen (`docs/RUNNER.md` "As built (2026-10-09)"
    hand-edit prod.
 5. Clear the halt with a note of what was fixed.
 
+### 6.1 Corporate-action halt: a split or merger on a held name
+
+**How it shows.** The verify line reads `MISSED: ... [data] corporate-action gate
+(halt): <SYMBOL> (held) is the <role> in <type> <id> (...; long window ...)`.
+The day's `plan.json` (or `send.json`, when the send refused) carries
+`corporate_actions.blocking`, one row per event and name. A row holds the
+event's id, type, market and process dates, its parties, the rule and the window
+(`docs/RUNNER.md`, "As built (2026-10-28)").
+
+**What clears each kind of halt** (the same table as `docs/RUNNER.md`):
+
+| halt | what clears it |
+|---|---|
+| short-window match: a merger acquirer, a reorganization's allocated leg, any match through the process date alone | itself, at the next session |
+| long-window match on a target-only name | itself, once the as-of date passes the event's date |
+| long-window match on a held name | a filled order in the name submitted on the second trading day after the event or later, through the team lead (§6.1 step 3); or `ca-ack` of its id (step 7) |
+| unresolved row (a party symbol missing), short role: acquirer, allocated leg | itself, at the next session |
+| unresolved row, any other role, in a name's window | `ca-ack` of the id its refusal names (`row-sha256:...` when its own id is null); or Alpaca completing the row, which is then judged afresh |
+| UNDATED unresolved row (a party missing and a date unreadable): blocks in every window | `ca-ack` of its `row-sha256:...` key; or Alpaca completing the row, which is then a new row, judged afresh |
+| an acknowledged row, revised or listed under another type (`ack_mismatch`) | `ca-ack` again, which replaces the entry |
+| UNMEASURED: the read or the order history failed | itself, when a later slot reads cleanly |
+| a row naming ours with a null, empty or non-string id, or an id listed with different content: keyed by its content (`row-sha256:...`) and judged like any row naming ours | as for its window above; `ca-ack` of its `row-sha256:` key |
+| UNMEASURED that persists: a transport or response-SHAPE fault only (a failed GET, a body that is not JSON or not an object, a type's list that is not a list, an unknown response key, a bad page token). No value in any field of any row can cause it (2026-11-02, `test_ca_read_property.py`) | Alpaca correcting the feed; otherwise a release (code or `report` mode) |
+| `ca_acks.json` unreadable | restoring or removing the file, then acknowledging again |
+| any of these, on the team lead's decision | `corporate_actions.mode` set to `report`, through a release |
+
+A **short-window** row clears by itself after one session: a merger acquirer
+or a reorganization's allocated leg (both judged on the market date only), or
+any other match through the process date alone. Confirm the event (step 1) and let it
+pass. A **long-window** row on a held name repeats every session until the steps
+below are done. Alpaca paper processes no corporate actions, so the account still
+holds the old count, or the old symbol (`docs/REFERENCES.md` §12pc).
+
+1. **Confirm the event and its terms from a primary source.** Do not rely on the
+   feed alone. Use the fund's press release, 8-K, N-14 or proxy on EDGAR, or the
+   exchange's notice. Record:
+   - the effective or ex-date;
+   - the ratio: a split's old and new rates, or a merger's exchange ratio and any
+     cash per share;
+   - how fractional shares are settled (cash in lieu or rounding).
+
+   When the filing and the feed disagree, report both and say which you used.
+   Never average them (`CLAUDE.md`, data rules).
+2. **Work out the true post-event count**, the count a broker that processes
+   corporate actions would hold:
+   - a split: paper qty × new_rate ÷ old_rate, then the issuer's rule for
+     fractions. A 1:4 reverse split has old_rate 4 and new_rate 1, so the count
+     falls to a quarter;
+   - a stock dividend: the count × (1 + rate);
+   - an acquiree in a stock merger: 0 shares of the old symbol, plus the count ×
+     the exchange ratio in the acquirer, plus any cash;
+   - an acquiree in a cash merger: 0 shares, plus cash;
+   - a name change: the same count under the new symbol;
+   - a spin-off: the same count of the source, plus the count × the distribution
+     ratio in the new symbol.
+3. **Orders go only through the team lead** (`CLAUDE.md` hard rule 1). A closing
+   or rebalancing order to bring paper to the true count is an order-path action.
+   Show the concrete order list, get an explicit go, and only then transmit:
+   - whole shares only (landmine 3);
+   - one netted order per symbol (landmine 2).
+
+   The gate clears once the name's shares are set again after the event. That
+   means a filled order in the name, submitted on the SECOND trading day after the
+   event's latest date or later. An order submitted on the first trading day
+   after is sized on the event's own close and does not clear it. The window
+   starts at the trading day before the last fill's submission, the close it was
+   sized on. Example (third review, 2026-10-29): a reverse split ex Wednesday
+   10-07 and a corrective order submitted Thursday 10-08 leave the halt on; one
+   submitted Friday 10-09 clears it.
+
+   The start stays inclusive on purpose. An exclusive start would let a
+   late-listed action, dated on the sizing close of an ordinary filled order,
+   go unflagged, and its phantom P&L would enter without a word.
+4. **Measure the phantom amount**: (paper qty − true qty) × the post-event price
+   at the close used. Name the close, either the as-of close in that day's
+   `plan.json` `closes` or the official closing print of the day measured, and
+   label its provenance.
+
+   Positive means paper overstates the book. For a merger, do the same for each
+   leg. The old symbol is still held on paper, marked at whatever Alpaca last
+   prices it at. The acquirer shares and the cash are missing from paper.
+5. **Record it, dated, beside the official P&L.** Write a results note,
+   `results/ops/CORP_ACTION_<SYMBOL>_<YYYY-MM-DD>.md`, holding:
+   - the event id;
+   - the primary source;
+   - both counts;
+   - the close used;
+   - the phantom amount and the date it was measured.
+
+   The official P&L is Alpaca's end-of-day history (`docs/SYSTEM.md` §5,
+   2026-10-19, P&L of record).
+
+   Say in the note what follows. **Alpaca's equity carries the phantom amount,
+   and so does everything read from it, until the account is recreated.** That
+   includes the end-of-day history, the drawdown check, and the runner's sizing,
+   since the sleeve is sized on account equity. A rebalance corrects the count.
+   It does not take the phantom amount out: paper books the trade at the
+   inflated (or deflated) mark. Alpaca staff's only stated fix is "deleting the
+   account and recreating it" (staff reply, 2026-07-15, §12pc).
+6. **To trade on regardless** before the count is fixed, the team lead may set
+   `corporate_actions.mode` to `report`. The gate then records and sends. Do it in
+   the dev repo through a release (sections 1–2), never by hand-editing prod.
+   Set it back to `halt` the same way.
+7. **A long-window row no trade can clear: acknowledge that action** (team lead,
+   2026-10-29). The case it is for: a name change, redemption, worthless removal
+   or partial call carries only a process date, so a BACKFILLED one (processed
+   long after it happened) is judged as if it had just happened, and repeats
+   every session. A corrective order may be impossible (a redeemed or removed
+   security) or pointless (the action predates the holding). Do step 1 first:
+   the primary source must show what the action was and when. Then the team
+   lead, and only the team lead, runs ONE command per action id:
+
+   ```bash
+   # laptop prod clone
+   cd ~/prod/quantt-alpaca
+   QUANTT_STATE_DIR=~/quantt_state/cef QUANTT_ENV_FILE=~/.config/quantt/alpaca.env \
+     python3 -m quantt.session ca-ack --book cef --id <action id> --reason "<one line>"
+
+   # the VM
+   sudo -u quantt env HOME=/home/quantt QUANTT_STATE_DIR=/home/quantt/quantt_state/cef \
+     QUANTT_ENV_FILE=/run/quantt/alpaca.env \
+     bash -c 'cd /home/quantt/prod/quantt-alpaca &&
+       /home/quantt/venv/bin/python -m quantt.session ca-ack --book cef --id <action id> --reason "<one line>"'
+   ```
+
+   The `<action id>` is the `id` in `corporate_actions.blocking`. The command
+   reads the feed, read-only, for the names and window of the gate's latest
+   record, and refuses an id the feed does not list, an id already
+   acknowledged whose row and type are unchanged, a reason that is not one line, and a
+   `ca_acks.json` it cannot read. Otherwise it writes the entry (id, reason, UTC time, the event as
+   listed) to `<state>/ca_acks.json` atomically and prints what it
+   acknowledged. The entry keeps the feed row exactly as listed, and its type.
+   The gate then clears THAT ID ONLY, and only while the feed's row for it is
+   unchanged in every field (dates, parties, ratio and the rest) and its type
+   is unchanged. An unresolved row is acknowledged by the id its refusal
+   names, a `row-sha256:...` key when its own id is null. Any other action, a
+   new one on the same fund included, still halts. If Alpaca revises the row,
+   or lists it under another type, the gate halts again, and the refusal names each changed field
+   (`acknowledged at ..., but the feed row has changed since (...)`). Do step 1
+   again for the revised action, and if it still stands run the same command
+   again. For a revised row or type it replaces the old entry, which it keeps as
+   `supersedes`; for an unchanged one it refuses. Never edit the file by hand. The cleared rows stay in the record
+   under `corporate_actions.acknowledged`. Nothing else may write the file. A
+   `ca_acks.json` the gate cannot read refuses every session (UNMEASURED) until
+   it is fixed: restore it, or remove it and acknowledge again. An
+   acknowledgement for a split, a stock dividend, a spin-off or a merger clears
+   the halt but fixes no count: steps 2–5 still apply, and the command prints a
+   NOTE saying so.
+
+**An unresolved row** (docs/SYSTEM.md §5, team lead 2026-11-02 (unresolved corporate-action rows)). A row with a party symbol null or empty
+(an acquirer, an acquiree, an old, new or source symbol, a split's own symbol,
+or a reorganization leg with no ticker and no CUSIP) is not a read failure. The
+gate treats the missing party as each held and targeted fund in turn, on the
+usual windows.
+- If it would block one of them, the session refuses with `an UNRESOLVED <type>
+  <id> ... its <field> is missing ...; the team lead clears it with ca-ack --id
+  <id>`.
+- Otherwise the row is listed under `corporate_actions.unresolved` with an
+  `UNRESOLVED, recorded only` log line, and the session sends.
+
+A missing acquirer or allocated leg halts one session and then clears by
+itself. Any other missing party in a held name's window halts until it is
+acknowledged. Do step 1 for it; if it is not one of our funds, run the step 7
+command with the id the refusal names. That id is a `row-sha256:...` key when
+the row's own id is null. A revised row, or the same row under another type,
+halts again.
+
+**A skipped malformed row** (team lead 2026-10-29, `docs/SYSTEM.md` §5: "skip
+it, and record it, unless it could concern one of our funds"). A row whose
+every party symbol is present and none ours, but whose id or a date is
+malformed, is listed under `corporate_actions.skipped_malformed` with a
+`SKIPPED a malformed row` log line, and the session sends on. The same fault
+on a row naming one of our funds refuses, naming the row.
+
 ## 7. Keeping the laptop awake
 
 launchd runs a missed calendar job **once on wake**, and coalesces several
@@ -709,12 +883,40 @@ NOTHING_TO_SEND, PREVIEW, PLANNED and DRY as success (`SuccessExitStatus`), so
 `systemctl --failed` shows REFUSED and FAIL. Verify exits 1 on a FAIL line, so a
 missed day shows there too.
 
+**Every account on one page:** `python3 -m ops.daily_page` (read-only, one ssh call, about a
+second). For each paper account: the official P&L of record, its drawdown from the high-water
+mark, and the headline lines of its own nightly risk report (severity, drawdown against its
+HALVE and KILL lines, gross and net, the plan and fills), with the blocks that report could
+not measure named. Above them the accounts summed over the sessions both have an official row
+for, and below them the shadow scoreboard's table (SIMULATED). A file it cannot read is
+UNMEASURED for that book only; an account a session behind is named and the combined line
+stops there. It holds no limit of its own and there is no combined risk budget (team lead,
+2026-11-18), so the combined drawdown is for information. Added 2026-11-19 (team lead: "P&L
+and risk by book, one page").
+
 **Tonight's plan:** `python3 -m ops.orient` PROD prints the VM's `newest plan`:
 its date, status, order count, whether it was sent, and its evening pre-flight.
 `PRE-FLIGHT WARNING` means a day as bad as the worst of the last year would get
 tomorrow's send refused or scaled. The detail is in that day's `plan.json`
 (`preflight`) and the session log (`docs/RUNNER.md` "As built (2026-10-09)"). The collector's INCOMPLETE (exit
 5) also shows as failed, on purpose: one that never clears is worth seeing.
+
+**The evidence log, each evening** (after verify's 17:30 ET line; `results/report/README.md`).
+Every live day gets an entry in `results/report/EVIDENCE_LOG.md`, in the same commit as its data:
+
+```bash
+! sh vmpnl.sh        # the team lead's local, read-only wrapper; it copies the VM's P&L records to the scratchpad
+python3 -m scripts.report.snapshot_live --src "$(sed -n 's/^OUT="\(.*\)"$/\1/p' vmpnl.sh)" --book cef
+git add results/report/data results/report/EVIDENCE_LOG.md && git commit -m "Evidence pack: live day <date>"   # aggregates only; the cache is ignored
+python3 -m scripts.report.build_pack && git add results/report && git commit -m "Evidence pack: rebuild for <date>"
+```
+
+`snapshot_live` sanitises (it refuses, naming the field, anything it cannot drop) and is
+idempotent: a pull it has already ingested adds nothing. **Aggregates go to the repository,
+rows to the gitignored `results/report/_cache_live/`** (team lead, 2026-11-03: "Aggregates in
+repo, rows private"); it refuses to write a row file where git can see it. `vmpnl.sh` copies
+`eod_equity.csv` (since 2026-11-03), so the official EOD line is built from the pull. The
+cache's R2 backup is the team lead's step (`results/report/README.md`).
 
 **Halting**, the VM equivalents of section 4, fastest first. None of them
 cancels an order already at Alpaca.
@@ -762,6 +964,8 @@ cancels an order already at Alpaca.
    `sudo systemctl disable --now quantt-cef-session.timer quantt-cef-verify.timer quantt-cef-collect.timer`.
 
 **Updating** to a new release. Never change code under a running job.
+
+**Who runs these steps (team lead, 2026-11-23, `docs/SYSTEM.md` §5):** an agent in the team lead's session may run the merge, the tag and the install; arming or disarming a book happens only on the team lead's go in the session, after the order list is shown. (Corrected 2026-11-23: this paragraph said "Since 2026-11-02 an agent may run every step below itself, arming included", under a standing authority withdrawn on 2026-11-09.) The agent does so only through the laptop's wrapper, and only when each gate passes: a release-check GO on the exact commit, CI passed on the PR's exact head (the merge then uses the team lead's `--admin` bypass, which main's ruleset requires for every merge, with `--match-head-commit`), a replay with no run refused now, outside the send windows, and the read-back. It stops at the first failure and records the outcome in `docs/JOURNAL.md` the same day.
 **Start any `--apply` before 15:30 ET, or after 16:00.** The installer
 refuses to start inside 15:30–16:00. It also refuses to restart the timers
 from 15:52, which would leave them stopped, and the key fetch can take about 4
@@ -917,6 +1121,384 @@ The VM's compute price was not measured here, so this table is not a total.
 - **Burstable CPU:** B-series sizes are burstable [S]: they run below full
   speed once their burst credit is spent. Whether that slows the evening decide or a pytest run on
   the VM is unmeasured.
+### 8.9 A second book on the VM: C4 (dark, 2026-10-29)
+
+`install_vm --book c4` installs C4's own units beside the core's: seven
+`quantt-c4-*` units, the core's jobs with `--book c4` at the same times. They
+touch none of the core's units. The default book is still the core, whose
+install is byte-identical to release-20261029-3's
+(`quantt/deploy/tests/test_install_vm_books.py`).
+
+| what | the core | C4 |
+|---|---|---|
+| state | `quantt_state/cef` | `quantt_state/c4` (the runner, verify and collector refuse any other) |
+| keys | `/run/quantt/alpaca.env` from `alpaca-cef-*` | `/run/quantt-c4/alpaca.env` from `alpaca-c4-*`, through `quantt-c4-secret.service` |
+| panels and lock | `data/cef/`, `.fetch.lock` there | `data/cef_c4/`, its own `.fetch.lock` |
+| account start | in the collector | `--eod-from`, required with no default, rendered as `QUANTT_EOD_FROM` |
+| seed | `--seed-from` the laptop's `data/cef` files | `--seed-from` a `data_books.py seed-c4` directory whose manifest names the tag's IGR ruling |
+
+**One clone, one tag.**
+- `--book c4` never checks the clone out. It refuses unless the clone is
+  already at the tag, so install the core first.
+- The core's install refuses to move the clone while a C4 timer is enabled or
+  running, or a C4 job is busy. To release: disable C4's timers, install the
+  core, then re-install C4 at the same tag.
+
+Every guard in this section applies to C4 too. The team lead's steps, from the
+vault secrets to the arming go, are in
+`results/ops/C4_DRY_RUN_CHECKLIST_2026-10-29.md`.
+
+### 8.10 The shadow-book runner on the VM (2026-11-09)
+
+A second, separate thing on the VM: simulated books on live data, which send no order
+(`results/mission/SHADOW_RUNNER_DESIGN_2026-11-09.md`; `docs/SYSTEM.md` §5, 2026-11-09). It
+is **not prod and not a release**. It is a clone under its own unix user, `quantt-shadow` (not `shadow`: Ubuntu has a system group of that name, which guards the password file), that
+follows the branch `shadow`, so a new book is a commit to that branch.
+
+| what | prod | the shadow runner |
+|---|---|---|
+| user and home | `quantt`, `/home/quantt` | `quantt-shadow`, `/home/quantt-shadow` |
+| code | a clone at a release tag | `/home/quantt-shadow/quantt-shadow`, following the branch `shadow` |
+| state | `quantt_state/<book>` | `/home/quantt-shadow/shadow_state` |
+| key file | `/run/quantt/alpaca.env` | `/run/quantt-shadow/alpaca.env`: a copy of the core account's key, for reading prices |
+| units | `quantt-cef-*`, `quantt-c4-*` | `quantt-shadow-secret.service`, `quantt-shadow.service`, `quantt-shadow.timer` |
+| schedule (New York) | section 8.3 | 18:50 and 20:50 Monday to Friday, 07:20 Tuesday to Saturday |
+
+**Install (the team lead, once; it needs sudo).** Outside prod's windows (not 15:45–16:00,
+17:25–17:40 or 22:00–01:00, and not at :10 or :40 past an hour); the script refuses while a
+prod job runs. The branch `shadow` must exist on GitHub first.
+
+```bash
+curl -fsSLo install_shadow_vm.sh \
+  https://raw.githubusercontent.com/quanttqueensu/CreditTrading/shadow/shadow/deploy/install_shadow_vm.sh
+less install_shadow_vm.sh            # read it before running it as root
+sudo bash install_shadow_vm.sh --vault <vault-name> --enable
+```
+
+**Check it once by hand:**
+
+```bash
+sudo systemctl start quantt-shadow-secret.service && sudo systemctl start quantt-shadow.service
+sudo tail -n 20 /home/quantt-shadow/logs/nightly.out.log /home/quantt-shadow/logs/nightly.err.log
+systemctl list-timers 'quantt-shadow*'
+```
+
+With no book file on the branch the run prints "no enabled book" and exits 0. The page for
+every book is `/home/quantt-shadow/shadow_state/SCOREBOARD.md`.
+
+**Stop it:** `sudo systemctl disable --now quantt-shadow.timer`. Nothing else depends on it.
+
+**Beside a C4 or `--reports` install.** Those installs refuse any `quantt-` unit file that no
+book installs. On 2026-11-18 (release-20261116-1) they refused on the shadow runner's three,
+with C4's timers already disabled, and the files had to be moved out of
+`/etc/systemd/system` and back by hand. From the release after that one the installer knows
+the three names (`install_vm.SHADOW_UNIT_FILES`, pinned to the shell installer by a test).
+**On release-20261116-1 or older, park them first:** stop `quantt-shadow.timer`, move the
+three files to a directory outside systemd's search path, run the install, move them back,
+`sudo systemctl daemon-reload`, `sudo systemctl enable --now quantt-shadow.timer`. A new
+installer that writes `quantt-` units must add its names to the scan in the same PR.
+
+**What the separate user does not protect against.** The vault is read through the VM's own
+identity, which every local user can reach. File permissions keep shadow code out of prod's
+state and key file, and they cover accidents; they do not stop code on the `shadow` branch
+from asking the vault for a secret. Control who can push to that branch.
+
+**Installed 2026-11-10, 11:12 New York**, by an agent at the team lead's request ("can u run
+it"), in the gap between prod's jobs; it took 22 seconds [V: the run's own output]. The first
+attempt, at 10:12, stopped at its first step and created nothing, because the user was then
+named `shadow`. **Still not measured:** the job's memory peak (systemd reported none for the
+first run), so the unit's `MemoryMax` remains a guess to read against later runs. **If `requirements.txt` changes on the branch, the nightly run refuses** until
+this script is re-run.
+
+### 8.11 The nightly report-only checks (data QA and risk)
+
+Team lead, 2026-11-08: the nightly check is owned by a VM timer, and pushes a
+notification only when a stop fires. Everything else stays in the journal
+(`results/ops/AGENT_DESK_DESIGN_2026-11-03.md`, PR #46; the scripts'
+docstrings give the reasons).
+
+| job | unit | when (Mon-Fri, local) | writes |
+|---|---|---|---|
+| data QA per book | `quantt-{cef,c4}-dataqa` | 21:45 cef, 21:50 c4 (after the :40 collect, before the 22:00 decide) | `<state>/reports/data_qa/<date>.{md,json}` |
+| risk per account | `quantt-{cef,c4}-risk` | **05:45 cef, 05:50 c4, Tue-Sat, for the session before** (after the pnl job, before the 06:00 session slot; until release-20261116-1: 22:15 and 22:20 the same evening) | `<state>/reports/risk/<date>.{md,json}` |
+
+These times are clear of every runner slot (session :00/:30, collect :10/:40,
+send, verify 17:30), and the units cannot overrun into the next one:
+`TimeoutStartSec=480`. The units carry no broker key file, no DRY_RUN and no
+lock: they read the panels and the runner's files, and `ReadOnlyPaths=` the
+clone. `MemoryMax=450M` (peak measured 2026-11-08 on the laptop's panels,
+data_qa 220 MB for C4, risk 102 MB; read the real figure with `systemctl show
+quantt-c4-dataqa -p MemoryPeak` after a first run). A failed report job is its own failed
+unit: a session never depends on one.
+
+**Install** (after the core at the tag; it never moves the clone):
+
+```bash
+qi --tag <tag> --vault <vault-name> --reports                     # dry run: every check, every unit
+qi --tag <tag> --vault <vault-name> --reports --apply --enable    # writes the units, starts the timers
+```
+
+It touches no session, verify, collect or key unit. A book install's existing checks
+refuse only at planning while a report job is running; it never re-asks that after it
+has stopped the timers, and it never stops or starts a report timer.
+
+**Reading.** `sudo tail -n 60 /home/quantt/quantt_state/cef/logs/{dataqa,risk}.out.log`
+and the dated reports under `<state>/reports/`. A report that cannot measure a block
+says UNMEASURED and names what is missing (on the VM today: `stops.py`'s fit series;
+the attribution and factor blocks read the daily P&L job's report (8.12) and are
+UNMEASURED until it has run; the drawdown reader's freshest-row rule waits on PR #55).
+
+**Severity.** INFO stays in the file; WATCH is a line near a limit or a data-QA flag on a held name; ACT is a
+pre-registered stop that has fired. Only ACT pushes (risk jobs only). **The team lead's steps
+for the push to work:**
+
+1. Create a Gmail App Password (16 characters; 2-step verification on) for the sending account.
+2. In the vault the units already use, create two secrets, single-line values:
+   `alert-smtp-user` (the sending address) and `alert-smtp-pass` (the app password).
+3. After a release with this section's code is installed with `--reports`:
+   `sudo systemctl restart quantt-reports-secret.service`, then send a test through the channel:
+
+   ```bash
+   sudo systemd-run --wait --pipe --uid=quantt --gid=quantt \
+     -p EnvironmentFile=/run/quantt-reports/alert.env \
+     --working-directory=/home/quantt/prod/quantt-alpaca \
+     /home/quantt/venv/bin/python -B -m scripts.ops.risk_daily --book cef \
+     --state-dir /home/quantt/quantt_state/cef --notify-test
+   ```
+
+Until that is done, a fired stop records `ACT: notification NOT delivered: <reason>` in
+the report and the service exits 3, failed: it is never silent. Authenticated SMTP on
+port 587 is allowed from Azure VMs regardless of subscription (docs/REFERENCES.md);
+this code has never sent from the VM, so the test above is the first proof.
+
+**Rollback.** On a rollback to a tag older than this section, first
+`sudo systemctl disable --now quantt-{cef,c4}-{dataqa,risk}.timer` and delete the
+report unit files: an older installer's C4 scan names any other `quantt-` unit file as
+"no unit any book installs" and refuses.
+
+### 8.12 The daily P&L attribution and factor readout (report only)
+
+Team lead, 2026-11-09: a daily VM report for BOTH paper books, the P&L attribution and
+the exposure readout. It is a third report kind under `--reports` (beside dataqa and
+risk), one job per book:
+
+| job | unit | when (Mon-Fri, local) | writes |
+|---|---|---|---|
+| P&L attribution and factor readout | `quantt-{cef,c4}-pnl` | **05:15 cef, 05:20 c4, Tue-Sat, for the session before** (team lead, 2026-11-19: Alpaca published the EOD point between 03:10 and 03:40 ET on each night measured, so the 20:30/20:35 runs of release-20261116-1 reported the day before) | `<state>/reports/pnl/<date>.{md,json}` (and its fetch cache `<state>/reports/pnl/_cache/`, the account's fills and equity, and yfinance's own SQLite caches `<state>/reports/pnl/_yf_cache/`; all outside git) |
+
+What it reports, per book, for the session just closed and cumulative from the book's
+first trade (read from the account's own fills, never written anywhere): official P&L
+(Alpaca EOD history), hold split into NAV part and discount part, fill cost, fees,
+distributions, then factor exposure at the last close against the review line
+(REVIEW_FRACTION x vol_target_annual x sizing_multiplier, each read from the book's own
+spec, the multiplier since the team lead's ruling of 2026-11-10 because the account holds m
+x the unit book; the report prints the three inputs beside the line), headline first, by
+muni/taxable (core) or by family (C4), with the cumulative factor P&L, E(t-1) x f(t) summed
+per factor over every session from the first trade to the as-of close whose previous close
+held a position, labelled with its count, first and last session. The session on which the
+book closes flat is in it (team lead, 2026-11-11/12, on the second review of PR #82: until
+this follow-up it was left out); a flat book whose
+as-of term lacks a factor ETF's return at the as-of names that term UNMEASURED and sums the
+sessions before it. The rebuild must reconcile to official to the
+cent, or the report says so at its top (overall status UNRECONCILED, not OK). **A breach of a review line is report-only: it
+appears in the report and sends NOTHING** (no push, no ACT, no halt, no trade; team lead,
+2026-11-09). `risk_daily`'s attribution and factor blocks read this job's JSON and stay
+UNMEASURED, named, when the job has not run.
+
+**Exit codes** (team lead, 2026-11-10; `scripts/ops/pnl_report.py`, EXIT CODES). The report
+files are written before the job exits, whatever the code, and `risk_daily` reads them the
+same way after any code (its own timer; nothing ties it to this unit's result: an
+unreconciled report is its WATCH).
+
+| code | meaning | the report says |
+|---|---|---|
+| 0 | the attribution ran and reconciled to the cent on every session (the factor block may still be PARTIAL or UNMEASURED) | OK or PARTIAL |
+| 2 | refused before reading or writing anything: no state directory, or one under data/ or visible to git | (no report) |
+| 4 | incomplete: no broker read (no key, a failed read) or the attribution refused | UNMEASURED, naming why |
+| 5 | unreconciled: on some session the rebuild does not equal Alpaca's official EOD change to the cent | UNRECONCILED, naming the session and the residual |
+| 1 | an uncaught exception (a bug); the report may not have been written | - |
+
+A run that is both incomplete and unreconciled exits 4: nothing could be reconciled. The
+pnl unit carries no `SuccessExitStatus` (the installer refuses a rendered unit that has
+one), so 4 and 5 both show as a failed `quantt-<book>-pnl.service`; read the report before
+the unit's log.
+
+**Keys (the only secrets these units touch).** The pnl jobs read the account, so they
+need the account's Alpaca key, and read it from the vault at run time, never from a file
+in the repo or on disk: each book has its own secret service
+(`quantt-reports-{cef,c4}-pnl-keys.service`), writing that book's key to a tmpfs env file
+of its own, `/run/quantt-reports-{cef,c4}-pnl/broker.env`, mode 0600, loaded only by that
+book's `quantt-<book>-pnl.service` through `EnvironmentFile=`. **No new vault secret is
+needed**: they use the same secrets the books' own key services already use (`alpaca-cef-key-id`,
+`alpaca-cef-secret-key`, `alpaca-c4-key-id`, `alpaca-c4-secret-key`). The dataqa and
+risk units stay key-free and the SMTP `alert.env` stays separate (both tested). The job's
+reader is `scripts/ops/alpaca_read.py`: HTTP GET only, the paper and data hosts only, no
+order code; a closure test (`scripts/ops/tests/test_report_no_order_path.py`) pins that
+no import path from the job reaches order-sending code. The job takes no lock, and
+`ReadOnlyPaths=` the clone. A failed key fetch or broker read marks its own unit failed and
+touches nothing else.
+
+**Install** (the team lead's step, after the release is installed; the same command as
+8.11, which also installs and updates the dataqa and risk units):
+
+```bash
+qi --tag <tag> --vault <vault-name> --reports                     # dry run: every check, every unit
+qi --tag <tag> --vault <vault-name> --reports --apply --enable    # writes the units, starts the timers
+```
+
+Its output names the two key services and the two env files. Then start one by hand once
+the day's EOD point exists (after 20:00 ET on a trading day), and read what it wrote:
+
+```bash
+sudo systemctl start quantt-reports-cef-pnl-keys.service
+sudo systemctl start quantt-cef-pnl.service
+sudo tail -n 60 /home/quantt/quantt_state/cef/logs/pnl.out.log /home/quantt/quantt_state/cef/logs/pnl.err.log
+sudo sed -n 1,40p /home/quantt/quantt_state/cef/reports/pnl/<date>.md
+systemctl show quantt-cef-pnl -p MemoryPeak    # MemoryMax=900M is a guess, not a measurement
+```
+
+`MemoryMax=900M` (a generous first setting: the job has not been measured on the VM; the
+report units' measured peaks are in 8.11) should be cut to the measured peak with margin
+after the first week. The job calls yfinance for NAVs, dividends and prices (keyless); the
+VM must be able to reach Yahoo. A missing NAV (a fund not published by 20:30) makes the NAV
+and discount parts UNMEASURED for that name-day, named, and leaves hold, fill, fees and
+the reconciliation complete. A held name yfinance has not served by the job's run (a late
+same-day close; HYT lags, CLAUDE.md landmine 6), or cannot serve at all, makes the factor
+block PARTIAL, not UNMEASURED (team lead, 2026-11-10): the other held names are read, the
+names left out are listed with the reason and their share of the book's gross, and every
+reading and REVIEW flag on the partial book says PARTIAL; `risk_daily` shows that block as a
+WATCH naming the share. PARTIAL is about the as-of close only (independent review of PR #82,
+2026-11-11): a name left out only on an earlier date (a fund once held that yfinance no
+longer serves) is a named history note in an OK block, and `risk_daily` shows it as INFO. A
+split record in a fund the book has held leaves that fund out, named with its ex-date and
+yfinance's ratio, only on the dates the split can touch (team lead, 2026-11-14, option A of the
+third review of PR #82): the dates it was held before the ex-date (its close may be on the
+post-split basis) and, for the core, the dates whose beta window (the spec's z_window sessions)
+holds the ex-date; at the as-of close that is PARTIAL, only earlier a history note, and every
+other reading is unchanged. Before that ruling one split made the block UNMEASURED every night
+after. A corporate action no longer stops the attribution by being in the window (team lead,
+2026-11-14: "narrow and handle it"; `scripts/cef/live_attribution.py`, CORPORATE ACTIONS). Only
+a fund held into the event's session, in a role whose count or symbol the event changes, is
+touched: an acquirer's merger (the core's MHD and MQY, 2026-02) and a flat name are not.
+Positions come from FILLs alone, never from the market feed and never from the account's own
+corporate-action activity rows (team lead, 2026-11-15: "simplify"). Paper has never written such
+a row and its REST format is undocumented, so the job still reads them strictly, and any row on
+or before the job's as-of (also on a night whose EOD point is not out yet), for any symbol, stops
+the attribution, naming every row's symbol, type, date and share count (exit 4): "the report
+stops until one has been seen and the handling is built
+against it". A row the parser cannot read stops it too. One split listed under two ids by the
+feed is one event; two records that disagree on its rates refuse, named, and a second record of
+a split already handled, within `live_attribution.CA_MATCH_SESSIONS` sessions with the same
+rates, refuses naming both ids. A forward or reverse split paper did not process reconciles as
+the account shows it; the report prints a labelled phantom line per event, (q_prev - q_prev x k)
+x close, then the phantom's accrual while it stays open (paper's extra shares move with the
+price) until the account first trades the name, its crystallisation at that trade (the extra
+shares at the fill price, plus the session's fee term), and the cumulative phantom line beside
+the official P&L, which stays the P&L of record: an estimate of what paper's missing split put
+into it. Every crystallised phantom is labelled "approximate: <reason>" (team lead, 2026-11-15):
+the live sleeve trades a name only outside its no-trade band, to the band's edge, so an account
+that had processed the split need not have traded to the same position (src/deploy/sleeves/
+cef_discount.py, NO-TRADE BAND; it sizes on equity that carries the phantom, section 6.1 step 5).
+The label also names fills on both sides of the name on the crystallising session, a q_prev x k
+that is not a whole number, and a fee term shared with such a session, where they apply; an
+open phantom (no trade in the name yet) is labelled only for a fractional q_prev x k. The label
+is in the report, its JSON (`approximate` on the event, `phantom_approximate`) and the
+attribution's gaps. That name-day's
+NAV/discount split is UNMEASURED, named. A session that does not reconcile (paper froze the
+position, or support pushed the split with no account row) is UNRECONCILED, exit 5, naming the
+session and the event (independent review of the follow-up, 2026-11-14). Any other
+count-changing type held into its date stops the attribution, named (exit 4). A
+book that holds nothing at the as-of close has a FLAT factor block (the same review): it
+says the book is flat and reads no exposure, flag or PARTIAL for that close, never the
+previous close's reading; its history since the first trade is labelled with its dates;
+the report's overall status is OK. A bug, the
+no-lookahead assertion or a failed price fetch (yfinance down) while reading that history
+makes the block UNMEASURED, as on a held night (second review of PR #82, 2026-11-11). Every
+factor block, FLAT or held, is read from the fill rebuild's positions, never the account's, so
+checks guard it (team lead, 2026-11-11 for FLAT, 2026-11-11/12 for every status after the
+third review of PR #82, whose phantom sale of 2,000 AAA at the close left a held block OK at
+half the true MUNI exposure). The job never says FLAT when the rebuild does not reconcile (the
+block is UNMEASURED, saying whether the book is flat cannot be read from it), and never OK on a
+held night whose rebuild does not reconcile (the block is read for diagnosis under status
+UNRECONCILED, every flag labelled; `risk_daily` shows it as at least a WATCH). The JSON carries
+the rebuild's signed shares per name at the block's close (`factor.rebuild_positions`), and
+`risk_daily` compares them, share for share, with the collector's account record for that
+same close, `<state>/data/<D>/account.json` (written by the collector's `account_snapshot`
+step after D's close and before the next open), for every factor status. The cross-check is
+INFO when the record holds the same positions, a WATCH naming the counts and the symbols that
+differ when it holds others, and UNMEASURED when the record is missing, unreadable, for another
+session or not whole shares, so a reading the account record cannot confirm is never INFO.
+When Alpaca's EOD history has no point for the as-of D when the job runs, it reads the latest
+session it has, D-1, and writes it under D's name. Its markdown then says so in its title and
+under its status ("READ AT THE CLOSE OF D-1, NOT D"), its JSON names the session read
+(`session_read`), and `risk_daily`'s D report shows the attribution and factor blocks as
+UNMEASURED for D, never INFO, each first line saying the reading is D-1's and D-1's lines below
+it as history; a WATCH in D-1's reading stays a WATCH (team lead, 2026-11-11/12, on the third
+review of PR #82; UNMEASURED because a block that cannot measure D says so, 8.11).
+A factor ETF
+without its price, or no held name with its inputs, makes the block UNMEASURED, naming it;
+the attribution above it stays either way. A book whose lag rule has produced no Dimson lag
+has a factor block UNMEASURED, naming the rule. Neither does today: the core's rule gives
+L = 0, and C4's gave L = 2 on 2026-11-09 (`scripts/cef/exposure_readout.py`, THE C4 RULE'S
+RESULT).
+
+**Rollback.** As 8.11: on a rollback to a tag older than this section, first
+`sudo systemctl disable --now quantt-{cef,c4}-pnl.timer`, then
+`sudo systemctl stop quantt-reports-{cef,c4}-pnl-keys.service` (its key material goes
+with its runtime directory), and delete the two pnl service files, the two pnl timer files
+and the two key-service unit files.
+
+### 8.13 The public site (event-driven.quantt.ca)
+
+Team lead, 2026-11-23 (`docs/SYSTEM.md` §5, "the public site"): a public website served from
+the VM, with the live paper results of every book. What it reads and why it cannot touch a
+book: `dashboard/README.md`. It runs beside the books and is installed on its own:
+
+```bash
+# on the VM. The site runs from its OWN clone, so releasing it never moves the trading clone.
+# First time only (a local clone of the prod clone, then GitHub as its origin):
+sudo -u quantt git clone -q /home/quantt/prod/quantt-alpaca /home/quantt/site/quantt-alpaca
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca remote set-url origin https://github.com/quanttqueensu/CreditTrading.git
+# Each site release (T = a release tag that carries dashboard/):
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca fetch -q --tags origin
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca checkout -q --detach T
+sudo sh /home/quantt/site/quantt-alpaca/dashboard/deploy/install_site_vm.sh --hosts "<names>"
+# Remove:
+sudo sh /home/quantt/site/quantt-alpaca/dashboard/deploy/install_site_vm.sh uninstall
+```
+
+`<names>`: the VM's own DNS name (its Azure DNS label), never written in a tracked file.
+Before the first install, from the laptop: the network security group allows TCP 80 and 443
+from the internet (rule `site-http-https`). Caddy fetches the certificate itself.
+
+**The public address, `event-driven.quantt.ca`, is Cloudflare's**, not the VM's: the Worker
+`quantt-event-driven` (`dashboard/worker/index.js`, `dashboard/wrangler.jsonc`; the build's Root directory is `dashboard`, because at the repository root the build image pip-installs `requirements.txt` and fails) is deployed by Cloudflare
+Workers Builds from `main`. It is a read-only caching proxy: every path, pages and `/static/*`
+alike, is fetched from the VM, pages cached at the edge for 60 seconds and static files for an
+hour, so a page and its styles always come from the same site release. Its variable `ORIGIN`
+(`https://` + the VM's DNS name) is set once in the Cloudflare dashboard (Worker, Settings,
+Variables and Secrets) and kept across deploys (`keep_vars`). If the VM cannot be reached,
+the Worker answers 503 with a page saying so.
+
+What it installs: Caddy (Ubuntu's package, user `caddy`, static files only),
+`/srv/quantt-site` (builds and the `current` link, owned by quantt), and
+`quantt-site.service` + `quantt-site.timer` (every 30 minutes at :20 and :50; no network,
+state read-only). The unit names are registered in `quantt/deploy/install_vm.py`
+`SITE_UNIT_FILES`, so a C4 or `--reports` install does not refuse beside them.
+
+Checks:
+
+```bash
+systemctl status quantt-site.timer caddy --no-pager
+journalctl -u quantt-site.service -n 20 --no-pager      # "published .../builds/<stamp>"
+readlink /srv/quantt-site/current
+```
+
+A failed build leaves the last good site in place and marks only `quantt-site.service`
+failed. The usual causes are a record format change in a runner (the exporter names the file
+and field as UNMEASURED, which still builds) or a privacy refusal (`snapshot refused`: a
+record carried something §2 of `dashboard/README.md` forbids; read it before anything else).
+
 ## Open questions (for the TL)
 
 1. **Timezone:** set this Mac to `America/New_York`, or accept `America/Toronto`

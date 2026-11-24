@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1287032,
+  "episode_accession": "0000950123-09-041353",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Patriot Capital Funding, Inc.", "cik": null, "ticker": "PCAP"},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": 1287032, "ticker": "PSEC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001102624-09-000367", "quote": "Prospect Capital Corporation (NASDAQ: PSEC ) (\"Prospect\") announced today that it has entered into a definitive agreement to acquire Patriot Capital Funding, Inc. (NASDAQ: PCAP ) (\"Patriot\")."},
+      "outcome": "completed",
+      "announcement": {"accession": "0001102624-09-000367", "date": "2009-08-05", "quote": "Prospect Capital Corporation (NASDAQ: PSEC ) (\"Prospect\") announced today that it has entered into a definitive agreement to acquire Patriot Capital Funding, Inc. (NASDAQ: PCAP ) (\"Patriot\")."},
+      "outcome_evidence": {"accession": "0001102624-09-000565", "date": "2009-12-04", "quote": "announced today that it has completed the acquisition of Patriot Capital Funding, Inc. (\"Patriot\") whereby Patriot merged with and into Prospect"},
+      "notes": "Press release dated August 03, 2009 is attached to the 8-K filed 2009-08-05. Both on NASDAQ; the excerpts do not say in words that Patriot is a BDC, but the registration was on form N-14 8C. Patriot CIK does not appear in any FILING header."
+    },
+    {
+      "target": {"name": "Allied Capital Corporation", "cik": 3906, "ticker": null},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": 1287032, "ticker": "PSEC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "terminated",
+      "announcement": {"accession": "0000950123-10-003591", "date": "2010-01-20", "quote": "announced today that it has delivered a letter to the Board of Directors of Allied Capital Corporation (\"Allied\") in connection with its offer to acquire Allied."},
+      "outcome_evidence": {"accession": "0000950123-10-021524", "date": "2010-03-05", "quote": "Accordingly, we have terminated our solicitation."},
+      "notes": "Unsolicited offer rejected by the Allied board, in competition with a proposed Allied-Ares combination; Prospect later raised its offer and filed a preliminary proxy in opposition to the Ares/Allied merger. Prospect ended its solicitation on 2010-03-05. The excerpts do not show Allied's listing. Whether the Ares combination completed is not stated in the excerpts."
+    }
+  ],
+  "problems": ""
+}

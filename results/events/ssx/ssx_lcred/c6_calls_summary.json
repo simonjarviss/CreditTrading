@@ -1,0 +1,93 @@
+{
+ "superset_shortable_above_25": 12,
+ "prospectus_found": 8,
+ "call_date_within_12m_or_passed": 4,
+ "call_date_beyond_12m": 3,
+ "call_date_not_established": 5,
+ "rows": [
+  [
+   "SAZ",
+   "ok",
+   "2025-04-14",
+   "True",
+   "0001213900-23-029146"
+  ],
+  [
+   "AGNCN",
+   "ok",
+   "2022-10-15",
+   "True",
+   "0001423689-17-000040"
+  ],
+  [
+   "C.PRN",
+   "8-A12B not found",
+   "nan",
+   "None",
+   "nan"
+  ],
+  [
+   "CHSCO",
+   "424B not found",
+   "nan",
+   "None",
+   "nan"
+  ],
+  [
+   "CHSCP",
+   "424B not found",
+   "nan",
+   "None",
+   "nan"
+  ],
+  [
+   "LNC.PRD",
+   "ok",
+   "2027-12-01",
+   "False",
+   "0001193125-22-287672"
+  ],
+  [
+   "MTB.PRH",
+   "424B not found",
+   "nan",
+   "None",
+   "nan"
+  ],
+  [
+   "MTB.PRJ",
+   "ok",
+   "2029-06-15",
+   "False",
+   "0001193125-24-133536"
+  ],
+  [
+   "STRC",
+   "ok",
+   "2025-02-24",
+   "True",
+   "0001193125-25-018819"
+  ],
+  [
+   "STRD",
+   "ok",
+   "2025-02-24",
+   "True",
+   "0001193125-25-060332"
+  ],
+  [
+   "SYF.PRB",
+   "ok",
+   "None",
+   "None",
+   "0001193125-24-038474"
+  ],
+  [
+   "XRN.PRB",
+   "ok",
+   "2030-11-20",
+   "False",
+   "0001104659-25-112543"
+  ]
+ ]
+}

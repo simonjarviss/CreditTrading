@@ -1,0 +1,5 @@
+date,book,verdict,missed,traded,n_orders,n_filled,snapshot_1730_usd,verify_label,official_usd,official_status,auction_marked_usd,fill_vs_auction_bp,refusal_gates
+2026-11-03,c4,FAIL,False,False,,,+0.00,snapshot 17:30 ET,,PENDING at 17:30,+0.00,,
+2026-11-04,c4,PASS,False,True,15,15,-89.10,snapshot 17:30 ET,,PENDING at 17:30,-8.60,+0.7,
+2026-11-05,c4,PASS,False,True,2,2,+1278.00,snapshot 17:30 ET,,PENDING at 17:30,+1244.07,+18.0,
+2026-11-06,c4,PASS,False,True,3,3,-1190.10,snapshot 17:30 ET,,PENDING at 17:30,-1225.80,+23.4,

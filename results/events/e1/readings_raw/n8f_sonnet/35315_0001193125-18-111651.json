@@ -1,0 +1,18 @@
+{
+  "episode_cik": 35315,
+  "episode_accession": "0001193125-18-111651",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Fidelity Inflation-Protected Bond Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Inflation-Protected Bond Index Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-18-111651", "quote": "The price to buy one share is its NAV."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-18-111651", "date": "2018-04-09", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity Inflation-Protected Bond Fund to Fidelity Inflation-Protected Bond Index Fund in exchange solely for shares of beneficial interest of Fidelity Inflation-Protected Bond Index Fund"},
+      "outcome_evidence": null,
+      "notes": "Both are series of Fidelity Salem Street Trust (the episode CIK is the trust, not a fund in the deal). Shares are bought at NAV with retail and Advisor classes, so open-end funds; no exchange listing is shown. The filings give no completion outcome (a DEFA14A only anticipates closing in late August 2018)."
+    }
+  ],
+  "problems": ""
+}

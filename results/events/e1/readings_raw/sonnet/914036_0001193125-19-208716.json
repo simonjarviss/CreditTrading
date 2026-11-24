@@ -1,0 +1,88 @@
+{
+  "episode_cik": 914036,
+  "episode_accession": "0001193125-19-208716",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "LVIP Franklin Templeton Value Managed Volatility Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "LVIP BlackRock Dividend Value Managed Volatility Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-208716", "quote": "As an owner of a variable life insurance policy and/or a variable annuity contract"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-208716", "date": "2019-07-31", "quote": "which provides for the reorganization of the Acquired Fund into the LVIP BlackRock Dividend Value Managed Volatility Fund (the “Acquiring Fund”), also a series of the Trust (the “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Series of an insurance-dedicated trust, not exchange-listed. Registrant CIK 914036 is the trust, hence role other. Meeting scheduled October 31, 2019; a reminder DEFA14A of 2019-10-03 asks for votes; result not stated in the excerpts."
+    },
+    {
+      "target": {"name": "Delaware VIP Diversified Income Series", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-323472", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "Reorganization is not conditioned upon the specific consummation of any other Reorganization"},
+      "outcome_evidence": null,
+      "notes": "Seven Delaware VIP Trust series are to be reorganized into 'Acquiring Funds' (Lincoln trust series) whose names are not in the excerpts; one entry per target series below, same filing. Joint meeting set for April 7, 2021; the 2021-03-09 DEFA14A is a vote reminder. Result not stated."
+    },
+    {
+      "target": {"name": "Delaware VIP High Yield Series", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-323472", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "Reorganization is not conditioned upon the specific consummation of any other Reorganization"},
+      "outcome_evidence": null,
+      "notes": "See first Delaware entry."
+    },
+    {
+      "target": {"name": "Delaware VIP Limited-Term Diversified Income Series", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-323472", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "Reorganization is not conditioned upon the specific consummation of any other Reorganization"},
+      "outcome_evidence": null,
+      "notes": "See first Delaware entry."
+    },
+    {
+      "target": {"name": "Delaware VIP REIT Series", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-323472", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "Reorganization is not conditioned upon the specific consummation of any other Reorganization"},
+      "outcome_evidence": null,
+      "notes": "See first Delaware entry."
+    },
+    {
+      "target": {"name": "Delaware VIP Smid Cap Core Series", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-323472", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "Reorganization is not conditioned upon the specific consummation of any other Reorganization"},
+      "outcome_evidence": null,
+      "notes": "See first Delaware entry."
+    },
+    {
+      "target": {"name": "Delaware VIP U.S. Growth Series", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-323472", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "Reorganization is not conditioned upon the specific consummation of any other Reorganization"},
+      "outcome_evidence": null,
+      "notes": "See first Delaware entry."
+    },
+    {
+      "target": {"name": "Delaware VIP Value Series", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-20-323472", "quote": "Shares of the Delaware Funds are sold directly or indirectly to insurance company separate accounts that support certain"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "Reorganization is not conditioned upon the specific consummation of any other Reorganization"},
+      "outcome_evidence": null,
+      "notes": "See first Delaware entry."
+    }
+  ],
+  "problems": "Acquiring funds for the Delaware series are not named in the excerpts. The 2021 PRE 14A/DEF 14A concern a diversification change for LVIP Blended Large Cap Growth Managed Volatility Fund, not a merger."
+}

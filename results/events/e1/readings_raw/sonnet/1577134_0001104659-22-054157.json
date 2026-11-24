@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1577134,
+  "episode_accession": "0001104659-22-054157",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Terra Income Fund 6, Inc.", "cik": 1577134, "ticker": "TFSA"},
+      "acquirer": {"name": "Terra Property Trust, Inc.", "cik": 1674356, "ticker": "TPTA"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-22-054154", "quote": "Terra Property Trust, Inc. (“Terra REIT”) and Terra Income Fund 6, Inc. (“Terra BDC”) today jointly announced that they have entered into a definitive merger agreement pursuant to which Terra REIT has agreed to acquire Terra BDC."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-22-054154", "date": "2022-05-02", "quote": "Terra Property Trust, Inc. (“Terra REIT”) and Terra Income Fund 6, Inc. (“Terra BDC”) today jointly announced that they have entered into a definitive merger agreement pursuant to which Terra REIT has agreed to acquire Terra BDC."},
+      "outcome_evidence": null,
+      "notes": "Acquirer is described as a REIT (an operating company, not a closed-end fund or BDC); the cover-page Section 12(b) tables list only notes (TFSA, TPTA) on the NYSE, and the press releases print NYSE:TFSA and NYSE:TPTA, so the common-stock listing is unclear, and the release says TPT Class A stock is not yet listed. Stockholders approved the merger on September 12, 2022 (8-K 0001193125-22-243334); closing was expected on or about October 1, 2022. No excerpt states that the merger closed (the October 2022 and July 2023 8-Ks are shown only by header, and the registrant is later named Terra Income Fund 6, LLC)."
+    }
+  ],
+  "problems": "Completion is not stated in any excerpt. If the listing test were applied differently (both entities show NYSE tickers), the outcome would still be unconfirmed rather than failed."
+}

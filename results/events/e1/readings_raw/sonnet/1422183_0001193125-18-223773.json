@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1422183,
+  "episode_accession": "0001193125-18-223773",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Corporate Capital Trust, Inc.", "cik": 1494538, "ticker": "CCT"},
+      "acquirer": {"name": "FS Investment Corporation", "cik": 1422183, "ticker": "FSIC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-18-223730", "quote": "FS Investment Corporation (NYSE: FSIC) and Corporate Capital Trust, Inc. (NYSE: CCT) have entered into a definitive agreement under which FSIC and CCT will be merged."},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-18-223730", "date": "2018-07-23", "quote": "FS/KKR Announces Agreement to Merge FS Investment Corporation and Corporate Capital Trust"},
+      "outcome_evidence": {"accession": "0001193125-18-353292", "date": "2018-12-19", "quote": "today announced that the merger of FS Investment Corporation (NYSE: FSIC) and Corporate Capital Trust, Inc. (NYSE: CCT) has closed, creating the second-largest publicly traded business development company."},
+      "notes": "Shareholders of both funds approved on 2018-12-03 (8-K 0001193125-18-341163); merger closed 2018-12-19 and FSIC was renamed FS KKR Capital Corp. (NYSE: FSK). Episode fund is the surviving acquirer."
+    }
+  ],
+  "problems": ""
+}

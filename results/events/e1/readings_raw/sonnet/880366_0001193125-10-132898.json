@@ -1,0 +1,58 @@
+{
+  "episode_cik": 880366,
+  "episode_accession": "0001193125-10-132898",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Legg Mason Lifestyle Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Legg Mason Lifestyle Allocation 30%", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-10-132898", "date": "2010-06-04", "quote": "has approved the reorganization of your fund into Legg Mason Lifestyle Allocation 30%"},
+      "outcome_evidence": null,
+      "notes": "Series of one trust (Legg Mason Partners Equity Trust); text shows share classes and contingent deferred sales charges but never states exchange listing. Excerpts do not state completion."
+    },
+    {
+      "target": {"name": "Legg Mason ClearBridge Dividend Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Legg Mason ClearBridge Equity Income Builder Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-10-265302", "date": "2010-11-19", "quote": "You are being asked to consider and vote on a proposed reorganization transaction related to your fund, Legg Mason ClearBridge Dividend Strategy Fund"},
+      "outcome_evidence": null,
+      "notes": "Acquirer taken from the title of securities being registered (Equity Income Builder Fund). Meeting set for April 13, 2011; outcome not in excerpts."
+    },
+    {
+      "target": {"name": "Legg Mason Lifestyle Allocation 100%", "cik": null, "ticker": null},
+      "acquirer": {"name": "Legg Mason Lifestyle Allocation 85%", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-10-265316", "date": "2010-11-19", "quote": "has approved the reorganization of your fund into Legg Mason Lifestyle Allocation 85%"},
+      "outcome_evidence": null,
+      "notes": "Reorganization expected on or about April 21, 2011; outcome not in excerpts."
+    },
+    {
+      "target": {"name": "Legg Mason ClearBridge Capital Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Legg Mason ClearBridge Mid Cap Core Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-10-265335", "date": "2010-11-19", "quote": "You are being asked to consider and vote on a proposed reorganization transaction related to your fund, Legg Mason ClearBridge Capital Fund"},
+      "outcome_evidence": null,
+      "notes": "Acquirer taken from the title of securities being registered. Meeting set for April 13, 2011; the later DEFA14A of 2011-04-13 shows no outcome text in the excerpt."
+    },
+    {
+      "target": {"name": "Legg Mason ClearBridge Diversified Large Cap Growth Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Legg Mason ClearBridge Appreciation Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-11-032628", "date": "2011-02-11", "quote": "You are being asked to vote on a proposed reorganization transaction related to your fund, Legg Mason ClearBridge Diversified Large Cap Growth Fund"},
+      "outcome_evidence": null,
+      "notes": "Acquirer taken from the title of securities being registered. Meeting set for June 17, 2011; outcome not in excerpts."
+    }
+  ],
+  "problems": "Episode is a trust with several series reorganizations. No filing excerpt states exchange listing or any completion/termination; the DEFA14A excerpts show only cover pages."
+}

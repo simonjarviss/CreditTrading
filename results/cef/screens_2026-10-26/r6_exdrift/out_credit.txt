@@ -1,0 +1,30 @@
+credit CEFs, 2005-2022: 3226 events on 17 funds
+-2     5.1
+-1    11.1
+0     -3.2
+1    -10.1
+2     -4.8
+3     -5.6
+4      1.5
+5     -1.9
+n_ev       3226.000
+mean_bp     -20.454
+t_month      -6.765
+Traceback (most recent call last):
+  File "/private/tmp/claude-501/-Users-simonjarvis-Downloads-2027-Projects-Quant---PM2027-2027/767b4ac8-7cb7-4bf6-953a-b785b037a5b4/scratchpad/r6_exdrift/check_credit.py", line 36, in <module>
+    print(ev.groupby("grp")[["car13"]].apply(tstat).round(3).to_string())
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 1826, in apply
+    result = self._python_apply_general(f, self._selected_obj)
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 1887, in _python_apply_general
+    values, mutated = self._grouper.apply_groupwise(f, data, self.axis)
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/core/groupby/ops.py", line 928, in apply_groupwise
+    res = f(group)
+  File "/private/tmp/claude-501/-Users-simonjarvis-Downloads-2027-Projects-Quant---PM2027-2027/767b4ac8-7cb7-4bf6-953a-b785b037a5b4/scratchpad/r6_exdrift/check_credit.py", line 31, in tstat
+    m = g.groupby(g.date.dt.to_period("M"))["car13"].mean()
+                  ^^^^^^
+  File "/opt/anaconda3/lib/python3.13/site-packages/pandas/core/generic.py", line 6321, in __getattr__
+    return object.__getattribute__(self, name)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AttributeError: 'DataFrame' object has no attribute 'date'. Did you mean: '_data'?

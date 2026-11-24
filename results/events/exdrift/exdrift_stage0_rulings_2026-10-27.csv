@@ -1,0 +1,758 @@
+check,ticker,date,ruling,ruled_by,ruled_on
+R1,-,2026-10-27,keep (proposal #9),team lead,2026-10-28
+R10,-,2026-10-27,"KEEP (team lead, 2026-10-28): a basket fund with no declaration found stays in the basket. Stated limitation, named in the opening's report: the hedge basket's exclusion window uses ex-dates that may not have been public at decide time",team lead,2026-10-28
+R2,-,2026-10-27,keep (proposal #10),team lead,2026-10-28
+R3,-,2026-10-27,keep (proposal #11),team lead,2026-10-28
+R4,-,2026-10-27,"keep, applied to the sponsor-release table (proposal #12)",team lead,2026-10-28
+R5,-,2026-10-27,keep (proposal #13),team lead,2026-10-28
+R6,-,2026-10-27,superseded by the X5 rulings by position (proposal #14),team lead,2026-10-28
+R7,-,2026-10-27,keep (proposal #15),team lead,2026-10-28
+R8,-,2026-10-27,as X6: wait for the 202610 vintage (proposal #16),team lead,2026-10-28
+R9,-,2026-10-27,fit-k authorised (proposal #17),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-01-12,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-02-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-03-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-04-13,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-05-12,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-06-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-07-13,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-08-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-09-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-10-13,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-11-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2023-12-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-01-11,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-02-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-03-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-04-12,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-05-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-06-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-07-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-08-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-09-16,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-10-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-11-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2024-12-16,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-01-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-02-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-03-14,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-04-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-05-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-06-13,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-07-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X1_amount_mismatch,BIT,2025-08-15,keep the event: its ex-date is confirmed by both sources; Alpaca's amount is used in the report-only size strata (proposal #2),team lead,2026-10-28
+X2_not_found,JFR,2025-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-02-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-03-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-08-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-10-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-11-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2025-12-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-02-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-03-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-06-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-08-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,JFR,2026-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-02-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-03-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-08-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-10-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-11-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2025-12-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-02-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-03-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-06-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-08-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NAD,2026-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-02-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-03-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-08-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-10-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-11-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2025-12-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-02-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-03-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-06-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-08-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NEA,2026-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-02-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-03-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-08-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-10-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-11-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2025-12-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-02-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-03-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-06-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-08-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NVG,2026-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-02-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-03-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-08-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-10-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-11-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2025-12-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-01-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-02-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-03-13,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-04-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-05-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-06-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-07-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-08-14,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X2_not_found,NZF,2026-09-15,"excluded and counted: no sponsor release found, never guessed (row 1)",team lead,2026-10-28
+X4_no_bar,BIT,2026-02-13,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,BIT,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,DSL,2026-02-18,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,DSL,2026-03-18,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,HYT,2026-02-13,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,HYT,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,JFR,2026-02-13,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,JFR,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,MHD,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,MQY,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NAD,2026-02-13,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NAD,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NEA,2026-02-13,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NEA,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NVG,2026-02-13,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NVG,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NZF,2026-02-13,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,NZF,2026-09-15,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,PCN,2026-02-12,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,PDI,2026-02-12,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,PDO,2026-02-12,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,PFN,2026-02-12,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,PHK,2026-02-12,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_no_bar,PTY,2026-02-12,"fill the close from Alpaca's raw SIP bar, logged per cell; the adjacent bars are checked on one share basis at the opening (proposal #4)",team lead,2026-10-28
+X4_split,BIT,2025-08-19,keep rule 3 (R1): BIT's returns masked within +-5 sessions; the factor is yfinance-only (proposal #5),team lead,2026-10-28
+X5_nav_repeat,AWF,2023-02-07,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2023-04-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2023-08-08,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2023-10-06,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2023-12-08,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2023-12-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-01-05,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-02-02,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-03-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-03-12,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2024-04-05,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-04-08,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-07-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-09-06,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-10-04,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-10-08,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2024-11-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-12-09,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2024-12-10,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2024-12-23,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-05-05,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-05-06,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2025-06-06,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-06-09,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-07-08,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-08-08,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-08-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-09-08,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-10-06,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2025-12-09,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2025-12-23,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2026-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,AWF,2026-01-13,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,AWF,2026-08-11,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2023-04-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2023-11-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2024-05-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2024-05-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2024-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2024-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2025-03-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2025-05-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2025-05-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2025-09-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2025-12-23,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2026-01-23,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2026-02-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2026-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2026-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2026-07-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,BIT,2026-07-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,BIT,2026-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2023-03-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2023-08-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2023-10-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,DSL,2023-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2024-01-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2024-01-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2024-02-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2024-03-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2024-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,DSL,2024-07-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2024-09-20,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2024-09-23,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,DSL,2024-11-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,DSL,2025-04-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2025-08-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,DSL,2025-11-21,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2025-11-24,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,DSL,2026-02-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2026-07-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,DSL,2026-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-01-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-02-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-06-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,HYT,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-11-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2024-02-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2024-02-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,HYT,2024-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2024-10-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2024-11-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,HYT,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-06-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,HYT,2025-07-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-08-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-08-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,HYT,2025-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-10-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,HYT,2025-12-26,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,HYT,2026-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2026-07-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2026-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,HYT,2026-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-02-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-03-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2023-04-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-04-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-05-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2023-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-08-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-09-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-11-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2023-11-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-02-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-03-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2024-04-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2024-05-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-06-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-06-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2024-07-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-07-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2024-08-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2024-09-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-10-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-11-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2024-12-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-01-21,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-02-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-03-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-03-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2025-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-06-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2025-07-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-08-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-08-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2025-09-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-09-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2025-10-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-10-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2025-12-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2025-12-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2026-01-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-01-21,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2026-02-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-02-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2026-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2026-05-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-05-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2026-06-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2026-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-07-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,JFR,2026-08-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-08-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,JFR,2026-09-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2023-05-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2023-09-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2023-11-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2024-02-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2024-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2024-04-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2024-05-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2024-06-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2024-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2024-09-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2024-10-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2024-11-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2025-03-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2025-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2025-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2025-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2025-12-23,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2025-12-24,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2026-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MHD,2026-05-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MHD,2026-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2023-03-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2023-05-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2023-09-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2024-02-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2024-04-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MQY,2024-09-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2024-10-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2025-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2025-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MQY,2025-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2025-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2025-12-23,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,MQY,2025-12-26,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MQY,2026-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,MQY,2026-05-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-02-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-11-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2023-11-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2024-02-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2024-03-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2024-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2024-04-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2024-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2024-08-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2024-09-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2024-10-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2024-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2024-11-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2025-03-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2025-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2025-08-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2025-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2025-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2025-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2025-12-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2026-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2026-02-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2026-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NAD,2026-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NAD,2026-05-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-02-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-11-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2023-11-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2024-02-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2024-02-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2024-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2024-04-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2024-04-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2024-07-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2024-08-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2024-09-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2024-10-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2024-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2024-11-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2025-02-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2025-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2025-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2025-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2025-12-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2025-12-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2026-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2026-02-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2026-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2026-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NEA,2026-04-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NEA,2026-05-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2023-02-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2023-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2023-11-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2024-02-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2024-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NVG,2024-04-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NVG,2024-07-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NVG,2024-11-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NVG,2024-12-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2025-02-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2025-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NVG,2025-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NVG,2025-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2026-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2026-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NVG,2026-04-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NVG,2026-04-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NZF,2023-02-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2023-03-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2023-04-28,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2023-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2023-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2023-12-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2024-04-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NZF,2024-08-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2024-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2024-10-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NZF,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2025-03-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2025-03-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NZF,2025-08-19,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2025-08-20,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NZF,2025-11-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2026-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,NZF,2026-02-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NZF,2026-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,NZF,2026-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2023-05-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2023-05-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2023-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2023-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2023-09-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2023-09-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2024-03-13,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2024-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2024-09-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2024-10-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2024-11-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2024-12-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2024-12-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2025-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2025-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2025-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2025-10-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2025-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2025-12-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2026-01-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2026-01-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2026-02-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2026-02-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PCN,2026-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PCN,2026-06-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2023-01-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2023-04-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2023-05-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2023-05-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2023-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2023-11-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2024-07-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2024-07-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2024-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2024-09-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2024-10-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2024-11-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2024-12-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2025-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2025-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2025-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2025-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2026-01-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2026-02-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2026-02-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2026-04-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDI,2026-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDI,2026-08-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2023-01-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2023-01-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2023-02-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2023-05-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2023-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2024-01-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2024-01-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2024-03-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2024-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2024-07-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2024-10-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2025-02-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2025-03-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2025-05-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2025-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2025-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2025-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2026-01-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2026-01-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2026-02-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2026-02-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2026-04-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PDO,2026-04-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PDO,2026-08-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2023-04-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2023-05-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2023-05-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2023-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2023-06-14,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2023-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2023-09-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2023-09-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2023-09-13,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-01-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2024-02-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-03-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-03-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-03-13,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2024-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2024-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2024-09-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-10-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-11-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-11-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2024-12-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-12-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2024-12-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2025-01-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-03-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-10-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2025-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2025-12-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2025-12-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2026-01-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2026-01-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2026-02-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2026-02-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2026-02-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2026-03-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2026-04-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2026-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2026-07-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PFN,2026-08-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PFN,2026-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-02-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-04-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-04-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-05-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-05-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-05-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2023-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-06-14,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2023-09-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-10-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2023-10-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2023-11-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-01-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-01-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2024-03-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-04-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-04-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2024-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-05-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-06-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2024-07-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-07-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2024-09-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-10-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-11-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-12-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-12-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2024-12-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2025-01-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-01-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2025-02-18,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-03-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2025-05-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-06-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-06-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2025-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-10-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2025-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2025-12-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2025-12-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2026-01-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2026-01-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2026-02-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2026-02-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2026-02-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2026-04-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2026-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2026-05-14,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2026-06-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2026-08-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PHK,2026-08-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PHK,2026-09-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2023-01-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2023-05-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2023-05-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2023-07-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2023-08-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2023-08-15,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2023-09-11,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2024-01-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2024-03-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2024-07-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2024-09-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2024-11-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2024-12-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2024-12-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2025-02-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2025-03-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2025-06-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2025-09-16,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2025-10-17,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2025-11-17,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2025-11-19,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2025-12-12,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2026-01-14,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2026-01-15,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat,PTY,2026-02-18,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2026-04-16,"exclude the event from the NAV leg only, counted: a stale NAV(e+3) truncates the window (proposal #7)",team lead,2026-10-28
+X5_nav_repeat,PTY,2026-05-13,book as is: a repeat on e+1 or e+2 leaves the three-row NAV sum unchanged to first order (proposal #7),team lead,2026-10-28
+X5_nav_repeat_on_e,BIT,2023-10-13,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,DSL,2023-02-15,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,HYT,2023-05-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,HYT,2023-10-13,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,JFR,2023-05-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,MHD,2023-10-13,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,MHD,2024-06-14,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,MQY,2023-10-13,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,MQY,2024-04-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NAD,2023-05-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NAD,2024-04-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NAD,2025-01-15,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NEA,2023-05-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NVG,2023-05-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NVG,2024-04-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NZF,2023-05-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,NZF,2024-04-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PCN,2023-06-09,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PCN,2023-11-10,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDI,2023-06-09,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDI,2023-11-10,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDI,2023-12-08,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDI,2024-09-13,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDO,2023-06-09,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDO,2023-09-08,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDO,2023-11-10,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDO,2023-12-08,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDO,2024-09-13,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PDO,2025-05-12,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PFN,2023-06-09,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PFN,2023-11-10,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PFN,2023-12-08,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PHK,2023-06-09,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PHK,2023-11-10,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PHK,2023-12-08,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PTY,2023-06-09,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X5_nav_repeat_on_e,PTY,2023-11-10,"exclude the event from the NAV leg only, counted (proposal #6)",team lead,2026-10-28
+X6_FF6_uncovered,FF6,2026-10-01,wait for French's 202610 vintage before the opening; `open` re-measures the coverage (proposal #8),team lead,2026-10-28

@@ -1,0 +1,229 @@
+{
+ "edgar": {
+  "ran_utc": "2026-10-19T19:46:28+00:00",
+  "index": "2008Q1-2026Q4 master.gz, offline cache (fetched 2026-10-12)",
+  "last_date_filed_seen": "2026-10-09",
+  "live_requests": 0,
+  "fund_set_size": 2371
+ },
+ "crsp": {
+  "ran_utc": "2026-10-19T19:49:35+00:00",
+  "count_window": "2010-01-01..2024-12-31 (counts)",
+  "adv_window": "IPOs with begdat + 40d < 2023-01-01; dsf < 2023 only",
+  "spin_off_children_excluded_total": 655
+ },
+ "r2_crosscheck": {
+  "ran_utc": "2026-10-19T19:52:02+00:00",
+  "sdc_filter": "ipo='Yes', nation='United States', security in ('Common Shares', 'Ord/Common Shs.', 'Class A Shares', 'Ordinary Shares', 'Class A Ord Shs', 'Class B Shares'), sicp<>'6770'",
+  "tr_filter": "formtype='4', trancode='P', acqdisp='A', distinct (dcn, seqnum)"
+ },
+ "alpaca_k5": {
+  "ran_utc": "2026-10-19T19:52:34+00:00",
+  "alpaca_clock": "2026-10-19 15:52:28.720633-04:00",
+  "today": "2026-10-19",
+  "n_active_assets": 14412,
+  "sec_ticker_file": "company_tickers_exchange.json fetched 2026-10-12 (cached)",
+  "near_day_150_210": {
+   "ipo_window": [
+    "2026-03-23",
+    "2026-05-22"
+   ],
+   "ipo_ciks": 37,
+   "with_sec_ticker_2026_10_12": 36,
+   "active_at_alpaca": 36,
+   "shortable": 15,
+   "easy_to_borrow": 15,
+   "shortable_share_of_active": 0.4166666666666667,
+   "etb_share_of_active": 0.4166666666666667
+  },
+  "all_2025": {
+   "ipo_ciks": 205,
+   "with_sec_ticker_2026_10_12": 197,
+   "active_at_alpaca": 193,
+   "shortable": 66,
+   "easy_to_borrow": 66,
+   "shortable_share_of_active": 0.34196891191709844,
+   "etb_share_of_active": 0.34196891191709844
+  },
+  "by_month_2025": {
+   "2025-01": {
+    "ipo_ciks": 21,
+    "with_sec_ticker_2026_10_12": 20,
+    "active_at_alpaca": 19,
+    "shortable": 4,
+    "easy_to_borrow": 4,
+    "shortable_share_of_active": 0.21052631578947367,
+    "etb_share_of_active": 0.21052631578947367
+   },
+   "2025-02": {
+    "ipo_ciks": 19,
+    "with_sec_ticker_2026_10_12": 19,
+    "active_at_alpaca": 19,
+    "shortable": 7,
+    "easy_to_borrow": 7,
+    "shortable_share_of_active": 0.3684210526315789,
+    "etb_share_of_active": 0.3684210526315789
+   },
+   "2025-03": {
+    "ipo_ciks": 15,
+    "with_sec_ticker_2026_10_12": 15,
+    "active_at_alpaca": 15,
+    "shortable": 2,
+    "easy_to_borrow": 2,
+    "shortable_share_of_active": 0.13333333333333333,
+    "etb_share_of_active": 0.13333333333333333
+   },
+   "2025-04": {
+    "ipo_ciks": 19,
+    "with_sec_ticker_2026_10_12": 19,
+    "active_at_alpaca": 19,
+    "shortable": 1,
+    "easy_to_borrow": 1,
+    "shortable_share_of_active": 0.05263157894736842,
+    "etb_share_of_active": 0.05263157894736842
+   },
+   "2025-05": {
+    "ipo_ciks": 12,
+    "with_sec_ticker_2026_10_12": 10,
+    "active_at_alpaca": 9,
+    "shortable": 4,
+    "easy_to_borrow": 4,
+    "shortable_share_of_active": 0.4444444444444444,
+    "etb_share_of_active": 0.4444444444444444
+   },
+   "2025-06": {
+    "ipo_ciks": 16,
+    "with_sec_ticker_2026_10_12": 16,
+    "active_at_alpaca": 16,
+    "shortable": 9,
+    "easy_to_borrow": 9,
+    "shortable_share_of_active": 0.5625,
+    "etb_share_of_active": 0.5625
+   },
+   "2025-07": {
+    "ipo_ciks": 22,
+    "with_sec_ticker_2026_10_12": 21,
+    "active_at_alpaca": 19,
+    "shortable": 7,
+    "easy_to_borrow": 7,
+    "shortable_share_of_active": 0.3684210526315789,
+    "etb_share_of_active": 0.3684210526315789
+   },
+   "2025-08": {
+    "ipo_ciks": 22,
+    "with_sec_ticker_2026_10_12": 20,
+    "active_at_alpaca": 20,
+    "shortable": 6,
+    "easy_to_borrow": 6,
+    "shortable_share_of_active": 0.3,
+    "etb_share_of_active": 0.3
+   },
+   "2025-09": {
+    "ipo_ciks": 19,
+    "with_sec_ticker_2026_10_12": 18,
+    "active_at_alpaca": 18,
+    "shortable": 12,
+    "easy_to_borrow": 12,
+    "shortable_share_of_active": 0.6666666666666666,
+    "etb_share_of_active": 0.6666666666666666
+   },
+   "2025-10": {
+    "ipo_ciks": 20,
+    "with_sec_ticker_2026_10_12": 20,
+    "active_at_alpaca": 20,
+    "shortable": 4,
+    "easy_to_borrow": 4,
+    "shortable_share_of_active": 0.2,
+    "etb_share_of_active": 0.2
+   },
+   "2025-11": {
+    "ipo_ciks": 12,
+    "with_sec_ticker_2026_10_12": 12,
+    "active_at_alpaca": 12,
+    "shortable": 5,
+    "easy_to_borrow": 5,
+    "shortable_share_of_active": 0.4166666666666667,
+    "etb_share_of_active": 0.4166666666666667
+   },
+   "2025-12": {
+    "ipo_ciks": 8,
+    "with_sec_ticker_2026_10_12": 7,
+    "active_at_alpaca": 7,
+    "shortable": 5,
+    "easy_to_borrow": 5,
+    "shortable_share_of_active": 0.7142857142857143,
+    "etb_share_of_active": 0.7142857142857143
+   }
+  },
+  "ipo_attribute_seen": 0
+ },
+ "k5_size_split": {
+  "ran_utc": "2026-10-19T19:53:19+00:00",
+  "near_day_150_210": {
+   "n": 36,
+   "sdc_matched": 20,
+   "ge_100m": {
+    "n": 16,
+    "shortable": 11
+   },
+   "lt_100m": {
+    "n": 4,
+    "shortable": 0
+   }
+  },
+  "all_2025": {
+   "n": 193,
+   "sdc_matched": 55,
+   "ge_100m": {
+    "n": 40,
+    "shortable": 39
+   },
+   "lt_100m": {
+    "n": 15,
+    "shortable": 6
+   }
+  },
+  "hedge_flags_today": {
+   "IWM": {
+    "shortable": true,
+    "etb": true
+   },
+   "SPY": {
+    "shortable": true,
+    "etb": true
+   },
+   "IJR": {
+    "shortable": true,
+    "etb": true
+   },
+   "XLF": {
+    "shortable": true,
+    "etb": true
+   },
+   "XLK": {
+    "shortable": true,
+    "etb": true
+   },
+   "XLV": {
+    "shortable": true,
+    "etb": true
+   },
+   "XLE": {
+    "shortable": true,
+    "etb": true
+   },
+   "XLI": {
+    "shortable": true,
+    "etb": true
+   },
+   "XBI": {
+    "shortable": true,
+    "etb": true
+   },
+   "KRE": {
+    "shortable": false,
+    "etb": false
+   }
+  }
+ }
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1395999,
+  "episode_accession": "0000088053-10-001487",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "DWS RREEF World Real Estate Fund, Inc.", "cik": 1395999, "ticker": "DRP"},
+      "acquirer": {"name": "DWS RREEF Global Real Estate Securities Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000088053-10-001716", "quote": "calling for the merger of your Fund into the DWS RREEF Global Real Estate Securities Fund, an open-end investment company."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000088053-10-001487", "date": "2010-10-04", "quote": "Completion of the proposed merger is subject to a number of conditions and other factors, including final Board approval and approval by shareholders."},
+      "outcome_evidence": null,
+      "notes": "Closed-end DRP (NYSE) merging into an open-end fund. The October 2010 press release excerpt does not name the acquirer; the December 2010 proxy reminder does. Stockholders approved on January 12, 2011 (0000088053-11-000215), the merger was expected to complete on or about February 25, 2011, and the N-8F (0000088053-12-000035) records a merger deregistration with a shareholder vote on 1/12/11 and distributions on 2/28/11."
+    }
+  ],
+  "problems": ""
+}

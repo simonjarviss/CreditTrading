@@ -1,0 +1,95 @@
+{
+ "episode_cik": 1579412,
+ "episode_accession": "0001193125-19-164377",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "FS Investment Corporation III",
+    "cik": 1579412,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "FS Investment Corporation II",
+    "cik": 1525759,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-19-164189",
+    "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-19-164189",
+    "date": "2019-06-03",
+    "quote": "FS/KKR Advisor, LLC (FS/KKR), a partnership between FS Investments and KKR Credit Advisors (US) LLC, today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "outcome_evidence": {
+    "accession": "0001193125-19-164189",
+    "date": "2019-06-03",
+    "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "notes": "Funds are non-traded BDCs; listing on the NYSE was planned only for the combined entity after the mergers. The shareholder vote approved the mergers (8-K 0001193125-19-298805, 2019-11-22) and the closing of the mergers was announced in 8-K 0001193125-19-317712 filed 2019-12-18."
+  },
+  {
+   "target": {
+    "name": "FS Investment Corporation IV",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "FS Investment Corporation II",
+    "cik": 1525759,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-19-164189",
+    "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-19-164189",
+    "date": "2019-06-03",
+    "quote": "FS/KKR Advisor, LLC (FS/KKR), a partnership between FS Investments and KKR Credit Advisors (US) LLC, today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "outcome_evidence": {
+    "accession": "0001193125-19-164189",
+    "date": "2019-06-03",
+    "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "notes": "Funds are non-traded BDCs; listing on the NYSE was planned only for the combined entity after the mergers. The shareholder vote approved the mergers (8-K 0001193125-19-298805, 2019-11-22) and the closing of the mergers was announced in 8-K 0001193125-19-317712 filed 2019-12-18. CIK of this target does not appear in a FILING header."
+  },
+  {
+   "target": {
+    "name": "Corporate Capital Trust II",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "FS Investment Corporation II",
+    "cik": 1525759,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-19-164189",
+    "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-19-164189",
+    "date": "2019-06-03",
+    "quote": "FS/KKR Advisor, LLC (FS/KKR), a partnership between FS Investments and KKR Credit Advisors (US) LLC, today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "outcome_evidence": {
+    "accession": "0001193125-19-164189",
+    "date": "2019-06-03",
+    "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"
+   },
+   "notes": "Funds are non-traded BDCs; listing on the NYSE was planned only for the combined entity after the mergers. The shareholder vote approved the mergers (8-K 0001193125-19-298805, 2019-11-22) and the closing of the mergers was announced in 8-K 0001193125-19-317712 filed 2019-12-18. CIK of this target does not appear in a FILING header."
+  }
+ ],
+ "problems": ""
+}

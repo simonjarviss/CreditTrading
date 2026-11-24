@@ -1,0 +1,61 @@
+{
+ "source": "R2 tr_sdc_ni.wrds_ni_details (SDC New Issues), read 2026-10-19; last deal date in pull 2026-07-02",
+ "definition": "offer price == 25, exchange New York/Nasdaq/American, security text preferred/depositary, not CONV/MANDATORY/EXCH/UNIT/WARRANT/RIGHT",
+ "per_year_preferred_us_listed": {
+  "2015": 43,
+  "2016": 75,
+  "2017": 68,
+  "2018": 37,
+  "2019": 73,
+  "2020": 59,
+  "2021": 71,
+  "2022": 11,
+  "2023": 7,
+  "2024": 9,
+  "2025": 13
+ },
+ "per_year_preferred_unique_issuers": {
+  "2015": 36,
+  "2016": 56,
+  "2017": 60,
+  "2018": 33,
+  "2019": 57,
+  "2020": 46,
+  "2021": 53,
+  "2022": 10,
+  "2023": 7,
+  "2024": 8,
+  "2025": 13
+ },
+ "per_year_notes_at_25_us_listed": {
+  "2015": 2,
+  "2016": 2,
+  "2017": 1,
+  "2021": 1
+ },
+ "preferred_share_with_calldate": 0.682,
+ "preferred_callprice_values": {
+  "25.0": 292,
+  "6.25": 14,
+  "100.0": 1,
+  "1000.0": 1,
+  "25.5": 1
+ },
+ "listing_date_equals_deal_date_share": 0.914,
+ "security_text_top": {
+  "Cum Red Pfd Shs": 141,
+  "Depositary Shs": 69,
+  "NonCum Pref Stk": 59,
+  "Non-Cum Pref Sh": 55,
+  "Preferred Shs": 35,
+  "Cum Preferred": 33,
+  "Cum Perp Pfd St": 17,
+  "Preference Shs": 11
+ },
+ "preferred_summary": {
+  "mean": 42.4,
+  "median": 43.0,
+  "min": 7,
+  "max": 75
+ }
+}

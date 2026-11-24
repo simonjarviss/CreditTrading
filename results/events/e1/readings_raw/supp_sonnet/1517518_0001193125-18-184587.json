@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1517518,
+  "episode_accession": "0001193125-18-184587",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "ClearBridge American Energy MLP Fund Inc.", "cik": 1570318, "ticker": null},
+      "acquirer": {"name": "ClearBridge Energy MLP Opportunity Fund Inc.", "cik": 1517518, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-184587", "date": "2018-06-05", "quote": "ClearBridge American Energy MLP Fund Inc. and ClearBridge Energy MLP Opportunity Fund Inc. Announce Board Approval of Proposed Merger Plan"},
+      "outcome_evidence": null,
+      "notes": "The excerpts never print a ticker or exchange for the target (CBA is named only as an abbreviation in the N-14), and the only exchange listing shown is for the acquirer renamed ClearBridge Energy Midstream Opportunity Fund Inc. (NYSE: EMO) in the 2019-01-02 press release, so both_listed is null. No excerpt states completion, termination or a vote result: the 2018-09-26, 2018-10-11 and 2018-10-29 DEFA14A filings are shown only as cover pages; the later 2019-2020 filings concern a name change, bylaws and Legg Mason/Franklin Templeton management agreements, not this merger. The acquirer's later name (ClearBridge Energy Midstream Opportunity Fund Inc.) is not treated as proof of completion."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt; DEFA14A filings of autumn 2018 are cut off at the cover page."
+}

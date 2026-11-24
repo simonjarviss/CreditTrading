@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1414932,
+  "episode_accession": "0001193125-22-245123",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Oaktree Strategic Income II, Inc.", "cik": 1744179, "ticker": null},
+      "acquirer": {"name": "Oaktree Specialty Lending Corporation", "cik": 1414932, "ticker": "OCSL"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-22-245119", "date": "2022-09-15", "quote": "today announced that they have entered into an agreement to merge together with OCSL as the surviving company, subject to stockholder approval and customary closing conditions."},
+      "outcome_evidence": {"accession": "0001193125-23-012750", "date": "2023-01-23", "quote": "On January 23, 2023, OCSL completed its previously announced acquisition of Oaktree Strategic Income II, Inc."},
+      "notes": "OCSL is shown as NASDAQ-listed; the excerpts give no exchange or ticker for Oaktree Strategic Income II, Inc., so both_listed is null. Both stockholder bases approved on January 20, 2023 (accession 0001193125-23-011352 is a different 8-K; the approval press release is 0001193125-23-012152). Described as a two-step merger with OCSL as surviving company."
+    }
+  ],
+  "problems": ""
+}

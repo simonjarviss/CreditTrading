@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1479238,
+  "episode_accession": "0001193125-19-062859",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund 2", "cik": 1479238, "ticker": "JMT"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062859", "date": "2019-03-05", "quote": "As part of the proposal, shareholders will be asked to vote on a merger of their fund with a new fund, Nuveen Mortgage and Income Fund."},
+      "outcome_evidence": {"accession": "0001193125-19-155549", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal , asks shareholders of each fund to vote to amend the charter and eliminate the term structure."},
+      "notes": "Target JMT is shown as NYSE-listed (NYSE: JMT), but the acquirer is described only as 'a new fund' with no listing shown, so both_listed is null. Press release dated February 28, 2019, filed as 425 on 2019-03-05. Merger replaced by charter-amendment plus 100 percent tender offer proposals (DEFA14A 2019-05-23). JMT's later N-8F (2020-03-11) states Liquidation and no shareholder vote, consistent with no merger."
+    },
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund", "cik": null, "ticker": "JLS"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062859", "date": "2019-03-05", "quote": "As part of the proposal, shareholders will be asked to vote on a merger of their fund with a new fund, Nuveen Mortgage and Income Fund."},
+      "outcome_evidence": {"accession": "0001193125-19-155549", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal , asks shareholders of each fund to vote to amend the charter and eliminate the term structure."},
+      "notes": "Sister fund of the episode fund, included because the same filings propose its merger into the same new fund. JLS CIK does not appear in any FILING header line. Acquirer listing not shown."
+    }
+  ],
+  "problems": ""
+}

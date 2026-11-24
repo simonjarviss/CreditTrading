@@ -1,0 +1,29 @@
+# quantt-c4-collect.service : C4's nightly data collector, read-only at Alpaca.
+# It appends to prod's own data/cef_c4/ panels (fetch_daily --data-book c4,
+# fetch_cef_distributions.py --data-book c4) and reads no CEFConnect.
+#
+# RENDERED by quantt/deploy/install_vm.py --book c4 from release tag ${TAG}. Do
+# not hand-edit the installed copy. Started only by quantt-c4-collect.timer.
+# QUANTT_EOD_FROM is the date C4's paper account was first funded, given to the
+# installer as --eod-from (required, no default; the team lead's): the collector
+# dates the official end-of-day P&L from it (quantt/collect/collect.py, THE C4
+# BOOK). Exit 5 (INCOMPLETE) shows as failed, as for the core's collector.
+[Unit]
+Description=QUANTT C4 data collector (release ${TAG})
+Wants=quantt-c4-secret.service
+After=quantt-c4-secret.service
+
+[Service]
+Type=oneshot
+User=${USER}
+Group=${USER}
+WorkingDirectory=${PROD_DIR}
+Environment=DRY_RUN=${DRY_RUN}
+Environment=QUANTT_STATE_DIR=${STATE_DIR}
+Environment=QUANTT_ENV_FILE=${ENV_FILE}
+Environment=PATH=${PATH}
+Environment=PYTHONUNBUFFERED=1
+Environment=QUANTT_EOD_FROM=${EOD_FROM}
+ExecStart=${PYTHON} -m quantt.collect --book c4
+StandardOutput=append:${LOG_DIR}/collect.out.log
+StandardError=append:${LOG_DIR}/collect.err.log

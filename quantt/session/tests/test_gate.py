@@ -241,6 +241,105 @@ def test_data_refresh_timeout_string_refuses():
     assert [r.gate for r in rs] == ["data"] and "did not complete" in rs[0].detail
 
 
+# ---------------------------------------- 5, the missing-NAV hold (data.missing_nav)
+
+LATE_BBB = {**{s: ASOF for s in UNI}, "BBB": dt.date(2026, 9, 25)}
+
+
+def hold(**over):
+    """gate 5 with the key on, min_names 2 (so at most 1 of the 3 may be held)."""
+    kw = dict(asof=ASOF, refresh_exit=4, close_dates={s: ASOF for s in UNI},
+              nav_dates=LATE_BBB, universe=UNI, final=True, min_names=2, max_sessions=2,
+              held_before={"BBB": 0})
+    kw.update(over)
+    return gt.missing_nav_hold(**kw)
+
+
+def test_missing_nav_hold_from_the_final_check_holds_the_name_and_refuses_nothing():
+    v = hold()
+    assert v["action"] == "held" and v["refusals"] == [] and list(v["held"]) == ["BBB"]
+    assert "no NAV dated 2026-09-28 (the panel's last is 2026-09-25)" in v["held"]["BBB"]
+    assert v["missing"] == {"BBB": "2026-09-25"} and v["max_held"] == 1
+    # evaluate sees the same gate 5: no data refusal at all.
+    f = good(refresh_exit=4, nav_dates=LATE_BBB, missing_nav="hold", min_names=2,
+             data_final=True, missing_nav_max_sessions=2, missing_nav_held_before={"BBB": 0})
+    assert gates(f) == []
+
+
+def test_missing_nav_hold_before_the_final_check_defers_with_todays_refusals():
+    v = hold(final=False)
+    today = gt.gate_data(ASOF, 4, {s: ASOF for s in UNI}, LATE_BBB, UNI)
+    assert v["action"] == "deferred" and v["held"] == {}
+    assert v["refusals"][:-1] == today and "deferred" in v["refusals"][-1].detail
+    assert [r.gate for r in v["refusals"]] == ["data"] * (len(today) + 1)
+
+
+@pytest.mark.parametrize("over, why", [
+    ({"close_dates": {**{s: ASOF for s in UNI}, "BBB": dt.date(2026, 9, 25)}}, "close"),
+    ({"close_dates": {"AAA": ASOF, "CCC": ASOF}}, "close"),
+    ({"nav_dates": {**LATE_BBB, "CCC": None}}, "no NAV at all"),
+    ({"refresh_exit": "timed out after 60s"}, "refresh failed"),
+    ({"refresh_exit": 3}, "refresh failed"),
+    ({"nav_dates": {s: ASOF for s in UNI}}, "disagree"),
+    ({"nav_dates": {**LATE_BBB, "CCC": dt.date(2026, 9, 25)},
+      "held_before": {"BBB": 0, "CCC": 0}}, "broken feed"),
+])
+def test_missing_nav_hold_refuses_what_it_is_not_for(over, why):
+    """A missing price, a NAV never captured, a failed refresh, a fetcher/panel
+    disagreement: gate 5's refusals, unchanged. More missing NAVs than
+    n - min_names: refused, the reason added."""
+    for final in (True, False):
+        v = hold(final=final, **over)
+        kw = {k: over.get(k, d) for k, d in (("refresh_exit", 4),
+                                             ("close_dates", {s: ASOF for s in UNI}),
+                                             ("nav_dates", LATE_BBB))}
+        today = gt.gate_data(ASOF, kw["refresh_exit"], kw["close_dates"], kw["nav_dates"], UNI)
+        assert v["action"] == "refused" and v["held"] == {} and why in v["why"], v
+        if why == "broken feed":
+            assert v["refusals"][:-1] == today and "at most 1 may be held" in \
+                v["refusals"][-1].detail
+        else:
+            assert v["refusals"] == today
+
+
+def test_missing_nav_hold_limit_is_n_minus_min_names_and_final_is_a_bool():
+    assert gt.max_missing_nav_holds(13, 6) == 7 and gt.max_missing_nav_holds(5, 6) == 0
+    for bad in (0, True, 6.0, None):
+        with pytest.raises(ValueError):
+            gt.max_missing_nav_holds(13, bad)
+    for bad in (None, 1, "yes"):
+        with pytest.raises(ValueError):
+            hold(final=bad)
+    assert hold(nav_dates={s: ASOF for s in UNI}, refresh_exit=0)["action"] == "none"
+
+
+def test_missing_nav_hold_age_limit_refuses_after_max_sessions_and_on_an_unread_count():
+    """The age limit (team lead 2026-10-29, a policy): held through session
+    max_sessions; the session after, refused with today's refusals plus a line
+    naming the fund and its count; a count that could not be read refuses."""
+    today = gt.gate_data(ASOF, 4, {s: ASOF for s in UNI}, LATE_BBB, UNI)
+    v = hold(held_before={"BBB": 1})                      # this would be session 2 of 2
+    assert v["action"] == "held" and "session 2 of at most 2" in v["held"]["BBB"]
+    v = hold(held_before={"BBB": 2})                      # session 3: over the limit
+    assert v["action"] == "refused" and v["held"] == {}
+    assert v["refusals"][:-1] == today
+    last = v["refusals"][-1].detail
+    assert "BBB" in last and "2 consecutive sessions" in last and \
+        "missing_nav_max_sessions = 2" in last
+    v = hold(held_before={"BBB": "no plan.json for the session 2026-09-25"})
+    assert v["action"] == "refused" and "cannot be counted" in v["refusals"][-1].detail
+    assert v["refusals"][:-1] == today
+    for bad_count in (-1, True, 1.0, None):
+        with pytest.raises(ValueError):
+            hold(held_before={"BBB": bad_count})
+    with pytest.raises(ValueError):                       # a held name without its count
+        hold(held_before={})
+    for bad in (0, -1, True, 2.0, "2", None):
+        with pytest.raises(ValueError):
+            hold(max_sessions=bad)
+    assert hold(final=False, held_before=None)["action"] == "deferred"   # not read before final
+
+
 # ------------------------------------------------------ 6 no set in auction
 
 def test_started_refuses():

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1400897,
+  "episode_accession": "0000894189-20-000802",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "The Cushing ® Energy Income Fund", "cik": 1526629, "ticker": "SRF"},
+      "acquirer": {"name": "The Cushing ® MLP & Infrastructure Total Return Fund", "cik": 1400897, "ticker": "SRV"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000894189-20-000802", "quote": "The Board of Trustees (the “Board”) of The Cushing ® Energy Income Fund (NYSE: SRF) and The Cushing ® MLP & Infrastructure Total Return Fund (NYSE: SRV), each a closed-end fund (together, the “Funds”), announced today that each Fund’s Board has approved the merger of SRF with and into SRV."},
+      "outcome": null,
+      "announcement": {"accession": "0000894189-20-000802", "date": "2020-01-30", "quote": "The Board of Trustees (the “Board”) of The Cushing ® Energy Income Fund (NYSE: SRF) and The Cushing ® MLP & Infrastructure Total Return Fund (NYSE: SRV), each a closed-end fund (together, the “Funds”), announced today that each Fund’s Board has approved the merger of SRF with and into SRV."},
+      "outcome_evidence": null,
+      "notes": "The 2020-05-01 425 (0000894189-20-003464) says 'At the special meeting, shareholders of SRF voted to approve the Merger.' The 2020-05-04 425 (0000894189-20-003537) says the SRV Special Meeting 'has been adjourned until Friday, May 8, 2020 at 9:00 a.m. Central time to allow us more time to solicit votes.' The N-14 states 'The Merger will be consummated if the Target Fund’s shareholders and the Acquiring Fund’s shareholders each approve the Merger.' No filing in the excerpts states the final SRV vote or that the merger was completed, terminated or failed."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts: the last merger filing in the window is the 2020-05-04 adjournment notice for the SRV (acquirer) special meeting. The 2021-04-20 DEF 14A shows only a cover page."
+}

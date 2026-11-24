@@ -1,0 +1,38 @@
+{
+  "episode_cik": 870780,
+  "episode_accession": "0001193125-13-293168",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Pennsylvania Premium Income Municipal Fund 2", "cik": null, "ticker": "NPY"},
+      "acquirer": {"name": "Nuveen Pennsylvania Investment Quality Municipal Fund", "cik": 870780, "ticker": "NQP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-13-381455", "date": "2013-09-27", "quote": "Nuveen Pennsylvania Investment Quality Municipal Fund (NQP) Nuveen Pennsylvania Premium Income Municipal Fund 2 (NPY)"},
+      "outcome_evidence": null,
+      "notes": "Excerpts never state the outcome. The 425 lists four subject companies; tickers are printed for NQP and NPY only, with no exchange named."
+    },
+    {
+      "target": {"name": "Nuveen Pennsylvania Dividend Advantage Municipal Fund", "cik": 1087787, "ticker": null},
+      "acquirer": {"name": "Nuveen Pennsylvania Investment Quality Municipal Fund", "cik": 870780, "ticker": "NQP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-13-381455", "date": "2013-09-27", "quote": "Nuveen Pennsylvania Dividend Advantage Municipal Fund Commission File No. 811-09457"},
+      "outcome_evidence": null,
+      "notes": "The 2013-11-26 425 (0001193125-13-454117) says for this fund 'Annual Meeting - Next Adjournment Ends December 17, 2013', so its vote was being adjourned; no excerpt states how it ended."
+    },
+    {
+      "target": {"name": "Nuveen Pennsylvania Dividend Advantage Municipal Fund 2", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen Pennsylvania Investment Quality Municipal Fund", "cik": 870780, "ticker": "NQP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-13-381455", "date": "2013-09-27", "quote": "Nuveen Pennsylvania Dividend Advantage Municipal Fund 2 Commission File No. 811-10549"},
+      "outcome_evidence": null,
+      "notes": "Outcome not stated in any excerpt."
+    }
+  ],
+  "problems": "Excerpts are mostly cover pages and boilerplate; no filing excerpt states any merger outcome. Roles inferred from the 425 filed by NQP naming it first among subject companies and the N-14 registrant being NQP."
+}

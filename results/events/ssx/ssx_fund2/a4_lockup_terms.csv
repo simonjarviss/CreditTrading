@@ -1,0 +1,23 @@
+ticker,cik,accession,listing_date,status,n_release_events,release_dates,affiliate_only_offsets,quote_verified,quote
+KIPO,1444706,0001157523-11-006852,2011-12-12,none_found,0,,,True,Our planned December 12 th listing date allows us to fulfill our commitment to investors
+TSLX,1508655,0001193125-14-110468,2014-03-21,coded,2,2014-09-17;2014-12-16,365,True,180 days after the date of this prospectus for all shares of common stock held by those stockholders and 270 days after the date of this prospectus for 50% of the shares
+FSIC,1422183,0001193125-14-058066,2014-04-16,none_found,0,,,True,The Company expects that the Tender Offer will commence at the time of the Listing
+CGBD,1544206,0001193125-17-203505,2017-06-14,coded,4,2017-12-11;2018-12-06;2019-06-04;2019-12-01,,True,During the period beginning 720 days after the Release Date and thereafter: any remaining Pre-IPO Shares
+CCT,1494538,0001387131-17-005250,2017-11-14,none_found,0,,,True,The Company currently expects that the Listing-Related Tender Offer will commence at the time of the Listing
+BCSF,1655050,0001047469-18-007272,2018-11-15,coded,1,2019-05-14,,True,Stockholders that purchased our shares of common stock prior to this offering are not permitted to transfer their shares without our and our Advisor's prior written consent until such date that is 180 days after the completion of this offering
+ORCC,1655888,0001193125-19-196326,2019-07-18,coded,3,2020-01-14;2020-04-13;2020-07-17,540,True,(iii) one-third of the shares of our common stock held by such shareholder prior to the date of an Exchange Listing for 365 days following the Exchange Listing
+CCAP,1633336,0001193125-20-022152,2020-02-03,none_found,0,,,True,the Company has agreed to repurchase in open market transactions
+FSKR,1525759,0001387131-20-005741,2020-06-17,none_found,0,,,False,
+TRIN,1786108,0001104659-21-009495,2021-01-29,not_established,0,,,True,Transfer Restrictions/Lock-up Periods Under the Common Stock Registration Rights Agreement
+CION,1534254,0001140361-21-032445,2021-10-05,none_found,0,,,False,
+RWAY,1653384,0001104659-21-128483,2021-10-21,coded,5,2022-04-19;2022-07-18;2022-10-16;2022-10-21;2023-01-14,,True,will not be subject to any transfer restrictions on the 270th day following the expiration of the initial 180 day lock-up period
+BXSL,1736035,0001193125-21-313514,2021-10-28,coded,4,2022-01-03;2022-03-01;2022-05-01;2022-07-01,,True,"(iv) 50% of the common shares held by such shareholder prior to the later of 240 days following an Exchange Listing and July 1, 2022"
+PSBD,1794776,0001213900-24-004584,2024-01-18,coded,3,2024-07-16;2024-10-14;2025-01-12,,True,"for 360 days following this offering, a shareholder is not permitted"
+MSDL,1782524,0001104659-24-006251,2024-01-24,coded,3,2024-07-22;2024-10-20;2025-01-23,365,True,the remaining 33% of the shares of the Company's Common Stock held by such stockholder prior to this offering will be released from such transfer restrictions 365 days after the date of the prospectus
+NCDL,1737924,0001628280-24-002305,2024-01-25,coded,3,2024-04-25;2024-07-24;2024-10-22,365,True,beginning with the 181st day following the date of this prospectus through the 270th day following the date of this prospectus
+OBDE,1807427,0001193125-24-008555,2024-01-25,coded,3,2024-07-23;2024-10-21;2025-01-24,,True,"Lock-ups expire on one third of remaining position at each of 180 days, 270 days, and 365 days post-listing"
+KBDC,1747172,0001213900-24-046057,2024-05-22,coded,3,2024-11-18;2025-02-16;2025-05-22,,True,the remaining 33.3% of the shares of the Company's Common Stock held by such stockholder prior to this offering will be released from such transfer restrictions 365 days after the date of the prospectus
+MSIF,1535778,0001535778-25-000050,2025-01-29,coded,3,2025-07-28;2025-10-26;2026-01-29,,True,180 days after the Trading Date for one-third of the Restricted Shares held by such stockholder
+OTF,1747777,0001193125-25-134115,2025-06-12,coded,3,2025-12-09;2026-03-09;2026-06-12,,True,"Lock-ups expire on one third of remaining position at each of 180 days, 270 days, and 365 days post-listing"
+TCPC,1370755,0001047469-12-003911,2012-04-04,sensitivity,1,2012-10-01,1095,True,The term of the lock-up agreements entered into by non-affiliates is for a period of 180 days after the date of the underwriting agreement
+FSSL,2065812,0001104659-25-103244,2025-11-13,sensitivity_none_found,0,,,False,

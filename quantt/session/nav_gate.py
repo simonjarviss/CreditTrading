@@ -195,7 +195,15 @@ def panel_rows(nav, asof: dt.date, universe) -> dict:
     Yahoo served, which is that row. A duplicate (date, ticker) for a universe
     name raises: which of two values is the NAV cannot be chosen silently. A name
     with no NAV dated `asof` is absent -- a missing as-of NAV is gate 5's to
-    refuse, not this gate's."""
+    refuse, not this gate's.
+
+    A NAV that is NaN, infinite or not positive is no NAV, and its row is
+    skipped, both as NAV(D) and as the previous row. FINITE since 2026-10-28
+    (review of fetch_daily's NAV half): the filter was `notna() & > 0`, which
+    +inf passes; it is now gate 5's test (`run.last_navs`) and fetch_daily's
+    `has_nav`. No panel NAV is infinite, so on the panels this is the old filter
+    exactly (quantt/session/tests/test_nav_finite.py)."""
+    import numpy as np
     import pandas as pd
     n = nav[nav["ticker"].isin(list(universe))][["date", "ticker", "nav"]].copy()
     n["date"] = pd.to_datetime(n["date"]).dt.normalize()
@@ -204,7 +212,8 @@ def panel_rows(nav, asof: dt.date, universe) -> dict:
     if len(dup):
         raise ValueError(f"NAV panel has duplicate (date, ticker) rows, e.g. "
                          f"{dup.head(3).to_dict('records')}")
-    n = n[n["nav"].notna() & (n["nav"] > 0)]
+    nav = pd.to_numeric(n["nav"])
+    n = n[np.isfinite(nav) & (nav > 0)]
     out = {}
     for tk in sorted(universe):
         rows = n[n["ticker"] == tk].sort_values("date")

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 910068,
+  "episode_accession": "0001104659-13-011351",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Western Asset High Income Fund Inc.", "cik": 891760, "ticker": "HIF"},
+      "acquirer": {"name": "Western Asset High Income Opportunity Fund Inc.", "cik": 910068, "ticker": "HIO"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001104659-13-011342", "quote": "Western Asset High Income Fund Inc. (NYSE: HIF) and Western Asset High Income Opportunity Fund Inc. (NYSE: HIO) today announced approval by each Fund’s Board of Directors of a proposal to merge Western Asset High Income Fund Inc. with and into Western Asset High Income Opportunity Fund Inc."},
+      "outcome": null,
+      "announcement": {"accession": "0001104659-13-011342", "date": "2013-02-15", "quote": "Western Asset High Income Fund Inc. (NYSE: HIF) and Western Asset High Income Opportunity Fund Inc. (NYSE: HIO) today announced approval by each Fund’s Board of Directors of a proposal to merge Western Asset High Income Fund Inc. with and into Western Asset High Income Opportunity Fund Inc., subject to approval by stockholders of Western Asset High Income Fund Inc."},
+      "outcome_evidence": null,
+      "notes": "Proposed merger of HIF into HIO, announced 2013-02-15; N-14 8C filed 2013-03-15, amended 2013-04-18; HIF meeting set for May 31, 2013; a 2013-05-09 DEFA14A solicits HIF votes. Later filings in the window (8-Ks 2013-06-14, 2014-05-29, 2014-12-23 and DEF 14As) are director-appointment or annual-meeting documents whose excerpts do not state the merger outcome."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts."
+}

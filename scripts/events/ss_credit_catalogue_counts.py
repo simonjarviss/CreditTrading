@@ -374,7 +374,7 @@ def x3_breakeven() -> dict:
     hedged sleeve turns over about (1 + |beta|) times as much, and the most it can
     pay per unit of turnover is alpha / turnover. This computes no new return: it
     divides two numbers the closed XASSET slate already produced."""
-    p = REPO / "results" / "xasset" / "x3_fit_2026-10-14.json"
+    p = REPO / "results" / "xasset" / "trials" / "x3_fit_2026-10-14.json"
     if not p.exists():
         raise FileNotFoundError(p)
     d = json.loads(p.read_text())

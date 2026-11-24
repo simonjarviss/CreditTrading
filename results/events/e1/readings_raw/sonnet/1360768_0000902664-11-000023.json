@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1360768,
+  "episode_accession": "0000902664-11-000023",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Old Mutual Emerging Managers Fund, L.L.C.", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0000902664-11-000023", "date": "2011-01-11", "quote": "At the Meeting, members of each EM Fund will vote on a proposal to reorganize each of the EM Funds into corresponding closed-end investment companies that, like the EM Funds, are advised by Larch Lane Advisors LLC (the \"Adviser\")"},
+      "outcome_evidence": {"accession": "0000902664-11-000449", "date": "2011-02-14", "quote": "hereby respectfully requests withdrawal of the Company's Registration Statement on Form N-14 (Registration File No. 333-171638), together with all exhibits thereto (collectively, the \"Registration Statement). The Registration Statement was initially filed with the Securities and Exchange Commission (the \"Commission\") on January 11, 2011."},
+      "notes": "Acquirer funds are only described as 'corresponding closed-end investment companies'; none is named in the excerpt. The RW (form RW by the N-14 registrant, Old Mutual Absolute Return Fund, L.L.C.) withdraws the N-14 and says no securities have been or will be distributed under it. Listing status of any party is not stated (private-fund style LLC interests, no exchange mentioned). The later N-8F (2011-08-12) ticks Liquidation, not Merger."
+    },
+    {
+      "target": {"name": "Old Mutual Emerging Managers Institutional Fund, L.L.C.", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0000902664-11-000023", "date": "2011-01-11", "quote": "At the Meeting, members of each EM Fund will vote on a proposal to reorganize each of the EM Funds into corresponding closed-end investment companies that, like the EM Funds, are advised by Larch Lane Advisors LLC (the \"Adviser\")"},
+      "outcome_evidence": {"accession": "0000902664-11-000449", "date": "2011-02-14", "quote": "hereby respectfully requests withdrawal of the Company's Registration Statement on Form N-14 (Registration File No. 333-171638), together with all exhibits thereto (collectively, the \"Registration Statement). The Registration Statement was initially filed with the Securities and Exchange Commission (the \"Commission\") on January 11, 2011."},
+      "notes": "Same as the first entry."
+    },
+    {
+      "target": {"name": "Old Mutual Emerging Managers Master Fund, L.L.C.", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0000902664-11-000023", "date": "2011-01-11", "quote": "At the Meeting, members of each EM Fund will vote on a proposal to reorganize each of the EM Funds into corresponding closed-end investment companies that, like the EM Funds, are advised by Larch Lane Advisors LLC (the \"Adviser\")"},
+      "outcome_evidence": {"accession": "0000902664-11-000449", "date": "2011-02-14", "quote": "hereby respectfully requests withdrawal of the Company's Registration Statement on Form N-14 (Registration File No. 333-171638), together with all exhibits thereto (collectively, the \"Registration Statement). The Registration Statement was initially filed with the Securities and Exchange Commission (the \"Commission\") on January 11, 2011."},
+      "notes": "Same as the first entry."
+    }
+  ],
+  "problems": "The excerpt does not say whether the episode fund (the N-14 registrant) is the acquirer; role left null. Acquirer names are not in the excerpts. Whether the 'withdrawn' outcome applies to each of the three EM Funds individually is inferred from the single N-14 covering all three."
+}

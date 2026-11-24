@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1502711,
+  "episode_accession": "0001193125-12-096948",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "MLP & Strategic Equity Fund Inc.", "cik": 1389611, "ticker": "MTP"},
+      "acquirer": {"name": "Nuveen Energy MLP Total Return Fund", "cik": 1502711, "ticker": "JMF"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-12-096944", "date": "2012-03-05", "quote": "the Board of Trustees of Nuveen’s closed-end funds approved a proposal to merge Nuveen’s two MLP closed-end funds."},
+      "outcome_evidence": {"accession": "0001193125-12-439906", "date": "2012-10-29", "quote": "as well as reviewing the Registrant’s recently completed merger, investment strategy, management and performance."},
+      "notes": "Tickers MTP and JMF are printed but no exchange is named in the excerpts, so both_listed is null. The 2012-10-29 8-K (by the acquirer) says 'recently completed merger' without naming MTP; the only merger proposed in the filings is MTP into JMF. A 2012-07-13 425 states the MTP annual meeting was adjourned until August 2, 2012."
+    }
+  ],
+  "problems": ""
+}

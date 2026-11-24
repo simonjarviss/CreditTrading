@@ -1,0 +1,458 @@
+{
+ "spec_id": "c4_families.v1.20261029",
+ "spec_sha256": "19243e93b2539c299d6ce46d2b25f855c747ef7b44b4c2c40e6835b27fdd95ab",
+ "core_spec_id": "cef_discount.v7.20260928",
+ "run_utc": "2026-10-29T15:43:55.202166+00:00",
+ "families_cut": {
+  "cef_prices": {
+   "rows": 775180,
+   "last": "2022-12-30"
+  },
+  "cef_nav": {
+   "rows": 542205,
+   "last": "2022-12-30"
+  },
+  "cef_actions": {
+   "rows": 19740,
+   "last": "2022-12-29"
+  }
+ },
+ "fidelity": {
+  "spec_id": "c4_families.v1.20261029",
+  "sessions": 907,
+  "first": "2005-01-03",
+  "last": "2022-12-30",
+  "trade_sessions": 829,
+  "hold_sessions": 78,
+  "sessions_matched": 907,
+  "session_match_rate": 1.0,
+  "cells_compared": 61346,
+  "cells_matched": 61346,
+  "cell_match_rate": 1.0,
+  "largest_gap": 0.0,
+  "tolerance": 1e-12,
+  "largest_unexplained_gap": null,
+  "kind_breaks": 0,
+  "breaks": [],
+  "n_breaks": 0,
+  "item5_sub_min_abs_names": 370,
+  "item5_of_held_names": 10092,
+  "item5_sessions": 267,
+  "min_abs_weight": 0.005
+ },
+ "controls": [
+  {
+   "control": "nav_repeat_mask off",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 9.729e-03 on JPC (sleeve -0.196730, trial -0.187001)"
+  },
+  {
+   "control": "zero_volume_mask off",
+   "broke": false,
+   "first": null,
+   "note": "no break, and none can arise here: M2 masks 10 paired fund-days of the 74 in the fit panel (AIO, GCV, GLU, PDT, RFI), 0 of them on a fund-day whose ADV clears the floor, so it moves no compared target (PREREG_C4 \u00a74.3: a guard). The synthetic test injects a zero-volume day and shows the break"
+  },
+  {
+   "control": "below_min_names flatten",
+   "broke": true,
+   "first": "2005-01-03",
+   "note": "kind: the trial holds and the sleeve does neither (cef: only 5 eligible names)"
+  },
+  {
+   "control": "z_window 252 -> 251",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 1.148e-03 on RNP (sleeve -0.242734, trial -0.241586)"
+  },
+  {
+   "control": "vol_target_annual x 1.1",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 2.550e-02 on EVT (sleeve +0.280450, trial +0.254955)"
+  },
+  {
+   "control": "min_adv_usd x 0.9",
+   "broke": true,
+   "first": "2005-01-03",
+   "note": "kind: the trial holds and the sleeve trades (cef discount z=-0.21 w=-0.3065 volscal=1.16 gmax=1.9000; cef discount z=-0.36 w=-0.1797 volscal=1.16 gmax"
+  },
+  {
+   "control": "min_names 6 -> 7",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "kind: the trial trades and the sleeve holds (cef: not opened, book holds: only 6 eligible names, under min_names 7 (below_min_names=hold))"
+  },
+  {
+   "control": "gross_leverage x 1.1",
+   "broke": true,
+   "first": "2005-02-23",
+   "note": "weight: largest gap 2.550e-02 on EVT (sleeve +0.280450, trial +0.254955)"
+  },
+  {
+   "control": "band_width dropped (the rebalance_days calendar)",
+   "broke": true,
+   "first": "2005-03-02",
+   "note": "weight: largest gap 1.203e-01 on JPC (sleeve -0.334894, trial -0.214616)"
+  }
+ ],
+ "cap": {
+  "method_check": {
+   "w5_13": 0.04258140437339241,
+   "end": "2020-03-18",
+   "recorded": [
+    0.0425814,
+    "2020-03-18"
+   ],
+   "traded_start": "2013-06-14"
+  },
+  "w5": 0.02613925057386521,
+  "w5_window_end": "2008-07-23",
+  "traded_start": "2005-02-22",
+  "traded_end": "2022-12-30",
+  "w5_second_method": "direct sum agrees to 1e-12",
+  "worst_windows": [
+   [
+    "2008-07-23",
+    0.02613925057386521
+   ],
+   [
+    "2020-03-17",
+    0.024382093742581153
+   ],
+   [
+    "2009-04-08",
+    0.024192278122398367
+   ]
+  ],
+  "w5_for_next_step_down": 0.02631578947368418,
+  "w5_headroom": 0.00017653889981896972,
+  "inputs": {
+   "nlv_usd": [
+    100000.0,
+    "ruled, not probe-read: C4's own $100k (team lead 2026-10-26, docs/SYSTEM.md \u00a75), the paper default in an account never traded (created 2026-09-29) [U until a probe reads it]"
+   ],
+   "m_other_usd": [
+    0.0,
+    "C4's own account (team lead 2026-10-26). Since 2026-10-28 the agent lab shares it; the lab book is not built and holds nothing there [U until a probe reads it]"
+   ],
+   "m": [
+    0.5,
+    "Reg T initial (team lead 2026-09-28; the core's input, scripts/cef/alpaca_v7_derivation.py MARGIN)"
+   ],
+   "e_book_usd": [
+    100000.0,
+    "capital_usd of c4_families.v1.20261029"
+   ],
+   "mark_sensitivity": [
+    0.0,
+    "no other book's margin moves this account today; the core's reading (PREREG_ALPACA_V7 \u00a73b)"
+   ]
+  },
+  "margin_at_frozen_read": {
+   "read_utc": "2026-10-14T21:40:33Z",
+   "funds": 74,
+   "all_marginable": true,
+   "maintenance_margin_pct": [
+    30.0
+   ],
+   "exchanges": {
+    "NYSE": 65,
+    "AMEX": 5,
+    "NASDAQ": 4
+   }
+  },
+  "g_stress": 1.9006375192675518,
+  "max_gross_stress": 1.9,
+  "uncapped_max_gross": 3.2001100959362905,
+  "uncapped_mean_gross": 1.6676663651231332,
+  "uncapped_share_above_cap": 0.3408939292861908,
+  "spec_value": 1.9,
+  "plateau": [
+   {
+    "cap": 1.6,
+    "sr": 1.2473869860533136,
+    "ann_pct": 7.180342309001797,
+    "turn": 38.25996547457479,
+    "max_gross": 1.600000000000001
+   },
+   {
+    "cap": 1.7,
+    "sr": 1.2328714800610623,
+    "ann_pct": 7.184983925047848,
+    "turn": 38.14761910440891,
+    "max_gross": 1.7000000000000008
+   },
+   {
+    "cap": 1.8,
+    "sr": 1.216957834377122,
+    "ann_pct": 7.164335203125429,
+    "turn": 38.082282348979426,
+    "max_gross": 1.8000000000000012
+   },
+   {
+    "cap": 1.9,
+    "sr": 1.2002684537305317,
+    "ann_pct": 7.115250735147092,
+    "turn": 38.031955890852856,
+    "max_gross": 1.900000000000001
+   },
+   {
+    "cap": 1.9006,
+    "sr": 1.2001740759781023,
+    "ann_pct": 7.11492943957584,
+    "turn": 38.03169494324643,
+    "max_gross": 1.9006000000000012
+   },
+   {
+    "cap": 2.0,
+    "sr": 1.184646477671881,
+    "ann_pct": 7.058854772920589,
+    "turn": 37.992513458555,
+    "max_gross": 2.0000000000000013
+   },
+   {
+    "cap": null,
+    "sr": 1.137014610134491,
+    "ann_pct": 7.203878408716275,
+    "turn": 37.789016025415215,
+    "max_gross": 3.2001100959362905
+   }
+  ]
+ },
+ "lines": {
+  "spec_book": {
+   "role": "H11 REFERENCE (team lead 2026-10-29): the book paper trades",
+   "policy": "band 0.048 + cap 1.9 (c4_families.v1.20261029)",
+   "total": {
+    "label": "spec book, CRSP ret (total return)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.2002684537305317,
+    "ann_pct": 7.115250735147092,
+    "vol_pct": 5.928049440133427,
+    "turn": 38.031955890852856,
+    "net5": 0.8794887750610768,
+    "net15": 0.23792941772216697,
+    "net30": -0.7244096182861978,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -8.896137965254603,
+    "max_dd_trough": "2011-05-25",
+    "eras": {
+     "2005-09": {
+      "sr": 1.1300971925923295,
+      "ann_pct": 7.181246917565641,
+      "turn": 16.18468029210869,
+      "net15": 0.7480550074870312,
+      "net30": 0.36601282238173294,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 0.9833103988093752,
+      "ann_pct": 5.609349124718417,
+      "turn": 41.95751838727519,
+      "net15": -0.11995300718822316,
+      "net30": -1.2232164131858216,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.2078730715236268,
+      "ann_pct": 6.613353922196397,
+      "turn": 58.99000325735009,
+      "net15": -0.4082305862096986,
+      "net30": -2.024334243943024,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.6434447491190602,
+      "ann_pct": 10.349331546190117,
+      "turn": 32.02578049522956,
+      "net15": 0.8806041653129468,
+      "net30": 0.11776358150683339,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "price": {
+    "label": "spec book, CRSP retx (price only)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.3442086385730083,
+    "ann_pct": 8.290044613408934,
+    "vol_pct": 6.167230573826337,
+    "turn": 38.031955890852856,
+    "net5": 1.0358696245246277,
+    "net15": 0.41919159642786585,
+    "net30": -0.5058254457172766,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -9.328842379971281,
+    "max_dd_trough": "2011-05-25",
+    "eras": {
+     "2005-09": {
+      "sr": 1.3122851369811679,
+      "ann_pct": 8.552872827283437,
+      "turn": 16.18468029210869,
+      "net15": 0.939797743159971,
+      "net30": 0.5673103493387741,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 1.1283285458743408,
+      "ann_pct": 6.884722237049225,
+      "turn": 41.95751838727519,
+      "net15": 0.09687373737866647,
+      "net30": -0.9345810711170078,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.1904259330448665,
+      "ann_pct": 6.784452994176638,
+      "turn": 58.99000325735009,
+      "net15": -0.36216562580798545,
+      "net30": -1.9147571846608373,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.9735803521203192,
+      "ann_pct": 12.707988058459824,
+      "turn": 32.02578049522956,
+      "net15": 1.227528527992737,
+      "net30": 0.4814767038651552,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "distribution_leg_pct_per_yr": -1.1747938782618408,
+   "price_minus_total_sr": 0.14394018484247662
+  },
+  "trial_book": {
+   "role": "the trial's own book: the reproduction gate only, NOT read by H11",
+   "policy": "band 0.048 + cap 1.8 (scripts/cef/spec.py, as the trial read them)",
+   "total": {
+    "label": "trial book, CRSP ret (total return)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.216957834377122,
+    "ann_pct": 7.164335203125429,
+    "vol_pct": 5.887085814104944,
+    "turn": 38.082282348979426,
+    "net5": 0.8935186698100147,
+    "net15": 0.24664034067580035,
+    "net30": -0.7236771530255212,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -8.775534137877539,
+    "max_dd_trough": "2011-05-25",
+    "eras": {
+     "2005-09": {
+      "sr": 1.1353182631250593,
+      "ann_pct": 7.1839705414467785,
+      "turn": 16.194100543534926,
+      "net15": 0.7514332375138043,
+      "net30": 0.3675482119025494,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 1.0038925867715143,
+      "ann_pct": 5.691226662153966,
+      "turn": 42.08071768660849,
+      "net15": -0.10951906521555134,
+      "net30": -1.222930717202617,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.217060910829531,
+      "ann_pct": 6.6008069662271325,
+      "turn": 59.02187077657255,
+      "net15": -0.41531249837023365,
+      "net30": -2.0476859075699982,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.6863014373028502,
+      "ann_pct": 10.521525384496467,
+      "turn": 32.05184427360911,
+      "net15": 0.9157515062096484,
+      "net30": 0.14520157511644646,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "price": {
+    "label": "trial book, CRSP retx (price only)",
+    "first_held": "2005-02-22",
+    "last": "2022-12-30",
+    "sr": 1.3595907627768347,
+    "ann_pct": 8.32847466161133,
+    "vol_pct": 6.125721716879874,
+    "turn": 38.082282348979426,
+    "net5": 1.0487516150888088,
+    "net15": 0.42707331971275675,
+    "net30": -0.5054441233513212,
+    "flips": "YES",
+    "days": 4497,
+    "years": 17.845238095238095,
+    "max_dd_pct": -9.2006430009838,
+    "max_dd_trough": "2011-05-25",
+    "eras": {
+     "2005-09": {
+      "sr": 1.3132929914794689,
+      "ann_pct": 8.524371301596304,
+      "turn": 16.194100543534926,
+      "net15": 0.9390554437235017,
+      "net30": 0.5648178959675348,
+      "flips": "no",
+      "days": 1225
+     },
+     "2010-14": {
+      "sr": 1.1458831832404175,
+      "ann_pct": 6.948319693897079,
+      "turn": 42.08071768660849,
+      "net15": 0.10492100403632158,
+      "net30": -0.9360411751677743,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2015-19": {
+      "sr": 1.2136465000643237,
+      "ann_pct": 6.856916420265685,
+      "turn": 59.02187077657255,
+      "net15": -0.3533483961442963,
+      "net30": -1.9203432923529162,
+      "flips": "YES",
+      "days": 1258
+     },
+     "2020-22": {
+      "sr": 1.999825790642293,
+      "ann_pct": 12.756360684118953,
+      "turn": 32.05184427360911,
+      "net15": 1.2461064532475803,
+      "net30": 0.4923871158528679,
+      "flips": "no",
+      "days": 756
+     }
+    }
+   },
+   "distribution_leg_pct_per_yr": -1.1641394584859015,
+   "price_minus_total_sr": 0.14263292839971276
+  }
+ },
+ "h11_reference": "spec_book"
+}

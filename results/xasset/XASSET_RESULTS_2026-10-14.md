@@ -15,7 +15,7 @@ holdouts opened 2026-10-15 UTC.
 `python3 scripts/xasset/x1_credit_trend.py --trial 1`, `x3_month_end.py --trial 2`,
 `x2_rebalancing.py --trial 3`, `x4_multi_trend.py --trial 4`, then
 `--holdout` for each. They refuse to rerun, because each test runs once. The
-figures are in `results/xasset/x<k>_{fit,holdout}_2026-10-14.json`, with
+figures are in `results/xasset/trials/x<k>_{fit,holdout}_2026-10-14.json`, with
 stdout in `results/xasset/runs/`. **Every figure below is [V]: produced by
 those scripts on 2026-10-14/15 from the pinned inputs.**
 

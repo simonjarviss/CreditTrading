@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1396092,
+  "episode_accession": "0001387131-20-006153",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Applied Finance Dividend Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Applied Finance Core Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001387131-20-006153", "quote": "The price you pay for a share of the Funds is the NAV next determined upon receipt by the Transfer Agent or financial intermediary."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001387131-20-006153", "date": "2020-07-01", "quote": "The accounting survivor of the Reorganization will be the Survivor Fund."},
+      "outcome_evidence": null,
+      "notes": "Both are series of World Funds Trust sold at NAV through a transfer agent (open-end mutual funds; this is an inference from the NAV purchase text, no filing excerpt says open-end in words). Target/acquirer roles inferred: the shareholder letter is addressed to Applied Finance Dividend Fund and the securities registered are shares of Applied Finance Core Fund. Completion not stated in excerpts."
+    },
+    {
+      "target": {"name": "REMS Real Estate Income 50/50 Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "REMS Real Estate Value-Opportunity Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001387131-20-008679", "quote": "The price at which you purchase or redeem shares is based on the next calculation of NAV after an order is received"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001387131-20-008864", "date": "2020-10-06", "quote": "relating to the proposed reorganization of the REMS Real Estate Income 50/50 Fund with and into the REMS Real Estate Value-Opportunity Fund"},
+      "outcome_evidence": null,
+      "notes": "Open-end status inferred from NAV purchase/redemption text. The N-14 filed 2020-10-02 (0001387131-20-008679) was withdrawn by Rule 477 request (RW, 2020-10-06) because it was filed with the wrong Acquiring REMS Fund name for the Institutional Shares; N-14s were refiled on 2020-10-06 and 2020-10-08. The withdrawal was a correction, not an abandonment. Announcement quote is taken from the RW letter although the N-14 of 2020-10-02 is the earlier public filing of the proposal. Completion not stated in excerpts."
+    }
+  ],
+  "problems": "Fund type (open-end) is inferred from NAV pricing text, not stated in words. 2021-2022 proxy filings in the window concern an adviser change, not a merger."
+}

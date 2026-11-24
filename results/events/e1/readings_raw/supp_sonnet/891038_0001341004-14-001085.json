@@ -1,0 +1,18 @@
+{
+  "episode_cik": 891038,
+  "episode_accession": "0001341004-14-001085",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "The BlackRock Pennsylvania Strategic Municipal Trust", "cik": 1089821, "ticker": "BPS"},
+      "acquirer": {"name": "BlackRock MuniYield Pennsylvania Quality Fund", "cik": 891038, "ticker": "MPA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-001085", "date": "2014-12-11", "quote": "Letter to Common Shareholders of The BlackRock Pennsylvania Strategic Municipal Trust (\"BPS\")."},
+      "outcome_evidence": null,
+      "notes": "Joint special meeting set for March 12, 2015 (reminder 425s of 2015-02-06, 2015-02-19, 2015-02-26). No excerpt states a vote result, closing, termination or adjournment. Later DEF 14As (2015-06-12, 2016-06-09) show only proxy cover pages. Exchange listing of the two funds is not shown in the excerpts."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt; listing not shown."
+}

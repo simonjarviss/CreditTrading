@@ -1,0 +1,20 @@
+{
+ "built_utc": "2026-10-19T20:27:14+00:00",
+ "deals_declared": 19,
+ "deals_touching_ge1_listed_fund": 12,
+ "funds_touched_total": 153,
+ "deals_announced_le_2022": 15,
+ "deals_by_year": {
+  "2009": 1,
+  "2014": 1,
+  "2016": 3,
+  "2017": 2,
+  "2018": 3,
+  "2019": 1,
+  "2020": 2,
+  "2021": 2,
+  "2023": 2,
+  "2024": 2
+ },
+ "n_in_window": 19
+}

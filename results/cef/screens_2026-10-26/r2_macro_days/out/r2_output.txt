@@ -1,0 +1,135 @@
+cef_discount.v7.20260928 | live policy: band 4.8% + gmax 1.80x | universe 13
+R2 macro-release-day screen -- FIT PERIOD ONLY (<= 2022-12-30); holdout sealed. Run 2026-10-26 22:47 UTC.
+panels: cef_prices last 2026-10-15, cef_nav last 2026-10-14, cef_distributions last ex-date 2026-09-10, events.parquet CPI last 2025-03-12 / NFP last 2025-04-04 (read-only; only <= 2022-12-30 used)
+names: deployed 13, wide 17; cef_universe.csv holds 44, of which 27 are the sealed name holdout and are NOT read
+events: FOMC scheduled (Fed pages == repo panel) 143; unscheduled statements on the Fed pages 8; extra repo-only emergency rows ['2019-10-04', '2019-10-11', '2020-03-19', '2020-03-23', '2020-03-31', '2020-08-27']; CPI 192, NFP 192 (2007-01-18 .. 2022-12-02)
+selftest_dk: lags=0 == clustered sandwich; iid DK(5)/iid SE ratio [0.975 0.982] (synthetic, method check only)
+DEPLOYED: sd_t == std of the 252 sessions strictly before t on 25 random cells (no lookahead)
+WIDE17: sd_t == std of the 252 sessions strictly before t on 25 random cells (no lookahead)
+
+==============================================================================================================
+DEPLOYED: 13 names ['AWF', 'BIT', 'DSL', 'HYT', 'JFR', 'MHD', 'MQY', 'PCN', 'PDI', 'PDO', 'PFN', 'PHK', 'PTY']
+==============================================================================================================
+sample 2013-06-21 .. 2022-12-27: 1038 sessions, 6849 name-days; 28 ex-dates have no NAV that day (names ['PFN'], 2005-01-19 .. 2007-05-10); their NAV return is NaN, so no zero yield is booked (checked; a silent case raises)
+release sessions in sample: {'FOMC': 33, 'CPI': 48, 'NFP': 49, 'any': 124}  (sessions with two types: 6)
+placebo sessions in sample: {'FOMC': 60, 'CPI': 91, 'NFP': 90, 'any': 220}; dropped unscheduled-FOMC sessions (whole period from start): 14
+releases on a non-session, moved to the next session: 8 [('CPI', '2017-04-14', '2017-04-17'), ('CPI', '2020-04-10', '2020-04-13'), ('NFP', '2007-04-06', '2007-04-09'), ('NFP', '2010-04-02', '2010-04-05'), ('NFP', '2012-04-06', '2012-04-09'), ('NFP', '2015-04-03', '2015-04-06'), ('NFP', '2021-04-02', '2021-04-05'), ('DROPPED-with-release', 'NFP', '2019-10-04')]
+scale: sd of demeaned x 0.270 z-units; of zlag 0.861; of F_P 108.7bp
+
+POOLED model, window t+2..t+3 (close t+1 -> t+3), bp of 2-day log TR per unit x; DK(5) t [date-clustered t]:
+leg                b0 ordinary       b_any release       p_any placebo         b_any-p_any              c zlag
+FP              -37.30 (-3.39)       -6.86 (-0.36)      +19.14 (+0.97)      -26.00 (-1.00)       -5.89 (-3.01)   [b_any clustered t -0.32]
+FN               +4.60 (+0.95)      -10.71 (-1.12)      +15.15 (+1.73)      -25.86 (-1.71)       +2.48 (+2.89)   [b_any clustered t -1.05]
+FD              -41.89 (-2.97)       +3.85 (+0.17)       +4.00 (+0.19)       -0.14 (-0.00)       -8.37 (-3.93)   [b_any clustered t +0.15]
+
+BY-TYPE model (joint), same window; b_k = extra slope on type-k release days, p_k its placebo:
+leg   type                   b_k                 p_k             b_k-p_k
+FP    FOMC        -34.24 (-0.84)      +25.74 (+0.91)      -59.98 (-1.24)
+FP    CPI          +7.43 (+0.29)      -15.89 (-0.76)      +23.32 (+0.64)
+FP    NFP         -11.43 (-0.39)      +64.41 (+2.93)      -75.85 (-2.36)
+FN    FOMC         +5.87 (+0.40)       -9.80 (-1.14)      +15.67 (+1.00)
+FN    CPI         -14.41 (-1.09)      +16.56 (+3.13)      -30.97 (-1.95)
+FN    NFP          -5.92 (-0.45)      +19.14 (+1.17)      -25.06 (-1.15)
+FD    FOMC        -40.11 (-0.87)      +35.54 (+1.19)      -75.65 (-1.46)
+FD    CPI         +21.85 (+0.61)      -32.45 (-1.44)      +54.30 (+1.11)
+FD    NFP          -5.51 (-0.18)      +45.27 (+2.43)      -50.79 (-1.70)
+
+SIZE-MATCHED (control 2): slope by expanding decile of D_t = mean|x~| (>= 250 prior sessions); sample 2014-11-26 .. 2022-12-27, 788 sessions
+  decile mix on release days: 1:0.07 2:0.05 3:0.09 4:0.06 5:0.14 6:0.11 7:0.14 8:0.12 9:0.14 10:0.08   (ordinary days are 0.10 each only if the size distribution were stable)
+  decile mix on placebo days: 1:0.04 2:0.09 3:0.08 4:0.10 5:0.12 6:0.14 7:0.13 8:0.10 9:0.09 10:0.12   (ordinary days are 0.10 each only if the size distribution were stable)
+  mean D_t: release 0.169, placebo 0.180, ordinary 0.183
+leg          unmatched b_any (same sample)       matched b_any       matched p_any         matched b-p    kept
+FP                           -9.04 (-0.44)       -8.11 (-0.40)      +19.23 (+0.91)      -27.34 (-1.00)    0.90
+   price-leg ordinary slope by decile b0_q (t): q1:-258(-2.2) q2:-17(-0.2) q3:-11(-0.3) q4:-2(-0.1) q5:-26(-1.0) q6:-36(-2.1) q7:-47(-2.4) q8:-30(-1.6) q9:-43(-2.4) q10:-38(-2.0)
+FN                          -14.33 (-1.43)      -12.89 (-1.30)      +13.87 (+1.44)      -26.76 (-1.68)    0.90
+FD                           +5.29 (+0.21)       +4.78 (+0.20)       +5.36 (+0.24)       -0.58 (-0.02)    0.90
+  price leg by type, matched vs unmatched (same sample): FOMC   -44.31 (-1.01) vs   -45.40 (-1.02); CPI    +9.98 (+0.38) vs   +10.49 (+0.40); NFP   -14.09 (-0.48) vs   -16.03 (-0.52)
+
+ROBUSTNESS (declared): Fama-MacBeth by date; per-date slope on x~ (with zlag~), then on [1, R_any, P_any], NW(5):
+  FP: dates 1038, ordinary mean slope -54.1; release extra -8.5 (t -0.30); placebo extra +33.0 (t +1.25); R-P -41.5 (t -1.22); median slope release -39.8 vs ordinary -27.7
+  FN: dates 1038, ordinary mean slope -0.2; release extra -5.2 (t -0.49); placebo extra +11.9 (t +1.57); R-P -17.1 (t -1.43); median slope release +5.7 vs ordinary +0.3
+  FP by type, release extra: FOMC +6.5 (t +0.14); CPI -31.3 (t -0.66); NFP +17.3 (t +0.48)
+
+BY ERA, pooled model, price leg (F_P), re-estimated within each era:
+  2013-06..14  sessions   274, release   31: b0   -41.29 (-2.82)  b_any   +10.07 (+0.26)  p_any   +42.55 (+1.51)
+  2015-19      sessions   350, release   42: b0   -10.63 (-1.07)  b_any    +1.95 (+0.09)  p_any   -17.89 (-0.99)
+  2020-22      sessions   414, release   51: b0   -48.36 (-2.64)  b_any   -14.61 (-0.52)  p_any   +30.26 (+1.07)
+
+CONTEXT (never decides): the same pooled model on t+1 only (close t -> t+1), INFEASIBLE for any book decided at t:
+  FP: b0   -32.42 (-3.50)  b_any    -8.82 (-0.37)  p_any   -20.50 (-0.84)
+  FN: b0    +4.46 (+1.16)  b_any    -5.76 (-0.85)  p_any    +4.11 (+0.94)
+  FD: b0   -36.88 (-3.64)  b_any    -3.06 (-0.13)  p_any   -24.61 (-0.96)
+
+CONTEXT: release-day anatomy (same sessions):
+  release   sessions   124: NAV unchanged on  12.2% of name-days; mean |demeaned price TR|  46.3bp, |NAV TR|  14.2bp; price share of the day's demeaned discount move  0.88
+  placebo   sessions   220: NAV unchanged on  16.0% of name-days; mean |demeaned price TR|  47.6bp, |NAV TR|  13.3bp; price share of the day's demeaned discount move  0.91
+  ordinary  sessions   694: NAV unchanged on  16.2% of name-days; mean |demeaned price TR|  52.8bp, |NAV TR|  14.8bp; price share of the day's demeaned discount move  0.91
+
+==============================================================================================================
+WIDE17: 17 names ['AWF', 'BIT', 'DSL', 'HYT', 'JFR', 'MHD', 'MQY', 'PCN', 'PDI', 'PDO', 'PFN', 'PHK', 'PTY', 'NAD', 'NEA', 'NVG', 'NZF']
+==============================================================================================================
+sample 2007-01-03 .. 2022-12-27: 4011 sessions, 59448 name-days; 28 ex-dates have no NAV that day (names ['PFN'], 2005-01-19 .. 2007-05-10); their NAV return is NaN, so no zero yield is booked (checked; a silent case raises)
+release sessions in sample: {'FOMC': 127, 'CPI': 192, 'NFP': 191, 'any': 497}  (sessions with two types: 13)
+placebo sessions in sample: {'FOMC': 241, 'CPI': 332, 'NFP': 341, 'any': 845}; dropped unscheduled-FOMC sessions (whole period from start): 14
+releases on a non-session, moved to the next session: 8 [('CPI', '2017-04-14', '2017-04-17'), ('CPI', '2020-04-10', '2020-04-13'), ('NFP', '2007-04-06', '2007-04-09'), ('NFP', '2010-04-02', '2010-04-05'), ('NFP', '2012-04-06', '2012-04-09'), ('NFP', '2015-04-03', '2015-04-06'), ('NFP', '2021-04-02', '2021-04-05'), ('DROPPED-with-release', 'NFP', '2019-10-04')]
+scale: sd of demeaned x 0.268 z-units; of zlag 0.907; of F_P 121.6bp
+
+POOLED model, window t+2..t+3 (close t+1 -> t+3), bp of 2-day log TR per unit x; DK(5) t [date-clustered t]:
+leg                b0 ordinary       b_any release       p_any placebo         b_any-p_any              c zlag
+FP              -32.98 (-6.17)       -6.57 (-0.49)      -10.03 (-1.16)       +3.46 (+0.23)      -10.87 (-7.76)   [b_any clustered t -0.48]
+FN               +4.97 (+1.80)       -4.93 (-0.73)       -7.69 (-1.24)       +2.75 (+0.35)       -0.56 (-0.71)   [b_any clustered t -0.75]
+FD              -37.95 (-6.48)       -1.63 (-0.13)       -2.35 (-0.25)       +0.71 (+0.05)      -10.31 (-9.55)   [b_any clustered t -0.13]
+
+BY-TYPE model (joint), same window; b_k = extra slope on type-k release days, p_k its placebo:
+leg   type                   b_k                 p_k             b_k-p_k
+FP    FOMC        -27.60 (-0.81)       +3.99 (+0.35)      -31.59 (-0.91)
+FP    CPI         -34.25 (-1.44)      -10.64 (-0.86)      -23.61 (-0.92)
+FP    NFP         +19.73 (+1.57)      -16.84 (-1.44)      +36.57 (+2.34)
+FN    FOMC         -6.42 (-1.05)       -4.87 (-0.93)       -1.56 (-0.22)
+FN    CPI          -7.68 (-0.61)      -11.08 (-1.26)       +3.39 (+0.23)
+FN    NFP          +0.45 (+0.05)       -3.40 (-0.28)       +3.85 (+0.28)
+FD    FOMC        -21.18 (-0.67)       +8.86 (+0.75)      -30.04 (-0.92)
+FD    CPI         -26.56 (-1.23)       +0.44 (+0.04)      -27.00 (-1.18)
+FD    NFP         +19.29 (+1.47)      -13.44 (-0.79)      +32.73 (+1.69)
+
+SIZE-MATCHED (control 2): slope by expanding decile of D_t = mean|x~| (>= 250 prior sessions); sample 2007-01-03 .. 2022-12-27, 4011 sessions
+  decile mix on release days: 1:0.12 2:0.11 3:0.09 4:0.09 5:0.09 6:0.10 7:0.10 8:0.10 9:0.10 10:0.10   (ordinary days are 0.10 each only if the size distribution were stable)
+  decile mix on placebo days: 1:0.11 2:0.12 3:0.10 4:0.10 5:0.09 6:0.11 7:0.08 8:0.09 9:0.10 10:0.09   (ordinary days are 0.10 each only if the size distribution were stable)
+  mean D_t: release 0.180, placebo 0.178, ordinary 0.180
+leg          unmatched b_any (same sample)       matched b_any       matched p_any         matched b-p    kept
+FP                           -6.57 (-0.49)       -6.82 (-0.51)       -9.97 (-1.15)       +3.15 (+0.21)    1.04
+   price-leg ordinary slope by decile b0_q (t): q1:-50(-3.7) q2:-24(-2.5) q3:-27(-2.9) q4:-41(-4.4) q5:-14(-1.4) q6:-36(-4.4) q7:-26(-3.4) q8:-31(-3.4) q9:-31(-3.0) q10:-37(-3.9)
+FN                           -4.93 (-0.73)       -4.63 (-0.70)       -7.74 (-1.26)       +3.11 (+0.40)    0.94
+FD                           -1.63 (-0.13)       -2.18 (-0.18)       -2.22 (-0.24)       +0.04 (+0.00)    1.34
+  price leg by type, matched vs unmatched (same sample): FOMC   -27.67 (-0.81) vs   -27.60 (-0.81); CPI   -34.09 (-1.44) vs   -34.25 (-1.44); NFP   +19.18 (+1.53) vs   +19.73 (+1.57)
+
+ROBUSTNESS (declared): Fama-MacBeth by date; per-date slope on x~ (with zlag~), then on [1, R_any, P_any], NW(5):
+  FP: dates 4011, ordinary mean slope -35.1; release extra +9.7 (t +0.98); placebo extra -2.3 (t -0.29); R-P +12.0 (t +1.01); median slope release -24.4 vs ordinary -24.9
+  FN: dates 4011, ordinary mean slope +1.0; release extra +0.8 (t +0.15); placebo extra +0.3 (t +0.09); R-P +0.5 (t +0.08); median slope release +0.3 vs ordinary +0.0
+  FP by type, release extra: FOMC +25.9 (t +1.12); CPI +2.6 (t +0.16); NFP +13.0 (t +0.95)
+
+BY ERA, pooled model, price leg (F_P), re-estimated within each era:
+  2007-09      sessions   751, release   92: b0   -54.57 (-3.83)  b_any   -42.11 (-0.98)  p_any   -29.31 (-1.26)
+  2010-14      sessions  1257, release  157: b0   -25.26 (-4.01)  b_any    -8.92 (-0.81)  p_any   -12.94 (-1.22)
+  2015-19      sessions  1256, release  154: b0   -26.71 (-5.77)  b_any   +16.29 (+1.51)  p_any    -7.45 (-0.86)
+  2020-22      sessions   747, release   94: b0   -35.62 (-2.15)  b_any   +18.46 (+0.71)  p_any    +5.15 (+0.20)
+
+CONTEXT (never decides): the same pooled model on t+1 only (close t -> t+1), INFEASIBLE for any book decided at t:
+  FP: b0   -24.83 (-6.35)  b_any   +13.71 (+1.36)  p_any    +3.95 (+0.39)
+  FN: b0   +13.92 (+1.31)  b_any   +23.19 (+1.00)  p_any   -11.67 (-1.07)
+  FD: b0   -38.74 (-3.89)  b_any    -9.49 (-0.35)  p_any   +15.62 (+1.12)
+
+CONTEXT: release-day anatomy (same sessions):
+  release   sessions   497: NAV unchanged on  14.2% of name-days; mean |demeaned price TR|  51.2bp, |NAV TR|  20.3bp; price share of the day's demeaned discount move  0.74
+  placebo   sessions   845: NAV unchanged on  17.5% of name-days; mean |demeaned price TR|  50.6bp, |NAV TR|  18.2bp; price share of the day's demeaned discount move  0.84
+  ordinary  sessions  2669: NAV unchanged on  19.1% of name-days; mean |demeaned price TR|  53.5bp, |NAV TR|  18.8bp; price share of the day's demeaned discount move  0.85
+
+==============================================================================================================
+VERDICT (NOTE A8; deciding set DEPLOYED, pooled, price leg, t+2..t+3)
+  fail  1 price b_any<0, t<=-2
+  fail  2 beats placebo (b-p) t<=-2
+  fail  3 matched t<=-2 and kept>=50%
+  PASS  4 FM release-minus-ordinary < 0
+  PASS  5 WIDE17 not opposite with |t|>=2
+  ARTIFACT condition met: False; single-type Bonferroni passes: {'FOMC': np.False_, 'CPI': np.False_, 'NFP': np.False_}
+  => NOTHING

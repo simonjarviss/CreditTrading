@@ -253,14 +253,42 @@ def check_desk_inventory(rep: Report) -> None:
 _KNOWN_DESK_NAMES = {
     "skill": {"book-status", "preflight", "morning-brief", "next-task",
               "graveyard", "harness", "repro", "prereg", "spec-change",
-              "fill-audit", "dashboard-ui", "incident"},   # the IBKR-era five
+              "fill-audit", "dashboard-ui", "incident",    # the IBKR-era five
               # (book-status, preflight, incident, fill-audit, dashboard-ui)
               # were archived 2026-09-28; kept here so CLAUDE.md naming one is
               # caught as a ghost rather than read as an unrelated backtick.
+              # The 2026-11-09 mission rebuild (docs/MISSION.md §9): prereg was
+              # removed (it stays above, so naming it is a ghost) and the
+              # pipeline's seven were added.
+              "hunt", "idea", "explore", "paper", "scoreboard", "combine",
+              "go-live"},
     "agent": {"alpha-finder", "beta-detector", "unique-angle-researcher",
               "execution-trader", "portfolio-manager", "market-structure-analyst",
               "equity-research", "quant-reviewer", "dashboard-designer",
-              "ops-watchdog"},
+              "ops-watchdog",
+              # the 2026-10-27 rebuild (results/research/DESK_METHOD_2026-10-27.md):
+              # alpha-finder and unique-angle-researcher became quant-researcher,
+              # execution-trader became quant-trader, and equity-research folded
+              # into market-structure-analyst. They stay above so that CLAUDE.md
+              # naming one is caught as a ghost.
+              "quant-researcher", "data-engineer", "data-analyst", "statistician",
+              "ml-engineer", "backtest-engineer", "quant-trader",
+              # the event desk's seats, added 2026-10-19 on branch simon;
+              # data-librarian and event-econometrician are superseded by
+              # data-engineer and statistician and should be deleted when simon
+              # merges. The 2026-10-28 merge of simon kept both seats (a merge
+              # drops nothing); deleting them is the team lead's call.
+              "event-scout", "filings-analyst", "deal-analyst",
+              "credit-situations-analyst", "data-librarian", "event-econometrician",
+              # the 2026-11-09 mission rebuild (docs/MISSION.md §9;
+              # results/mission/PHASE0_2026-11-09.md §3). Removed, and kept above
+              # so that CLAUDE.md naming one is a ghost: quant-researcher,
+              # backtest-engineer and event-scout (merged into signal-hunter),
+              # data-engineer (renamed data-scout), data-librarian,
+              # portfolio-manager (renamed portfolio-architect), quant-trader
+              # (renamed execution-engineer), event-econometrician.
+              "market-historian-economist", "signal-hunter", "data-scout",
+              "portfolio-architect", "execution-engineer", "go-live-reviewer"},
 }
 
 
@@ -473,6 +501,11 @@ def _pointer_targets(text: str) -> list[tuple[str, str]]:
 RUNTIME_ARTEFACTS = (
     re.compile(r"^results/ops/alpaca_probe/"),
     re.compile(r"^ops/HALT.*\.md$"),
+    # The evidence pack's private cache of row-level live records: gitignored by the team
+    # lead's ruling of 2026-11-03 ("Aggregates in repo, rows private"), written by
+    # scripts/report/snapshot_live.py, so it exists only where that has run. CI's fresh
+    # clone has none, and its pointer read as missing (CI run of 327d0b3, 2026-11-03).
+    re.compile(r"^results/report/_cache_live/"),
 )
 
 

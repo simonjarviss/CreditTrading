@@ -1,0 +1,8 @@
+{"episode_cik":1177017,"episode_accession":"0001741773-24-002369","episode_role":"acquirer",
+"deals":[{"target":{"name":"corresponding Target Fund (not named in the excerpts)","cik":null,"ticker":null},
+"acquirer":{"name":"T. Rowe Price Retirement Funds, Inc. (Acquiring Funds)","cik":1177017,"ticker":null},
+"both_listed":null,"listed_quote":null,"outcome":null,
+"announcement":{"accession":"0001741773-24-002369","date":"2024-05-24","quote":"each Acquiring Fund’s acquisition of the corresponding Target Fund pursuant to an Agreement and Plan of Reorganization, dated June 26, 2023 (each, a “ Plan ”)"},
+"outcome_evidence":null,
+"notes":"The RW (seq=2) withdraws only a mistakenly filed duplicate N-14 (File No. 333-279704) carrying a tax opinion; it is not a withdrawal of the merger. Excerpts do not say how the reorganizations ended or whether funds are listed."}],
+"problems":"Target funds are not named in the excerpts; listing status not stated."}

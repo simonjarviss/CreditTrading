@@ -1,0 +1,23 @@
+date,book,verdict,missed,traded,n_orders,n_filled,snapshot_1730_usd,verify_label,official_usd,official_status,auction_marked_usd,fill_vs_auction_bp,refusal_gates
+2026-10-08,cef,PASS,False,True,8,8,-8.91,"(official, gross): pre-2026-10-19 wording; it is the 17:30 snapshot",,,+71.09,+15.8,
+2026-10-09,cef,PASS,False,False,,,-445.67,"(official, gross): pre-2026-10-19 wording; it is the 17:30 snapshot",,,-777.67,,exposure
+2026-10-12,cef,PASS,False,True,4,4,+1085.88,"(official, gross): pre-2026-10-19 wording; it is the 17:30 snapshot",,,+1040.50,+9.5,
+2026-10-13,cef,PASS,False,True,13,13,-1249.71,"(official, gross): pre-2026-10-19 wording; it is the 17:30 snapshot",,,-1238.87,+11.9,
+2026-10-14,cef,PASS,False,True,7,7,-748.26,"(official, gross): pre-2026-10-19 wording; it is the 17:30 snapshot",,,-791.69,+15.1,
+2026-10-15,cef,PASS,False,True,6,6,-233.09,"(official, gross): pre-2026-10-19 wording; it is the 17:30 snapshot",,,-238.34,+9.9,
+2026-10-16,cef,PASS,False,True,5,5,+242.56,"(official, gross): pre-2026-10-19 wording; it is the 17:30 snapshot",,,+160.68,+29.8,
+2026-10-19,cef,PASS,False,True,6,6,-573.86,snapshot 17:30 ET,,PENDING at 17:30,-579.99,+19.9,
+2026-10-20,cef,PASS,False,True,5,5,+162.04,snapshot 17:30 ET,,PENDING at 17:30,+235.81,+24.3,
+2026-10-21,cef,PASS,False,True,9,9,+261.16,snapshot 17:30 ET,,PENDING at 17:30,+309.02,+8.9,
+2026-10-22,cef,FAIL,True,False,,,-216.30,snapshot 17:30 ET,,PENDING at 17:30,-94.28,,data
+2026-10-23,cef,PASS,False,True,2,2,+210.25,snapshot 17:30 ET,,PENDING at 17:30,+207.85,+9.8,
+2026-10-26,cef,PASS,False,True,6,6,-446.70,snapshot 17:30 ET,,PENDING at 17:30,-520.85,+1.4,
+2026-10-27,cef,PASS,False,True,6,6,+251.43,snapshot 17:30 ET,,PENDING at 17:30,+192.95,+2.2,
+2026-10-28,cef,PASS,False,True,10,10,+414.46,snapshot 17:30 ET,,PENDING at 17:30,+421.90,-4.6,
+2026-10-29,cef,PASS,False,True,3,3,+78.64,snapshot 17:30 ET,,PENDING at 17:30,-13.43,+21.3,
+2026-10-30,cef,PASS,False,True,7,7,-386.88,snapshot 17:30 ET,,PENDING at 17:30,-503.50,-6.8,
+2026-11-02,cef,PASS,False,True,4,4,+103.87,snapshot 17:30 ET,,PENDING at 17:30,+178.71,-15.3,
+2026-11-03,cef,PASS,False,True,6,6,+813.19,snapshot 17:30 ET,,PENDING at 17:30,+793.28,+16.7,
+2026-11-04,cef,PASS,False,True,11,11,-69.91,snapshot 17:30 ET,,PENDING at 17:30,-232.04,+18.3,
+2026-11-05,cef,PASS,False,True,5,5,+22.75,snapshot 17:30 ET,,PENDING at 17:30,-83.31,+10.2,
+2026-11-06,cef,PASS,False,True,13,13,-308.14,snapshot 17:30 ET,,PENDING at 17:30,-266.09,+7.2,

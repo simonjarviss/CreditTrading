@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1186641,
+  "episode_accession": "0001104659-20-140198",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "A&Q Masters Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "A&Q Long/Short Strategies Fund LLC", "cik": 1186641, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-20-140198", "quote": "Fund Shares and Acquiring Fund Interests are not traded on any securities exchange or other market, and are subject to restrictions on transfer."},
+      "outcome": "not_a_listed_pair",
+      "announcement": null,
+      "outcome_evidence": {"accession": "0001104659-20-140198", "date": "2020-12-29", "quote": "Fund Shares and Acquiring Fund Interests are not traded on any securities exchange or other market, and are subject to restrictions on transfer."},
+      "notes": "Roles inferred from the N-14 layout (shareholder letter headed A&Q MASTERS FUND; registrant A&Q Long/Short Strategies Fund LLC), not stated in the excerpts. No excerpt names the merger in a sentence, so announcement is null. Outcome not stated."
+    }
+  ],
+  "problems": "Excerpts do not explicitly name which fund is target or acquirer."
+}

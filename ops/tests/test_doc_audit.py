@@ -362,3 +362,14 @@ def test_agent_worktrees_are_not_audited(tmp_path, monkeypatch):
     monkeypatch.setattr(da, "REPO", tmp_path)
     assert not [p for p in da._authored_markdown() if p.startswith(".claude/worktrees/")]
     assert not [p for p in da._agent_layer() if p.startswith(".claude/worktrees/")]
+
+
+def test_the_evidence_packs_private_cache_is_a_runtime_artefact(tmp_path, monkeypatch):
+    """The cache is gitignored by ruling (2026-11-03), so a fresh clone has none; naming it
+    in CLAUDE.md, docs/SYSTEM.md or a rule file must not read as a pointer to nothing.
+    REPO is an empty directory here, so the cache cannot pass by merely existing (it does
+    on any machine that has run snapshot_live, which is how CI's failure went unseen)."""
+    monkeypatch.setattr(M, "REPO", tmp_path)
+    assert M._resolves("path", "results/report/_cache_live/")
+    assert M._resolves("path", "results/report/_cache_live/cef/scores_by_symbol.csv")
+    assert not M._resolves("path", "results/report/_cache_elsewhere/x.csv")

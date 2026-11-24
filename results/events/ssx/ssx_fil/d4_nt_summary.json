@@ -1,0 +1,51 @@
+{
+ "source": "EDGAR master indexes 2008Q1-2025Q4 (offline); bulk submissions archive; CRSP/Compustat via R2; Alpaca GETs",
+ "notices_2008_2025_originals": 63125,
+ "issuers_2008_2025": 10265,
+ "gate_window": [
+  2010,
+  2022
+ ],
+ "gate_liquid_events": 1718,
+ "gate_liquid_issuer_years": 1361,
+ "gate_liquid_filing_dates": 553,
+ "gate_kill_line": 250,
+ "listed_common_2010_22": 4833,
+ "linked_2010_22": 5611,
+ "notices_2010_22": 44240,
+ "listed_adv_median_usd_2010_22": 430293.90625,
+ "listed_share_adv_ge_1m_2010_22": 0.36,
+ "link_recall_check": {
+  "events_2018_22_by_ciks_listed_today": 1654,
+  "linked_ccm": 1170,
+  "listed_common": 1035,
+  "unlinked_cik_has_ccm_link_at_another_date": 467,
+  "unlinked_cik_absent_from_ccm": 17,
+  "unlinked_ciks_absent_from_ccm": 6
+ },
+ "multi_permno_events": 0,
+ "borrow_today": {
+  "alpaca_clock": "2026-10-19T11:37:12.811168-04:00",
+  "filers_2025": 1005,
+  "listed_today_national_exchange": 361,
+  "at_alpaca": 358,
+  "shortable": 109,
+  "etb": 109,
+  "shortable_share_of_at_alpaca": 0.3045,
+  "shortable_share_ci95": [
+   0.2591,
+   0.354
+  ],
+  "etb_share_of_at_alpaca": 0.3045,
+  "liquid_2018_22_issuers": 565,
+  "liquid_2018_22_listed_today": 293,
+  "liquid_2018_22_at_alpaca": 289,
+  "liquid_2018_22_shortable": 203,
+  "liquid_2018_22_shortable_ci95": [
+   0.6473,
+   0.7522
+  ]
+ },
+ "bdc_spells": 345,
+ "bdc_notices_2008_2025": 169
+}

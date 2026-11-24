@@ -1,0 +1,18 @@
+{
+  "episode_cik": 814083,
+  "episode_accession": "0001398344-15-001288",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Cornerstone Progressive Return Fund", "cik": 1399186, "ticker": null},
+      "acquirer": {"name": "Cornerstone Strategic Value Fund, Inc.", "cik": 814083, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-15-001288", "date": "2015-02-27", "quote": "Under the CFP Plan, CFP will merge with and into CLM on the Effective Date."},
+      "outcome_evidence": null,
+      "notes": "Only the N-14 8C, its amendment and two later annual-meeting proxies are in the window; none states how the CFP merger ended. The excerpts show the target's shares are listed on the NYSE MKT but do not settle the acquirer's listing."
+    }
+  ],
+  "problems": ""
+}

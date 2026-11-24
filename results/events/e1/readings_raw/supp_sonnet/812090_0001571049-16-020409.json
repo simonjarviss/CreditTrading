@@ -1,0 +1,18 @@
+{
+  "episode_cik": 812090,
+  "episode_accession": "0001571049-16-020409",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Virtus Total Return Fund", "cik": null, "ticker": "DCA"},
+      "acquirer": {"name": "The Zweig Fund, Inc.", "cik": 812090, "ticker": "ZF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001571049-16-020409", "quote": "A special meeting of shareholders (the “Special Meeting”) of The Zweig Fund, Inc. (NYSE: ZF), a Maryland corporation, and Virtus Total Return Fund (NYSE: DCA), a Delaware statutory trust (each a “Fund” and together, the “Funds”)"},
+      "outcome": null,
+      "announcement": {"accession": "0001571049-16-020409", "date": "2016-12-07", "quote": "ZF will continue to operate after the Reorganization as a registered, diversified, closed-end investment company with the investment objectives and policies described in this Joint Proxy Statement/Prospectus."},
+      "outcome_evidence": null,
+      "notes": "N-14 8C (2016-12-07) and N-14 8C/A (2017-02-01) propose DCA merging into ZF; meeting set for March 7, 2017. No excerpt states the outcome. The 2017-04-28 DEF 14A is filed under the name Virtus Total Return Fund Inc. for CIK 812090 and lists ZF as VIRTUS TOTAL RETURN FUND INC., but no excerpt states that the reorganization was completed or failed."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts. DCA's CIK does not appear in any FILING header."
+}

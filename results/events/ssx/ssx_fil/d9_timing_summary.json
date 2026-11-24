@@ -1,0 +1,23 @@
+{
+ "matched_firm_quarters_2009_2025": 440344,
+ "dropped_no_or_bad_period": 9109,
+ "late5_liquid_per_year_2010_22_mean": 367.7,
+ "late5_liquid_per_year_2010_22_min": 207,
+ "late5_liquid_issuer_years_2010_22": 3963,
+ "late5_on_202_clock_liquid_per_year_2010_22_mean": 594.0,
+ "late5_liquid_10q_within_45_days_share": 0.8269,
+ "days_202_to_report_median_2010_22": 2.0,
+ "days_202_to_report_p25_p75": [
+  0.0,
+  13.0
+ ],
+ "share_202_same_day_as_report": 0.3428,
+ "late5_with_nt_between": null,
+ "late5_liquid_2010_22_with_nt_between_share": 0.1479,
+ "rdq_vs_202": {
+  "n_matched": 117416,
+  "same_day": 0.8285,
+  "within_1_day": 0.918,
+  "rdq_on_or_before_10q": 0.9989
+ }
+}

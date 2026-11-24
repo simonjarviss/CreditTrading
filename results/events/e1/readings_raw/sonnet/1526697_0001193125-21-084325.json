@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1526697,
+  "episode_accession": "0001193125-21-084325",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Apollo Senior Floating Rate Fund Inc.", "cik": 1502573, "ticker": "AFT"},
+      "acquirer": {"name": "Apollo Tactical Income Fund Inc.", "cik": 1526697, "ticker": "AIF"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "vote_failed",
+      "announcement": {"accession": "0001193125-21-084325", "date": "2021-03-18", "quote": "You are cordially invited to attend a joint special stockholder meeting (the “Special Meeting”) of Apollo Senior"},
+      "outcome_evidence": {"accession": "0001193125-21-240466", "date": "2021-08-09", "quote": "shareholders did not approve the proposals applicable to AFT described in the Joint Proxy Statement/Prospectus of Apollo Tactical Income Fund, Inc. dated May 18, 2021 (the “Proxy Statement”). As a result, the Special Meeting of shareholders of AFT has been concluded."},
+      "notes": "AFT is shown as NYSE: AFT (0001193125-21-240466) and is described as a closed-end fund; AIF is called an Apollo-advised closed-end fund (0001193125-21-221831) but no excerpt states an exchange for AIF, so both_listed is null. The first filing's excerpt only fragmentarily names the joint special meeting; 0001193125-21-221831 (2021-07-22) states the proposal: the reorganization of AFT into AIF. The AIF-side special meeting result is previewed in 0001193125-21-203289 (2021-06-29, AFT meeting adjourned) but its outcome text is not shown. Failure rests on the AFT stockholder vote, with the AFT special meeting concluded on 2021-08-09."
+    }
+  ],
+  "problems": "The 2021 DEF 14A and DEFA14A (0001193125-21-111630, -111636, -167528) concern annual meetings (director election, adjournment); the 2022 PRE 14A, DEF 14A and DEFA14A (0001133228-22-001727, -002212, -002216) show only cover pages, so nothing about a merger in them."
+}

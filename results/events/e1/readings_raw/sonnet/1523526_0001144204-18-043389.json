@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1523526,
+  "episode_accession": "0001144204-18-043389",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Medley Capital Corporation", "cik": 1490349, "ticker": "MCC"},
+      "acquirer": {"name": "Sierra Income Corporation", "cik": 1523526, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001523526-19-000008", "quote": "Securities registered pursuant to Section 12(b) of the Exchange Act: None"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-18-043383", "date": "2018-08-09", "quote": "Sierra, MCC and MDLY have entered into definitive agreements for Sierra to acquire MCC and MDLY. MCC will merge with and into Sierra, with Sierra as the surviving company."},
+      "outcome_evidence": {"accession": "0001213900-20-010956", "date": "2020-05-05", "quote": "today announced that effective as of May 1, 2020 its Board of Directors has terminated its previously announced mergers with Medley Capital Corporation (“MCC”) and Medley Management Inc. (“MDLY”) as the Outside Date (as defined below) has passed and neither of the mergers were consummated."},
+      "notes": "Sierra Income Corporation (acquirer) shows no exchange registration in its 8-Ks (Section 12(b): None) and no ticker is printed for it, so the pair is not a listed pair; MCC is NYSE-listed. The merger itself was terminated by Sierra's board effective May 1, 2020 after the March 31, 2020 Outside Date passed. History in the filings: agreements dated August 9, 2018; special meetings repeatedly adjourned (Feb 8, Mar 8, Mar 15, Mar 29, 2019) and postponed on April 18, 2019; amended and restated agreement July 29, 2019 with a go-shop that produced no Superior Proposal (Oct 14, 2019 release)."
+    },
+    {
+      "target": {"name": "Medley Management Inc.", "cik": 1611110, "ticker": "MDLY"},
+      "acquirer": {"name": "Sierra Income Corporation", "cik": 1523526, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001523526-19-000008", "quote": "Securities registered pursuant to Section 12(b) of the Exchange Act: None"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-18-043383", "date": "2018-08-09", "quote": "Sierra, MCC and MDLY have entered into definitive agreements for Sierra to acquire MCC and MDLY."},
+      "outcome_evidence": {"accession": "0001213900-20-010956", "date": "2020-05-05", "quote": "today announced that effective as of May 1, 2020 its Board of Directors has terminated its previously announced mergers with Medley Capital Corporation (“MCC”) and Medley Management Inc. (“MDLY”) as the Outside Date (as defined below) has passed and neither of the mergers were consummated."},
+      "notes": "Target is an asset manager (an operating company, NYSE: MDLY) not a closed-end fund or BDC, and the acquirer shows no exchange registration, so not a listed pair. Terminated May 1, 2020 by Sierra's board after the Outside Date passed, together with the MCC merger."
+    }
+  ],
+  "problems": "Sierra's own exchange status rests on the 8-K cover line 'Securities registered pursuant to Section 12(b) of the Exchange Act: None' (filed 2019-07-01 and later); no text states in words that Sierra is non-traded. The outcome field is not_a_listed_pair as the rules require, but the evidence shows the deals were terminated."
+}

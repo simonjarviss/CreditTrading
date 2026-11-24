@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1099941,
+  "episode_accession": "0001140361-17-016580",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "U.S. Gas & Electric, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Equus Total Return, Inc.", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001140361-17-016578", "quote": "Upon effectiveness of the merger contemplated by the Merger Agreement, USG&E, MVC’s largest portfolio company, will merge with the Merger Sub and become a wholly-owned subsidiary of Equus, a publicly-traded company."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001140361-17-016578", "date": "2017-04-24", "quote": "On April 24, 2017, MVC Capital, Inc. (“MVC”) and certain other shareholders of U.S. Gas & Electric, Inc. (“USG&E”) entered into a Stock Purchase and Plan of Merger (“Merger Agreement”) with Equus Total Return, Inc. (“Equus”) and ETR Merger Sub., Inc. (“Merger Sub”), a newly-formed wholly-owned subsidiary of Equus."},
+      "outcome_evidence": null,
+      "notes": "MVC Capital is a seller (33% holder of Equus and owner of USG&E), not a party absorbed. USG&E is an operating company held by MVC as a portfolio company, so the pair is not two listed funds. Outcome of the Equus/USG&E deal is not stated in the excerpts; outcome set by the both_listed rule."
+    }
+  ],
+  "problems": "MVC Capital's own later filings (tender offers, buybacks, proxy) are not about a fund merger as far as the excerpts show."
+}

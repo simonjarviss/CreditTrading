@@ -1,0 +1,6 @@
+check,ticker,date,ruling,ruled_by,ruled_on
+O1,-,2026-10-28,"accept, with one change: the P&L window ends 2026-10-09 (where IEF and HYG in data/etf_daily.parquet end), not 2026-10-15; only events with e+3 on or before it are eligible; French must cover to 2026-10-09",team lead,2026-10-28
+O2,-,2026-10-28,accept: betas at the vol target (NAV-tender precedent),team lead,2026-10-28
+O3,-,2026-10-28,accept: the NAV leg against the price leg on the same events,team lead,2026-10-28
+O4,-,2026-10-28,accept: the X4 fills checked against Alpaca's adjacent-day bars within $0.01,team lead,2026-10-28
+GO,-,2026-10-28,,,

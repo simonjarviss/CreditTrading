@@ -1,0 +1,1 @@
+{"batch": "04", "model_id": "claude-sonnet-5-5", "episodes": ["1260729_0001193125-14-116706", "1769901_0001193125-19-082325", "1782524_0001193125-24-272461"], "parts_read": 9, "problems": "Episode 1782524 describes no fund merger (empty deals). Episode 1769901 deals coded both_listed false because the acquirer never issued shares, outcome kept as withdrawn."}

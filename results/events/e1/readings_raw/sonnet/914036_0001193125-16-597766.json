@@ -1,0 +1,28 @@
+{
+  "episode_cik": 914036,
+  "episode_accession": "0001193125-16-597766",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "LVIP VIP Mid Cap Managed Volatility Portfolio", "cik": null, "ticker": null},
+      "acquirer": {"name": "LVIP Blended Mid Cap Managed Volatility Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-16-597766", "quote": "Standard Class and Service Class shares of beneficial interest, no par value, of LVIP Blended Mid Cap Managed Volatility Fund, one series of the Registrant."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-16-597766", "date": "2016-05-20", "quote": "Proposal 1: To approve the Plan of Reorganization with respect to the Reorganization of the LVIP VIP Mid Cap Managed Volatility Portfolio into the Acquiring Fund"},
+      "outcome_evidence": null,
+      "notes": "Series of an insurance-dedicated trust (Lincoln Variable Insurance Products Trust, CIK 914036 is the registrant, hence role other); sold to separate accounts, not exchange-listed. The acquiring fund is called only 'the Acquiring Fund' in the excerpt; its name is taken from the registered-securities line of the same filing. A later PRE 14A/DEF 14A (2016-09 and 2016-10) proposes liquidating the Standard Class of the LVIP VIP Mid Cap Managed Volatility Portfolio; whether the reorganization happened is not stated."
+    },
+    {
+      "target": {"name": "LVIP BlackRock U.S. Opportunities Managed Volatility Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "LVIP Blended Mid Cap Managed Volatility Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-16-597766", "quote": "Standard Class and Service Class shares of beneficial interest, no par value, of LVIP Blended Mid Cap Managed Volatility Fund, one series of the Registrant."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-16-597766", "date": "2016-05-20", "quote": "Each Acquired Fund is a series of Lincoln Variable Insurance Products Trust (the “Trust”)."},
+      "outcome_evidence": null,
+      "notes": "Second Acquired Fund in the same joint meeting (September 7, 2016); reorganizations are not contingent on each other. The other N-14 filed the same day (seq 1) covers LVIP BlackRock Emerging Markets Managed Volatility Fund as an Acquired Fund into LVIP SSGA International Managed Volatility Fund."
+    }
+  ],
+  "problems": ""
+}

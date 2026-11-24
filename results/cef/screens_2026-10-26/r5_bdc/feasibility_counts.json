@@ -1,0 +1,51 @@
+{
+ "A_listed_bdcs_with_report_2012_22": 61,
+ "A_listed_bdc_reports_2012_22": 1943,
+ "A_listed_bdcs_ge20_reports_and_ge5y": 46,
+ "A_last_filing_date_used": "2022-12-16",
+ "B_pit_bdc_quarter_ends_2012_22": 175,
+ "B_pit_share_of_listed_reports": 0.0901,
+ "B_pit_bdcs": 39,
+ "B_pit_bdcs_ge20_quarters": 0,
+ "B_pit_bdcs_span_ge5y": 1,
+ "B_pit_by_end_year": {
+  "2017": 4,
+  "2018": 4,
+  "2019": 4,
+  "2020": 35,
+  "2021": 79,
+  "2022": 49
+ },
+ "B_relaxed_notPIT_bdc_period_ends_2012_22": 505,
+ "B_relaxed_bdcs_ge20_period_ends": 0,
+ "B_relaxed_by_end_year": {
+  "2012": 6,
+  "2013": 13,
+  "2014": 15,
+  "2015": 17,
+  "2016": 19,
+  "2017": 36,
+  "2018": 43,
+  "2019": 43,
+  "2020": 56,
+  "2021": 123,
+  "2022": 134
+ },
+ "C_bdc_gvkeys_linked": 61,
+ "C_fundq_rows_with_rdq_2012_22": 2017,
+ "C_gvkeys_ge20_quarters": 49,
+ "C_local_fundq_columns": [
+  "gvkey",
+  "datadate",
+  "rdq"
+ ],
+ "C_rdq_minus_datadate_days_p10_p50_p90": [
+  32.0,
+  39.0,
+  65.0
+ ],
+ "D_bdc_permnos": 61,
+ "D_permnos_with_prices_2012_22": 54,
+ "D_permnos_ge1260_price_days": 44,
+ "D_price_last_date": "2022-12-30"
+}

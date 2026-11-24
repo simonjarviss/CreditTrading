@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1310445,
+  "episode_accession": "0001193125-10-148738",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "DCW Total Return Fund", "cik": 1347384, "ticker": "DCW"},
+      "acquirer": {"name": "DCA Total Return Fund", "cik": 1310445, "ticker": "DCA"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-10-148738", "quote": "DCA Total Return Fund (NYSE: DCA) and DCW Total Return Fund (NYSE: DCW)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-10-148738", "date": "2010-06-28", "quote": "The aggregate net asset value (not the market value) of DCA Common Shares received by DCW investors in the Reorganization will equal the aggregate net asset value (not the market value) of DCW common shares held immediately prior to the Reorganization, less the costs of the Reorganization paid by DCW."},
+      "outcome_evidence": null,
+      "notes": "Both funds are described as closed-end (DCA 'will continue to operate after the Reorganization as a registered, non-diversified, closed-end investment company'). Reorganization conditional on approval by both sets of stockholders at a September 16, 2010 meeting. The excerpts from 2011-2012 (DCA only) concern a change of adviser to Virtus and renaming to Virtus Total Return Fund; they do not mention DCW or say how the reorganization ended."
+    }
+  ],
+  "problems": "Outcome of the DCA/DCW reorganization is not stated in the excerpts, so null."
+}

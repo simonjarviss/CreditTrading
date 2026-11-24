@@ -1,0 +1,106 @@
+{
+ "run_date": "2026-10-19",
+ "read_at_utc": "2026-10-19T15:29:17+00:00",
+ "active_us_equity_assets": 14412,
+ "zero_trials": true,
+ "written": "results/events/ssx/ssx_lcred/census_2026-10-19.csv",
+ "rejected_preferred_named": 5,
+ "bdc_commons_in_map": 53,
+ "bdc_ciks_resolved": 49,
+ "baby_bond": {
+  "n": 168,
+  "tradable": 167,
+  "shortable": 5,
+  "easy_to_borrow": 5,
+  "nyse": 107,
+  "nasdaq": 56,
+  "otc": 1,
+  "cik_matched": 167,
+  "cik_match_rate": 0.994,
+  "unique_issuers": 89,
+  "match_methods": {
+   "ticker": 167,
+   "unmatched": 1
+  },
+  "by_rule": {
+   "name: notes/debentures": 168
+  },
+  "cumulative": {
+   "unstated": 168
+  },
+  "name_fixed_to_float": 3,
+  "name_reset": 5,
+  "name_floating": 1,
+  "bdc_issuer": 29,
+  "bdc_issuer_shortable": 1
+ },
+ "preferred": {
+  "n": 422,
+  "tradable": 407,
+  "shortable": 45,
+  "easy_to_borrow": 45,
+  "nyse": 312,
+  "nasdaq": 96,
+  "otc": 14,
+  "cik_matched": 410,
+  "cik_match_rate": 0.972,
+  "unique_issuers": 198,
+  "match_methods": {
+   "ticker": 409,
+   "unmatched": 12,
+   "root+name": 1
+  },
+  "by_rule": {
+   "name: preferred": 408,
+   "symbol: NYSE .PR": 14
+  },
+  "cumulative": {
+   "cumulative": 196,
+   "non_cumulative": 150,
+   "unstated": 76
+  },
+  "name_fixed_to_float": 49,
+  "name_reset": 26,
+  "name_floating": 14,
+  "bdc_issuer": 1,
+  "bdc_issuer_shortable": 0
+ },
+ "both_kinds": {
+  "n": 590,
+  "tradable": 574,
+  "shortable": 50,
+  "easy_to_borrow": 50,
+  "nyse": 419,
+  "nasdaq": 152,
+  "otc": 15,
+  "cik_matched": 577,
+  "cik_match_rate": 0.978,
+  "unique_issuers": 263,
+  "match_methods": {
+   "ticker": 576,
+   "unmatched": 13,
+   "root+name": 1
+  },
+  "by_rule": {
+   "name: preferred": 408,
+   "name: notes/debentures": 168,
+   "symbol: NYSE .PR": 14
+  }
+ },
+ "vs_2026_10_15": {
+  "old_rows": 547,
+  "new_rows": 590,
+  "in_old_not_new": [
+   "AXICY",
+   "BAK",
+   "BBD",
+   "CCZ",
+   "CIB",
+   "PFBC",
+   "XELAP"
+  ],
+  "in_new_not_old_n": 50,
+  "shortable_old": 53,
+  "shortable_new": 50
+ }
+}

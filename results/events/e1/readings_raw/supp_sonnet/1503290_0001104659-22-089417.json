@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1503290,
+  "episode_accession": "0001104659-22-089417",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Delaware Ivy High Income Opportunities Fund", "cik": 1568292, "ticker": "IVH"},
+      "acquirer": {"name": "abrdn Income Credit Strategies Fund", "cik": 1503290, "ticker": "ACP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-22-089417", "date": "2022-08-11", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by one or more affiliates of Delaware Management Company into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "The 2022-08-11 press release lists four pairs; only IVH into ACP involves this episode's fund (the other pairs name different acquirers: AGD and ASGI). Special meeting 'tentatively scheduled for November 9, 2022'. No excerpt states a vote result, closing or termination; later 2022 DEFA14As and the 2023-04-14 DEF 14A show only cover pages. Tickers are printed but no exchange is named in the excerpts."
+    },
+    {
+      "target": {"name": "First Trust High Income Long/Short Fund", "cik": 1494530, "ticker": null},
+      "acquirer": {"name": "abrdn Income Credit Strategies Fund", "cik": 1503290, "ticker": "ACP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-23-110919", "date": "2023-10-24", "quote": "Shareholders of each Acquired Fund will be asked to vote on the Reorganization of their fund into the respective Acquiring Fund at a special meeting currently targeted for February 2024."},
+      "outcome_evidence": null,
+      "notes": "Pairing inferred only from the 425 headers (filed by abrdn Income Credit Strategies Fund, CIK 1503290; subject company First Trust High Income Long/Short Fund, CIK 1494530). The excerpts do not print which of the four First Trust funds goes to which abrdn acquirer; the other three subject companies named (Macquarie/First Trust Global Infrastructure/Utilities Dividend & Income Fund, First Trust/abrdn Global Opportunity Income Fund, First Trust Specialty Finance and Financial Opportunities Fund) are not recorded as deals because the excerpts do not tie them to this acquirer. No excerpt states an outcome (N-14 8C 2023-10-24 and 8C/A 2023-12-12, DEF 14A 2023-11-15 and 2024-04-08 show only cover or boilerplate text)."
+    }
+  ],
+  "problems": "No outcome stated for either proposal; pairing of the 2023 First Trust funds to acquirers is not stated in the excerpts beyond the 425 headers."
+}

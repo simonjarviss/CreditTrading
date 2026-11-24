@@ -1,0 +1,28 @@
+{
+  "episode_cik": 891038,
+  "episode_accession": "0001193125-23-231640",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock MuniYield Pennsylvania Quality Fund", "cik": 891038, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-23-231640", "date": "2023-09-08", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Mergers"},
+      "outcome_evidence": {"accession": "0001193125-24-145099", "date": "2024-05-22", "quote": "causing merger to be withdrawn"},
+      "notes": "2023 proposal. Acquirer taken from the FILED BY / SUBJECT COMPANY header of the 2023-09-08 425; the excerpt of the press release is cut off before it names the funds. Withdrawal is stated only in Saba-contest slides (DEFA14A seq 16 and seq 23): 'Saba opposes merger of 4 BlackRock CEFs, increasing solicitation costs and causing merger to be withdrawn'; the slides do not name MPA, but the 2023 PRE 14A (seq 2) lists MPA with three other funds. Listing status of the funds is not shown in the excerpts."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield Pennsylvania Quality Fund", "cik": 891038, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund, Inc.", "cik": 890196, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-25-137906", "date": "2025-06-09", "quote": "BlackRock Announces Board Approvals Seeking to Deliver Significant Scale Benefits to Municipal CEF Shareholders"},
+      "outcome_evidence": null,
+      "notes": "2025 proposal (press release header 'MQY/MPA'). The PRE 14A of 2025-08-08 (seq 34) is a joint filing for reorganizations among IQM, MYF, MQY II, VKV, MPA and MQY; the excerpts do not state which funds are acquiring or the outcome. Only the MPA pair is recorded."
+    }
+  ],
+  "problems": "The 2023 proposal's withdrawal rests on slide text that does not name MPA. No filing in the window states the outcome of the 2025 proposal. The 2025 joint proxy involves other funds; only the pair involving this episode's fund was recorded."
+}

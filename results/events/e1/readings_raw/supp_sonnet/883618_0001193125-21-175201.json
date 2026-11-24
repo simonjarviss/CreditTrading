@@ -1,0 +1,28 @@
+{
+  "episode_cik": 883618,
+  "episode_accession": "0001193125-21-175201",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Select Tax-Free Income Portfolio 2", "cik": 885733, "ticker": "NXQ"},
+      "acquirer": {"name": "Nuveen Select Tax-Free Income Portfolio", "cik": 883618, "ticker": "NXP"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-21-175201", "quote": "The Boards of Trustees of Nuveen Select Tax-Free Income Portfolio (NYSE: NXP), Nuveen Select Tax-Free Income Portfolio 2 (NYSE: NXQ), and Nuveen Select Tax-Free Income Portfolio 3 (NYSE: NXR) have approved a proposal to reorganize the funds."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-175201", "date": "2021-05-27", "quote": "The proposed reorganization, if approved by shareholders, would combine NXQ and NXR into NXP."},
+      "outcome_evidence": null,
+      "notes": "Meeting of 2021-09-22 adjourned to 2021-10-29 (425 filed 2021-09-22). No excerpt states the result of the vote or whether the reorganization closed. The 2022-02 8-K and 2022-06 DEF 14A excerpts do not mention it. The 2021-09-22 notices speak of 'an important proposal' (singular); the excerpts do not say whether a target dropped out."
+    },
+    {
+      "target": {"name": "Nuveen Select Tax-Free Income Portfolio 3", "cik": 888411, "ticker": "NXR"},
+      "acquirer": {"name": "Nuveen Select Tax-Free Income Portfolio", "cik": 883618, "ticker": "NXP"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-21-175201", "quote": "The Boards of Trustees of Nuveen Select Tax-Free Income Portfolio (NYSE: NXP), Nuveen Select Tax-Free Income Portfolio 2 (NYSE: NXQ), and Nuveen Select Tax-Free Income Portfolio 3 (NYSE: NXR) have approved a proposal to reorganize the funds."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-175201", "date": "2021-05-27", "quote": "The proposed reorganization, if approved by shareholders, would combine NXQ and NXR into NXP."},
+      "outcome_evidence": null,
+      "notes": "Same filings as the NXQ deal; outcome not stated in any excerpt (meeting adjourned from 2021-09-22 to 2021-10-29)."
+    }
+  ],
+  "problems": "Outcome of neither deal is stated in the excerpts."
+}

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1769901,
+  "episode_accession": "0001193125-19-082325",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund", "cik": null, "ticker": "JLS"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": 1769901, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-19-082325", "date": "2019-03-21", "quote": "If the shareholder voting and other conditions to closing are satisfied (or waived), the Mergers are expected to take effect on or about [●], 2019 or as soon as practicable thereafter."},
+      "outcome_evidence": {"accession": "0001193125-19-157215", "date": "2019-05-24", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s shares as part of a proposed merger transaction that is no longer contemplated;"},
+      "notes": "N-14 registration statement withdrawn by Form RW on 2019-05-24 (merger no longer contemplated); N-8F of 2019-10-23 says the acquiring fund never commenced operations or issued shares. Exchange listing is not stated for either fund (tickers in parentheses only)."
+    },
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund 2", "cik": null, "ticker": "JMT"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": 1769901, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-19-082325", "date": "2019-03-21", "quote": "If the shareholder voting and other conditions to closing are satisfied (or waived), the Mergers are expected to take effect on or about [●], 2019 or as soon as practicable thereafter."},
+      "outcome_evidence": {"accession": "0001193125-19-157215", "date": "2019-05-24", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s shares as part of a proposed merger transaction that is no longer contemplated;"},
+      "notes": "Second target of the same two-target proposal; same withdrawal evidence."
+    }
+  ],
+  "problems": ""
+}

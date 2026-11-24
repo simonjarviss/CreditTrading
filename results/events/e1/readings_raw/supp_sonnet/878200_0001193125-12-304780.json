@@ -1,0 +1,38 @@
+{
+  "episode_cik": 878200,
+  "episode_accession": "0001193125-12-304780",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Ohio Dividend Advantage Municipal Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Nuveen Ohio Quality Income Municipal Fund, Inc.", "cik": 878200, "ticker": "NUO"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Subject company in the 2012-09-27 and 2012-10-15 Rule 425 filings; absent from the subject lists from 2012-11-19. No excerpt states why or how it ended."
+    },
+    {
+      "target": {"name": "Nuveen Ohio Dividend Advantage Municipal Fund 2", "cik": 1145728, "ticker": null},
+      "acquirer": {"name": "Nuveen Ohio Quality Income Municipal Fund, Inc.", "cik": 878200, "ticker": "NUO"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Subject company in the 425s from 2012-09-27 through 2013-02-12 (annual meeting adjourned repeatedly, next adjournments ending Nov 16 2012, Dec 14 2012, Jan 24 2013, Feb 8 2013; 2013-02-12 says 'Due to low voter participation'). Filings after Feb 2013 in the window do not mention it. No outcome stated."
+    },
+    {
+      "target": {"name": "Nuveen Ohio Dividend Advantage Municipal Fund 3", "cik": 1165383, "ticker": null},
+      "acquirer": {"name": "Nuveen Ohio Quality Income Municipal Fund, Inc.", "cik": 878200, "ticker": "NUO"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Subject company in the 425s from 2012-09-27 through 2013-02-12; the 2012-11-19 425 (seq=11) is headed by this fund's CIK. No outcome stated."
+    }
+  ],
+  "problems": "Excerpts are compact and contain no outcome language; the 425 excerpts do not use the word merger, so no announcement quote could be given. Episode role 'acquirer' rests on the fund being the N-14 registrant and filer of the 425s."
+}

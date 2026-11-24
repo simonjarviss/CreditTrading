@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1391461,
+  "episode_accession": "0001219120-18-000010",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Advent Claymore Convertible Securities and Income Fund II", "cik": 1391461, "ticker": "AGC"},
+      "acquirer": {"name": "Advent Claymore Convertible Securities and Income Fund", "cik": 1219120, "ticker": "AVK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001219120-18-000010", "date": "2018-05-31", "quote": "Proposal 1: The mergers of AGC and LCM with and into AVK and the issuance of AVK’s common shares"},
+      "outcome_evidence": null,
+      "notes": "Funds are described as closed-end funds but exchange listing is not stated in the excerpts. The N-8F (2018-08-29, reason: Merger) shows shareholder approval on July 20, 2018 and a distribution to shareholders, but the excerpt does not state completion."
+    },
+    {
+      "target": {"name": "Advent/Claymore Enhanced Growth & Income Fund", "cik": null, "ticker": "LCM"},
+      "acquirer": {"name": "Advent Claymore Convertible Securities and Income Fund", "cik": 1219120, "ticker": "AVK"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001219120-18-000010", "date": "2018-05-31", "quote": "Proposal 1: The mergers of AGC and LCM with and into AVK and the issuance of AVK’s common shares"},
+      "outcome_evidence": null,
+      "notes": "Part of the same joint proposal; no LCM-specific outcome appears in the excerpts."
+    }
+  ],
+  "problems": "Tickers AGC, LCM, AVK are given as defined terms in the text, not with an exchange name."
+}

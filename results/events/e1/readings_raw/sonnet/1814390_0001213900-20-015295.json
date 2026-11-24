@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1814390,
+  "episode_accession": "0001213900-20-015295",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Flat Rock Capital Corp.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Flat Rock Core Income Fund", "cik": 1814390, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-20-025058", "quote": "a non-diversified, closed-end management investment company that intends to operate as an interval fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-20-015295", "date": "2020-06-19", "quote": "pursuant to which the Company will transfer all of its assets to the Fund in exchange for an equal number of common shares of beneficial interest of the Fund"},
+      "outcome_evidence": {"accession": "0001213900-20-025058", "date": "2020-09-02", "quote": "a non-diversified, closed-end management investment company that intends to operate as an interval fund"},
+      "notes": "BDC reorganizing into an interval fund (fund named Flat Rock Capital Credit Fund in the first filing, Flat Rock Core Income Fund later); the fund is not exchange listed. Special meeting noticed for October 27, 2020; the excerpts do not state the vote result or completion. The company's own listing status is not stated."
+    }
+  ],
+  "problems": ""
+}

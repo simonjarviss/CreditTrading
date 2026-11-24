@@ -1,0 +1,18 @@
+{
+  "episode_cik": 275309,
+  "episode_accession": "0000880195-15-000121",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Fidelity Fifty", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Focused Stock Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000927384-15-000034", "quote": "This notice is a confirmation of the proxy vote cast via the telephone for the mutual fund listed below."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000880195-15-000121", "date": "2015-01-30", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity Fifty to Fidelity ® Focused Stock Fund and the assumption by Fidelity Focused Stock Fund of Fidelity Fifty's liabilities, in complete liquidation of Fidelity Fifty."},
+      "outcome_evidence": null,
+      "notes": "Fidelity Fifty is a series of Fidelity Hastings Street Trust, a mutual fund; the filer in the header is Fidelity Capital Trust (CIK 275309), whose relation to the two funds is not stated in the excerpts, so CIKs and episode_role are null. Meeting adjourned from 2015-05-12 to 2015-06-09 for lack of votes (seq 7); no outcome stated."
+    }
+  ],
+  "problems": ""
+}

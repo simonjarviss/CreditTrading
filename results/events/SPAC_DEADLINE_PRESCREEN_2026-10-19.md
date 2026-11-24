@@ -37,7 +37,7 @@ The pre-screen itself reads only gitignored caches and committed files. It
 opens no network connection and reads no credentials. For this note its CRSP,
 names, delisting and DTB3 caches were copied, byte for byte, from the census's
 own `_cache_spac/`. Every figure below is in
-`results/events/spac_deadline_prescreen_summary_2026-10-19.json`. That file
+`results/events/spac/spac_deadline_prescreen_summary_2026-10-19.json`. That file
 holds aggregates only, with no permno and no CRSP row, because CRSP is
 licensed and this repository is public.
 

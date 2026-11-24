@@ -1,0 +1,18 @@
+{
+  "episode_cik": 923184,
+  "episode_accession": "0001193125-24-210871",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Matthews Asian Growth and Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-24-254102", "quote": "Fund shares for shares of another Matthews Asia Funds mutual fund is on or about [__], 2025."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-24-254102", "date": "2024-11-08", "quote": "These materials are for a Special Meeting of Shareholders (the “Meeting”) of Matthews Asian Growth and Income Fund (the “Target Fund”), a series of Matthews Asia Funds (the “Trust”)"},
+      "outcome_evidence": null,
+      "notes": "Both funds are series of one mutual fund trust (CIK 923184 is the trust). Acquiring fund is not named in the excerpts; the 2025-01-27 425 caption lists Matthews Asian Growth and Income Fund and Matthews Emerging Markets Equity Fund. Later N-14 filings (2025-09-30, 2026-03-06) show no merger text in their excerpts; 2026 DEFA14As concern a new investment management agreement and quorum, not shown to be a merger."
+    }
+  ],
+  "problems": "Only the 2024 merger is described in excerpts. The 2025 and 2026 N-14 filings may propose other mergers but their excerpts do not say."
+}

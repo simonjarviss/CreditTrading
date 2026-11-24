@@ -1,0 +1,28 @@
+{
+  "episode_cik": 886043,
+  "episode_accession": "0001193125-23-074093",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Western Asset Intermediate Muni Fund Inc.", "cik": null, "ticker": "SBI"},
+      "acquirer": {"name": "Western Asset Managed Municipals Fund Inc.", "cik": 886043, "ticker": "MMU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-074093", "quote": "Under Maryland law, stockholders of a corporation whose shares are traded publicly on a national securities exchange, such as the Funds’ Common Shares, are not entitled to demand the fair value of their shares upon a merger"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-074093", "date": "2023-03-17", "quote": "to approve the mergers of each of MNP and SBI (each a “Target Fund” and collectively, the “Target Funds”) with and into MMU in accordance with the Maryland General Corporation Law"},
+      "outcome_evidence": null,
+      "notes": "No excerpt states how the SBI-into-MMU merger ended. The N-14 8C/A filings (2023-05-11, 2023-05-22) and the DEFA14A (2023-06-12) set the joint special meeting for July 14, 2023 and only speak prospectively. The later DEF 14A filings (2023-09-13, 2024-09-17) are annual-meeting proxies of MMU alone, still printing (NYSE: MMU), and the 2024-11-20 8-K is a bylaws amendment; none mentions the merger, so nothing states completion, termination or a failed vote. SBI's ticker is the defined term (“SBI”) in the filings, never printed with an exchange; the NYSE listing of both funds' common shares is shown by the 'Funds’ Common Shares' quote and by the statement that each Target Fund will 'remove its Common Shares from listing on the NYSE'."
+    },
+    {
+      "target": {"name": "Western Asset Municipal Partners Fund Inc.", "cik": null, "ticker": "MNP"},
+      "acquirer": {"name": "Western Asset Managed Municipals Fund Inc.", "cik": 886043, "ticker": "MMU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-074093", "quote": "Under Maryland law, stockholders of a corporation whose shares are traded publicly on a national securities exchange, such as the Funds’ Common Shares, are not entitled to demand the fair value of their shares upon a merger"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-074093", "date": "2023-03-17", "quote": "to approve the mergers of each of MNP and SBI (each a “Target Fund” and collectively, the “Target Funds”) with and into MMU in accordance with the Maryland General Corporation Law"},
+      "outcome_evidence": null,
+      "notes": "Second of the two parallel mergers into MMU in the same proxy statement/prospectus; outcome not stated in any excerpt, same reasoning as the SBI deal."
+    }
+  ],
+  "problems": "Focus question (how SBI into MMU ended) cannot be answered from the excerpts: no filing in the window states an outcome. The ticker 'SBI' (and 'MNP') appear only as defined terms, not as '(NYSE: ...)' prints; only MMU is printed as (NYSE: MMU). Target CIKs for SBI and MNP do not appear in any FILING header."
+}

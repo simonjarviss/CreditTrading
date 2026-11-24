@@ -1,0 +1,170 @@
+{
+ "read_at_utc": "2026-10-19T15:38:19+00:00",
+ "clock_timestamp": "2026-10-19 11:38:18.142625-04:00",
+ "endpoint": "GET /v2/assets?status=active&asset_class=us_equity (paper, cef key)",
+ "active_assets": 14412,
+ "otc_active": 1164,
+ "otc_tradable": 309,
+ "gse": {
+  "n": 0,
+  "tradable": 0,
+  "shortable": 0,
+  "easy_to_borrow": 0,
+  "by_exchange": {}
+ },
+ "trust": {
+  "n": 28,
+  "tradable": 27,
+  "shortable": 6,
+  "easy_to_borrow": 6,
+  "by_exchange": {
+   "ARCA": 15,
+   "NASDAQ": 6,
+   "OTC": 4,
+   "BATS": 3
+  }
+ },
+ "cert": {
+  "n": 10,
+  "tradable": 10,
+  "shortable": 0,
+  "easy_to_borrow": 0,
+  "by_exchange": {
+   "NYSE": 10
+  }
+ },
+ "preferred": {
+  "n": 388,
+  "tradable": 371,
+  "shortable": 46,
+  "easy_to_borrow": 46,
+  "by_exchange": {
+   "NYSE": 276,
+   "NASDAQ": 96,
+   "OTC": 16
+  }
+ },
+ "baby_bond": {
+  "n": 159,
+  "tradable": 158,
+  "shortable": 3,
+  "easy_to_borrow": 3,
+  "by_exchange": {
+   "NYSE": 99,
+   "NASDAQ": 55,
+   "AMEX": 4,
+   "OTC": 1
+  }
+ },
+ "named": {
+  "BIZD": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "CEFS": {
+   "exchange": "BATS",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "FFLX": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "FPE": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "HYG": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "IWM": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "KRE": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "MUB": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "PCEF": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "PFF": {
+   "exchange": "NASDAQ",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "PFFD": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "PGF": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "PGX": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "PSK": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "SPY": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  "XMPT": {
+   "exchange": "BATS",
+   "tradable": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  "YYY": {
+   "exchange": "ARCA",
+   "tradable": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  }
+ },
+ "named_absent_from_active_list": [
+  "FCT",
+  "FMCC",
+  "FMCKJ",
+  "FNMA",
+  "FNMAS"
+ ]
+}

@@ -1,0 +1,127 @@
+{
+ "what": "E1 deal counts under amendment 4 (delisting codes 231 and 331 into the acquirer's permno); counts only, no return read",
+ "codes": [
+  231,
+  331
+ ],
+ "counts": [
+  {
+   "set": "excluded_spec",
+   "segment": "equity_other",
+   "events": 3,
+   "groups_acq_x_completion": 2,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "excluded_spec",
+   "segment": "muni",
+   "events": 9,
+   "groups_acq_x_completion": 2,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "excluded_spec",
+   "segment": "taxable_income",
+   "events": 7,
+   "groups_acq_x_completion": 3,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "fit_seen",
+   "segment": "bdc",
+   "events": 4,
+   "groups_acq_x_completion": 4,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "fit_seen",
+   "segment": "equity_other",
+   "events": 40,
+   "groups_acq_x_completion": 29,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "fit_seen",
+   "segment": "muni",
+   "events": 99,
+   "groups_acq_x_completion": 51,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "fit_seen",
+   "segment": "taxable_income",
+   "events": 53,
+   "groups_acq_x_completion": 39,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "name_holdout",
+   "segment": "muni",
+   "events": 31,
+   "groups_acq_x_completion": 15,
+   "events_on_the_27": 10
+  },
+  {
+   "set": "name_holdout",
+   "segment": "taxable_income",
+   "events": 5,
+   "groups_acq_x_completion": 4,
+   "events_on_the_27": 5
+  },
+  {
+   "set": "time_holdout",
+   "segment": "equity_other",
+   "events": 16,
+   "groups_acq_x_completion": 11,
+   "events_on_the_27": 1
+  },
+  {
+   "set": "time_holdout",
+   "segment": "muni",
+   "events": 5,
+   "groups_acq_x_completion": 3,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "time_holdout",
+   "segment": "taxable_income",
+   "events": 8,
+   "groups_acq_x_completion": 7,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "excluded_spec",
+   "segment": "ALL",
+   "events": 19,
+   "groups_acq_x_completion": 5,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "fit_seen",
+   "segment": "ALL",
+   "events": 196,
+   "groups_acq_x_completion": 116,
+   "events_on_the_27": 0
+  },
+  {
+   "set": "name_holdout",
+   "segment": "ALL",
+   "events": 36,
+   "groups_acq_x_completion": 19,
+   "events_on_the_27": 15
+  },
+  {
+   "set": "time_holdout",
+   "segment": "ALL",
+   "events": 29,
+   "groups_acq_x_completion": 19,
+   "events_on_the_27": 1
+  }
+ ],
+ "deals_331_by_set": {
+  "fit_seen": 10,
+  "excluded_spec": 5,
+  "name_holdout": 1
+ },
+ "run_utc": "2026-10-21T14:01:22+00:00"
+}

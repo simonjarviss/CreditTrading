@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1078659,
+  "episode_accession": "0001341004-11-000705",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Senior Floating Rate Fund II, Inc.", "cik": 1078659, "ticker": "XMPCX"},
+      "acquirer": {"name": "BlackRock Floating Rate Income Portfolio", "cik": 1398078, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001341004-11-000705", "date": "2011-03-15", "quote": "shareholders of the Senior Floating Rate Funds have approved the reorganization of each of the Senior Floating Rate Funds with and into the BlackRock Floating Rate Income Portfolio (the “Floating Rate Income Fund”), a series of BlackRock Funds II (the “Reorganizations” and each a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Acquirer CIK is that of BlackRock Funds II (the trust, subject company in the FILING header); the acquirer is a series of it. Whether either fund is exchange-listed is not stated. Shareholders approved on March 11, 2011 and completion was expected on or about March 18, 2011; the N-8F (0001341004-11-000981) checks Merger and says a distribution was made in March, but no excerpt states the merger was completed, so outcome is null. The earlier DEFA14A (0001193125-11-034897) only reports the meeting adjourned to March 11, 2011."
+    },
+    {
+      "target": {"name": "BlackRock Senior Floating Rate Fund, Inc.", "cik": 853911, "ticker": "XMPFX"},
+      "acquirer": {"name": "BlackRock Floating Rate Income Portfolio", "cik": 1398078, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001341004-11-000705", "date": "2011-03-15", "quote": "shareholders of the Senior Floating Rate Funds have approved the reorganization of each of the Senior Floating Rate Funds with and into the BlackRock Floating Rate Income Portfolio (the “Floating Rate Income Fund”), a series of BlackRock Funds II (the “Reorganizations” and each a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Second target in the same joint reorganization; only the episode fund's own N-8F is in front of us, none for this fund."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1379400,
+  "episode_accession": "0001104659-23-111135",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "First Trust Specialty Finance and Financial Opportunities Fund", "cik": 1392994, "ticker": "FGB"},
+      "acquirer": {"name": "abrdn Total Dynamic Dividend Fund", "cik": 1379400, "ticker": "AOD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-23-110929", "date": "2023-10-24", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by First Trust Advisors, L.P. into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "Only the FGB -> AOD pair is recorded; the press release also lists MFD, FSD and FAM as acquired funds with other abrdn acquirers, but this episode's fund is AOD and the table pairing for FAM is ambiguous in the text. AOD is shown as NYSE-listed in the 2024 DEF 14A, but no excerpt shows FGB as exchange-listed, so both_listed is null. The N-14 (2023-10-24) and N-14/A (2023-12-12) set a special meeting for February 22, 2024, but no excerpted filing states the result of the vote or whether the reorganization closed. The 2024 and 2025 DEF 14As are annual-meeting trustee elections and do not mention the merger."
+    }
+  ],
+  "problems": "No filing in the window states how the FGB -> AOD reorganization ended; outcome left null."
+}

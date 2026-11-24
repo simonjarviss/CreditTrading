@@ -88,7 +88,7 @@ if str(REPO) not in sys.path:
 DEALS = REPO / "results/events/merger_arb/edgar_deals.csv"
 PENDING = REPO / "results/events/merger_arb/pending_deals_2026-10-18.csv"
 PENDING_READ_DATE = pd.Timestamp("2026-10-16")    # last Alpaca bar behind the ADV column; flags read 2026-10-18
-G1A_SUMMARY = REPO / "results/events/g1a_summary_2026-10-13.json"
+G1A_SUMMARY = REPO / "results/events/g1a/g1a_summary_2026-10-13.json"
 E1_HEDGE_SUMMARY = REPO / "results/events/e1_etf_hedge_summary_2026-10-15.json"
 CEF_IBKR_TODAY = REPO / "results/events/merger_arb/cef_names_borrow_2026-10-18.csv"
 BORROW = REPO / "data/cef/cef_borrow_history.parquet"

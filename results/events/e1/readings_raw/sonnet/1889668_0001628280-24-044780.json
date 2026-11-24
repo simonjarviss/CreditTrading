@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1889668,
+  "episode_accession": "0001628280-24-044780",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Blue Owl Technology Finance Corp. II", "cik": 1889668, "ticker": null},
+      "acquirer": {"name": "Blue Owl Technology Finance Corp.", "cik": 1747777, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-24-257201", "date": "2024-11-13", "quote": "Blue Owl Technology Finance Corp. (“OTF”) and Blue Owl Technology Finance Corp. II (“OTF II”) today announced that they have entered into a definitive merger agreement, with OTF as the surviving company"},
+      "outcome_evidence": {"accession": "0001628280-25-014414", "date": "2025-03-24", "quote": "Blue Owl Technology Finance Corp. (“OTF”) today announced the closing of its merger with Blue Owl Technology Finance Corp. II (“OTF II”), with OTF as the surviving company."},
+      "notes": "Shareholder approvals announced 2025-03-20 (8-K 0001628280-25-014119). Neither fund is shown with an exchange ticker in the excerpts, so listing status is not settled by the text; both carry a 000- Commission file number."
+    }
+  ],
+  "problems": ""
+}

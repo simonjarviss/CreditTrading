@@ -1,0 +1,10 @@
+{
+ "stage": "k3",
+ "verdict_as_committed": "KILL (D4)",
+ "is_a_pass": false,
+ "ruled_by": "team lead (post-data, asked interactively)",
+ "ruled_on": "2026-11-03",
+ "words": "revive it and figure out a way to not kill it",
+ "what_it_covers": "K3 only: the pre-registered remainder (P3, DG-L4, the 2023-26 holdout opened once) runs; a failure at any of them is a KILL; the holdout decides",
+ "evidence": "level-only post-2007 alpha t 2.96 < 3.0, every |beta| <= 0.082 (k3_2026-11-03.json); recorded at 46d386e"
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1526329,
+  "episode_accession": "0001140361-20-025281",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Tortoise Energy Independence Fund, Inc.", "cik": 1547158, "ticker": "NDP"},
+      "acquirer": {"name": "Tortoise Pipeline & Energy Fund, Inc.", "cik": 1526329, "ticker": "TTP"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001140361-20-023834", "quote": "Tortoise Pipeline & Energy Fund, Inc. (NYSE: TTP), Tortoise Energy Independence Fund, Inc. (NYSE: NDP),"},
+      "outcome": null,
+      "announcement": {"accession": "0001140361-20-025281", "date": "2020-11-12", "quote": "the Board of Directors has approved a proposal to merge Tortoise Energy Independence Fund, Inc. (NDP) with and into Tortoise Pipeline & Energy Fund, Inc. (TTP)."},
+      "outcome_evidence": null,
+      "notes": "The special meeting set for 2021-04-07 was to be convened and adjourned to 2021-06-04 (DEFA14A 2021-04-06). No excerpt states the vote result, completion or termination. The 2021-05-25 and 2022 DEF 14A annual-meeting proxies still list TTP and NDP as separate companies, but they do not say what happened to the merger, so no outcome is recorded."
+    }
+  ],
+  "problems": ""
+}

@@ -945,6 +945,11 @@ The allocator would give it weight by correlation alone until four sleeves exist
 - **Every figure in §6 is in-sample to 2013–22.** The 2023+ holdout stays sealed. The
   CEF holdout was opened earlier and FAILED on net
   [doc: `docs/SYSTEM.md` §2, `pre-clean-slate:results/cef/HOLDOUT_OPENED.json`].
+  *Correction, 2026-11-01 (CEF trial 53, Q7, team lead):* "the 2023+ holdout stays sealed" is not
+  true of the core book. Its 2024-01-01 → 2026-07-30 returns were opened on 2026-07-31 (the line
+  above). The v7 pre-registration computed the deployed book over 2013-06-14 → 2026-09-21
+  (`results/cef/PREREG_ALPACA_V7_2026-09-28.md` §5). Treat the core's 2023+ as seen. This note's
+  §6 figures are unaffected: they are fit-only.
 - **The bootstrap rescaling assumes the Sharpe is invariant to size.** Costs per unit
   turnover rise with participation, which is unmeasured at auction.
 - **Today's live group share, live factor betas and live margin cushion are

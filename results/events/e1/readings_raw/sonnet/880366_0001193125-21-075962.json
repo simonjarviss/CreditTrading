@@ -1,0 +1,28 @@
+{
+  "episode_cik": 880366,
+  "episode_accession": "0001193125-21-075962",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Diamond Hill Corporate Credit Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "BrandywineGLOBAL – Corporate Credit Fund (a series of Legg Mason Partners Equity Trust)", "cik": 880366, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-075962", "date": "2021-03-10", "quote": "Shareholders of Diamond Hill Corporate Credit Fund and Diamond Hill High Yield Fund (the “Funds”) are being asked to vote on proposed reorganization transactions related to those Funds."},
+      "outcome_evidence": null,
+      "notes": "Excerpts do not state whether either fund is exchange-listed and do not state how the June 11, 2021 meeting ended. Acquirer CIK 880366 is the registrant trust on the N-14; the acquiring series has no CIK in the headers. The PRE 14A and DEF 14A (seq 1 and 3) are only a trustee-election proxy for the Legg Mason trusts."
+    },
+    {
+      "target": {"name": "Diamond Hill High Yield Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "BrandywineGLOBAL – High Yield Fund (a series of Legg Mason Partners Equity Trust)", "cik": 880366, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-075962", "date": "2021-03-10", "quote": "Shareholders of Diamond Hill Corporate Credit Fund and Diamond Hill High Yield Fund (the “Funds”) are being asked to vote on proposed reorganization transactions related to those Funds."},
+      "outcome_evidence": null,
+      "notes": "Same as the Corporate Credit Fund deal: outcome and listing status not stated in the excerpts."
+    }
+  ],
+  "problems": ""
+}

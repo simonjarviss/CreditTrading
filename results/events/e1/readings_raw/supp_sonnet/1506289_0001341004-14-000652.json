@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1506289,
+  "episode_accession": "0001341004-14-000652",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Real Asset Equity Trust", "cik": 1368893, "ticker": "BCF"},
+      "acquirer": {"name": "BlackRock Resources & Commodities Strategy Trust", "cik": 1506289, "ticker": "BCX"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000804", "quote": "The reorganizations of BlackRock Real Asset Equity Trust (NYSE:BCF) and BlackRock EcoSolutions Investment Trust (NYSE:BQR) into BlackRock Resources & Commodities Strategy Trust (NYSE:BCX)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000652", "date": "2014-07-31", "quote": "BlackRock Advisors, LLC announced today that the Boards of Trustees of several equity option closed-end funds approved the reorganizations outlined below."},
+      "outcome_evidence": null,
+      "notes": "BCF into BCX; approval not contingent on the BQR into BCX reorganization. Joint special meeting of BCF, BQR and BCX set for November 10, 2014 (reminder 425s through 2014-10-24). No excerpt states the outcome. The same press release also lists BQY into BDJ, a pair that does not involve this acquirer and is not recorded."
+    },
+    {
+      "target": {"name": "BlackRock EcoSolutions Investment Trust", "cik": 1403238, "ticker": "BQR"},
+      "acquirer": {"name": "BlackRock Resources & Commodities Strategy Trust", "cik": 1506289, "ticker": "BCX"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000804", "quote": "The reorganizations of BlackRock Real Asset Equity Trust (NYSE:BCF) and BlackRock EcoSolutions Investment Trust (NYSE:BQR) into BlackRock Resources & Commodities Strategy Trust (NYSE:BCX)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000653", "date": "2014-07-31", "quote": "BlackRock Advisors, LLC announced today that the Boards of Trustees of several equity option closed-end funds approved the reorganizations outlined below."},
+      "outcome_evidence": null,
+      "notes": "BQR into BCX; approval not contingent on the BCF into BCX reorganization. No excerpt states the outcome."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts for either target."
+}

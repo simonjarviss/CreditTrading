@@ -1,0 +1,51 @@
+R3 POST-HOC (added after the declared run; report-only; cannot change the declared verdict). Fit window only, <= 2022-12-30. Gate passed in setup().
+
+P1. WHERE THE CRSP PRICE DROP LANDS (same likelihood rule as the NAV test; offsets -1, 0, +1, +2, none)
+  counts, all 7,985: {'ambiguous': 6093, '0': 1582, '+1': 106, 'unmeasurable': 69, '+2': 68, '-1': 43, 'none': 24}
+  counts, held 3,977: {'ambiguous': 3025, '0': 845, '+1': 50, '+2': 27, '-1': 19, 'none': 8, 'unmeasurable': 3}
+  median |y|/sigma_price on measurable events: 1.10
+  price class 0             events  1582: window total share  36.7%, price-only  39.0%, day-2 total share  23.7%, window gross  23.2%
+  price class +1            events   106: window total share   3.6%, price-only   3.2%, day-2 total share   4.2%, window gross   1.2%
+  price class +2            events    68: window total share   9.0%, price-only   6.5%, day-2 total share   8.0%, window gross   0.6%
+  price class -1            events    43: window total share  -0.1%, price-only  -0.1%, day-2 total share  -1.3%, window gross   0.4%
+  price class none          events    24: window total share  -0.8%, price-only   0.7%, day-2 total share   1.5%, window gross   0.1%
+  price class ambiguous     events  6093: window total share  52.0%, price-only  50.7%, day-2 total share  64.0%, window gross  74.3%
+  price class unmeasurable  events    69: window total share  -0.4%, price-only   0.1%, day-2 total share  -0.2%, window gross   0.1%
+  late price drop (+1 or +2): window total share 12.7%, day-2 total share 12.2%
+  pooled price slope at s+1 excluding late-drop events: +0.121 (n 7742)
+  pooled price slope at s+2 excluding late-drop events: +0.064 (n 7742)
+
+P2. IN-WINDOW P&L BY DAY AND HELD SIDE (% of capital, summed over the fit; total / price-only / gross share of all held)
+  day 0 long : total    -6.49%  price-only  -100.56%  gross  1.58%
+  day 0 short: total   +19.64%  price-only  +134.48%  gross  1.92%
+  day 1 long : total   -17.73%  price-only   -17.73%  gross  1.55%
+  day 1 short: total   +22.00%  price-only   +22.00%  gross  1.97%
+  day 2 long : total    +1.90%  price-only    +1.90%  gross  1.56%
+  day 2 short: total   +23.02%  price-only   +23.02%  gross  1.96%
+
+P3. BY ERA (H5): window and pooled placebo, total basis | price-only CR
+  2005-09: S  15.9% G  9.7% CR  1.63 excess t +0.34 | placebo CR  3.51 | price-only CR  3.00 | all P&L +34.92%
+  2010-14: S  25.1% G  8.8% CR  2.84 excess t +0.78 | placebo CR  1.84 | price-only CR  4.38 | all P&L +28.41%
+  2015-19: S  49.5% G 11.8% CR  4.19 excess t +1.78 | placebo CR  1.00 | price-only CR  4.35 | all P&L +32.95%
+  2020-22: S  42.3% G 12.4% CR  3.41 excess t +2.01 | placebo CR  0.06 | price-only CR  4.22 | all P&L +31.56%
+
+P4. BY DISTRIBUTION SIZE (CRSP y = ret - retx on the ex-date)
+  y > 2% (specials)  events   867: window total share  18.1%, price-only  31.2%, gross  12.5%
+  y <= 2%            events  7118: window total share  81.9%, price-only  68.8%, gross  87.5%
+
+P5. WITHOUT THE LARGEST EVENTS (by |total-return window P&L|)
+  events with window P&L: 8,331; largest |P&L| event 2.73% of capital
+  without the top 10: S  30.8% G 10.5% CR  2.94 excess t +2.47 | placebo CR  1.58
+  without the top 20: S  26.7% G 10.4% CR  2.57 excess t +2.05 | placebo CR  1.67
+  without the top 50: S  25.0% G 10.1% CR  2.46 excess t +2.08 | placebo CR  1.71
+
+P6. FLAG (a): CRSP vs yfinance amount, the shape of the 788
+  flagged 788; yfinance/CRSP yield ratio quantiles (5/25/50/75/95%): 0.976, 0.981, 0.986, 3.000, 6.781; no yfinance row 20
+  ratio within 2% of 1: 249; below 0.9: 4; above 1.1: 357
+  flagged events by fund (top 8): {'IGR': 214, 'UTF': 154, 'BUI': 111, 'SCD': 97, 'EMO': 46, 'ADX': 31, 'PEO': 29, 'GAM': 15}
+
+P7. WHAT PAPER DROPS: distribution leg (total - price-only) by era, %/yr; price-only minus total Sharpe
+  2005-09: distribution leg -1.34%/yr; gross SR total 1.135, price-only 1.313
+  2010-14: distribution leg -1.26%/yr; gross SR total 1.004, price-only 1.146
+  2015-19: distribution leg -0.26%/yr; gross SR total 1.217, price-only 1.214
+  2020-22: distribution leg -2.23%/yr; gross SR total 1.686, price-only 2.000

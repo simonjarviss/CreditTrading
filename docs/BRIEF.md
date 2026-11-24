@@ -259,7 +259,12 @@ NOII **does** refresh — every 10 seconds from 15:50, then every second from
 **its cutoff and threshold could not be verified** and vendor sources only
 suggest parity with NYSE. **Confirm before routing.** (2026-10-08: a 2018 SEC
 release puts Arca's closing imbalance freeze at 15:59. That is not the current
-rule text; `docs/REFERENCES.md` §3.)
+rule text; `docs/REFERENCES.md` §3.) *Correction 2026-11-02: the cutoff is
+verified. SEC Rel. 34-103886 (SR-NYSEARCA-2025-67, 90 FR 43676, 10 Sep 2025)
+puts the Closing Auction Imbalance Freeze one minute before the close, and
+NYSE's Arca timetable reads 15:00 imbalance publication, 15:59 freeze (only
+offsetting MOC/LOC accepted, cancels rejected). The publication threshold is
+still unverified. `docs/REFERENCES.md` §3.*
 
 Our clips are one to three orders of magnitude below 50,000 shares, so we never
 register as a published imbalance. NYSE's **Closing IO Order** (Rule
@@ -469,15 +474,19 @@ three other documents disagreed. Run the command in the last column.
 
 ## 5. The harness, and the rules every research prompt inherits
 
-Do not build a new backtester. Use the canonical one and extend it visibly.
+Do not build another backtester. The canonical one is `scripts/research/harness.py` (restructured with the team lead's ruling of 2026-10-27; `band_frontier.evaluate` delegates to it, byte-identical on the live book). Extend it visibly.
 
 ```python
 from scripts.cef.band_frontier import build_targets, band, calendar, evaluate
 from scripts.cef.spec import BAND_WIDTH     # never write the width as a literal
+from scripts.research import harness        # the one lag, report(), the family builders
 T, R = build_targets()          # frictionless daily targets as the sleeve builds them
 H_live = band(T, BAND_WIDTH)    # the live policy, read from the frozen spec
 H_old  = calendar(T, 2)         # the previous configuration
 res    = evaluate(H, R)         # applies H.shift(2): decide t, MOC fill t+1, earn t+2
+rep    = harness.report(H, R)   # gross headline, 5/15/30bp grid, H5 eras, fit and holdout rows
+# other families: harness.cross_sectional_weights / event_weights; ML: scripts/research/ml.py;
+# store the trial's series: scripts/research/registry.py; compare variants: resampling.sharpe_diff
 ```
 
 **H1.** Execution convention is **shift(2)**. Anything scored differently is not

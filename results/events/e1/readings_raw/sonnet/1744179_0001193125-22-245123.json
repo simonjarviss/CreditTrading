@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1744179,
+  "episode_accession": "0001193125-22-245123",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Oaktree Strategic Income II, Inc.", "cik": 1744179, "ticker": null},
+      "acquirer": {"name": "Oaktree Specialty Lending Corporation", "cik": 1414932, "ticker": "OCSL"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-22-285206", "quote": "to evaluate a potential exit event for OSI II stockholders, including (1) a listing of OSI II’s common stock on a national securities exchange"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-22-245113", "date": "2022-09-15", "quote": "Oaktree Specialty Lending Corporation (NASDAQ:OCSL) (“OCSL”) and Oaktree Strategic Income II, Inc. (“OSI II”) today announced that they have entered into an agreement to merge together with OCSL as the surviving company"},
+      "outcome_evidence": {"accession": "0001193125-23-012731", "date": "2023-01-23", "quote": "is pleased to announce the closing of the previously announced merger with Oaktree Strategic Income II, Inc. (“OSI II”), with OCSL as the surviving company."},
+      "notes": "The merger was completed on the text of the 2023-01-23 8-K (stockholder approvals announced 2023-01-20), but the target OSI II was an unlisted BDC (OSI II's cover shows no trading symbol or exchange, and its Q&A treats a listing as a possible future exit event), so only OCSL is shown as Nasdaq-listed. Not a failed deal."
+    }
+  ],
+  "problems": ""
+}

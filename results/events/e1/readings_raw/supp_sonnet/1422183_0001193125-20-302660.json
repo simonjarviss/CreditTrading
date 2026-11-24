@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1422183,
+  "episode_accession": "0001193125-20-302660",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "FS KKR Capital Corp. II", "cik": 1525759, "ticker": "FSKR"},
+      "acquirer": {"name": "FS KKR Capital Corp.", "cik": 1422183, "ticker": "FSK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-302646", "quote": "FS KKR Capital Corp. (NYSE: FSK) and FS KKR Capital Corp. II (NYSE: FSKR), two publicly traded business development companies (“BDCs”) advised by FS/KKR"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-302646", "date": "2020-11-24", "quote": "FS/KKR Advisor Announces Proposed Merger of FS KKR Capital Corp. and FS KKR Capital Corp. II"},
+      "outcome_evidence": {"accession": "0001193125-21-192219", "date": "2021-06-16", "quote": "today announced the completion of the merger between FS KKR Capital Corp. (NYSE: FSK) and FS KKR Capital Corp. II (NYSE: FSKR)."},
+      "notes": "Only one target (FSKR) is named by the filings in this episode. Shareholders of both funds approved on 2021-05-21 (8-K 0001193125-21-170086); the 2021-08-09 8-K (0001193125-21-240595) also states the merger completed on June 16, 2021 with FSKR merged into FSK."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1418076,
+  "episode_accession": "0001193125-21-345552",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "SLR Senior Investment Corp.", "cik": 1508171, "ticker": "SUNS"},
+      "acquirer": {"name": "SLR Investment Corp.", "cik": 1418076, "ticker": "SLRC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-21-345547", "quote": "SLR Investment Corp. (NASDAQ: SLRC) (“SLRC”) and SLR Senior Investment Corp. (NASDAQ: SUNS) (“SUNS”) today announced that they have entered into an agreement to merge together, with SLRC as the surviving company"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-21-345547", "date": "2021-12-01", "quote": "SLR Investment Corp. (NASDAQ: SLRC) (“SLRC”) and SLR Senior Investment Corp. (NASDAQ: SUNS) (“SUNS”) today announced that they have entered into an agreement to merge together, with SLRC as the surviving company"},
+      "outcome_evidence": {"accession": "0001193125-22-092898", "date": "2022-04-01", "quote": "is pleased to announce the closing of the previously announced merger with SLR Senior Investment Corp. (“SUNS”), with SLRC as the surviving company."},
+      "notes": "Stockholders of both companies approved on 2022-03-21 (8-K 0001193125-22-080715). Only one target is named in the excerpts. The excerpts do not state in words that the funds are BDCs; both are shown with NASDAQ tickers and form N-14 8C."
+    }
+  ],
+  "problems": ""
+}

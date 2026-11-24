@@ -1,0 +1,216 @@
+{
+ "fema_disclaimer": "This product uses the Federal Emergency Management Agency's OpenFEMA API, but is not endorsed by FEMA.",
+ "fema_endpoint": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries (v2)",
+ "fema_rows": 21704,
+ "fema_distinct_dr": 1161,
+ "years": [
+  2008,
+  2025
+ ],
+ "kill_pairs_per_year": 30,
+ "indep_pairs_per_year_median": 17.0,
+ "indep_state_month_per_year_median": 15.5,
+ "indep_pairs_2021_2025_median": 16.0,
+ "single_state_funds_2008": 143,
+ "single_state_funds_2025": 54,
+ "years_below_kill": 17,
+ "funds_by_state_2025": {
+  "AZ": 1,
+  "CA": 13,
+  "MA": 1,
+  "MI": 1,
+  "MN": 1,
+  "MO": 1,
+  "NJ": 2,
+  "NY": 11,
+  "PA": 3,
+  "PR": 18,
+  "VA": 2
+ },
+ "indep_pairs_per_year_median_excl_PR": 17.0,
+ "verdict": "KILL",
+ "alpaca_today_cef_only": {
+  "n": 22,
+  "shortable": 7,
+  "easy_to_borrow": 7,
+  "by_state": {
+   "AZ": [
+    "NAZ"
+   ],
+   "CA": [
+    "CEV",
+    "MUC",
+    "NAC",
+    "NCA",
+    "NKX",
+    "PCQ",
+    "VCV"
+   ],
+   "MA": [
+    "NMT"
+   ],
+   "MI": [
+    "MIY"
+   ],
+   "MN": [
+    "NMS"
+   ],
+   "NJ": [
+    "MUJ"
+   ],
+   "NY": [
+    "MYN",
+    "NAN",
+    "NNY",
+    "NRK",
+    "PNI",
+    "VTN"
+   ],
+   "PA": [
+    "MPA",
+    "VPV"
+   ],
+   "VA": [
+    "BHV",
+    "NPV"
+   ]
+  },
+  "shortable_symbols": [
+   "NAZ",
+   "MUC",
+   "NCA",
+   "MYN",
+   "NNY",
+   "VTN",
+   "NPV"
+  ],
+  "not_in_sec_ticker_file": [
+   "CALI",
+   "CAM",
+   "CATF",
+   "CMF",
+   "DFCA",
+   "FCAL",
+   "FTCA",
+   "GCAL",
+   "JCAL",
+   "MMCA",
+   "PWZ",
+   "RMCA",
+   "TXCA",
+   "VTEC",
+   "FTMA",
+   "FTMN",
+   "MINN",
+   "FTNJ",
+   "FMNY",
+   "FTNY",
+   "GMNY",
+   "JTNY",
+   "MUNY",
+   "NYF",
+   "NYM",
+   "PZT",
+   "RMNY",
+   "TXNY",
+   "FTOH",
+   "FTPA"
+  ]
+ },
+ "alpaca_today": {
+  "read_at_utc": "2026-10-19T19:56:17+00:00",
+  "active_assets": 14412,
+  "n": 52,
+  "tradable": 52,
+  "shortable": 9,
+  "easy_to_borrow": 9,
+  "by_state": {
+   "AZ": [
+    "NAZ"
+   ],
+   "CA": [
+    "CALI",
+    "CAM",
+    "CATF",
+    "CEV",
+    "CMF",
+    "DFCA",
+    "FCAL",
+    "FTCA",
+    "GCAL",
+    "JCAL",
+    "MMCA",
+    "MUC",
+    "NAC",
+    "NCA",
+    "NKX",
+    "PCQ",
+    "PWZ",
+    "RMCA",
+    "TXCA",
+    "VCV",
+    "VTEC"
+   ],
+   "MA": [
+    "FTMA",
+    "NMT"
+   ],
+   "MI": [
+    "MIY"
+   ],
+   "MN": [
+    "FTMN",
+    "MINN",
+    "NMS"
+   ],
+   "NJ": [
+    "FTNJ",
+    "MUJ"
+   ],
+   "NY": [
+    "FMNY",
+    "FTNY",
+    "GMNY",
+    "JTNY",
+    "MUNY",
+    "MYN",
+    "NAN",
+    "NNY",
+    "NRK",
+    "NYF",
+    "NYM",
+    "PNI",
+    "PZT",
+    "RMNY",
+    "TXNY",
+    "VTN"
+   ],
+   "OH": [
+    "FTOH"
+   ],
+   "PA": [
+    "FTPA",
+    "MPA",
+    "VPV"
+   ],
+   "VA": [
+    "BHV",
+    "NPV"
+   ]
+  },
+  "shortable_symbols": [
+   "NAZ",
+   "CALI",
+   "MMCA",
+   "MUC",
+   "NCA",
+   "MYN",
+   "NNY",
+   "VTN",
+   "NPV"
+  ]
+ },
+ "in_cef_universe_44": [
+  "NAN"
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "batch": "34",
+ "model_id": "claude-sonnet-5-5",
+ "episodes": [
+  "275309_0000880195-15-000121",
+  "830474_0001341004-13-000684",
+  "1068234_0001341004-13-000680",
+  "1169034_0001193125-23-231636",
+  "1217951_0000825063-15-000028",
+  "1472215_0001193125-19-062860",
+  "1571329_0001193125-22-045592"
+ ],
+ "parts_read": 13,
+ "problems": "Episodes 2 and 3 record only the episode fund's own deal, not the other funds in the same joint proposal. Episode 4 outcome 'superseded' for BHV into MYI is inferred from the 2025 filings, not stated."
+}

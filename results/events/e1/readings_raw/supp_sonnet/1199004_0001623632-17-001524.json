@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1199004,
+  "episode_accession": "0001623632-17-001524",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Federated Premier Intermediate Municipal Income Fund", "cik": 1202806, "ticker": "FPT"},
+      "acquirer": {"name": "Federated Premier Municipal Income Fund", "cik": 1199004, "ticker": "FMN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001623632-17-001524", "quote": "Federated Premier Municipal Income Fund (NYSE: FMN) and Federated Premier Intermediate Municipal Income Fund (NYSE: FPT) have declared their monthly dividends."},
+      "outcome": null,
+      "announcement": {"accession": "0001623632-17-001524", "date": "2017-07-10", "quote": "This press release mentions a reorganization, which, if approved by shareholders, would be conducted pursuant to an agreement and plan of reorganization that will be included in a registration statement, to be filed by FMN (Registration Statement)."},
+      "outcome_evidence": null,
+      "notes": "The RW of 2017-10-05 withdrew the 2017-08-11 N-14 only because it used the wrong EDGAR form type; the registrant states it 'will re-file the Registration Statement using Edgar Submission Form Type N-14 8C' (re-filed 2017-10-06), so it is not a withdrawal of the merger. Joint annual meeting was set for 2017-11-14. The later excerpts (425s of 2017-10-30 and 2017-11-09, compact) show no outcome language, and the 2018-07-17 DEF 14A excerpt concerns only trustee elections for FMN; no excerpt states how the reorganization ended."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 836267,
+  "episode_accession": "0001398344-20-003619",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "ICON International Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Shelton International Select Equity Fund", "cik": 836267, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001398344-20-003619", "quote": "To automatically redeem your shares if your account balance falls below the minimum balance due to the sale of shares."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001398344-20-003619", "date": "2020-02-14", "quote": "to consider an Agreement and Plan of Reorganization (the “Plan”) by and among ICON Funds on behalf of the Acquired Fund, SCM Trust on behalf of the Shelton International Select Equity Fund"},
+      "outcome_evidence": {"accession": "0001398344-20-003619", "date": "2020-02-14", "quote": "To automatically redeem your shares if your account balance falls below the minimum balance due to the sale of shares."},
+      "notes": "Target is a series of ICON Funds trust, acquirer a series of SCM Trust (CIK 836267 is the trust, which is the acquiring fund's filer). Funds redeem shares and accept purchases from shareholders directly (open-end mutual funds). Meeting date moved from May __ to May 20, 2020 in the amendments. No outcome stated."
+    }
+  ],
+  "problems": "Other filings in the window (0001398344-20-003614, -007828, -008456) cover a separate reorganization of 16 ICON funds (ICON Fund, ICON Energy Fund, etc.), but the excerpts shown do not name the acquiring fund, so no deal entries were written for them. No outcome is stated anywhere."
+}

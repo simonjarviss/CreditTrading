@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1450445,
+  "episode_accession": "0001193125-20-213292",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Pennsylvania Municipal Value Fund", "cik": 1454978, "ticker": "NPN"},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Value Fund", "cik": 1450445, "ticker": "NUW"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213292", "date": "2020-08-07", "quote": "The Board of Trustees for eleven Nuveen municipal closed-end funds approved five reorganization proposals."},
+      "outcome_evidence": null,
+      "notes": "The meeting of December 7, 2020 was adjourned (425 of 2020-12-14: 'The meeting has been adjourned to allow shareholder more time to vote.'). The 425 of 2021-01-06 says 'Unfortunately, because not enough votes were received to satisfy the vote requirement, your Nuveen Closed End Fund(s) shareholder meeting was adjourned to January 15, 2021.' The 425 of 2021-01-15 gives a further adjourned meeting date of February 17, 2021 for NPN; the last NPN filing shown (2021-01-21, 0001193125-21-013463) is another adjournment reminder. No filing shown states a vote result, completion or termination."
+    },
+    {
+      "target": {"name": "Nuveen New Jersey Municipal Value Fund", "cik": 1454980, "ticker": "NJV"},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Value Fund", "cik": 1450445, "ticker": "NUW"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213292", "date": "2020-08-07", "quote": "The Board of Trustees for eleven Nuveen municipal closed-end funds approved five reorganization proposals."},
+      "outcome_evidence": null,
+      "notes": "Announcement text is shown once (seq 1, 0001193125-20-213292; seq 2, 0001193125-20-213299 is identical text and its parties line is not shown). The last NJV filing shown is the 425 of 2021-01-06 (0001193125-21-002825) saying the meeting 'was adjourned to January 15, 2021'; no NJV filing after that date is shown and none states an outcome."
+    }
+  ],
+  "problems": "Excerpts show a series of adjournments for both targets and no filing that states a vote result, completion, termination or withdrawal. Exchange listing of NPN and NJV is not shown (symbols only; the 8-K of 2020-10-06 shows NYSE only for NUW and others), so both_listed is null."
+}

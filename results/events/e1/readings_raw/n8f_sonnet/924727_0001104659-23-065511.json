@@ -1,0 +1,78 @@
+{
+  "episode_cik": 924727,
+  "episode_accession": "0001104659-23-065511",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "FPA New Income, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA New Income Fund (newly created shell series of FPA Funds Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": null,
+      "notes": "Mutual fund reorganized into a newly created shell series. The episode CIK is the registrant trust (named FPA Funds Trust in the 2023 filings), not a fund in the deal. No outcome shown."
+    },
+    {
+      "target": {"name": "FPA Queens Road Small Cap Value Fund (a series of Bragg Capital Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA Queens Road Small Cap Value Fund (newly created shell series of FPA Funds Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": null,
+      "notes": "Mutual fund; investor, advisor and institutional classes. No outcome shown."
+    },
+    {
+      "target": {"name": "FPA Queens Road Value Fund (a series of Bragg Capital Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA Queens Road Value Fund (newly created shell series of FPA Funds Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": null,
+      "notes": "Mutual fund. No outcome shown."
+    },
+    {
+      "target": {"name": "FPA U.S. Core Equity Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA U.S. Core Equity Fund (newly created shell series of FPA Funds Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": null,
+      "notes": "Mutual fund. No outcome shown."
+    },
+    {
+      "target": {"name": "FPA Global Equity ETF (a series of Northern Lights Fund Trust III)", "cik": null, "ticker": "FPAG"},
+      "acquirer": {"name": "FPA Global Equity ETF (newly created series of FPA Funds Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-129760", "quote": "The Fund is an ETF, and, as a result of an ETF’s structure, it is exposed to the following risks:"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-129760", "date": "2023-12-27", "quote": "A Special Meeting of Shareholders of the FPA Global Equity ETF (the “Acquired Fund”), a series of Northern Lights Fund Trust III (the “Northern Lights Trust”)"},
+      "outcome_evidence": null,
+      "notes": "ETF, not a closed-end fund. No outcome shown."
+    },
+    {
+      "target": {"name": "Credit Suisse Managed Futures Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Manteio Managed Futures Strategy Fund (newly created series)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-24-070845", "quote": "Shareholders may exchange shares of a Fund for the same class of shares of another Credit Suisse fund. Exchanges are made at NAV."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "A Joint Special Meeting of Shareholders (the “Special Meeting”) of the Credit Suisse Managed Futures Strategy Fund and Credit Suisse Multialternative Strategy Fund (each, an “Acquired Fund” and together, the “Acquired Funds”)"},
+      "outcome_evidence": null,
+      "notes": "Open-end series (Class A/C/I shares, exchanges at NAV). Meeting scheduled for October 31, 2024, then November 15, 2024 in the N-14/A (0001213900-24-089049). No outcome shown."
+    },
+    {
+      "target": {"name": "Credit Suisse Multialternative Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Manteio Multialternative Strategy Fund (newly created series)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-24-070845", "quote": "Shareholders may exchange shares of a Fund for the same class of shares of another Credit Suisse fund. Exchanges are made at NAV."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "A Joint Special Meeting of Shareholders (the “Special Meeting”) of the Credit Suisse Managed Futures Strategy Fund and Credit Suisse Multialternative Strategy Fund (each, an “Acquired Fund” and together, the “Acquired Funds”)"},
+      "outcome_evidence": null,
+      "notes": "Open-end series (Class A and Class I shares, exchanges at NAV). No outcome shown."
+    }
+  ],
+  "problems": "The episode CIK is a registrant trust (later renamed Investment Managers Series Trust III) covering several unrelated reorganizations of mutual funds and an ETF; none involves two listed closed-end funds."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 832327,
+  "episode_accession": "0001193125-24-266258",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Enhanced Government Fund, Inc.", "cik": 1336050, "ticker": "EGF"},
+      "acquirer": {"name": "BlackRock Income Trust, Inc.", "cik": 832327, "ticker": "BKT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-24-266258", "quote": "BlackRock Enhanced Government Fund, Inc. (NYSE: EGF) and BlackRock Income Trust, Inc. (NYSE: BKT)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-24-266258", "date": "2024-11-27", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors of BlackRock Enhanced Government Fund, Inc. (NYSE: EGF) and BlackRock Income Trust, Inc. (NYSE: BKT) (each, a “Fund” and together, the “Funds”) have approved the reorganization of EGF with and into BKT, with BKT continuing as the surviving Fund"},
+      "outcome_evidence": {"accession": "0001193125-25-061480", "date": "2025-03-24", "quote": "BlackRock Enhanced Government Fund, Inc. (NYSE: EGF, the “Fund”) has completed its reorganization with and into BlackRock Income Trust, Inc."},
+      "notes": "Press release is dated November 26, 2024; the 425 was filed 2024-11-27. Closing effective March 24, 2025."
+    }
+  ],
+  "problems": ""
+}

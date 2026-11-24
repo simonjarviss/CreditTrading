@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1742912,
+  "episode_accession": "0001999371-24-010891",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Unusual Whales Subversive Democratic Trading ETF", "cik": null, "ticker": null},
+      "acquirer": {"name": "Unusual Whales Subversive Democratic Trading ETF (a series of Tidal ETF Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010891", "quote": "Unusual Whales Subversive Democratic Trading ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010891", "date": "2024-08-28", "quote": "the Reorganization of Unusual Whales Subversive Democratic Trading ETF Unusual Whales Subversive Republican Trading ETF Each a series of Series Portfolios Trust"},
+      "outcome_evidence": null,
+      "notes": "ETF series reorganized from Series Portfolios Trust into Tidal ETF Trust; not closed-end funds. Closing expected on or about December 9, 2024; no outcome stated. CIK 1742912 is the Tidal ETF Trust (filer), not fund-level."
+    },
+    {
+      "target": {"name": "Unusual Whales Subversive Republican Trading ETF", "cik": null, "ticker": null},
+      "acquirer": {"name": "Unusual Whales Subversive Republican Trading ETF (a series of Tidal ETF Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010891", "quote": "Unusual Whales Subversive Republican Trading ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010891", "date": "2024-08-28", "quote": "the Reorganization of Unusual Whales Subversive Democratic Trading ETF Unusual Whales Subversive Republican Trading ETF Each a series of Series Portfolios Trust"},
+      "outcome_evidence": null,
+      "notes": "Same as the Democratic ETF entry."
+    },
+    {
+      "target": {"name": "ATAC Rotation Fund (a series of Managed Portfolio Series)", "cik": null, "ticker": null},
+      "acquirer": {"name": "ATAC Rotation Fund (a series of Tidal ETF Trust)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-25-002648", "quote": "a proposal to reorganize the Target Fund into a newly-created mutual fund within Tidal ETF Trust (the “Acquiring Entity”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-25-002648", "date": "2025-03-14", "quote": "The enclosed Proxy Statement/Prospectus describes a proposal to reorganize the Target Fund into a newly-created mutual fund within Tidal ETF Trust (the “Acquiring Entity”), which is also called the ATAC Rotation Fund (the “Acquiring Fund”)."},
+      "outcome_evidence": null,
+      "notes": "Mutual fund reorganization; no outcome stated."
+    },
+    {
+      "target": {"name": "God Bless America ETF", "cik": null, "ticker": "YALL"},
+      "acquirer": {"name": "a newly created actively-managed exchange-traded fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-26-008853", "quote": "shareholders of the God Bless America ETF exchanging their shares for those of a newly created actively-managed exchange-traded fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-26-008853", "date": "2026-04-23", "quote": "all shareholders of the God Bless America ETF are being asked to consider and vote on a proposal which will result in shareholders of the God Bless America ETF exchanging their shares for those of a newly created actively-managed exchange-traded fund"},
+      "outcome_evidence": null,
+      "notes": "Meeting adjourned until May 12 (2026); no outcome stated. ETF, not a closed-end fund."
+    }
+  ],
+  "problems": "Excerpts of the long N-14 filings are partial; other target funds may be covered in unseen text. The filer name changed between Tidal ETF Trust and Tidal Trust I."
+}

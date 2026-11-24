@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1511699,
+  "episode_accession": "0000894189-16-009753",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Target Fund(s) of the 2016 N-14 reorganization (names not in the excerpts)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund(s) of the 2016 N-14 reorganization (names not in the excerpts)", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000894189-16-009753", "date": "2016-05-25", "quote": "If shareholders of the Target Fund approve the Reorganization, it is anticipated that the Reorganization will occur on or around September 19, 2016."},
+      "outcome_evidence": null,
+      "notes": "N-14 filed by Managed Portfolio Series (a fund trust, not a single fund). The excerpts show 'Target Funds' and 'Acquiring Funds' but never name them, and no excerpt states how it ended."
+    },
+    {
+      "target": {"name": "Tortoise North American Pipeline Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Tortoise North American Pipeline Fund (as a series of Managed Portfolio Series)", "cik": 1511699, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000894189-17-000716", "date": "2017-02-09", "quote": "The purpose of the Meeting is to seek your approval of an Agreement and Plan of Reorganization for the Tortoise North American Pipeline Fund (the”Fund”) to move from a series of Montage Managers Trust to a series of Managed Portfolio Series."},
+      "outcome_evidence": null,
+      "notes": "A trust-to-trust reorganization of one fund ('The investment objective, strategies and policies of the Fund are not changing'), not a merger of two funds. The 2016-12-06 PRE 14A (Montage Managers Trust, seq 5) describes an Acquired Fund and Acquiring Fund unnamed; the N-14s of 2017-04-07 and 2017-05-11 follow. No excerpt states listing status or the outcome. The other proxy filings in the window (Torray, Tortoise, Port Street) are investment advisory agreement approvals, not mergers."
+    }
+  ],
+  "problems": "The filer is a fund trust; the fund pairs in the 2016 N-14 are unnamed in the excerpts. Episode role not stated. Neither outcome is stated."
+}

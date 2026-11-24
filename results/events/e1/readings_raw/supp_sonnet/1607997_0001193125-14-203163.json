@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1607997,
+  "episode_accession": "0001193125-14-203163",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Minnesota Municipal Income Portfolio Inc.", "cik": 902748, "ticker": "MXA"},
+      "acquirer": {"name": "Nuveen Minnesota Municipal Income Fund", "cik": 1607997, "ticker": "NMS"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-14-364498", "quote": "Minnesota Municipal Income Portfolio Inc. (NYSE: MXA) and First American Minnesota Municipal Income Fund II, Inc. (NYSE: MXN) have merged into a newly organized closed-end fund, now known as the Nuveen Minnesota Municipal Income Fund (NYSE: NMS)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-311928", "date": "2014-08-15", "quote": "proposals to merge the Funds into a newly organized closed-end fund which would be managed by Nuveen Fund Advisors, LLC and sub-advised by Nuveen Asset Management, LLC"},
+      "outcome_evidence": {"accession": "0001193125-14-364498", "date": "2014-10-06", "quote": "Minnesota Municipal Income Portfolio Inc. (NYSE: MXA) and First American Minnesota Municipal Income Fund II, Inc. (NYSE: MXN) have merged into a newly organized closed-end fund, now known as the Nuveen Minnesota Municipal Income Fund (NYSE: NMS)"},
+      "notes": "Special meetings were adjourned on 2014-08-15 to 2014-09-15 for lack of votes; the 2014-10-06 press release (EX-99.1 of the 8-K) reports the merger done. Earlier N-14 and 425 excerpts do not state the merger in words, so the announcement quote is from the 2014-08-15 press release."
+    },
+    {
+      "target": {"name": "First American Minnesota Municipal Income Fund II, Inc.", "cik": 1183829, "ticker": "MXN"},
+      "acquirer": {"name": "Nuveen Minnesota Municipal Income Fund", "cik": 1607997, "ticker": "NMS"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-14-364498", "quote": "Minnesota Municipal Income Portfolio Inc. (NYSE: MXA) and First American Minnesota Municipal Income Fund II, Inc. (NYSE: MXN) have merged into a newly organized closed-end fund, now known as the Nuveen Minnesota Municipal Income Fund (NYSE: NMS)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-311928", "date": "2014-08-15", "quote": "proposals to merge the Funds into a newly organized closed-end fund which would be managed by Nuveen Fund Advisors, LLC and sub-advised by Nuveen Asset Management, LLC"},
+      "outcome_evidence": {"accession": "0001193125-14-364498", "date": "2014-10-06", "quote": "Minnesota Municipal Income Portfolio Inc. (NYSE: MXA) and First American Minnesota Municipal Income Fund II, Inc. (NYSE: MXN) have merged into a newly organized closed-end fund, now known as the Nuveen Minnesota Municipal Income Fund (NYSE: NMS)"},
+      "notes": "Same filings as the MXA deal. The 8-K exhibit also reports XAA merged into NQM on the same date; that is a different acquirer and is not part of this episode's filings."
+    }
+  ],
+  "problems": ""
+}

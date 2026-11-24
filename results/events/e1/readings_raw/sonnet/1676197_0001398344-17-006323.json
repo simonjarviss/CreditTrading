@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1676197,
+  "episode_accession": "0001398344-17-006323",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Griffin Capital-Benefit Street Partners BDC Corp.", "cik": 1609336, "ticker": null},
+      "acquirer": {"name": "Griffin Institutional Access Credit Fund", "cik": 1676197, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001398344-17-006323", "quote": "The Griffin Credit Fund is an “interval fund” that has adopted a fundamental policy to make quarterly repurchase offers at NAV (less any repurchase fee) for no less than 5% of its outstanding shares."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001398344-17-006323", "date": "2017-05-12", "quote": "This is a brief overview of the reorganization proposed for Griffin Capital-Benefit Street Partners BDC Corp. (the “Company”) and Griffin Institutional Access Credit Fund (the “Griffin Credit Fund”)."},
+      "outcome_evidence": null,
+      "notes": "Acquirer is an interval fund, so not a listed pair. The target BDC was renamed Griffin-Benefit Street Partners BDC Corp. (July 2017) and then Griffin Capital BDC Corp. (July 31, 2017). The 2017-09-15 425 says the special meeting was adjourned to September 18, 2017 and that stockholders had 'voted significantly in favor of each proposal'; no excerpt states the final outcome."
+    }
+  ],
+  "problems": ""
+}

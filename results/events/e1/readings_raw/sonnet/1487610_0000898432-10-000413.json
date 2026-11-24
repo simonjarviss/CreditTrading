@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1487610,
+  "episode_accession": "0000898432-10-000413",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "NHS", "cik": 1487610, "ticker": "NHS"},
+      "acquirer": {"name": "New NHS", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000898432-10-000413", "date": "2010-03-19", "quote": "NHS Shareholders and NOX Stockholders are not entitled to demand the fair value of their shares on a reorganization; therefore, NHS Shareholders and NOX Stockholders will be bound by the terms of the Agreement, if it is approved."},
+      "outcome_evidence": null,
+      "notes": "The excerpts describe a Reorganization in which NHS shareholders and NOX stockholders would receive shares of 'New NHS Stock'. The DEF 14A of 2011-06-08 (joint annual meeting of NHS and NRO) is about electing directors and does not mention the reorganization outcome. 'New NHS' is the term used in the text; the target CIK given is the episode CIK per the filing header (Neuberger Berman High Yield Strategies Fund Inc.)."
+    },
+    {
+      "target": {"name": "NOX", "cik": null, "ticker": "NOX"},
+      "acquirer": {"name": "New NHS", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000898432-10-000413", "date": "2010-03-19", "quote": "NHS Shareholders and NOX Stockholders are not entitled to demand the fair value of their shares on a reorganization; therefore, NHS Shareholders and NOX Stockholders will be bound by the terms of the Agreement, if it is approved."},
+      "outcome_evidence": null,
+      "notes": "Text says NHS and NOX common stock may be sold 'on the NYSE or NYSE Amex, as applicable', but whether New NHS is itself listed is not stated, so both_listed is null. Ticker NOX is taken from the abbreviation in the text, not printed as an exchange ticker."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt. The exact structure (which fund survives, what New NHS is) is not clear from the excerpts. Full names of NOX not in the excerpts."
+}

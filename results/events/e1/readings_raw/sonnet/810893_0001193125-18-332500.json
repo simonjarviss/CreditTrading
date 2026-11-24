@@ -1,0 +1,58 @@
+{
+  "episode_cik": 810893,
+  "episode_accession": "0001193125-18-332500",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Gurtin California Municipal Intermediate Value Fund", "cik": 1576367, "ticker": null},
+      "acquirer": {"name": "PIMCO Gurtin California Municipal Intermediate Value Fund", "cik": 810893, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-332500", "date": "2018-11-23", "quote": "On behalf of the Board of Trustees of Forum Funds II (the “Gurtin Funds Board”), I am pleased to invite you to a special meeting of shareholders of the Gurtin California Municipal Intermediate Value Fund, Gurtin California Municipal Opportunistic Value Fund, Gurtin National Municipal Intermediate Value Fund and Gurtin National Municipal Opportunistic Value Fund"},
+      "outcome_evidence": null,
+      "notes": "Target CIK 1576367 is Forum Funds II (the trust, from the seq=2 header); the fund's own CIK is not shown. Acquirer CIK is PIMCO Funds (the trust). Text does not say whether either fund is listed; no outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Gurtin California Municipal Opportunistic Value Fund", "cik": 1576367, "ticker": null},
+      "acquirer": {"name": "PIMCO Gurtin California Municipal Opportunistic Value Fund", "cik": 810893, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-332500", "date": "2018-11-23", "quote": "On behalf of the Board of Trustees of Forum Funds II (the “Gurtin Funds Board”), I am pleased to invite you to a special meeting of shareholders of the Gurtin California Municipal Intermediate Value Fund, Gurtin California Municipal Opportunistic Value Fund, Gurtin National Municipal Intermediate Value Fund and Gurtin National Municipal Opportunistic Value Fund"},
+      "outcome_evidence": null,
+      "notes": "Same filing as the other three Gurtin pairs; see first deal."
+    },
+    {
+      "target": {"name": "Gurtin National Municipal Intermediate Value Fund", "cik": 1576367, "ticker": null},
+      "acquirer": {"name": "PIMCO Gurtin National Municipal Intermediate Value Fund", "cik": 810893, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-332500", "date": "2018-11-23", "quote": "On behalf of the Board of Trustees of Forum Funds II (the “Gurtin Funds Board”), I am pleased to invite you to a special meeting of shareholders of the Gurtin California Municipal Intermediate Value Fund, Gurtin California Municipal Opportunistic Value Fund, Gurtin National Municipal Intermediate Value Fund and Gurtin National Municipal Opportunistic Value Fund"},
+      "outcome_evidence": null,
+      "notes": "Same filing as the other three Gurtin pairs; see first deal."
+    },
+    {
+      "target": {"name": "Gurtin National Municipal Opportunistic Value Fund", "cik": 1576367, "ticker": null},
+      "acquirer": {"name": "PIMCO Gurtin National Municipal Opportunistic Value Fund", "cik": 810893, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-332500", "date": "2018-11-23", "quote": "On behalf of the Board of Trustees of Forum Funds II (the “Gurtin Funds Board”), I am pleased to invite you to a special meeting of shareholders of the Gurtin California Municipal Intermediate Value Fund, Gurtin California Municipal Opportunistic Value Fund, Gurtin National Municipal Intermediate Value Fund and Gurtin National Municipal Opportunistic Value Fund"},
+      "outcome_evidence": null,
+      "notes": "Same filing as the other three Gurtin pairs; see first deal."
+    },
+    {
+      "target": {"name": "PIMCO EqS ® Long/Short Fund", "cik": 1479360, "ticker": null},
+      "acquirer": {"name": "PIMCO RAE Worldwide Long/Short PLUS Fund", "cik": 810893, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-294804", "quote": "a Delaware statutory trust and an open-end management investment company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-228034", "date": "2019-08-23", "quote": "announcing the Board of Trustees’ approval of submitting to PIMCO EqS ® Long/Short Fund shareholders a proposal to reorganize the PIMCO EqS ® Long/Short Fund with and into the PIMCO RAE Worldwide Long/Short PLUS Fund."},
+      "outcome_evidence": null,
+      "notes": "Target CIK 1479360 is PIMCO Equity Series (the trust, from the seq=3 header); acquirer CIK is PIMCO Funds (the trust). The open-end quote describes the target's trust. Vote scheduled November 22, 2019; the last filing (2019-11-21) says quorum was close; no result is in the excerpts."
+    }
+  ],
+  "problems": "Two separate proposals appear in this episode (Gurtin funds into PIMCO Funds, filed 2018-11; EqS Long/Short into RAE Worldwide Long/Short PLUS, filed 2019-08). Fund-level CIKs are not given, so trust CIKs are used."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1847305,
+  "episode_accession": "0001193125-23-145180",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": null, "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-145180", "date": "2023-05-15", "quote": "IN CONNECTION WITH THE PROPOSED FUND MERGERS DESCRIBED HEREIN, EACH ACQUIRING FUND AND TARGET FUND INTEND TO FILE A REGISTRATION STATEMENT ON FORM N-14"},
+      "outcome_evidence": null,
+      "notes": "The 425 lists fourteen Puerto Rico funds and refers to proposed fund mergers, but the excerpt does not say which fund merges into which, or whether this fund is a target or acquirer. The DEFA14As and the 2023-06-16 DEF 14A (annual meeting to elect three directors) state no merger outcome. Listing is not stated ('closed-ended Funds' only)."
+    }
+  ],
+  "problems": "Pairing of target and acquirer is not visible in the excerpts, so this single deal entry has null parties."
+}

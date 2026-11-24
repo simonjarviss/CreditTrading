@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1160864,
+  "episode_accession": "0001341004-14-000511",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Income Trust, Inc.", "cik": 832327, "ticker": "BKT"},
+      "acquirer": {"name": "BlackRock Core Bond Trust", "cik": 1160864, "ticker": "BHK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000511", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000511", "date": "2014-06-09", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "No filing in the 13-filing window states how this reorganization ended. The last filings on it are 425 reminders of 2014-09-18 for a joint special meeting on 2014-09-30 (seq 11 and 12); no filing reports the meeting result, an adjournment, a termination, a withdrawal or a completion. The only later filing is the 2015-06-12 DEF 14A (annual board-election proxy), whose excerpts say nothing about the reorganization. That proxy's cover list of registrants includes BlackRock Income Trust, Inc. but not BlackRock Income Opportunity Trust, Inc.; the excerpt does not say why, so no outcome is inferred. Focus question (the filing that makes BKT's failure public) is not answered by any filing shown."
+    },
+    {
+      "target": {"name": "BlackRock Income Opportunity Trust, Inc.", "cik": 880280, "ticker": "BNA"},
+      "acquirer": {"name": "BlackRock Core Bond Trust", "cik": 1160864, "ticker": "BHK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000512", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000512", "date": "2014-06-09", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK) have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Same press release as the BKT deal, filed under BNA as subject company. The press release says approval of each Reorganization is not contingent upon approval of any other. No filing in the window states the outcome of the BNA reorganization (see the BKT entry for the filings seen)."
+    }
+  ],
+  "problems": "No outcome is stated in any excerpt for either deal; both are null. The excerpts of the two large N-14 8C filings (seq 5 and 6) show only generic termination and closing-condition language, not an actual termination. The 2014-09-30 meeting result is not in any filing shown."
+}

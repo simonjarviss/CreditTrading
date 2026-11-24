@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1741600,
+  "episode_accession": "0001193125-23-136077",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Multi-Sector Opportunities Trust II", "cik": 1741600, "ticker": null},
+      "acquirer": {"name": "BlackRock Strategic Income Opportunities Portfolio, a series of BlackRock Funds V", "cik": 1738078, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-23-136077", "quote": "BlackRock Strategic Income Opportunities Portfolio (the “Acquiring Fund”), a series of BlackRock Funds V, a Massachusetts business trust registered as an open-end management investment company under the 1940 Act"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-23-136077", "date": "2023-05-04", "quote": "On May 4, 2023, the Board of Trustees of the Trust approved the reorganization of the Trust into BlackRock Strategic Income Opportunities Portfolio (the “Acquiring Fund”), a series of BlackRock Funds V"},
+      "outcome_evidence": {"accession": "0001193125-23-276120", "date": "2023-11-13", "quote": "is effective as of Monday, November 13, 2023."},
+      "notes": "Acquirer is an open-end fund. The meeting was adjourned once for insufficient votes (2023-08-08 and 2023-09-06 filings), approved at the adjourned meeting on 2023-09-22, and the reorganization was announced effective 2023-11-13."
+    }
+  ],
+  "problems": ""
+}

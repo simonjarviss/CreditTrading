@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1788280,
+  "episode_accession": "0001193125-19-257789",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Alcentra Capital Corporation", "cik": null, "ticker": null},
+      "acquirer": {"name": "Crescent Reincorporation Sub, Inc. (to be renamed Crescent Capital BDC, Inc.)", "cik": 1788280, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-19-257789", "date": "2019-09-30", "quote": "the proposed maximum aggregate offering price is equal to: (1) $8.80, the average of the high and low prices per share of Alcentra Capital Corporation’s common stock"},
+      "outcome_evidence": null,
+      "notes": "The registration fee table says the registered shares are 'issuable pursuant to the merger agreement described in the enclosed document'; Alcentra's role as the merged company is inferred from that table and its mention in the fee computation. The text also mentions a 'Reincorporation Merger' of Crescent Capital BDC into this Maryland subsidiary; it is not recorded as a separate deal. Exchange listing of the parties is not stated in the excerpts."
+    }
+  ],
+  "problems": "Excerpts are mostly risk factors; the merger terms and any outcome are not shown. Roles are inferred from the fee table."
+}

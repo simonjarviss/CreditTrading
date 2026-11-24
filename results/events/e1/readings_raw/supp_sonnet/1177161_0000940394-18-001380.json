@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1177161,
+  "episode_accession": "0000940394-18-001380",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Eaton Vance California Municipal Bond Fund II", "cik": 1196869, "ticker": null},
+      "acquirer": {"name": "Eaton Vance California Municipal Bond Fund", "cik": 1177161, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001380", "date": "2018-07-23", "quote": "We cordially invite you to attend a Special Meeting of Shareholders of Eaton Vance California Municipal Bond Fund II (“Acquired Fund”) on October 12, 2018, to consider a proposal to approve an Agreement and Plan of Reorganization (“Plan”) providing for the reorganization"},
+      "outcome_evidence": null,
+      "notes": "The 2018-10-12 DEFA14A scripts say the Special Meetings scheduled for 2018-10-12 'have been adjourned to November 15, 2018 due to a lack of shareholder participation'. The 2018-10-12 425 also names special meetings of Massachusetts, Michigan, Michigan Income Trust and New York Municipal Bond Fund shareholders, but the excerpts do not state that any of those funds is to merge into this acquirer, so no deal is recorded for them. No excerpt states the outcome or an exchange listing."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt; the last merger-related filing is the 2018-10-30 DEFA14A (only its cover shown). Listing of either fund is not stated."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1452477,
+  "episode_accession": "0001104659-21-055075",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Tremont Mortgage Trust", "cik": 1708405, "ticker": "TRMT"},
+      "acquirer": {"name": "RMR Mortgage Trust", "cik": 1452477, "ticker": "RMRM"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-21-055062", "quote": "RMR Mortgage Trust (Nasdaq: RMRM) and Tremont Mortgage Trust (Nasdaq: TRMT) today announced that they have entered into a definitive merger agreement pursuant to which TRMT will merge with and into RMRM, with RMRM continuing as the surviving"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-21-055062", "date": "2021-04-27", "quote": "RMR Mortgage Trust (Nasdaq: RMRM) and Tremont Mortgage Trust (Nasdaq: TRMT) today announced that they have entered into a definitive merger agreement pursuant to which TRMT will merge with and into RMRM, with RMRM continuing as the surviving"},
+      "outcome_evidence": {"accession": "0001452477-21-000057", "date": "2021-11-02", "quote": "Seven Hills Realty Trust Announces Third Quarter 2021 Results Completed Merger with Tremont Mortgage Trust on September 30, 2021"},
+      "notes": "Both are Nasdaq-listed, but the text describes them as mortgage trusts (a commercial mortgage REIT merger), not closed-end funds or BDCs, so both_listed is set false under the closed-end-fund/BDC definition; the merger itself was COMPLETED on 2021-09-30 as proposed (RMRM survivor, renamed Seven Hills Realty Trust; shareholders approved the share issuance on 2021-09-20 per the 425 filed that day). A reviewer who counts listed mortgage REITs as eligible should read this as completed. Filings 25 and 26 (8-Ks of 2021-10-04) had no readable excerpt."
+    }
+  ],
+  "problems": ""
+}

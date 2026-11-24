@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1278211,
+  "episode_accession": "0000930413-19-001080",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Lazard World Dividend & Income Fund, Inc.", "cik": 1323206, "ticker": "LOR"},
+      "acquirer": {"name": "Lazard Global Total Return and Income Fund, Inc.", "cik": 1278211, "ticker": "LGI"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000930413-19-002701", "quote": "Lazard World Dividend & Income Fund, Inc. (NYSE: LOR) and Lazard Global Total Return and Income Fund, Inc. (NYSE: LGI)"},
+      "outcome": null,
+      "announcement": {"accession": "0000930413-19-001080", "date": "2019-03-29", "quote": "As a result of the foregoing, management recommended to the Board that LOR be merged with and into LGI. The Board recommends that you vote FOR the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "On 2019-10-18 (accession 0000930413-19-002701) LGI adjourned its annual meeting on the Merger Proposal to November 15, 2019. Later excerpts (2019-11-12 DEFA14A, 2020 and 2021 DEF 14A and DEFA14A) show only their first lines, so no filing in front of me states how the merger ended."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,1 @@
+CEF trial 54 holdout opened 2026-11-03T17:22:56+00:00 at commit 4badc45 by `trial54.py holdout`. Opened once; this file makes a second run refuse.

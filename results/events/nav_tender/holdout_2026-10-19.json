@@ -1,0 +1,37 @@
+{
+ "fit_verdict": "KILL D2 (stage 3: net per-event mean at 15bp, cluster t < 2.0)",
+ "gate": {
+  "deferred": 0,
+  "events": 42,
+  "max_share": 0.2,
+  "period": "holdout",
+  "reasons": {
+   "no SC TO-I/A after the offer document (no results filing)": 3,
+   "unread: pi": 5,
+   "unread: pi, P_final": 6
+  },
+  "share_hi": 0.3333333333333333,
+  "share_lo": 0.3333333333333333,
+  "unread_hi": 14,
+  "unread_lo": 14,
+  "verdict": "FAIL"
+ },
+ "holdout_events_unread": [
+  "PCF",
+  "VTN",
+  "VPV",
+  "EVF",
+  "FMN",
+  "TYG",
+  "TPZ",
+  "IGI",
+  "GDO",
+  "CIK1488775",
+  "NTG",
+  "EMO",
+  "TTP",
+  "CIK1547341"
+ ],
+ "opened_utc": "2026-10-20T21:38:57+00:00",
+ "verdict": "HALTED at the holdout's 20% unread gate (prereg \u00a74.3, \u00a711.1): no 2023-24 price or return was read; the fit verdict stands"
+}

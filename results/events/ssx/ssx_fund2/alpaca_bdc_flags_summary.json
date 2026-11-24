@@ -1,0 +1,141 @@
+{
+ "read_utc": "2026-10-19T20:02:35+00:00",
+ "alpaca_clock": "2026-10-19 16:02:32.418041-04:00",
+ "bizd_snapshot": "2025-11-30",
+ "n_bizd_tickers": 27,
+ "bdcs_read": 34,
+ "bdcs_found": 34,
+ "bdcs_shortable": 23,
+ "bdcs_easy_to_borrow": 23,
+ "a4_listings_shortable": [
+  {
+   "symbol": "BCSF",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "BXSL",
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "CCAP",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "CGBD",
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "CION",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "FSK",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "FSSL",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "KBDC",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "MSDL",
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "MSIF",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "NCDL",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "OBDC",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "OTF",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "PSBD",
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "RWAY",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "TRIN",
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "TSLX",
+   "shortable": false,
+   "easy_to_borrow": false
+  }
+ ],
+ "trackers": [
+  {
+   "symbol": "BDCX",
+   "found": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "BDCZ",
+   "found": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "BIZD",
+   "found": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "FBDC",
+   "found": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "HBDC",
+   "found": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  },
+  {
+   "symbol": "PBDC",
+   "found": true,
+   "shortable": true,
+   "easy_to_borrow": true
+  },
+  {
+   "symbol": "VPC",
+   "found": true,
+   "shortable": false,
+   "easy_to_borrow": false
+  }
+ ]
+}

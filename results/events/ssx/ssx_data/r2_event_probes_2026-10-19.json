@@ -1,0 +1,4103 @@
+{
+ "insiders_table1_rows_by_year": {
+  "why": "A2/D1: Thomson insider Form 4 transactions, all issuers, by filing year",
+  "rows": [
+   {
+    "y": 2007,
+    "n": 5149439
+   },
+   {
+    "y": 2008,
+    "n": 488466
+   },
+   {
+    "y": 2009,
+    "n": 1083675
+   },
+   {
+    "y": 2010,
+    "n": 361917
+   },
+   {
+    "y": 2011,
+    "n": 758487
+   },
+   {
+    "y": 2012,
+    "n": 795014
+   },
+   {
+    "y": 2013,
+    "n": 623634
+   },
+   {
+    "y": 2014,
+    "n": 752754
+   },
+   {
+    "y": 2015,
+    "n": 1995211
+   },
+   {
+    "y": 2016,
+    "n": 1630442
+   },
+   {
+    "y": 2017,
+    "n": 579169
+   },
+   {
+    "y": 2018,
+    "n": 314088
+   },
+   {
+    "y": 2019,
+    "n": 366090
+   },
+   {
+    "y": 2020,
+    "n": 326137
+   },
+   {
+    "y": 2021,
+    "n": 407208
+   },
+   {
+    "y": 2022,
+    "n": 349480
+   },
+   {
+    "y": 2023,
+    "n": 360191
+   },
+   {
+    "y": 2024,
+    "n": 398885
+   },
+   {
+    "y": 2025,
+    "n": 385397
+   },
+   {
+    "y": 2026,
+    "n": 232444
+   },
+   {
+    "y": null,
+    "n": 672
+   }
+  ]
+ },
+ "insiders_table1_cef_rows_by_year": {
+  "why": "A2: the same, issuers whose CUSIP-6 CRSP calls a closed-end fund (shrcd 14/44)",
+  "rows": [
+   {
+    "y": 2007,
+    "n": 58064,
+    "issuers": 800
+   },
+   {
+    "y": 2008,
+    "n": 7485,
+    "issuers": 383
+   },
+   {
+    "y": 2009,
+    "n": 7895,
+    "issuers": 457
+   },
+   {
+    "y": 2010,
+    "n": 3326,
+    "issuers": 315
+   },
+   {
+    "y": 2011,
+    "n": 5606,
+    "issuers": 398
+   },
+   {
+    "y": 2012,
+    "n": 9168,
+    "issuers": 361
+   },
+   {
+    "y": 2013,
+    "n": 5635,
+    "issuers": 394
+   },
+   {
+    "y": 2014,
+    "n": 5901,
+    "issuers": 402
+   },
+   {
+    "y": 2015,
+    "n": 14508,
+    "issuers": 585
+   },
+   {
+    "y": 2016,
+    "n": 10988,
+    "issuers": 565
+   },
+   {
+    "y": 2017,
+    "n": 5577,
+    "issuers": 453
+   },
+   {
+    "y": 2018,
+    "n": 5233,
+    "issuers": 507
+   },
+   {
+    "y": 2019,
+    "n": 5222,
+    "issuers": 555
+   },
+   {
+    "y": 2020,
+    "n": 5936,
+    "issuers": 490
+   },
+   {
+    "y": 2021,
+    "n": 5280,
+    "issuers": 468
+   },
+   {
+    "y": 2022,
+    "n": 5354,
+    "issuers": 455
+   },
+   {
+    "y": 2023,
+    "n": 5463,
+    "issuers": 414
+   },
+   {
+    "y": 2024,
+    "n": 7057,
+    "issuers": 473
+   },
+   {
+    "y": 2025,
+    "n": 12150,
+    "issuers": 395
+   },
+   {
+    "y": 2026,
+    "n": 3379,
+    "issuers": 285
+   }
+  ]
+ },
+ "insiders_form144_rows_by_year": {
+  "why": "post-2023 list: does Form 144 history exist before EDGAR's electronic 144?",
+  "rows": [
+   {
+    "y": 2001,
+    "n": 172067
+   },
+   {
+    "y": 2002,
+    "n": 20498
+   },
+   {
+    "y": 2003,
+    "n": 21283
+   },
+   {
+    "y": 2004,
+    "n": 24687
+   },
+   {
+    "y": 2005,
+    "n": 44015
+   },
+   {
+    "y": 2006,
+    "n": 37392
+   },
+   {
+    "y": 2007,
+    "n": 47096
+   },
+   {
+    "y": 2008,
+    "n": 33821
+   },
+   {
+    "y": 2009,
+    "n": 67312
+   },
+   {
+    "y": 2010,
+    "n": 25453
+   },
+   {
+    "y": 2011,
+    "n": 43142
+   },
+   {
+    "y": 2012,
+    "n": 52030
+   },
+   {
+    "y": 2013,
+    "n": 45150
+   },
+   {
+    "y": 2014,
+    "n": 59038
+   },
+   {
+    "y": 2015,
+    "n": 118851
+   },
+   {
+    "y": 2016,
+    "n": 98254
+   },
+   {
+    "y": 2017,
+    "n": 46989
+   },
+   {
+    "y": 2018,
+    "n": 27192
+   },
+   {
+    "y": 2019,
+    "n": 28721
+   },
+   {
+    "y": 2020,
+    "n": 20878
+   },
+   {
+    "y": 2021,
+    "n": 20991
+   },
+   {
+    "y": 2022,
+    "n": 17263
+   },
+   {
+    "y": 2023,
+    "n": 29746
+   },
+   {
+    "y": 2024,
+    "n": 42182
+   },
+   {
+    "y": 2025,
+    "n": 37753
+   },
+   {
+    "y": 2026,
+    "n": 20854
+   },
+   {
+    "y": null,
+    "n": 792
+   }
+  ]
+ },
+ "insiders_rule10b5_rows_by_year": {
+  "why": "post-2023 list: Thomson's 10b5-1 flag table, by Thomson create date",
+  "rows": [
+   {
+    "y": 1997,
+    "table_type": "1",
+    "flag": "N",
+    "n": 2
+   },
+   {
+    "y": 1998,
+    "table_type": "1",
+    "flag": "N",
+    "n": 14
+   },
+   {
+    "y": 1999,
+    "table_type": "1",
+    "flag": "N",
+    "n": 29
+   },
+   {
+    "y": 1999,
+    "table_type": "2",
+    "flag": "N",
+    "n": 14
+   },
+   {
+    "y": 2000,
+    "table_type": "1",
+    "flag": "N",
+    "n": 10
+   },
+   {
+    "y": 2000,
+    "table_type": "2",
+    "flag": "N",
+    "n": 5
+   },
+   {
+    "y": 2001,
+    "table_type": "1",
+    "flag": "N",
+    "n": 9
+   },
+   {
+    "y": 2001,
+    "table_type": "2",
+    "flag": "N",
+    "n": 5
+   },
+   {
+    "y": 2002,
+    "table_type": "1",
+    "flag": "N",
+    "n": 10
+   },
+   {
+    "y": 2002,
+    "table_type": "2",
+    "flag": "N",
+    "n": 8
+   },
+   {
+    "y": 2003,
+    "table_type": "1",
+    "flag": "N",
+    "n": 44
+   },
+   {
+    "y": 2003,
+    "table_type": "2",
+    "flag": "N",
+    "n": 5
+   },
+   {
+    "y": 2004,
+    "table_type": "1",
+    "flag": "N",
+    "n": 19
+   },
+   {
+    "y": 2004,
+    "table_type": "2",
+    "flag": "N",
+    "n": 1
+   },
+   {
+    "y": 2005,
+    "table_type": "1",
+    "flag": "N",
+    "n": 866
+   },
+   {
+    "y": 2005,
+    "table_type": "2",
+    "flag": "N",
+    "n": 24
+   },
+   {
+    "y": 2006,
+    "table_type": "1",
+    "flag": "N",
+    "n": 442
+   },
+   {
+    "y": 2006,
+    "table_type": "2",
+    "flag": "N",
+    "n": 25
+   },
+   {
+    "y": 2007,
+    "table_type": "1",
+    "flag": "N",
+    "n": 3288
+   },
+   {
+    "y": 2007,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 14480
+   },
+   {
+    "y": 2007,
+    "table_type": "2",
+    "flag": "N",
+    "n": 1787
+   },
+   {
+    "y": 2007,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 254
+   },
+   {
+    "y": 2008,
+    "table_type": "1",
+    "flag": "N",
+    "n": 1025
+   },
+   {
+    "y": 2008,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 7970
+   },
+   {
+    "y": 2008,
+    "table_type": "2",
+    "flag": "N",
+    "n": 658
+   },
+   {
+    "y": 2008,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 175
+   },
+   {
+    "y": 2009,
+    "table_type": "1",
+    "flag": "N",
+    "n": 1101
+   },
+   {
+    "y": 2009,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 3414
+   },
+   {
+    "y": 2009,
+    "table_type": "2",
+    "flag": "N",
+    "n": 444
+   },
+   {
+    "y": 2009,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 86
+   },
+   {
+    "y": 2010,
+    "table_type": "1",
+    "flag": "N",
+    "n": 925
+   },
+   {
+    "y": 2010,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 3091
+   },
+   {
+    "y": 2010,
+    "table_type": "2",
+    "flag": "N",
+    "n": 504
+   },
+   {
+    "y": 2010,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 240
+   },
+   {
+    "y": 2011,
+    "table_type": "1",
+    "flag": "N",
+    "n": 1247
+   },
+   {
+    "y": 2011,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 3986
+   },
+   {
+    "y": 2011,
+    "table_type": "2",
+    "flag": "N",
+    "n": 821
+   },
+   {
+    "y": 2011,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 163
+   },
+   {
+    "y": 2012,
+    "table_type": "1",
+    "flag": "N",
+    "n": 49042
+   },
+   {
+    "y": 2012,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 8097
+   },
+   {
+    "y": 2012,
+    "table_type": "2",
+    "flag": "N",
+    "n": 36574
+   },
+   {
+    "y": 2012,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 652
+   },
+   {
+    "y": 2013,
+    "table_type": "1",
+    "flag": "N",
+    "n": 166534
+   },
+   {
+    "y": 2013,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 26813
+   },
+   {
+    "y": 2013,
+    "table_type": "2",
+    "flag": "N",
+    "n": 235711
+   },
+   {
+    "y": 2013,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 2291
+   },
+   {
+    "y": 2014,
+    "table_type": "1",
+    "flag": "N",
+    "n": 207502
+   },
+   {
+    "y": 2014,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 36304
+   },
+   {
+    "y": 2014,
+    "table_type": "2",
+    "flag": "N",
+    "n": 244769
+   },
+   {
+    "y": 2014,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 3555
+   },
+   {
+    "y": 2015,
+    "table_type": "1",
+    "flag": "N",
+    "n": 233928
+   },
+   {
+    "y": 2015,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 45569
+   },
+   {
+    "y": 2015,
+    "table_type": "2",
+    "flag": "N",
+    "n": 487611
+   },
+   {
+    "y": 2015,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 4192
+   },
+   {
+    "y": 2016,
+    "table_type": "1",
+    "flag": "N",
+    "n": 291034
+   },
+   {
+    "y": 2016,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 48269
+   },
+   {
+    "y": 2016,
+    "table_type": "2",
+    "flag": "N",
+    "n": 345756
+   },
+   {
+    "y": 2016,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 3955
+   },
+   {
+    "y": 2017,
+    "table_type": "1",
+    "flag": "N",
+    "n": 312446
+   },
+   {
+    "y": 2017,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 52016
+   },
+   {
+    "y": 2017,
+    "table_type": "2",
+    "flag": "N",
+    "n": 350468
+   },
+   {
+    "y": 2017,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 4587
+   },
+   {
+    "y": 2018,
+    "table_type": "1",
+    "flag": "N",
+    "n": 291714
+   },
+   {
+    "y": 2018,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 76626
+   },
+   {
+    "y": 2018,
+    "table_type": "2",
+    "flag": "N",
+    "n": 350355
+   },
+   {
+    "y": 2018,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 5096
+   },
+   {
+    "y": 2019,
+    "table_type": "1",
+    "flag": "N",
+    "n": 265147
+   },
+   {
+    "y": 2019,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 68188
+   },
+   {
+    "y": 2019,
+    "table_type": "2",
+    "flag": "N",
+    "n": 367174
+   },
+   {
+    "y": 2019,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 4276
+   },
+   {
+    "y": 2020,
+    "table_type": "1",
+    "flag": "N",
+    "n": 295898
+   },
+   {
+    "y": 2020,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 74640
+   },
+   {
+    "y": 2020,
+    "table_type": "2",
+    "flag": "N",
+    "n": 383028
+   },
+   {
+    "y": 2020,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 5990
+   },
+   {
+    "y": 2021,
+    "table_type": "1",
+    "flag": "N",
+    "n": 340635
+   },
+   {
+    "y": 2021,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 102204
+   },
+   {
+    "y": 2021,
+    "table_type": "2",
+    "flag": "N",
+    "n": 495811
+   },
+   {
+    "y": 2021,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 6812
+   },
+   {
+    "y": 2022,
+    "table_type": "1",
+    "flag": "N",
+    "n": 305650
+   },
+   {
+    "y": 2022,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 51800
+   },
+   {
+    "y": 2022,
+    "table_type": "2",
+    "flag": "N",
+    "n": 395208
+   },
+   {
+    "y": 2022,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 3326
+   },
+   {
+    "y": 2023,
+    "table_type": "1",
+    "flag": "N",
+    "n": 310375
+   },
+   {
+    "y": 2023,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 52936
+   },
+   {
+    "y": 2023,
+    "table_type": "2",
+    "flag": "N",
+    "n": 350234
+   },
+   {
+    "y": 2023,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 3425
+   },
+   {
+    "y": 2024,
+    "table_type": "1",
+    "flag": "N",
+    "n": 305109
+   },
+   {
+    "y": 2024,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 66476
+   },
+   {
+    "y": 2024,
+    "table_type": "2",
+    "flag": "N",
+    "n": 302352
+   },
+   {
+    "y": 2024,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 3800
+   },
+   {
+    "y": 2025,
+    "table_type": "1",
+    "flag": "N",
+    "n": 282410
+   },
+   {
+    "y": 2025,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 63566
+   },
+   {
+    "y": 2025,
+    "table_type": "2",
+    "flag": "N",
+    "n": 270127
+   },
+   {
+    "y": 2025,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 3116
+   },
+   {
+    "y": 2026,
+    "table_type": "1",
+    "flag": "N",
+    "n": 175876
+   },
+   {
+    "y": 2026,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 33369
+   },
+   {
+    "y": 2026,
+    "table_type": "2",
+    "flag": "N",
+    "n": 173455
+   },
+   {
+    "y": 2026,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 1166
+   },
+   {
+    "y": null,
+    "table_type": "1",
+    "flag": "N",
+    "n": 22581
+   },
+   {
+    "y": null,
+    "table_type": "1",
+    "flag": "Y",
+    "n": 5197
+   },
+   {
+    "y": null,
+    "table_type": "2",
+    "flag": "N",
+    "n": 37851
+   },
+   {
+    "y": null,
+    "table_type": "2",
+    "flag": "Y",
+    "n": 428
+   }
+  ]
+ },
+ "otc_eod_gse_symbols": {
+  "why": "G2: Fannie/Freddie preferreds and commons in the OTC end-of-day file",
+  "rows": [
+   {
+    "symbol": "FMCC",
+    "issue": "FREDDIE MAC",
+    "sectype": "Common Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCG",
+    "issue": "FREDDIE MAC VAR RTE PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCH",
+    "issue": "FREDDIE MAC 5.1% PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCI",
+    "issue": "FREDDIE MAC V/R PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCJ",
+    "issue": "FREDDIE MAC VAR RT PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCK",
+    "issue": "FREDDIE MAC 5.79 PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCL",
+    "issue": "FREDDIE MAC V/RTE NON PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCM",
+    "issue": "FREDDIE MAC 4.817 PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCN",
+    "issue": "FREDDIE MAC 4.5 PR",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCO",
+    "issue": "FREDDIE MAC 5.81 MKT PUB",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCP",
+    "issue": "FREDDIE MAC 6% PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCS",
+    "issue": "FREDDIE MAC VAR RATE PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCCT",
+    "issue": "FREDDIE MAC 6.42% PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKI",
+    "issue": "FREDDIE MAC 6.55 PR",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKJ",
+    "issue": "FREDDIE MAC 8.375 PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKK",
+    "issue": "FREDDIE MAC 5% PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKL",
+    "issue": "FREDDIE MAC 6.02 % PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKM",
+    "issue": "FREDDIE MAC 5.75 PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKN",
+    "issue": "FREDDIE MAC 5.66 PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKO",
+    "issue": "FREDDIE MAC PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FMCKP",
+    "issue": "FREDDIE MAC 5.70 PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMA",
+    "issue": "FANNIE MAE",
+    "sectype": "Common Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAG",
+    "issue": "FANNIE MAE M/A5.375 PR I",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAH",
+    "issue": "FANNIE MAE MTG ASSN P PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAI",
+    "issue": "FANNIE MAE MTG/A PFD Q",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAJ",
+    "issue": "FANNIE MAE M/A7.625PR R",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAK",
+    "issue": "FANNIE MAE N PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAL",
+    "issue": "FANNIE MAE M/A 4.75 M",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAM",
+    "issue": "FANNIE MAE 5.81 PFD H",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAN",
+    "issue": "FANNIE MAE M/A 5.125 L",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAO",
+    "issue": "FANNIE MAE VAR RTE G PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAP",
+    "issue": "FANNIE MAE VAR RTE F PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAS",
+    "issue": "FANNIE MAE M/A 8.25 PR S",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMAT",
+    "issue": "FANNIE MAE 8.235% PFD T",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMFM",
+    "issue": "FED NAT MTGE ASSN E PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-01-11T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMFN",
+    "issue": "FED NAT MTGE ASSN O PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2011-09-01T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   },
+   {
+    "symbol": "FNMFO",
+    "issue": "FED NAT MTG ASSN PFD",
+    "sectype": "Preferred Stock",
+    "n": 3677,
+    "first_bid_date": "2013-11-04T00:00:00.000",
+    "last_bid_date": "2026-06-01T00:00:00.000"
+   }
+  ]
+ },
+ "otc_eod_rows_by_year": {
+  "why": "G2: rows per year in the OTC end-of-day file (is the early history populated?)",
+  "rows": [
+   {
+    "y": 1990,
+    "n": 1725
+   },
+   {
+    "y": 1992,
+    "n": 5197
+   },
+   {
+    "y": 1993,
+    "n": 10534
+   },
+   {
+    "y": 1994,
+    "n": 17813
+   },
+   {
+    "y": 1995,
+    "n": 45656
+   },
+   {
+    "y": 1996,
+    "n": 38246
+   },
+   {
+    "y": 1997,
+    "n": 73652
+   },
+   {
+    "y": 1998,
+    "n": 89761
+   },
+   {
+    "y": 1999,
+    "n": 334019
+   },
+   {
+    "y": 2000,
+    "n": 462964
+   },
+   {
+    "y": 2001,
+    "n": 315616
+   },
+   {
+    "y": 2002,
+    "n": 608421
+   },
+   {
+    "y": 2003,
+    "n": 227880
+   },
+   {
+    "y": 2004,
+    "n": 222157
+   },
+   {
+    "y": 2005,
+    "n": 111227
+   },
+   {
+    "y": 2006,
+    "n": 93318
+   },
+   {
+    "y": 2007,
+    "n": 238070
+   },
+   {
+    "y": 2008,
+    "n": 321669
+   },
+   {
+    "y": 2009,
+    "n": 1073937
+   },
+   {
+    "y": 2010,
+    "n": 1076398
+   },
+   {
+    "y": 2011,
+    "n": 2091551
+   },
+   {
+    "y": 2012,
+    "n": 4312859
+   },
+   {
+    "y": 2013,
+    "n": 3091902
+   },
+   {
+    "y": 2014,
+    "n": 3588816
+   },
+   {
+    "y": 2015,
+    "n": 3056197
+   },
+   {
+    "y": 2016,
+    "n": 2744983
+   },
+   {
+    "y": 2017,
+    "n": 2811065
+   },
+   {
+    "y": 2018,
+    "n": 2847133
+   },
+   {
+    "y": 2019,
+    "n": 2567804
+   },
+   {
+    "y": 2020,
+    "n": 2581683
+   },
+   {
+    "y": 2021,
+    "n": 5042709
+   },
+   {
+    "y": 2022,
+    "n": 3068878
+   },
+   {
+    "y": 2023,
+    "n": 3219250
+   },
+   {
+    "y": 2024,
+    "n": 3177161
+   },
+   {
+    "y": 2025,
+    "n": 2911321
+   },
+   {
+    "y": 2026,
+    "n": 1151079
+   },
+   {
+    "y": null,
+    "n": 21977019
+   }
+  ]
+ },
+ "crsp_mf_etf_holdings": {
+  "why": "A9/CR15: do CRSP MF holdings carry BIZD, PFF and peers? (portfolio report dates)",
+  "rows": [
+   {
+    "ticker": "BIZD",
+    "crsp_portno": 1032741.0,
+    "n_rows": 3619,
+    "n_reports": 136,
+    "first_report": "2013-07-31T00:00:00.000",
+    "last_report": "2025-11-30T00:00:00.000"
+   },
+   {
+    "ticker": "HYG",
+    "crsp_portno": 1021603.0,
+    "n_rows": 187472,
+    "n_reports": 187,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "JNK",
+    "crsp_portno": 1028298.0,
+    "n_rows": 160778,
+    "n_reports": 187,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "MUB",
+    "crsp_portno": 1021882.0,
+    "n_rows": 687823,
+    "n_reports": 184,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "PFF",
+    "crsp_portno": 1021325.0,
+    "n_rows": 69523,
+    "n_reports": 187,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "PFFD",
+    "crsp_portno": 1050049.0,
+    "n_rows": 23683,
+    "n_reports": 95,
+    "first_report": "2017-09-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "PGX",
+    "crsp_portno": 1028330.0,
+    "n_rows": 41910,
+    "n_reports": 183,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   }
+  ]
+ },
+ "sdc_ni_cef_and_pfd_by_year": {
+  "why": "A1/C1: SDC new issues: closed-end fund issuers (SIC 6726) and preferred-style securities, by year",
+  "rows": [
+   {
+    "y": 1962,
+    "n_all": 1,
+    "n_sic6726": 0,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1963,
+    "n_all": 14,
+    "n_sic6726": 0,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1964,
+    "n_all": 83,
+    "n_sic6726": 0,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1965,
+    "n_all": 7,
+    "n_sic6726": 0,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1966,
+    "n_all": 69,
+    "n_sic6726": 0,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1967,
+    "n_all": 81,
+    "n_sic6726": 0,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1968,
+    "n_all": 124,
+    "n_sic6726": 1,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1969,
+    "n_all": 115,
+    "n_sic6726": 2,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   },
+   {
+    "y": 1970,
+    "n_all": 1376,
+    "n_sic6726": 9,
+    "n_pfd_text": 55,
+    "n_25par": 2
+   },
+   {
+    "y": 1971,
+    "n_all": 1903,
+    "n_sic6726": 13,
+    "n_pfd_text": 77,
+    "n_25par": 1
+   },
+   {
+    "y": 1972,
+    "n_all": 2051,
+    "n_sic6726": 16,
+    "n_pfd_text": 79,
+    "n_25par": 1
+   },
+   {
+    "y": 1973,
+    "n_all": 746,
+    "n_sic6726": 18,
+    "n_pfd_text": 53,
+    "n_25par": 1
+   },
+   {
+    "y": 1974,
+    "n_all": 635,
+    "n_sic6726": 2,
+    "n_pfd_text": 57,
+    "n_25par": 5
+   },
+   {
+    "y": 1975,
+    "n_all": 1049,
+    "n_sic6726": 3,
+    "n_pfd_text": 86,
+    "n_25par": 26
+   },
+   {
+    "y": 1976,
+    "n_all": 1154,
+    "n_sic6726": 6,
+    "n_pfd_text": 67,
+    "n_25par": 19
+   },
+   {
+    "y": 1977,
+    "n_all": 1129,
+    "n_sic6726": 5,
+    "n_pfd_text": 56,
+    "n_25par": 21
+   },
+   {
+    "y": 1978,
+    "n_all": 1079,
+    "n_sic6726": 6,
+    "n_pfd_text": 45,
+    "n_25par": 18
+   },
+   {
+    "y": 1979,
+    "n_all": 1081,
+    "n_sic6726": 3,
+    "n_pfd_text": 51,
+    "n_25par": 11
+   },
+   {
+    "y": 1980,
+    "n_all": 1584,
+    "n_sic6726": 3,
+    "n_pfd_text": 74,
+    "n_25par": 20
+   },
+   {
+    "y": 1981,
+    "n_all": 2693,
+    "n_sic6726": 7,
+    "n_pfd_text": 81,
+    "n_25par": 18
+   },
+   {
+    "y": 1982,
+    "n_all": 3112,
+    "n_sic6726": 8,
+    "n_pfd_text": 118,
+    "n_25par": 17
+   },
+   {
+    "y": 1983,
+    "n_all": 4207,
+    "n_sic6726": 11,
+    "n_pfd_text": 172,
+    "n_25par": 39
+   },
+   {
+    "y": 1984,
+    "n_all": 3714,
+    "n_sic6726": 8,
+    "n_pfd_text": 131,
+    "n_25par": 11
+   },
+   {
+    "y": 1985,
+    "n_all": 6142,
+    "n_sic6726": 12,
+    "n_pfd_text": 181,
+    "n_25par": 22
+   },
+   {
+    "y": 1986,
+    "n_all": 9045,
+    "n_sic6726": 54,
+    "n_pfd_text": 265,
+    "n_25par": 36
+   },
+   {
+    "y": 1987,
+    "n_all": 8640,
+    "n_sic6726": 57,
+    "n_pfd_text": 219,
+    "n_25par": 23
+   },
+   {
+    "y": 1988,
+    "n_all": 9549,
+    "n_sic6726": 149,
+    "n_pfd_text": 192,
+    "n_25par": 8
+   },
+   {
+    "y": 1989,
+    "n_all": 9961,
+    "n_sic6726": 98,
+    "n_pfd_text": 199,
+    "n_25par": 24
+   },
+   {
+    "y": 1990,
+    "n_all": 11053,
+    "n_sic6726": 144,
+    "n_pfd_text": 139,
+    "n_25par": 9
+   },
+   {
+    "y": 1991,
+    "n_all": 20781,
+    "n_sic6726": 231,
+    "n_pfd_text": 241,
+    "n_25par": 36
+   },
+   {
+    "y": 1992,
+    "n_all": 25208,
+    "n_sic6726": 342,
+    "n_pfd_text": 313,
+    "n_25par": 102
+   },
+   {
+    "y": 1993,
+    "n_all": 28001,
+    "n_sic6726": 621,
+    "n_pfd_text": 449,
+    "n_25par": 126
+   },
+   {
+    "y": 1994,
+    "n_all": 29710,
+    "n_sic6726": 597,
+    "n_pfd_text": 183,
+    "n_25par": 54
+   },
+   {
+    "y": 1995,
+    "n_all": 26038,
+    "n_sic6726": 583,
+    "n_pfd_text": 164,
+    "n_25par": 46
+   },
+   {
+    "y": 1996,
+    "n_all": 33213,
+    "n_sic6726": 751,
+    "n_pfd_text": 231,
+    "n_25par": 44
+   },
+   {
+    "y": 1997,
+    "n_all": 35500,
+    "n_sic6726": 363,
+    "n_pfd_text": 334,
+    "n_25par": 105
+   },
+   {
+    "y": 1998,
+    "n_all": 42843,
+    "n_sic6726": 355,
+    "n_pfd_text": 301,
+    "n_25par": 101
+   },
+   {
+    "y": 1999,
+    "n_all": 39807,
+    "n_sic6726": 537,
+    "n_pfd_text": 240,
+    "n_25par": 67
+   },
+   {
+    "y": 2000,
+    "n_all": 35951,
+    "n_sic6726": 262,
+    "n_pfd_text": 238,
+    "n_25par": 31
+   },
+   {
+    "y": 2001,
+    "n_all": 44927,
+    "n_sic6726": 330,
+    "n_pfd_text": 265,
+    "n_25par": 87
+   },
+   {
+    "y": 2002,
+    "n_all": 41858,
+    "n_sic6726": 412,
+    "n_pfd_text": 194,
+    "n_25par": 70
+   },
+   {
+    "y": 2003,
+    "n_all": 44547,
+    "n_sic6726": 428,
+    "n_pfd_text": 298,
+    "n_25par": 99
+   },
+   {
+    "y": 2004,
+    "n_all": 40554,
+    "n_sic6726": 399,
+    "n_pfd_text": 220,
+    "n_25par": 98
+   },
+   {
+    "y": 2005,
+    "n_all": 37274,
+    "n_sic6726": 361,
+    "n_pfd_text": 185,
+    "n_25par": 80
+   },
+   {
+    "y": 2006,
+    "n_all": 43360,
+    "n_sic6726": 326,
+    "n_pfd_text": 145,
+    "n_25par": 81
+   },
+   {
+    "y": 2007,
+    "n_all": 44913,
+    "n_sic6726": 480,
+    "n_pfd_text": 123,
+    "n_25par": 66
+   },
+   {
+    "y": 2008,
+    "n_all": 34126,
+    "n_sic6726": 365,
+    "n_pfd_text": 114,
+    "n_25par": 57
+   },
+   {
+    "y": 2009,
+    "n_all": 38872,
+    "n_sic6726": 316,
+    "n_pfd_text": 142,
+    "n_25par": 54
+   },
+   {
+    "y": 2010,
+    "n_all": 45169,
+    "n_sic6726": 414,
+    "n_pfd_text": 154,
+    "n_25par": 45
+   },
+   {
+    "y": 2011,
+    "n_all": 42306,
+    "n_sic6726": 393,
+    "n_pfd_text": 200,
+    "n_25par": 70
+   },
+   {
+    "y": 2012,
+    "n_all": 41382,
+    "n_sic6726": 360,
+    "n_pfd_text": 325,
+    "n_25par": 134
+   },
+   {
+    "y": 2013,
+    "n_all": 41714,
+    "n_sic6726": 461,
+    "n_pfd_text": 245,
+    "n_25par": 81
+   },
+   {
+    "y": 2014,
+    "n_all": 48663,
+    "n_sic6726": 440,
+    "n_pfd_text": 223,
+    "n_25par": 83
+   },
+   {
+    "y": 2015,
+    "n_all": 51119,
+    "n_sic6726": 691,
+    "n_pfd_text": 151,
+    "n_25par": 47
+   },
+   {
+    "y": 2016,
+    "n_all": 55341,
+    "n_sic6726": 459,
+    "n_pfd_text": 192,
+    "n_25par": 66
+   },
+   {
+    "y": 2017,
+    "n_all": 56192,
+    "n_sic6726": 452,
+    "n_pfd_text": 237,
+    "n_25par": 73
+   },
+   {
+    "y": 2018,
+    "n_all": 53162,
+    "n_sic6726": 395,
+    "n_pfd_text": 208,
+    "n_25par": 42
+   },
+   {
+    "y": 2019,
+    "n_all": 56370,
+    "n_sic6726": 603,
+    "n_pfd_text": 176,
+    "n_25par": 48
+   },
+   {
+    "y": 2020,
+    "n_all": 64451,
+    "n_sic6726": 641,
+    "n_pfd_text": 156,
+    "n_25par": 29
+   },
+   {
+    "y": 2021,
+    "n_all": 72653,
+    "n_sic6726": 1392,
+    "n_pfd_text": 196,
+    "n_25par": 44
+   },
+   {
+    "y": 2022,
+    "n_all": 62800,
+    "n_sic6726": 583,
+    "n_pfd_text": 117,
+    "n_25par": 7
+   },
+   {
+    "y": 2023,
+    "n_all": 66084,
+    "n_sic6726": 463,
+    "n_pfd_text": 82,
+    "n_25par": 5
+   },
+   {
+    "y": 2024,
+    "n_all": 74082,
+    "n_sic6726": 454,
+    "n_pfd_text": 78,
+    "n_25par": 2
+   },
+   {
+    "y": 2025,
+    "n_all": 80665,
+    "n_sic6726": 516,
+    "n_pfd_text": 107,
+    "n_25par": 12
+   },
+   {
+    "y": 2026,
+    "n_all": 36273,
+    "n_sic6726": 304,
+    "n_pfd_text": 62,
+    "n_25par": 3
+   },
+   {
+    "y": null,
+    "n_all": 1,
+    "n_sic6726": 0,
+    "n_pfd_text": 0,
+    "n_25par": 0
+   }
+  ]
+ },
+ "sdc_ma_cef_targets_by_year": {
+  "why": "Merger arb / CEF tenders: SDC M&A deals with a SIC-6726 target, and all tender offers, by announcement year",
+  "rows": [
+   {
+    "y": 1965,
+    "n_all": 3,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 0
+   },
+   {
+    "y": 1966,
+    "n_all": 1,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 0
+   },
+   {
+    "y": 1969,
+    "n_all": 1,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 0
+   },
+   {
+    "y": 1971,
+    "n_all": 1,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 0
+   },
+   {
+    "y": 1973,
+    "n_all": 1,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 0
+   },
+   {
+    "y": 1975,
+    "n_all": 2,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 0
+   },
+   {
+    "y": 1976,
+    "n_all": 3,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 1
+   },
+   {
+    "y": 1977,
+    "n_all": 7,
+    "n_t6726": 0,
+    "n_tender": 1,
+    "n_us_public_target": 2
+   },
+   {
+    "y": 1978,
+    "n_all": 35,
+    "n_t6726": 0,
+    "n_tender": 12,
+    "n_us_public_target": 22
+   },
+   {
+    "y": 1979,
+    "n_all": 33,
+    "n_t6726": 1,
+    "n_tender": 7,
+    "n_us_public_target": 19
+   },
+   {
+    "y": 1980,
+    "n_all": 116,
+    "n_t6726": 0,
+    "n_tender": 19,
+    "n_us_public_target": 38
+   },
+   {
+    "y": 1981,
+    "n_all": 1328,
+    "n_t6726": 1,
+    "n_tender": 228,
+    "n_us_public_target": 337
+   },
+   {
+    "y": 1982,
+    "n_all": 2282,
+    "n_t6726": 2,
+    "n_tender": 214,
+    "n_us_public_target": 457
+   },
+   {
+    "y": 1983,
+    "n_all": 3883,
+    "n_t6726": 7,
+    "n_tender": 193,
+    "n_us_public_target": 801
+   },
+   {
+    "y": 1984,
+    "n_all": 4620,
+    "n_t6726": 11,
+    "n_tender": 274,
+    "n_us_public_target": 1453
+   },
+   {
+    "y": 1985,
+    "n_all": 3577,
+    "n_t6726": 5,
+    "n_tender": 223,
+    "n_us_public_target": 1065
+   },
+   {
+    "y": 1986,
+    "n_all": 5256,
+    "n_t6726": 13,
+    "n_tender": 330,
+    "n_us_public_target": 1222
+   },
+   {
+    "y": 1987,
+    "n_all": 7047,
+    "n_t6726": 17,
+    "n_tender": 438,
+    "n_us_public_target": 2099
+   },
+   {
+    "y": 1988,
+    "n_all": 9593,
+    "n_t6726": 23,
+    "n_tender": 598,
+    "n_us_public_target": 1932
+   },
+   {
+    "y": 1989,
+    "n_all": 13403,
+    "n_t6726": 56,
+    "n_tender": 600,
+    "n_us_public_target": 2468
+   },
+   {
+    "y": 1990,
+    "n_all": 14943,
+    "n_t6726": 72,
+    "n_tender": 483,
+    "n_us_public_target": 2324
+   },
+   {
+    "y": 1991,
+    "n_all": 21021,
+    "n_t6726": 81,
+    "n_tender": 566,
+    "n_us_public_target": 1658
+   },
+   {
+    "y": 1992,
+    "n_all": 20033,
+    "n_t6726": 85,
+    "n_tender": 472,
+    "n_us_public_target": 1715
+   },
+   {
+    "y": 1993,
+    "n_all": 21091,
+    "n_t6726": 114,
+    "n_tender": 650,
+    "n_us_public_target": 1848
+   },
+   {
+    "y": 1994,
+    "n_all": 23770,
+    "n_t6726": 135,
+    "n_tender": 600,
+    "n_us_public_target": 2652
+   },
+   {
+    "y": 1995,
+    "n_all": 28542,
+    "n_t6726": 139,
+    "n_tender": 826,
+    "n_us_public_target": 2937
+   },
+   {
+    "y": 1996,
+    "n_all": 30048,
+    "n_t6726": 158,
+    "n_tender": 802,
+    "n_us_public_target": 3440
+   },
+   {
+    "y": 1997,
+    "n_all": 30459,
+    "n_t6726": 191,
+    "n_tender": 793,
+    "n_us_public_target": 2906
+   },
+   {
+    "y": 1998,
+    "n_all": 35885,
+    "n_t6726": 182,
+    "n_tender": 694,
+    "n_us_public_target": 3526
+   },
+   {
+    "y": 1999,
+    "n_all": 39105,
+    "n_t6726": 186,
+    "n_tender": 1103,
+    "n_us_public_target": 3035
+   },
+   {
+    "y": 2000,
+    "n_all": 43636,
+    "n_t6726": 198,
+    "n_tender": 1209,
+    "n_us_public_target": 2317
+   },
+   {
+    "y": 2001,
+    "n_all": 34067,
+    "n_t6726": 182,
+    "n_tender": 889,
+    "n_us_public_target": 1672
+   },
+   {
+    "y": 2002,
+    "n_all": 29867,
+    "n_t6726": 101,
+    "n_tender": 724,
+    "n_us_public_target": 1286
+   },
+   {
+    "y": 2003,
+    "n_all": 32927,
+    "n_t6726": 75,
+    "n_tender": 659,
+    "n_us_public_target": 1249
+   },
+   {
+    "y": 2004,
+    "n_all": 35297,
+    "n_t6726": 71,
+    "n_tender": 598,
+    "n_us_public_target": 1187
+   },
+   {
+    "y": 2005,
+    "n_all": 38518,
+    "n_t6726": 103,
+    "n_tender": 740,
+    "n_us_public_target": 1420
+   },
+   {
+    "y": 2006,
+    "n_all": 44188,
+    "n_t6726": 255,
+    "n_tender": 958,
+    "n_us_public_target": 1497
+   },
+   {
+    "y": 2007,
+    "n_all": 51135,
+    "n_t6726": 273,
+    "n_tender": 1110,
+    "n_us_public_target": 1948
+   },
+   {
+    "y": 2008,
+    "n_all": 50532,
+    "n_t6726": 294,
+    "n_tender": 891,
+    "n_us_public_target": 2091
+   },
+   {
+    "y": 2009,
+    "n_all": 46039,
+    "n_t6726": 255,
+    "n_tender": 816,
+    "n_us_public_target": 1503
+   },
+   {
+    "y": 2010,
+    "n_all": 48200,
+    "n_t6726": 164,
+    "n_tender": 857,
+    "n_us_public_target": 1306
+   },
+   {
+    "y": 2011,
+    "n_all": 47964,
+    "n_t6726": 186,
+    "n_tender": 865,
+    "n_us_public_target": 1462
+   },
+   {
+    "y": 2012,
+    "n_all": 44608,
+    "n_t6726": 187,
+    "n_tender": 787,
+    "n_us_public_target": 1214
+   },
+   {
+    "y": 2013,
+    "n_all": 42306,
+    "n_t6726": 162,
+    "n_tender": 679,
+    "n_us_public_target": 1059
+   },
+   {
+    "y": 2014,
+    "n_all": 47442,
+    "n_t6726": 179,
+    "n_tender": 727,
+    "n_us_public_target": 1252
+   },
+   {
+    "y": 2015,
+    "n_all": 51419,
+    "n_t6726": 167,
+    "n_tender": 737,
+    "n_us_public_target": 1375
+   },
+   {
+    "y": 2016,
+    "n_all": 53273,
+    "n_t6726": 171,
+    "n_tender": 701,
+    "n_us_public_target": 1128
+   },
+   {
+    "y": 2017,
+    "n_all": 56136,
+    "n_t6726": 146,
+    "n_tender": 731,
+    "n_us_public_target": 1151
+   },
+   {
+    "y": 2018,
+    "n_all": 56901,
+    "n_t6726": 121,
+    "n_tender": 672,
+    "n_us_public_target": 1164
+   },
+   {
+    "y": 2019,
+    "n_all": 55233,
+    "n_t6726": 139,
+    "n_tender": 596,
+    "n_us_public_target": 836
+   },
+   {
+    "y": 2020,
+    "n_all": 55296,
+    "n_t6726": 142,
+    "n_tender": 600,
+    "n_us_public_target": 899
+   },
+   {
+    "y": 2021,
+    "n_all": 68439,
+    "n_t6726": 178,
+    "n_tender": 600,
+    "n_us_public_target": 1139
+   },
+   {
+    "y": 2022,
+    "n_all": 62910,
+    "n_t6726": 186,
+    "n_tender": 589,
+    "n_us_public_target": 1438
+   },
+   {
+    "y": 2023,
+    "n_all": 62011,
+    "n_t6726": 217,
+    "n_tender": 612,
+    "n_us_public_target": 1148
+   },
+   {
+    "y": 2024,
+    "n_all": 57370,
+    "n_t6726": 168,
+    "n_tender": 677,
+    "n_us_public_target": 1176
+   },
+   {
+    "y": 2025,
+    "n_all": 57157,
+    "n_t6726": 156,
+    "n_tender": 737,
+    "n_us_public_target": 1126
+   },
+   {
+    "y": 2026,
+    "n_all": 24507,
+    "n_t6726": 71,
+    "n_tender": 237,
+    "n_us_public_target": 420
+   },
+   {
+    "y": null,
+    "n_all": 4121,
+    "n_t6726": 0,
+    "n_tender": 0,
+    "n_us_public_target": 0
+   }
+  ]
+ },
+ "sdc_ma_tender_values": {
+  "why": "Which code SDC uses in `tender` (so the count above is not keyed on a guessed value)",
+  "rows": [
+   {
+    "tender": "No",
+    "n": 1583343
+   },
+   {
+    "tender": "Yes",
+    "n": 30124
+   },
+   {
+    "tender": null,
+    "n": 4121
+   }
+  ]
+ },
+ "comp_sp_indices": {
+  "why": "D8: Compustat index ids for the S&P 500 / 400 / 600",
+  "rows": [
+   {
+    "gvkeyx": "166577",
+    "conm": "S&P 500 CAD",
+    "tic": "I0258",
+    "indexid": "500CAD",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "000003",
+    "conm": "S&P 500 Comp-Ltd",
+    "tic": "I0003",
+    "indexid": "500",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "000283",
+    "conm": "S&P 500 Comp-Wed",
+    "tic": "I0010",
+    "indexid": "500",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "187811",
+    "conm": "S&P 500 EQUAL WEIGHT INDEX",
+    "tic": "I0255",
+    "indexid": "500EW",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "166710",
+    "conm": "S&P 500 EUR",
+    "tic": "I0261",
+    "indexid": "500EUR",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "000002",
+    "conm": "S&P 500 Ex-Financials, Real Estate, Utilities and Transportation Index",
+    "tic": "I0002",
+    "indexid": "500",
+    "idxstat": null
+   },
+   {
+    "gvkeyx": "166712",
+    "conm": "S&P 500 GBP",
+    "tic": "I0262",
+    "indexid": "500GBP",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "165155",
+    "conm": "S&P 500 Growth",
+    "tic": "I0221",
+    "indexid": "500",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "266295",
+    "conm": "S&P 500 O-Strip Index",
+    "tic": "SPOS",
+    "indexid": "500",
+    "idxstat": "I"
+   },
+   {
+    "gvkeyx": "165158",
+    "conm": "S&P 500 Pure Growth",
+    "tic": "I0222",
+    "indexid": "500",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "165168",
+    "conm": "S&P 500 Pure Value",
+    "tic": "I0223",
+    "indexid": "500",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "032388",
+    "conm": "S&P 500 QUALITY INDEX",
+    "tic": "I0317",
+    "indexid": "NONE",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "165157",
+    "conm": "S&P 500 Value",
+    "tic": "I0219",
+    "indexid": "500",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "166707",
+    "conm": "S&P 500 YEN",
+    "tic": "I0260",
+    "indexid": "500YEN",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "026113",
+    "conm": "S&P 500/Barra Growth Index",
+    "tic": "I0017",
+    "indexid": "500",
+    "idxstat": "I"
+   },
+   {
+    "gvkeyx": "026114",
+    "conm": "S&P 500/Barra Value Index",
+    "tic": "I0018",
+    "indexid": "500",
+    "idxstat": "I"
+   },
+   {
+    "gvkeyx": "024248",
+    "conm": "S&P Midcap 400 Index",
+    "tic": "I0016",
+    "indexid": "400",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "030824",
+    "conm": "S&P Smallcap 600 Index",
+    "tic": "I0019",
+    "indexid": "600",
+    "idxstat": "A"
+   },
+   {
+    "gvkeyx": "136749",
+    "conm": "iShares Index S&P Midcap 400",
+    "tic": "I0070",
+    "indexid": "NONE",
+    "idxstat": "A"
+   }
+  ]
+ },
+ "comp_idxcst_adds_by_year": {
+  "why": "D8: constituent additions (`from` dates) per year for the S&P 500/400/600 ids found above",
+  "rows": [
+   {
+    "gvkeyx": "000003",
+    "y": 1964,
+    "n": 52
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1965,
+    "n": 3
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1967,
+    "n": 1
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1969,
+    "n": 3
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1970,
+    "n": 2
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1972,
+    "n": 2
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1973,
+    "n": 2
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1974,
+    "n": 1
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1975,
+    "n": 1
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1976,
+    "n": 12
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1978,
+    "n": 1
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1980,
+    "n": 3
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1981,
+    "n": 4
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1982,
+    "n": 6
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1983,
+    "n": 3
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1984,
+    "n": 5
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1985,
+    "n": 8
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1986,
+    "n": 4
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1987,
+    "n": 2
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1988,
+    "n": 4
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1989,
+    "n": 4
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1991,
+    "n": 1
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1992,
+    "n": 2
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1993,
+    "n": 2
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1994,
+    "n": 6
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1995,
+    "n": 11
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1996,
+    "n": 2
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1997,
+    "n": 15
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1998,
+    "n": 9
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 1999,
+    "n": 11
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2000,
+    "n": 9
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2001,
+    "n": 6
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2002,
+    "n": 12
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2003,
+    "n": 4
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2004,
+    "n": 6
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2005,
+    "n": 7
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2006,
+    "n": 9
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2007,
+    "n": 13
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2008,
+    "n": 16
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2009,
+    "n": 12
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2010,
+    "n": 8
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2011,
+    "n": 9
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2012,
+    "n": 11
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2013,
+    "n": 10
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2014,
+    "n": 8
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2015,
+    "n": 14
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2016,
+    "n": 20
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2017,
+    "n": 21
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2018,
+    "n": 13
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2019,
+    "n": 19
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2020,
+    "n": 10
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2021,
+    "n": 10
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2022,
+    "n": 14
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2023,
+    "n": 15
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2024,
+    "n": 16
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2025,
+    "n": 18
+   },
+   {
+    "gvkeyx": "000003",
+    "y": 2026,
+    "n": 11
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 1991,
+    "n": 14
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 1992,
+    "n": 1
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 1993,
+    "n": 1
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 1994,
+    "n": 1
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 1997,
+    "n": 3
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 1999,
+    "n": 2
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2000,
+    "n": 1
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2001,
+    "n": 2
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2003,
+    "n": 6
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2004,
+    "n": 2
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2005,
+    "n": 3
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2006,
+    "n": 6
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2007,
+    "n": 5
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2008,
+    "n": 10
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2009,
+    "n": 10
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2010,
+    "n": 8
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2011,
+    "n": 3
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2012,
+    "n": 4
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2013,
+    "n": 9
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2014,
+    "n": 7
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2015,
+    "n": 10
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2016,
+    "n": 21
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2017,
+    "n": 13
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2018,
+    "n": 16
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2019,
+    "n": 28
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2020,
+    "n": 21
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2021,
+    "n": 26
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2022,
+    "n": 30
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2023,
+    "n": 48
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2024,
+    "n": 35
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2025,
+    "n": 32
+   },
+   {
+    "gvkeyx": "024248",
+    "y": 2026,
+    "n": 22
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 1994,
+    "n": 23
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 1995,
+    "n": 2
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 1997,
+    "n": 3
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 1998,
+    "n": 3
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 1999,
+    "n": 2
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2000,
+    "n": 5
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2001,
+    "n": 4
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2003,
+    "n": 4
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2004,
+    "n": 10
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2005,
+    "n": 7
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2006,
+    "n": 7
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2007,
+    "n": 8
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2008,
+    "n": 9
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2009,
+    "n": 13
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2010,
+    "n": 10
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2011,
+    "n": 9
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2012,
+    "n": 7
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2013,
+    "n": 6
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2014,
+    "n": 8
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2015,
+    "n": 23
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2016,
+    "n": 17
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2017,
+    "n": 18
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2018,
+    "n": 21
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2019,
+    "n": 28
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2020,
+    "n": 33
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2021,
+    "n": 33
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2022,
+    "n": 31
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2023,
+    "n": 80
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2024,
+    "n": 60
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2025,
+    "n": 63
+   },
+   {
+    "gvkeyx": "030824",
+    "y": 2026,
+    "n": 55
+   }
+  ]
+ },
+ "comp_idxcst_has_removals": {
+  "why": "D8: does the mirror's constituent history keep REMOVED members? (a `thru` date is set only for them)",
+  "rows": [
+   {
+    "t": "idxcst_his",
+    "gvkeyx": "000003",
+    "n": 503,
+    "n_with_thru": 0
+   },
+   {
+    "t": "idxcst_his",
+    "gvkeyx": "024248",
+    "n": 400,
+    "n_with_thru": 0
+   },
+   {
+    "t": "idxcst_his",
+    "gvkeyx": "030824",
+    "n": 602,
+    "n_with_thru": 0
+   },
+   {
+    "t": "indexcst_his",
+    "gvkeyx": "000003",
+    "n": 503,
+    "n_with_thru": 0
+   },
+   {
+    "t": "indexcst_his",
+    "gvkeyx": "024248",
+    "n": 400,
+    "n_with_thru": 0
+   },
+   {
+    "t": "indexcst_his",
+    "gvkeyx": "030824",
+    "n": 602,
+    "n_with_thru": 0
+   }
+  ]
+ },
+ "crsp_mf_sp_etf_holdings": {
+  "why": "D8 cross-check: monthly holdings of the S&P 400/600 ETFs in CRSP MF (diffs = membership changes)",
+  "rows": [
+   {
+    "ticker": "IJH",
+    "n_reports": 188,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "IJR",
+    "n_reports": 189,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "MDY",
+    "n_reports": 187,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-02-28T00:00:00.000"
+   },
+   {
+    "ticker": "SLY",
+    "n_reports": 150,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2023-05-31T00:00:00.000"
+   },
+   {
+    "ticker": "SPMD",
+    "n_reports": 181,
+    "first_report": "2010-06-30T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   },
+   {
+    "ticker": "SPSM",
+    "n_reports": 148,
+    "first_report": "2013-07-31T00:00:00.000",
+    "last_report": "2026-03-31T00:00:00.000"
+   }
+  ]
+ },
+ "ibes_anntims_placeholder": {
+  "why": "D9: IBES announcement times equal to 00:00:00 (a placeholder, not a time) by year",
+  "rows": [
+   {
+    "y": 1976,
+    "n": 1833,
+    "n_midnight": 1833
+   },
+   {
+    "y": 1977,
+    "n": 79,
+    "n_midnight": 79
+   },
+   {
+    "y": 1978,
+    "n": 141,
+    "n_midnight": 141
+   },
+   {
+    "y": 1979,
+    "n": 118,
+    "n_midnight": 118
+   },
+   {
+    "y": 1980,
+    "n": 92,
+    "n_midnight": 92
+   },
+   {
+    "y": 1981,
+    "n": 110,
+    "n_midnight": 110
+   },
+   {
+    "y": 1982,
+    "n": 87,
+    "n_midnight": 87
+   },
+   {
+    "y": 1983,
+    "n": 4109,
+    "n_midnight": 4109
+   },
+   {
+    "y": 1984,
+    "n": 7294,
+    "n_midnight": 7294
+   },
+   {
+    "y": 1985,
+    "n": 8597,
+    "n_midnight": 8597
+   },
+   {
+    "y": 1986,
+    "n": 10286,
+    "n_midnight": 10285
+   },
+   {
+    "y": 1987,
+    "n": 12766,
+    "n_midnight": 12765
+   },
+   {
+    "y": 1988,
+    "n": 14959,
+    "n_midnight": 14959
+   },
+   {
+    "y": 1989,
+    "n": 18907,
+    "n_midnight": 18905
+   },
+   {
+    "y": 1990,
+    "n": 21843,
+    "n_midnight": 21842
+   },
+   {
+    "y": 1991,
+    "n": 23768,
+    "n_midnight": 23760
+   },
+   {
+    "y": 1992,
+    "n": 26877,
+    "n_midnight": 26857
+   },
+   {
+    "y": 1993,
+    "n": 29296,
+    "n_midnight": 29132
+   },
+   {
+    "y": 1994,
+    "n": 30579,
+    "n_midnight": 29982
+   },
+   {
+    "y": 1995,
+    "n": 33512,
+    "n_midnight": 32611
+   },
+   {
+    "y": 1996,
+    "n": 36829,
+    "n_midnight": 34662
+   },
+   {
+    "y": 1997,
+    "n": 38258,
+    "n_midnight": 33467
+   },
+   {
+    "y": 1998,
+    "n": 38326,
+    "n_midnight": 14977
+   },
+   {
+    "y": 1999,
+    "n": 36978,
+    "n_midnight": 2955
+   },
+   {
+    "y": 2000,
+    "n": 35693,
+    "n_midnight": 145
+   },
+   {
+    "y": 2001,
+    "n": 31340,
+    "n_midnight": 695
+   },
+   {
+    "y": 2002,
+    "n": 34818,
+    "n_midnight": 2595
+   },
+   {
+    "y": 2003,
+    "n": 40831,
+    "n_midnight": 5245
+   },
+   {
+    "y": 2004,
+    "n": 41232,
+    "n_midnight": 3149
+   },
+   {
+    "y": 2005,
+    "n": 37489,
+    "n_midnight": 481
+   },
+   {
+    "y": 2006,
+    "n": 39559,
+    "n_midnight": 190
+   },
+   {
+    "y": 2007,
+    "n": 38533,
+    "n_midnight": 316
+   },
+   {
+    "y": 2008,
+    "n": 35442,
+    "n_midnight": 48
+   },
+   {
+    "y": 2009,
+    "n": 31153,
+    "n_midnight": 21
+   },
+   {
+    "y": 2010,
+    "n": 28817,
+    "n_midnight": 17
+   },
+   {
+    "y": 2011,
+    "n": 26947,
+    "n_midnight": 8
+   },
+   {
+    "y": 2012,
+    "n": 27131,
+    "n_midnight": 8
+   },
+   {
+    "y": 2013,
+    "n": 28813,
+    "n_midnight": 5
+   },
+   {
+    "y": 2014,
+    "n": 29313,
+    "n_midnight": 22
+   },
+   {
+    "y": 2015,
+    "n": 29059,
+    "n_midnight": 1
+   },
+   {
+    "y": 2016,
+    "n": 27900,
+    "n_midnight": 2
+   },
+   {
+    "y": 2017,
+    "n": 27362,
+    "n_midnight": 1
+   },
+   {
+    "y": 2018,
+    "n": 26639,
+    "n_midnight": 0
+   },
+   {
+    "y": 2019,
+    "n": 26092,
+    "n_midnight": 5
+   },
+   {
+    "y": 2020,
+    "n": 26693,
+    "n_midnight": 24
+   },
+   {
+    "y": 2021,
+    "n": 29269,
+    "n_midnight": 26
+   },
+   {
+    "y": 2022,
+    "n": 29031,
+    "n_midnight": 24
+   },
+   {
+    "y": 2023,
+    "n": 28468,
+    "n_midnight": 19
+   },
+   {
+    "y": 2024,
+    "n": 27619,
+    "n_midnight": 29
+   },
+   {
+    "y": 2025,
+    "n": 26649,
+    "n_midnight": 25
+   },
+   {
+    "y": 2026,
+    "n": 13522,
+    "n_midnight": 16
+   },
+   {
+    "y": null,
+    "n": 102213,
+    "n_midnight": 0
+   }
+  ]
+ },
+ "comp_seg_customer_by_year": {
+  "why": "D7: Compustat customer-segment rows per year",
+  "rows": [
+   {
+    "y": 2020,
+    "n": 23553
+   },
+   {
+    "y": 2021,
+    "n": 25528
+   },
+   {
+    "y": 2022,
+    "n": 25380
+   },
+   {
+    "y": 2023,
+    "n": 25081
+   },
+   {
+    "y": 2024,
+    "n": 24365
+   },
+   {
+    "y": 2025,
+    "n": 22003
+   },
+   {
+    "y": 2026,
+    "n": 616
+   }
+  ]
+ },
+ "ibes_act_anntims_by_year": {
+  "why": "D9: IBES US EPS actuals, share with an announcement time of day, by year",
+  "rows": [
+   {
+    "y": 1976,
+    "n": 1833,
+    "n_with_time": 1833
+   },
+   {
+    "y": 1977,
+    "n": 79,
+    "n_with_time": 79
+   },
+   {
+    "y": 1978,
+    "n": 141,
+    "n_with_time": 141
+   },
+   {
+    "y": 1979,
+    "n": 118,
+    "n_with_time": 118
+   },
+   {
+    "y": 1980,
+    "n": 92,
+    "n_with_time": 92
+   },
+   {
+    "y": 1981,
+    "n": 110,
+    "n_with_time": 110
+   },
+   {
+    "y": 1982,
+    "n": 87,
+    "n_with_time": 87
+   },
+   {
+    "y": 1983,
+    "n": 4109,
+    "n_with_time": 4109
+   },
+   {
+    "y": 1984,
+    "n": 7294,
+    "n_with_time": 7294
+   },
+   {
+    "y": 1985,
+    "n": 8597,
+    "n_with_time": 8597
+   },
+   {
+    "y": 1986,
+    "n": 10286,
+    "n_with_time": 10286
+   },
+   {
+    "y": 1987,
+    "n": 12766,
+    "n_with_time": 12766
+   },
+   {
+    "y": 1988,
+    "n": 14959,
+    "n_with_time": 14959
+   },
+   {
+    "y": 1989,
+    "n": 18907,
+    "n_with_time": 18907
+   },
+   {
+    "y": 1990,
+    "n": 21843,
+    "n_with_time": 21843
+   },
+   {
+    "y": 1991,
+    "n": 23768,
+    "n_with_time": 23768
+   },
+   {
+    "y": 1992,
+    "n": 26877,
+    "n_with_time": 26877
+   },
+   {
+    "y": 1993,
+    "n": 29296,
+    "n_with_time": 29296
+   },
+   {
+    "y": 1994,
+    "n": 30579,
+    "n_with_time": 30579
+   },
+   {
+    "y": 1995,
+    "n": 33512,
+    "n_with_time": 33512
+   },
+   {
+    "y": 1996,
+    "n": 36829,
+    "n_with_time": 36829
+   },
+   {
+    "y": 1997,
+    "n": 38258,
+    "n_with_time": 38258
+   },
+   {
+    "y": 1998,
+    "n": 38326,
+    "n_with_time": 38326
+   },
+   {
+    "y": 1999,
+    "n": 36978,
+    "n_with_time": 36978
+   },
+   {
+    "y": 2000,
+    "n": 35693,
+    "n_with_time": 35693
+   },
+   {
+    "y": 2001,
+    "n": 31340,
+    "n_with_time": 31340
+   },
+   {
+    "y": 2002,
+    "n": 34818,
+    "n_with_time": 34818
+   },
+   {
+    "y": 2003,
+    "n": 40831,
+    "n_with_time": 40831
+   },
+   {
+    "y": 2004,
+    "n": 41232,
+    "n_with_time": 41232
+   },
+   {
+    "y": 2005,
+    "n": 37489,
+    "n_with_time": 37489
+   },
+   {
+    "y": 2006,
+    "n": 39559,
+    "n_with_time": 39559
+   },
+   {
+    "y": 2007,
+    "n": 38533,
+    "n_with_time": 38533
+   },
+   {
+    "y": 2008,
+    "n": 35442,
+    "n_with_time": 35442
+   },
+   {
+    "y": 2009,
+    "n": 31153,
+    "n_with_time": 31153
+   },
+   {
+    "y": 2010,
+    "n": 28817,
+    "n_with_time": 28817
+   },
+   {
+    "y": 2011,
+    "n": 26947,
+    "n_with_time": 26947
+   },
+   {
+    "y": 2012,
+    "n": 27131,
+    "n_with_time": 27131
+   },
+   {
+    "y": 2013,
+    "n": 28813,
+    "n_with_time": 28813
+   },
+   {
+    "y": 2014,
+    "n": 29313,
+    "n_with_time": 29313
+   },
+   {
+    "y": 2015,
+    "n": 29059,
+    "n_with_time": 29059
+   },
+   {
+    "y": 2016,
+    "n": 27900,
+    "n_with_time": 27900
+   },
+   {
+    "y": 2017,
+    "n": 27362,
+    "n_with_time": 27362
+   },
+   {
+    "y": 2018,
+    "n": 26639,
+    "n_with_time": 26639
+   },
+   {
+    "y": 2019,
+    "n": 26092,
+    "n_with_time": 26092
+   },
+   {
+    "y": 2020,
+    "n": 26693,
+    "n_with_time": 26693
+   },
+   {
+    "y": 2021,
+    "n": 29269,
+    "n_with_time": 29269
+   },
+   {
+    "y": 2022,
+    "n": 29031,
+    "n_with_time": 29031
+   },
+   {
+    "y": 2023,
+    "n": 28468,
+    "n_with_time": 28468
+   },
+   {
+    "y": 2024,
+    "n": 27619,
+    "n_with_time": 27619
+   },
+   {
+    "y": 2025,
+    "n": 26649,
+    "n_with_time": 26649
+   },
+   {
+    "y": 2026,
+    "n": 13522,
+    "n_with_time": 13522
+   },
+   {
+    "y": null,
+    "n": 102213,
+    "n_with_time": 0
+   }
+  ]
+ },
+ "crsp_ciz_last_dates": {
+  "why": "Correction check: last daily date in the CRSP CIZ stock file vs the legacy dsf",
+  "rows": [
+   {
+    "ciz_last": "2025-12-31T00:00:00.000",
+    "legacy_last": "2024-12-31T00:00:00.000"
+   }
+  ]
+ },
+ "comp_shortint_rows_by_year": {
+  "why": "G1/short-interest: Compustat short interest rows per year (current and legacy tables)",
+  "rows": [
+   {
+    "t": "current",
+    "y": 2006,
+    "n": 97922
+   },
+   {
+    "t": "current",
+    "y": 2007,
+    "n": 205079
+   },
+   {
+    "t": "current",
+    "y": 2008,
+    "n": 210514
+   },
+   {
+    "t": "current",
+    "y": 2009,
+    "n": 195391
+   },
+   {
+    "t": "current",
+    "y": 2010,
+    "n": 192690
+   },
+   {
+    "t": "current",
+    "y": 2011,
+    "n": 219157
+   },
+   {
+    "t": "current",
+    "y": 2012,
+    "n": 226538
+   },
+   {
+    "t": "current",
+    "y": 2013,
+    "n": 225800
+   },
+   {
+    "t": "current",
+    "y": 2014,
+    "n": 234408
+   },
+   {
+    "t": "current",
+    "y": 2015,
+    "n": 224403
+   },
+   {
+    "t": "current",
+    "y": 2016,
+    "n": 224349
+   },
+   {
+    "t": "current",
+    "y": 2017,
+    "n": 224189
+   },
+   {
+    "t": "current",
+    "y": 2018,
+    "n": 232529
+   },
+   {
+    "t": "current",
+    "y": 2019,
+    "n": 273510
+   },
+   {
+    "t": "current",
+    "y": 2020,
+    "n": 286193
+   },
+   {
+    "t": "current",
+    "y": 2021,
+    "n": 310740
+   },
+   {
+    "t": "current",
+    "y": 2022,
+    "n": 337913
+   },
+   {
+    "t": "current",
+    "y": 2023,
+    "n": 329538
+   },
+   {
+    "t": "current",
+    "y": 2024,
+    "n": 355612
+   },
+   {
+    "t": "current",
+    "y": 2025,
+    "n": 405118
+   },
+   {
+    "t": "current",
+    "y": 2026,
+    "n": 194330
+   },
+   {
+    "t": "legacy",
+    "y": 1973,
+    "n": 7441
+   },
+   {
+    "t": "legacy",
+    "y": 1974,
+    "n": 10612
+   },
+   {
+    "t": "legacy",
+    "y": 1975,
+    "n": 10898
+   },
+   {
+    "t": "legacy",
+    "y": 1976,
+    "n": 10988
+   },
+   {
+    "t": "legacy",
+    "y": 1977,
+    "n": 12001
+   },
+   {
+    "t": "legacy",
+    "y": 1978,
+    "n": 13342
+   },
+   {
+    "t": "legacy",
+    "y": 1979,
+    "n": 13554
+   },
+   {
+    "t": "legacy",
+    "y": 1980,
+    "n": 14303
+   },
+   {
+    "t": "legacy",
+    "y": 1981,
+    "n": 15288
+   },
+   {
+    "t": "legacy",
+    "y": 1982,
+    "n": 15301
+   },
+   {
+    "t": "legacy",
+    "y": 1983,
+    "n": 17108
+   },
+   {
+    "t": "legacy",
+    "y": 1984,
+    "n": 15869
+   },
+   {
+    "t": "legacy",
+    "y": 1985,
+    "n": 16254
+   },
+   {
+    "t": "legacy",
+    "y": 1986,
+    "n": 18850
+   },
+   {
+    "t": "legacy",
+    "y": 1987,
+    "n": 19822
+   },
+   {
+    "t": "legacy",
+    "y": 1988,
+    "n": 19139
+   },
+   {
+    "t": "legacy",
+    "y": 1989,
+    "n": 20176
+   },
+   {
+    "t": "legacy",
+    "y": 1990,
+    "n": 21412
+   },
+   {
+    "t": "legacy",
+    "y": 1991,
+    "n": 21826
+   },
+   {
+    "t": "legacy",
+    "y": 1992,
+    "n": 24161
+   },
+   {
+    "t": "legacy",
+    "y": 1993,
+    "n": 29476
+   },
+   {
+    "t": "legacy",
+    "y": 1994,
+    "n": 32922
+   },
+   {
+    "t": "legacy",
+    "y": 1995,
+    "n": 33619
+   },
+   {
+    "t": "legacy",
+    "y": 1996,
+    "n": 35644
+   },
+   {
+    "t": "legacy",
+    "y": 1997,
+    "n": 38206
+   },
+   {
+    "t": "legacy",
+    "y": 1998,
+    "n": 39833
+   },
+   {
+    "t": "legacy",
+    "y": 1999,
+    "n": 39697
+   },
+   {
+    "t": "legacy",
+    "y": 2000,
+    "n": 39152
+   },
+   {
+    "t": "legacy",
+    "y": 2001,
+    "n": 38051
+   },
+   {
+    "t": "legacy",
+    "y": 2002,
+    "n": 40172
+   },
+   {
+    "t": "legacy",
+    "y": 2003,
+    "n": 63580
+   },
+   {
+    "t": "legacy",
+    "y": 2004,
+    "n": 86841
+   },
+   {
+    "t": "legacy",
+    "y": 2005,
+    "n": 88629
+   },
+   {
+    "t": "legacy",
+    "y": 2006,
+    "n": 90357
+   },
+   {
+    "t": "legacy",
+    "y": 2007,
+    "n": 187419
+   },
+   {
+    "t": "legacy",
+    "y": 2008,
+    "n": 191896
+   },
+   {
+    "t": "legacy",
+    "y": 2009,
+    "n": 185185
+   },
+   {
+    "t": "legacy",
+    "y": 2010,
+    "n": 186656
+   },
+   {
+    "t": "legacy",
+    "y": 2011,
+    "n": 187978
+   },
+   {
+    "t": "legacy",
+    "y": 2012,
+    "n": 188227
+   },
+   {
+    "t": "legacy",
+    "y": 2013,
+    "n": 187110
+   },
+   {
+    "t": "legacy",
+    "y": 2014,
+    "n": 193246
+   },
+   {
+    "t": "legacy",
+    "y": 2015,
+    "n": 199398
+   },
+   {
+    "t": "legacy",
+    "y": 2016,
+    "n": 199741
+   },
+   {
+    "t": "legacy",
+    "y": 2017,
+    "n": 201390
+   },
+   {
+    "t": "legacy",
+    "y": 2018,
+    "n": 202814
+   },
+   {
+    "t": "legacy",
+    "y": 2019,
+    "n": 204519
+   },
+   {
+    "t": "legacy",
+    "y": 2020,
+    "n": 208114
+   },
+   {
+    "t": "legacy",
+    "y": 2021,
+    "n": 246033
+   },
+   {
+    "t": "legacy",
+    "y": 2022,
+    "n": 277859
+   },
+   {
+    "t": "legacy",
+    "y": 2023,
+    "n": 260118
+   },
+   {
+    "t": "legacy",
+    "y": 2024,
+    "n": 248431
+   }
+  ]
+ }
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1633336,
+  "episode_accession": "0001193125-19-219527",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Alcentra Capital Corporation", "cik": 1578620, "ticker": "ABDC"},
+      "acquirer": {"name": "Crescent Capital BDC, Inc.", "cik": 1633336, "ticker": "CCAP"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-19-219521", "date": "2019-08-13", "quote": "Crescent Capital BDC, Inc. to Acquire Alcentra Capital Corporation"},
+      "outcome_evidence": {"accession": "0001193125-20-022152", "date": "2020-02-03", "quote": "Crescent Capital BDC, Inc. (“Crescent BDC”) today announced that it has completed its acquisition of Alcentra Capital Corporation (“Alcentra Capital”)"},
+      "notes": "Target is shown as listed (NASDAQ:ABDC, 8-K 0001193125-20-019114). The acquirer's exchange listing is not shown at announcement: the 2020-02-03 release speaks of fee waivers 'for 18 months following listing' and the first excerpt showing '(NASDAQ: CCAP)' is the 2020-03-04 release, after the merger. So both_listed is null (settled neither way by the excerpts). Stockholder approval of both sides announced 2020-01-30. The structure was multi-step (reincorporation merger of the acquirer in Maryland plus the acquisition), but the 2020-02-03 release states the acquisition was completed."
+    }
+  ],
+  "problems": "both_listed left null because Crescent BDC's own listing status at the time of the deal is not stated in the excerpts."
+}

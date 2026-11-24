@@ -1,0 +1,28 @@
+{
+  "episode_cik": 313212,
+  "episode_accession": "0000313212-20-000124",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "T. Rowe Price Institutional International Core Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-20-000124", "quote": "into a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-20-000124", "date": "2020-06-08", "quote": "We are writing to inform you about reorganizations that will affect your investment in T. Rowe Price Institutional International Core Equity Fund and T. Rowe Price Institutional International Growth Equity Fund (each, an “ Institutional Fund ” and together, the “ Institutional Funds ”)."},
+      "outcome_evidence": null,
+      "notes": "The acquiring fund names are in a table not shown in the excerpts. Acquirer is described only as a corresponding mutual fund. Completion is not stated in any excerpt; the 2021 proxy filings (seq 5-13) concern a different matter (diversification status)."
+    },
+    {
+      "target": {"name": "T. Rowe Price Institutional International Growth Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-20-000124", "quote": "into a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-20-000124", "date": "2020-06-08", "quote": "We are writing to inform you about reorganizations that will affect your investment in T. Rowe Price Institutional International Core Equity Fund and T. Rowe Price Institutional International Growth Equity Fund (each, an “ Institutional Fund ” and together, the “ Institutional Funds ”)."},
+      "outcome_evidence": null,
+      "notes": "Same as the other deal in this filing."
+    }
+  ],
+  "problems": "Acquiring fund names and the episode fund's role are not shown in the excerpts (the table of Acquiring Funds is cut off). Seq 3 is identical to seq 2."
+}

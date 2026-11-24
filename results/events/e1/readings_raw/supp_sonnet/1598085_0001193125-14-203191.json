@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1598085,
+  "episode_accession": "0001193125-14-203191",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "American Strategic Income Portfolio Inc.", "cik": null, "ticker": "ASP"},
+      "acquirer": {"name": "Diversified Real Asset Income Fund", "cik": 1598085, "ticker": "DRA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-203191", "date": "2014-05-19", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF AMERICAN STRATEGIC INCOME PORTFOLIO INC. (ASP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—II (BSP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—III (CSP) AND AMERICAN SELECT PORTFOLIO INC. (SLA)"},
+      "outcome_evidence": null,
+      "notes": "Excerpts show only the N-14 registration by Diversified Real Asset Income Fund for a joint proxy statement/prospectus addressed to shareholders of ASP, BSP, CSP and SLA; the merger is not described in so many words in the excerpt, the exchange listing is not stated, and the later DEF 14A (2015-10-26) is an annual meeting trustee election with no merger outcome."
+    },
+    {
+      "target": {"name": "American Strategic Income Portfolio Inc.—II", "cik": null, "ticker": "BSP"},
+      "acquirer": {"name": "Diversified Real Asset Income Fund", "cik": 1598085, "ticker": "DRA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-203191", "date": "2014-05-19", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF AMERICAN STRATEGIC INCOME PORTFOLIO INC. (ASP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—II (BSP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—III (CSP) AND AMERICAN SELECT PORTFOLIO INC. (SLA)"},
+      "outcome_evidence": null,
+      "notes": "Same filing and limits as the ASP entry: named in the N-14 notice; no outcome and no listing statement in the excerpts."
+    },
+    {
+      "target": {"name": "American Strategic Income Portfolio Inc.—III", "cik": null, "ticker": "CSP"},
+      "acquirer": {"name": "Diversified Real Asset Income Fund", "cik": 1598085, "ticker": "DRA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-203191", "date": "2014-05-19", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF AMERICAN STRATEGIC INCOME PORTFOLIO INC. (ASP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—II (BSP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—III (CSP) AND AMERICAN SELECT PORTFOLIO INC. (SLA)"},
+      "outcome_evidence": null,
+      "notes": "Same filing and limits as the ASP entry: named in the N-14 notice; no outcome and no listing statement in the excerpts."
+    },
+    {
+      "target": {"name": "American Select Portfolio Inc.", "cik": null, "ticker": "SLA"},
+      "acquirer": {"name": "Diversified Real Asset Income Fund", "cik": 1598085, "ticker": "DRA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-203191", "date": "2014-05-19", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF AMERICAN STRATEGIC INCOME PORTFOLIO INC. (ASP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—II (BSP) AMERICAN STRATEGIC INCOME PORTFOLIO INC.—III (CSP) AND AMERICAN SELECT PORTFOLIO INC. (SLA)"},
+      "outcome_evidence": null,
+      "notes": "Same filing and limits as the ASP entry: named in the N-14 notice; no outcome and no listing statement in the excerpts."
+    }
+  ],
+  "problems": "Only three filings in the window (two N-14s and a later annual-meeting DEF 14A); none states how any of the four proposed mergers ended."
+}

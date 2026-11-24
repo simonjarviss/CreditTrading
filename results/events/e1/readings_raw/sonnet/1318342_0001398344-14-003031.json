@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1318342,
+  "episode_accession": "0001398344-14-003031",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Strategic Latin America Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "New Fund (WFT)", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-14-003823", "date": "2014-07-31", "quote": "If the Reorganization were not approved by shareholders, the Reorganization would not be consummated and the Existing Fund would remain as a series of the Trust."},
+      "outcome_evidence": null,
+      "notes": "Episode filer is Investment Managers Series Trust, a trust of fund series. Excerpts are mostly boilerplate; only the July 2014 PRE 14A passages mention an Existing Fund / New Fund reorganization. The earlier N-14 and 2015-2016 N-14 filings show no party names or outcome in the excerpts. RW filings (2015-08-07, 2015-08-20, 2015-11-20, 2016-01-07) state administrative reasons or concern other filings, not a merger outcome."
+    }
+  ],
+  "problems": "Excerpts do not name the merging funds, say whether they are exchange-listed, or state any outcome. The target/acquirer names are inferred from a heading and the phrase New Fund in the July 2014 proxy excerpts; low confidence."
+}

@@ -1,0 +1,38 @@
+{
+  "episode_cik": 914036,
+  "episode_accession": "0001193125-22-076245",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "LVIP T. Rowe Price 2010 Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund (a series of Lincoln Variable Insurance Products Trust; name not given in the excerpt)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-22-076245", "quote": "The Trust is an open-end management investment company."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-22-076245", "date": "2022-03-15", "quote": "relating to a Special Meeting of Shareholders of the LVIP T. Rowe Price 2010 Fund"},
+      "outcome_evidence": null,
+      "notes": "Both funds are series of one open-end trust (variable insurance products). Outcome of the reorganization is not stated in the excerpts."
+    },
+    {
+      "target": {"name": "LVIP BlackRock Advantage Allocation Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund (a series of Lincoln Variable Insurance Products Trust; name not given in the excerpt)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-22-076245", "quote": "The Trust is an open-end management investment company."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-22-076231", "date": "2022-03-15", "quote": "Enclosed is a notice and Combined Proxy Statement/Prospectus relating to a Special Meeting of Shareholders of LVIP BlackRock Advantage Allocation Fund and LVIP Franklin Templeton Multi-Asset Opportunities Fund"},
+      "outcome_evidence": null,
+      "notes": "Same open-end trust. Filed in a separate N-14 (accession 0001193125-22-076231) from the episode's own accession. Open-end statement is from the other March 2022 N-14 of the same Trust."
+    },
+    {
+      "target": {"name": "LVIP Franklin Templeton Multi-Asset Opportunities Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund (a series of Lincoln Variable Insurance Products Trust; name not given in the excerpt)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-22-076245", "quote": "The Trust is an open-end management investment company."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-22-076231", "date": "2022-03-15", "quote": "Enclosed is a notice and Combined Proxy Statement/Prospectus relating to a Special Meeting of Shareholders of LVIP BlackRock Advantage Allocation Fund and LVIP Franklin Templeton Multi-Asset Opportunities Fund"},
+      "outcome_evidence": null,
+      "notes": "Same open-end trust and filing as the previous deal."
+    }
+  ],
+  "problems": "Later N-14s in the window (2022-12-22 involving JPMorgan Portfolios, 2024-01-08 involving American Century funds) propose other reorganizations into Lincoln trust funds; their fund names are not visible in the excerpts, so no deals are recorded for them."
+}

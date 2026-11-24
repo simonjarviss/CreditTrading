@@ -1,0 +1,195 @@
+{
+ "panel_last_dates": {
+  "Fitch": "2025-06-30",
+  "Moody's": "2023-12-15"
+ },
+ "events_window": [
+  "2019-12-01",
+  "2022-12-31"
+ ],
+ "issuer_downgrade_days_in_window": 4341,
+ "of_which_ig_to_hy": 336,
+ "of_which_severe": 1532,
+ "pit": {
+  "fund_quarters": 143,
+  "events_per_fund_quarter_median": 8.0,
+  "events_per_fund_quarter_mean": 14.587412587412587,
+  "affected_bp_median": 266.9724,
+  "affected_bp_mean": 374.44690779606776,
+  "affected_bp_p90": 838.35139797992,
+  "share_fq_ge_kill": 0.8951048951048951,
+  "ig_to_hy_bp_median": 0.0,
+  "share_fq_any_ig_to_hy": 0.38461538461538464,
+  "severe_bp_median": 75.15049,
+  "severe_bp_mean": 176.72863692962164,
+  "share_fq_severe_ge_kill": 0.7832167832167832,
+  "share_fq_any_severe": 0.8321678321678322,
+  "per_fund_affected_bp_median": {
+   "AWF": 223.5,
+   "BIT": 205.4,
+   "DSL": 324.1,
+   "HYT": 319.6,
+   "JFR": 410.7,
+   "PCN": 242.0,
+   "PDI": 196.3,
+   "PDO": 77.5,
+   "PFN": 322.5,
+   "PHK": 265.5,
+   "PTY": 320.3
+  },
+  "per_quarter_affected_bp_median": {
+   "2019Q4": 0.0,
+   "2020Q1": 476.5,
+   "2020Q2": 1380.9,
+   "2020Q3": 218.8,
+   "2020Q4": 199.5,
+   "2021Q1": 171.7,
+   "2021Q2": 87.5,
+   "2021Q3": 320.8,
+   "2021Q4": 204.7,
+   "2022Q1": 119.2,
+   "2022Q2": 361.0,
+   "2022Q3": 320.2,
+   "2022Q4": 384.7
+  },
+  "pairs_per_quarter_total_median": 111.0
+ },
+ "asof": {
+  "fund_quarters": 143,
+  "events_per_fund_quarter_median": 9.0,
+  "events_per_fund_quarter_mean": 14.881118881118882,
+  "affected_bp_median": 268.62144927590003,
+  "affected_bp_mean": 386.22761987946234,
+  "affected_bp_p90": 853.4887825606401,
+  "share_fq_ge_kill": 0.9370629370629371,
+  "ig_to_hy_bp_median": 0.0,
+  "share_fq_any_ig_to_hy": 0.42657342657342656,
+  "severe_bp_median": 84.68780842,
+  "severe_bp_mean": 187.33268853239088,
+  "share_fq_severe_ge_kill": 0.8181818181818182,
+  "share_fq_any_severe": 0.8601398601398601,
+  "per_fund_affected_bp_median": {
+   "AWF": 240.8,
+   "BIT": 191.4,
+   "DSL": 333.7,
+   "HYT": 339.9,
+   "JFR": 401.3,
+   "PCN": 258.2,
+   "PDI": 229.5,
+   "PDO": 127.0,
+   "PFN": 304.1,
+   "PHK": 309.6,
+   "PTY": 397.3
+  },
+  "per_quarter_affected_bp_median": {
+   "2019Q4": 172.7,
+   "2020Q1": 465.9,
+   "2020Q2": 1337.3,
+   "2020Q3": 325.1,
+   "2020Q4": 178.0,
+   "2021Q1": 156.8,
+   "2021Q2": 110.1,
+   "2021Q3": 333.7,
+   "2021Q4": 214.3,
+   "2022Q1": 109.7,
+   "2022Q2": 524.3,
+   "2022Q3": 302.5,
+   "2022Q4": 344.8
+  },
+  "pairs_per_quarter_total_median": 114.0
+ },
+ "coverage": [
+  {
+   "ticker": "PDI",
+   "credit_pct_per_q": 161.7195,
+   "cusip_identified_share": 0.9924,
+   "panel_issuer_share_of_identified": 0.2596,
+   "panel_issuer_share_of_credit": 0.2576
+  },
+  {
+   "ticker": "PTY",
+   "credit_pct_per_q": 144.1796,
+   "cusip_identified_share": 0.9981,
+   "panel_issuer_share_of_identified": 0.5084,
+   "panel_issuer_share_of_credit": 0.5074
+  },
+  {
+   "ticker": "PDO",
+   "credit_pct_per_q": 169.7894,
+   "cusip_identified_share": 0.9972,
+   "panel_issuer_share_of_identified": 0.3267,
+   "panel_issuer_share_of_credit": 0.3258
+  },
+  {
+   "ticker": "PCN",
+   "credit_pct_per_q": 127.8346,
+   "cusip_identified_share": 0.999,
+   "panel_issuer_share_of_identified": 0.4814,
+   "panel_issuer_share_of_credit": 0.4809
+  },
+  {
+   "ticker": "PHK",
+   "credit_pct_per_q": 119.6225,
+   "cusip_identified_share": 0.9992,
+   "panel_issuer_share_of_identified": 0.44,
+   "panel_issuer_share_of_credit": 0.4397
+  },
+  {
+   "ticker": "PFN",
+   "credit_pct_per_q": 124.2952,
+   "cusip_identified_share": 0.9984,
+   "panel_issuer_share_of_identified": 0.5038,
+   "panel_issuer_share_of_credit": 0.503
+  },
+  {
+   "ticker": "DSL",
+   "credit_pct_per_q": 135.2532,
+   "cusip_identified_share": 0.9879,
+   "panel_issuer_share_of_identified": 0.4501,
+   "panel_issuer_share_of_credit": 0.4446
+  },
+  {
+   "ticker": "HYT",
+   "credit_pct_per_q": 138.4154,
+   "cusip_identified_share": 0.9348,
+   "panel_issuer_share_of_identified": 0.9876,
+   "panel_issuer_share_of_credit": 0.9233
+  },
+  {
+   "ticker": "BIT",
+   "credit_pct_per_q": 150.7519,
+   "cusip_identified_share": 0.9166,
+   "panel_issuer_share_of_identified": 0.6363,
+   "panel_issuer_share_of_credit": 0.5832
+  },
+  {
+   "ticker": "JFR",
+   "credit_pct_per_q": 151.6139,
+   "cusip_identified_share": 0.9069,
+   "panel_issuer_share_of_identified": 0.9328,
+   "panel_issuer_share_of_credit": 0.8459
+  },
+  {
+   "ticker": "AWF",
+   "credit_pct_per_q": 94.698,
+   "cusip_identified_share": 0.8062,
+   "panel_issuer_share_of_identified": 0.7129,
+   "panel_issuer_share_of_credit": 0.5747
+  }
+ ],
+ "coverage_panel_share_of_credit_median": 0.5029984195994424,
+ "new_default_flags": {
+  "fund_quarters": 135,
+  "median_bp": 0.0,
+  "mean_bp": 29.646700084970373,
+  "p90_bp": 76.59467200000013,
+  "share_fq_any": 0.4444444444444444
+ },
+ "kill_bp": 10.0,
+ "kill_cover": 0.5,
+ "verdict": "PASS",
+ "verdict_legs": {
+  "weight_leg": "pass",
+  "coverage_leg": "pass"
+ }
+}

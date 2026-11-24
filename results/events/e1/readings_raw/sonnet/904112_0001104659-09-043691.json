@@ -1,0 +1,18 @@
+{
+  "episode_cik": 904112,
+  "episode_accession": "0001104659-09-043691",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Morgan Stanley Global Opportunity Bond Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Morgan Stanley Emerging Markets Debt Fund, Inc.", "cik": 904112, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-09-043691", "date": "2009-07-17", "quote": "Notice is hereby given of a Special Meeting of the Stockholders of Morgan Stanley Global Opportunity Bond Fund, Inc. (“Global Opportunity Bond”) to be held in Conference Room [ · ], [ · ] Floor, 522 Fifth Avenue, New York, New York 10036, at [ · ] a.m., New York time, on November 18, 2009"},
+      "outcome_evidence": null,
+      "notes": "Registrant is the Emerging Markets Debt Fund (issues shares). The amended N-14 8C/A (2009-09-22) moved the outside date from May 18, 2010 to March 4, 2010 and registered 3,225,807 shares. The 2010 and 2011 DEF 14A filings are joint director-election proxies and say nothing about the merger. Listing status of the funds and the outcome are not stated."
+    }
+  ],
+  "problems": ""
+}

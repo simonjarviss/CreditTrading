@@ -1,0 +1,67 @@
+C4 PAPER BENCHMARK (step 2 of C4_DEPLOY_PLAN_2026-10-27; zero trials). Run 2026-11-11T16:54 UTC. Spec c4_families.v5.20261103 (sha256 65c19a9e498fb917...); the trial's parameters from cef_discount.v9.20261102 (scripts/cef/spec.py). Fit window only, <= 2022-12-30: no 2023+ row is read.
+panels: data/cef_families/ (last 2026-10-09) cut on read at 2022-12-30 into a temporary directory: {'cef_prices': {'rows': 775180, 'last': '2022-12-30'}, 'cef_nav': {'rows': 542205, 'last': '2022-12-30'}, 'cef_actions': {'rows': 19740, 'last': '2022-12-29'}}
+trial T: 74 frozen funds (65 with fit rows; zero columns for BSTZ, BTX, GUG, HGLB, IGA, KYN, NPFD, NXG, TBLD), 4531 sessions 2005-01-03..2022-12-30
+spec target: CEF trial 54's blend (level_signal, z_share 0.5), built by spec_targets from the same cut; fidelity and H11 read it, the reproduction gate and the cap rule read the trial's z T
+
+[1] FIDELITY: the live sleeve under c4_families.v5.20261103 (built through the registry) against CEF trial 54's blend (spec_targets), on 907 fit sessions (2005-01-03..2022-12-30, every 5th session of T's index and its last); compared at the sleeve's target before min_abs_weight; tolerance 1e-12
+  sessions compared 907: trial trades on 829, holds on 78; matched 907 (100.0000%)
+  name-cells compared on trading sessions 61,346, matched 61,346 (100.0000%); largest gap 5.551e-16; largest UNEXPLAINED gap none
+  declared divergence §3 item 5, reported only: on 270 of 829 trading sessions, 393 of 10092 targeted names sit under min_abs_weight 0.005 and the live sleeve drops them and re-neutralises
+  FIDELITY: every difference is inside the declared divergences (none at the target level)
+
+[1b] NEGATIVE CONTROLS: each spec below should break fidelity (each stops at its first break)
+  nav_repeat_mask off                                  BREAKS  2005-02-23  weight: largest gap 5.925e-03 on JPC (sleeve -0.116787, trial -0.110861)
+  zero_volume_mask off                                 no break    no break, and none can arise here: M2 masks 10 paired fund-days of the 74 in the fit panel (AIO, GCV, GLU, PDT, RFI), 0 of them on a fund-day whose ADV clears the floor, so it moves no compared target (PREREG_C4 §4.3: a guard). The synthetic test injects a zero-volume day and shows the break
+  below_min_names flatten                              BREAKS  2005-01-03  kind: the trial holds and the sleeve does neither (cef: only 5 eligible names)
+  z_window 252 -> 251                                  BREAKS  2005-02-23  weight: largest gap 6.316e-04 on RNP (sleeve -0.301893, trial -0.301261)
+  vol_target_annual x 1.1                              BREAKS  2005-02-23  weight: largest gap 3.158e-02 on EVT (sleeve +0.347402, trial +0.315820)
+  min_adv_usd x 0.9                                    BREAKS  2005-01-03  kind: the trial holds and the sleeve trades (cef discount z=-0.21 w=-0.4069 volscal=1.24 gmax=1.9000 smult=1.2600 level z_share=0.5000 s_z=0.0515 s_L=
+  min_names 6 -> 7                                     BREAKS  2005-02-23  kind: the trial trades and the sleeve holds (cef: not opened, book holds: only 6 eligible names, under min_names 7 (below_min_names=hold))
+  gross_leverage x 1.1                                 BREAKS  2005-02-23  weight: largest gap 3.158e-02 on EVT (sleeve +0.347402, trial +0.315820)
+  band_width dropped (the rebalance_days calendar)     REFUSED  REFUSED by the registry: cef_discount level_signal is set but band_width is not; the level blend is defined on the daily signal through the band (PRER
+  level_signal dropped (the z book alone)              BREAKS  2005-02-23  weight: largest gap 2.670e-01 on CSQ (sleeve +0.251380, trial -0.015645)
+  level_signal.risk_share 0.5 x 1.1                    BREAKS  2005-02-23  weight: largest gap 3.134e-02 on CSQ (sleeve +0.015693, trial -0.015645)
+
+[2] THE TRIAL'S BOOK, GATED (CRSP extract sha256 47f20b474ceb6ae4..., rows <= 2022-12-30)
+  GATE PASS: total-return gross SR 1.216957834377, price-only 1.359590762777: both the committed figures to 1e-9 (c4_fit_verdict_2026-10-14.json stage1, R-P); first held 2005-02-22
+
+[3] MAX_GROSS_STRESS by the frozen rule (PREREG_GROUP_CAP_2026-09-16 §3b; PREREG_ALPACA_V7 §3b)
+  method check: the v7 w5 on the core's 13, panels cut at 2022-12-30, traded era from 2013-06-14: 0.0425814044 ending 2020-03-18 = recorded [0.0425814, '2020-03-18']
+  derived on the LIVE spec book: blend: CEF trial 54's level_signal (z_share 0.5), spec_targets, x sizing_multiplier 1.26, uncapped band (c4_families.v5.20261103)
+  C4 w5 (uncapped band 0.048, CRSP total return, 2005-02-22..2022-12-30): 0.0536082708, the 5 sessions ending 2020-03-18 (direct sum agrees to 1e-12); the three worst non-overlapping windows 2020-03-18 0.0536, 2008-07-23 0.0341, 2011-08-08 0.0246
+    nlv_usd           100,000.0000   ruled, not probe-read: C4's own $100k (team lead 2026-10-26, docs/SYSTEM.md §5), the paper default in an account never traded (created 2026-09-29) [U until a probe reads it]
+    m_other_usd             0.0000   C4's own account (team lead 2026-10-26). Since 2026-10-28 the agent lab shares it; the lab book is not built and holds nothing there [U until a probe reads it]
+    m                       0.5000   Reg T initial (team lead 2026-09-28; the core's input, scripts/cef/alpaca_v7_derivation.py MARGIN)
+    e_book_usd        100,000.0000   capital_usd of c4_families.v5.20261103
+    mark_sensitivity        0.0000   no other book's margin moves this account today; the core's reading (PREREG_ALPACA_V7 §3b)
+    the 74 at the frozen read 2026-10-14T21:40:33Z: all marginable, maintenance [30.0]%, exchanges {'NYSE': 65, 'AMEX': 5, 'NASDAQ': 4}
+  G_stress = (100,000 - 0) / (0.5 + 0.0536083) / 100,000 = 1.806331; floor_0.05(G - 0.0) = 1.80
+  KNOWN LIMIT: a worst week above w5 = 0.0555556 gives the next step down (1.75); the fit's sits 0.0019473 below it. The core's read ran to its panel end; C4's 2023-26 is not read here
+  the uncapped band's gross over the fit: mean 2.12x, max 4.04x, above 1.80x on 67.9% of sessions
+  PLATEAU (H8; shown to prove the derived value is not on a cliff -- the value comes from the margin arithmetic, never from this): fit gross SR by cap
+    cap     1.6  gross SR 1.524  ann 10.42%  turn 51.7  max gross 1.60
+    cap     1.7  gross SR 1.509  ann 10.58%  turn 51.5  max gross 1.70
+    cap     1.8  gross SR 1.488  ann 10.65%  turn 51.3  max gross 1.80
+    cap  1.8063  gross SR 1.487  ann 10.66%  turn 51.3  max gross 1.81
+    cap     1.9  gross SR 1.481  ann 10.76%  turn 51.2  max gross 1.90
+    cap     2.0  gross SR 1.479  ann 10.85%  turn 51.0  max gross 2.00
+    cap    none  gross SR 1.406  ann 11.87%  turn 50.4  max gross 4.04
+  the spec carries 1.9, NOT the rule's 1.8: OVERRIDE ON RECORD (team lead, 2026-11-03: "Keep 1.90, install tonight."; docs/SYSTEM.md §5, 'Team lead, 2026-11-03 — C4 v5's gross cap (after the release-check of e41f10b)' (PR #48, branch journal-20261103b): an override of the rule's 1.80, made with the blend's w5 0.0536 against the z book's 0.0261 in front of the team lead; results/cef/c4/c4_cap_override_2026-11-03.json)
+
+[4] THE H11 LINES (fit; gross is the headline, the 5/15/30bp grid beside it as the real-money view, labelled; descriptive only, H14: PREREG_C4 §14 re-measures on the read date). H11 READS THE SPEC BOOK (spec_book; team lead 2026-10-29): the 120-session percentile and the drawdown stop are measured on it, never on the trial's 1.80 book
+  line                                       grossSR   ann%   vol%   turn   net@5  net@15  net@30 flips?   maxDD%
+  -- spec book, H11 REFERENCE (team lead 2026-10-29): the book paper trades: band 0.048 + cap 1.9 x sizing_multiplier 1.26 + level_signal (z_share 0.5) (c4_families.v5.20261103)
+  spec book, CRSP ret (total return)           1.481  10.76   7.26   51.2   1.129   0.425  -0.632    YES    -7.51
+  spec book, CRSP retx (price only)            1.665  12.66   7.60   51.2   1.328   0.655  -0.354    YES    -7.90
+     distribution leg (total - price) -1.90%/yr; price-only Sharpe exceeds total by +0.183 (paper credits shorts no distribution)
+     eras, total: 2005-09 1.662 (13.09%); 2010-14 1.323 (9.47%); 2015-19 1.424 (9.16%); 2020-22 1.530 (11.77%)
+     eras, price: 2005-09 1.929 (15.81%); 2010-14 1.539 (11.79%); 2015-19 1.431 (9.61%); 2020-22 1.779 (14.07%)
+  -- trial book, the trial's own book: the reproduction gate only, NOT read by H11: band 0.048 + cap 1.8 (scripts/cef/spec.py, as the trial read them)
+  trial book, CRSP ret (total return)          1.217   7.16   5.89   38.1   0.894   0.247  -0.724    YES    -8.78
+  trial book, CRSP retx (price only)           1.360   8.33   6.13   38.1   1.049   0.427  -0.505    YES    -9.20
+     distribution leg (total - price) -1.16%/yr; price-only Sharpe exceeds total by +0.143 (paper credits shorts no distribution)
+     eras, total: 2005-09 1.135 (7.18%); 2010-14 1.004 (5.69%); 2015-19 1.217 (6.60%); 2020-22 1.686 (10.52%)
+     eras, price: 2005-09 1.313 (8.52%); 2010-14 1.146 (6.95%); 2015-19 1.214 (6.86%); 2020-22 2.000 (12.76%)
+  the H11 reference's daily P&L for stops.py --c4-exact: results/cef/c4/_cache_c4/h11_spec_book_c4_families.v5.20261103.parquet (gitignored)
+
+Borrow is not charged in any line above (H4): all 74 were easy to borrow at the frozen read and Alpaca charges no fee on an easy-to-borrow short; one snapshot is a counterfactual over 17.8 years.

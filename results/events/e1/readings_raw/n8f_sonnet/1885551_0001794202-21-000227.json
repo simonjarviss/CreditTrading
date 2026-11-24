@@ -1,0 +1,68 @@
+{
+  "episode_cik": 1885551,
+  "episode_accession": "0001794202-21-000227",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Fundrise Income eREIT II, LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fundrise Income Real Estate Fund, LLC", "cik": 1885551, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001794202-21-000227", "quote": "The Acquiring Fund will make quarterly repurchase offers pursuant to Rule 23c-3 under the 1940 Act, as such rule may be amended from time to time, for between 5% and 25% of the shares outstanding at NAV"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001794202-21-000227", "date": "2021-10-08", "quote": "provides information about a proposed merger in which six real estate investment trusts (“REITs”), Fundrise Income eREIT II, LLC; Fundrise Income eREIT III, LLC; Fundrise Income eREIT 2019, LLC; Fundrise Income eREIT V, LLC; Fundrise eREIT XIV, LLC and Fundrise Real Estate Investment Trust, LLC (each a “Target Company” and together, the “Target Companies”), will be merged with and into Fundrise Income Real Estate Fund, LLC (the “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Target is a private REIT; the acquirer is an interval fund (quarterly repurchase offers under Rule 23c-3, Interval Fund Board), not exchange-listed. The filings are registration statements only (latest N-14 8C/A of 2022-02-16 anticipates closing by June 30, 2022); no outcome shown."
+    },
+    {
+      "target": {"name": "Fundrise Income eREIT III, LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fundrise Income Real Estate Fund, LLC", "cik": 1885551, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001794202-21-000227", "quote": "The Acquiring Fund will make quarterly repurchase offers pursuant to Rule 23c-3 under the 1940 Act, as such rule may be amended from time to time, for between 5% and 25% of the shares outstanding at NAV"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001794202-21-000227", "date": "2021-10-08", "quote": "provides information about a proposed merger in which six real estate investment trusts (“REITs”), Fundrise Income eREIT II, LLC; Fundrise Income eREIT III, LLC; Fundrise Income eREIT 2019, LLC; Fundrise Income eREIT V, LLC; Fundrise eREIT XIV, LLC and Fundrise Real Estate Investment Trust, LLC (each a “Target Company” and together, the “Target Companies”), will be merged with and into Fundrise Income Real Estate Fund, LLC (the “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Private REIT into an interval fund; no outcome shown."
+    },
+    {
+      "target": {"name": "Fundrise Income eREIT 2019, LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fundrise Income Real Estate Fund, LLC", "cik": 1885551, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001794202-21-000227", "quote": "The Acquiring Fund will make quarterly repurchase offers pursuant to Rule 23c-3 under the 1940 Act, as such rule may be amended from time to time, for between 5% and 25% of the shares outstanding at NAV"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001794202-21-000227", "date": "2021-10-08", "quote": "provides information about a proposed merger in which six real estate investment trusts (“REITs”), Fundrise Income eREIT II, LLC; Fundrise Income eREIT III, LLC; Fundrise Income eREIT 2019, LLC; Fundrise Income eREIT V, LLC; Fundrise eREIT XIV, LLC and Fundrise Real Estate Investment Trust, LLC (each a “Target Company” and together, the “Target Companies”), will be merged with and into Fundrise Income Real Estate Fund, LLC (the “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Private REIT into an interval fund; no outcome shown."
+    },
+    {
+      "target": {"name": "Fundrise Income eREIT V, LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fundrise Income Real Estate Fund, LLC", "cik": 1885551, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001794202-21-000227", "quote": "The Acquiring Fund will make quarterly repurchase offers pursuant to Rule 23c-3 under the 1940 Act, as such rule may be amended from time to time, for between 5% and 25% of the shares outstanding at NAV"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001794202-21-000227", "date": "2021-10-08", "quote": "provides information about a proposed merger in which six real estate investment trusts (“REITs”), Fundrise Income eREIT II, LLC; Fundrise Income eREIT III, LLC; Fundrise Income eREIT 2019, LLC; Fundrise Income eREIT V, LLC; Fundrise eREIT XIV, LLC and Fundrise Real Estate Investment Trust, LLC (each a “Target Company” and together, the “Target Companies”), will be merged with and into Fundrise Income Real Estate Fund, LLC (the “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Private REIT into an interval fund; no outcome shown."
+    },
+    {
+      "target": {"name": "Fundrise eREIT XIV, LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fundrise Income Real Estate Fund, LLC", "cik": 1885551, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001794202-21-000227", "quote": "The Acquiring Fund will make quarterly repurchase offers pursuant to Rule 23c-3 under the 1940 Act, as such rule may be amended from time to time, for between 5% and 25% of the shares outstanding at NAV"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001794202-21-000227", "date": "2021-10-08", "quote": "provides information about a proposed merger in which six real estate investment trusts (“REITs”), Fundrise Income eREIT II, LLC; Fundrise Income eREIT III, LLC; Fundrise Income eREIT 2019, LLC; Fundrise Income eREIT V, LLC; Fundrise eREIT XIV, LLC and Fundrise Real Estate Investment Trust, LLC (each a “Target Company” and together, the “Target Companies”), will be merged with and into Fundrise Income Real Estate Fund, LLC (the “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Private REIT into an interval fund; no outcome shown."
+    },
+    {
+      "target": {"name": "Fundrise Real Estate Investment Trust, LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fundrise Income Real Estate Fund, LLC", "cik": 1885551, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001794202-21-000227", "quote": "The Acquiring Fund will make quarterly repurchase offers pursuant to Rule 23c-3 under the 1940 Act, as such rule may be amended from time to time, for between 5% and 25% of the shares outstanding at NAV"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001794202-21-000227", "date": "2021-10-08", "quote": "provides information about a proposed merger in which six real estate investment trusts (“REITs”), Fundrise Income eREIT II, LLC; Fundrise Income eREIT III, LLC; Fundrise Income eREIT 2019, LLC; Fundrise Income eREIT V, LLC; Fundrise eREIT XIV, LLC and Fundrise Real Estate Investment Trust, LLC (each a “Target Company” and together, the “Target Companies”), will be merged with and into Fundrise Income Real Estate Fund, LLC (the “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Private REIT into an interval fund; no outcome shown."
+    }
+  ],
+  "problems": ""
+}

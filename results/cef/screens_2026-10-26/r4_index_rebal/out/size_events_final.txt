@@ -1,0 +1,298 @@
+NAV-symbol mapping: {'XBKTX': 'BKT', 'XDLYX': 'DLY', 'XETYX': 'ETY', 'XEXGX': 'EXG', 'XJGVX': 'JGV', 'XJLAX': 'JLA', 'XMGFX': 'MGF', 'XQQQX': 'QQQX'}
+NAV-symbol tickers mapped back: {'PCEF': ['XBKTX', 'XETYX', 'XEXGX', 'XJGVX', 'XJLAX', 'XMGFX', 'XQQQX'], 'YYY': ['XDLYX']}
+spec universe (13): AWF, BIT, DSL, HYT, JFR, MHD, MQY, PCN, PDI, PDO, PFN, PHK, PTY
+ADV panel last date read: 2022-12-30 (fit window end 2022-12-30)
+
+== snapshot pairs (n_rebalances: 1 = dated; 0 = calendar check; >=2 = undatable)
+ etf      snap0      snap1  n_rebalances  n_new  n_gone  n_both
+PCEF 2010-02-26 2010-09-17             2     34       5      65
+PCEF 2010-09-17 2010-11-17             1      0       2      97
+PCEF 2010-11-17 2011-01-26             1     17       1      96
+PCEF 2011-01-26 2011-02-03             0      0       0     113
+PCEF 2011-02-03 2011-02-15             0      0       0     113
+PCEF 2011-02-15 2011-05-09             1      4       1     112
+PCEF 2011-05-09 2011-07-29             1      1       0     116
+PCEF 2011-07-29 2011-12-29             1      8       2     115
+PCEF 2011-12-29 2012-01-04             1      0       0     123
+PCEF 2012-01-04 2012-01-05             0      0       0     123
+PCEF 2012-01-05 2012-01-06             0      0       0     123
+PCEF 2012-01-06 2012-01-09             0      0       0     123
+PCEF 2012-01-09 2012-05-18             1      1       2     121
+PCEF 2012-05-18 2012-10-05             2      8       3     119
+PCEF 2012-10-05 2013-03-15             1      4       4     123
+PCEF 2013-03-15 2013-05-10             1     16       1     126
+PCEF 2013-05-10 2013-08-05             1      5       1     141
+PCEF 2013-08-05 2013-12-19             1      6       6     140
+XMPT 2019-11-12 2019-12-11             0      0       0      62
+XMPT 2019-12-11 2020-11-23             4      2       0      62
+XMPT 2020-11-23 2021-02-03             1      0       0      64
+XMPT 2021-02-03 2021-03-01             0      0       0      64
+XMPT 2021-03-01 2021-09-20             2      0       6      58
+ YYY 2013-12-06 2014-03-24             1      9       9      21
+ YYY 2014-03-24 2015-02-17             2     19      18      12
+ YYY 2015-02-17 2015-08-05             1      0       1      30
+ YYY 2015-08-05 2015-09-04             0      0       0      30
+ YYY 2015-09-04 2016-03-18             1      3       3      27
+ YYY 2016-03-18 2016-03-23             0      0       0      30
+ YYY 2016-03-23 2016-04-22             0      0       0      30
+ YYY 2016-04-22 2017-02-23             2     13      13      17
+ YYY 2017-02-23 2017-04-07             0      0       0      30
+ YYY 2017-04-07 2020-03-16             6     15      14      16
+ YYY 2020-03-16 2020-03-17             0      0       0      31
+ YYY 2020-03-17 2021-02-17             2     13      13      18
+ YYY 2021-02-17 2021-02-18             0      0       0      31
+
+== snapshot bound: full position in allowed names, days of ADV63
+                 aum_musd  gap  n_names  n_sized  median   p90   max  n_ge1
+etf  asof                                                                  
+PCEF 2010-02-26      6.30    2       20       20    0.04  0.05  0.11      0
+     2010-09-17    130.80   18       26       26    0.75  1.20  1.80      6
+     2010-11-17    173.80    5       26       26    0.87  1.26  2.07      9
+     2011-01-26    185.70    0       33       33    0.73  1.22  1.97      8
+     2011-02-03    185.60    1       33       33    0.73  1.22  1.98      8
+     2011-02-15    191.60    3       33       33    0.79  1.31  2.00      9
+     2011-05-09    212.40    0       34       34    0.90  1.70  2.20     15
+     2011-07-29    257.10    0       34       34    1.21  1.80  2.16     24
+     2011-12-29    233.40    5       35       35    1.07  1.38  1.86     21
+     2012-01-04    233.40    1       35       35    1.06  1.37  1.83     22
+     2012-01-05    233.40    2       35       35    1.06  1.41  1.87     22
+     2012-01-06    233.40    3       35       35    1.06  1.42  1.84     22
+     2012-01-09    233.40    6       35       35    1.06  1.43  1.84     22
+     2012-05-18    290.70    0       35       35    1.43  1.81  2.21     29
+     2012-10-05    360.60    0       36       36    1.78  2.43  3.62     33
+     2013-03-15    445.40    3       37       37    2.03  2.40  3.05     34
+     2013-05-10    483.00   11       41       41    2.08  2.63  3.23     39
+     2013-08-05    468.70    1       41       41    2.01  2.49  3.83     36
+     2013-12-19    470.80    1       45       45    1.79  2.44  2.81     40
+XMPT 2019-11-12    163.30    0        6        6    2.00  2.46  2.72      6
+     2019-12-11    168.00    0        6        6    2.16  2.69  2.98      6
+     2020-11-23    150.70    0        6        6    2.44  2.53  2.57      6
+     2021-02-03    167.30    0        6        6    2.32  2.65  2.88      6
+     2021-03-01    166.30    0        6        6    2.08  2.49  2.77      6
+     2021-09-20    211.80    0        6        6    4.05  4.93  5.36      6
+YYY  2013-12-06     14.77    0       20       20    0.20  0.36  0.40      0
+     2014-03-24     31.52    0       21       21    0.33  0.46  0.50      0
+     2015-02-17     87.46    0       15       15    0.69  1.46  1.59      5
+     2015-08-05     94.70    0       14       14    1.18  2.25  2.67     10
+     2015-09-04     86.93    0       14       14    1.11  1.82  2.57      7
+     2016-03-18     78.75    0       17       17    0.68  1.55  1.92      5
+     2016-03-23     78.65    0       17       17    0.69  1.61  1.98      5
+     2016-04-22     84.19    0       17       17    1.03  2.40  2.89      9
+     2017-02-23    142.58    0       12       12    1.40  1.79  2.22     10
+     2017-04-07    152.02    0       12       12    1.68  2.73  3.00     10
+     2020-03-16    203.53    0        8        8    1.00  2.25  2.39      4
+     2020-03-17    183.41    0        8        8    0.87  2.01  2.11      2
+     2021-02-17    296.12    0       14       14    1.65  3.61  3.87     11
+     2021-02-18    296.43    0       14       14    1.66  3.60  3.83     11
+
+  by class (all snapshots):
+                 count   50%   max
+etf  cls                          
+PCEF c4_family   542.0  1.17  3.83
+     deployed13  107.0  0.91  2.70
+XMPT deployed13   12.0  2.28  4.50
+     wide17       24.0  2.25  5.36
+YYY  c4_family   146.0  0.98  3.87
+     deployed13   57.0  0.69  3.67
+
+  names per snapshot by class:
+cls   SEALED  c4_family  deployed13  outside_panels  wide17
+etf                                                        
+PCEF     212        542         107            1402       0
+XMPT      30          0          12             308      24
+YYY       77        146          57             145       0
+
+== dated events (one rebalance bracketed)
+      min  50%  max
+etf                
+PCEF  3.0  6.0  8.0
+XMPT  3.0  6.0  8.0
+YYY   4.0  4.0  4.0
+ etf          E     kind            cls  n  sized  ge1
+PCEF 2010-09-30     drop outside_panels  2      0    0
+PCEF 2010-09-30 reweight         SEALED  8      0    0
+PCEF 2010-09-30 reweight      c4_family 23     23    0
+PCEF 2010-09-30 reweight     deployed13  3      3    0
+PCEF 2010-09-30 reweight outside_panels 63      0    0
+PCEF 2010-12-31      add         SEALED  2      0    0
+PCEF 2010-12-31      add      c4_family  5      5    1
+PCEF 2010-12-31      add     deployed13  2      2    1
+PCEF 2010-12-31      add outside_panels  8      0    0
+PCEF 2010-12-31     drop outside_panels  1      0    0
+PCEF 2010-12-31 reweight         SEALED  8      0    0
+PCEF 2010-12-31 reweight      c4_family 23     23    0
+PCEF 2010-12-31 reweight     deployed13  3      3    0
+PCEF 2010-12-31 reweight outside_panels 62      0    0
+PCEF 2011-03-31      add     deployed13  1      1    0
+PCEF 2011-03-31      add outside_panels  3      0    0
+PCEF 2011-03-31     drop outside_panels  1      0    0
+PCEF 2011-03-31 reweight         SEALED 10      0    0
+PCEF 2011-03-31 reweight      c4_family 28     28    0
+PCEF 2011-03-31 reweight     deployed13  5      5    0
+PCEF 2011-03-31 reweight outside_panels 69      0    0
+PCEF 2011-06-30      add outside_panels  1      0    0
+PCEF 2011-06-30 reweight         SEALED 10      0    0
+PCEF 2011-06-30 reweight      c4_family 28     28    0
+PCEF 2011-06-30 reweight     deployed13  6      6    0
+PCEF 2011-06-30 reweight outside_panels 72      0    0
+PCEF 2011-09-30      add         SEALED  2      0    0
+PCEF 2011-09-30      add      c4_family  1      1    0
+PCEF 2011-09-30      add outside_panels  5      0    0
+PCEF 2011-09-30     drop         SEALED  1      0    0
+PCEF 2011-09-30     drop outside_panels  1      0    0
+PCEF 2011-09-30 reweight         SEALED  9      0    0
+PCEF 2011-09-30 reweight      c4_family 28     28    0
+PCEF 2011-09-30 reweight     deployed13  6      6    0
+PCEF 2011-09-30 reweight outside_panels 72      0    0
+PCEF 2011-12-30 reweight         SEALED 11      0    0
+PCEF 2011-12-30 reweight      c4_family 29     29    0
+PCEF 2011-12-30 reweight     deployed13  6      6    0
+PCEF 2011-12-30 reweight outside_panels 77      0    0
+PCEF 2012-03-30      add outside_panels  1      0    0
+PCEF 2012-03-30     drop outside_panels  2      0    0
+PCEF 2012-03-30 reweight         SEALED 11      0    0
+PCEF 2012-03-30 reweight      c4_family 29     29    0
+PCEF 2012-03-30 reweight     deployed13  6      6    0
+PCEF 2012-03-30 reweight outside_panels 75      0    0
+PCEF 2012-12-31      add      c4_family  1      1    1
+PCEF 2012-12-31      add outside_panels  3      0    0
+PCEF 2012-12-31     drop outside_panels  4      0    0
+PCEF 2012-12-31 reweight         SEALED 11      0    0
+PCEF 2012-12-31 reweight      c4_family 30     30    0
+PCEF 2012-12-31 reweight     deployed13  6      6    0
+PCEF 2012-12-31 reweight outside_panels 76      0    0
+PCEF 2013-03-28      add         SEALED  6      0    0
+PCEF 2013-03-28      add      c4_family  3      3    2
+PCEF 2013-03-28      add     deployed13  1      1    0
+PCEF 2013-03-28      add outside_panels  6      0    0
+PCEF 2013-03-28     drop outside_panels  1      0    0
+PCEF 2013-03-28 reweight         SEALED 11      0    0
+PCEF 2013-03-28 reweight      c4_family 31     31    0
+PCEF 2013-03-28 reweight     deployed13  6      6    0
+PCEF 2013-03-28 reweight outside_panels 78      0    0
+PCEF 2013-06-28      add     deployed13  1      1    1
+PCEF 2013-06-28      add outside_panels  4      0    0
+PCEF 2013-06-28     drop     deployed13  1      1    0
+PCEF 2013-06-28 reweight         SEALED 17      0    0
+PCEF 2013-06-28 reweight      c4_family 34     34    0
+PCEF 2013-06-28 reweight     deployed13  6      6    0
+PCEF 2013-06-28 reweight outside_panels 84      0    0
+PCEF 2013-09-30      add      c4_family  2      2    1
+PCEF 2013-09-30      add     deployed13  2      2    0
+PCEF 2013-09-30      add outside_panels  2      0    0
+PCEF 2013-09-30     drop outside_panels  6      0    0
+PCEF 2013-09-30 reweight         SEALED 17      0    0
+PCEF 2013-09-30 reweight      c4_family 34     34    0
+PCEF 2013-09-30 reweight     deployed13  7      7    1
+PCEF 2013-09-30 reweight outside_panels 82      0    0
+XMPT 2020-12-31 reweight         SEALED  5      0    0
+XMPT 2020-12-31 reweight     deployed13  2      2    0
+XMPT 2020-12-31 reweight outside_panels 53      0    0
+XMPT 2020-12-31 reweight         wide17  4      4    0
+ YYY 2014-01-17      add      c4_family  4      4    0
+ YYY 2014-01-17      add     deployed13  1      1    0
+ YYY 2014-01-17      add outside_panels  4      0    0
+ YYY 2014-01-17     drop         SEALED  1      0    0
+ YYY 2014-01-17     drop      c4_family  4      4    0
+ YYY 2014-01-17     drop outside_panels  4      0    0
+ YYY 2014-01-17 reweight      c4_family 13     13    0
+ YYY 2014-01-17 reweight     deployed13  3      3    0
+ YYY 2014-01-17 reweight outside_panels  5      0    0
+ YYY 2015-07-17     drop      c4_family  1      1    0
+ YYY 2015-07-17 reweight         SEALED  5      0    0
+ YYY 2015-07-17 reweight      c4_family 11     11    0
+ YYY 2015-07-17 reweight     deployed13  3      3    0
+ YYY 2015-07-17 reweight outside_panels 11      0    0
+ YYY 2016-01-15      add      c4_family  1      1    0
+ YYY 2016-01-15      add     deployed13  2      2    0
+ YYY 2016-01-15     drop outside_panels  3      0    0
+ YYY 2016-01-15 reweight         SEALED  5      0    0
+ YYY 2016-01-15 reweight      c4_family 11     11    0
+ YYY 2016-01-15 reweight     deployed13  3      3    0
+ YYY 2016-01-15 reweight outside_panels  8      0    0
+
+  totals by etf/kind/class:
+                                n  sized  ge1  med_days
+etf  kind     cls                                      
+PCEF add      SEALED           10      0    0       NaN
+              c4_family        12     12    5      0.78
+              deployed13        7      7    2      0.81
+              outside_panels   33      0    0       NaN
+     drop     SEALED            1      0    0       NaN
+              deployed13        1      1    0      0.64
+              outside_panels   18      0    0       NaN
+     reweight SEALED          123      0    0       NaN
+              c4_family       317    317    0      0.11
+              deployed13       60     60    1      0.05
+              outside_panels  810      0    0       NaN
+XMPT reweight SEALED            5      0    0       NaN
+              deployed13        2      2    0      0.22
+              outside_panels   53      0    0       NaN
+              wide17            4      4    0      0.01
+YYY  add      c4_family         5      5    0      0.36
+              deployed13        3      3    0      0.47
+              outside_panels    4      0    0       NaN
+     drop     SEALED            1      0    0       NaN
+              c4_family         5      5    0      0.23
+              outside_panels    7      0    0       NaN
+     reweight SEALED           10      0    0       NaN
+              c4_family        35     35    0      0.06
+              deployed13        9      9    0      0.03
+              outside_panels   24      0    0       NaN
+
+  corporate actions excluded:
+ etf          E     kind ticker  w0_pct  w1_pct  demand_days_adv                                                                                                                              corp_action
+PCEF 2013-09-30 reweight    HYT    0.46     1.8             3.06 BlackRock HY merger: COY, CYE and HYV leave PCEF between 2013-08-05 and 2013-12-19 while HYT goes 0.46% -> 1.80% (sum of the four 1.47%)
+
+== UNDATABLE adds/drops (pair spans >= 2 rebalances): full position at the near snapshot, days of ADV
+                           n  sized  ge1   med
+etf  kind cls                                 
+PCEF add  SEALED           2      0    0   NaN
+          c4_family        7      7    2  0.72
+          outside_panels  33      0    0   NaN
+     drop SEALED           1      0    0   NaN
+          outside_panels   7      0    0   NaN
+XMPT add  outside_panels   2      0    0   NaN
+     drop outside_panels   6      0    0   NaN
+YYY  add  SEALED          11      0    0   NaN
+          c4_family       20     20   16  1.41
+          deployed13       4      4    1  0.67
+          outside_panels  25      0    0   NaN
+     drop SEALED           4      0    0   NaN
+          c4_family       28     28   13  0.81
+          deployed13       5      5    2  0.23
+          outside_panels  21      0    0   NaN
+  by pair:
+                                         n_allowed  ge1
+etf  snap0      snap1      n_rebalances                
+PCEF 2010-02-26 2010-09-17 2                     6    1
+     2012-05-18 2012-10-05 2                     1    1
+YYY  2014-03-24 2015-02-17 2                    20    3
+     2016-04-22 2017-02-23 2                    15   13
+     2017-04-07 2020-03-16 6                    10    8
+     2020-03-17 2021-02-17 2                    12    8
+  all names (any class) by pair:
+cls                                      SEALED  c4_family  deployed13  outside_panels
+etf  snap0      snap1      n_rebalances                                               
+PCEF 2010-02-26 2010-09-17 2                  3          6           0              30
+     2012-05-18 2012-10-05 2                  0          1           0              10
+XMPT 2019-12-11 2020-11-23 4                  0          0           0               2
+     2021-03-01 2021-09-20 2                  0          0           0               6
+YYY  2014-03-24 2015-02-17 2                  5         15           5              12
+     2016-04-22 2017-02-23 2                  2         14           1               9
+     2017-04-07 2020-03-16 6                  6          8           2              13
+     2020-03-17 2021-02-17 2                  2         11           1              12
+
+== GATE: dated, sized, >= 1.0 ADV, allowed names, fit window: 7 (gate needs 30)
+year  etf   kind
+2010  PCEF  add     2
+2012  PCEF  add     1
+2013  PCEF  add     4
+ etf          E          A  window_sessions kind ticker        cls  w0_pct  w1_pct     aum_usd   adv63_usd  demand_days_adv
+PCEF 2010-12-31 2010-12-20                7  add    HPF  c4_family     0.0    0.76 177800000.0 1214667.590            1.112
+PCEF 2010-12-31 2010-12-20                7  add    JFR deployed13     0.0    1.45 177800000.0 1354743.122            1.903
+PCEF 2012-12-31 2012-12-24                3  add    DNP  c4_family     0.0    2.16 374900000.0 6239212.167            1.298
+PCEF 2013-03-28 2013-03-18                7  add    LDP  c4_family     0.0    0.79 470300000.0 2721278.330            1.365
+PCEF 2013-03-28 2013-03-18                7  add    HEQ  c4_family     0.0    0.40 470300000.0 1007161.555            1.868
+PCEF 2013-06-28 2013-06-24                3  add    BIT deployed13     0.0    0.66 491600000.0 2596400.281            1.250
+PCEF 2013-09-30 2013-09-23                4  add    FPF  c4_family     0.0    1.15 447300000.0 4713338.515            1.091

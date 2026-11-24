@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1796233,
+  "episode_accession": "0001193125-19-314107",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Resource Credit Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Goldman Sachs Credit Income Fund", "cik": 1796233, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-19-314107", "date": "2019-12-16", "quote": "On behalf of the Board of Trustees (the “Board”) of Resource Credit Income Fund (the “Acquired Fund”), we are pleased to invite you to a special meeting of shareholders"},
+      "outcome_evidence": {"accession": "0001193125-20-164346", "date": "2020-06-09", "quote": "The N-14 related to the reorganization of the Resource Credit Income Fund with and into the Registrant."},
+      "notes": "Form RW (2020-06-09) withdraws the N-14 (File No. 333-235513) and its Pre-Effective Amendment No. 1 'after further consideration and business reasons'; it confirms no securities were sold. The RW does not itself say the merger is abandoned, but the registration for the issuing shares was withdrawn and no completion is shown. The excerpts never say whether either fund is exchange-listed, so both_listed is null."
+    }
+  ],
+  "problems": ""
+}

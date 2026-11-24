@@ -546,7 +546,7 @@ first failing rule in this order. A PASS needs stages 1–5 and 7.
 ### 2.1 Instruments
 
 **Source:** `python3 scripts/xasset/slate_feasibility.py --alpaca --crsp --factors`
-→ `results/xasset/slate_feasibility_2026-10-12.csv`.
+→ `results/xasset/feasibility/slate_feasibility_2026-10-12.csv`.
 
 - **CRSP** counts come from `dsf` through the R2 mirror.
 - **Alpaca flags** were read on the cef paper key at 2026-10-12T22:42:40–41Z.

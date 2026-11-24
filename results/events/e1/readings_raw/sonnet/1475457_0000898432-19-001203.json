@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1475457,
+  "episode_accession": "0000898432-19-001203",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Grosvenor Registered Multi-Strategy Fund (W), LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Grosvenor Registered Multi-Strategy Fund (TI 1), LLC", "cik": 1475457, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000898432-19-001203", "date": "2019-09-24", "quote": "WILL THE REORGANIZATION RESULT IN A HIGHER MANAGEMENT FEE OR HIGHER FUND EXPENSES?"},
+      "outcome_evidence": null,
+      "notes": "Roles inferred from the N-14 layout (letter headed Fund (W); registrant TI 1 is the Acquiring Fund), not stated in so many words. Listing status not stated in the excerpts. Outcome not stated."
+    }
+  ],
+  "problems": "Excerpts do not state listing status, role of each fund by name, or outcome."
+}

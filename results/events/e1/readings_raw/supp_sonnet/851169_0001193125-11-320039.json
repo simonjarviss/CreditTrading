@@ -1,0 +1,18 @@
+{
+  "episode_cik": 851169,
+  "episode_accession": "0001193125-11-320039",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Helios Strategic Mortgage Income Fund, Inc.", "cik": 1173788, "ticker": "HSM"},
+      "acquirer": {"name": "Helios Total Return Fund, Inc.", "cik": 851169, "ticker": "HTR"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-12-016860", "quote": "Each Fund’s shares of common stock are listed on the New York Stock Exchange."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-11-320039", "date": "2011-11-22", "quote": "HELIOS STRATEGIC MORTGAGE INCOME FUND, INC. HELIOS TOTAL RETURN FUND, INC."},
+      "outcome_evidence": null,
+      "notes": "Announcement is the N-14 filed 2011-11-22 (joint proxy statement/prospectus for the HSM into HTR reorganization); the shown excerpt only names the two funds, the clearest sentence naming the merger is in the 2012-02-29 DEFA14A: 'proposed reorganization of HSM into HTR'. The meeting was adjourned on 2012-02-29 to March 16, 2012 for lack of sufficient votes; no filing in the excerpts states the final result. The RW of 2012-08-01 concerns a 2007 Form N-2 registration statement, not the N-14, so it does not settle this deal."
+    }
+  ],
+  "problems": ""
+}

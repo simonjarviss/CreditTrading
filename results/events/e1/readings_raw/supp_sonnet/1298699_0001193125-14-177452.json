@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1298699,
+  "episode_accession": "0001193125-14-177452",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Equity Premium Opportunity Fund", "cik": 1308658, "ticker": "JSN"},
+      "acquirer": {"name": "Nuveen Equity Premium Income Fund", "cik": 1298699, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-177436", "date": "2014-05-01", "quote": "Nuveen Announces Equity Option Closed-End Fund Restructuring"},
+      "outcome_evidence": null,
+      "notes": "Every 425 in the window has Nuveen Equity Premium Opportunity Fund as subject company and Nuveen Equity Premium Income Fund as filer. Meeting set for 2014-09-19, then repeatedly adjourned (to 2014-10-20, 2014-11-17, and per the 2014-11-18 425 'The Annual Meeting of Shareholders for Nuveen Equity Premium Opportunity Fund (JSN) has been adjourned to December 5, 2014.'). The window's last excerpts (DEF 14A 2015-02-17 and 2016-03-10) show only the acquirer's own cover page under the name Nuveen S&P 500 Buy-Write Income Fund (BXMX); none states how the proposal for JSN ended. The 2014-05-01 DEFA14A press release lists many funds as filers but its excerpt does not name other target-acquirer pairs for this acquirer."
+    }
+  ],
+  "problems": ""
+}

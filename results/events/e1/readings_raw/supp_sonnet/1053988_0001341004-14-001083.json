@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1053988,
+  "episode_accession": "0001341004-14-001083",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock MuniYield New Jersey Quality Fund, Inc.", "cik": 891037, "ticker": null},
+      "acquirer": {"name": "BlackRock MuniHoldings New Jersey Quality Fund, Inc.", "cik": 1053988, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-001083", "date": "2014-12-11", "quote": "Letter to Common Shareholders of BlackRock MuniYield New Jersey Quality Fund, Inc. (\"MJI\") and BlackRock MuniHoldings New Jersey Quality Fund, Inc. (\"MUJ\")."},
+      "outcome_evidence": null,
+      "notes": "MJI is the Target Fund and MUJ the Acquiring Fund (DEF 14A 2015-01-23). The joint special meeting was set for 2015-03-12. The last merger filing in the window is a 425 vote reminder filed 2015-02-26; no excerpt shows an exchange listing for either fund and none states the outcome."
+    }
+  ],
+  "problems": "No excerpt states how the MJI/MUJ reorganization ended, and none states an exchange listing."
+}

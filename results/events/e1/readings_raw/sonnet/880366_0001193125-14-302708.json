@@ -1,0 +1,48 @@
+{
+  "episode_cik": 880366,
+  "episode_accession": "0001193125-14-302708",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "ClearBridge Equity Fund", "cik": 880366, "ticker": null},
+      "acquirer": {"name": "ClearBridge Large Cap Growth Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-302708", "date": "2014-08-08", "quote": "You are being asked to vote on a proposed reorganization transaction related to ClearBridge Equity Fund (the “Target Fund”), a series of Legg Mason Partners Equity Trust, a Maryland statutory trust (the “Trust”)."},
+      "outcome_evidence": null,
+      "notes": "The excerpt cuts off before naming the counterparty; the acquirer is taken from the N-14 cover, which registers 'Class A, Class C, Class I and Class R1 shares of ClearBridge Large Cap Growth Fund'. Special meeting set for December 10, 2014; 2014-09-25 DEFA14A is a vote solicitation. Outcome not stated. Listing status not stated."
+    },
+    {
+      "target": {"name": "Legg Mason Investment Counsel Financial Services Fund", "cik": 880366, "ticker": null},
+      "acquirer": {"name": "1919 Financial Services Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-349457", "date": "2014-09-23", "quote": "FOR THE REORGANIZATIONS OF LEGG MASON INVESTMENT COUNSEL FINANCIAL SERVICES FUND AND LEGG MASON INVESTMENT COUNSEL SOCIAL AWARENESS FUND (EACH A SERIES OF LEGG MASON PARTNERS EQUITY TRUST) INTO 1919 FINANCIAL SERVICES FUND AND 1919 SOCIALLY RESPONSIVE BALANCED FUND, RESPECTIVELY"},
+      "outcome_evidence": null,
+      "notes": "Earliest excerpted filing is a supplement dated September 22, 2014 to a combined proxy statement and prospectus dated August 15, 2014; it says the special meeting originally scheduled for September 24, 2014 was postponed to October 15, 2014. Outcome not stated."
+    },
+    {
+      "target": {"name": "Legg Mason Investment Counsel Social Awareness Fund", "cik": 880366, "ticker": null},
+      "acquirer": {"name": "1919 Socially Responsive Balanced Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-349457", "date": "2014-09-23", "quote": "FOR THE REORGANIZATIONS OF LEGG MASON INVESTMENT COUNSEL FINANCIAL SERVICES FUND AND LEGG MASON INVESTMENT COUNSEL SOCIAL AWARENESS FUND (EACH A SERIES OF LEGG MASON PARTNERS EQUITY TRUST) INTO 1919 FINANCIAL SERVICES FUND AND 1919 SOCIALLY RESPONSIVE BALANCED FUND, RESPECTIVELY"},
+      "outcome_evidence": null,
+      "notes": "Same supplement as the Financial Services Fund deal; meeting postponed to October 15, 2014. Outcome not stated."
+    },
+    {
+      "target": {"name": "Legg Mason Investment Counsel Maryland Tax-Free Income Trust", "cik": null, "ticker": null},
+      "acquirer": {"name": "1919 Maryland Tax-Free Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-349457", "date": "2014-09-23", "quote": "LEGG MASON INVESTMENT COUNSEL MARYLAND TAX-FREE INCOME TRUST (A SERIES OF LEGG MASON TAX-FREE INCOME FUND) INTO 1919 MARYLAND TAX-FREE INCOME FUND"},
+      "outcome_evidence": null,
+      "notes": "Target is a series of a different trust (Legg Mason Tax-Free Income Fund), named in this filing alongside the episode fund's two series. Outcome not stated."
+    }
+  ],
+  "problems": "The 2016 PRE 14A, DEF 14A and DEFA14A (Permal Alternative Select Fund and Permal Alternative Core Fund) concern new management and subadvisory agreements after a change of control, not a fund merger, so they are not recorded as deals. No outcome is stated for any 2014 deal."
+}

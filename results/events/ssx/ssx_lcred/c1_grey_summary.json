@@ -1,0 +1,14 @@
+{
+ "index_last_date": "2026-10-16",
+ "window_days": 14,
+ "takedowns_by_census_issuers_in_window": 14,
+ "structured_note_factories_excluded": 25,
+ "read": 14,
+ "retail25_listing_intended": 2,
+ "in_prelisting_window_today": 0,
+ "in_window_with_any_alpaca_asset": 0,
+ "alpaca_active_assets": 14412,
+ "alpaca_inactive_assets": 19165,
+ "alpaca_active_otc_named_pref_or_notes": 18,
+ "live_edgar_requests": 15
+}

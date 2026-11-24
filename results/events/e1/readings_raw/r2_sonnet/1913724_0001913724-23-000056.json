@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1913724,
+  "episode_accession": "0001913724-23-000056",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "AG Twin Brook BDC, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "AG Twin Brook Capital Income Fund", "cik": 1913724, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001913724-23-000055", "quote": "AGTB is an affiliated, privately offered business development company (“BDC”) managed by AG Twin Brook Manager, LLC (“AGTB Adviser”), an affiliate of Angelo, Gordon & Co., L.P. (“Angelo Gordon”). TCAP is a publicly offered, non-exchange traded BDC managed by AGTB Fund Manager, LLC (“TCAP Adviser”), an affiliate of Angelo Gordon, with substantially the same investment objective as AGTB."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001913724-23-000055", "date": "2023-05-19", "quote": "On May 19, 2023, AG Twin Brook Capital Income Fund, a Delaware statutory trust (“TCAP”), entered into an Agreement and Plan of Merger (“Merger Agreement”) with AG Twin Brook BDC, Inc., a Delaware corporation (“AGTB”)."},
+      "outcome_evidence": {"accession": "0001913724-23-000080", "date": "2023-07-28", "quote": "On July 28, 2023, AG Twin Brook Capital Income Fund, a Delaware statutory trust (the “Fund”), completed its previously announced acquisition of AG Twin Brook BDC, Inc., a Delaware corporation (“AGTB” and, together with the Fund, the “Parties”), with the Fund continuing as the surviving company (the “Transaction”)."},
+      "notes": "Outcome is not_a_listed_pair because the acquirer is a non-exchange traded BDC and the target a privately offered BDC. For information, the merger was completed on 2023-07-28 per the cited 8-K (Item 2.01). The 2023-05-17 and 2023-05-19 8-K and DEFA14A filings otherwise concern TPG's acquisition of Angelo Gordon (the adviser's parent), not a fund merger; the proxy statements of 2023-07-21 onward concern the adviser transaction."
+    }
+  ],
+  "problems": ""
+}

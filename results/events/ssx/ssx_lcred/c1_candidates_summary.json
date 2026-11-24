@@ -1,0 +1,94 @@
+{
+ "years": [
+  2015,
+  2025
+ ],
+ "lookback_days": 45,
+ "per_year": {
+  "2015": {
+   "all_8a12b": 1221,
+   "fund": 156,
+   "spac": 16,
+   "candidates": 218
+  },
+  "2016": {
+   "all_8a12b": 786,
+   "fund": 163,
+   "spac": 13,
+   "candidates": 259
+  },
+  "2017": {
+   "all_8a12b": 842,
+   "fund": 189,
+   "spac": 26,
+   "candidates": 209
+  },
+  "2018": {
+   "all_8a12b": 885,
+   "fund": 199,
+   "spac": 38,
+   "candidates": 197
+  },
+  "2019": {
+   "all_8a12b": 886,
+   "fund": 185,
+   "spac": 48,
+   "candidates": 269
+  },
+  "2020": {
+   "all_8a12b": 1253,
+   "fund": 224,
+   "spac": 187,
+   "candidates": 247
+  },
+  "2021": {
+   "all_8a12b": 2083,
+   "fund": 384,
+   "spac": 480,
+   "candidates": 311
+  },
+  "2022": {
+   "all_8a12b": 948,
+   "fund": 362,
+   "spac": 93,
+   "candidates": 146
+  },
+  "2023": {
+   "all_8a12b": 986,
+   "fund": 421,
+   "spac": 46,
+   "candidates": 119
+  },
+  "2024": {
+   "all_8a12b": 1476,
+   "fund": 568,
+   "spac": 53,
+   "candidates": 454
+  },
+  "2025": {
+   "all_8a12b": 1837,
+   "fund": 836,
+   "spac": 124,
+   "candidates": 290
+  }
+ },
+ "candidate_gap_days_median": 5.0,
+ "candidate_gap_days_quartiles": [
+  2.0,
+  5.0,
+  7.0
+ ],
+ "candidate_unique_issuers_per_year": {
+  "2015": 178,
+  "2016": 191,
+  "2017": 166,
+  "2018": 147,
+  "2019": 199,
+  "2020": 183,
+  "2021": 235,
+  "2022": 111,
+  "2023": 91,
+  "2024": 406,
+  "2025": 247
+ }
+}

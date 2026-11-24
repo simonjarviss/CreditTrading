@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1539337,
+  "episode_accession": "0001193125-17-081772",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Diversified Real Asset Income Fund", "cik": 1598085, "ticker": "DRA"},
+      "acquirer": {"name": "Nuveen Real Asset Income and Growth Fund", "cik": 1539337, "ticker": "JRI"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-17-081772", "quote": "Nuveen Real Asset Income and Growth Fund (NYSE: JRI) and Diversified Real Asset Income Fund (NYSE: DRA)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-17-081772", "date": "2017-03-14", "quote": "have approved the reorganization of DRA into JRI."},
+      "outcome_evidence": null,
+      "notes": "No excerpt states the outcome. The 2017-05-31 425 says the DRA shareholder meeting was adjourned to June 30, 2017 and 'Unless a sufficient number of shareholders vote by June 30, 2017, the adjournment date for your fund's Shareholder Meeting, your fund will not be able to implement this proposal'; nothing later in the window (2018 8-K, 2018 and 2019 DEF 14As, shown as cover pages and meeting-notice text only) reports the vote result or completion."
+    }
+  ],
+  "problems": ""
+}

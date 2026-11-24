@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1137887,
+  "episode_accession": "0001193125-22-262266",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Ohio Quality Municipal Income Fund", "cik": 878200, "ticker": "NUO"},
+      "acquirer": {"name": "Nuveen Municipal Credit Income Fund", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-262266", "quote": "The Boards of Trustees of Nuveen Ohio Quality Municipal Income Fund (NYSE: NUO), Nuveen Georgia Quality Municipal Income Fund (NYSE: NKG), and Nuveen Municipal Credit Income Fund (NYSE: NZF) have approved a proposal to reorganize the funds."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-22-262266", "date": "2022-10-13", "quote": "The proposed reorganizations, if approved by shareholders, would combine NUO and NKG into NZF."},
+      "outcome_evidence": null,
+      "notes": "Shareholders approved the NUO-NZF merger at the 2023-02-08 meeting (8-K 0001193125-23-030426: 'approved the proposed merger between NUO and NZF'), but no excerpted filing states it was completed. Outcome left null."
+    },
+    {
+      "target": {"name": "Nuveen Georgia Quality Municipal Income Fund", "cik": 1177219, "ticker": "NKG"},
+      "acquirer": {"name": "Nuveen Municipal Credit Income Fund", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-262266", "quote": "The Boards of Trustees of Nuveen Ohio Quality Municipal Income Fund (NYSE: NUO), Nuveen Georgia Quality Municipal Income Fund (NYSE: NKG), and Nuveen Municipal Credit Income Fund (NYSE: NZF) have approved a proposal to reorganize the funds."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-22-262266", "date": "2022-10-13", "quote": "The proposed reorganizations, if approved by shareholders, would combine NUO and NKG into NZF."},
+      "outcome_evidence": null,
+      "notes": "8-K 0001193125-23-030426 (2023-02-10) says NKG adjourned its meeting on the merger proposal to solicit further proxies. No later excerpted filing states how the NKG-NZF merger ended, so outcome is null."
+    }
+  ],
+  "problems": ""
+}

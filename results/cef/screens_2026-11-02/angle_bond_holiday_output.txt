@@ -1,0 +1,6 @@
+bond holidays with an active book, fit: 19  (['2013-10-14', '2013-11-11', '2014-10-13', '2014-11-11', '2015-10-12', '2015-11-11', '2016-10-10', '2016-11-11', '2017-10-09', '2018-10-08', '2018-11-12', '2019-10-14', '2019-11-11', '2020-10-12', '2020-11-11', '2021-10-11', '2021-11-11', '2022-10-10', '2022-11-11'])
+                      set  dates  dates_with_trades  turnover_total  pnl_bp_per_unit_turnover  pnl_total_pct_capital
+   bond-holiday decisions     19                  5           0.225                   -20.006                 -0.045
+   CONTROL: +/-5 sessions     38                 11           1.691                    -3.891                 -0.066
+all active decision dates   2394               1078         128.562                    17.973                 23.107
+share of fit turnover decided on bond holidays: 0.17%; share of active dates: 0.79%

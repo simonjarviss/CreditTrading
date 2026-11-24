@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1392994,
+  "episode_accession": "0001104659-23-110929",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "First Trust Specialty Finance and Financial Opportunities Fund", "cik": 1392994, "ticker": "FGB"},
+      "acquirer": {"name": "abrdn Total Dynamic Dividend Fund", "cik": 1379400, "ticker": "AOD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001445546-24-000114", "date": "2024-01-09", "quote": "First Trust Specialty Finance and Financial Opportunities Fund (“FGB”) abrdn Total Dynamic Dividend Fund (“AOD”)"},
+      "outcome_evidence": null,
+      "notes": "FGB shown as NYSE: FGB; AOD's exchange listing is not shown in the excerpts. Special meeting adjourned repeatedly (2024-03-07, 04-18, 05-31, 06-18, 07-11, 07-25, 08-23); the 2024-08-29 8-K announces results of the 2024-08-29 meeting but its excerpt is cut off before the result. On 2024-09-10 the FGB board approved a different reorganization into an ETF. No excerpt states that the AOD merger was terminated, failed or completed."
+    },
+    {
+      "target": {"name": "First Trust Specialty Finance and Financial Opportunities Fund", "cik": 1392994, "ticker": "FGB"},
+      "acquirer": {"name": "FT Confluence BDC & Specialty Finance Income ETF", "cik": null, "ticker": "FBDC"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001445546-25-004410", "quote": "Specialty Finance Income ETF (NYSE: FBDC), an actively managed exchange-traded fund (“ETF”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001445546-24-006248", "date": "2024-09-10", "quote": "approved the reorganization (the “Reorganization”) of FGB into FT Confluence BDC & Specialty Finance Income ETF, a newly created exchange-traded fund (“ETF”)"},
+      "outcome_evidence": {"accession": "0001445546-25-004410", "date": "2025-06-30", "quote": "was completed prior to the open of the NYSE on June 30, 2025"},
+      "notes": "Acquirer is an ETF, so not a closed-end-fund pair; the reorganization itself was completed on 2025-06-30. Shareholders approved it on 2025-05-05 (8-K 0001445546-25-003205). Seems to follow the earlier abrdn AOD proposal for the same fund, but no excerpt says the AOD proposal was replaced."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1609336,
+  "episode_accession": "0001398344-17-012060",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Griffin Capital BDC Corp.", "cik": 1609336, "ticker": null},
+      "acquirer": {"name": "Griffin Institutional Access Credit Fund", "cik": 1676197, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-17-012060", "date": "2017-09-15", "quote": "with respect to both the Company’s reorganization proposal and the related proposal to withdraw the Company’s election to be regulated as a Business Development Company under the Investment Company Act of 1940"},
+      "outcome_evidence": null,
+      "notes": "Earliest filing in the window is already the adjournment letter (special meeting convened 2017-09-12, adjourned to 2017-09-18 for stockholders hit by Hurricanes Harvey and Irma). The 2017-09-18 8-K (0001609336-17-000026) says stockholders approved the Agreement and Plan of Reorganization (93.94% of total votes cast for) and the withdrawal of the BDC election, but no filing here states that the reorganization closed and no N-8F is shown, so the outcome is null. Neither fund is shown with an exchange listing or ticker (the target is a BDC with Commission File Number 000-55351; the Credit Fund is filed under File No. 811-23159 and its listing status is not stated), so both_listed is null."
+    }
+  ],
+  "problems": "Outcome not stated after the shareholder approval on 2017-09-18; listing of both funds not stated."
+}

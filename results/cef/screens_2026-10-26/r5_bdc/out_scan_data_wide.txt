@@ -1,0 +1,9 @@
+forced_flow2/jnk_nav_so_daily.parquet | BDC-named cols: [] | nav cols: ['nav_per_share'] | ncols 7
+forced_flow2/ishares_so_daily.parquet | BDC-named cols: [] | nav cols: ['nav_per_share'] | ncols 7
+cef_families/cef_nav_cefconnect.parquet | BDC-named cols: [] | nav cols: ['nav'] | ncols 6
+cef_families/cef_nav.parquet | BDC-named cols: [] | nav cols: ['nav'] | ncols 3
+cef_families/nav_flags.parquet | BDC-named cols: [] | nav cols: ['yf_nav_repeated', 'cc_nav_1Y', 'cc_nav_All'] | ncols 7
+forced_flow/angl_nav_aum_daily.parquet | BDC-named cols: [] | nav cols: ['nav_per_share'] | ncols 10
+forced_flow/ishares_so_daily.parquet | BDC-named cols: [] | nav cols: ['nav_per_share'] | ncols 5
+holdings/ishares_nav_daily.parquet | BDC-named cols: [] | nav cols: ['nav_per_share'] | ncols 5
+cef/cef_nav.parquet | BDC-named cols: [] | nav cols: ['nav'] | ncols 3

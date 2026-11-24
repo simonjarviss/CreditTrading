@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1745059,
+  "episode_accession": "0001193125-22-095184",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Angel Oak Dynamic Financial Strategies Income Term Trust", "cik": null, "ticker": "DYFN"},
+      "acquirer": {"name": "Angel Oak Financial Strategies Income Term Trust", "cik": 1745059, "ticker": "FINS"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-095184", "quote": "The Boards of Trustees of Angel Oak Financial Strategies Income Term Trust (NYSE: FINS) and Angel Oak Dynamic Financial Strategies Income Term Trust (NYSE: DYFN) have approved a proposal to reorganize DYFN with and into FINS."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-22-095184", "date": "2022-04-04", "quote": "The Boards of Trustees of Angel Oak Financial Strategies Income Term Trust (NYSE: FINS) and Angel Oak Dynamic Financial Strategies Income Term Trust (NYSE: DYFN) have approved a proposal to reorganize DYFN with and into FINS."},
+      "outcome_evidence": null,
+      "notes": "Annual meeting of FINS shareholders scheduled for 2022-06-30 (PRE 14A 2022-04-26, DEF 14A 2022-05-25) with Proposal 1 to approve share issuance for the DYFN reorganization; N-14 amended 2022-05-26. The window's last filing, the 2023-05-01 DEF 14A, shows only meeting proposals about electing trustees in its excerpts. No excerpt states a vote result, completion or termination."
+    }
+  ],
+  "problems": ""
+}

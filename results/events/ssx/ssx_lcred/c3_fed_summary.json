@@ -1,0 +1,74 @@
+{
+ "fetched_utc": "2026-10-19T15:32:45+00:00",
+ "pages": 20,
+ "capital_rule_releases": [
+  [
+   "2020-03-04",
+   "Federal Reserve Board approves rule to simplify its capital rules for large banks, preserving the strong capital requirements already in place"
+  ],
+  [
+   "2023-07-27",
+   "Agencies request comment on proposed rules to strengthen capital requirements for large banks"
+  ],
+  [
+   "2025-04-17",
+   "Federal Reserve Board requests comment on a proposal to reduce the volatility of the capital requirements stemming from the Board&#39;s annual stress test results"
+  ],
+  [
+   "2025-10-24",
+   "Federal Reserve Board requests comment on proposals to enhance the transparency and public accountability of its annual stress test"
+  ],
+  [
+   "2026-03-19",
+   "Agencies request comment on proposals to modernize the regulatory capital framework and maintain the strength of the banking system"
+  ]
+ ],
+ "pages_missing": [],
+ "press_releases_linked": 62,
+ "results_release_dates_by_year": {
+  "2015": [
+   "2015-03-05",
+   "2015-03-11"
+  ],
+  "2016": [
+   "2016-06-23",
+   "2016-06-29"
+  ],
+  "2017": [
+   "2017-06-22",
+   "2017-06-28"
+  ],
+  "2018": [
+   "2018-06-21",
+   "2018-06-28"
+  ],
+  "2019": [
+   "2019-06-21",
+   "2019-06-27"
+  ],
+  "2020": [
+   "2020-06-25",
+   "2020-12-18"
+  ],
+  "2021": [
+   "2021-06-24"
+  ],
+  "2022": [
+   "2022-06-23"
+  ],
+  "2023": [
+   "2023-06-28"
+  ],
+  "2024": [
+   "2024-06-26"
+  ],
+  "2025": [
+   "2025-06-27"
+  ],
+  "2026": [
+   "2026-06-24"
+  ]
+ },
+ "distinct_results_dates_2015_2025": 17,
+ "distinct_results_or_capital_dates_2015_2025": 26
+}

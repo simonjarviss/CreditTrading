@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1289868,
+  "episode_accession": "0001289868-18-000015",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Madison Strategic Sector Premium Fund", "cik": null, "ticker": "MSP"},
+      "acquirer": {"name": "Madison Covered Call & Equity Strategy Fund", "cik": 1289868, "ticker": "MCN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001289868-18-000015", "quote": "Madison Strategic Sector Premium Fund (NYSE:MSP) and Madison Covered Call & Equity Strategy Fund (NYSE:MCN) today announced"},
+      "outcome": null,
+      "announcement": {"accession": "0001289868-18-000015", "date": "2018-07-02", "quote": "Madison Strategic Sector Premium Fund and Madison Covered Call & Equity Strategy Fund Announce Intention to Merge followed by Tender Offer"},
+      "outcome_evidence": null,
+      "notes": "Joint meetings were set for 2018-09-28; the 2018-10-01 DEFA14A (after that date) still asks for votes and warns that without enough votes the meeting could not be held and the proposals would fail, but states no result. The 2019 and 2020 DEF 14As in the excerpts concern only a trustee election and say nothing about MSP. MSP's CIK does not appear in any filing header."
+    }
+  ],
+  "problems": ""
+}

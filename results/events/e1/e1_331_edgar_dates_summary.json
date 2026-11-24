@@ -1,0 +1,45 @@
+{
+ "events": 11,
+ "groups_acq_x_completion": 8,
+ "target_match": {
+  "matched": 11
+ },
+ "acquirer_match": {
+  "matched": 11
+ },
+ "dated": 10,
+ "undated_reasons": {
+  "no candidate filing": 1
+ },
+ "by_form": {
+  "N-14 8C": 7,
+  "425": 3
+ },
+ "by_basis": {
+  "registration (upper bound)": 7,
+  "merger communication": 3
+ },
+ "verified_by": {
+  "name": 10
+ },
+ "names_acquirer": {
+  "True": 9,
+  "nan": 1,
+  "False": 1
+ },
+ "deals_with_rejected_candidates": 0,
+ "days_ann_to_completion": {
+  "count": 10.0,
+  "mean": 193.7,
+  "std": 55.2,
+  "min": 88.0,
+  "25%": 151.5,
+  "50%": 215.0,
+  "75%": 220.0,
+  "max": 255.0
+ },
+ "fetch": {
+  "requests": 5,
+  "cache_hits": 85
+ }
+}

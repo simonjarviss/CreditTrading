@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1500096,
+  "episode_accession": "0001193125-18-047426",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Kayne Anderson Energy Total Return Fund, Inc.", "cik": null, "ticker": "KYE"},
+      "acquirer": {"name": "Kayne Anderson Midstream/Energy Fund, Inc.", "cik": 1500096, "ticker": "KMF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-18-047428", "quote": "the proposed merger of Kayne Anderson Energy Total Return Fund, Inc. (NYSE: KYE) with and into Kayne Anderson Midstream/Energy Fund, Inc. (NYSE: KMF)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-047426", "date": "2018-02-15", "quote": "Kayne Anderson Energy Total Return Fund (KYE) to merge with and into Kayne Anderson Midstream/Energy Fund (KMF) in a non-taxable transaction (the “Merger”)"},
+      "outcome_evidence": null,
+      "notes": "Filings through 2018-06-01 only propose the merger (later renamed the Reorganization). The 2019-05-23 DEF 14A excerpt is a combined annual-meeting proxy for KYN and KMF and says nothing about KYE or the outcome."
+    }
+  ],
+  "problems": ""
+}

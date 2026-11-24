@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1570335,
+  "episode_accession": "0001570335-18-000022",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Pathway Capital Opportunity Fund, Inc.", "cik": 1570335, "ticker": "PWAY"},
+      "acquirer": {"name": "Triton Pacific Investment Corporation, Inc.", "cik": 1521945, "ticker": "TPIC"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000897101-18-000798", "quote": "a registered closed-end investment company that operates as an interval fund pursuant to Rule 23c-3"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001570335-18-000022", "date": "2018-08-13", "quote": "On August 10, 2018, the Company entered into an Agreement and Plan of Merger (the “Merger Agreement”) between the Company and Triton Pacific Investment Corporation, Inc., a Maryland corporation (“Triton”)"},
+      "outcome_evidence": {"accession": "0000897101-18-000798", "date": "2018-08-16", "quote": "a registered closed-end investment company that operates as an interval fund pursuant to Rule 23c-3"},
+      "notes": "PWAY is an interval fund and the surviving fund is a non-traded BDC (seq 1: 'the shares of common stock of FLEX will not be listed on an exchange'). Stockholders of both approved the merger on March 15, 2019 (8-K exhibit filed 2019-03-20, expected to close on or about March 27, 2019); completion is not stated in the excerpts."
+    }
+  ],
+  "problems": ""
+}

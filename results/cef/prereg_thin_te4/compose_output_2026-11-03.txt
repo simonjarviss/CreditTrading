@@ -1,0 +1,112 @@
+spec cef_discount.v9.20261102: sizing_multiplier 1.3, band 0.048, max_gross_stress 1.8, min_names 6, min_abs_weight 0.005; FLOOR 4 (the draft's proposed value; not yet a spec key); stamp 2026-11-03
+fit panel 2005-01-03 .. 2022-12-30: 4531 sessions, 3484 thin (< 6 eligible), 1570 reduced (4..5 eligible), 1914 below the floor; W1 (2013-06-25 on): 1353 thin, 1353 reduced
+A1. every scored book (flatten and te4, m 1.00, 1.13, 1.30, instant and deferred) = the independent row-by-row loop at this spec (largest difference 5.6e-17)
+A2. reproduced: flatten at m 1.00 / 1.13 / 1.30 = trial 53's flatten_exact_2026-11-02.json (largest difference 0.0e+00); flatten trading-session unit sd 0.003556 = flatten_remeasure's; te4's 9 fit episodes = the screen's (largest difference 1.4e-17)
+
+B. trial 53's exact-build rows (W1 2013-06-25 .. 2022-12-30), flatten against te4
+  flatten x1.00 instant : TR 2.98%/yr SR 0.799 maxDD 6.64% | while trading 6.84%/yr vol 5.65% SR 1.212 | PR 3.39%/yr SR 0.866 maxDD 6.52% (2017-06-02 .. 2019-01-25) | earns on 43.6% of W1 | held at the cap 1.2% of sessions with a book; mean gross when held 1.068
+  te4     x1.00 instant : TR 9.91%/yr SR 1.552 maxDD 11.23% | while trading 9.91%/yr vol 6.38% SR 1.552 | PR 10.62%/yr SR 1.590 maxDD 11.24% (2017-06-05 .. 2018-06-12) | earns on 100.0% of W1 | held at the cap 4.7% of sessions with a book; mean gross when held 1.185
+  flatten x1.00 deferred: TR 2.76%/yr SR 0.723 maxDD 6.82% | while trading 6.34%/yr vol 5.78% SR 1.096 | PR 3.05%/yr SR 0.767 maxDD 6.69% (2017-06-02 .. 2019-01-25) | earns on 43.6% of W1 | held at the cap 1.1% of sessions with a book; mean gross when held 1.056
+  te4     x1.00 deferred: TR 9.13%/yr SR 1.426 maxDD 11.65% | while trading 9.13%/yr vol 6.40% SR 1.426 | PR 9.76%/yr SR 1.462 maxDD 11.64% (2017-06-05 .. 2018-06-12) | earns on 100.0% of W1 | held at the cap 4.3% of sessions with a book; mean gross when held 1.169
+  flatten x1.13 instant : TR 3.31%/yr SR 0.795 maxDD 7.53% | while trading 7.59%/yr vol 6.30% SR 1.205 | PR 3.77%/yr SR 0.862 maxDD 7.40% (2017-06-02 .. 2019-01-25) | earns on 43.6% of W1 | held at the cap 6.5% of sessions with a book; mean gross when held 1.197
+  te4     x1.13 instant : TR 10.80%/yr SR 1.521 maxDD 12.39% | while trading 10.80%/yr vol 7.10% SR 1.521 | PR 11.82%/yr SR 1.591 maxDD 12.33% (2017-06-02 .. 2018-06-12) | earns on 100.0% of W1 | held at the cap 11.2% of sessions with a book; mean gross when held 1.276
+  flatten x1.13 deferred: TR 3.06%/yr SR 0.718 maxDD 7.74% | while trading 7.02%/yr vol 6.45% SR 1.088 | PR 3.38%/yr SR 0.761 maxDD 7.59% (2017-06-02 .. 2019-01-25) | earns on 43.6% of W1 | held at the cap 5.9% of sessions with a book; mean gross when held 1.184
+  te4     x1.13 deferred: TR 9.91%/yr SR 1.392 maxDD 12.84% | while trading 9.91%/yr vol 7.12% SR 1.392 | PR 10.85%/yr SR 1.461 maxDD 12.76% (2017-06-02 .. 2018-06-12) | earns on 100.0% of W1 | held at the cap 10.1% of sessions with a book; mean gross when held 1.259
+  flatten x1.30 instant : TR 3.78%/yr SR 0.805 maxDD 8.39% | while trading 8.67%/yr vol 7.10% SR 1.222 | PR 4.32%/yr SR 0.875 maxDD 8.26% (2017-06-02 .. 2019-01-25) | earns on 43.6% of W1 | held at the cap 15.2% of sessions with a book; mean gross when held 1.343
+  te4     x1.30 instant : TR 11.90%/yr SR 1.492 maxDD 13.28% | while trading 11.90%/yr vol 7.97% SR 1.492 | PR 13.24%/yr SR 1.586 maxDD 13.27% (2017-06-02 .. 2018-06-05) | earns on 100.0% of W1 | held at the cap 19.9% of sessions with a book; mean gross when held 1.384
+  flatten x1.30 deferred: TR 3.50%/yr SR 0.726 maxDD 8.63% | while trading 8.02%/yr vol 7.29% SR 1.101 | PR 3.87%/yr SR 0.771 maxDD 8.48% (2017-06-02 .. 2019-01-25) | earns on 43.6% of W1 | held at the cap 13.6% of sessions with a book; mean gross when held 1.328
+  te4     x1.30 deferred: TR 10.90%/yr SR 1.361 maxDD 13.79% | while trading 10.90%/yr vol 8.01% SR 1.361 | PR 12.15%/yr SR 1.455 maxDD 13.76% (2017-06-02 .. 2018-06-05) | earns on 100.0% of W1 | held at the cap 17.5% of sessions with a book; mean gross when held 1.365
+
+C. the 2026-10-29 rule (m_core = m_c4_rule x sd_c4 / sd_core; m_c4_rule 1.2642, sd_c4 0.003659, both from flatten_remeasure_2026-11-02_m1.30.json [S]): flatten trading-session sd 0.003556 -> 1.3007; te4 trading-session sd 0.004021 -> 1.1502 (rounded down to 2 dp: 1.15)
+
+D. trial 53's R1 / R2 / R3 at m 1.3, calibrated on each exact book's W1 trading sessions (fit edge; stops.py definitions). Trial 53's approved values (house cap model, flatten, earning-only) 10.14% / -3.06% / 12.07%:
+  flatten instant : R1 10.00% (p95 raw 10.00%) | R2 -3.02% | R3 11.64% | trading sessions 1045
+  flatten deferred: R1 10.68% (p95 raw 10.68%) | R2 -3.26% | R3 12.41% | trading sessions 1045
+  te4     instant : R1 10.34% (p95 raw 10.34%) | R2 -2.19% | R3 15.35% | trading sessions 2398
+  te4     deferred: R1 10.75% (p95 raw 10.75%) | R2 -2.48% | R3 15.66% | trading sessions 2398
+  P(fire within horizon), truth <- calibration, fit edge SB21 (nominal 5%; R1 below 5% by construction):
+    flatten/instant <- flatten/instant                   R1 1.8%  R2 5.0%  R3 5.0%
+    flatten/instant <- flatten/deferred                  R1 1.2%  R2 4.5%  R3 4.1%
+    flatten/instant <- te4/instant                       R1 1.5%  R2 7.4%  R3 0.5%
+    flatten/instant <- te4/deferred                      R1 1.1%  R2 6.5%  R3 0.3%
+    flatten/deferred <- flatten/instant                  R1 2.2%  R2 5.6%  R3 6.8%
+    flatten/deferred <- flatten/deferred                 R1 1.5%  R2 5.0%  R3 5.0%
+    flatten/deferred <- te4/instant                      R1 1.8%  R2 8.3%  R3 2.9%
+    flatten/deferred <- te4/deferred                     R1 1.4%  R2 7.2%  R3 2.6%
+    te4/instant <- flatten/instant                       R1 2.6%  R2 3.7%  R3 8.4%
+    te4/instant <- flatten/deferred                      R1 1.8%  R2 3.4%  R3 7.2%
+    te4/instant <- te4/instant                           R1 2.2%  R2 5.0%  R3 5.0%
+    te4/instant <- te4/deferred                          R1 1.7%  R2 4.5%  R3 4.2%
+    te4/deferred <- flatten/instant                      R1 2.9%  R2 4.1%  R3 9.1%
+    te4/deferred <- flatten/deferred                     R1 2.1%  R2 3.7%  R3 7.7%
+    te4/deferred <- te4/instant                          R1 2.4%  R2 5.8%  R3 5.7%
+    te4/deferred <- te4/deferred                         R1 2.0%  R2 5.0%  R3 5.0%
+    te4/deferred <- approved (flatten, cap model)        R1 2.7%  R2 4.0%  R3 8.3%
+    flatten/deferred <- approved (flatten, cap model)    R1 2.0%  R2 5.4%  R3 6.0%
+
+D2. zero-edge P(HALVE 12%) / P(KILL) within 252 trading sessions, W1 trading sessions, worst method, worse of TR / PR (trial 53 approved 15.9% / 1.5% on the hold book; amendment 1: 16.7% / 1.68% on the flatten book's trading sessions, house cap model [S]):
+  flatten/1.3/instant   : P(HALVE) 16.0%  P(KILL) 1.54%
+  flatten/1.3/deferred  : P(HALVE) 17.1%  P(KILL) 1.75%
+  te4/1.3/instant       : P(HALVE) 23.2%  P(KILL) 3.28%
+  te4/1.3/deferred      : P(HALVE) 23.2%  P(KILL) 3.28%
+  te4/1.15/instant      : P(HALVE) 16.7%  P(KILL) 1.69%
+  te4/1.15/deferred     : P(HALVE) 16.7%  P(KILL) 1.69%
+
+E. in-episode stops at m 1.3, te4 deferred, fit from the first reduced decision 2010-05-05 (1570 reduced decisions, 1570 reduced earning days):
+  D_E(21) = 4.13% (TR SB21 3.51, SB63 3.45, GAUSS 4.02; PR SB21 3.53, SB63 3.49, GAUSS 4.13)
+  D_E(63) = 6.62% (TR SB21 5.64, SB63 6.03, GAUSS 6.47; PR SB21 5.80, SB63 6.11, GAUSS 6.62)
+  D_E(126) = 8.51% (TR SB21 7.30, SB63 7.74, GAUSS 8.39; PR SB21 7.28, SB63 7.84, GAUSS 8.51)
+  D_E(252) = 10.52% (TR SB21 8.80, SB63 8.55, GAUSS 10.40; PR SB21 8.88, SB63 8.88, GAUSS 10.52)
+  reduced_max_w  p50 0.498  p90 0.791  p99 0.891  max 0.956  [n 1570]
+  active_max_w   p50 0.428  p90 0.614  p99 0.694  max 0.824  [n 1047]
+  reduced_net    p50 0.049  p90 0.131  p99 0.248  max 0.833  [n 1570]
+  active_net     p50 0.046  p90 0.129  p99 0.232  max 0.487  [n 1047]
+  reduced_net_instant p50 0.048  p90 0.123  p99 0.175  max 0.235  [n 1570]
+  reduced_gross  p50 1.348  p90 1.800  p99 1.800  max 1.800  [n 1570]
+  scalar_reduced p50 1.007  p90 1.587  p99 2.239  max 2.418  [n 1570]
+  scalar_active  p50 1.119  p90 1.558  p99 1.898  max 2.105  [n 1047]
+  largest reduced |net| (deferred): {'2019-10-09': 0.8333328628918065, '2019-11-04': 0.7782803060767658, '2019-10-02': 0.658149106664289, '2018-06-20': 0.45854922304908186, '2016-07-01': 0.4287081276118803}; vol scalar at a clip on 0 reduced decisions
+  held at the cap (1.8x NAV): reduced 16.9%, active 14.6%; a single-fund side in the reduced TARGET on 19.1% of reduced decisions
+  unit te4 (instant) realised vol, fit from 2010-05-05: reduced earning days 6.64% [n 1570], full earning days 5.78% [n 1045] (the scalar targets vol_target_annual 0.06)
+  persistence on the fit (reduced decisions in sequence): max_w: runs of 2 above p99 5, runs of 3 2; net: runs of 2 above p99 1, runs of 3 0
+
+F. te4 fit episodes at m 1.3, instant flips (pp of NAV over the episode's thin earning days; flatten earns exactly 0 there):
+  2010-05-05..2010-08-13 (2 runs, 69 earning days): TR +3.20 PR +3.51 | within-episode maxDD TR 3.08% PR 3.08% | largest single-name |w| 0.532
+  2012-11-16..2013-12-13 (5 runs, 222 earning days): TR +14.25 PR +15.72 | within-episode maxDD TR 2.53% PR 2.45% | largest single-name |w| 0.725
+  2014-07-01..2014-09-26 (4 runs, 37 earning days): TR +9.16 PR +9.49 | within-episode maxDD TR 1.54% PR 1.79% | largest single-name |w| 0.681
+  2015-03-23..2016-12-14 (3 runs, 390 earning days): TR +25.67 PR +29.85 | within-episode maxDD TR 4.21% PR 4.08% | largest single-name |w| 0.895
+  2017-06-21..2018-12-19 (2 runs, 324 earning days): TR +0.76 PR +0.82 | within-episode maxDD TR 8.33% PR 8.70% | largest single-name |w| 0.956
+  2019-03-27..2020-01-02 (1 runs, 195 earning days): TR +13.59 PR +13.72 | within-episode maxDD TR 4.74% PR 4.88% | largest single-name |w| 0.952
+  2020-06-23..2021-07-16 (5 runs, 216 earning days): TR +9.18 PR +8.54 | within-episode maxDD TR 3.79% PR 3.89% | largest single-name |w| 0.855
+  2021-12-07..2022-01-14 (1 runs, 28 earning days): TR +2.20 PR +2.83 | within-episode maxDD TR 2.96% PR 2.92% | largest single-name |w| 0.641
+  2022-08-08..2022-12-12 (1 runs, 89 earning days): TR +9.10 PR +11.46 | within-episode maxDD TR 2.15% PR 2.37% | largest single-name |w| 0.585
+  per-episode effect (mean/sd): TR 1.26, PR 1.21; P(pass) at the PR effect by forward episodes: N=53 (bar 2.818): 2: 0.13, 3: 0.24, 5: 0.46, 9: 0.79, 13: 0.94 | N=54 (bar 2.825): 2: 0.13, 3: 0.23, 5: 0.45, 9: 0.79, 13: 0.94 | N=55 (bar 2.831): 2: 0.13, 3: 0.23, 5: 0.45, 9: 0.79, 13: 0.94
+
+F. te4 fit episodes at m 1.3, deferred flips (pp of NAV over the episode's thin earning days; flatten earns exactly 0 there):
+  2010-05-05..2010-08-13 (2 runs, 69 earning days): TR +3.20 PR +3.31 | within-episode maxDD TR 3.08% PR 3.08% | largest single-name |w| 0.532
+  2012-11-16..2013-12-13 (5 runs, 222 earning days): TR +14.05 PR +15.60 | within-episode maxDD TR 2.52% PR 2.44% | largest single-name |w| 0.725
+  2014-07-01..2014-09-26 (4 runs, 37 earning days): TR +7.38 PR +7.77 | within-episode maxDD TR 1.54% PR 1.79% | largest single-name |w| 0.681
+  2015-03-23..2016-12-14 (3 runs, 390 earning days): TR +23.00 PR +27.23 | within-episode maxDD TR 4.21% PR 4.08% | largest single-name |w| 0.903
+  2017-06-21..2018-12-19 (2 runs, 324 earning days): TR -1.35 PR -1.32 | within-episode maxDD TR 8.75% PR 8.90% | largest single-name |w| 0.956
+  2019-03-27..2020-01-02 (1 runs, 195 earning days): TR +11.32 PR +12.06 | within-episode maxDD TR 5.37% PR 4.99% | largest single-name |w| 0.951
+  2020-06-23..2021-07-16 (5 runs, 216 earning days): TR +8.52 PR +7.82 | within-episode maxDD TR 3.78% PR 3.88% | largest single-name |w| 0.854
+  2021-12-07..2022-01-14 (1 runs, 28 earning days): TR +2.00 PR +2.64 | within-episode maxDD TR 2.95% PR 2.93% | largest single-name |w| 0.641
+  2022-08-08..2022-12-12 (1 runs, 89 earning days): TR +12.04 PR +14.42 | within-episode maxDD TR 2.15% PR 2.15% | largest single-name |w| 0.585
+  per-episode effect (mean/sd): TR 1.22, PR 1.16; P(pass) at the PR effect by forward episodes: N=53 (bar 2.818): 2: 0.12, 3: 0.21, 5: 0.41, 9: 0.75, 13: 0.91 | N=54 (bar 2.825): 2: 0.12, 3: 0.21, 5: 0.41, 9: 0.74, 13: 0.91 | N=55 (bar 2.831): 2: 0.12, 3: 0.21, 5: 0.41, 9: 0.74, 13: 0.91
+
+G. declared rules at per-episode effect 1.16 (PR, deferred, m 1.3) and shrunk x0.49 (0.56), and at zero:
+  N=53 (bar 2.818, one-sided p 0.00242): P(PASS) normal / exact-t, fit | shrunk: k=3: 0.21/0.024 | 0.03/0.009 (t crit 14.33); k=5: 0.41/0.100 | 0.06/0.021 (t crit 5.65); k=9: 0.75/0.431 | 0.13/0.066 (t crit 3.86); k=13: 0.91/0.747 | 0.22/0.134 (t crit 3.45); k=20: 0.99/0.965 | 0.38/0.288 (t crit 3.19)
+  N=54 (bar 2.825, one-sided p 0.00237): P(PASS) normal / exact-t, fit | shrunk: k=3: 0.21/0.023 | 0.03/0.009 (t crit 14.48); k=5: 0.41/0.098 | 0.06/0.021 (t crit 5.68); k=9: 0.74/0.427 | 0.13/0.065 (t crit 3.87); k=13: 0.91/0.744 | 0.21/0.133 (t crit 3.46); k=20: 0.99/0.964 | 0.38/0.286 (t crit 3.20)
+  N=55 (bar 2.831, one-sided p 0.00232): P(PASS) normal / exact-t, fit | shrunk: k=3: 0.21/0.023 | 0.03/0.009 (t crit 14.63); k=5: 0.41/0.097 | 0.06/0.020 (t crit 5.71); k=9: 0.74/0.423 | 0.13/0.064 (t crit 3.89); k=13: 0.91/0.741 | 0.21/0.131 (t crit 3.47); k=20: 0.99/0.963 | 0.38/0.283 (t crit 3.21)
+  ABSENT at effect fit (1.16): first two negative 0.015; mean of three <= 0 0.022; either (simulated, 200,000) 0.031
+  ABSENT at effect shrunk (0.56): first two negative 0.082; mean of three <= 0 0.165; either (simulated, 200,000) 0.188
+  ABSENT at effect zero (0.00): first two negative 0.250; mean of three <= 0 0.500; either (simulated, 200,000) 0.527
+
+G2. repeated reads at N=54 (bar 2.825, single-read one-sided p 0.00237); P(PRESENT by k), simulated 400,000 paths with the ABSENT stop; 'every' = read at every episode at p (the draft as first written); 'declared' = read only at k in (5, 9, 13, 20), each at p/4 = 0.000592:
+  zero   every   : k=3 0.0045, k=5 0.0079, k=9 0.0122, k=13 0.0150, k=20 0.0179
+  zero   declared: k=3 0.0000, k=5 0.0006, k=9 0.0011, k=13 0.0016, k=20 0.0021
+  fit    every   : k=3 0.0312, k=5 0.1316, k=9 0.4943, k=13 0.7877, k=20 0.9464
+  fit    declared: k=3 0.0000, k=5 0.0293, k=9 0.2192, k=13 0.5356, k=20 0.8749
+  shrunk every   : k=3 0.0136, k=5 0.0373, k=9 0.1101, k=13 0.2026, k=20 0.3621
+  shrunk declared: k=3 0.0000, k=5 0.0054, k=9 0.0253, k=13 0.0645, k=20 0.1595
+  exact single-read P(PRESENT) at the fit effect 1.16: k=5 0.098, k=9 0.427, k=10 0.518, k=13 0.744, k=20 0.964; first k at or past 0.5: 10 (14.1 years at 0.71/yr, 36.7 at 0.27/yr [S screen rates])

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1396092,
+  "episode_accession": "0001209286-15-000118",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Toreador Core Fund (a series of Unified Series Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Toreador Core Fund (a series of World Funds Trust)", "cik": 1396092, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001209286-15-000118", "quote": "Both the Existing Fund and the New Fund assess a 2.00% short-term redemption fee against investment proceeds withdrawn within 60 days of investment."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001209286-15-000118", "date": "2015-03-05", "quote": "COMBINED PROXY STATEMENT AND PROSPECTUS FOR THE REORGANIZATION OF Toreador Core Fund (a series of Unified Series Trust) INTO Toreador Core Fund (a series of World Funds Trust)"},
+      "outcome_evidence": null,
+      "notes": "Open-end fund series moving between trusts (redeemable shares, Retail and Institutional classes). Outcome not stated. The PRE 14A and DEF 14A in the window concern the unrelated European Equity Fund."
+    }
+  ],
+  "problems": ""
+}

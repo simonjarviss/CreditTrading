@@ -82,7 +82,7 @@ results/xasset/PREREG_XASSET_SLATE_2026-10-12.md, revision 3, approved):
     the panel lacked, `XASSET_PERMNOS` (SPY, EMB, PFF, MUB, BKLN, CWB, IEI,
     TLH, AGG; share code 73; permno, range and row count read from `dsf` on
     the R2 mirror by `scripts/xasset/slate_feasibility.py --crsp`, 2026-10-12,
-    results/xasset/slate_feasibility_2026-10-12.csv), through the SAME gates.
+    results/xasset/feasibility/slate_feasibility_2026-10-12.csv), through the SAME gates.
   * It adds ONE column, `prc_signed`: CRSP `dsf.prc` exactly as recorded,
     unadjusted and SIGNED. CRSP stores minus the bid/ask midpoint when no
     trade closed the session, so `prc_signed < 0` is the no-closing-trade
@@ -146,7 +146,7 @@ BY_PERMNO = {v["permno"]: t for t, v in PERMNOS.items()}
 
 # XASSET gate DG1 (2026-10-14): the nine slate names the panel lacked. Permno,
 # range and n from `dsf` on the R2 mirror, 2026-10-12
-# (results/xasset/slate_feasibility_2026-10-12.csv, columns crsp_permno,
+# (results/xasset/feasibility/slate_feasibility_2026-10-12.csv, columns crsp_permno,
 # crsp_first, crsp_last, crsp_rows). Used only under --xasset.
 XASSET_PERMNOS = {
     "SPY":  {"permno": 84398, "first": "1993-01-29", "last": "2024-12-31", "n": 8038},

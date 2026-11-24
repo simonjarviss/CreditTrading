@@ -1,0 +1,37 @@
+{
+ "episode_cik": 1068234,
+ "episode_accession": "0001341004-13-000680",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "BlackRock High Yield Trust",
+    "cik": 1068234,
+    "ticker": "BHY"
+   },
+   "acquirer": {
+    "name": "BlackRock Corporate High Yield Fund VI, Inc.",
+    "cik": 1222401,
+    "ticker": "HYT"
+   },
+   "both_listed": true,
+   "listed_quote": {
+    "accession": "0001341004-13-000680",
+    "quote": "BlackRock High Yield Trust (NYSE:BHY), BlackRock Corporate High Yield Fund, Inc. (NYSE:COY), BlackRock Corporate High Yield Fund III, Inc. (NYSE:CYE), BlackRock High Income Shares (NYSE:HIS), BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT)"
+   },
+   "outcome": "completed",
+   "announcement": {
+    "accession": "0001341004-13-000680",
+    "date": "2013-06-27",
+    "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."
+   },
+   "outcome_evidence": {
+    "accession": "0001341004-13-001257",
+    "date": "2013-12-06",
+    "quote": "The Fund was a party to a senior committed secured, 360-day rolling credit facility (the “Credit Facility”), which was terminated as of the effective date of the Merger."
+   },
+   "notes": "Evidence is the fund's own Form N-8F (reason for deregistration: Merger; all assets distributed; shareholder vote 2013-10-11). Shareholders of all six funds approved on 2013-10-11. Same press release also covers COY, CYE, HYV and the other of BHY/HIS into HYT; those are not recorded here."
+  }
+ ],
+ "problems": ""
+}

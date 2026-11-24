@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1525759,
+  "episode_accession": "0001193125-19-164381",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "FS Investment Corporation III", "cik": 1579412, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164179", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement: FS Investment Corporation II (FSIC II), FS Investment Corporation"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164179", "date": "2019-06-03", "quote": "FS/KKR Announces Merger and Liquidity Plan for Non-Traded BDCs"},
+      "outcome_evidence": null,
+      "notes": "Non-traded BDCs. The merger was completed: the 2019-12-18 8-K (0001193125-19-317705) says it announced the closing of the mergers of the four non-traded BDCs."
+    },
+    {
+      "target": {"name": "FS Investment Corporation IV", "cik": null, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164179", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement: FS Investment Corporation II (FSIC II), FS Investment Corporation"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164179", "date": "2019-06-03", "quote": "FS/KKR Announces Merger and Liquidity Plan for Non-Traded BDCs"},
+      "outcome_evidence": null,
+      "notes": "Non-traded BDCs. Completed with the other mergers per the 2019-12-18 8-K (0001193125-19-317705). FSIC IV CIK does not appear in a FILING header line."
+    },
+    {
+      "target": {"name": "Corporate Capital Trust II", "cik": null, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164179", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement: FS Investment Corporation II (FSIC II), FS Investment Corporation"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164179", "date": "2019-06-03", "quote": "FS/KKR Announces Merger and Liquidity Plan for Non-Traded BDCs"},
+      "outcome_evidence": null,
+      "notes": "Non-traded BDCs. Completed with the other mergers per the 2019-12-18 8-K (0001193125-19-317705). CCT II CIK does not appear in a FILING header line."
+    },
+    {
+      "target": {"name": "FS KKR Capital Corp. II", "cik": 1525759, "ticker": "FSKR"},
+      "acquirer": {"name": "FS KKR Capital Corp.", "cik": 1422183, "ticker": "FSK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-302647", "quote": "FS KKR Capital Corp. (NYSE: FSK) and FS KKR Capital Corp. II (NYSE: FSKR), two publicly traded business development companies (“BDCs”) advised by FS/KKR,"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-302647", "date": "2020-11-24", "quote": "FS/KKR Advisor Announces Proposed Merger of FS KKR Capital Corp. and FS KKR Capital Corp. II"},
+      "outcome_evidence": null,
+      "notes": "Shareholders of both funds approved the merger at special meetings on May 21, 2021 (8-K 0001193125-21-170089 filed 2021-05-24, which says the merger was expected to close on or around June 16, 2021 and FSK will be the ... [excerpt cut off]). The last filing in the window is 2021-05-26; no excerpt states the merger closed, so outcome is left null."
+    }
+  ],
+  "problems": "Episode fund is acquirer in the 2019 four-way non-traded merger and target in the 2020 FSK merger; episode_role set to acquirer for the first-filing deal. The 2019 deals are recorded as not_a_listed_pair although completed."
+}

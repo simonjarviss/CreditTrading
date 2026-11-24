@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1266585,
+  "episode_accession": "0001193125-12-502942",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Municipal High Income Opportunity Fund 2", "cik": 1412495, "ticker": "NMD"},
+      "acquirer": {"name": "Nuveen Municipal High Income Opportunity Fund", "cik": 1266585, "ticker": "NMZ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-12-502928", "quote": "Municipal High Income Opportunity Fund (NYSE MKT: NMZ ) and Nuveen Municipal High Income Opportunity Fund 2 (NYSE: NMD ) approved a merger"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-502928", "date": "2012-12-14", "quote": "Nuveen Closed-End Funds’ Board Approves Fund Merger"},
+      "outcome_evidence": null,
+      "notes": "Last filings that discuss this merger are the 2013-05-17 Rule 425 letters saying the annual meeting is adjourned to June 21, 2013 and that sufficient votes are needed to implement the proposals. No excerpt states the vote result, completion or termination. The 2014 filings (DEFA14A, PRE 14A, DEF 14A) concern a different transaction (new advisory agreements, a Transaction involving many Nuveen funds) and do not mention NMD."
+    }
+  ],
+  "problems": ""
+}

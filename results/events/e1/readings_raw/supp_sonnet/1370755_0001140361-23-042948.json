@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1370755,
+  "episode_accession": "0001140361-23-042948",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Capital Investment Corporation", "cik": 1326003, "ticker": "BKCC"},
+      "acquirer": {"name": "BlackRock TCP Capital Corp.", "cik": 1370755, "ticker": "TCPC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001140361-23-042948", "quote": "BlackRock TCP Capital Corp. (“TCPC”) (NASDAQ: TCPC) and BlackRock Capital Investment Corporation (“BCIC”) (NASDAQ: BKCC) today announced that they have entered into a definitive agreement"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001140361-23-042948", "date": "2023-09-06", "quote": "BLACKROCK TCP CAPITAL CORP. AND BLACKROCK CAPITAL INVESTMENT CORPORATION ANNOUNCE MERGER AGREEMENT"},
+      "outcome_evidence": {"accession": "0001140361-24-013943", "date": "2024-03-18", "quote": "BLACKROCK TCP CAPITAL CORP. ANNOUNCES COMPLETION OF MERGER WITH BLACKROCK CAPITAL INVESTMENT CORPORATION"},
+      "notes": "Structure: BCIC merges with and into a wholly owned, indirect subsidiary of TCPC. Shareholders of both approved on 2024-03-07 (accession 0001140361-24-011967). The 2024-03-18 8-K filed by TCPC reports the closing; the 8-K's own filer header lists only TCPC. Only one target named in the excerpts."
+    }
+  ],
+  "problems": ""
+}

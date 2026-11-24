@@ -1,0 +1,13 @@
+{
+ "batch": "08",
+ "model_id": "claude-sonnet-5-5",
+ "episodes": [
+  "862716_0001193125-14-206389",
+  "892992_0001193125-12-303425",
+  "1293613_0001213900-23-023264",
+  "1633336_0001193125-22-257466",
+  "1655099_0001104659-16-121603"
+ ],
+ "parts_read": 10,
+ "problems": "Excerpts for most episodes were cover pages; outcomes null except 1633336 (completed)."
+}

@@ -52,6 +52,7 @@ if str(REPO) not in sys.path:  # run as a script, not -m
 
 OUT = REPO / "results" / "events"
 ACQ_CSV = OUT / "merger_acquirers_2010_2022.csv"
+G1A_DIR = OUT / "g1a"           # this gate's outputs: the note sits in OUT, its data here
 UNIVERSE_MAP = REPO / "results" / "data" / "universe_2026-10-08" / "universe_map.csv"
 FIELDS = ("name", "status", "exchange", "tradable", "shortable", "easy_to_borrow", "borrow_status")
 
@@ -106,7 +107,8 @@ def main(argv=None) -> int:
     acq = pd.read_csv(ACQ_CSV)
     a = read_assets(client, acq["a_ticker"])
     h = acq.merge(a, left_on="a_ticker", right_on="symbol", how="left")
-    h.to_csv(OUT / f"alpaca_acquirers_{today}.csv", index=False)
+    G1A_DIR.mkdir(parents=True, exist_ok=True)
+    h.to_csv(G1A_DIR / f"alpaca_acquirers_{today}.csv", index=False)
     tk = h[h["in_ticker_only_sample"]].drop_duplicates("a_ticker").copy()
     # Muni by CRSP name, the same words merger_pairs.classify keys on: a label
     # for the split the original reported ("mostly munis"), not a fact.
@@ -143,7 +145,7 @@ def main(argv=None) -> int:
     n_rows = len(rm)
     ra = read_assets(client, rm["acquirer_symbol"])
     rm = rm.merge(ra, left_on="acquirer_symbol", right_on="symbol", how="left")
-    rm.to_csv(OUT / f"alpaca_recent_cef_bdc_mergers_{today}.csv", index=False)
+    rm.to_csv(G1A_DIR / f"alpaca_recent_cef_bdc_mergers_{today}.csv", index=False)
     ev = rm.drop_duplicates(["acquiree_symbol", "acquirer_symbol"])
     u = rm.drop_duplicates("acquirer_symbol")
     summary["last_365d_and_future"] = {"feed_rows": n_rows, "mergers": len(ev), "acquirers": len(u),
@@ -154,7 +156,7 @@ def main(argv=None) -> int:
           summary["last_365d_and_future"], "| future-dated, any issuer:", summary["feed_future_dated_any_issuer"],
           "| future-dated CEF/BDC:", summary["feed_future_dated_cef_bdc"])
     import json
-    (OUT / f"alpaca_g1a_summary_{today}.json").write_text(json.dumps(summary, indent=1))
+    (G1A_DIR / f"alpaca_g1a_summary_{today}.json").write_text(json.dumps(summary, indent=1))
     print(rm[["effective_date", "acquiree_symbol", "acquirer_symbol", "acquirer_rate", "type",
               "shortable", "easy_to_borrow", "name"]].sort_values("effective_date").to_string(index=False))
     return 0

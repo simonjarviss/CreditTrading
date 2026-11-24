@@ -1,0 +1,20 @@
+{
+  "about": "Declared slates: the N a counter's trials are judged at, when the team lead fixed one, for scripts/research/registry.py (minimum_declared_n, paper_sr0, bars). Proposed 2026-10-28 on branch research-loop-gate. The team lead approves it by merging that branch, and only the team lead adds or changes a row. Each row copies a ruling already recorded at its source; the table makes none. A standing slate sets the least N a new trial on that counter may declare. A closed slate takes no new trial: `closed_at` is the number of trials it held when it closed (a slate can close below its N), and one more trial on that counter needs a new declaration, which is the team lead's ruling. A counter with no row is a running count, whose least N is the counter itself.",
+  "slates": [
+    {
+      "counter": "EVENTS",
+      "declared_n": 6,
+      "status": "standing",
+      "ruled": "2026-10-19",
+      "source": "docs/SYSTEM.md §5, 'Team lead, 2026-10-19 — the interrupted work and the research slate', row 'The EVENTS bar': N = 6, shared by every EVENTS trial, E2's draft included"
+    },
+    {
+      "counter": "XASSET",
+      "declared_n": 4,
+      "status": "closed",
+      "ruled": "2026-10-14",
+      "source": "docs/RESEARCH_STATE.md, 2026-10-14: the XASSET slate is declared at N = 4 (results/xasset/PREREG_XASSET_SLATE_2026-10-12.md, revision 3, approved); later in the same file: XASSET is at 4 = N. The slate is closed",
+      "closed_at": 4
+    }
+  ]
+}

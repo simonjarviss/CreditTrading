@@ -1,0 +1,37 @@
+{
+ "pit_175": {
+  "misses": 8,
+  "bdcs_with_misses": 6,
+  "ratio_comp_over_xbrl_rounded": [
+   0.1,
+   0.17,
+   0.5,
+   0.73,
+   0.85,
+   0.95
+  ],
+  "explained_by_cfacpr_within_1pct": 4,
+  "unexplained": 0,
+  "unexplained_with_xbrl_filed_after_fit_end": 0
+ },
+ "loose_505": {
+  "misses": 39,
+  "bdcs_with_misses": 13,
+  "ratio_comp_over_xbrl_rounded": [
+   0.05,
+   0.1,
+   0.11,
+   0.17,
+   0.25,
+   0.33,
+   0.5,
+   0.73,
+   0.83,
+   0.85,
+   0.95
+  ],
+  "explained_by_cfacpr_within_1pct": 26,
+  "unexplained": 8,
+  "unexplained_with_xbrl_filed_after_fit_end": 8
+ }
+}

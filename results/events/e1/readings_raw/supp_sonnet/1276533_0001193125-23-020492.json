@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1276533,
+  "episode_accession": "0001193125-23-020492",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Senior Income Fund", "cik": 1093428, "ticker": "NSL"},
+      "acquirer": {"name": "Nuveen Floating Rate Income Fund", "cik": 1276533, "ticker": "JFR"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-020492", "date": "2023-01-31", "quote": "You are receiving the Joint Proxy Statement/Prospectus as a holder of common shares of Nuveen Senior Income Fund (“Senior Income” or a “Target Fund”), Nuveen Floating Rate Income Opportunity Fund (“Floating Rate Income Opportunity” or a “Target Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Meeting held May 8, 2023 was adjourned to June 8, 2023 (425 of 2023-05-09). The excerpts do not show the result of the vote or any completion."
+    },
+    {
+      "target": {"name": "Nuveen Floating Rate Income Opportunity Fund", "cik": 1289213, "ticker": "JRO"},
+      "acquirer": {"name": "Nuveen Floating Rate Income Fund", "cik": 1276533, "ticker": "JFR"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-020492", "date": "2023-01-31", "quote": "You are receiving the Joint Proxy Statement/Prospectus as a holder of common shares of Nuveen Senior Income Fund (“Senior Income” or a “Target Fund”), Nuveen Floating Rate Income Opportunity Fund (“Floating Rate Income Opportunity” or a “Target Fund”)"},
+      "outcome_evidence": null,
+      "notes": "The 425 of 2023-06-08 (0001193125-23-163622) is addressed to JRO shareholders only: 'We recently sent you proxy materials concerning an important merger proposal affecting your fund, which was considered at an Annual Meeting of Shareholders of the fund on May 8, 2023, at 2:00 p.m., Central Time. The Meeting has been adjourned to allow shareholders more time to vote.' No result shown for JRO or for any target."
+    },
+    {
+      "target": {"name": "Nuveen Short Duration Credit Opportunities Fund", "cik": 1509253, "ticker": "JSD"},
+      "acquirer": {"name": "Nuveen Floating Rate Income Fund", "cik": 1276533, "ticker": "JFR"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-020492", "date": "2023-01-31", "quote": "NUVEEN SHORT DURATION CREDIT OPPORTUNITIES FUND (JSD) AND NUVEEN FLOATING RATE INCOME FUND (JFR)"},
+      "outcome_evidence": null,
+      "notes": "JSD is named in the 2023-05-09 adjournment letter but no 2023-06-08 425 for JSD or NSL appears among the excerpts. The text does not say why; no outcome is stated."
+    }
+  ],
+  "problems": "The 2023-10-13, 2024-03-06 and 2024-12-30 8-Ks and the 2024-02-27 DEF 14A are shown only by their cover pages, with no outcome language. Exchange listing is shown only by tickers in parentheses, never an exchange name, so both_listed is null. A later 425 addressed only to JRO holders hints that other targets may have been treated differently, but nothing states it."
+}

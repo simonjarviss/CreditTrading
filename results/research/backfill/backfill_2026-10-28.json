@@ -1,0 +1,924 @@
+{
+ "run_utc": "2026-10-28T17:34:55+00:00",
+ "head": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+ "record": true,
+ "counters": {
+  "EVENTS": {
+   "canonical_trials": 2,
+   "bar_inputs": {
+    "counter": "EVENTS",
+    "canonical_trials": 2,
+    "stored_trials": 2,
+    "coverage": 1.0,
+    "paper_bar_may_gate": true,
+    "variants": 2,
+    "T": 3217,
+    "dropped_sessions": 189,
+    "rho_bar": 0.005956912823026237,
+    "n_effective": 1.9940430871769736,
+    "sr_var": 5.27284983388247e-05,
+    "ill_conditioned": false
+   }
+  },
+  "XASSET": {
+   "canonical_trials": 4,
+   "bar_inputs": {
+    "counter": "XASSET",
+    "canonical_trials": 4,
+    "stored_trials": 4,
+    "coverage": 1.0,
+    "paper_bar_may_gate": true,
+    "variants": 4,
+    "T": 3693,
+    "dropped_sessions": 1425,
+    "rho_bar": 0.18682479180006195,
+    "n_effective": 3.4395256245998143,
+    "sr_var": 0.0004994654446952893,
+    "ill_conditioned": false
+   }
+  },
+  "CEF": {
+   "canonical_trials": 52,
+   "bar_inputs": {
+    "counter": "CEF",
+    "canonical_trials": 52,
+    "stored_trials": 2,
+    "coverage": 0.038461538461538464,
+    "paper_bar_may_gate": false,
+    "variants": 2,
+    "T": 1762,
+    "dropped_sessions": 2735,
+    "rho_bar": -0.012228195181676603,
+    "n_effective": 2.0,
+    "sr_var": 0.00012261720624482663,
+    "ill_conditioned": false
+   }
+  }
+ },
+ "trials": {
+  "EVENTS-1": {
+   "trial": "E1: NAV-for-NAV CEF merger pair, muni headline, tradable sleeve",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/events/e1_merger_pair.py (trial-events-e1), via scripts/research/reopen_book/extract_trial_series.py e1",
+   "source": "docs/RESEARCH_STATE.md (2026-10-19: 'EVENTS trial 1 is E1'); results/events/e1/e1_fit_verdict.json on branch trial-events-e1",
+   "variant": "e1_muni_tradable",
+   "check": {
+    "compared": 11,
+    "figures": [
+     "T",
+     "ann",
+     "deals",
+     "gross",
+     "harness_turn",
+     "k",
+     "net15",
+     "net30",
+     "net5",
+     "turn",
+     "vol"
+    ],
+    "max_abs_diff": 0.0,
+    "committed": {
+     "gross": 0.28084314799161997,
+     "net5": 0.2439401973178901,
+     "net15": 0.17013429597043028,
+     "net30": 0.05942544394924055,
+     "turn": 2.634947204361659,
+     "ann": 0.010026391577834389,
+     "vol": 0.03570103685824503,
+     "T": 3406,
+     "k": 0.3455221115497343,
+     "harness_turn": 14.402818555490311,
+     "deals": 98
+    },
+    "span": [
+     "2009-06-23",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 4 NW t, L 21",
+    "lags": 21,
+    "inference_nw_t": 1.6516199113021013,
+    "committed_t": 1.6516199113021013,
+    "abs_diff": 0.0
+   },
+   "first": "2009-06-23",
+   "last": "2022-12-30",
+   "n": 3406,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2009-06-23",
+    "last": "2022-12-30",
+    "n": 3406,
+    "sr_annual": 0.28084314799162274,
+    "skew": 0.33789427596134053,
+    "kurt": 12.047698293557312,
+    "sha256": "64f8c0eeaf826763643fa8901662253a5d79983eb1a85ecddce713a67eef4a37"
+   }
+  },
+  "EVENTS-2": {
+   "trial": "NAV tenders: tradable sleeve",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/events/nav_tender_trial.py (trial-events-navtender), via scripts/research/reopen_book/extract_trial_series.py navtender",
+   "source": "docs/RESEARCH_STATE.md (2026-10-19: 'EVENTS trial 2 is NAV tenders'); results/events/nav_tender/fit_2026-10-19.json on branch trial-events-navtender",
+   "variant": "navtender_tradable",
+   "check": {
+    "compared": 9,
+    "figures": [
+     "T",
+     "ann",
+     "gross",
+     "k",
+     "net15",
+     "net30",
+     "net5",
+     "turn",
+     "vol"
+    ],
+    "max_abs_diff": 0.0,
+    "committed": {
+     "gross": 0.4500642608985372,
+     "net5": 0.38126790194173865,
+     "net15": 0.24367518402814153,
+     "net30": 0.03728610715774587,
+     "turn": 6.2104395182941285,
+     "ann": 0.020314279084241414,
+     "vol": 0.04513639684183028,
+     "T": 3217,
+     "k": 0.2832495832262797
+    },
+    "span": [
+     "2010-03-24",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 5 NW t, L 21 (NW_LAGS; the automatic lag is reported beside it)",
+    "lags": 21,
+    "inference_nw_t": 2.150481581725893,
+    "committed_t": 2.150481581725893,
+    "abs_diff": 0.0
+   },
+   "first": "2010-03-24",
+   "last": "2022-12-30",
+   "n": 3217,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2010-03-24",
+    "last": "2022-12-30",
+    "n": 3217,
+    "sr_annual": 0.4500642608985352,
+    "skew": -2.084544404636994,
+    "kurt": 81.29495779612786,
+    "sha256": "bd59e95151d4f3518c8f3f17bc8b66d9a3c22683ed9f0da7304416f86b3f1d59"
+   }
+  },
+  "XASSET-1": {
+   "trial": "X1: credit and rates trend, sized uncapped sleeve (the series that decides)",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/xasset/x1_credit_trend.py (runner.decide)",
+   "source": "results/xasset/trials/x1_fit_2026-10-14.json; results/xasset/XASSET_RESULTS_2026-10-14.md",
+   "variant": "x1_sized",
+   "check": {
+    "compared": 190,
+    "max_abs_diff": 0.0,
+    "verdict": "KILL D1 (stage 1: no detectable edge)",
+    "cached_series": "identical",
+    "window": [
+     "2008-05-02",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 1 NW t, L 21",
+    "lags": 21,
+    "inference_nw_t": 1.6216900658915672,
+    "committed_t": 1.6216900658915672,
+    "abs_diff": 0.0
+   },
+   "first": "2008-05-02",
+   "last": "2022-12-30",
+   "n": 3693,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2008-05-02",
+    "last": "2022-12-30",
+    "n": 3693,
+    "sr_annual": 0.41402767958515374,
+    "skew": -3.145404679330966,
+    "kurt": 100.44117145043201,
+    "sha256": "e0ac0004c2d8ff3d4fd81a74d6c2a5c1ed8da2a1bb988296d9f1af8e383d3203"
+   }
+  },
+  "XASSET-2": {
+   "trial": "X3: month-end Treasury extension, sized uncapped sleeve (the series that decides)",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/xasset/x3_month_end.py (runner.decide)",
+   "source": "results/xasset/trials/x3_fit_2026-10-14.json; results/xasset/XASSET_RESULTS_2026-10-14.md",
+   "variant": "x3_sized",
+   "check": {
+    "compared": 228,
+    "max_abs_diff": 0.0,
+    "verdict": "KILL D4 (stage 4: R-D4)",
+    "cached_series": "identical",
+    "window": [
+     "2002-09-04",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 1 NW t, L 21",
+    "lags": 21,
+    "inference_nw_t": 4.935025128245541,
+    "committed_t": 4.935025128245541,
+    "abs_diff": 0.0
+   },
+   "first": "2002-09-04",
+   "last": "2022-12-30",
+   "n": 5118,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2002-09-04",
+    "last": "2022-12-30",
+    "n": 5118,
+    "sr_annual": 1.0363621710517672,
+    "skew": 1.53299861921387,
+    "kurt": 35.81449363041347,
+    "sha256": "df553aaa8ccc6476c2eb2bea52314fa86588979ef7f9c0079939dc67c009a0eb"
+   }
+  },
+  "XASSET-3": {
+   "trial": "X2: pension rebalancing front-run, sized uncapped sleeve (the series that decides)",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/xasset/x2_rebalancing.py (runner.decide)",
+   "source": "results/xasset/trials/x2_fit_2026-10-14.json; results/xasset/XASSET_RESULTS_2026-10-14.md",
+   "variant": "x2_sized",
+   "check": {
+    "compared": 231,
+    "max_abs_diff": 0.0,
+    "verdict": "KILL D1 (stage 1: no detectable edge)",
+    "cached_series": "identical",
+    "window": [
+     "2002-09-04",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 1 NW t, L 21",
+    "lags": 21,
+    "inference_nw_t": 1.5918457792466367,
+    "committed_t": 1.5918457792466367,
+    "abs_diff": 0.0
+   },
+   "first": "2002-09-04",
+   "last": "2022-12-30",
+   "n": 5118,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2002-09-04",
+    "last": "2022-12-30",
+    "n": 5118,
+    "sr_annual": 0.33315450909568395,
+    "skew": 3.0796064337091194,
+    "kurt": 107.95407712302094,
+    "sha256": "87241771faa8ae58bb484e7bab0327e62a14873e1de51061845ebe7c5ea681d2"
+   }
+  },
+  "XASSET-4": {
+   "trial": "X4: multi-asset trend, sized uncapped sleeve (the series that decides)",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/xasset/x4_multi_trend.py (runner.decide)",
+   "source": "results/xasset/trials/x4_fit_2026-10-14.json; results/xasset/XASSET_RESULTS_2026-10-14.md",
+   "variant": "x4_sized",
+   "check": {
+    "compared": 344,
+    "max_abs_diff": 0.0,
+    "verdict": "KILL D4 (stage 2: the historical-mean rule, TSH)",
+    "cached_series": "identical",
+    "window": [
+     "2005-12-02",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 1 NW t, L 21",
+    "lags": 21,
+    "inference_nw_t": 1.964237246013189,
+    "committed_t": 1.964237246013189,
+    "abs_diff": 0.0
+   },
+   "first": "2005-12-02",
+   "last": "2022-12-30",
+   "n": 4299,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2005-12-02",
+    "last": "2022-12-30",
+    "n": 4299,
+    "sr_annual": 0.4535431287476147,
+    "skew": -1.4534975037209126,
+    "kurt": 40.76752177997848,
+    "sha256": "2ac59cd4fb2a1c193d0d94080c25b45b6aa9a0cf918c92adf5c65a8fc225f981"
+   }
+  },
+  "CEF-1": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (1 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-2": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (2 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-3": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (3 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-4": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (4 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-5": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (5 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-6": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (6 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-7": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (7 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-8": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (8 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-9": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (9 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-10": {
+   "trial": "day-one CEF discount sleeve specification, 2026-07-31: the long/short book on each fund's own 252d discount z, with its hold, basket, |z|-threshold, point-in-time-universe and v2/v3 (vol-target, group-neutral) variants (10 of 10; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the record names more than ten configurations); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample 2005-2026); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:_archive/scripts/_archive/cef_sleeve.py, cef_sleeve_v2.py; pre-clean-slate:scripts/cef/discount_test.py, validate.py",
+   "source": "pre-clean-slate:results/AUDIT_2026-07-31.md row 4 ('10 specs'); pre-clean-slate:_archive/docs/RESEARCH_STATE_2026-09-14.md 'CEF DISCOUNT REVERSION' and 'CEF v2/v3' ('SEARCH STOPPED HERE at 10 specifications')"
+  },
+  "CEF-11": {
+   "trial": "execution and niche-edge variants, 2026-07-31: no-trade bands 1%/5%, holds 10/21/42d, price weighting and its four alternatives, the January hedged basis sleeve, distribution events (1 of 6; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (twelve or more configurations named, six counted); no script in git names this work (it predates the repository's first commit); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "none named in the note",
+   "source": "pre-clean-slate:results/cef/research/NICHE_EDGE_RESEARCH.md \u00a76 ('Trial counter on this data source: 10 -> 16')"
+  },
+  "CEF-12": {
+   "trial": "execution and niche-edge variants, 2026-07-31: no-trade bands 1%/5%, holds 10/21/42d, price weighting and its four alternatives, the January hedged basis sleeve, distribution events (2 of 6; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (twelve or more configurations named, six counted); no script in git names this work (it predates the repository's first commit); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "none named in the note",
+   "source": "pre-clean-slate:results/cef/research/NICHE_EDGE_RESEARCH.md \u00a76 ('Trial counter on this data source: 10 -> 16')"
+  },
+  "CEF-13": {
+   "trial": "execution and niche-edge variants, 2026-07-31: no-trade bands 1%/5%, holds 10/21/42d, price weighting and its four alternatives, the January hedged basis sleeve, distribution events (3 of 6; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (twelve or more configurations named, six counted); no script in git names this work (it predates the repository's first commit); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "none named in the note",
+   "source": "pre-clean-slate:results/cef/research/NICHE_EDGE_RESEARCH.md \u00a76 ('Trial counter on this data source: 10 -> 16')"
+  },
+  "CEF-14": {
+   "trial": "execution and niche-edge variants, 2026-07-31: no-trade bands 1%/5%, holds 10/21/42d, price weighting and its four alternatives, the January hedged basis sleeve, distribution events (4 of 6; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (twelve or more configurations named, six counted); no script in git names this work (it predates the repository's first commit); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "none named in the note",
+   "source": "pre-clean-slate:results/cef/research/NICHE_EDGE_RESEARCH.md \u00a76 ('Trial counter on this data source: 10 -> 16')"
+  },
+  "CEF-15": {
+   "trial": "execution and niche-edge variants, 2026-07-31: no-trade bands 1%/5%, holds 10/21/42d, price weighting and its four alternatives, the January hedged basis sleeve, distribution events (5 of 6; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (twelve or more configurations named, six counted); no script in git names this work (it predates the repository's first commit); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "none named in the note",
+   "source": "pre-clean-slate:results/cef/research/NICHE_EDGE_RESEARCH.md \u00a76 ('Trial counter on this data source: 10 -> 16')"
+  },
+  "CEF-16": {
+   "trial": "execution and niche-edge variants, 2026-07-31: no-trade bands 1%/5%, holds 10/21/42d, price weighting and its four alternatives, the January hedged basis sleeve, distribution events (6 of 6; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (twelve or more configurations named, six counted); no script in git names this work (it predates the repository's first commit); scored at shift(1), the lookahead fixed 2026-09-10; a faithful rebuild reproduces the artifact; its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (full sample); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "none named in the note",
+   "source": "pre-clean-slate:results/cef/research/NICHE_EDGE_RESEARCH.md \u00a76 ('Trial counter on this data source: 10 -> 16')"
+  },
+  "CEF-17": {
+   "trial": "two trials between NICHE_EDGE_RESEARCH's 16 and the 18 the table read at the end of 2026-07-31; one candidate is the AUDIT's hold sweep (hold 1/2/5/21), unconfirmed (1 of 2; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (no record itemises 17 and 18); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout; panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "unknown (pre-clean-slate:scripts/audit/cef_cost_frontier.py if the hold sweep)",
+   "source": "git show 1335a91:RESEARCH_STATE.md (CEF 18); pre-clean-slate:results/AUDIT_2026-07-31.md \u00a73"
+  },
+  "CEF-18": {
+   "trial": "two trials between NICHE_EDGE_RESEARCH's 16 and the 18 the table read at the end of 2026-07-31; one candidate is the AUDIT's hold sweep (hold 1/2/5/21), unconfirmed (2 of 2; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (no record itemises 17 and 18); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout; panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "unknown (pre-clean-slate:scripts/audit/cef_cost_frontier.py if the hold sweep)",
+   "source": "git show 1335a91:RESEARCH_STATE.md (CEF 18); pre-clean-slate:results/AUDIT_2026-07-31.md \u00a73"
+  },
+  "CEF-19": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (1 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-20": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (2 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-21": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (3 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-22": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (4 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-23": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (5 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-24": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (6 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-25": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (7 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-26": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (8 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-27": {
+   "trial": "distribution-cut study, 2026-07-31: 1 event study + 8 exclusion-filter variants (9 of 9; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the note's table shows six exclusion rules and a baseline against its 'eight'); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (the sweep runs to the panel end); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/dist_cut_study.py",
+   "source": "pre-clean-slate:results/cef/DIST_CUT_NOTE.md ('CEF counter +9'); pre-clean-slate:results/cef/ESTIMATOR_NOTE.md 'Trial accounting'"
+  },
+  "CEF-28": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (1 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-29": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (2 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-30": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (3 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-31": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (4 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-32": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (5 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-33": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (6 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-34": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (7 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-35": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (8 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-36": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (9 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-37": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (10 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-38": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (11 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-39": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (12 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-40": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (13 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-41": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (14 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-42": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (15 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-43": {
+   "trial": "Kalman state-space discount sweeps, 2026-07-31 (lam grids, cut-inflation on/off) (16 of 16; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (sixteen sweeps, not listed one by one); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('16 Kalman sweeps')"
+  },
+  "CEF-44": {
+   "trial": "rolling-z window control, 2026-07-31: z windows 21/63/126/252 (1 of 4; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the four windows are named, their order is not); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('4 window control'); its 2024+ holdout (pre-clean-slate:results/cef/HOLDOUT_OPENED.json) adjudicated z_window=63"
+  },
+  "CEF-45": {
+   "trial": "rolling-z window control, 2026-07-31: z windows 21/63/126/252 (2 of 4; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the four windows are named, their order is not); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('4 window control'); its 2024+ holdout (pre-clean-slate:results/cef/HOLDOUT_OPENED.json) adjudicated z_window=63"
+  },
+  "CEF-46": {
+   "trial": "rolling-z window control, 2026-07-31: z windows 21/63/126/252 (3 of 4; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the four windows are named, their order is not); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('4 window control'); its 2024+ holdout (pre-clean-slate:results/cef/HOLDOUT_OPENED.json) adjudicated z_window=63"
+  },
+  "CEF-47": {
+   "trial": "rolling-z window control, 2026-07-31: z windows 21/63/126/252 (4 of 4; which one is unrecorded)",
+   "status": "NOT REBUILT",
+   "reason": "ambiguous identity: the record does not say which configuration this id is (the four windows are named, their order is not); script deleted in the 2026-09-28 clean slate (recoverable only at tag pre-clean-slate); its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (fit 2005-01 .. 2023-12-31); panel changed: the 2026-07-31 panels were refetched and replaced since",
+   "script": "pre-clean-slate:scripts/cef/kalman_discount.py",
+   "source": "pre-clean-slate:results/cef/ESTIMATOR_NOTE.md ('4 window control'); its 2024+ holdout (pre-clean-slate:results/cef/HOLDOUT_OPENED.json) adjudicated z_window=63"
+  },
+  "CEF-48": {
+   "trial": "no-trade band 4.8% replaces the 2-day calendar (spec v6), 17 names",
+   "status": "NOT REBUILT",
+   "reason": "its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (5,452 sessions to 2026-09-03); the prereg commits no fit-only Sharpe for this book",
+   "script": "scripts/cef/band_frontier.py",
+   "source": "results/cef/PREREG_BAND_2026-09-06.md ('Trial 48'); results/cef/FRONTIER_REPRO_2026-10-07.md \u00a7A"
+  },
+  "CEF-49": {
+   "trial": "universe 17 -> 13 (NAD, NEA, NVG, NZF unshortable at Alpaca), band 4.8%",
+   "status": "NOT REBUILT",
+   "reason": "its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (traded era 2013-06-14 .. 2026-09-21); no fit-only Sharpe is committed for the uncapped 13-name book (only its w5, checked as report-only)",
+   "script": "scripts/cef/alpaca_v7_derivation.py",
+   "source": "results/cef/PREREG_ALPACA_V7_2026-09-28.md (trial 1 of 2)"
+  },
+  "CEF-50": {
+   "trial": "max_gross_stress 1.80 on the 13-name band (v7-on-Alpaca)",
+   "status": "NOT REBUILT",
+   "reason": "its committed headline spans the sealed 2023 time holdout, so reproducing it would open the holdout (traded era 2013-06-14 .. 2026-09-21); its fit-period era rows are checked as report-only, a ruling would be needed to store on them",
+   "script": "scripts/cef/alpaca_v7_derivation.py",
+   "source": "results/cef/PREREG_ALPACA_V7_2026-09-28.md (trial 2 of 2)"
+  },
+  "CEF-51": {
+   "trial": "C5: t+1 opening-auction fill, the gain G on WIDE's holdings path",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/cef/c5_open_auction.py (FitData, gain, stage1) on the frozen copy",
+   "source": "results/cef/C5_RESULT_2026-10-14.md; results/cef/c5/C5_FIT_VERDICT.json",
+   "variant": "c5_G_wide",
+   "check": {
+    "compared": 25,
+    "max_abs_diff": 0.0,
+    "verdict": "KILL D1 (stage 2b: artefact control)",
+    "cached_series": "identical",
+    "window": [
+     "2016-01-04",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 1 NW t, L 21",
+    "lags": 21,
+    "inference_nw_t": 2.815807503670321,
+    "committed_t": 2.815807503670321,
+    "abs_diff": 0.0
+   },
+   "first": "2016-01-04",
+   "last": "2022-12-30",
+   "n": 1762,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2016-01-04",
+    "last": "2022-12-30",
+    "n": 1762,
+    "sr_annual": 1.159214527279765,
+    "skew": 7.7488261460825525,
+    "kurt": 290.42247924298255,
+    "sha256": "7ba68d91241bd0ef2e697d9af2edc78a98f2cbaf675ff0926b0e0a20164e5222"
+   }
+  },
+  "CEF-52": {
+   "trial": "C4: the live z pooled over five CEF families, 74 frozen funds (declared book)",
+   "status": "STORED",
+   "reason": "",
+   "script": "scripts/cef/c4_families.py (build_book, run_book) on panels cut at 2022-12-30",
+   "source": "results/cef/C4_RESULT_2026-10-14.md; results/cef/c4/c4_fit_verdict_2026-10-14.json",
+   "variant": "c4_74_declared",
+   "check": {
+    "compared": 72,
+    "max_abs_diff": 0.0,
+    "verdict": "FIT PASS (stages 1-6); the holdout sign rule decides",
+    "cached_series": "identical",
+    "span": [
+     "2005-02-22",
+     "2022-12-30"
+    ]
+   },
+   "second_method": {
+    "what": "stage 1 NW t, L 21",
+    "lags": 21,
+    "inference_nw_t": 5.317282347668806,
+    "committed_t": 5.317282347668806,
+    "abs_diff": 0.0
+   },
+   "first": "2005-02-22",
+   "last": "2022-12-30",
+   "n": 4497,
+   "ledger": {
+    "commit": "0eaedfae77bc9aea0c2d0e6083afb416c71d15e3",
+    "dirty": false,
+    "first": "2005-02-22",
+    "last": "2022-12-30",
+    "n": 4497,
+    "sr_annual": 1.2169578343771223,
+    "skew": 0.3193644882089216,
+    "kurt": 5.76625629070352,
+    "sha256": "d227e61946818101bcd00ba04cc39c1205af86b19d1e4e61ee7d77851012f878"
+   }
+  }
+ },
+ "cef_48_50_fit_check": {
+  "report_only": true,
+  "panels_cut_on_read": {
+   "cef_prices": {
+    "rows": 226191,
+    "last": "2022-12-30"
+   },
+   "cef_nav": {
+    "rows": 193375,
+    "last": "2022-12-30"
+   },
+   "cef_distributions": {
+    "rows": 9937,
+    "last": "2022-12-28"
+   },
+   "cef_splits": {
+    "rows": 0,
+    "last": null
+   }
+  },
+  "v6_universe": [
+   "AWF",
+   "BIT",
+   "DSL",
+   "HYT",
+   "JFR",
+   "MHD",
+   "MQY",
+   "NAD",
+   "NEA",
+   "NVG",
+   "NZF",
+   "PCN",
+   "PDI",
+   "PDO",
+   "PFN",
+   "PHK",
+   "PTY"
+  ],
+  "figures": [
+   {
+    "figure": "k17",
+    "committed": 0.304953,
+    "rebuilt": 0.304953,
+    "match": true
+   },
+   {
+    "figure": "w5_17",
+    "committed": 0.038264817497540925,
+    "rebuilt": 0.038264817497540925,
+    "match": true
+   },
+   {
+    "figure": "w5_17_end",
+    "committed": "2020-03-18",
+    "rebuilt": "2020-03-18",
+    "match": true
+   },
+   {
+    "figure": "k13",
+    "committed": 0.0,
+    "rebuilt": 0.0,
+    "match": true
+   },
+   {
+    "figure": "w5_13",
+    "committed": 0.0425814,
+    "rebuilt": 0.0425814,
+    "match": true
+   },
+   {
+    "figure": "w5_13_end",
+    "committed": "2020-03-18",
+    "rebuilt": "2020-03-18",
+    "match": true
+   },
+   {
+    "figure": "muni13_target_share",
+    "committed": 0.074,
+    "rebuilt": 0.074,
+    "match": true
+   },
+   {
+    "figure": "eras.v6 band, 17 names.2010-14[0]",
+    "committed": 0.86,
+    "rebuilt": 0.86,
+    "match": true
+   },
+   {
+    "figure": "eras.v6 band, 17 names.2010-14[1]",
+    "committed": 2.7,
+    "rebuilt": 2.7,
+    "match": true
+   },
+   {
+    "figure": "eras.v6 band, 17 names.2015-19[0]",
+    "committed": 1.48,
+    "rebuilt": 1.48,
+    "match": true
+   },
+   {
+    "figure": "eras.v6 band, 17 names.2015-19[1]",
+    "committed": 9.9,
+    "rebuilt": 9.9,
+    "match": true
+   },
+   {
+    "figure": "eras.v6 band, 17 names.2020-22[0]",
+    "committed": 2.17,
+    "rebuilt": 2.17,
+    "match": true
+   },
+   {
+    "figure": "eras.v6 band, 17 names.2020-22[1]",
+    "committed": 16.0,
+    "rebuilt": 16.0,
+    "match": true
+   },
+   {
+    "figure": "eras.v7-on-Alpaca.2010-14[0]",
+    "committed": 0.72,
+    "rebuilt": 0.72,
+    "match": true
+   },
+   {
+    "figure": "eras.v7-on-Alpaca.2010-14[1]",
+    "committed": 2.2,
+    "rebuilt": 2.2,
+    "match": true
+   },
+   {
+    "figure": "eras.v7-on-Alpaca.2015-19[0]",
+    "committed": 0.82,
+    "rebuilt": 0.82,
+    "match": true
+   },
+   {
+    "figure": "eras.v7-on-Alpaca.2015-19[1]",
+    "committed": 5.6,
+    "rebuilt": 5.6,
+    "match": true
+   },
+   {
+    "figure": "eras.v7-on-Alpaca.2020-22[0]",
+    "committed": 1.06,
+    "rebuilt": 1.06,
+    "match": true
+   },
+   {
+    "figure": "eras.v7-on-Alpaca.2020-22[1]",
+    "committed": 6.7,
+    "rebuilt": 6.7,
+    "match": true
+   }
+  ],
+  "all_match": true,
+  "reading": "every committed pre-2023 figure of the v7 note reproduces on panels cut at 2022-12-30"
+ }
+}

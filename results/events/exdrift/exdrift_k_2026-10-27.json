@@ -1,0 +1,19 @@
+{
+ "active_sessions": 1351,
+ "cap": 1.8,
+ "cap_binding_rows": 0,
+ "cap_binding_share": 0.0,
+ "decision_rows_with_a_position": 1351,
+ "events": 3000,
+ "excluded_rule2": 9,
+ "first_active": "2005-01-13",
+ "fit": "2005-01-01..2022-12-30",
+ "k": 0.16482568436435574,
+ "last_active": "2022-12-20",
+ "note": "fit P&L dispersion only; no mean, Sharpe or t was formed (team lead's go, 2026-10-28, R9)",
+ "run_utc": "2026-10-28T16:08:11+00:00",
+ "sigma_active_annual": 0.3640209366118382,
+ "spec": "cef_discount.v7.20260928",
+ "stamp": "2026-10-27",
+ "vol_target": 0.06
+}

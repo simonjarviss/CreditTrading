@@ -1,0 +1,18 @@
+{
+  "episode_cik": 806628,
+  "episode_accession": "0001193125-20-316008",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Duff & Phelps Utility and Corporate Bond Trust Inc.", "cik": 894239, "ticker": null},
+      "acquirer": {"name": "DNP Select Income Fund Inc.", "cik": 806628, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-021815", "date": "2021-01-29", "quote": "DNP Select Income Fund Inc. (“DNP”), a closed-end fund advised by Duff & Phelps Investment Management Co., posted a set of frequently asked questions and answers on its website, www.dpimc.com/dnp, responding to shareholder inquiries received by DNP in connection with DNP’s proposed merger with Duff & Phelps Utility and Corporate Bond Trust Inc. (“DUC”)."},
+      "outcome_evidence": null,
+      "notes": "The N-14 filed 2020-12-11 (0001193125-20-316008) is the earliest filing describing the merger, but its excerpts do not state the merger as announced in a single quotable sentence beyond the merger agreement description; the 425 is the earliest excerpted filing with an explicit announcement sentence. The excerpts show DUC shares would be delisted from the NYSE but do not state that DNP is exchange-listed. No filing in the excerpts states how the merger ended."
+    }
+  ],
+  "problems": "No outcome stated in the excerpts. Later filings (2021-12-30 and 2022-01-19 proxy statements) are annual meeting proxies that do not mention the DUC merger in the excerpts."
+}

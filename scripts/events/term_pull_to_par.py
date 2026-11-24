@@ -1,6 +1,6 @@
 """Term-CEF pull-to-par, terminations before 2023: the repo re-run of SCALING §7.1 row 7.
 
-    python3 scripts/events/term_pull_to_par.py     # writes results/events/term_*.csv|json
+    python3 scripts/events/term_pull_to_par.py     # writes results/events/term_cef/term_*.csv|json
 
 ZERO TRIALS. DESCRIPTIVE ONLY. It re-measures what an agent printed on
 2026-10-09 from scratch code that was then deleted (`measure.py`,
@@ -86,6 +86,7 @@ if str(REPO) not in sys.path:  # run as a script, not -m
 from scripts.events import crsp_events as ce  # noqa: E402
 
 OUT = REPO / "results" / "events"
+TERM_CEF_DIR = OUT / "term_cef"        # the term-CEF outputs: the notes sit in OUT, their data here
 H = (24, 12, 6, 3, 1)
 TARGET_PAR = 9.85  # the stated target of the loan/HY target-term funds in question [S, 2026-10-09 report]
 
@@ -302,7 +303,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--refresh", action="store_true")
     args = ap.parse_args(argv)
-    OUT.mkdir(parents=True, exist_ok=True)
+    TERM_CEF_DIR.mkdir(parents=True, exist_ok=True)
     nm, dl = ce.names(args.refresh), ce.delistings(args.refresh)
     # every permno that ever carried a peer ticker as a CEF; peer_perm picks the one covering the window
     cef = nm[nm["shrcd"].isin(ce.CEF_SHRCD)]
@@ -327,7 +328,7 @@ def main(argv=None) -> int:
     bad = (fund_perms | used_peers) & up
     if bad:
         raise AssertionError(f"holdout leak: permnos {sorted(bad)} are cef_universe.csv funds")
-    m.to_csv(OUT / "term_pull_to_par_measure.csv", index=False, float_format="%.8g")
+    m.to_csv(TERM_CEF_DIR / "term_pull_to_par_measure.csv", index=False, float_format="%.8g")
 
     modern = m[m["cohort"] == "modern"]
     first = modern.drop_duplicates("fund")
@@ -360,13 +361,13 @@ def main(argv=None) -> int:
         runs.append(("beta_adj_orig_rf_panel_and_zero_fill", pr_, True))
     for key, rfs, zf in runs:
         ba, info = beta_adjusted(panel, rfs, zero_fill_empty=zf)
-        ba.to_csv(OUT / f"term_{key}.csv", index=False, float_format="%.8g")
+        ba.to_csv(TERM_CEF_DIR / f"term_{key}.csv", index=False, float_format="%.8g")
         res[key] = {"info": info}
         for coh in ("modern", "old"):
             for h in (24, 12):
                 x = ba[(ba["cohort"] == coh) & (ba["h"] == h)]
                 res[key][f"{coh}_h{h}"] = {"alpha_ann_pct": q(x["alpha_ann"]), "beta_median": round(x["beta"].median(), 3)}
-    (OUT / "term_pull_to_par_summary.json").write_text(json.dumps(res, indent=1, default=str))
+    (TERM_CEF_DIR / "term_pull_to_par_summary.json").write_text(json.dumps(res, indent=1, default=str))
     print(json.dumps(res, indent=1, default=str))
     return 0
 

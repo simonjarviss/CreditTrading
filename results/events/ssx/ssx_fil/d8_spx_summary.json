@@ -1,0 +1,72 @@
+{
+ "sp400": {
+  "rows_now": 400,
+  "rows_with_open_thru": 400,
+  "added_by_year_current_members": {
+   "2008": 10,
+   "2009": 10,
+   "2010": 8,
+   "2011": 3,
+   "2012": 4,
+   "2013": 9,
+   "2014": 7,
+   "2015": 10,
+   "2016": 21,
+   "2017": 13,
+   "2018": 16,
+   "2019": 28,
+   "2020": 21,
+   "2021": 26,
+   "2022": 30,
+   "2023": 48,
+   "2024": 35,
+   "2025": 32,
+   "2026": 22
+  },
+  "additions_2015_22_current_members_with_data": 158,
+  "passive_share_input": 0.147,
+  "pre_event_adv_median_usd": 41684056.0,
+  "share_adv_ge_1m": 1.0,
+  "mcap_median_usd": 4351731925.0,
+  "demand_days_adv_median": 15.13,
+  "demand_days_adv_p25_p75": [
+   10.42,
+   24.26
+  ]
+ },
+ "sp600": {
+  "rows_now": 602,
+  "rows_with_open_thru": 602,
+  "added_by_year_current_members": {
+   "2008": 9,
+   "2009": 13,
+   "2010": 10,
+   "2011": 9,
+   "2012": 7,
+   "2013": 6,
+   "2014": 8,
+   "2015": 23,
+   "2016": 17,
+   "2017": 18,
+   "2018": 21,
+   "2019": 28,
+   "2020": 33,
+   "2021": 33,
+   "2022": 31,
+   "2023": 80,
+   "2024": 60,
+   "2025": 63,
+   "2026": 55
+  },
+  "additions_2015_22_current_members_with_data": 196,
+  "passive_share_input": 0.0885,
+  "pre_event_adv_median_usd": 11163503.5,
+  "share_adv_ge_1m": 0.9949,
+  "mcap_median_usd": 1240220435.0,
+  "demand_days_adv_median": 9.7,
+  "demand_days_adv_p25_p75": [
+   5.98,
+   17.49
+  ]
+ }
+}

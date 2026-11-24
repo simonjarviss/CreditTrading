@@ -1,0 +1,483 @@
+{
+ "alpaca": {
+  "read_utc": "2026-10-20T20:19:40+00:00",
+  "source": "GET /v2/assets/{symbol}, cef paper key",
+  "symbols": {
+   "ACWI": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "AGG": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "AMLP": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "BBJP": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "BKLN": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "BND": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "CWB": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "EEM": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "EMB": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "EPI": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "EWJ": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "EWT": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "EWY": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "EZU": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "FLKR": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "FLLA": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "FLTW": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "FXI": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "HYD": {
+    "easy_to_borrow": false,
+    "found": true,
+    "shortable": false
+   },
+   "HYG": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "IBB": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "ICVT": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "IEF": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "IEMG": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "IEUR": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "ILF": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "INDA": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "IVV": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "IYR": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "JNK": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "MCHI": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "MLPA": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "MUB": {
+    "easy_to_borrow": false,
+    "found": true,
+    "shortable": false
+   },
+   "PCY": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "PFF": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "PGX": {
+    "easy_to_borrow": false,
+    "found": true,
+    "shortable": false
+   },
+   "SPY": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "SRLN": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "SUB": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "TFI": {
+    "easy_to_borrow": false,
+    "found": true,
+    "shortable": false
+   },
+   "USHY": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "VGK": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "VNQ": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "VOO": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "VPU": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "VT": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "VTEB": {
+    "easy_to_borrow": false,
+    "found": true,
+    "shortable": false
+   },
+   "VWO": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "VWOB": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "XLRE": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "XLU": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   },
+   "XLV": {
+    "easy_to_borrow": true,
+    "found": true,
+    "shortable": true
+   }
+  }
+ },
+ "ibkr": {
+  "date": "2026-10-20",
+  "source": "https://www.interactivebrokers.com/shortstock/usa.txt",
+  "stamp": "2026-10-20 16:10:37",
+  "symbols": {
+   "ACWI": {
+    "available": 1500000.0,
+    "fee_rate_pct": 0.3972
+   },
+   "AGG": {
+    "available": 3500000.0,
+    "fee_rate_pct": 0.4135
+   },
+   "AMLP": {
+    "available": 400000.0,
+    "fee_rate_pct": 0.8621
+   },
+   "BBJP": {
+    "available": 60000.0,
+    "fee_rate_pct": 0.633
+   },
+   "BKLN": {
+    "available": 1500000.0,
+    "fee_rate_pct": 0.9227
+   },
+   "BND": {
+    "available": 5400000.0,
+    "fee_rate_pct": 0.2782
+   },
+   "CWB": {
+    "available": 90000.0,
+    "fee_rate_pct": 0.735
+   },
+   "EEM": {
+    "available": 4300000.0,
+    "fee_rate_pct": 0.4297
+   },
+   "EMB": {
+    "available": 650000.0,
+    "fee_rate_pct": 1.546
+   },
+   "EPI": {
+    "available": 750000.0,
+    "fee_rate_pct": 0.7244
+   },
+   "EWJ": {
+    "available": 800000.0,
+    "fee_rate_pct": 0.6121
+   },
+   "EWT": {
+    "available": 1200000.0,
+    "fee_rate_pct": 0.2758
+   },
+   "EWY": {
+    "available": 4400000.0,
+    "fee_rate_pct": 0.4738
+   },
+   "EZU": {
+    "available": 150000.0,
+    "fee_rate_pct": 0.25
+   },
+   "FLKR": {
+    "available": 750000.0,
+    "fee_rate_pct": 0.5603
+   },
+   "FLLA": {
+    "available": 100000.0,
+    "fee_rate_pct": 1.6314
+   },
+   "FLTW": {
+    "available": 1300000.0,
+    "fee_rate_pct": 1.8148
+   },
+   "FXI": {
+    "available": 1500000.0,
+    "fee_rate_pct": 0.8728
+   },
+   "HYD": {
+    "available": 400000.0,
+    "fee_rate_pct": 13.316
+   },
+   "HYG": {
+    "available": 4100000.0,
+    "fee_rate_pct": 0.6895
+   },
+   "IBB": {
+    "available": 200000.0,
+    "fee_rate_pct": 1.4178
+   },
+   "ICVT": {
+    "available": 200000.0,
+    "fee_rate_pct": 1.6787
+   },
+   "IEF": {
+    "available": 2400000.0,
+    "fee_rate_pct": 0.2711
+   },
+   "IEMG": {
+    "available": 10000000.0,
+    "fee_rate_pct": 0.2784
+   },
+   "IEUR": {
+    "available": 200000.0,
+    "fee_rate_pct": 1.1011
+   },
+   "ILF": {
+    "available": 4500000.0,
+    "fee_rate_pct": 0.5489
+   },
+   "INDA": {
+    "available": 500000.0,
+    "fee_rate_pct": 0.6878
+   },
+   "IVV": {
+    "available": 9700000.0,
+    "fee_rate_pct": 0.25
+   },
+   "IYR": {
+    "available": 300000.0,
+    "fee_rate_pct": 1.0901
+   },
+   "JNK": {
+    "available": 5600000.0,
+    "fee_rate_pct": 0.5839
+   },
+   "MCHI": {
+    "available": 900000.0,
+    "fee_rate_pct": 2.183
+   },
+   "MLPA": {
+    "available": 600000.0,
+    "fee_rate_pct": 0.5685
+   },
+   "MUB": {
+    "available": 90000.0,
+    "fee_rate_pct": 10.2914
+   },
+   "PCY": {
+    "available": 150000.0,
+    "fee_rate_pct": 1.1479
+   },
+   "PFF": {
+    "available": 600000.0,
+    "fee_rate_pct": 1.8614
+   },
+   "PGX": {
+    "available": 1200000.0,
+    "fee_rate_pct": 1.0892
+   },
+   "SPY": {
+    "available": 5800000.0,
+    "fee_rate_pct": 0.2509
+   },
+   "SRLN": {
+    "available": 400000.0,
+    "fee_rate_pct": 0.581
+   },
+   "SUB": {
+    "available": 450000.0,
+    "fee_rate_pct": 5.0766
+   },
+   "TFI": {
+    "available": 400000.0,
+    "fee_rate_pct": 8.6676
+   },
+   "USHY": {
+    "available": 8900000.0,
+    "fee_rate_pct": 0.4171
+   },
+   "VGK": {
+    "available": 650000.0,
+    "fee_rate_pct": 0.5135
+   },
+   "VNQ": {
+    "available": 2500000.0,
+    "fee_rate_pct": 0.4947
+   },
+   "VOO": {
+    "available": 10000000.0,
+    "fee_rate_pct": 0.25
+   },
+   "VPU": {
+    "available": 150000.0,
+    "fee_rate_pct": 0.7018
+   },
+   "VT": {
+    "available": 9100000.0,
+    "fee_rate_pct": 0.4422
+   },
+   "VTEB": {
+    "available": 2100000.0,
+    "fee_rate_pct": 2.9203
+   },
+   "VWO": {
+    "available": 10000000.0,
+    "fee_rate_pct": 0.4135
+   },
+   "VWOB": {
+    "available": 1600000.0,
+    "fee_rate_pct": 0.4135
+   },
+   "XLRE": {
+    "available": 1300000.0,
+    "fee_rate_pct": 0.4292
+   },
+   "XLU": {
+    "available": 9200000.0,
+    "fee_rate_pct": 0.2571
+   },
+   "XLV": {
+    "available": 1700000.0,
+    "fee_rate_pct": 0.5442
+   }
+  }
+ }
+}

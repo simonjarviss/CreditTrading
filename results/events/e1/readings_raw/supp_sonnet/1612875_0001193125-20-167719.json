@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1612875,
+  "episode_accession": "0001193125-20-167719",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Goldman Sachs MLP Income Opportunities Fund", "cik": null, "ticker": "GMZ"},
+      "acquirer": {"name": "Goldman Sachs MLP and Energy Renaissance Fund", "cik": 1612875, "ticker": "GER"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-167719", "date": "2020-06-12", "quote": "On behalf of the Board of Trustees of each of Goldman Sachs MLP and Energy Renaissance Fund (“GER”) and Goldman Sachs MLP Income Opportunities Fund (“GMZ”) (together, the “Board”), each a Delaware statutory trust (each a “Fund” and together, the “Funds”), we are pleased to invite you to a joint special meeting of shareholders"},
+      "outcome_evidence": null,
+      "notes": "Filings in the window are the N-14 and its amendment, then proxy statements for GER's own later meetings (trustee elections, 2021-2022); none of the excerpts states how the GMZ merger ended. The N-14/A of 2020-07-28 registers shares for 'common shares of Goldman Sachs MLP Income Opportunities Fund that may be cancelled in the reorganization and exchanged for common shares of the Registrant'. No exchange is named for either fund in the excerpts and no CIK for GMZ appears in a FILING header."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt; the excerpts shown for the merger filings are mostly risk-factor and plan boilerplate."
+}

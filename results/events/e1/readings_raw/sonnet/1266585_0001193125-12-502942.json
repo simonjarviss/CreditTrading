@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1266585,
+  "episode_accession": "0001193125-12-502942",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Municipal High Income Opportunity Fund 2", "cik": 1412495, "ticker": "NMD"},
+      "acquirer": {"name": "Nuveen Municipal High Income Opportunity Fund", "cik": 1266585, "ticker": "NMZ"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-502928", "date": "2012-12-14", "quote": "Nuveen Closed-End Funds’ Board Approves Fund Merger"},
+      "outcome_evidence": null,
+      "notes": "Acquirer/target roles come from the 425 headers (filed by NMZ, subject company NMD); the excerpts do not state them in words. NMZ is shown as 'NYSE MKT: NMZ' but no excerpt gives an exchange for NMD. The May 2013 425s only say the annual meeting was adjourned to June 21, 2013 for lack of votes; no filing excerpt states the outcome. The 2014 filings in the window concern other Nuveen funds' advisory agreements and a different proposal."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt. Roles inferred from filing headers."
+}

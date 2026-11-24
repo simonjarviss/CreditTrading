@@ -365,7 +365,7 @@ its next step is a pre-registered CEF trial.
   section reads X3's fit at run time. Alpha of 5.33%/yr, divided by turnover of
   58.3 × (1 + 0.34), gives a **breakeven of about 6.8bp per unit turnover**,
   or 9.2bp unhedged [V; arithmetic on
-  `results/xasset/x3_fit_2026-10-14.json`].
+  `results/xasset/trials/x3_fit_2026-10-14.json`].
   - **It ends the discussion if** the measured LQD plus IEF closing cost per unit
     turnover is at or above that breakeven. Measure it from Alpaca closing prints
     and quotes; do not take it from this note (H14).

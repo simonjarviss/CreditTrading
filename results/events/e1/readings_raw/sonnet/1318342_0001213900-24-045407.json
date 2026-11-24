@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1318342,
+  "episode_accession": "0001213900-24-045407",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "KL Allocation Fund (a series of Investment Managers Series Trust)", "cik": 1318342, "ticker": null},
+      "acquirer": {"name": "AXS Astoria Inflation Sensitive ETF (a series of Investment Managers Series Trust II)", "cik": 1587982, "ticker": "PPI"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-24-045407", "quote": "the Fund would be reorganized into the AXS Astoria Inflation Sensitive ETF (ticker: PPI), a series of Investment Managers Series Trust II"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-24-045407", "date": "2024-05-21", "quote": "This Special Meeting had been called to ask the shareholders to approve a proposed reorganization of the Fund (the “Proposal”). If approved by shareholders, the Fund would be reorganized into the AXS Astoria Inflation Sensitive ETF (ticker: PPI), a series of Investment Managers Series Trust II (the “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Target is a series of an open-end trust (a mutual fund series; the acquirer is an ETF). The 425 shows the meeting, originally set for April 11, 2024, adjourned a third time to May 31, 2024 for insufficient shareholder participation; no later filing in the window states the result. Acquirer CIK 1587982 is the 425 filer (Investment Managers Series Trust II); the ETF series itself has no CIK in the header. Target CIK 1318342 is the trust named as subject company."
+    },
+    {
+      "target": {"name": "Palmer Square Income Plus Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001213900-25-099792", "date": "2025-10-17", "quote": "the Special Meeting of Shareholders for the Palmer Square Income Plus Fund and Palmer Square Ultra - Short Duration Investment Grade Fund has been adjourned to October 31, 2025, as we continue to seek shareholder approval on this important reorganization proposal."},
+      "outcome_evidence": null,
+      "notes": "Only a short excerpt of a proxy reminder is shown; the acquiring fund is not named, listing status is not stated, and the meeting was adjourned to October 31, 2025 with no result shown."
+    },
+    {
+      "target": {"name": "Palmer Square Ultra - Short Duration Investment Grade Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001213900-25-099792", "date": "2025-10-17", "quote": "the Special Meeting of Shareholders for the Palmer Square Income Plus Fund and Palmer Square Ultra - Short Duration Investment Grade Fund has been adjourned to October 31, 2025, as we continue to seek shareholder approval on this important reorganization proposal."},
+      "outcome_evidence": null,
+      "notes": "Same as the Palmer Square Income Plus Fund entry."
+    }
+  ],
+  "problems": "Other filings in the window concern an advisory agreement for Bahl & Gaynor Income Growth Fund (seq 1-4), a WCM Focused Global Growth Fund notice (seq 6, nature of the matter not stated) and a trustee election (seq 7-9); none describes a merger. The Palmer Square entries come from a single short excerpt (seq 10)."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1655099,
+  "episode_accession": "0001193125-19-282083",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Brookfield Global Listed Infrastructure Income Fund Inc.", "cik": null, "ticker": "INF"},
+      "acquirer": {"name": "Brookfield Real Assets Income Fund Inc.", "cik": 1655099, "ticker": "RA"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001104659-20-008749", "quote": "stockholders of Brookfield Real Assets Income Fund Inc. (NYSE: RA) approved the proposal to issue additional shares of common stock to effect the proposed reorganization of Brookfield Global Listed Infrastructure Income Fund Inc. (NYSE: INF) into RA"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-19-282083", "date": "2019-11-01", "quote": "A joint special meeting of stockholders (the “Special Meeting”) of Brookfield Global Listed Infrastructure Income Fund, Inc. (“INF”) and"},
+      "outcome_evidence": null,
+      "notes": "425 of 2020-01-30 (0001104659-20-008749): RA stockholders approved the share issuance; the meeting was adjourned to 2020-02-07 for the INF reorganization vote because INF needed an additional 3.2% of its outstanding shares. No excerpted filing states how it ended. Later DEF 14A and DEFA14A excerpts (2020-04 to 2021-04) show only annual-meeting or sub-advisory items."
+    }
+  ],
+  "problems": "The INF CIK does not appear in any FILING header, so it is null. The announcement quote is cut at the end of the excerpt."
+}

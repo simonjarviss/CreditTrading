@@ -1,0 +1,48 @@
+{
+ "episode_cik": 722574,
+ "episode_accession": "0000722574-12-000167",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {"name": "Fidelity Advisor Stock Selector All Cap Fund", "cik": null, "ticker": null},
+   "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+   "both_listed": false,
+   "listed_quote": {"accession": "0000722574-12-000167", "quote": "will be bought at the offering price or NAV, as applicable, next calculated after the order is received by the authorized intermediary."},
+   "outcome": "not_a_listed_pair",
+   "announcement": {"accession": "0000722574-12-000167", "date": "2012-04-27", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity Advisor Stock Selector All Cap Fund to Fidelity Stock Selector All Cap Fund in exchange solely for shares of beneficial interest of Fidelity Stock Selector All Cap Fund"},
+   "outcome_evidence": {"accession": "0000722574-12-000167", "date": "2012-04-27", "quote": "will be bought at the offering price or NAV, as applicable, next calculated after the order is received by the authorized intermediary."},
+   "notes": "Series of an open-end Fidelity trust (continuous purchases at NAV, share classes, no exchange listing stated); openness inferred from that, never stated outright. Fund-level CIKs not in headers (only trust CIKs), so null. Completion not stated in the excerpts."
+  },
+  {
+   "target": {"name": "Fidelity Advisor Growth Strategies Fund", "cik": null, "ticker": null},
+   "acquirer": {"name": "Fidelity Advisor Stock Selector Mid Cap Fund", "cik": null, "ticker": null},
+   "both_listed": false,
+   "listed_quote": {"accession": "0000719451-12-000207", "quote": "The fund may waive or lower purchase minimums in other circumstances."},
+   "outcome": "not_a_listed_pair",
+   "announcement": {"accession": "0000719451-12-000207", "date": "2012-08-09", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Advisor Growth Strategies to Fidelity Advisor Stock Selector Mid Cap Fund in exchange solely for shares of beneficial interest of Fidelity Advisor Stock Selector Mid Cap Fund"},
+   "outcome_evidence": {"accession": "0000719451-12-000207", "date": "2012-08-09", "quote": "The fund may waive or lower purchase minimums in other circumstances."},
+   "notes": "Open-end fund series with purchase minimums and share classes; no exchange listing shown. The same notice also covers a Fidelity Mid Cap Growth Fund meeting (Devonshire Trust). Outcome not stated in the excerpts."
+  },
+  {
+   "target": {"name": "Fidelity Advisor Mid Cap Growth Fund", "cik": null, "ticker": null},
+   "acquirer": {"name": "Fidelity Advisor Stock Selector Mid Cap Fund", "cik": null, "ticker": null},
+   "both_listed": false,
+   "listed_quote": {"accession": "0000719451-12-000207", "quote": "The fund may waive or lower purchase minimums in other circumstances."},
+   "outcome": "not_a_listed_pair",
+   "announcement": {"accession": "0000722574-12-000325", "date": "2012-09-19", "quote": "The purpose of the meeting is to provide you with the opportunity to vote on an important proposal to reorganize Fidelity Advisor Mid Cap Growth Fund into Fidelity Advisor Stock Selector Mid Cap Fund."},
+   "outcome_evidence": {"accession": "0000722574-12-000325", "date": "2012-09-19", "quote": "The purpose of the meeting is to provide you with the opportunity to vote on an important proposal to reorganize Fidelity Advisor Mid Cap Growth Fund into Fidelity Advisor Stock Selector Mid Cap Fund."},
+   "notes": "Open-end status inferred, not stated outright. Later DEFA14As (2012-10-18 to 2012-11-16) are reminders for the 2012-11-13 meeting; the compact excerpts show no result. Quote for listed_quote comes from the seq=2 prospectus text, which covers the acquirer, not this target."
+  },
+  {
+   "target": {"name": "Fidelity 130/30 Large Cap Fund", "cik": null, "ticker": null},
+   "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+   "both_listed": false,
+   "listed_quote": {"accession": "0000275309-13-000008", "quote": "The fund may stop offering shares completely or may offer shares only on a limited basis, for a period of time or permanently."},
+   "outcome": "not_a_listed_pair",
+   "announcement": {"accession": "0000275309-13-000008", "date": "2013-02-01", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of 130/30 Large Cap to Fidelity Stock Selector All Cap Fund in exchange solely for shares of beneficial interest of Fidelity Stock Selector All Cap Fund"},
+   "outcome_evidence": {"accession": "0000275309-13-000008", "date": "2013-02-01", "quote": "The fund may stop offering shares completely or may offer shares only on a limited basis, for a period of time or permanently."},
+   "notes": "Open-end status inferred from continuous offering language. The same filing also covers Advisor Strategic Growth, Large Cap Growth and Tax Managed Stock series, whose acquirers are not visible in the excerpt, so no deals are recorded for them."
+  }
+ ],
+ "problems": "All mutual funds (open-end series), so no listed pair; open-end status is inferred from offering language, not stated outright. The seq=4 Fidelity Mid Cap Growth Fund (Devonshire Trust) reorganization is not recorded as a deal because the excerpt does not name the acquirer. No outcome is stated anywhere in the excerpts."
+}

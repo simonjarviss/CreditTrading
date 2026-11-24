@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1691570,
+  "episode_accession": "0000894189-24-003639",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "PREDEX", "cik": null, "ticker": null},
+      "acquirer": {"name": "USQ Core Real Estate Fund", "cik": 1691570, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-24-003639", "quote": "Neither Fund's shares are traded on a national securities exchange and no secondary market exists for the shares,"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-24-003639", "date": "2024-06-17", "quote": "The Board of Trustees of the Acquired Fund has approved the reorganization of the Acquired Fund with and into USQ Core Real Estate Fund (the \"Acquiring Fund\" and, together with the Acquired Fund, the \"Funds\")."},
+      "outcome_evidence": {"accession": "0000894189-24-003639", "date": "2024-06-17", "quote": "Neither Fund's shares are traded on a national securities exchange and no secondary market exists for the shares,"},
+      "notes": "Both funds are interval funds, unlisted. Outcome of the reorganization is not stated in the excerpts."
+    }
+  ],
+  "problems": ""
+}

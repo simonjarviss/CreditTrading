@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1280226,
+  "episode_accession": "0000891804-11-005022",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "TS&W / Claymore Tax-Advantaged Balanced Fund", "cik": 1280226, "ticker": "TYW"},
+      "acquirer": {"name": "Rydex | SGI Municipal Income Fund, a series of Security Income Fund", "cik": 88498, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000891804-11-005401", "quote": "have approved a reorganization into an open-end fund, Rydex | SGI Municipal Income Fund (the “Rydex | SGI Fund”), a series of Security Income Fund."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000891804-11-005022", "date": "2011-11-09", "quote": "We have been trying to get in touch with you regarding a very important matter pertaining to your investment in the TS&W / Claymore Tax-Advantaged Balanced Fund. This matter pertains to a proposed Agreement and Plan of Reorganization."},
+      "outcome_evidence": {"accession": "0000891804-11-005401", "date": "2011-12-01", "quote": "have approved a reorganization into an open-end fund, Rydex | SGI Municipal Income Fund (the “Rydex | SGI Fund”), a series of Security Income Fund."},
+      "notes": "Closed-end TYW (NYSE) reorganized into an open-end fund; shareholders approved November 23, 2011; N-8F (Merger) filed 2012-01-30. Acquirer CIK 88498 is Security Income Fund, taken from the FILED BY header."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1336050,
+  "episode_accession": "0001193125-24-266258",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Enhanced Government Fund, Inc.", "cik": 1336050, "ticker": "EGF"},
+      "acquirer": {"name": "BlackRock Income Trust, Inc.", "cik": 832327, "ticker": "BKT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-24-266258", "quote": "BlackRock Enhanced Government Fund, Inc. (NYSE: EGF) and BlackRock Income Trust, Inc. (NYSE: BKT)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-24-266258", "date": "2024-11-27", "quote": "BlackRock Announces Board Approval of Closed-End Fund Reorganization"},
+      "outcome_evidence": {"accession": "0001193125-25-061480", "date": "2025-03-24", "quote": "BlackRock Enhanced Government Fund, Inc. (NYSE: EGF, the “Fund”) has completed its reorganization with and into BlackRock Income Trust, Inc. (NYSE: BKT and together with EGF, the “Funds,” and each, a “Fund”) (the “Reorganization”), effective as of the opening for business of the New York Stock Exchange on Monday, March 24, 2025."},
+      "notes": "Shareholder approval announced 2025-03-18 per a press-release title in the 425 of 2025-03-24. A Saba standstill agreement was filed 2025-01-21."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1655887,
+  "episode_accession": "0001628280-24-030881",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Blue Owl Capital Corporation II", "cik": 1655887, "ticker": null},
+      "acquirer": {"name": "Blue Owl Capital Corporation", "cik": 1655888, "ticker": "OBDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "terminated",
+      "announcement": {"accession": "0001193125-25-267128", "date": "2025-11-05", "quote": "Blue Owl Capital Corporation and Blue Owl Capital Corporation II Announce Merger Agreement"},
+      "outcome_evidence": {"accession": "0001628280-25-053065", "date": "2025-11-19", "quote": "today announced that the previously proposed merger of OBDC and OBDC II has been terminated, with plans to reevaluate alternatives in the future."},
+      "notes": "OBDC is shown as NYSE-listed; the excerpts give no exchange or ticker for OBDC II (a later filing mentions an unsolicited tender offer for OBDC II shares at a discount to NAV, but does not state a listing), so both_listed is null. The termination press release was also filed under Form 425 by OBDC II (accession 0001628280-25-053067, 2025-11-19). The earlier 2024 N-14 filings in the window concern an exchange offer for notes, not a merger. Later filings show no renewed merger proposal."
+    }
+  ],
+  "problems": ""
+}

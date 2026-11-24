@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1347384,
+  "episode_accession": "0001193125-10-199578",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "DCW Total Return Fund", "cik": 1347384, "ticker": null},
+      "acquirer": {"name": "DCA Total Return Fund", "cik": 1310445, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "The 425 (filed by DCA, subject company DCW) is a shareholder letter whose excerpt is cut off before the proposals are listed, so the excerpt does not itself name the merger or the acquirer. DCW's N-8F (2010-12-28) checks 'Merger' as the reason for deregistering and gives board vote June 23, 2010 and shareholder approval September 16, 2010, but names no acquirer, so by the N-8F rule it settles nothing. The DCA-as-acquirer pairing comes only from the 425 header line. Listing status not shown."
+    }
+  ],
+  "problems": "Excerpts do not name the merger partner or state the outcome; the 425 letter is truncated at proposal 2 and the N-8F excerpt is truncated at question 16."
+}

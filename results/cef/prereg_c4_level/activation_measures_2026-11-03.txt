@@ -1,0 +1,15 @@
+CEF trial 54 activation measures (2026-11-11T16:54:04+00:00); code c433265 + uncommitted edits; C4 spec c4_families.v5.20261103 (sha256 65c19a9e498fb917...): m 1.26, cap 1.9, band 0.048, z_share 0.5; fit only, <= 2022-12-30
+  reproduction gate PASS: trial 52's fit gross SR 1.216957834377 (total), 1.359590762777 (price)
+
+§3.3 ON THE SLEEVE'S CONSTRUCTION (account x1.26, cap 1.9, band 0.048; fit sessions with a target):
+   book               target gross P(tgt>cap) uncapped held  P(>cap) held gross P(at cap)  turn/yr
+   z_only_spec_book          1.513      22.4%         2.101    59.0%      1.550     21.5%     48.5
+   blend_spec_book           1.567      26.1%         2.119    60.2%      1.588     24.0%     51.2
+   beside it, the pre-registration's design run (results/cef/screens_2026-11-02/prereg_c4_level_design_output_v4.txt section B [S]): its level book had no ADV floor, a 6-name level floor and a z-only fallback
+   z_only_spec_book (design)        1.513      22.4%         2.101    59.0%      1.550     21.5%     48.5
+   blend_spec_book (design)        2.279      72.0%         2.536    84.6%      1.719     28.3%     32.9
+
+L1 REFERENCE (§6.3): the level-only spec book, w_L with its own scalar, x1.26, band 0.048, cap 1.9/m; CRSP; 120-session cumulative return
+   price_only    2005-02-22..2022-12-30 (4497 sessions): gross SR 0.988, ann +8.61%, vol 8.72%; 120-session 5th pct SB21 -5.87% (median +3.96%); beside it, the empirical 5th pct of 4378 overlapping windows -6.50%
+   total_return  2005-02-22..2022-12-30 (4497 sessions): gross SR 0.883, ann +7.46%, vol 8.45%; 120-session 5th pct SB21 -6.10% (median +3.36%); beside it, the empirical 5th pct of 4378 overlapping windows -6.64%
+   the stop reads the PRICE-ONLY SB21 5th percentile (paper's P&L of record is price only), re-measured on the read date (H14); the total-return and empirical figures are context, not the rule

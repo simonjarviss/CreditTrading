@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1289868,
+  "episode_accession": "0001289868-17-000013",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Madison Strategic Sector Premium Fund", "cik": 1317080, "ticker": "MSP"},
+      "acquirer": {"name": "Madison Covered Call & Equity Strategy Fund", "cik": 1289868, "ticker": "MCN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001289868-18-000015", "quote": "Madison Strategic Sector Premium Fund (NYSE:MSP) and Madison Covered Call & Equity Strategy Fund (NYSE:MCN) today announced that the Boards of Trustees of MSP and MCN (collectively, the “Funds”) approved the merger of MSP with and into MCN (the “Surviving Fund”)"},
+      "outcome": null,
+      "announcement": {"accession": "0001289868-17-000013", "date": "2017-06-01", "quote": "to approve an Agreement and Plan of Reorganization (the “Reorganization”) and the transactions contemplated thereby, including the merger of MSP with and into MCN."},
+      "outcome_evidence": null,
+      "notes": "The same pair was proposed twice: an N-14 of 2017-06-01 (amended 2017-06-29; DEFA14A soliciting material through 2017-08-22) and a second N-14 of 2018-07-09 (amended 2018-08-29) after a 2018-06-29 press release (425 filed 2018-07-02) announcing the Boards 'approved the merger of MSP with and into MCN' plus a Karpus settlement, with a special/annual meeting set for September 28, 2018. The excerpts do not state what happened to the 2017 proposal (no vote result, withdrawal or termination shown) nor the result of the 2018 meeting (the 2018-09-13 and 2018-10-01 DEFA14As are vote reminders only). Outcome left null for both. The excerpt shows the 2018 press release as the first filing naming the listing; the 2017 excerpts show no exchange. MSP's CIK 1317080 is from the 2017 DEFA14A FILER lines."
+    }
+  ],
+  "problems": "No outcome stated for either the 2017 or the 2018 proposal in any excerpt."
+}

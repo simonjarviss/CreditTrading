@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1633336,
+  "episode_accession": "0001193125-22-257466",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "First Eagle Alternative Capital BDC, Inc.", "cik": 1464963, "ticker": "FCRD"},
+      "acquirer": {"name": "Crescent Capital BDC, Inc.", "cik": 1633336, "ticker": "CCAP"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-257293", "quote": "(NASDAQ: CCAP) and First Eagle Alternative Capital BDC, Inc. (“First Eagle BDC”) (NASDAQ: FCRD)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-22-257293", "date": "2022-10-04", "quote": "Crescent Capital BDC, Inc. To Acquire First Eagle Alternative Capital BDC, Inc."},
+      "outcome_evidence": {"accession": "0001193125-23-066479", "date": "2023-03-10", "quote": "Crescent Capital BDC, Inc. Completes Merger with First Eagle Alternative Capital BDC, Inc."},
+      "notes": "Both are business development companies. 8-K of 2023-03-10 (exhibit dated March 9, 2023) says 'announced today the closing of the previously announced merger'; the 2023-05-10 8-K confirms 'On March 9, 2023, the Company completed its previously announced acquisition of First Eagle Alternative Capital BDC, Inc.'"
+    }
+  ],
+  "problems": ""
+}

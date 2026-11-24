@@ -1,0 +1,18 @@
+{
+  "episode_cik": 3906,
+  "episode_accession": "0001104659-09-060229",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Allied Capital Corporation", "cik": 3906, "ticker": "ALD"},
+      "acquirer": {"name": "Ares Capital Corporation", "cik": 1287750, "ticker": "ARCC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001104659-09-060229", "quote": "Ares Capital Corporation (NASDAQ: ARCC) and Allied Capital Corporation (NYSE: ALD) announced today that they have entered into a definitive agreement"},
+      "outcome": null,
+      "announcement": {"accession": "0001104659-09-060229", "date": "2009-10-26", "quote": "Ares Capital Corporation (NASDAQ: ARCC) and Allied Capital Corporation (NYSE: ALD) announced today that they have entered into a definitive agreement under which Ares Capital will acquire Allied Capital in an all stock transaction currently valued at $648 million, or approximately $3.47 per Allied Capital share."},
+      "outcome_evidence": null,
+      "notes": "Prospect Capital made a competing proposal (Jan-Mar 2010) and on 2010-03-05 terminated its solicitation against the Ares deal. Allied stockholders approved the merger on 2010-03-26 (8-K 0001299933-10-001288), but no excerpt states the merger was completed, so outcome is null."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,34 @@
+{
+ "episode_cik": 1472215,
+ "episode_accession": "0001193125-19-062860",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "Nuveen Mortgage Opportunity Term Fund",
+    "cik": 1472215,
+    "ticker": "JLS"
+   },
+   "acquirer": {
+    "name": "Nuveen Mortgage and Income Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": "superseded",
+   "announcement": {
+    "accession": "0001193125-19-062860",
+    "date": "2019-03-05",
+    "quote": "As part of the proposal, shareholders will be asked to vote on a merger of their fund with a new fund, Nuveen Mortgage and Income Fund."
+   },
+   "outcome_evidence": {
+    "accession": "0001193125-19-155544",
+    "date": "2019-05-23",
+    "quote": "these alternate proposals, which replace a previously announced merger proposal , asks shareholders of each fund to vote to"
+   },
+   "notes": "The acquirer was to be a new fund, so its listing is not stated. The same proposal also covered Nuveen Mortgage Opportunity Term Fund 2 (JMT), not recorded here. The replacement proposals (charter amendment ending the term plus a tender offer) were then voted on at meetings adjourned to 2019-08-29; later filings show this CIK renamed Nuveen Mortgage and Income Fund, still ticker JLS, but the excerpts do not state how the tender offer ended."
+  }
+ ],
+ "problems": ""
+}

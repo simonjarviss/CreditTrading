@@ -76,9 +76,9 @@ too.
 ```bash
 export QUANTT_ENV_FILE=".../config/.env"          # R2 and Alpaca keys; never printed
 python3 scripts/events/merger_pairs.py            # -> results/events/merger_*.csv, merger_summary.json
-python3 scripts/events/acquirer_shortability.py   # read-only Alpaca -> alpaca_acquirers_<date>.csv, alpaca_g1a_summary_<date>.json
-python3 scripts/events/term_pull_to_par.py        # -> term_pull_to_par_measure.csv, term_beta_adj*.csv, term_pull_to_par_summary.json
-python3 scripts/events/fetch_term_cef_live.py     # CEFConnect + read-only Alpaca -> term_cef_live_<date>.csv, term_cef_live_summary_<date>.csv
+python3 scripts/events/acquirer_shortability.py   # read-only Alpaca -> g1a/alpaca_acquirers_<date>.csv, g1a/alpaca_g1a_summary_<date>.json
+python3 scripts/events/term_pull_to_par.py        # -> term_cef/term_pull_to_par_measure.csv, term_cef/term_beta_adj*.csv, term_cef/term_pull_to_par_summary.json
+python3 scripts/events/fetch_term_cef_live.py     # CEFConnect + read-only Alpaca -> term_cef/term_cef_live_<date>.csv, term_cef/term_cef_live_summary_<date>.csv
 python3 scripts/data/term_cef_census.py --csv     # -> term_cef_census.csv
 python3 -m pytest scripts/events/tests            # the four method corrections, each checked to fail on the old code
 ```
@@ -89,7 +89,7 @@ gitignored. `--refresh` re-pulls them.
 ## 2. Row 1: the NAV-for-NAV merger pair
 
 Source: `merger_summary.json`, `merger_ann_sample.csv` and
-`alpaca_g1a_summary_2026-10-11.json`. Two exclusions are shown:
+`g1a/alpaca_g1a_summary_2026-10-11.json`. Two exclusions are shown:
 - "ticker" is the original's ticker-only universe exclusion;
 - "permno" also catches a universe fund under an older ticker.
 
@@ -116,8 +116,8 @@ Source: `merger_summary.json`, `merger_ann_sample.csv` and
 
 ## 3. Row 7: term-CEF pull-to-par, and the §7.4 census
 
-Source: `term_pull_to_par_summary.json`, `term_pull_to_par_measure.csv`,
-`term_beta_adj*.csv` and `term_cef_live_summary_2026-10-11.csv`.
+Source: `term_cef/term_pull_to_par_summary.json`, `term_cef/term_pull_to_par_measure.csv`,
+`term_cef/term_beta_adj*.csv` and `term_cef/term_cef_live_summary_2026-10-11.csv`.
 
 | figure (SCALING §7.1 row 7, §7.4) | original | re-run | verdict |
 |---|---|---|---|
@@ -194,7 +194,7 @@ stock and stock-plus-cash mergers; a count, no returns). The gate passes at
   date, and dates exist for only 12 groups until the EDGAR fetcher (0.7) runs.
 - **2023–24 is counted only.** It adds 29 events (20 groups) under tier (b).
 
-**G1a: borrow on acquirers** (`alpaca_g1a_summary_2026-10-11.json`; true on
+**G1a: borrow on acquirers** (`g1a/alpaca_g1a_summary_2026-10-11.json`; true on
 2026-10-11 only). The gate passes if most acquirers are shortable.
 - **Historical acquirers.** 34 of the 61 still active are shortable (56%), but
   only 7 of the 23 munis (30%). Munis are the class where the effect is

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1666384,
+  "episode_accession": "0001666384-23-000030",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "AG Twin Brook BDC, Inc.", "cik": 1666384, "ticker": null},
+      "acquirer": {"name": "AG Twin Brook Capital Income Fund", "cik": null, "ticker": "TCAP"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001666384-23-000025", "quote": "AGTB is an affiliated, privately offered business development company (“BDC”) managed by AG Twin Brook Manager, LLC (“AGTB Adviser”), an affiliate of Angelo, Gordon & Co., L.P. (“Angelo Gordon”). TCAP is a publicly offered, non-exchange traded BDC"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001666384-23-000025", "date": "2023-05-19", "quote": "On May 19, 2023, AG Twin Brook BDC, Inc., a Delaware corporation (“AGTB”), entered into an Agreement and Plan of Merger (“Merger Agreement”) with AG Twin Brook Capital Income Fund, a Delaware statutory trust (“TCAP”). The Merger Agreement provides that, subject to the conditions set forth in the Merger Agreement, at the effective time of the merger (the “Effective Time”), AGTB will merge with and into TCAP, with TCAP continuing as the surviving company (the “Transaction”)."},
+      "outcome_evidence": {"accession": "0001666384-23-000044", "date": "2023-07-28", "quote": "On July 28, 2023, AG Twin Brook Capital Income Fund, a Delaware statutory trust (“TCAP”), completed its previously announced acquisition of AG Twin Brook BDC, Inc., a Delaware corporation (the “Company” and, together with TCAP, the “Parties”), with TCAP continuing as the surviving company (the “Transaction”)."},
+      "notes": "Neither fund is exchange-listed (AGTB privately offered, TCAP non-exchange traded). The merger was completed on 2023-07-28 after AGTB shareholders approved on 2023-07-18 (8-K 0001666384-23-000040). The 2023-05-15 8-K/DEFA14A concern TPG acquiring Angelo Gordon, not this merger."
+    }
+  ],
+  "problems": ""
+}

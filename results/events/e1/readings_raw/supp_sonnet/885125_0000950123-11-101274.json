@@ -1,0 +1,28 @@
+{
+  "episode_cik": 885125,
+  "episode_accession": "0000950123-11-101274",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco Quality Municipal Investment Trust", "cik": 876982, "ticker": null},
+      "acquirer": {"name": "Invesco Quality Municipal Income Trust", "cik": 885125, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101274", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Roles inferred from the filing headers and the proxy registrants: the 2011-12-01 425 is FILED BY Invesco Quality Municipal Income Trust with SUBJECT COMPANY Invesco Quality Municipal Investment Trust, and the 2012 PRE 14A and DEF 14A name Quality Municipal Income Trust, Quality Municipal Investment Trust and Quality Municipal Securities together. The excerpts do not say which fund is the target or acquirer in words, and do not state any outcome. The N-14 excerpts say 'If shareholders of a Fund do not approve a Merger or if a Merger does not otherwise close, the Board will consider what additional action to take', which is generic."
+    },
+    {
+      "target": {"name": "Invesco Quality Municipal Securities", "cik": 898496, "ticker": null},
+      "acquirer": {"name": "Invesco Quality Municipal Income Trust", "cik": 885125, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101274", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Quality Municipal Securities is named as a subject company in the 425 and is a registrant on the 2012 PRE 14A and DEF 14A together with the other two Quality funds. Which fund is the target and which the acquirer is not stated in the excerpts; no outcome is stated."
+    }
+  ],
+  "problems": "The excerpts of this episode are mostly cover pages and generic merger-agreement language; no filing excerpt states that any merger was completed, terminated or failed, and none shows exchange listing of the funds."
+}

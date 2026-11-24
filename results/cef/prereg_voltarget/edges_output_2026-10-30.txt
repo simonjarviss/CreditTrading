@@ -1,0 +1,14 @@
+
+TR: ruled core x1.24 / C4 x1.41; combined vol 5.40% (W1); turnover core 16.6, C4 63.8, combined 40.2/yr
+  fit path                             SR core 0.950 C4 1.451 -> gross  9.04%/yr, Sharpe 1.67; net +7.02 / +3.00 / -3.03 %/yr at 5/15/30bp; breakeven 22.5bp (C4 account 16.7bp)
+  C4 own window                        SR core 0.950 C4 1.200 -> gross  8.11%/yr, Sharpe 1.50; net +6.10 / +2.08 / -3.95 %/yr at 5/15/30bp; breakeven 20.2bp (C4 account 13.8bp)
+  C4 holdout, corrected (the verdict)  SR core 0.950 C4 1.434 -> gross  8.97%/yr, Sharpe 1.66; net +6.96 / +2.94 / -3.09 %/yr at 5/15/30bp; breakeven 22.3bp (C4 account 16.5bp)
+  C4 holdout, as committed             SR core 0.950 C4 0.725 -> gross  6.37%/yr, Sharpe 1.18; net +4.36 / +0.34 / -5.70 %/yr at 5/15/30bp; breakeven 15.8bp (C4 account 8.4bp)
+  half of fit path                     SR core 0.475 C4 0.726 -> gross  4.52%/yr, Sharpe 0.84; net +2.51 / -1.51 / -7.55 %/yr at 5/15/30bp; breakeven 11.2bp (C4 account 8.4bp)
+
+PR: ruled core x1.24 / C4 x1.41; combined vol 5.58% (W1); turnover core 16.6, C4 63.8, combined 40.2/yr
+  fit path                             SR core 0.964 C4 1.548 -> gross  9.75%/yr, Sharpe 1.75; net +7.74 / +3.72 / -2.31 %/yr at 5/15/30bp; breakeven 24.3bp (C4 account 18.4bp)
+  C4 own window                        SR core 0.964 C4 1.344 -> gross  8.98%/yr, Sharpe 1.61; net +6.97 / +2.95 / -3.08 %/yr at 5/15/30bp; breakeven 22.3bp (C4 account 16.0bp)
+  C4 holdout, corrected (the verdict)  SR core 0.964 C4 1.434 -> gross  9.32%/yr, Sharpe 1.67; net +7.31 / +3.29 / -2.74 %/yr at 5/15/30bp; breakeven 23.2bp (C4 account 17.1bp)
+  C4 holdout, as committed             SR core 0.964 C4 0.725 -> gross  6.63%/yr, Sharpe 1.19; net +4.62 / +0.59 / -5.44 %/yr at 5/15/30bp; breakeven 16.5bp (C4 account 8.6bp)
+  half of fit path                     SR core 0.482 C4 0.774 -> gross  4.88%/yr, Sharpe 0.87; net +2.87 / -1.16 / -7.19 %/yr at 5/15/30bp; breakeven 12.1bp (C4 account 9.2bp)

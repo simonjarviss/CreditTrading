@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1329388,
+  "episode_accession": "0001445546-11-001497",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "First Trust Strategic High Income Fund", "cik": 1323520, "ticker": "FHI"},
+      "acquirer": {"name": "First Trust Strategic High Income Fund II", "cik": 1329388, "ticker": "FHY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001445546-11-001497", "quote": "First Trust Strategic High Income Fund (NYSE: FHI), First Trust Strategic High Income Fund II (NYSE: FHY) and First Trust Strategic High Income Fund III (NYSE: FHO), closed-end funds (each a \"Fund\")"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001445546-11-001497", "date": "2011-04-19", "quote": "approved the reorganization of each of FHI and FHO, with FHY."},
+      "outcome_evidence": {"accession": "0001445546-11-003768", "date": "2011-10-03", "quote": "FIRST TRUST STRATEGIC HIGH INCOME FUNDS COMPLETE REORGANIZATIONS; REVERSE SHARE SPLIT FOR SURVIVING FUND"},
+      "notes": "The 2011-10-03 425 headline states completion; its body excerpt is cut after 'with and into First Trust Strategic High Income Fund II (NYSE: FHY) are'. The 2011-08-09 425 states FHI and FHO shareholders approved the reorganizations at joint special meetings."
+    },
+    {
+      "target": {"name": "First Trust Strategic High Income Fund III", "cik": null, "ticker": "FHO"},
+      "acquirer": {"name": "First Trust Strategic High Income Fund II", "cik": 1329388, "ticker": "FHY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001445546-11-001497", "quote": "First Trust Strategic High Income Fund (NYSE: FHI), First Trust Strategic High Income Fund II (NYSE: FHY) and First Trust Strategic High Income Fund III (NYSE: FHO), closed-end funds (each a \"Fund\")"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001445546-11-001497", "date": "2011-04-19", "quote": "approved the reorganization of each of FHI and FHO, with FHY."},
+      "outcome_evidence": {"accession": "0001445546-11-003768", "date": "2011-10-03", "quote": "FIRST TRUST STRATEGIC HIGH INCOME FUNDS COMPLETE REORGANIZATIONS; REVERSE SHARE SPLIT FOR SURVIVING FUND"},
+      "notes": "FHO's CIK does not appear in any FILING header line (the header lists Subject Company FHO by file number 811-21994 only), so cik is null. The 2011-10-03 425 headline says the funds complete reorganizations; its body excerpt is cut after 'are'."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1176194,
+  "episode_accession": "0001193125-20-170548",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "The BlackRock Strategic Municipal Trust", "cik": 1089094, "ticker": "BSD"},
+      "acquirer": {"name": "BlackRock Municipal Income Trust II", "cik": 1176194, "ticker": "BLE"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-170548", "quote": "New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Trustees of The BlackRock Strategic Municipal Trust (NYSE: BSD), BlackRock MuniYield Investment Quality Fund (NYSE: MFT), BlackRock Municipal Income Investment Trust (NYSE: BBF) and BlackRock Municipal Income Trust II (NYSE: BLE) (collectively, the “Funds”) have"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170548", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Trustees of The BlackRock Strategic Municipal Trust (NYSE: BSD), BlackRock MuniYield Investment Quality Fund (NYSE: MFT), BlackRock Municipal Income Investment Trust (NYSE: BBF) and BlackRock Municipal Income Trust II (NYSE: BLE) (collectively, the “Funds”) have"},
+      "outcome_evidence": {"accession": "0001193125-21-112948", "date": "2021-04-12", "quote": "BlackRock Announces Closing of Reorganizations of Four Municipal Closed-End Funds New York, April 12, 2021 – BlackRock Advisors, LLC today announced that the reorganizations of each of The BlackRock Strategic Municipal Trust (“BSD”, CUSIP: 09248T109), BlackRock MuniYield Investment Quality Fund (“MFT”, CUSIP: 09254T100), BlackRock Municipal Income Investment Trust (“BBF”, CUSIP: 09248H105)"},
+      "notes": "Dec 15 2020 release: BSD, MFT and BLE did not obtain the requisite votes or quorum and the meeting was adjourned to January 21, 2021 (BBF reorganization approved). The Jan 21 2021 results text is cut off in the excerpt. The Apr 12 2021 closing release is cut off after the three target names (the later 'with and into BlackRock Municipal' appears only in the MFT and BBF filings), so completion rests on the headline and that sentence. The 2020-06-16 announcement was filed under three accessions (BBF 0001193125-20-170530, MFT 0001193125-20-170542, BSD 0001193125-20-170548); only the last shows the sentence naming all four funds with tickers."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield Investment Quality Fund", "cik": 891188, "ticker": "MFT"},
+      "acquirer": {"name": "BlackRock Municipal Income Trust II", "cik": 1176194, "ticker": "BLE"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-170548", "quote": "New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Trustees of The BlackRock Strategic Municipal Trust (NYSE: BSD), BlackRock MuniYield Investment Quality Fund (NYSE: MFT), BlackRock Municipal Income Investment Trust (NYSE: BBF) and BlackRock Municipal Income Trust II (NYSE: BLE) (collectively, the “Funds”) have"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170548", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Trustees of The BlackRock Strategic Municipal Trust (NYSE: BSD), BlackRock MuniYield Investment Quality Fund (NYSE: MFT), BlackRock Municipal Income Investment Trust (NYSE: BBF) and BlackRock Municipal Income Trust II (NYSE: BLE) (collectively, the “Funds”) have"},
+      "outcome_evidence": {"accession": "0001193125-21-112946", "date": "2021-04-12", "quote": "BlackRock Announces Closing of Reorganizations of Four Municipal Closed-End Funds New York, April 12, 2021 – BlackRock Advisors, LLC today announced that the reorganizations of each of The BlackRock Strategic Municipal Trust (“BSD”, CUSIP: 09248T109), BlackRock MuniYield Investment Quality Fund (“MFT”, CUSIP: 09254T100), BlackRock Municipal Income Investment Trust (“BBF”, CUSIP: 09248H105)"},
+      "notes": "Dec 15 2020 release: MFT did not obtain the requisite votes or quorum and the meeting was adjourned to January 21, 2021; the Jan 21 results text is cut off in the excerpt. The Apr 12 2021 closing release is cut off after the three target names. Announcement was also filed under accession 0001193125-20-170542 (MFT subject company); the sentence with all tickers is shown in 0001193125-20-170548."
+    },
+    {
+      "target": {"name": "BlackRock Municipal Income Investment Trust", "cik": 1137392, "ticker": "BBF"},
+      "acquirer": {"name": "BlackRock Municipal Income Trust II", "cik": 1176194, "ticker": "BLE"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-170548", "quote": "New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Trustees of The BlackRock Strategic Municipal Trust (NYSE: BSD), BlackRock MuniYield Investment Quality Fund (NYSE: MFT), BlackRock Municipal Income Investment Trust (NYSE: BBF) and BlackRock Municipal Income Trust II (NYSE: BLE) (collectively, the “Funds”) have"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170548", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Trustees of The BlackRock Strategic Municipal Trust (NYSE: BSD), BlackRock MuniYield Investment Quality Fund (NYSE: MFT), BlackRock Municipal Income Investment Trust (NYSE: BBF) and BlackRock Municipal Income Trust II (NYSE: BLE) (collectively, the “Funds”) have"},
+      "outcome_evidence": {"accession": "0001193125-21-112950", "date": "2021-04-12", "quote": "BlackRock Announces Closing of Reorganizations of Four Municipal Closed-End Funds New York, April 12, 2021 – BlackRock Advisors, LLC today announced that the reorganizations of each of The BlackRock Strategic Municipal Trust (“BSD”, CUSIP: 09248T109), BlackRock MuniYield Investment Quality Fund (“MFT”, CUSIP: 09254T100), BlackRock Municipal Income Investment Trust (“BBF”, CUSIP: 09248H105)"},
+      "notes": "Dec 15 2020 release: the requisite vote of shareholders of BBF approved the reorganization of BBF with and into BLE. The BBF reorganization was contingent on a VRDP refinancing (N-14 and proxy text). The Apr 12 2021 closing release is cut off after the three target names. Announcement was also filed under accession 0001193125-20-170530 (BBF subject company)."
+    }
+  ],
+  "problems": "The 2021-04-12 closing releases and the 2021-01-21 vote-results releases are shown only to 800 characters, so the sentence stating completion for each target is cut off; completion rests on the headline. No target is shown failing."
+}

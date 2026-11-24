@@ -1,0 +1,95 @@
+{
+ "a1": {
+  "ran_utc": "2026-10-19T19:58:04+00:00"
+ },
+ "index": {
+  "edgar_cache_hits": 72,
+  "edgar_requests": 0,
+  "fund_rows_kept": 123955,
+  "fund_set_by_rule": {
+   "marker_form": 2037,
+   "ncsr_insider": 262
+  },
+  "fund_set_ciks": 2299,
+  "fund_type_counts": {
+   "bdc": 347,
+   "rcef": 1489,
+   "unknown": 463
+  },
+  "interval_ciks": 210,
+  "n_quarters": 72,
+  "quarters": [
+   "2008Q1",
+   "2025Q4"
+  ],
+  "ran_utc": "2026-10-19T15:32:53+00:00"
+ },
+ "listed": {
+  "ciks_matched_attempted": 1636,
+  "ciks_with_permno": 812,
+  "crsp_names_last": "2024-12-31",
+  "match_how": {
+   "ambiguous": 1,
+   "best": 1378,
+   "name": 680,
+   "ticker": 662
+  },
+  "names_matched": 1342,
+  "names_tried": 2721,
+  "ran_utc": "2026-10-19T19:58:04+00:00",
+  "rows_listed_counts": {
+   "listed_crsp": 50114,
+   "listed_crsp_end": 3478,
+   "listed_ticker_now": 379,
+   "not_listed": 59236
+  },
+  "universe44_mapped": 44,
+  "universe44_unmapped": [],
+  "universe44_with_sec_ticker": 44
+ },
+ "live_requests_log": [
+  {
+   "cache_hits": 6,
+   "live": 335,
+   "part": "supplements",
+   "utc": "2026-10-19T19:53:53+00:00"
+  },
+  {
+   "cache_hits": 339,
+   "live": 0,
+   "part": "supplements",
+   "utc": "2026-10-19T19:54:25+00:00"
+  },
+  {
+   "cache_hits": 339,
+   "live": 0,
+   "part": "supplements",
+   "utc": "2026-10-19T19:55:11+00:00"
+  },
+  {
+   "cache_hits": 339,
+   "live": 0,
+   "part": "supplements",
+   "utc": "2026-10-19T19:55:46+00:00"
+  },
+  {
+   "cache_hits": 1,
+   "live": 59,
+   "part": "proxies",
+   "utc": "2026-10-19T19:59:50+00:00"
+  },
+  {
+   "cache_hits": 0,
+   "live": 49,
+   "part": "tenq",
+   "utc": "2026-10-19T20:02:41+00:00"
+  },
+  {
+   "cache_hits": 339,
+   "live": 0,
+   "part": "supplements",
+   "utc": "2026-10-19T20:25:43+00:00"
+  }
+ ],
+ "live_requests_total": 443
+}

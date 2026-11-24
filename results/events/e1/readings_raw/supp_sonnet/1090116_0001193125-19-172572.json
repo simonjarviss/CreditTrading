@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1090116,
+  "episode_accession": "0001193125-19-172572",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Connecticut Quality Municipal Income Fund", "cik": 899752, "ticker": "NTC"},
+      "acquirer": {"name": "Nuveen AMT-Free Municipal Credit Income Fund", "cik": 1090116, "ticker": "NVG"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-19-172572", "date": "2019-06-13", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN AMT-FREE MUNICIPAL CREDIT INCOME FUND (NVG) AND NUVEEN CONNECTICUT QUALITY MUNICIPAL INCOME FUND (NTC)"},
+      "outcome_evidence": null,
+      "notes": "Roles inferred from the N-14 8C filed by 1090116 (registrant issuing common shares; 'Acquiring Fund' in the text). Special meeting was set for September 23, 2019 and the 2019-09-24 425 says 'Shareholder Meeting Adjourned to October 25, 2019'; no excerpt states a later vote result, closing or termination. The 2019-08-16 and 2019-09-24 425s (filed by NVG, subject company NTC) also list Nuveen North Carolina Quality Municipal Income Fund (NNC) and Nuveen Texas Quality Municipal Income Fund (NTX) under the same meeting, but the excerpts do not say they merge into NVG, so no deal is recorded for them. The 2020-10-06 8-K press release shows 'NYSE: NVG' but does not mention NTC; listing of NTC is not shown."
+    }
+  ],
+  "problems": "No outcome stated in any excerpt; NNC and NTX are named in 425 headers but their relation to NVG is not stated."
+}

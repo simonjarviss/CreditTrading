@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1390109,
+  "episode_accession": "0001193125-12-330905",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Global Income & Currency Fund Inc.", "cik": 1334510, "ticker": "GCF"},
+      "acquirer": {"name": "Nuveen Multi-Currency Short-Term Government Income Fund", "cik": 1390109, "ticker": "JGT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-12-330905", "quote": "the Board of Trustees of the Global Currency and Income Fund (NYSE: GCF) and the Nuveen Multi-Currency Short-Term Government Income Fund (NYSE: JGT) approved a plan to reposition JGT’s portfolio and subsequently to merge GCF into JGT."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-12-330905", "date": "2012-08-02", "quote": "the Board of Trustees of the Global Currency and Income Fund (NYSE: GCF) and the Nuveen Multi-Currency Short-Term Government Income Fund (NYSE: JGT) approved a plan to reposition JGT’s portfolio and subsequently to merge GCF into JGT."},
+      "outcome_evidence": null,
+      "notes": "Press release dated August 1, 2012 (425 filed 2012-08-02); N-14 8C filed 2012-08-15 and amended 2012-09-27; a 2012-10-29 425 by the renamed Nuveen Diversified Currency Opportunities Fund urges GCF shareholders to vote at a Special Meeting. No excerpt states the outcome. Later filings (2013-2014) are proxy and press-release documents whose excerpts do not mention the merger result."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts."
+}

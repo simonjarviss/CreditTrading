@@ -1,0 +1,137 @@
+{
+ "window_report_dt": [
+  "2019-10-31",
+  "2022-11-30"
+ ],
+ "kill_bp": 10.0,
+ "deployed_MQY_MHD": {
+  "fund_quarters_with_flow": 24,
+  "flow_newflag_bp_median": 0.0,
+  "flow_newflag_bp_mean": 0.0,
+  "flow_newflag_bp_p90": 0.0,
+  "share_fq_with_any_newflag": 0.0,
+  "flow_idio_drop_bp_median": 16.6993198363,
+  "flow_idio_drop_bp_p90": 210.7600639560299,
+  "share_fq_idio_drop_ge_kill": 0.5416666666666666,
+  "stock_default_bp_median": 0.0,
+  "stock_arrears_bp_median": 0.0,
+  "nonig_cs01_share_median": 0.15136664161975444,
+  "per_fund_nonig_cs01_share_median": {
+   "MHD": 0.1585,
+   "MQY": 0.1379
+  },
+  "per_fund_flow_newflag_bp_median": {
+   "MHD": 0.0,
+   "MQY": 0.0
+  },
+  "verdict_vs_kill": "KILL"
+ },
+ "context_NAD_NEA_NVG_NZF_NAN": {
+  "fund_quarters_with_flow": 60,
+  "flow_newflag_bp_median": 0.8542375773499999,
+  "flow_newflag_bp_mean": 12.435094826719997,
+  "flow_newflag_bp_p90": 36.13918921247003,
+  "share_fq_with_any_newflag": 0.5333333333333333,
+  "flow_idio_drop_bp_median": 11.26481123625,
+  "flow_idio_drop_bp_p90": 551.7855698715102,
+  "share_fq_idio_drop_ge_kill": 0.5,
+  "stock_default_bp_median": 42.3134069006,
+  "stock_arrears_bp_median": 14.6975781352,
+  "nonig_cs01_share_median": 0.1530665539993097,
+  "per_fund_nonig_cs01_share_median": {
+   "NAD": 0.0968,
+   "NAN": 0.1531,
+   "NEA": 0.0862,
+   "NVG": 0.2565,
+   "NZF": 0.2735
+  },
+  "per_fund_flow_newflag_bp_median": {
+   "NAD": 3.66,
+   "NAN": 0.0,
+   "NEA": 0.0,
+   "NVG": 10.06,
+   "NZF": 10.37
+  },
+  "verdict_vs_kill": "KILL"
+ },
+ "all_7": {
+  "fund_quarters_with_flow": 84,
+  "flow_newflag_bp_median": 0.0,
+  "flow_newflag_bp_mean": 8.882210590514283,
+  "flow_newflag_bp_p90": 23.97256457615001,
+  "share_fq_with_any_newflag": 0.38095238095238093,
+  "flow_idio_drop_bp_median": 14.785922916299999,
+  "flow_idio_drop_bp_p90": 495.99906119063036,
+  "share_fq_idio_drop_ge_kill": 0.5119047619047619,
+  "stock_default_bp_median": 20.818289311900003,
+  "stock_arrears_bp_median": 8.337325844899999,
+  "nonig_cs01_share_median": 0.1514736453577537,
+  "per_fund_nonig_cs01_share_median": {
+   "MHD": 0.1585,
+   "MQY": 0.1379,
+   "NAD": 0.0968,
+   "NAN": 0.1531,
+   "NEA": 0.0862,
+   "NVG": 0.2565,
+   "NZF": 0.2735
+  },
+  "per_fund_flow_newflag_bp_median": {
+   "MHD": 0.0,
+   "MQY": 0.0,
+   "NAD": 3.66,
+   "NAN": 0.0,
+   "NEA": 0.0,
+   "NVG": 10.06,
+   "NZF": 10.37
+  },
+  "verdict_vs_kill": "KILL"
+ },
+ "mark_dispersion_same_cusip_same_date": {
+  "all_shared": {
+   "n": 14045,
+   "median": 0.0,
+   "p90": 0.5364201574803107,
+   "max": 14.236000000000018
+  },
+  "flagged_shared": {
+   "n": 586,
+   "median": 3.953268212342209e-06,
+   "p90": 1.2717087805036442e-05,
+   "max": 0.20200034519083943
+  },
+  "flagged_shared_mixed_default_flag": 0
+ },
+ "cross_sponsor_marks": {
+  "all_cross_sponsor": {
+   "n": 3053,
+   "median": 0.464,
+   "p90": 1.8606,
+   "max": 14.236
+  },
+  "flagged_by_either": {
+   "n": 1,
+   "median": 0.202,
+   "p90": 0.202,
+   "max": 0.202
+  },
+  "default_flag_disagrees_between_sponsors": 0,
+  "share_gap_ge_1pt": 0.2735
+ },
+ "unchanged_quarterly_marks": {
+  "flagged_pairs": 1474,
+  "flagged_unchanged_share": 0.2327,
+  "unflagged_pairs": 62944,
+  "unflagged_unchanged_share": 0.002
+ },
+ "newflag_mark_timing": {
+  "share_mark_prev_below_90": 0.7314,
+  "share_mark_unchanged_at_flag": 0.2286,
+  "share_mark_fell_ge_5_at_flag": 0.0514
+ },
+ "newflag_events": {
+  "n": 175,
+  "distinct_cusips": 84,
+  "mark_prev_median": 15.0,
+  "mark_now_median": 15.0
+ }
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1851277,
+  "episode_accession": "0001193125-24-193315",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Carlyle Secured Lending III", "cik": 1851277, "ticker": null},
+      "acquirer": {"name": "Carlyle Secured Lending, Inc.", "cik": 1544206, "ticker": "CGBD"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-24-193313", "quote": "a private business development company with a similar investment strategy and portfolio."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-24-193313", "date": "2024-08-05", "quote": "Carlyle Secured Lending, Inc. Announces Merger with Carlyle Secured Lending III"},
+      "outcome_evidence": null,
+      "notes": "Target CSL III is a private BDC (exchange fields on its 8-K cover read N/A); acquirer CGBD is NASDAQ-listed. For information only: the 2025-03-28 8-K (0001193125-25-065939) reports CGBD shareholder approval on March 26, 2025 with closing expected on or about March 27, 2025; no excerpt states the closing itself. Merger Agreement amended January 3, 2025 (425 of that date)."
+    }
+  ],
+  "problems": "Several 8-Ks show only XBRL header text. The CIK 1544206 for the acquirer comes from the FILED BY header of seq 3 and seq 13."
+}

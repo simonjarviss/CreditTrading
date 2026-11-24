@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1053988,
+  "episode_accession": "0001193125-21-284573",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock MuniYield New Jersey Fund, Inc.", "cik": 884216, "ticker": "MYJ"},
+      "acquirer": {"name": "BlackRock MuniHoldings New Jersey Quality Fund, Inc.", "cik": 1053988, "ticker": "MUJ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-21-284573", "quote": "BlackRock MuniYield New Jersey Fund, Inc. (NYSE: MYJ) and BlackRock MuniHoldings New Jersey Quality Fund, Inc. (NYSE: MUJ) (together, the “Funds”)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-21-284573", "date": "2021-09-28", "quote": "have approved the reorganization of MYJ with and into MUJ, with MUJ continuing as the surviving Fund (the “Reorganization”)."},
+      "outcome_evidence": {"accession": "0001193125-22-101848", "date": "2022-04-11", "quote": "BlackRock Announces Closing of Reorganization of Two Municipal Closed-End Funds"},
+      "notes": "First vote on 2022-02-04 lacked the requisite common votes and was adjourned to 2022-03-04; the 2022-03-04 results release is shown only by its heading, then special distributions were announced 2022-03-18 and the closing on 2022-04-11. The excerpt of the 2022-04-11 release is cut off mid-sentence ('is effective as of the')."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 883265,
+  "episode_accession": "0000950123-11-101288",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco New York Quality Municipal Securities", "cik": 898659, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Trust for Investment Grade New York Municipals", "cik": 883265, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101288", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Role inferred from the N-14 8C registrant being 883265 and the proxy using 'Acquiring Fund' and 'Target Fund' for the two registrants; the excerpts do not say which is which in so many words. The 425 press release excerpt does not name the pair; the pair comes from the 425 and proxy headers. No excerpt states the vote result, completion or termination. The 2013 proxies are filed by the renamed fund (Invesco Trust for Investment Grade New York Municipals) with no merger text shown."
+    }
+  ],
+  "problems": "Excerpts never show exchange listing or the outcome."
+}

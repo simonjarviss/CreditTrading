@@ -1,0 +1,15 @@
+listed BDC ciks 61 reports (accessions) 2012-22 1943
+caches scanned 17
+BDC ciks with any cached archive doc 56
+distinct BDC accessions cached 541
+of which are listed-BDC 10-Q/10-K reports 2012-22 31
+subs_rows columns ['cik', 'accessionNumber', 'filingDate', 'reportDate', 'acceptanceDateTime', 'form', 'items', 'primaryDocument', 'isXBRL', '__index_level_0__']
+cached BDC accessions found in subs_rows 112
+fit    form
+True   8-K     66
+       10-Q    31
+False  10-Q    12
+       8-K      3
+dtype: int64
+cached 8-K item 2.02 (earnings releases) in 2012-22: 23 ciks 16
+all 8-K item 2.02 for the 61 listed BDCs 2012-22 (index only): 2440 ciks 59

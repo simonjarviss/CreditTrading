@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1275617,
+  "episode_accession": "0001193125-19-184381",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Cohen & Steers Global Income Builder, Inc.", "cik": 1395057, "ticker": "INB"},
+      "acquirer": {"name": "Cohen & Steers Infrastructure Fund, Inc.", "cik": 1275617, "ticker": "UTF"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-19-184381", "date": "2019-06-27", "quote": "You are being asked to consider and vote upon a proposed transaction related to Cohen & Steers Global Income Builder, Inc. (“INB”) and Cohen & Steers Infrastructure Fund, Inc. (“UTF” and, together with INB, the “Funds” and each a “Fund”)."},
+      "outcome_evidence": null,
+      "notes": "The N-14 says INB shares would be removed from listing on the NYSE, but no excerpt shows UTF's exchange listing, so both_listed is null. The excerpts show vote-solicitation 425s through 2019-11-20 for the 2019-11-15 INB meeting; none states the meeting result or how the reorganization ended. The 2020 and 2021 filings are annual-meeting materials of UTF and other funds and do not mention INB in the excerpts."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1372807,
+  "episode_accession": "0001193125-19-211056",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "OHA Investment Corporation", "cik": 1297704, "ticker": "OHAI"},
+      "acquirer": {"name": "Portman Ridge Finance Corporation", "cik": 1372807, "ticker": "PTMN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-19-211034", "quote": "OHA Investment Corporation (NASDAQ: OHAI) (“OHAI”) and Portman Ridge Finance Corporation (“PTMN”) (NASDAQ: PTMN) (f/k/a KCAP Financial, Inc.) today announced that they have entered into a definitive agreement under which OHAI will merge with and into PTMN, a business development company"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-19-211034", "date": "2019-08-01", "quote": "OHA Investment Corporation (NASDAQ: OHAI) (“OHAI”) and Portman Ridge Finance Corporation (“PTMN”) (NASDAQ: PTMN) (f/k/a KCAP Financial, Inc.) today announced that they have entered into a definitive agreement under which OHAI will merge with and into PTMN"},
+      "outcome_evidence": {"accession": "0001193125-19-319279", "date": "2019-12-19", "quote": "today announced the closing (the “Closing”) of the previously announced transaction under which OHAI will be merged into PTMN."},
+      "notes": ""
+    },
+    {
+      "target": {"name": "Garrison Capital Inc.", "cik": 1509892, "ticker": "GARS"},
+      "acquirer": {"name": "Portman Ridge Finance Corporation", "cik": 1372807, "ticker": "PTMN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-178041", "quote": "Garrison Capital Inc. (Nasdaq: GARS) (“GARS”) and Portman Ridge Finance Corporation (“PTMN”) (Nasdaq: PTMN) announced today that they have entered into a definitive agreement under which GARS will merge with and into PTMN, a business development company"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-178041", "date": "2020-06-25", "quote": "Garrison Capital Inc. (Nasdaq: GARS) (“GARS”) and Portman Ridge Finance Corporation (“PTMN”) (Nasdaq: PTMN) announced today that they have entered into a definitive agreement under which GARS will merge with and into PTMN"},
+      "outcome_evidence": {"accession": "0001193125-20-279845", "date": "2020-10-28", "quote": "announced today the closing (the “Closing”) of the previously announced transaction under which GARS will be merged into PTMN."},
+      "notes": "PTMN stockholder vote on the merger stock issuance (8-K filed 2020-10-20) showed votes for exceeding votes against; merger then closed 2020-10-28."
+    },
+    {
+      "target": {"name": "Harvest Capital Credit Corporation", "cik": 1559909, "ticker": "HCAP"},
+      "acquirer": {"name": "Portman Ridge Finance Corporation", "cik": 1372807, "ticker": "PTMN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-326734", "quote": "Harvest Capital Credit Corporation (NASDAQ: HCAP) (“HCAP”) and Portman Ridge Finance Corporation (NASDAQ: PTMN) (the “Company” or “PTMN”) announced today that they have entered into a definitive agreement under which HCAP will merge with and into PTMN, a business development company"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-326734", "date": "2020-12-28", "quote": "Harvest Capital Credit Corporation (NASDAQ: HCAP) (“HCAP”) and Portman Ridge Finance Corporation (NASDAQ: PTMN) (the “Company” or “PTMN”) announced today that they have entered into a definitive agreement under which HCAP will merge with and into PTMN"},
+      "outcome_evidence": {"accession": "0001193125-21-186945", "date": "2021-06-10", "quote": "announced today the closing of the previously announced merger with Harvest Capital Credit Corporation (formerly NASDAQ: HCAP)"},
+      "notes": "Press release dated December 23, 2020; the 425 filed the same day (0001193125-20-326222) carries the same release."
+    }
+  ],
+  "problems": ""
+}

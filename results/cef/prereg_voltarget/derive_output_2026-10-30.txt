@@ -1,0 +1,60 @@
+core spec cef_discount.v7.20260928: vol_target_annual 0.06, max_gross_stress 1.8
+C4 spec c4_families.v1.20261029 (c4-integrate): vol_target_annual 0.06, max_gross_stress 1.9
+
+1. THE 2026-10-28 RULE (one account, one cap 1.80; equal standalone vol, b = 1/2, 1/2), W1 2013-06-25 -> 2022-12-30
+   daily sd core 0.004095, C4 trial book 0.003622; sd of the unit-vol mix 11.289779
+   sigma_cap 0.20 | sigma_kill(p*5%) 0.2 [doc t9; the grid stops at 20%] | sigma_margin 0.059583 [V: 1.80 x 0.06 / mean netted gross 1.8126 at 6%] | half-Kelly@15 0.3151 [doc t9]
+   sigma* = 0.0575 (sigma_margin binds, rounded down to 0.25%)
+   combined multipliers at 0.0575: core 0.6219, C4 0.7030 (reproduce t8 to 0.0e+00)
+   z_kill_worst (zero edge, one account) at 0.0575: 0.0010; at 20%: 0.0066 [doc t8]
+
+2. PER ACCOUNT (two $100k accounts; m_account = m_combined x 200k/100k)
+   trial-book series: core 1.2437 -> written 1.24; C4 1.4060 -> written 1.40 (rounded DOWN); ruled {'core': 1.24, 'c4': 1.41}
+
+3. THE SAME RULE ON C4's SPEC BOOK (cap 1.90), total return [price only beside]
+   daily sd C4 spec 0.003659 (trial 0.003622); mix sd 11.288362
+   per account at 0.0575: core 1.2439, C4 1.3923  [price only: core 1.2064, C4 1.3430]
+   written (2 dp, down): core 1.24, C4 1.39
+
+4. EACH ACCOUNT'S MEAN UNCAPPED GROSS (W1) AT THE RULED MULTIPLIERS, against its own cap
+   core (v7, cap 1.80): unit book 1.206 x 1.24 = 1.496 against 1.8 -> below
+   C4 trial book in its own account, cap 1.80: unit book 1.404 x 1.41 = 1.979 against 1.8 -> ABOVE the cap (term d fails)
+   C4 spec book in its own account, cap 1.90: unit book 1.447 x 1.41 = 2.040 against 1.9 -> ABOVE the cap (term d fails)
+   term (d) per account, spec series: core passes to 0.0690, C4 to 0.0542 -> grid 0.0525, multipliers core 1.1357, C4 1.2712
+   [doc SCRATCH/alloc4/tables/m_books.csv 'core + C4 only (2 accounts)': sigma* 0.0525, term_d, 1.1357 / 1.2712]
+
+5. PLATEAU: two accounts, own caps (core 1.80, C4 1.90), spec series, W1; combined = 1/2 + 1/2
+ target  m_core   m_c4  ann_TR  sr_TR  vol_TR  binds_core  binds_c4  gross_core  gross_c4  ann_PR  sr_PR  vol_PR
+ 0.0400  0.8653 0.9685  0.0682 1.7058  0.0400      0.0000    0.0000      1.0439    1.4016  0.0737 1.7809  0.0414
+ 0.0425  0.9194 1.0291  0.0723 1.7039  0.0424      0.0000    0.1364      1.1091    1.4892  0.0780 1.7789  0.0439
+ 0.0450  0.9735 1.0896  0.0761 1.7009  0.0447      0.0000    0.2098      1.1744    1.5768  0.0821 1.7754  0.0463
+ 0.0475  1.0275 1.1501  0.0795 1.6950  0.0469      0.0930    0.2857      1.2396    1.6644  0.0858 1.7695  0.0485
+ 0.0500  1.0816 1.2107  0.0825 1.6873  0.0489      0.1927    0.3795      1.3048    1.7520  0.0891 1.7622  0.0505
+ 0.0525  1.1357 1.2712  0.0852 1.6796  0.0507      0.2089    0.4766      1.3701    1.8396  0.0920 1.7554  0.0524
+ 0.0550  1.1898 1.3317  0.0877 1.6733  0.0524      0.2210    0.5788      1.4353    1.9272  0.0947 1.7496  0.0542
+ 0.0575  1.2439 1.3923  0.0901 1.6699  0.0539      0.3232    0.6576      1.5006    2.0148  0.0973 1.7462  0.0557
+ 0.0600  1.2979 1.4528  0.0924 1.6733  0.0552      0.3832    0.7148      1.5658    2.1024  0.0997 1.7493  0.0570
+ 0.0625  1.3520 1.5133  0.0942 1.6734  0.0563      0.4158    0.7644      1.6311    2.1900  0.1016 1.7492  0.0581
+ 0.0650  1.4061 1.5739  0.0958 1.6719  0.0573      0.4892    0.8015      1.6963    2.2776  0.1032 1.7469  0.0591
+ 0.0675  1.4602 1.6344  0.0970 1.6658  0.0582      0.5138    0.8303      1.7615    2.3652  0.1044 1.7395  0.0600
+ 0.0700  1.5143 1.6949  0.0980 1.6617  0.0590      0.5838    0.8511      1.8268    2.4528  0.1054 1.7341  0.0608
+ 0.0725  1.5683 1.7555  0.0989 1.6582  0.0596      0.5992    0.8707      1.8920    2.5404  0.1062 1.7290  0.0614
+ 0.0750  1.6224 1.8160  0.0998 1.6556  0.0603      0.6168    0.8878      1.9573    2.6280  0.1070 1.7247  0.0620
+   within +-0.50% of 0.0575: Sharpe TR 1.670..1.680, PR 1.746..1.755 (at the point 1.670 / 1.746) -> plateau: True
+   NOT CHOSEN: Sharpe argmax at 0.0325 (SR 1.706, 5.54%/yr); return argmax at 0.2000 (10.73%/yr, SR 1.554, cap binds core 99% / C4 100%)
+   [doc t8, one account, trial series] target / gross %/yr / SR / cap binds:
+     0.0400    6.88  1.719  0.00
+     0.0425    7.31  1.719  0.00
+     0.0450    7.73  1.719  0.05
+     0.0475    8.11  1.714  0.10
+     0.0500    8.46  1.711  0.22
+     0.0525    8.75  1.705  0.32
+     0.0550    9.02  1.703  0.40
+     0.0575    9.25  1.701  0.49
+     0.0600    9.43  1.698  0.57
+     0.0625    9.60  1.696  0.63
+     0.0650    9.75  1.692  0.69
+     0.0675    9.86  1.688  0.73
+     0.0700    9.94  1.680  0.77
+     0.0725    9.98  1.670  0.80
+     0.0750   10.01  1.659  0.83

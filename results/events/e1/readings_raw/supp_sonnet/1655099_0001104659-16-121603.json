@@ -1,0 +1,74 @@
+{
+ "episode_cik": 1655099,
+ "episode_accession": "0001104659-16-121603",
+ "episode_role": "acquirer",
+ "deals": [
+  {
+   "target": {
+    "name": "Brookfield Mortgage Opportunity Income Fund Inc.",
+    "cik": 1562834,
+    "ticker": "BOI"
+   },
+   "acquirer": {
+    "name": "Brookfield Real Assets Income Fund Inc.",
+    "cik": 1655099,
+    "ticker": null
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {
+    "accession": "0001104659-16-121479",
+    "date": "2016-05-17",
+    "quote": "Brookfield Investment Management Inc. Announces Board Approval of the Reorganization of Three Brookfield Closed-End Funds (BOI, HTR and HHY)"
+   },
+   "outcome_evidence": null,
+   "notes": "Shareholders approved: 2016-11-18 release titled 'Announces Shareholder Approval of the Reorganization of Brookfield Mortgage Opportunity Income Fund Inc. into Brookfield Real Assets Income Fund Inc.' (accession 0001104659-16-158107). Earlier meetings adjourned (2016-08-11, 2016-09-01, 2016-09-09). Approval is not completion, so outcome is null. Target shown as NYSE-listed in the 2016-09-16 release ('Brookfield Mortgage Opportunity Income Fund Inc. (NYSE: BOI), Brookfield Total Return Fund Inc. (NYSE: HTR) and Brookfield High Income Fund Inc. (NYSE:HHY)'), but the acquirer's listing is not shown, so both_listed is null. No excerpt states completion or termination; the 2017 and 2018 DEF 14As shown are annual-meeting proxies with no outcome text."
+  },
+  {
+   "target": {
+    "name": "Brookfield Total Return Fund Inc.",
+    "cik": 851169,
+    "ticker": "HTR"
+   },
+   "acquirer": {
+    "name": "Brookfield Real Assets Income Fund Inc.",
+    "cik": 1655099,
+    "ticker": null
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {
+    "accession": "0001104659-16-121479",
+    "date": "2016-05-17",
+    "quote": "Brookfield Investment Management Inc. Announces Board Approval of the Reorganization of Three Brookfield Closed-End Funds (BOI, HTR and HHY)"
+   },
+   "outcome_evidence": null,
+   "notes": "2016-09-09 release (accession 0001104659-16-144041): 'Announces Approval of the Reorganization Proposal by Brookfield Total Return Fund Inc.' Approval is not completion, so outcome is null. Target shown as NYSE-listed in the 2016-09-16 release ('Brookfield Mortgage Opportunity Income Fund Inc. (NYSE: BOI), Brookfield Total Return Fund Inc. (NYSE: HTR) and Brookfield High Income Fund Inc. (NYSE:HHY)'), but the acquirer's listing is not shown, so both_listed is null. No excerpt states completion or termination; the 2017 and 2018 DEF 14As shown are annual-meeting proxies with no outcome text."
+  },
+  {
+   "target": {
+    "name": "Brookfield High Income Fund Inc.",
+    "cik": 1062978,
+    "ticker": "HHY"
+   },
+   "acquirer": {
+    "name": "Brookfield Real Assets Income Fund Inc.",
+    "cik": 1655099,
+    "ticker": null
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {
+    "accession": "0001104659-16-121479",
+    "date": "2016-05-17",
+    "quote": "Brookfield Investment Management Inc. Announces Board Approval of the Reorganization of Three Brookfield Closed-End Funds (BOI, HTR and HHY)"
+   },
+   "outcome_evidence": null,
+   "notes": "2016-09-01 release (accession 0001104659-16-142739): 'Approval of Reorganization Proposal by HHY'. Approval is not completion, so outcome is null. Target shown as NYSE-listed in the 2016-09-16 release ('Brookfield Mortgage Opportunity Income Fund Inc. (NYSE: BOI), Brookfield Total Return Fund Inc. (NYSE: HTR) and Brookfield High Income Fund Inc. (NYSE:HHY)'), but the acquirer's listing is not shown, so both_listed is null. No excerpt states completion or termination; the 2017 and 2018 DEF 14As shown are annual-meeting proxies with no outcome text."
+  }
+ ],
+ "problems": "Excerpts show shareholder approvals for all three targets but no completion or failure statement."
+}

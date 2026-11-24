@@ -1,0 +1,53 @@
+symbol,name,state,exchange,tradable,shortable,easy_to_borrow,cik,is_cef
+NAZ,Nuveen Arizona Quality Municipal Income Fund,AZ,NYSE,True,True,True,892992.0,True
+CALI,BlackRock ETF Trust II iShares Short-Term California Muni Active ETF,CA,NASDAQ,True,True,True,,False
+CAM,AB California Intermediate Municipal ETF,CA,ARCA,True,False,False,,False
+CATF,American Century California Municipal Bond ETF,CA,ARCA,True,False,False,,False
+CEV,Eaton Vance California Municipal Income Trust,CA,AMEX,True,False,False,1074692.0,True
+CMF,iShares California Muni Bond ETF,CA,ARCA,True,False,False,,False
+DFCA,Dimensional California Municipal Bond ETF,CA,ARCA,True,False,False,,False
+FCAL,First Trust Exchange-Traded Fund III First Trust California Municipal High Income ETF,CA,NASDAQ,True,False,False,,False
+FTCA,Franklin California Municipal Income ETF,CA,ARCA,True,False,False,,False
+GCAL,Goldman Sachs Dynamic California Municipal Income ETF,CA,ARCA,True,False,False,,False
+JCAL,JPMorgan California Tax Free Bond ETF,CA,ARCA,True,False,False,,False
+MMCA,NYLIM MacKay California Muni Intermediate ETF,CA,ARCA,True,True,True,,False
+MUC,"BLACKROCK MUNIHOLDINGS CALIFORNIA QUALITY FUND, INC",CA,NYSE,True,True,True,1051004.0,True
+NAC,Nuveen California Quality Municipal Income Fund,CA,NYSE,True,False,False,1074952.0,True
+NCA,Nuveen California Municipal Value Fund,CA,NYSE,True,True,True,818851.0,True
+NKX,Nuveen California AMT-Free Quality Municipal Income Fund,CA,NYSE,True,False,False,1195738.0,True
+PCQ,Pimco California Municipal Income Fund,CA,NYSE,True,False,False,1140411.0,True
+PWZ,Invesco California AMT-Free Municipal Bond ETF,CA,ARCA,True,False,False,,False
+RMCA,Rockefeller California Municipal Bond ETF,CA,ARCA,True,False,False,,False
+TXCA,Northern Funds Northern Trust California Intermediate Tax-Exempt Bond ETF,CA,NASDAQ,True,False,False,,False
+VCV,INVESCO  CALIFORNIA VALUE MUNI INCOME TRUST,CA,NYSE,True,False,False,895531.0,True
+VTEC,Vanguard California Tax-Exempt Bond ETF,CA,BATS,True,False,False,,False
+FTMA,Franklin Massachusetts Municipal Income ETF,MA,ARCA,True,False,False,,False
+NMT,Nuveen Massachusetts Quality Municipal Income Fund,MA,NYSE,True,False,False,897419.0,True
+MIY,"BLACKROCK MUNIYIELD MICHIGAN QUALITY FUND, INC. i",MI,NYSE,True,False,False,890393.0,True
+FTMN,Franklin Minnesota Municipal Income ETF,MN,ARCA,True,False,False,,False
+MINN,Mairs & Power Minnesota Municipal Bond ETF,MN,BATS,True,False,False,,False
+NMS,Nuveen Minnesota Quality Municipal Income Fund,MN,NYSE,True,False,False,1607997.0,True
+FTNJ,Franklin New Jersey Municipal Income ETF,NJ,ARCA,True,False,False,,False
+MUJ,"BLACKROCK MUNIHOLDINGS NEW JERSEY QUALITY FUND, INC.",NJ,NYSE,True,False,False,1053988.0,True
+FMNY,First Trust New York Municipal High Income ETF,NY,ARCA,True,False,False,,False
+FTNY,Franklin New York Municipal Income ETF,NY,ARCA,True,False,False,,False
+GMNY,Goldman Sachs Dynamic New York Municipal Income ETF,NY,ARCA,True,False,False,,False
+JTNY,JPMorgan New York Tax Free Bond ETF,NY,ARCA,True,False,False,,False
+MUNY,Vanguard New York Tax-Exempt Bond ETF,NY,BATS,True,False,False,,False
+MYN,"BLACKROCK MUNIYIELD NEW YORK QUALITY FUND, INC.",NY,NYSE,True,True,True,882150.0,True
+NAN,Nuveen New York Quality Municipal Income Fund,NY,NYSE,True,False,False,1074769.0,True
+NNY,Nuveen New York Municipal Value Fund,NY,NYSE,True,True,True,818850.0,True
+NRK,Nuveen New York AMT-Free Quality Municipal Income Fund,NY,NYSE,True,False,False,1195739.0,True
+NYF,iShares New York Muni Bond ETF,NY,ARCA,True,False,False,,False
+NYM,AB New York Intermediate Municipal ETF,NY,ARCA,True,False,False,,False
+PNI,PIMCO NEW YORK MUNICIPAL INCOME FUND II COMMON SHARES OF BENEFICIAL INT.,NY,NYSE,True,False,False,1170311.0,True
+PZT,Invesco New York AMT-Free Municipal Bond ETF,NY,ARCA,True,False,False,,False
+RMNY,Rockefeller New York Municipal Bond ETF,NY,ARCA,True,False,False,,False
+TXNY,Northern Funds Northern Trust New York Intermediate Tax-Exempt Bond ETF,NY,NASDAQ,True,False,False,,False
+VTN,Invesco  Trust for Investment Grade New York Municipals,NY,NYSE,True,True,True,883265.0,True
+FTOH,Franklin Ohio Municipal Income ETF,OH,ARCA,True,False,False,,False
+FTPA,Franklin Pennsylvania Municipal Income ETF,PA,ARCA,True,False,False,,False
+MPA,BLACKROCK MUNIYIELD PENNSYLVANIA QUALITY FUND,PA,NYSE,True,False,False,891038.0,True
+VPV,Invesco  Pennsylvania Value Municipal Income Trust,PA,NYSE,True,False,False,895528.0,True
+BHV,BlackRock Virginia Muni Bond Trust,VA,NYSE,True,False,False,1169034.0,True
+NPV,Nuveen Virginia Quality Municipal Income Fund,VA,NYSE,True,True,True,897421.0,True

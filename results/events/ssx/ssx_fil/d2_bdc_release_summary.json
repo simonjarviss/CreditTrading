@@ -1,0 +1,11 @@
+{
+ "n": 20,
+ "prints_navps": 17,
+ "ci95": [
+  0.6396,
+  0.9476
+ ],
+ "after_close": 15,
+ "pre_open": 4,
+ "live_requests_ledger_total": 450
+}

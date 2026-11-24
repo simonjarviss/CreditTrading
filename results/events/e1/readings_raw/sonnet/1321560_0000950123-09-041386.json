@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1321560,
+  "episode_accession": "0000950123-09-041386",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Patriot Capital Funding, Inc.", "cik": 1321560, "ticker": "PCAP"},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": null, "ticker": "PSEC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0000950123-09-041386", "date": "2009-09-08", "quote": "On August 3, 2009, Prospect Capital Corporation (“Prospect”) and Patriot Capital Funding, Inc. (“Patriot”) announced a strategic business combination in which Patriot will merge with and into Prospect."},
+      "outcome_evidence": {"accession": "0000950123-09-067669", "date": "2009-12-02", "quote": "On December 2, 2009, Patriot Capital Funding, Inc. (the “Company” or “Patriot”) was merged with and into Prospect Capital Corporation (“Prospect”) pursuant to the Agreement and Plan of Merger (the “Merger Agreement”) by and between Prospect and Patriot, dated August 3, 2009 (the “Merger”)."},
+      "notes": "Both are shown as NasdaqGS-listed (PCAP, PSEC) in the 2009-10-27 DEFA14A, but the excerpts never state that either is a closed-end fund or business development company (Patriot is called a specialty finance company), so both_listed is left null. Shareholders approved on 2009-11-18 (8-K 0000950123-09-064288). The August 3, 2009 announcement itself is not in the excerpts; the earliest excerpted filing is the PREM14A. Exchange ratio changed from 0.3992 (proxy) to 0.363992367 at closing after the final dividend shares."
+    }
+  ],
+  "problems": ""
+}

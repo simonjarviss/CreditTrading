@@ -1,0 +1,18 @@
+{
+  "episode_cik": 35315,
+  "episode_accession": "0001193125-15-026906",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Fidelity Select Money Market Portfolio", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Money Market Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-15-026906", "quote": "Fidelity’s bond and money market mutual funds."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-15-026906", "date": "2015-01-30", "quote": "To strengthen and simplify our money market product line, we are also proposing to merge several funds that have similar investment strategies."},
+      "outcome_evidence": null,
+      "notes": "Money market mutual funds (open-end), not exchange-listed. Seq 9 names three mergers: U.S. Government Reserves into Government Money Market Fund; Select Money Market Portfolio into Money Market Fund; Prime Fund - Daily Money Class into Government Money Market Fund. Only the Select Money Market Portfolio pair is recorded here; the other two are equally unlisted. No excerpt states the vote result or completion."
+    }
+  ],
+  "problems": "Excerpts do not say which role the Salem Street Trust fund plays; target and acquirer CIKs not shown."
+}

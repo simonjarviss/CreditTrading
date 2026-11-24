@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1051003,
+  "episode_accession": "0001341004-13-000780",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Senior High Income Fund, Inc.", "cik": 896665, "ticker": "ARK"},
+      "acquirer": {"name": "BlackRock Debt Strategies Fund, Inc.", "cik": 1051003, "ticker": "DSU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000779", "quote": "BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU) have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000779", "date": "2013-07-22", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU) have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"},
+      "outcome_evidence": null,
+      "notes": "Last filings that mention the deal are the Oct 8 2013 vote-reminder 425s (meeting set for Oct 25 2013) and a Dec 10 2013 N-14 post-effective amendment filing tax opinions; none states the vote result or completion. The 2014 and 2015 DEF 14As in the window are annual board-election proxies and do not mention the reorganization in the excerpts."
+    },
+    {
+      "target": {"name": "BlackRock Strategic Bond Trust", "cik": 1165216, "ticker": "BHD"},
+      "acquirer": {"name": "BlackRock Debt Strategies Fund, Inc.", "cik": 1051003, "ticker": "DSU"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000779", "quote": "BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU) have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000779", "date": "2013-07-22", "quote": "BlackRock Advisors, LLC announced today that the Boards of Directors/Trustees of each of BlackRock Senior High Income Fund, Inc. (NYSE:ARK), BlackRock Strategic Bond Trust (NYSE:BHD) and BlackRock Debt Strategies Fund, Inc. (NYSE:DSU) have approved the reorganization of each of ARK and BHD into DSU, with DSU continuing as the surviving fund"},
+      "outcome_evidence": null,
+      "notes": "Same filings as the ARK deal; no excerpt states the vote result or completion."
+    }
+  ],
+  "problems": ""
+}

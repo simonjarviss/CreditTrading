@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1322436,
+  "episode_accession": "0000940394-22-001433",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Eaton Vance Tax-Managed Buy-Write Strategy Fund", "cik": 1480999, "ticker": "EXD"},
+      "acquirer": {"name": "Eaton Vance Tax-Managed Buy-Write Opportunities Fund", "cik": 1322436, "ticker": "ETV"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000940394-23-000253", "quote": "Eaton Vance Tax-Managed Buy-Write Strategy Fund (NYSE: EXD) (the “Fund”) held a special meeting of shareholders earlier today (the “Special Meeting”). At the Special Meeting, Fund shareholders were asked to approve an Agreement and Plan of Reorganization pursuant to which the Fund will be reorganized with and into Eaton Vance Tax-Managed Buy-Write Opportunities Fund (NYSE: ETV)"},
+      "outcome": null,
+      "announcement": {"accession": "0000940394-22-001433", "date": "2022-11-21", "quote": "to consider a proposal to approve an Agreement and Plan of Reorganization (“Plan”) providing for the reorganization (the “Reorganization”) of Acquired Fund with and into Eaton Vance Tax-Managed Buy-Write Opportunities Fund (“Acquiring Fund” and, together with Acquired Fund, the “Funds”)."},
+      "outcome_evidence": null,
+      "notes": "Special meeting of 2023-02-02 was adjourned to 2023-03-16: the DEFA14A of 2023-02-02 says Eaton Vance Management and the Board 'concluded that they did not receive enough votes to meet the vote required to approve the proposal'. No excerpt states the result of the 2023-03-16 meeting or whether the reorganization closed or failed. The 2023-02-24 DEF 14A (annual meeting, six funds) and the 2024 DEF 14A and 8-K excerpts do not say. The target's CIK 1480999 is taken from the filer list of the 2023-02-24 DEF 14A header, where it is named 'Eaton Vance Tax-Managed Buy-Write Strategy Fund'; that fund is not listed as a filer on the 2024-02-23 DEF 14A, which does not itself state why."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts."
+}

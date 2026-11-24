@@ -1,0 +1,18 @@
+{
+  "episode_cik": 904112,
+  "episode_accession": "0001104659-09-043691",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Morgan Stanley Global Opportunity Bond Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Morgan Stanley Emerging Markets Debt Fund, Inc.", "cik": 904112, "ticker": "MSD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-09-043691", "date": "2009-07-17", "quote": "Notice is hereby given of a Special Meeting of the Stockholders of Morgan Stanley Global Opportunity Bond Fund, Inc. (“Global Opportunity Bond”)"},
+      "outcome_evidence": null,
+      "notes": "Reorganization of Global Opportunity Bond into Emerging Markets Debt (stockholder meeting set for November 18, 2009; agreement outside date May 18, 2010, later March 4, 2010). The excerpts show no exchange or ticker for the target and the abbreviation MSD appears only in the later DEF 14A (director election), which says nothing about this merger. No filing in the window states how the reorganization ended."
+    }
+  ],
+  "problems": ""
+}

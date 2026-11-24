@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1310445,
+  "episode_accession": "0001193125-10-148738",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "DCW Total Return Fund", "cik": 1347384, "ticker": "DCW"},
+      "acquirer": {"name": "DCA Total Return Fund", "cik": 1310445, "ticker": "DCA"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-10-148738", "quote": "Annual Meeting of Shareholders of DCA Total Return Fund (NYSE: DCA) and DCW Total Return Fund (NYSE: DCW) (each a “Fund” and together, the “Funds”)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-10-148738", "date": "2010-06-28", "quote": "The Reorganization will not be consummated unless it is approved by the stockholders of both DCA and DCW."},
+      "outcome_evidence": null,
+      "notes": "Proposed 2010 reorganization of DCW into DCA (N-14 filed 2010-06-28, amended twice 2010-07-30; annual meeting set for September 16, 2010). The 2010-08-27 425 shareholder letter is cut off before it lists the proposals. The 2011-2012 filings shown (DCA adviser change to Virtus, renamed Virtus Total Return Fund) do not mention DCW or the reorganization in the excerpts, so no outcome is stated; completion is not inferred from silence."
+    }
+  ],
+  "problems": ""
+}

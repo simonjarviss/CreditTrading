@@ -5,7 +5,7 @@
 
 Note: results/events/SPAC_DEADLINE_PRESCREEN_2026-10-19.md. Output (aggregates
 only; CRSP is licensed and this repository is public):
-results/events/spac_deadline_prescreen_summary_2026-10-19.json.
+results/events/spac/spac_deadline_prescreen_summary_2026-10-19.json.
 
 WHY THIS EXISTS
 ---------------
@@ -108,7 +108,8 @@ from scripts.events import spac_trust_census as C                       # noqa: 
 
 NOTE_DATE = "2026-10-19"
 OUT = REPO / "results" / "events"
-SUMMARY_JSON = OUT / f"spac_deadline_prescreen_summary_{NOTE_DATE}.json"
+SPAC_DIR = C.SPAC_DIR                   # the SPAC outputs' one folder (the census's); the notes sit in OUT
+SUMMARY_JSON = SPAC_DIR / f"spac_deadline_prescreen_summary_{NOTE_DATE}.json"
 FF_CACHE = REPO / "results" / "cef" / "w4" / "_cache_w4"
 ETF_PANEL = REPO / "data" / "etf_daily.parquet"
 DELIST_CACHE = C.CACHE / "crsp_stkdelists_2014plus.parquet"
@@ -631,6 +632,7 @@ def main(argv=None) -> int:
            f"{LAST_FIT_DAY.date()}", "history": run_history(), "snapshot": run_snapshot()}
     txt = json.dumps(res, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))
     if not a.no_write:
+        SPAC_DIR.mkdir(parents=True, exist_ok=True)
         SUMMARY_JSON.write_text(txt + "\n")
         print(f"wrote {SUMMARY_JSON.relative_to(REPO)}")
     print(txt)

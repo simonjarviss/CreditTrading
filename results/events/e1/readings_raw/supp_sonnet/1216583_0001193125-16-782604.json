@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1216583,
+  "episode_accession": "0001193125-16-782604",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Flexible Investment Income Fund", "cik": 1573312, "ticker": "JPW"},
+      "acquirer": {"name": "Nuveen Preferred Income Opportunities Fund", "cik": 1216583, "ticker": "JPC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-782604", "date": "2016-12-01", "quote": "Nuveen, an operating division of TIAA Global Asset Management, today announced that the Board of Trustees of two closed-end funds has approved a plan to merge the funds in order to reduce common shareholder fees and expenses and increase common net earnings."},
+      "outcome_evidence": null,
+      "notes": "Symbols JPW and JPC appear in the release table but the excerpts never say the shares trade on an exchange. Meeting set for 2017-04-12 was adjourned: the 2017-04-12 425 says 'Unless a sufficient number of shareholders vote by May 5, 2017, the adjournment date for your fund’s Shareholder Meeting, your fund will not be able to implement this proposal'. No excerpt states the result of the meeting or completion."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt; the last relevant filing shown is a 2017-04-12 solicitation reminder with the meeting adjourned to 2017-05-05. The 2018-02-23 DEF 14A is annual-meeting text only."
+}

@@ -1,0 +1,12 @@
+CEF trial 54, DG-L3 (2026-11-03): 242 name-days with |price TR - NAV TR| > 10% on the fit's yfinance leg
+  by year: {'2006': 6, '2007': 3, '2008': 126, '2009': 27, '2010': 2, '2013': 1, '2015': 1, '2018': 1, '2020': 72, '2021': 1, '2022': 2}
+  price leg confirmed by CRSP (|yf - CRSP| <= 50bp): 241; NAV confirmable by CEFConnect (both days present): 0; NAV spike reverts next day: 19; in a crisis window: 221; covered by a C4 split/bar/seed ruling: 0
+  RECOMMENDED on the 242: {'KEEP (recommended)': 237, 'MASK (recommended)': 5}; plus 4 NAV-misprint name-days below the 10% line (DG-L3-NAV rows); 9 misprint name-days proposed in all
+    MASK (recommended): BME 2006-07-24: yf price TR +1.71%, CRSP agrees: True, NAV TR +12.64% then -8.63%; NAV 26.35 -> 29.68
+    MASK (recommended): ASG 2006-12-20: yf price TR -0.92%, CRSP agrees: True, NAV TR +13.49% then -12.35%; NAV 5.71 -> 6.48
+    MASK (recommended): PFO 2006-12-26: yf price TR +1.23%, CRSP agrees: True, NAV TR +31.45% then +0.00%; NAV 12.40 -> 16.30
+    MASK (recommended): JPC 2008-01-11: yf price TR +0.71%, CRSP agrees: True, NAV TR -10.49% then +12.60%; NAV 12.68 -> 11.35
+    KEEP (recommended): IGR 2020-03-19: yf price TR +12.85%, CRSP agrees: False, NAV TR +1.15% then -0.78%; NAV 5.24 -> 5.15
+    MASK (recommended): BME 2021-06-28: yf price TR -0.45%, CRSP agrees: True, NAV TR -42.23% then +nan%; NAV 47.86 -> 27.65
+  every flag needs a ruling (§4b). Proposal: dgl3_rulings_PROPOSAL_2026-11-03.csv (keys + recommended ruling; ruled_by / ruled_on blank). The team lead signs it into dgl3_rulings_2026-11-03.csv.
+  rulings file dgl3_rulings_2026-11-03.csv: ABSENT: the fit refuses until the team lead rules

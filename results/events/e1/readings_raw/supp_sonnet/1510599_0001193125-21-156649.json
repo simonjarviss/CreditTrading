@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1510599,
+  "episode_accession": "0001193125-21-156649",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "PIMCO Income Opportunity Fund", "cik": null, "ticker": "PKO"},
+      "acquirer": {"name": "PIMCO Dynamic Income Fund", "cik": 1510599, "ticker": "PDI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-156649", "date": "2021-05-11", "quote": "the Board of each Fund has approved, subject to certain conditions and shareholder approvals as discussed herein, the reorganizations of PKO and PCI (together, the “Target Funds”) with"},
+      "outcome_evidence": null,
+      "notes": "The excerpt shows tickers only, with no exchange named for PKO or PDI. The sentence is cut off after 'with' in the excerpt; the acquirer is PDI per the registrant and the 'Combined Fund' wording. No excerpt states a vote result, completion or termination. The DEFA14A filings of 2021-06-30 to 2021-07-27 are shown only as cover pages, and the 2022 DEF 14A and 2022-12-02 8-K are annual-meeting and distribution items with no merger text."
+    },
+    {
+      "target": {"name": "PIMCO Dynamic Credit and Mortgage Income Fund", "cik": null, "ticker": "PCI"},
+      "acquirer": {"name": "PIMCO Dynamic Income Fund", "cik": 1510599, "ticker": "PDI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-156649", "date": "2021-05-11", "quote": "the Board of each Fund has approved, subject to certain conditions and shareholder approvals as discussed herein, the reorganizations of PKO and PCI (together, the “Target Funds”) with"},
+      "outcome_evidence": null,
+      "notes": "Same filings as the PKO deal; the filings name PKO and PCI as the two Target Funds. The excerpts do not state whether either one, or both, completed."
+    }
+  ],
+  "problems": "Neither listing nor outcome is stated in any excerpt; the cut-off sentence in the N-14 letter does not name the acquirer in the excerpt itself."
+}

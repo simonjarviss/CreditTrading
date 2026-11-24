@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1293613,
+  "episode_accession": "0001213900-23-023264",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Kayne Anderson NextGen Energy & Infrastructure, Inc.", "cik": 1500096, "ticker": "KMF"},
+      "acquirer": {"name": "Kayne Anderson Energy Infrastructure Fund, Inc.", "cik": 1293613, "ticker": "KYN"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001213900-23-023260", "date": "2023-03-27", "quote": "Overview of KYN & KMF Merger March 27, 2023"},
+      "outcome_evidence": null,
+      "notes": "Excerpts show the KYN-KMF merger announced 2023-03-27, updated terms 2023-04-24, N-14 amendments through 2023-09-20, and joint special meeting reminders on 2023-10-12 and 2023-10-20. Only KYN is shown as NYSE-listed ('(NYSE: KYN)' in the 2023-04-24 release; KMF's listing not visible in the excerpt). No excerpt states the vote result or completion or termination. The 2024 and 2025 DEF 14As shown are annual-meeting proxies with no outcome text. Role as acquirer follows KYN being the N-14 registrant and issuer ('issuance of KYN's shares of common stock as part of the Merger')."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt; listing of KMF not shown."
+}

@@ -1,5 +1,20 @@
 {
+ "cutoff_not_traded": 0,
+ "dg4": {
+  "alpaca_read": "2026-10-20T20:19:40+00:00",
+  "ibkr_stamp": "2026-10-20 16:10:37"
+ },
+ "dg_nt5": {
+  "factor_rows_2009_2022": 3524,
+  "ff_first": "1963-07-01",
+  "ff_last": "2026-08-31",
+  "ff_vintage": "202608"
+ },
+ "etf_unresolved_in_crsp": {},
  "events_census": 206,
+ "excluded_partB": {
+  "beta: no beta history": 4
+ },
  "gate_fit": {
   "deferred": 0,
   "events": 134,
@@ -35,7 +50,8 @@
  },
  "in_universe_excluded": 8,
  "merger_open_excluded": 4,
- "part": "A (EDGAR only)",
+ "overlap_not_entered": 0,
+ "part": "A+B",
  "periods": {
   "after_crsp": {
    "completed": 14,
@@ -78,9 +94,24 @@
    "unread": 14
   }
  },
- "run_utc": "2026-10-20T01:00:55+00:00",
+ "run_utc": "2026-10-20T21:33:43+00:00",
  "stamp": "2026-10-19",
- "uncached_documents": 82,
+ "traded_fit": {
+  "beta_median": 0.9038129434752125,
+  "beta_q10": 0.595696992073345,
+  "beta_q90": 1.40689275787377,
+  "bridged_days": 0,
+  "events": 104,
+  "groups": 96,
+  "ibkr_routed": 8
+ },
+ "uncached_documents": 0,
+ "universe_check": {
+  "events_checked": 108,
+  "universe_permnos": 46,
+  "universe_tickers": 44
+ },
+ "unmapped_permno": [],
  "unread_dg1": [],
  "unread_dg1_holdout_read_at_its_stage0": [
   "MVF",

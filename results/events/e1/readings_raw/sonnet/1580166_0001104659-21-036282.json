@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1580166,
+  "episode_accession": "0001104659-21-036282",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "A&Q Masters Fund", "cik": 1580166, "ticker": null},
+      "acquirer": {"name": "A&Q Long/Short Strategies Fund LLC", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-21-036282", "date": "2021-03-15", "quote": "Subject Company: A&Q Masters Fund Form N-14 filed by A&Q Long/Short Strategies Fund LLC (File No. 333-251803)"},
+      "outcome_evidence": null,
+      "notes": "Special meeting set for March 26, 2021, adjourned to March 31, 2021. The N-8F (reason: Merger, filed 2021-04-07) records shareholder approval with a vote date of March 31, 2021 and a distribution, but the excerpt does not state that the merger closed, so outcome left null. Excerpts do not say whether either fund is exchange listed."
+    }
+  ],
+  "problems": "Completion and listing are not stated in the excerpts."
+}

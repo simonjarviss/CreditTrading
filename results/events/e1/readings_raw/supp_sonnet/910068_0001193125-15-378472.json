@@ -1,0 +1,18 @@
+{
+  "episode_cik": 910068,
+  "episode_accession": "0001193125-15-378472",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Western Asset Managed High Income Fund Inc.", "cik": 895523, "ticker": "MHY"},
+      "acquirer": {"name": "Western Asset High Income Opportunity Fund Inc.", "cik": 910068, "ticker": "HIO"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-15-378472", "quote": "Western Asset Managed High Income Fund Inc. (NYSE: MHY) and Western Asset High Income Opportunity Fund Inc. (NYSE: HIO)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-378466", "date": "2015-11-16", "quote": "today announced approval by each Fund’s Board of Directors of a proposal to merge Western Asset Managed High Income Fund Inc. with and into Western Asset High Income Opportunity Fund Inc., subject to approval by the stockholders of each Fund."},
+      "outcome_evidence": null,
+      "notes": "Joint meeting on June 30, 2016 was adjourned to August 12, 2016 for insufficient votes (DEFA14A 0001193125-16-640522, 2016-07-01; still urging votes on 2016-08-01). No excerpt states the result of the August 12 meeting or whether the merger completed or failed. A new DEF 14A filed 2016-12-22 and an 8-K filed 2017-08-17 are shown only as cover pages, with no merger text."
+    }
+  ],
+  "problems": "Outcome not stated in any excerpt."
+}

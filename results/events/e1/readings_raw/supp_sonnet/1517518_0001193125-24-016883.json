@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1517518,
+  "episode_accession": "0001193125-24-016883",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "ClearBridge MLP and Midstream Total Return Fund Inc.", "cik": null, "ticker": "CTR"},
+      "acquirer": {"name": "ClearBridge Energy Midstream Opportunity Fund Inc.", "cik": 1517518, "ticker": "EMO"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-24-016883", "date": "2024-01-26", "quote": "Each Merger will become effective when the SDAT accepts for record the Articles of Merger or at such later time, which may not exceed 30 days after the Articles of Merger are accepted for record, as specified in the Articles of Merger."},
+      "outcome_evidence": null,
+      "notes": "N-14 8C filed 2024-01-26 by EMO covers a joint special meeting of CTR, CEM and EMO; amended 2024-04-05 (meeting May 17, 2024; proposals numbered 1.A, 1.B, 2.A and 2.B, versus 1.A and 1.B in the first filing). A 2024-04-29 DEFA14A urges a vote for the merger. No excerpt states the outcome. EMO is shown as NYSE: EMO in its own filings, but the exchange listing of CTR is not stated in the excerpts."
+    },
+    {
+      "target": {"name": "ClearBridge MLP and Midstream Fund Inc.", "cik": null, "ticker": "CEM"},
+      "acquirer": {"name": "ClearBridge Energy Midstream Opportunity Fund Inc.", "cik": 1517518, "ticker": "EMO"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-24-016883", "date": "2024-01-26", "quote": "Each Merger will become effective when the SDAT accepts for record the Articles of Merger or at such later time, which may not exceed 30 days after the Articles of Merger are accepted for record, as specified in the Articles of Merger."},
+      "outcome_evidence": null,
+      "notes": "Same joint proposal as CTR; outcome not stated. The later filings in the window (8-K 2024-11-20, DEF 14A 2025-03-07) are bylaw and annual-meeting documents whose excerpts do not mention the mergers. Exchange listing of CEM not stated in the excerpts."
+    }
+  ],
+  "problems": "No outcome stated in any excerpt. Target CIKs do not appear in FILING headers. Which of CTR and CEM is the target in each numbered proposal (1.A, 1.B, 2.A, 2.B) is not shown in the excerpts."
+}

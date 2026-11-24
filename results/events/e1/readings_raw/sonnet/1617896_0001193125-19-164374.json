@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1617896,
+  "episode_accession": "0001193125-19-164374",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Corporate Capital Trust II", "cik": 1617896, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164224", "quote": "FS/KKR Announces Merger and Liquidity Plan for Non-Traded BDCs"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164224", "date": "2019-06-03", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome_evidence": {"accession": "0001193125-19-317718", "date": "2019-12-18", "quote": "today announced the closing of the mergers of four non-traded business development companies (BDCs)"},
+      "notes": "Non-traded BDCs, so not a listed pair. The merger closed on 2019-12-18; stockholders approved it on 2019-11-06 to 2019-11-22."
+    },
+    {
+      "target": {"name": "FS Investment Corporation III", "cik": null, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164224", "quote": "FS/KKR Announces Merger and Liquidity Plan for Non-Traded BDCs"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164224", "date": "2019-06-03", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome_evidence": {"accession": "0001193125-19-317718", "date": "2019-12-18", "quote": "today announced the closing of the mergers of four non-traded business development companies (BDCs)"},
+      "notes": "Non-traded BDC. Merger closed 2019-12-18 together with the other two."
+    },
+    {
+      "target": {"name": "FS Investment Corporation IV", "cik": null, "ticker": null},
+      "acquirer": {"name": "FS Investment Corporation II", "cik": 1525759, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-164224", "quote": "FS/KKR Announces Merger and Liquidity Plan for Non-Traded BDCs"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-164224", "date": "2019-06-03", "quote": "today announced a definitive agreement to merge four non-traded business development companies (BDCs) under its advisement"},
+      "outcome_evidence": {"accession": "0001193125-19-317718", "date": "2019-12-18", "quote": "today announced the closing of the mergers of four non-traded business development companies (BDCs)"},
+      "notes": "Non-traded BDC. Merger closed 2019-12-18 together with the other two."
+    }
+  ],
+  "problems": ""
+}

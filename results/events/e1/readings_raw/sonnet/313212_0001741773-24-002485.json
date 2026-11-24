@@ -1,0 +1,38 @@
+{
+  "episode_cik": 313212,
+  "episode_accession": "0001741773-24-002485",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "T. Rowe Price Institutional Emerging Markets Bond Fund", "cik": 852254, "ticker": null},
+      "acquirer": {"name": "T. Rowe Price Emerging Markets Bond Fund", "cik": 313212, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001741773-24-002485", "quote": "Redemptions or exchanges of Fund shares and distributions by the Fund, whether or not you reinvest these amounts in additional Fund shares,"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001741773-24-002485", "date": "2024-05-29", "quote": "receipt of certain documents and financial statements from the Institutional Fund, and receipt of a tax opinion of counsel to the Institutional Fund."},
+      "outcome_evidence": null,
+      "notes": "Funds are T. Rowe Price series whose text speaks of redemptions and exchanges of Fund shares (open-end style); no ticker or exchange shown. The N-14 (file 333-279782) was withdrawn by Form RW on 2024-08-08 only to be refiled without a co-registrant (N-14 of 2024-08-09, accession 0001741773-24-003451, same Reorganization wording), so the withdrawal is administrative. Names come from the RW; CIKs are the registrants (International Funds and Global Funds). A parallel N-14 (333-279781, accession 0001741773-24-002484) concerns another pair not named in the excerpts and is not recorded."
+    },
+    {
+      "target": {"name": "Asia Opportunities Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": 313212, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-26-001749", "quote": "Redemptions or exchanges of Fund shares and distributions by the Fund, whether or not you reinvest these amounts in additional Fund shares,"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-26-001749", "date": "2026-01-27", "quote": "receipt of certain documents and financial statements from the Asia Opportunities Fund, and receipt of a tax opinion of counsel to the Asia Opportunities Fund."},
+      "outcome_evidence": null,
+      "notes": "Acquiring fund not named in the excerpts; CIK is the filer registrant T. Rowe Price International Funds, Inc. Open-end style wording only; outcome not stated in the excerpts."
+    },
+    {
+      "target": {"name": "International Disciplined Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": 313212, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-26-001752", "quote": "Redemptions or exchanges of Fund shares and distributions by the Fund, whether or not you reinvest these amounts in additional Fund shares,"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-26-001752", "date": "2026-01-27", "quote": "receipt of certain documents and financial statements from the International Disciplined Equity Fund, and receipt of a tax opinion of counsel to the International Disciplined Equity Fund."},
+      "outcome_evidence": null,
+      "notes": "Acquiring fund not named in the excerpts; CIK is the filer registrant T. Rowe Price International Funds, Inc. Open-end style wording only; outcome not stated in the excerpts."
+    }
+  ],
+  "problems": "Excerpts are mostly boilerplate; fund names, tickers and listing status are inferred only from wording about redemptions of Fund shares. Whether the 2024 pair completed after refiling is not stated."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1521945,
+  "episode_accession": "0000897101-19-000110",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Pathway Capital Opportunity Fund, Inc.", "cik": 1570335, "ticker": null},
+      "acquirer": {"name": "Triton Pacific Investment Corporation, Inc.", "cik": 1521945, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000897101-19-000307", "quote": "has closed, creating a publicly registered non-traded business development company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000897101-19-000110", "date": "2019-02-13", "quote": "The proposal to permit increased leverage (Proposal 4) must be approved by TPIC’s stockholders for the Merger to occur."},
+      "outcome_evidence": {"accession": "0000897101-19-000307", "date": "2019-04-01", "quote": "the merger between Triton Pacific Investment Corporation, Inc. (“TPIC”) and Pathway Capital Opportunity Fund, Inc. (“PWAY”) has closed"},
+      "notes": "Merger was completed (closed 2019-04-01; TPIC renamed TP Flexible Income Fund) but the funds are described as non-traded, so not a listed pair. Shareholders of both approved on 2019-03-15 (8-K filed 2019-03-20). Direction (TPIC as survivor/acquirer) inferred from TPIC being the registrant on the N-14 and being renamed FLEX; the text says 'merger between TPIC and PWAY to create TP Flexible Income Fund'. The listed_quote shows the combined fund is non-traded; no text shown says PWAY itself is non-traded."
+    }
+  ],
+  "problems": ""
+}

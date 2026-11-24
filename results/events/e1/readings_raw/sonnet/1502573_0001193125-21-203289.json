@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1502573,
+  "episode_accession": "0001193125-21-203289",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Apollo Senior Floating Rate Fund Inc.", "cik": 1502573, "ticker": "AFT"},
+      "acquirer": {"name": "Apollo Tactical Income Fund Inc.", "cik": 1526697, "ticker": "AIF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-21-203289", "quote": "Apollo Tactical Income Fund Inc. (NYSE: AIF) and Apollo Senior Floating Rate Fund (NYSE: AFT)"},
+      "outcome": "vote_failed",
+      "announcement": {"accession": "0001193125-21-203289", "date": "2021-06-29", "quote": "stockholders of AIF have approved the issuance of additional shares of AIF common stock in connection with the reorganization of AFT with and into AIF, with AIF continuing as the surviving Fund (the “Reorganization”)."},
+      "outcome_evidence": {"accession": "0001193125-21-240466", "date": "2021-08-09", "quote": "shareholders did not approve the proposals applicable to AFT described in the Joint Proxy Statement/Prospectus of Apollo Tactical Income Fund, Inc. dated May 18, 2021 (the “Proxy Statement”). As a result, the Special Meeting of shareholders of AFT has been concluded."},
+      "notes": "AIF stockholders approved the share issuance on 2021-06-28; the AFT meeting was adjourned from that date to 2021-08-09 for more votes, and on 2021-08-09 AFT shareholders did not approve. The first filing in the window is the 425 of 2021-06-29, which is itself the earliest shown; the proxy statement is dated May 18, 2021 (not in the window). The 2022 and 2023 proxy filings (seq 5-9) are annual meetings with no merger. AFT remained a separate registrant in 2022 and 2023."
+    }
+  ],
+  "problems": ""
+}

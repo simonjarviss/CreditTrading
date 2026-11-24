@@ -112,12 +112,13 @@ if str(REPO) not in sys.path:  # run as a script, not -m
     sys.path.insert(0, str(REPO))
 
 OUT = REPO / "results" / "events"
+SPAC_DIR = OUT / "spac"                # the census's and the IBKR gate's outputs; their notes sit in OUT
 CACHE = OUT / "_cache_spac"            # gitignored (results/**/_cache_*): Alpaca snapshots, CRSP rows
 NOTE_DATE = "2026-10-15"
-LIVE_CSV = OUT / f"spac_trust_census_live_{NOTE_DATE}.csv"
-UNIVERSE_CSV = OUT / f"spac_trust_census_universe_{NOTE_DATE}.csv"
-YEARS_CSV = OUT / f"spac_trust_census_years_{NOTE_DATE}.csv"
-SUMMARY_JSON = OUT / f"spac_trust_census_summary_{NOTE_DATE}.json"
+LIVE_CSV = SPAC_DIR / f"spac_trust_census_live_{NOTE_DATE}.csv"
+UNIVERSE_CSV = SPAC_DIR / f"spac_trust_census_universe_{NOTE_DATE}.csv"
+YEARS_CSV = SPAC_DIR / f"spac_trust_census_years_{NOTE_DATE}.csv"
+SUMMARY_JSON = SPAC_DIR / f"spac_trust_census_summary_{NOTE_DATE}.json"
 HIST_ROWS = CACHE / "spac_hist_crsp_rows.csv"   # CRSP prices: licensed, never tracked
 
 SIC_BROWSE_URL = ("https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&SIC=6770&type=&dateb="
@@ -1841,8 +1842,8 @@ def hist_splits(levels: pd.DataFrame) -> dict:
 # averaged in. Every fee below is re-read from IBKR before any trade.
 
 IBKR_DATE = "2026-10-19"
-IBKR_LIVE_CSV = OUT / f"spac_ibkr_gate_live_{IBKR_DATE}.csv"
-IBKR_SUMMARY_JSON = OUT / f"spac_ibkr_gate_summary_{IBKR_DATE}.json"
+IBKR_LIVE_CSV = SPAC_DIR / f"spac_ibkr_gate_live_{IBKR_DATE}.csv"
+IBKR_SUMMARY_JSON = SPAC_DIR / f"spac_ibkr_gate_summary_{IBKR_DATE}.json"
 # The public "Products and Exchange Search" page calls this endpoint without a
 # login (read from its own script, /products.exchanges.search/index.js, 2026-10-19).
 IBKR_PRODUCTS_URL = "https://www.interactivebrokers.com/webrest/search/products-by-exchangeId-productType"
@@ -2239,7 +2240,7 @@ def ibkr_stage(asof: str, offline: bool) -> dict:
             "name_ok", "name_rule", "conid_in_shortstock_agrees", "isin_matches_domicile", "ambiguous", "tradable_ibkr"]
     out = L[keep].merge(priced[["cik", "cap_median_adv"] + [c for c in priced.columns if c.startswith("breakeven_ticket_")]],
                         on="cik", how="left")
-    OUT.mkdir(parents=True, exist_ok=True)
+    SPAC_DIR.mkdir(parents=True, exist_ok=True)
     out.sort_values(["tradable_ibkr", "symbol"], ascending=[True, True]).to_csv(IBKR_LIVE_CSV, index=False, float_format="%.6g")
 
     alp, ib = L["tradable"] == True, L["tradable_ibkr"] == True   # noqa: E712
@@ -2378,7 +2379,7 @@ def main(argv=None) -> int:
         xcheck = pd.crosstab(m["status"], m["delactiontype"]).to_dict()
 
     # ---------------- outputs
-    OUT.mkdir(parents=True, exist_ok=True)
+    SPAC_DIR.mkdir(parents=True, exist_ok=True)
     ucols = ["cik", "name_now", "ipo_name", "ipo_date", "ipo_accession", "sic_now", "net_sic6770", "item_506",
              "xbrl_trust_share", "net_name", "n_trust", "n_bc", "cover_trust", "cover_ipo", "prospectus_test",
              "base_months", "t0", "status", "status_forms", "announce_date", "n_425", "completion_date",

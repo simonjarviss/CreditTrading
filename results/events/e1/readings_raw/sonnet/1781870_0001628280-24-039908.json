@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1781870,
+  "episode_accession": "0001628280-24-039908",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "New Mountain Guardian III BDC, L.L.C.", "cik": 1781870, "ticker": null},
+      "acquirer": {"name": "New Mountain Private Credit Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001628280-24-042951", "quote": "Title of each class Trading Symbol(s) Name of each exchange on which registered N/A N/A N/A"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001628280-24-039908", "date": "2024-09-09", "quote": "In connection with the Merger, the Company will merge with and into NEWCRED, with NEWCRED continuing as the surviving company."},
+      "outcome_evidence": null,
+      "notes": "The target's 8-K cover shows no trading symbol and no exchange; a unitholder consent solicitation (not a stock exchange vote) was used. The merger was in fact completed: the 8-K of 2024-12-19 (accession 0001628280-24-051942) says 'On December 17, 2024, the Company completed its previously announced merger (the “Merger”) with and into NEWCRED, with NEWCRED continuing as the surviving company in the Merger.' Units were converted into cash of $7.27 each. Recorded as not_a_listed_pair because the target is shown with no exchange listing; the acquirer's listing status is not stated in the excerpts and its CIK does not appear in a FILING header."
+    }
+  ],
+  "problems": ""
+}

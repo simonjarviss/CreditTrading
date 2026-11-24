@@ -1,0 +1,58 @@
+{
+  "episode_cik": 880366,
+  "episode_accession": "0001193125-13-109270",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Legg Mason Capital Management All Cap Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "ClearBridge Large Cap Value Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-13-109270", "quote": "If your account application permits, you may be eligible to redeem shares by telephone."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-13-109270", "date": "2013-03-15", "quote": "You are being asked to vote on a proposed reorganization transaction related to your fund, Legg Mason Capital Management All Cap Fund, a series of Legg Mason Partners Equity Trust, a Maryland statutory trust (the “Trust”)."},
+      "outcome_evidence": {"accession": "0001193125-13-109270", "date": "2013-03-15", "quote": "If your account application permits, you may be eligible to redeem shares by telephone."},
+      "notes": "Share classes (Class A, C, I) and shareholder redemption indicate open-end mutual funds; the text never uses the words open-end. The vote was adjourned from July 11 to August 7, 2013 (DEFA14A 0001193125-13-288966); the excerpts do not say how it ended. The episode CIK is the trust that contains the fund, so role is recorded as other."
+    },
+    {
+      "target": {"name": "ClearBridge Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "ClearBridge Large Cap Growth Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-14-302708", "quote": "If your account application permits, you may be eligible to redeem shares by telephone."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-14-302708", "date": "2014-08-08", "quote": "You are being asked to vote on a proposed reorganization transaction related to ClearBridge Equity Fund (the “Target Fund”), a series of Legg Mason Partners Equity Trust, a Maryland statutory trust (the “Trust”)."},
+      "outcome_evidence": {"accession": "0001193125-14-302708", "date": "2014-08-08", "quote": "If your account application permits, you may be eligible to redeem shares by telephone."},
+      "notes": "Acquirer name taken from the registered securities line: Class A, Class C, Class I and Class R1 shares of ClearBridge Large Cap Growth Fund. Mutual fund by share classes and redemption. Meeting set for December 10, 2014; the DEFA14A of 2014-09-25 is a proxy reminder; no outcome is stated."
+    },
+    {
+      "target": {"name": "Legg Mason Investment Counsel Financial Services Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "1919 Financial Services Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-349457", "date": "2014-09-23", "quote": "The Special Meeting of Shareholders of Legg Mason Investment Counsel Financial Services Fund, Legg Mason Investment Counsel Social Awareness Fund and Legg Mason Investment Counsel Maryland Tax-Free Income Trust originally scheduled for September 24, 2014 has been postponed to October 15, 2014"},
+      "outcome_evidence": null,
+      "notes": "Appears only in the 2014-09-23 supplement to a combined proxy statement and prospectus dated August 15, 2014 (the supplement is the earliest filing shown for it). Meeting postponed to October 15, 2014; no outcome stated."
+    },
+    {
+      "target": {"name": "Legg Mason Investment Counsel Social Awareness Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "1919 Socially Responsive Balanced Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-349457", "date": "2014-09-23", "quote": "The Special Meeting of Shareholders of Legg Mason Investment Counsel Financial Services Fund, Legg Mason Investment Counsel Social Awareness Fund and Legg Mason Investment Counsel Maryland Tax-Free Income Trust originally scheduled for September 24, 2014 has been postponed to October 15, 2014"},
+      "outcome_evidence": null,
+      "notes": "Same supplement as the Financial Services Fund deal. Series of Trust for Advised Portfolios is the acquirer trust. No outcome stated."
+    },
+    {
+      "target": {"name": "Legg Mason Investment Counsel Maryland Tax-Free Income Trust", "cik": null, "ticker": null},
+      "acquirer": {"name": "1919 Maryland Tax-Free Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-349457", "date": "2014-09-23", "quote": "The Special Meeting of Shareholders of Legg Mason Investment Counsel Financial Services Fund, Legg Mason Investment Counsel Social Awareness Fund and Legg Mason Investment Counsel Maryland Tax-Free Income Trust originally scheduled for September 24, 2014 has been postponed to October 15, 2014"},
+      "outcome_evidence": null,
+      "notes": "Target is a series of Legg Mason Tax-Free Income Fund, a different trust from the episode CIK. No outcome stated."
+    }
+  ],
+  "problems": "Episode CIK is a trust holding both target and acquirer series, so role is other. Open-end status of the funds is inferred from share classes and redemption language, not stated as open-end."
+}

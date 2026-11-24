@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1587987,
+  "episode_accession": "0001193125-14-201526",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Newtek Business Services, Inc.", "cik": 1094019, "ticker": null},
+      "acquirer": {"name": "Newtek Business Services Corp.", "cik": 1587987, "ticker": "NEWT"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-15-106979", "quote": "On November 12, 2014, Newtek Business Services, Inc. successfully completed its conversion from an operating company to an internally managed BDC and merged with and into Newtek Business Services Corp."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-14-378863", "date": "2014-10-22", "quote": "Newtek Announces Shareholder Approval of Conversion to Business Development Company (“BDC”) and Reverse Stock Split"},
+      "outcome_evidence": {"accession": "0001193125-14-412283", "date": "2014-11-14", "quote": "As part of the conversion to a business development company (a “BDC”), Newtek Business Services, Inc. (the “Company” or “Newtek”) merged with and into Newtek Business Services Corp. (the “Successor Company”) effective as of November 12, 2014 (the “Effective Date”)."},
+      "notes": "Not a fund-to-fund merger: an operating company (Newtek Business Services, Inc.) merged into a successor entity to convert to a BDC; the merger was completed 2014-11-12. The N-14 (seq=1, 2014-05-15) excerpts show only boilerplate, so the earliest excerpted announcement is the 425 of 2014-10-22 reporting shareholder approval."
+    }
+  ],
+  "problems": ""
+}

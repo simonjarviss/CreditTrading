@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1514490,
+  "episode_accession": "0000949377-11-000139",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Royce Value Trust, Inc.", "cik": 804116, "ticker": null},
+      "acquirer": {"name": "Royce Global Value Trust, Inc.", "cik": 1514490, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000949377-11-000139", "date": "2011-03-16", "quote": "Combined Prospectus/Proxy Statement regarding the proposed Transaction"},
+      "outcome_evidence": null,
+      "notes": "Only the first 2,500 characters and four passages of the N-14 are shown. The text calls it a 'Transaction' and never says merger; it registers Global Trust shares and addresses stockholders of Value Trust, so the pair and direction are inferred from the registration cover and explanatory note, not stated. Nothing on listing or outcome."
+    }
+  ],
+  "problems": "Episode is a single N-14 filing; the excerpt does not define the Transaction, so role, both_listed and outcome are null."
+}

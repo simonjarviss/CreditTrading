@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1281845,
+  "episode_accession": "0001213900-22-080655",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Unique Logistics International, Inc.", "cik": 1281845, "ticker": "UNQL"},
+      "acquirer": {"name": "Edify Acquisition Corp.", "cik": null, "ticker": "EAC"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-22-080655", "quote": "Unique Logistics International, Inc. (OTCMKTS: UNQL) (“Unique” or the “Company”), a global logistics and freight forwarding company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-22-080650", "date": "2022-12-19", "quote": "Unique Logistics International, Inc. Announces Merger Agreement with Edify Acquisition Corp."},
+      "outcome_evidence": null,
+      "notes": "Not a fund merger: Unique is a logistics operating company quoted on OTC and Edify is a special purpose acquisition company. The excerpts of later filings do not state how the Edify merger ended."
+    }
+  ],
+  "problems": "Episode is an operating company / SPAC business combination, not a merger of closed-end funds or BDCs."
+}

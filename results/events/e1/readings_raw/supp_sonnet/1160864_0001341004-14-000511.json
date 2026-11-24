@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1160864,
+  "episode_accession": "0001341004-14-000511",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Income Trust, Inc.", "cik": 832327, "ticker": "BKT"},
+      "acquirer": {"name": "BlackRock Core Bond Trust", "cik": 1160864, "ticker": "BHK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000511", "quote": "BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000511", "date": "2014-06-09", "quote": "have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Joint special meeting set for 2014-09-30 (425 reminder filed 2014-08-29). The last merger filings in the window are 425 vote reminders filed 2014-09-18; no excerpt states the vote result, completion or termination."
+    },
+    {
+      "target": {"name": "BlackRock Income Opportunity Trust, Inc.", "cik": 880280, "ticker": "BNA"},
+      "acquirer": {"name": "BlackRock Core Bond Trust", "cik": 1160864, "ticker": "BHK"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-14-000512", "quote": "BlackRock Income Trust, Inc. (NYSE:BKT), BlackRock Income Opportunity Trust, Inc. (NYSE:BNA) and BlackRock Core Bond Trust (NYSE:BHK)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-14-000512", "date": "2014-06-09", "quote": "have approved the reorganization of each of BKT and BNA into BHK, with BHK continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Same press release as the BKT deal, filed under BNA as subject company. Approval of each Reorganization was stated to be not contingent on any other. No excerpt states the outcome."
+    }
+  ],
+  "problems": "No excerpt states how either reorganization ended."
+}

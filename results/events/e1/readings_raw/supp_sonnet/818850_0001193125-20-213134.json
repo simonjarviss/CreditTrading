@@ -1,0 +1,18 @@
+{
+  "episode_cik": 818850,
+  "episode_accession": "0001193125-20-213134",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen New York Municipal Value Fund 2", "cik": 1454981, "ticker": "NYV"},
+      "acquirer": {"name": "Nuveen New York Municipal Value Fund, Inc.", "cik": 818850, "ticker": "NNY"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213134", "date": "2020-08-07", "quote": "The Board of Trustees for eleven Nuveen municipal closed-end funds approved five reorganization proposals. The reorganizations are subject to customary conditions, including shareholder approval."},
+      "outcome_evidence": null,
+      "notes": "Shareholder meeting set for 2020-12-07, then adjourned (425s of 2020-12-14, 2021-01-06, 2021-01-15, 2021-02-17): 'because not enough votes were received to satisfy the vote requirement, your Nuveen Closed End Fund(s) shareholder meeting was adjourned to January 15, 2021', later adjourned meeting date March 17, 2021. No excerpt states a final vote result, completion or termination. The 2021-02-17 425 names only NNY (not NYV) as a fund; DEF 14A filings of 2021-06-25 and 2022-06-28 show only the cover page. Only NYV is named as a target of this acquirer in the excerpts; the other four pairs in the 2020-08-07 release involve other funds. The 2022 8-K lists NNY as NYSE-traded but the excerpt does not show NYV's exchange."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 836267,
+  "episode_accession": "0001398344-16-015634",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "European Growth and Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "International Select Equity Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-18-004150", "date": "2018-03-13", "quote": "will receive Institutional Class shares of the International Select Equity Fund. The shares of the European Growth and Income Fund will be cancelled following the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Registrant SCM Trust (a trust with a Plan of reorganization); excerpts do not say whether the funds are listed or how it ended. The N-14 was refiled as amendments through 2018-06-12 with no outcome statement."
+    },
+    {
+      "target": {"name": "Greater China Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "International Select Equity Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-18-004154", "date": "2018-03-13", "quote": "The shares of the Greater China Fund will be cancelled following the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Excerpts do not say whether the funds are listed or how it ended."
+    }
+  ],
+  "problems": "Excerpts are mostly boilerplate (plan termination language, closing conditions). The 2016-2017 N-14 filings (ARC acquired funds into SCM Trust funds; FundVantage International Fund and Shelton Tactical Credit Fund) do not name target and acquirer pairs in the excerpts, so no deals are recorded for them. Role of SCM Trust (registrant) is not stated, so episode_role is null."
+}

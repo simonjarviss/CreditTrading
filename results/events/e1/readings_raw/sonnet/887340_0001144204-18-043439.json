@@ -1,0 +1,18 @@
+{
+ "episode_cik": 887340,
+ "episode_accession": "0001144204-18-043439",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {"name": "MainStay VP Absolute Return Multi-Strategy Portfolio", "cik": 887340, "ticker": null},
+   "acquirer": {"name": null, "cik": null, "ticker": null},
+   "both_listed": false,
+   "listed_quote": {"accession": "0001144204-18-043439", "quote": "the Portfolios may offer their shares to the separate accounts of various other insurance companies to fund benefits of their variable insurance contracts."},
+   "outcome": "not_a_listed_pair",
+   "announcement": {"accession": "0001144204-18-043439", "date": "2018-08-10", "quote": "To approve an Agreement and Plan of Reorganization (“Reorganization Agreement”) providing for the acquisition of the assets and liabilities of the VP ARMS Portfolio, a series of MainStay VP Funds"},
+   "outcome_evidence": null,
+   "notes": "Insurance-dedicated series of MainStay VP Funds Trust sold through variable annuity/life separate accounts; text shows no exchange listing. Acquiring portfolio is not named in the excerpts. Meeting moved from October 25 to November 26, 2018; completion not stated in any excerpt. Later filings (seq 3, 5, 7, 8) are subadviser proxies, not this merger. The CIK is the trust's CIK."
+  }
+ ],
+ "problems": "Acquiring portfolio name cut off by the excerpt; outcome of the merger itself not stated, so evidence is null."
+}

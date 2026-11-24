@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1100663,
+  "episode_accession": "0001193125-14-265523",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "iShares MSCI United Kingdom ETF, a series of iShares, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "iShares MSCI United Kingdom ETF, a newly created series of iShares Trust", "cik": 1100663, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-14-265523", "quote": "Letter to Shareholders of the iShares MSCI United Kingdom ETF (the “Target Fund”), a series of iShares, Inc., a Maryland corporation."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-14-265523", "date": "2014-07-10", "quote": "The Board of Directors (the “Board”) of iShares, Inc., a Maryland corporation (the “Company”), is pleased to announce the reorganization (the “Reorganization”) of iShares MSCI United Kingdom ETF (the “Target Fund”)"},
+      "outcome_evidence": {"accession": "0001193125-14-265523", "date": "2014-07-10", "quote": "Letter to Shareholders of the iShares MSCI United Kingdom ETF (the “Target Fund”), a series of iShares, Inc., a Maryland corporation."},
+      "notes": "ETF-to-ETF reorganization into a newly created series; both are ETFs, not closed-end funds."
+    }
+  ],
+  "problems": ""
+}

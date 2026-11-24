@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1310709,
+  "episode_accession": "0000891804-16-001717",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Guggenheim Enhanced Equity Strategy Fund", "cik": null, "ticker": "GGE"},
+      "acquirer": {"name": "Guggenheim Enhanced Equity Income Fund", "cik": 1310709, "ticker": "GPM"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000891804-16-001717", "date": "2016-08-31", "quote": "Guggenheim Investments announced today that the Boards of Trustees of several equity closed-end funds approved the mergers outlined below."},
+      "outcome_evidence": null,
+      "notes": "Exchange listing of GGE is not stated in the excerpts (tickers only). A joint special meeting was scheduled for 2017-02-13; no excerpted filing states its result or whether the GGE merger closed."
+    },
+    {
+      "target": {"name": "Guggenheim Equal Weight Enhanced Equity Income Fund", "cik": 1526104, "ticker": "GEQ"},
+      "acquirer": {"name": "Guggenheim Enhanced Equity Income Fund", "cik": 1310709, "ticker": "GPM"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000891804-16-001717", "date": "2016-08-31", "quote": "Guggenheim Investments announced today that the Boards of Trustees of several equity closed-end funds approved the mergers outlined below."},
+      "outcome_evidence": null,
+      "notes": "Exchange listing of GEQ is not stated in the excerpts (tickers only; the 2018 DEF 14A shows GPM as NYSE but says nothing of GEQ). Merger contingent on GPM redomestication; no excerpted filing states the meeting result or completion."
+    }
+  ],
+  "problems": "Neither the 2017 nor the 2018 DEF 14A excerpt states what happened to the proposed mergers."
+}

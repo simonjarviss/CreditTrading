@@ -30,31 +30,52 @@ RUNNER.md "The session, in order"; the reasons for the order are the incidents:
                `nav_gate.py`, "DEFERRAL AND THE ORDER PATH" below). After the
                sleeve has read the panel, `still_holds` checks it was the panel
                the gate certified, or the session FAILs.
-  2. read      Alpaca clock, calendar, account, positions, orders, assets.
+  2. read      Alpaca clock, calendar, account, positions, closed orders, assets.
+               Gate 6's order lists are read at step 4, not here.
   2b. drawdown only when the book json sets `risk.drawdown` (absent = off;
                `report` is the only mode built). The book's drawdown from its
                high-water mark on `<state>/eod_equity.csv` (Alpaca's EOD
                portfolio history, the official daily P&L) is compared with the
                frozen spec's risk.halve_drawdown / risk.kill_drawdown and
                recorded in plan.json and the log, with what an `on` mode would
-               do. Nothing that trades reads it (`drawdown.py`; team lead
-               2026-10-19).
+               do. Report mode acts on nothing (`drawdown.py`; team lead
+               2026-10-19). ONE READER RESTRICTS ON IT: under the core spec's
+               `below_min_names = "trade_eligible"` (CEF trial 55, paper only),
+               K0 builds a reduced book only when the status is exactly OK, and
+               otherwise takes today's flatten (CEF TRIAL 55 block below). With
+               that key absent nothing reads it.
   3. decide    the sleeve on the as-of date with the broker's holdings and
                `extras={"sleeve_nav": equity, "opening_session": bool}`, then
                `decide.decide` -> whole-share orders and `plan_sha`.
+  3b. corporate actions only when the book json sets `corporate_actions.mode`
+               (absent = off, the behaviour above unchanged). Alpaca paper
+               processes no splits or mergers, so a held name's broker count
+               can sit on a different basis from its as-of close. Every
+               non-dividend action naming a held or targeted name inside its
+               window is found (`corp_actions.py`, THE WINDOW): `report`
+               records it and sends anyway; `halt` refuses with a gate-5 `data`
+               refusal naming each event, and also refuses when the feed cannot
+               be read. Run again at the late-market SEND on fresh reads (team
+               lead 2026-10-28). On a combined book (MULTI-SLEEVE BOOKS below)
+               the targets are the netted decision's AND every sleeve's own
+               (`_plan_targets`), and the held names are still the broker's.
   4. gate      all nine (`gate.evaluate`), on a clock read AFTER the slow
-               steps, never the one from the start. Any refusal: nothing is sent.
+               steps, never the one from the start. Gate 6's order lists
+               (status=all since midnight before the as-of, and open) are the
+               last broker read before that clock read (`_gate6_orders`; review
+               2026-10-29); a failed read refuses. Any refusal: nothing is sent.
   5. record    `<state>/<date>/STARTED`, exclusively, BEFORE the first order
                (CLAUDE.md order-path rule 2).
   6. transmit  in `decide.transmit_sequence` order (running net kept near
                zero); the Alpaca clock re-read before every POST and the batch
-               stopped at the cutoff. One POST per order, each attempt and response appended to
-               orders.jsonl as it happens. ANY failure stops the batch: an
-               `AmbiguousSubmit` is resolved by looking the id up, never by
-               resending (a resend of an accepted order doubles it in the same
-               auction), and a rejection or a bad echo stops the rest too,
-               because the list that was approved is no longer the list that
-               is going.
+               stopped at the cutoff. Each attempt and response is appended to
+               orders.jsonl as it happens. An `AmbiguousSubmit` stops the batch
+               and is resolved by looking the id up, never by resending (a
+               resend of an accepted order doubles it). A 4xx rejection skips
+               that symbol and the rest go (team lead, 2026-09-28; `_transmit`).
+               Since 2026-11-23 one id can be POSTed up to four times: a 429 is
+               waited out and the id read, and it is resent only when Alpaca
+               has no such order (`_submit_one`, POST_429_WAITS_S).
   7. confirm   every sent id is re-read from Alpaca by client_order_id; one
                missing or different is FAIL.
 
@@ -71,7 +92,11 @@ the session runs in two phases:
           be what goes. Positions must still equal the plan's "current" for
           every name; dry-run, arming (--approve, <D>/APPROVED, or AUTO_ARMED),
           halt, late clock, no-set, shortability, exposure and sanity are
-          re-evaluated on fresh broker reads.
+          re-evaluated on fresh broker reads, and so is the corporate-action
+          gate when the book sets it (step 3b): Alpaca can list an action
+          effective on the session date only after the evening decide. Gate
+          6's lists are read after all of those, just before the gate's clock
+          read (step 4).
 Why: paper runs no closing auction and under-fills `cls` (11 of 13 expired on
 2026-09-29). Absent the key, the book runs as `cls` exactly as before.
 
@@ -103,6 +128,62 @@ the session date; an evening run is never final) is REFUSED with a gate-5
   * verify: a day still deferred at the send reads, from plan.json's refusal,
     `MISSED: ... [data] stale-NAV gate: ... deferred`: a FAIL, never a PASS.
 
+MULTI-SLEEVE BOOKS (quantt/session/combine.py; DARK, team lead 2026-10-28).
+`Deps.sleeves` is None for the released book json, and every step above runs
+exactly as before (proved against de6e9c5: tests/test_combine_noop.py). It is
+set only when every enabled entry of the book json's `sleeves[]` carries a
+`risk_budget`. Then step 3 builds each sleeve from its own spec on its own
+sleeve_nav and decides the NETTED book once; the closes, NAVs, assets, gate 9
+and the send read the union of the sleeves' universes, each name's closes and
+NAVs from its own sleeve's panel (PER-SLEEVE PANELS, below `refresh_subprocess`);
+gate 5 acts per sleeve (`gate.gate_data_by_sleeve`); the stale-NAV gate's holds
+go to the sleeve that owns the name; and plan.json gains `combine`, the
+per-sleeve record. The book-level limits stay the book spec's, applied to the
+netted orders by `fit_to_buying_power` and gate 8.
+
+EACH SLEEVE'S OWN PANEL (C4 plan row 6A; DARK, 2026-10-29). Every panel read
+-- the closes sized on, the NAV dates gate 5 and the missing-NAV hold check,
+the pre-flight's history, the stale-NAV gate's file, the refresh -- is of the
+panel the sleeve decides on (`spec_panel`, the sleeve's own `panel_paths()`).
+For the released book that is `data/cef/`, by the same calls as before (proved
+against 5e627ff: tests/test_panels_noop.py). A sleeve whose panel files are
+absent, or whose universe its own panel does not cover, FAILs the decide naming
+them; a panel this tree has no fetcher for is refused at step 1.
+
+GATE 5'S MISSING-NAV HOLD (book json `data.missing_nav`; DARK, team lead
+2026-10-29). `Deps.missing_nav` is None for the released book json, and gate 5
+refuses the whole day when one name has no NAV dated the as-of date, exactly as
+before (proved against bd87144: tests/test_missing_nav_hold.py). Why the key:
+on 2026-10-22 PDO's 10-21 NAV never landed, the CEFConnect fallback that used
+to fill such a gap has refused every scripted request since 10-21, and one
+fund's NAV cost all 13 the day. With "hold" (`gate.missing_nav_hold`):
+  * EVENING DECIDE and every morning slot BEFORE the final check (the
+    stale-NAV gate's `nav_gate.final_check_at`, close - 90 min: 14:30 ET):
+    REFUSED with today's gate-5 refusals plus one line saying the decide is
+    deferred. Nothing is decided or marked; the next slot re-runs the refresh,
+    and a NAV that lands meanwhile is simply used. The DEFERRAL AND THE ORDER
+    PATH notes above apply unchanged.
+  * AT OR AFTER THE FINAL CHECK: each name whose only fault is a NAV not dated
+    as-of is HELD -- current shares, no order, out of the cross-section, never
+    targeted to zero, never the cause of the sleeve's `min_names` flatten --
+    through the stale-NAV gate's `nav_hold` extra; the other names decide. The
+    stale-NAV gate runs on that exit-4 refresh too (`_nav_gate`).
+  * Still refused at any hour, as today: a missing or stale CLOSE, a name with
+    no NAV at all, a refresh failure other than INCOMPLETE, and more names
+    without a NAV than `gate.max_missing_nav_holds` (n - min_names: 7 of 13).
+  * THE AGE LIMIT (team lead 2026-10-29, a policy): a fund may be held for at
+    most data.missing_nav_max_sessions consecutive sessions. At the final check
+    after that, its NAV still not dated as-of, the day is REFUSED as without
+    the key, the fund and its count named. The count is re-read from the prior
+    sessions' plan.json (`missing_nav_streaks`); a missing or unreadable record
+    refuses rather than counts as zero.
+  * SHORT OF min_names (release-check of 6d42f4f): if, with the holds and the
+    sleeve's own exclusions, fewer than `min_names` names are eligible on their
+    signal (the sleeve's own count, tagged on its targets), the day is REFUSED
+    as without the key, not decided as a whole-book hold that marks it DONE.
+`missing_nav` in plan.json and the run record says what was missing, the
+action, and what was held.
+
 OPENING SESSION. True only when Alpaca shows no positions AND no order in the
 account's history has ever filled. The sleeve is told explicitly (it never
 infers it from a flat book: a failed day or a manual flatten also looks flat),
@@ -130,11 +211,13 @@ import os
 import subprocess
 import sys
 import traceback
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
-from typing import Callable
+from typing import Callable, NamedTuple
 
+from quantt.session import combine as cmb
+from quantt.session import corp_actions as cam
 from quantt.session import decide as dec
 from quantt.session import drawdown as ddm
 from quantt.session import gate as gt
@@ -190,6 +273,16 @@ class Book:
 BOOKS = {
     "cef": Book("cef", "cef", REPO / "ops/specs/cef_discount.frozen.json",
                 REPO / "ops/books/cef_discount_book.json"),
+    # C4 (CEF trial 52) on its own Alpaca paper account (team lead 2026-10-26,
+    # docs/SYSTEM.md section 5; deploy plan row 6A). DARK: nothing schedules it
+    # until quantt/deploy/install_vm.py is run with `--book c4`, and that renders
+    # DRY_RUN=1 unless armed. Its keys are ALPACA_C4_KEY_ID / _SECRET_KEY (the
+    # `name`, as alpaca_probe.env_names derives them); its order ids `c4-<D>-...`,
+    # which verify reads as `<book>-<D>-`; its state directory must be named
+    # `c4` (records.STATE_DIR_NAMES), so a C4 run can never write the core's
+    # STARTED, plan.json or verify.log for the same session.
+    "c4": Book("c4", "c4", REPO / "ops/specs/c4_families.frozen.json",
+               REPO / "ops/books/c4_families_book.json"),
 }
 
 
@@ -474,8 +567,18 @@ def last_navs(nav_path: Path, asof: dt.date, universe) -> dict:
     docstring has the measured case). `last_closes` alone cannot see that.
     Same discipline as `last_closes`: rows after `asof` dropped first (NO
     LOOKAHEAD, asserted), a duplicate (date, ticker) raises rather than being
-    averaged by a pivot. A NaN or non-positive NAV is not a NAV.
+    averaged by a pivot. A NaN, infinite or non-positive NAV is not a NAV.
+
+    FINITE (review of fetch_daily's NAV half, 2026-10-28): the filter was
+    `notna() & > 0`, which +inf passes, so an infinite NAV dated D would have
+    counted as D's NAV here (measured that day on a copy of the real panel:
+    one deployed name's NAV(D) set to +inf, and the old filter let the session
+    DECIDE a plan on it). It is `isfinite & > 0` now, the same test as
+    fetch_daily's `has_nav` and nav_gate's `panel_rows`. No NAV in the panels is
+    infinite (measured that day), so on them this is the old filter exactly
+    (quantt/session/tests/test_nav_finite.py, on the real panel).
     """
+    import numpy as np
     import pandas as pd
     N = pd.read_parquet(nav_path, columns=["date", "ticker", "nav"])
     N = N[N["ticker"].isin(list(universe))].copy()
@@ -485,7 +588,8 @@ def last_navs(nav_path: Path, asof: dt.date, universe) -> dict:
     if len(dup):
         raise SessionError(f"{nav_path}: duplicate (date, ticker) rows, e.g. "
                            f"{dup.head(3).to_dict('records')}")
-    N = N[N["nav"].notna() & (N["nav"] > 0)]
+    nav = pd.to_numeric(N["nav"])
+    N = N[np.isfinite(nav) & (nav > 0)]
     last = N.groupby("ticker")["date"].max()
     out = {}
     for s in universe:
@@ -508,9 +612,27 @@ def _text(v) -> str:
     return v.decode("utf-8", "replace") if isinstance(v, bytes) else v
 
 
-def refresh_subprocess(asof: dt.date, book: Book, timeout_s: float) -> RefreshResult:
+# The fetch_daily flags, after `--require-asof D`, that refresh the CORE panel:
+# the command this runner has always run (RUNNER.md step 1). `refresh_flags`.
+CORE_REFRESH_FLAGS = ("--nav-fallback", "cefconnect")
+
+# fetch_daily's other data books (`--data-book`, scripts/cef/data_books.py): the
+# directory each one writes, under its own lock. MIRRORED, not imported: the
+# session imports nothing from scripts/ at module level (load_spec), and the
+# refresh it runs is a child process. tests/test_c4_book.py pins every entry to
+# data_books.C4_DIR and to the C4 spec's panel_source, so the three cannot drift.
+DATA_BOOK_DIRS = {"c4": REPO / "data" / "cef_c4"}
+
+
+def refresh_subprocess(asof: dt.date, book: Book, timeout_s: float,
+                       flags=CORE_REFRESH_FLAGS) -> RefreshResult:
     """RUNNER.md step 1, verbatim flags. A child process so a fetcher crash
     cannot take the session with it, and its exit code is the whole verdict.
+
+    `flags` are the ones `refresh_flags` gives for the book's panel. The
+    default is the core's, so the command is the one it has always been,
+    `--require-asof D --nav-fallback cefconnect --book <book json>`
+    (tests/test_run.py, test_refresh_subprocess_flags).
 
     TIMEOUT (review 2026-09-28). A fetch that hangs (cefconnect has no
     timeout of its own here) once meant the session could reach the gate after
@@ -522,7 +644,7 @@ def refresh_subprocess(asof: dt.date, book: Book, timeout_s: float) -> RefreshRe
     gate-5 refusal, recorded with whatever the fetcher printed.
     """
     cmd = [sys.executable, str(REPO / "scripts/cef/fetch_daily.py"),
-           "--require-asof", asof.isoformat(), "--nav-fallback", "cefconnect",
+           "--require-asof", asof.isoformat(), *flags,
            "--book", str(book.book_path.relative_to(REPO))]
     try:
         p = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True, timeout=timeout_s)
@@ -535,42 +657,493 @@ def refresh_subprocess(asof: dt.date, book: Book, timeout_s: float) -> RefreshRe
     return RefreshResult(exit=p.returncode, tail=tail)
 
 
+# ------------------------------------------------------- each sleeve's own panel
+
+class Panel(NamedTuple):
+    """The two parquet files one sleeve decides on (`cef_discount.panel_paths`)."""
+    prices: Path
+    nav: Path
+
+
+def core_panel() -> Panel:
+    """The 13's panel, `data/cef/`: the sleeve module's PX_PATH and NAV_PATH,
+    read at CALL time, so tests that point them at a copy move it here too."""
+    from src.deploy.sleeves import cef_discount as cefmod
+    return Panel(cefmod.PX_PATH, cefmod.NAV_PATH)
+
+
+def spec_panel(spec: dict) -> Panel:
+    """The panel this spec's sleeve decides on, and so the panel the runner
+    sizes, gates and NAV-checks it on (PER-SLEEVE PANELS below).
+
+    It is the sleeve's own `panel_paths()`, never a second derivation of it:
+    with `panel_source` absent the core's `data/cef/` (read now, as above),
+    present `REPO / <path>` (registry.cef_panel_source). Only `cef_discount`
+    names a panel. Another allocation type raises rather than be priced on the
+    core's panel, which holds none of its names."""
+    from src.deploy.registry import CEF_DISCOUNT_ALLOC_TYPE
+    from src.deploy.sleeves import cef_discount as cefmod
+    t = (spec.get("allocation") or {}).get("type")
+    if t != CEF_DISCOUNT_ALLOC_TYPE:
+        raise SessionError(f"spec {spec.get('spec_id')!r}: allocation type {t!r} names no "
+                           f"price and NAV panel; the runner prices and gates a sleeve on the "
+                           f"panel it decides on, and only {CEF_DISCOUNT_ALLOC_TYPE} has one")
+    return Panel(*cefmod.CEFDiscountSleeve(spec, 0.0).panel_paths())
+
+
+# PER-SLEEVE PANELS (C4 deploy plan row 6A, §2 step 5; DARK, team lead's
+# fast-track 2026-10-28/29). Until this, the runner took every close it sized
+# on, every NAV date gate 5 checked, the pre-flight's history and the stale-NAV
+# gate's file from the core's `data/cef/`, whatever panel the sleeve decided on,
+# and `require_core_panel` refused any other (C4 step 1). Now each name is read
+# from the panel of the sleeve that owns it (`BookPanels`): its closes for
+# sizing, gate 8 and the fit; its NAV dates for gate 5 (per sleeve on a
+# combined book, `gate.gate_data_by_sleeve`) and the missing-NAV hold; its close
+# history for the pre-flight; its NAV file for the stale-NAV gate; and the
+# refresh that writes it (`refresh_flags`). So C4 can decide, size and gate on
+# `data/cef_c4/` while the 13 stay on `data/cef/`. For the released book (one
+# sleeve, the core spec) every read is the call it was, on the same file, with
+# the same arguments: the no-op is pinned against 5e627ff
+# (tests/test_panels_noop.py).
+#
+# THE GUARD (`require_panel`), at each read, inside the session so a refusal is
+# recorded: a sleeve whose panel files are absent, or whose universe has a name
+# with no row in its own price or NAV file, FAILs the session naming the files
+# or the names. A name missing from its own panel means the spec and the panel
+# do not belong together (a mis-wired panel_source, a mis-seeded panel); read on,
+# gate 5 would only say "no close at all", and a spec whose panel_source were
+# dropped would be decided on `data/cef/`, which holds none of C4's names. It is
+# not in `default_deps`, which the 15:52 SEND also builds: the send reads no
+# panel (it sends the plan, priced on the plan's own closes), and a panel gone
+# by then must not stop a decided plan going.
+
+@dataclass(frozen=True)
+class BookPanels:
+    """Which panel each name the book trades is read from.
+
+    `entries`: one (label, Panel, universe) per sleeve, the single-spec book's
+    one spec or each enabled sleeve of a combined book. A name in two entries
+    raises: one name has one panel, as combine.py gives it one owner."""
+    entries: tuple
+
+    def __post_init__(self):
+        seen = {}
+        for label, panel, uni in self.entries:
+            if not isinstance(panel, Panel):
+                raise SessionError(f"{label}: no panel ({panel!r}); the runner reads each "
+                                   f"sleeve from the panel it decides on and assumes none")
+            for s in uni:
+                if s in seen:
+                    raise SessionError(f"{s} is in {seen[s]}'s universe and {label}'s: one "
+                                       f"name is read from one panel")
+                seen[s] = label
+
+    def panels(self) -> tuple:
+        """The distinct panels, in entry order."""
+        return tuple(dict.fromkeys(p for _, p, _ in self.entries))
+
+    def by_panel(self, universe) -> list:
+        """[(Panel, names, labels)]: `universe` split by the panel each name is
+        read from, each group in `universe`'s order. Raises for a name no
+        entry owns: nothing is read from a panel by default."""
+        own = {s: (label, panel) for label, panel, uni in self.entries for s in uni}
+        stray = [s for s in universe if s not in own]
+        if stray:
+            raise SessionError(f"{stray} belong to no sleeve of this book "
+                               f"({[label for label, _, _ in self.entries]}); no panel to read "
+                               f"them from")
+        groups = {}
+        for s in universe:
+            label, panel = own[s]
+            names, labels = groups.setdefault(panel, ([], []))
+            names.append(s)
+            if label not in labels:
+                labels.append(label)
+        return [(p, tuple(n), tuple(lb)) for p, (n, lb) in groups.items()]
+
+
+def book_panels(spec: dict, sleeves) -> BookPanels:
+    """The single-spec book: its spec's panel for its universe. A combined book
+    (combine.load_sleeves with `panel_of`): each enabled sleeve's own panel for
+    its own universe."""
+    if sleeves is None:
+        return BookPanels(((f"spec {spec.get('spec_id')!r}", spec_panel(spec),
+                            spec_params(spec)["universe"]),))
+    return BookPanels(tuple((f"sleeve {e.name!r} ({e.spec_id})", e.panel, e.universe)
+                            for e in sleeves))
+
+
+def require_panel(panel: Panel, names, labels) -> None:
+    """THE GUARD (PER-SLEEVE PANELS): refuse, naming them, a panel whose files
+    are absent, or whose price or NAV file has no row at all for one of `names`.
+    Reads only the files' `ticker` column."""
+    absent = [str(p) for p in panel if not Path(p).exists()]
+    if absent:
+        raise SessionError(f"{', '.join(labels)}: panel file(s) {absent} absent (panel "
+                           f"{[str(p) for p in panel]}); not pricing, gating or deciding on a "
+                           f"panel that is not there")
+    import pandas as pd
+    for what, path in (("price", panel.prices), ("NAV", panel.nav)):
+        have = set(pd.read_parquet(path, columns=["ticker"])["ticker"])
+        missing = [s for s in names if s not in have]
+        if missing:
+            raise SessionError(f"{', '.join(labels)}: universe not covered by its own panel: "
+                               f"{missing} have no row in its {what} file {path}. A sleeve's "
+                               f"names and its panel must match; refusing to read them from "
+                               f"it")
+
+
+def panel_closes(panels: BookPanels, asof: dt.date, universe) -> dict:
+    """`last_closes` for `universe`, each name from its own sleeve's panel, in
+    `universe`'s order. One panel: exactly `last_closes(prices, asof, universe)`."""
+    groups = panels.by_panel(universe)
+    for panel, names, labels in groups:
+        require_panel(panel, names, labels)
+    if len(groups) == 1:
+        return last_closes(groups[0][0].prices, asof, universe)
+    got = {}
+    for panel, names, _ in groups:
+        got.update(last_closes(panel.prices, asof, names))
+    return {s: got[s] for s in universe}
+
+
+def panel_navs(panels: BookPanels, asof: dt.date, universe) -> dict:
+    """`last_navs` for `universe`, each name from its own sleeve's NAV file: so
+    gate 5, per sleeve or not, checks the NAV dates the sleeve decides on. One
+    panel: exactly `last_navs(nav, asof, universe)`."""
+    groups = panels.by_panel(universe)
+    for panel, names, labels in groups:
+        require_panel(panel, names, labels)
+    if len(groups) == 1:
+        return last_navs(groups[0][0].nav, asof, universe)
+    got = {}
+    for panel, names, _ in groups:
+        got.update(last_navs(panel.nav, asof, names))
+    return {s: got[s] for s in universe}
+
+
+def panel_history(panels: BookPanels, asof: dt.date, universe, rows: int):
+    """`close_history` for the pre-flight, each name from its own sleeve's
+    panel. One panel: exactly `close_history(prices, asof, universe, rows)`.
+    Several: each panel's last `rows` closes, joined on date, each name
+    forward-filled over the dates its own panel lacks (landmine 6's rule, one
+    level up), then the last `rows` dates. A name its panel does not reach back
+    `rows` sessions shows as a gap, which `worst_day_loss` refuses by name."""
+    groups = panels.by_panel(universe)
+    for panel, names, labels in groups:
+        require_panel(panel, names, labels)
+    if len(groups) == 1:
+        return close_history(groups[0][0].prices, asof, universe, rows)
+    import pandas as pd
+    wide = pd.concat([close_history(p.prices, asof, names, rows) for p, names, _ in groups],
+                     axis=1).sort_index().ffill()
+    assert wide.index.max().date() <= asof, f"lookahead: close history past {asof}"
+    return wide[[s for s in universe if s in wide.columns]].iloc[-rows:]
+
+
+def refresh_flags(panel: Panel):
+    """THE DATA-REFRESH INTERFACE (C4 plan row 6A; filled by plan step 3): the
+    fetch_daily flags, after `--require-asof D`, that refresh `panel`, or None
+    when this tree has no fetcher for it.
+
+      * the core panel: CORE_REFRESH_FLAGS, the command the runner has always
+        run, unchanged (checked first, so the core's answer is the one it was);
+      * a data book's panel (DATA_BOOK_DIRS: `cef_prices.parquet` and
+        `cef_nav.parquet` in its directory, exactly): `("--data-book", <name>)`.
+        For C4 that is `fetch_daily --data-book c4`, which writes `data/cef_c4/`
+        under its OWN lock (`data/cef_c4/.fetch.lock`, never the core's, so the
+        two books' refreshes never wait on each other) and REFUSES
+        `--nav-fallback cefconnect` (exit 2; CEFConnect is disabled for C4, team
+        lead 2026-10-28), so no fallback flag is passed. Its exit 6 (a
+        spike-and-revert bar with no ruling, the panel written) is a non-zero
+        refresh, which gate 5 refuses at every check, as step 3 requires. That
+        holds on a day a C4 NAV is also late only because exit 6 OUTRANKS the
+        INCOMPLETE exit 4 in fetch_daily (release-check of 8b14298): exit 4 is
+        what C4's missing-NAV hold accepts at the final check, and until that fix
+        a late NAV turned an unruled spike into a held, decided day;
+      * any other panel: None, and the book's refresh is refused
+        (`book_refresh`), recorded, so a panel nothing refreshes is never
+        decided on.
+    """
+    if panel == core_panel():
+        return CORE_REFRESH_FLAGS
+    for name, d in DATA_BOOK_DIRS.items():
+        if panel == Panel(d / "cef_prices.parquet", d / "cef_nav.parquet"):
+            return ("--data-book", name)
+    return None
+
+
+def book_refresh(book: Book, panels: BookPanels) -> Callable[[dt.date, float], RefreshResult]:
+    """The session's step-1 callable for a book whose sleeves read `panels`.
+
+    One panel with flags (`refresh_flags`): `refresh_subprocess` with them,
+    which for the core is today's command. Otherwise it does not run the
+    fetcher at all and returns a refresh that DID NOT COMPLETE, saying why, so
+    gate 5 refuses the day, recorded, as for a timeout: a panel nothing
+    refreshed is never decided on. The two cases: a panel this tree has no
+    fetcher for (C4's, until step 3), and a book whose sleeves read more than
+    one panel (one `fetch_daily --book` run refreshes one data book, and step
+    3's requires every deployed name to be that book's). `--skip-refresh`
+    still skips it, as for any book (gate 5 then checks the panel's dates)."""
+    ps = panels.panels()
+    flags = refresh_flags(ps[0]) if len(ps) == 1 else None
+    if flags is not None:
+        return lambda asof, timeout_s: refresh_subprocess(asof, book, timeout_s, flags)
+    if len(ps) != 1:
+        why = (f"the book's sleeves read {len(ps)} panels "
+               f"({[str(p.prices.parent) for p in ps]}); one fetch_daily run refreshes one, "
+               f"and a refresh per panel is not built")
+    else:
+        why = (f"no fetcher for the panel {[str(p) for p in ps[0]]} on this tree: "
+               f"fetch_daily refreshes data/cef/ and the data books "
+               f"{sorted(DATA_BOOK_DIRS)} only (run.refresh_flags)")
+    note = f"not run: {why}; gate 5 refuses rather than decide on a panel nothing refreshed"
+    return lambda asof, timeout_s: RefreshResult(exit=None, tail="", incomplete=note)
+
+
+def stale_nav_panel(panels: BookPanels, mode: str) -> Path:
+    """The NAV file the stale-NAV gate certifies: the one every sleeve of the
+    book reads, which must be the core's. Raises otherwise, naming the sleeves.
+
+    WHY ONLY THE CORE'S. The gate reads CEFConnect for every name, and
+    CEFConnect is disabled for C4 (team lead 2026-10-28; plan row 5: M1, the
+    NAV-repeat mask, is C4's defence). And `PanelGate` writes under
+    fetch_daily's CORE lock and fallback log when it acts, which are not
+    another panel's. A per-panel gate, like a per-sleeve stale-NAV mode
+    (combine.py, NOT BUILT), is new code; until it exists a book json that sets
+    data.stale_nav on another panel is refused before any client is built."""
+    navs = tuple(dict.fromkeys(p.nav for p in panels.panels()))
+    core = core_panel().nav
+    if navs != (core,):
+        other = [label for label, p, _ in panels.entries if p.nav != core]
+        raise SessionError(f"data.stale_nav={mode!r}, but {other} read NAV file(s) "
+                           f"{[str(n) for n in navs if n != core]}, not the core's {core}. "
+                           f"The stale-NAV gate reads CEFConnect (disabled for C4, team lead "
+                           f"2026-10-28) and locks and logs as the core's fetch_daily; it is "
+                           f"not built for another panel. Delete data.stale_nav from this "
+                           f"book json")
+    return core
+
+
 def sleeve_targets(spec: dict, capital: float, asof: dt.date, holdings: dict,
-                   equity: float, opening: bool, nav_hold: dict | None = None) -> list:
+                   equity: float, opening: bool, nav_hold: dict | None = None, *,
+                   account: str | None = None, thin_rule: dict | None = None) -> list:
     """The strategy's targets, built exactly as RUNNER.md step 3 says: the
     registry's sleeve from the frozen spec at the spec's capital, asked on the
     as-of date with the broker's holdings and the two extras. `nav_hold`
     ({"asof", "names"}, from the stale-NAV gate in `on` mode) is added as a third
     extra only when the gate holds a name, so otherwise the sleeve's input is
-    unchanged."""
+    unchanged. MarketState's prices are the sleeve's OWN price file
+    (`spec_panel`; for the core spec `cefmod.PX_PATH`, as before row 6A); the
+    sleeve reads its panel itself and its own guard refuses an absent one named
+    by panel_source (cef_discount._read_panel).
+
+    `account` and `thin_rule` (CEF trial 55, te4; PAPER ONLY): the sleeve's paper
+    declaration and the `extras["thin_rule"]` it requires under `below_min_names
+    = "trade_eligible"` (cef_discount `_thin_rule`). The runner passes them only
+    when the spec sets that key (`_thin_target_kw`); otherwise both are None and
+    the sleeve is built and asked exactly as before, so the key-absent session is
+    byte-identical (tests/test_trade_eligible_noop.py)."""
     import pandas as pd
     from src.deploy.registry import build_sleeve
     from src.deploy.sleeve import MarketState
-    from src.deploy.sleeves import cef_discount as cefmod
-    sl = build_sleeve(spec, capital)
+    px_path = spec_panel(spec).prices
+    sl = build_sleeve(spec, capital) if account is None else build_sleeve(spec, capital,
+                                                                           account=account)
     ts = pd.Timestamp(asof)
-    prices = pd.read_parquet(cefmod.PX_PATH)       # MarketState requires it; this sleeve reads its own panel
+    prices = pd.read_parquet(px_path)              # MarketState requires it; this sleeve reads its own panel
     prices = prices[pd.to_datetime(prices["date"]) <= ts]
     extras = {"sleeve_nav": equity, "opening_session": opening}
     if nav_hold is not None:
         extras["nav_hold"] = nav_hold
+    if thin_rule is not None:
+        extras["thin_rule"] = thin_rule
     ms = MarketState(asof=ts, prices=prices, holdings=dict(holdings), extras=extras)
     return sl.target_positions(ts, ms)
 
 
-def is_opening_session(positions: dict, closed_orders: list) -> bool:
-    """No position AND no order in the account's history ever filled."""
+# `execution.opening_session_fills` (book json): which filled orders make a session
+# not an opening one. ABSENT = "any", today's rule.
+OPENING_FILLS_ANY, OPENING_FILLS_OWN = "any", "own_prefix"
+OPENING_FILLS_MODES = (OPENING_FILLS_ANY, OPENING_FILLS_OWN)
+
+
+def is_opening_session(positions: dict, closed_orders: list, *, fills: str = OPENING_FILLS_ANY,
+                       cid_prefix: str | None = None) -> bool:
+    """No position AND no COUNTED order in the account's history ever filled.
+
+    The opening session trades to FULL target instead of the band edge (team lead
+    2026-09-28); a flat book is not told it is opening (a failed day or a manual
+    flatten also looks flat), so the account's own history decides.
+
+    `fills` (the book json's `execution.opening_session_fills`, `opening_session_fills_for`):
+      * "any" (ABSENT, today's rule, the core's): every filled order counts;
+      * "own_prefix": a filled order counts only if its client_order_id starts with
+        `<cid_prefix>-`, this book's own order-id prefix (`Book.cid_prefix`, passed by
+        the runner, never a literal).
+    WHY "own_prefix" EXISTS (C4; the rule is the team lead 2026-11-03, "just flat it" (docs/SYSTEM.md section 5, PR #30); C4 trades the EXISTING
+    spare paper account, no new account, ruled 2026-11-02). The research loop may trade that account too
+    (CLAUDE.md rule 1's 2026-10-27 exception). Under "any", the loop's fills there, even
+    ones flattened long before, would starve C4's first session of its opening: it
+    would open from flat at the band EDGE, 28-42% of full target and net long +4.7% to
+    +11.1% (the release-check of 336df9d, measured on data/cef_families to 2026-10-09,
+    spec v4), and stay there, because nothing makes a later session an opening one.
+    Another runner's fills say nothing about C4's book. POSITIONS STILL COUNT whatever
+    their origin: a held share is exposure in this account, so any position means not
+    an opening session, under either rule. An order whose filled_qty cannot be read
+    raises under either rule, as before: an unreadable history is not a clean one."""
+    if fills not in OPENING_FILLS_MODES:
+        raise SessionError(f"opening-session fills rule {fills!r} is not one of {OPENING_FILLS_MODES}")
+    if fills == OPENING_FILLS_OWN and not cid_prefix:
+        raise SessionError("the own_prefix opening-session rule needs the book's order-id prefix")
     if positions:
         return False
+    own = f"{cid_prefix}-" if fills == OPENING_FILLS_OWN else None
     for o in closed_orders:
         try:
             f = Decimal(str(o["filled_qty"]))
         except (KeyError, InvalidOperation):
             raise SessionError(f"closed order {o.get('client_order_id')!r} has unreadable "
                                f"filled_qty {o.get('filled_qty')!r}") from None
-        if f > 0:
+        if f > 0 and (own is None or str(o.get("client_order_id") or "").startswith(own)):
             return False
     return True
+
+
+def opening_session_fills_for(book: Book) -> str | None:
+    """The book json's `execution.opening_session_fills`, or None (ABSENT: "any", today's
+    rule; `is_opening_session`). Present, it must be one of OPENING_FILLS_MODES."""
+    ex = json.loads(book.book_path.read_text()).get("execution") or {}
+    if "opening_session_fills" not in ex:
+        return None
+    v = ex["opening_session_fills"]
+    if v not in OPENING_FILLS_MODES:
+        raise SessionError(f"{book.book_path}: execution.opening_session_fills {v!r} is not one "
+                           f"of {OPENING_FILLS_MODES} (or the key must be deleted)")
+    return v
+
+
+# THE FIRST-SESSION GATE (release-check of 336df9d, QR1; a code gate since 2026-11-03).
+# A book listed here must make its FIRST armed session an opening session in a clean
+# account. C4 trades the EXISTING spare paper account (no new account, ruled 2026-11-02),
+# which the research loop may also trade (CLAUDE.md rule 1's 2026-10-27 exception). Its
+# book json sets `execution.opening_session_fills = "own_prefix"` (the rule: the
+# team lead 2026-11-03, "just flat it" (docs/SYSTEM.md section 5, PR #30)), so
+# the loop's past fills do not starve the opening (`is_opening_session`: else 28-42% of
+# target, net long). What can still make the first session wrong is what is THERE: a
+# position (any origin: it is exposure in this account, and makes the session not an
+# opening one) or an open order that is not the book's own. So, while no filled order in
+# the account carries the book's own prefix (`<cid_prefix>-`; from its first fill the gate
+# is spent): ARMED (DRY_RUN exactly "0", and AUTO_ARMED or an approval), a session that is
+# not an opening one under the book's rule, or with another runner's open order, or whose
+# open orders could not be read (UNMEASURED: never read as none), is refused before any
+# order, under its OWN gate name, `first_session` (release-check of 4f759a9: filed under
+# `arming`, which verify counts as a human's choice, a refused armed day read as an
+# explained no-trade day; this one is a MISSED day), naming what it found. At a
+# late-market DECIDE it refuses there too, unlike `arming`: what it judges is the account,
+# not an approval still to come. UNARMED, recorded in plan.json / send.json
+# `first_session` and printed, never refused. The core is not listed: it computes and
+# records nothing new. NO OVERRIDE: the account must be flat, and no other runner armed
+# on it (checklist step 6), before C4 arms.
+OPENING_REQUIRED_BOOKS = frozenset({"c4"})
+
+
+def first_session_check(book: Book, positions: dict, closed_orders: list,
+                        open_orders: list | None, fills: str | None,
+                        open_orders_unread: str | None = None) -> dict | None:
+    """THE FIRST-SESSION GATE's reading (above): None for a book not in
+    OPENING_REQUIRED_BOOKS, or once the account holds a filled order with the book's own
+    prefix. Else {"opening", "fills_rule", "positions", "foreign_fills",
+    "newest_foreign_fill_date", "newest_foreign_fill_prefix", "foreign_open_orders"}:
+    `opening` is `is_opening_session` under the book's rule (`fills`, None = "any"); the
+    foreign fills are reported whatever the rule, the newest by `submitted_at` with its ET
+    date and the first dash-field of its client_order_id (who sent it). `open_orders`
+    None means they could NOT be read (gate 6's read failed, `open_orders_unread` saying
+    why): `foreign_open_orders` is then None and `open_orders_unread` names it, and the
+    gate reads that as UNMEASURED, never as none (release-check of 4f759a9, quant-reviewer
+    2: it read as clear). Raises, naming it, on an order whose filled_qty or submitted_at
+    cannot be read."""
+    if book.name not in OPENING_REQUIRED_BOOKS:
+        return None
+    from quantt.broker.alpaca import parse_ts
+    own = f"{book.cid_prefix}-"
+    rule = fills or OPENING_FILLS_ANY
+    foreign = []
+    for o in closed_orders:
+        cid = o.get("client_order_id")
+        try:
+            f = Decimal(str(o["filled_qty"]))
+        except (KeyError, InvalidOperation):
+            raise SessionError(f"closed order {cid!r} has unreadable filled_qty "
+                               f"{o.get('filled_qty')!r}") from None
+        if f > 0:
+            if isinstance(cid, str) and cid.startswith(own):
+                return None                       # the book has traded here: gate spent
+            foreign.append((parse_ts(o.get("submitted_at"), f"closed order {cid!r} submitted_at"),
+                            cid))
+    newest = max(foreign, key=lambda x: x[0]) if foreign else None
+    return {"opening": is_opening_session(positions, closed_orders, fills=rule,
+                                          cid_prefix=book.cid_prefix),
+            "fills_rule": rule,
+            "positions": sum(1 for q in positions.values() if q),
+            "foreign_fills": len(foreign),
+            "newest_foreign_fill_date": newest[0].astimezone(gt.ET).date() if newest else None,
+            "newest_foreign_fill_prefix": ((str(newest[1]).split("-")[0] if newest[1] else "(none)")
+                                           if newest else None),
+            "foreign_open_orders": (None if open_orders is None else
+                                    sum(1 for o in open_orders
+                                        if not str(o.get("client_order_id") or "").startswith(own))),
+            "open_orders_unread": (None if open_orders is not None else
+                                   (open_orders_unread or "the open-order list was not read"))}
+
+
+def first_session_gate(book: Book, check: dict | None, armed: bool) -> tuple:
+    """(record or None, refusal text or None, log lines) for THE FIRST-SESSION GATE.
+    The record's `status` is CLEAR, NOT_FIT (not an opening session under the book's
+    rule, or another runner's open order) or UNMEASURED (the open orders could not be
+    read). Armed and not CLEAR: refused (the caller adds it as gate `first_session`).
+    Unarmed: recorded and printed only."""
+    if check is None:
+        return None, None, []
+    fills = (f"{check['foreign_fills']} filled order(s) not {book.name}'s in the account's "
+             f"closed-order history"
+             + (f" (newest submitted {check['newest_foreign_fill_date']}, client_order_id "
+                f"prefix {check['newest_foreign_fill_prefix']!r})" if check["foreign_fills"] else ""))
+    problems = []
+    if not check["opening"]:
+        problems.append(f"not an opening session under the {check['fills_rule']!r} rule: "
+                        f"{check['positions']} position(s); {fills}")
+    if check["foreign_open_orders"]:
+        problems.append(f"{check['foreign_open_orders']} open order(s) not {book.name}'s")
+    unmeasured = check["foreign_open_orders"] is None
+    if unmeasured:
+        problems.append(f"UNMEASURED: the account's open orders could not be read "
+                        f"({check['open_orders_unread']}), so another runner's order cannot "
+                        f"be ruled out")
+    status = "CLEAR" if not problems else ("UNMEASURED" if unmeasured and len(problems) == 1
+                                           else "NOT_FIT")
+    rec = {**check, "armed": armed, "status": status,
+           "action": "clear" if not problems else ("refused" if armed else "reported")}
+    if not problems:
+        return rec, None, [f"  FIRST SESSION ({book.name}): an opening session under the "
+                           f"{check['fills_rule']!r} rule (full target); {fills}"]
+    what = "; ".join(problems)
+    text = (f"{book.name}'s first armed session is not fit to send: {what}. An account that is "
+            f"not flat, or another runner's order in it, would open {book.name} from the band "
+            f"edge or beside foreign exposure (for C4 28-42% of target, net long: the "
+            f"release-check of 336df9d). Nothing is sent. The account must be flat and no other "
+            f"runner armed on it before arming (results/ops/C4_DRY_RUN_CHECKLIST_2026-10-29.md "
+            f"step 6)")
+    if armed:
+        return rec, text, [f"  FIRST SESSION ({book.name}): REFUSED: {text}"]
+    return rec, None, [f"  FIRST SESSION ({book.name}): {status} (unarmed: reported only): "
+                       f"{what}"]
+
+
+def _armed(env, approve_sha, state: Path) -> bool:
+    """DRY_RUN exactly "0" and AUTO_ARMED or an approval: gates 1 and 2's arming."""
+    return env.get("DRY_RUN") == "0" and (approve_sha is not None
+                                           or (state / "AUTO_ARMED").exists())
 
 
 def halts_for(book: Book) -> list:
@@ -614,23 +1187,169 @@ def execution_for(book: Book) -> dict:
     raise SessionError(f"{book.book_path}: execution.mode {mode!r} is not cls or late_market")
 
 
+def _data_block(book: Book) -> dict | None:
+    """The book json's `data` block, or None. Present, it must be a mapping that
+    sets at least one of `stale_nav` and `missing_nav` (each key ABSENT is today's
+    behaviour); a block that sets neither raises, as it always has."""
+    data = json.loads(book.book_path.read_text()).get("data")
+    if data is None:
+        return None
+    if not isinstance(data, dict) or not ({"stale_nav", "missing_nav"} & set(data)):
+        raise SessionError(f"{book.book_path}: a `data` block must set stale_nav to one of "
+                           f"{ng.MODES} or missing_nav to one of {gt.MISSING_NAV_MODES} (or "
+                           f"the block must be deleted)")
+    return data
+
+
 def stale_nav_for(book: Book) -> str | None:
     """The book json's `data.stale_nav`: the stale-NAV gate's mode, or None.
 
     ABSENT means no gate, today's behaviour (CLAUDE.md: a new key defaults to
     current behaviour), exactly as an absent `execution` block means `cls`.
     Present, it must be one of `nav_gate.MODES`; anything else raises. Why the
-    gate is a runner setting and not a frozen-spec key: `nav_gate` docstring."""
-    data = json.loads(book.book_path.read_text()).get("data")
-    if data is None:
+    gate is a runner setting and not a frozen-spec key: `nav_gate` docstring.
+    Since 2026-10-29 the `data` block may set `missing_nav` without it
+    (`missing_nav_for`); a block that sets neither still raises."""
+    data = _data_block(book)
+    if data is None or "stale_nav" not in data:
         return None
-    if not isinstance(data, dict) or "stale_nav" not in data:
-        raise SessionError(f"{book.book_path}: a `data` block must set stale_nav to one of "
-                           f"{ng.MODES} (or the block must be deleted)")
     mode = data["stale_nav"]
     if mode not in ng.MODES:
         raise SessionError(f"{book.book_path}: data.stale_nav {mode!r} is not one of {ng.MODES}")
     return mode
+
+
+def missing_nav_for(book: Book) -> str | None:
+    """The book json's `data.missing_nav`: "hold", or None (DARK; team lead 2026-10-29).
+
+    ABSENT means gate 5 as it always was: one name without a NAV dated the
+    as-of date refuses the whole day (CLAUDE.md: a new key defaults to current
+    behaviour; the no-op is proved against bd87144, release-20261029-1, by
+    tests/test_missing_nav_hold.py). "hold" is `gate.missing_nav_hold`: from
+    the final check such a name keeps its current shares and the other names
+    decide. Anything else raises. A runner setting, beside `stale_nav`, for the
+    same reason: it is about the live capture, which the research's panels never
+    lacked, not about the strategy the frozen spec states."""
+    data = _data_block(book)
+    if data is None or "missing_nav" not in data:
+        return None
+    mode = data["missing_nav"]
+    if mode not in gt.MISSING_NAV_MODES:
+        raise SessionError(f"{book.book_path}: data.missing_nav {mode!r} is not one of "
+                           f"{gt.MISSING_NAV_MODES}")
+    return mode
+
+
+def missing_nav_max_sessions_for(book: Book) -> int | None:
+    """The book json's `data.missing_nav_max_sessions`: the hold's age limit, or None.
+
+    A POLICY (team lead 2026-10-29), not a measurement: a fund may be held for
+    a missing NAV for at most this many consecutive sessions; on the next one
+    gate 5 refuses the day (`gate.missing_nav_hold`, THE AGE LIMIT, says why 2
+    and why it is not derived). It lives beside `missing_nav` in the book json,
+    never as a code literal, and is REQUIRED when `missing_nav` is set: a
+    positive int, else this raises. Set without `missing_nav` it raises too: a
+    limit for a hold that is off is a setting nothing reads."""
+    data = _data_block(book) or {}
+    on = "missing_nav" in data
+    if "missing_nav_max_sessions" not in data:
+        if on:
+            raise SessionError(f"{book.book_path}: data.missing_nav is set but "
+                               f"data.missing_nav_max_sessions is not; the hold's age limit "
+                               f"has no default")
+        return None
+    v = data["missing_nav_max_sessions"]
+    if not on:
+        raise SessionError(f"{book.book_path}: data.missing_nav_max_sessions {v!r} is set "
+                           f"without data.missing_nav")
+    if not gt.max_sessions_ok(v):
+        raise SessionError(f"{book.book_path}: data.missing_nav_max_sessions {v!r} is not a "
+                           f"positive int")
+    return v
+
+
+def missing_nav_streaks(state: Path, session_date: dt.date, names, limit: int) -> dict:
+    """{name: the consecutive sessions before `session_date` in which it had no
+    NAV dated its as-of, counted up to `limit`; or a string saying why that
+    cannot be counted}. Read from each prior session's `<state>/<D>/plan.json`,
+    the session's own record, newest first, and never from memory: the count
+    survives a restart because it is re-read at every final check.
+
+    For each prior session D (NYSE days, `previous_trading_day`):
+      * plan.json absent, not JSON, or for another session: cannot count. The
+        caller refuses the day rather than read a missing record as zero
+        (team lead 2026-10-29);
+      * plan.json with a `missing_nav` record (the key was on): the name in its
+        `missing` -> one more session without a dated NAV, look further back;
+        not in it -> its NAV was dated: the count stops (it resets);
+      * plan.json without one (the key was off): gate 5 then refused the day on
+        any missing NAV. No `data` refusal means gate 5 passed and every name had
+        a NAV dated as-of: the count stops. A `data` refusal does not record
+        which names lacked one: cannot count.
+    Only `limit` sessions are ever read: at `limit` the day is refused anyway.
+    Read-only: unlike rec.day_dir, it never creates a directory."""
+    from ops.schedule.nyse_calendar import previous_trading_day
+    out = {}
+    for name in sorted(names):
+        n, d, why = 0, session_date, None
+        while n < limit and why is None:
+            d = previous_trading_day(d)
+            path = Path(state) / d.isoformat() / "plan.json"
+            try:
+                plan = json.loads(path.read_text())
+            except FileNotFoundError:
+                why = f"no plan.json for the session {d}"
+                break
+            except (OSError, ValueError) as e:
+                why = f"{path} is unreadable: {type(e).__name__}: {e}"
+                break
+            if not isinstance(plan, dict) or plan.get("session_date") != d.isoformat():
+                why = (f"{path} is not the record of the session {d} (session_date "
+                       f"{plan.get('session_date') if isinstance(plan, dict) else None!r})")
+                break
+            mv = plan.get("missing_nav")
+            if mv is not None:
+                if not isinstance(mv, dict) or not isinstance(mv.get("missing"), dict):
+                    why = f"{path}: its missing_nav record has no `missing` mapping"
+                elif name in mv["missing"]:
+                    n += 1
+                    continue
+                break
+            refusals = plan.get("refusals")
+            if not isinstance(refusals, list):
+                why = f"{path} has no refusals list"
+            elif any(isinstance(r, dict) and r.get("gate") == "data" for r in refusals):
+                why = (f"{path}: the key was off and gate 5 refused that session; whether "
+                       f"{name}'s NAV was dated is not recorded")
+            break
+        out[name] = why if why is not None else n
+    return out
+
+
+def _short_of_min_names(targets) -> dict | None:
+    """The sleeve's tag on a decide that had holds and fell short of `min_names`
+    eligible names (`cef_discount.SHORT_OF_MIN_NAMES`), or None. Every target
+    carries the same tag or none does; a mixture is a sleeve bug and raises."""
+    from src.deploy.sleeves.cef_discount import SHORT_OF_MIN_NAMES
+    tags = [t.meta.get(SHORT_OF_MIN_NAMES) for t in targets]
+    if not any(tags):
+        return None
+    if not all(tags):
+        raise SessionError("the sleeve tagged some targets short of min_names and not "
+                           "others; not deciding on a mixed answer")
+    return tags[0]
+
+
+def min_names_of(spec: dict) -> int:
+    """The frozen spec's `min_names`, for the missing-NAV hold's limit
+    (`gate.max_missing_nav_holds`). Read only when the book json sets
+    data.missing_nav; missing or not a positive int raises, naming it."""
+    v = (spec.get("frozen") or {}).get("min_names")
+    if isinstance(v, bool) or not isinstance(v, int) or v <= 0:
+        raise SessionError(f"frozen spec {spec.get('spec_id')!r}: frozen.min_names {v!r} is "
+                           f"not a positive int; the missing-NAV hold's limit is derived "
+                           f"from it")
+    return v
 
 
 def drawdown_for(book: Book) -> str | None:
@@ -658,6 +1377,136 @@ def drawdown_for(book: Book) -> str | None:
     return mode
 
 
+def corporate_actions_for(book: Book) -> str | None:
+    """The book json's `corporate_actions.mode`: the corporate-action gate's mode, or None.
+
+    ABSENT means no gate, today's behaviour (CLAUDE.md: a new key defaults to
+    current behaviour), as an absent `execution` block means `cls`. Present, the
+    block must set `mode` to one of `corp_actions.MODES`; anything else raises,
+    so a typo cannot leave the book looking guarded when it is not. Why a runner
+    setting and not a frozen-spec key: the strategy the research measured never
+    met a paper broker that ignores splits; whether the runner trusts the
+    broker's counts is how the runner runs, like `execution` and `data`."""
+    block = json.loads(book.book_path.read_text()).get("corporate_actions")
+    if block is None:
+        return None
+    if not isinstance(block, dict) or "mode" not in block:
+        raise SessionError(f"{book.book_path}: a `corporate_actions` block must set mode to one "
+                           f"of {cam.MODES} (or the block must be deleted)")
+    mode = block["mode"]
+    if mode not in cam.MODES:
+        raise SessionError(f"{book.book_path}: corporate_actions.mode {mode!r} is not one of "
+                           f"{cam.MODES}")
+    return mode
+
+
+def _corporate_actions(deps, read_closed: Callable[[], list], positions: dict, targets,
+                       asof: dt.date, session_date: dt.date, *, universe, state: Path,
+                       book_name: str) -> tuple[dict, str | None, list]:
+    """Step 3b, the corporate-action gate (quantt/session/corp_actions.py):
+    (record, the `data` refusal's sentence or None, log lines).
+
+    `read_closed()` gives the account's closed orders: at DECIDE the list step 2
+    already read, at SEND a fresh read. It is called inside the try, so a
+    failure of that read is the gate's failure too.
+
+    Any failure -- the order history, the fetch, a malformed response, a held
+    name the history cannot date -- is recorded as UNMEASURED with its type, in
+    both modes, and never as CLEAR. Under `report` the session goes on, like the
+    drawdown check's report mode. Under `halt` it is a refusal naming the
+    error, not a FAIL: refusing is the gate's own answer to "cannot see", and
+    the next slot retries the read (the team lead's brief, 2026-10-28).
+
+    The two rulings of 2026-10-29 (corp_actions.py, ACKNOWLEDGEMENTS; and
+    AlpacaClient.corporate_actions, MALFORMED ROWS): `universe`, the book's
+    symbols, lets the read skip and record a malformed row that cannot be ours;
+    the team lead's acknowledgements are read from `<state>/ca_acks.json`
+    inside the same try, so a file that cannot be read is UNMEASURED too, never
+    "no acknowledgement"."""
+    mode = deps.corp_actions
+    try:
+        acks = _read_ca_acks(state / cam.ACKS_FILE, book_name)
+        res = cam.check(deps.client.corporate_actions, read_closed(), positions, targets,
+                        asof, session_date, mode, universe=universe, acks=acks)
+    except Exception as e:  # recorded in plan.json and printed, never swallowed (docstring)
+        res = cam.unmeasured_record(mode, asof, session_date, f"{type(e).__name__}: {e}")
+    refusal = cam.refusal_text(res) if mode == cam.HALT else None
+    return res, refusal, cam.lines(res)
+
+
+def _read_ca_acks(path: Path, book_name: str) -> dict | None:
+    """The team lead's corporate-action acknowledgements (corp_actions.py,
+    ACKNOWLEDGEMENTS): None when no file is there (nothing acknowledged, the
+    state before the 2026-10-29 ruling), else `cam.parse_acks` of it. Anything
+    at the path that cannot be read and parsed raises, a dangling link
+    included (`os.path.lexists`): it is never read as empty."""
+    if not os.path.lexists(path):
+        return None
+    return cam.parse_acks(json.loads(path.read_text()), book_name)
+
+
+def _gate6_orders(c, after: dt.datetime) -> tuple[list | None, list | None, str | None]:
+    """Gate 6's two Alpaca lists: (orders_recent, orders_open, None), or
+    (None, None, why) when either read fails.
+
+    WHY HERE, AND LAST (execution-trader, release-check of 35b429f, 2026-10-29).
+    Gate 6's Alpaca check is the only guard against a second runner, or a lost
+    state directory, doubling the book (CLAUDE.md order-path rule 2), and
+    `_transmit` never reads the orders again. Until this fix both send paths
+    read the lists early and judged them at the gate, so they were as old as
+    everything read in between: the asset GETs, the sleeve (at decide and
+    `cls`), the closed-order history and every corporate-action page (the
+    late send's gap widened by PR #20). One GET that exhausts its retries takes
+    about 250 s (docs/RUNNER.md "Latency at the send"), and the send-budget
+    gate refuses only once the clock passes the window's end minus the set's
+    budget, so a stall that finished earlier sent on lists minutes old, blind
+    to an order another runner placed meanwhile.
+
+    So each path calls this after every other broker read, immediately before
+    the gate's own clock read. The clock read stays AFTER it on purpose: the
+    late-clock and send-budget gates (gate 4 for `cls`) then judge a time after
+    this read too, as they do the corporate-action read, so a slow read here can
+    only make them see a later time. Between these lists and the first POST
+    stand only that clock GET, the pure gates, STARTED and `_transmit`'s clock
+    GET before the POST.
+
+    A FAILED READ REFUSES: gate 6 is handed `unread` and refuses, naming it
+    (gate.gate_no_set_in_auction). A list that cannot be read is not an empty
+    one, and no earlier read stands in for it: neither path reads the lists
+    anywhere else. Not a FAIL, so the next slot is free to try again, as for
+    the corporate-action gate's failed read."""
+    try:
+        recent = c.orders(status="all", after=after)
+        open_ = c.orders(status="open")
+    except Exception as e:  # a gate-6 refusal naming it, never swallowed (docstring)
+        return None, None, f"{type(e).__name__}: {e}"
+    return recent, open_, None
+
+
+def _plan_targets(targets: dict, combine: dict | None = None) -> list:
+    """The symbols the session wants to hold, for the corporate-action gate:
+    every name whose target is not zero in the decision (`Decision.targets`,
+    or a saved plan's "targets"), and on a combined book also in ANY sleeve's
+    own targets (`combine`: the `combine.decide` record, plan.json's "combine").
+
+    WHY THE SLEEVES TOO (2026-10-29, after the combiner landed). On a combined
+    book `Decision.targets` is the NETTED book: each symbol's sum over the
+    sleeves that own it. Today a symbol has one owner (combine.py refuses a
+    shared symbol, SHARED_SYMBOLS_ALLOWED False), so the net IS that sleeve's
+    target. But if that switch is ever turned on, two sleeves at +100 and -100
+    would net to 0. A name that nets to zero, held by no one, would then drop
+    out of the gate, while each sleeve's plan was still sized on it. Reading
+    each sleeve's targets as well keeps the gate on every name any sleeve
+    wants, whatever the netting does. A held sleeve (gate 5 at the final check)
+    targets its current shares, which are held names anyway. `combine` None,
+    the single-sleeve book, reads the decision alone, exactly as before."""
+    out = {s for s, t in targets.items() if t["target"] != 0}
+    if combine is not None:
+        for r in combine["sleeves"].values():
+            out |= {s for s, t in r["targets"].items() if t["target"] != 0}
+    return sorted(out)
+
+
 def _drawdown(deps, state: Path, spec: dict, asof: dt.date) -> tuple[dict, list]:
     """Step 2b, the drawdown check (quantt/session/drawdown.py): (record, log
     lines). Report mode changes nothing that trades, so an unexpected error,
@@ -677,6 +1526,388 @@ def _drawdown(deps, state: Path, spec: dict, asof: dt.date) -> tuple[dict, list]
                      f"no order changed."]
 
 
+# ---------------------------------------------------------------------------
+# CEF TRIAL 55, "te4": below_min_names = "trade_eligible", PAPER ONLY
+# ---------------------------------------------------------------------------
+#
+# results/cef/PREREG_THIN_TRADE_ELIGIBLE_2026-11-03.md, approved by the team
+# lead 2026-11-03 for paper only. On a session with fewer than `min_names`
+# eligible funds but at least the floor, and no NAV hold, the core sleeve
+# builds its book on the eligible funds instead of closing it (the sleeve's
+# module docstring). The runner's part, every piece of it in the functions
+# below, each with one call line in `run_session`:
+#
+#   * THE PAPER DECLARATION (§1.2, §10 Q14). The sleeve refuses to decide under
+#     the key unless it was built with account="paper" and given
+#     extras["thin_rule"]. The runner declares paper only when its broker
+#     client's trading endpoint is exactly alpaca.PAPER_BASE (`thin_rule_for`).
+#     Today the client cannot be anything else (AlpacaClient refuses another
+#     endpoint), so the check exists for the day a live client is written.
+#   * K0 (§1.3 item 5, §6.3; the owner's term 3). A reduced book is built only
+#     when K0's drawdown record reads exactly OK. HALVE, KILL, UNMEASURED, a
+#     stale series, a missing status: the stop goes to the sleeve and the
+#     session takes today's flatten path. This is the FIRST ACTING READER of
+#     quantt/session/drawdown.py's status, and it can only restrict: its one
+#     action is today's rule, so no status can size up or unlock a send
+#     (tests/test_trade_eligible_runner.py, the gross pin). K0'S RECORD IS ITS
+#     OWN, READ THROUGH THE PREVIOUS SESSION (team lead's ruling 2026-11-03,
+#     E-2026-11-03-42; `_thin_k0_drawdown`): at the 22:00 decide the as-of's
+#     own EOD row never exists (E-2026-11-03-41: prod's 4 of 4 decides with the
+#     field read UNMEASURED for it), so K0 as first built would have flattened
+#     every reduced session. It reads the as-of's own row when it is there
+#     (the morning backstop; ruling 2026-11-04: the freshest row, which can only
+#     be stricter), else `drawdown.check(..., read_through=<the NYSE session
+#     before the as-of>)`, labelled one session stale; an older row, a missing
+#     or bad file reads UNMEASURED and the session flattens.
+#     Step 2b's own record (HALVE/KILL's report) is unchanged and not read.
+#   * THE GATE-7 FLATTEN (§7.5, §10 Q7). A reduced decision that loses a
+#     short-opening order to gate 7 (decide's "not shortable today") is
+#     re-decided flat: a 4-5 name book without its short leg is not the book the
+#     trial scored (`_thin_gate7`).
+#   * THE RECORD (§4.2; the owner's answer 6). plan.json and the run record gain
+#     `thin_session` (and `thin_stops`, the K0-K3 report lines) ONLY when the key
+#     is set; every key-absent field is byte-identical
+#     (tests/test_trade_eligible_noop.py, against 0b1a2ef).
+#   * NOT HERE, BY RULING: a short skipped at the late-market SEND (`_send_planned`
+#     is unchanged; team lead, 2026-11-03, "accept it and label it"). The next
+#     decide's `thin_stops.send_skip` reads that session's send.json and records it.
+#
+# With the key ABSENT `thin_rule_for` returns None and nothing below runs.
+
+def _sets_trade_eligible(spec: dict) -> bool:
+    """True when `spec` is a cef_discount spec whose `below_min_names` is
+    "trade_eligible" (the registry's parse; a malformed value raises there)."""
+    from src.deploy.registry import CEF_DISCOUNT_ALLOC_TYPE, cef_below_min_names
+    if (spec.get("allocation") or {}).get("type") != CEF_DISCOUNT_ALLOC_TYPE:
+        return False
+    return cef_below_min_names(spec.get("frozen") or {}) == "trade_eligible"
+
+
+def thin_rule_for(spec: dict, deps) -> dict | None:
+    """The te4 declaration for this session, or None when no spec of the book sets
+    `below_min_names = "trade_eligible"` (today's behaviour: nothing reads the
+    client's endpoint, the drawdown mode or the sleeves for this).
+
+    With the key set it REFUSES, at session start, with a SessionError naming the
+    key, before any sleeve is built:
+      * a combined book (`deps.sleeves`) whose book spec sets it. The rule and its
+        stops were measured on the core's own account; netted with another sleeve
+        it is a book nobody scored. A combined SLEEVE whose own spec sets any te4
+        key is refused earlier, by `combine.load_sleeves` (the runner owner's review
+        2026-11-04, item 1); were one built by hand, the combiner passes no paper
+        declaration (`_sleeve_target_fn`), so the sleeve's own refusal would stand;
+      * the book json without `risk.drawdown` (`deps.drawdown` None; the owner's
+        answer 4). K0 reads the drawdown record, and a stop whose input is never
+        measured must not fail open: loud and closed;
+      * an execution mode other than late_market (the owner's release-check of 78e3483,
+        2026-11-09). K1-K3 count a reduced decision only if it filled, read from send.json,
+        and a cls set writes none: under cls an episode could open on STARTED alone;
+      * a broker client whose `trading_endpoint` is not exactly
+        `alpaca.PAPER_BASE` (§1.2), or that does not say what its endpoint is.
+    Returns {"rule", "account": "paper", "floor", "min_names", "endpoint"}."""
+    from quantt.broker.alpaca import PAPER_BASE
+    from src.deploy.registry import cef_below_min_names_floor
+    key = "frozen.below_min_names = 'trade_eligible' (CEF trial 55, PAPER ONLY)"
+    on = _sets_trade_eligible(spec)
+    if not on:
+        return None
+    if deps.sleeves is not None:
+        raise SessionError(
+            f"{key} is set on a combined book: the rule is built and measured for the core's "
+            f"own account only. Delete the key or the risk_budgets")
+    if deps.drawdown is None:
+        raise SessionError(
+            f"{key} is set but the book json has no risk.drawdown: K0 builds a reduced book "
+            f"only on a drawdown record that reads OK, and without the check there is no "
+            f"record. Set risk.drawdown to 'report' or delete the key")
+    mode = deps.execution.get("mode")
+    if mode != "late_market":
+        raise SessionError(
+            f"{key} is set and the book's execution mode is {mode!r}, not 'late_market'. "
+            f"Paper runs late_market, and the stop lines read what a set filled from its "
+            f"send.json, which a cls set never writes: an episode could open with no fill "
+            f"known. Nothing decided")
+    endpoint = getattr(deps.client, "trading_endpoint", None)
+    if endpoint is None:
+        raise SessionError(
+            f"{key} is set and the broker client {type(deps.client).__name__} does not say "
+            f"what its trading endpoint is (no `trading_endpoint`); the runner declares the "
+            f"account paper only on the paper endpoint {PAPER_BASE}")
+    if endpoint != PAPER_BASE:
+        raise SessionError(
+            f"{key} is set and the broker client's trading endpoint is {endpoint!r}, not the "
+            f"paper endpoint {PAPER_BASE!r}. The rule is PAPER ONLY and never applies to a "
+            f"live-money account; nothing decided")
+    frozen = spec["frozen"]
+    return {"rule": "trade_eligible", "account": "paper",
+            "floor": cef_below_min_names_floor(frozen), "min_names": min_names_of(spec),
+            "endpoint": endpoint}
+
+
+def _thin_k0_drawdown(deps, state: Path, spec: dict, asof: dt.date, cal: list) -> dict:
+    """K0's own drawdown record: the FRESHEST EOD row the decide has, never an older one
+    (team lead's rulings 2026-11-03, E-2026-11-03-42, and 2026-11-04).
+
+    1. Read through the as-of itself (`drawdown.check(..., read_through=asof)`: today's check,
+       labelled 0 sessions stale). If the as-of's row is there, whatever it reads decides,
+       a bad row included (UNMEASURED: K0 flattens; it never falls back past a row it has).
+    2. Only if the as-of's row has NOT landed yet (the newest row is older than the as-of),
+       read through the NYSE session before the as-of, labelled one session stale. Why: at
+       the 22:00 decide the as-of's row never exists (E-2026-11-03-41), so step 1 alone would
+       flatten every reduced session (the 2026-11-03 ruling). A newest row older than that,
+       or none, reads UNMEASURED and the session flattens.
+    Why the as-of's row first (ruling 2026-11-04): at the morning backstop the as-of's row
+    exists; reading D-1 there let a reduced book through on a stale OK while the fresh row
+    read KILL (the verification of f3ad29f). A fresher row can only make K0 stricter.
+
+    The read-through dates come from `asof_for(asof, cal)` (nyse_calendar AND Alpaca's
+    calendar, never a weekday guess; it raises if they differ). An error anywhere is
+    recorded as UNMEASURED with its type and K0 stops the reduced build: an input K0 cannot
+    read fails closed. HALVE/KILL's own record (step 2b) is not this, and unchanged."""
+    try:
+        prev = asof_for(asof, cal)
+        fresh = ddm.check(state, spec, asof, deps.drawdown, read_through=asof)
+        r = fresh.get("reading")
+        if fresh["status"] == ddm.UNMEASURED and r is not None and r["last_date"] < asof:
+            return ddm.check(state, spec, asof, deps.drawdown, read_through=prev)
+        return fresh
+    except Exception as e:  # recorded in thin_session.k0, and K0 stops on it: fails closed
+        return ddm.unmeasured_record(deps.drawdown, asof, f"{type(e).__name__}: {e}")
+
+
+def _thin_k0_stop(dd: dict | None) -> dict | None:
+    """K0 (pre-registration §6.3): None when K0's drawdown record (`_thin_k0_drawdown`, read
+    through the previous session) reads exactly "OK", else the stop the sleeve takes
+    ({"by": "K0", "why"}).
+
+    Anything but an exact OK stops the reduced build: HALVE, KILL, UNMEASURED
+    (a missing eod_equity.csv, a newest row older than the read-through date, bad
+    levels, a check that raised), and any other or missing status. A missing RECORD
+    raises: `thin_rule_for` refused a book without the check, so a missing record here
+    is a runner bug, never "no stop"."""
+    if not isinstance(dd, dict):
+        raise SessionError(f"K0 (CEF trial 55): no drawdown record to read ({dd!r}); "
+                           f"not deciding a reduced book without it")
+    status = dd.get("status")
+    if type(status) is str and status == ddm.OK:
+        return None
+    why = (f"the account's drawdown record reads {status!r} (as-of {dd.get('asof')}"
+           + (f", read through {dd['read_through']}" if dd.get("read_through") else "")
+           + (f": {dd['why']}" if dd.get("why") else "") + "); K0 builds a reduced book only "
+           "on OK, and its one action is today's flatten")
+    return {"by": "K0", "why": why}
+
+
+def _thin_k0(thin: dict, dd: dict | None) -> dict:
+    """The session's `thin_session` record as K0 leaves it, before the sleeve
+    runs: the rule, the floor, K0's reading (`k0`: its status, the as-of, the
+    read-through date and the reading's staleness, the stop, and the whole record
+    as `drawdown`) and the stop it passes. The sleeve's own answer is added by
+    `_thin_record`; a session refused before the sleeve ran keeps `decided` False
+    and the eligible fields None (not measured)."""
+    stop = _thin_k0_stop(dd)
+    return {"rule": thin["rule"], "floor": thin["floor"], "min_names": thin["min_names"],
+            "decided": False, "eligible": None, "eligible_names": None, "holds": None,
+            "reduced": False, "stopped_by": None,
+            "k0": {"status": dd.get("status"), "asof": dd.get("asof"),
+                   "read_through": dd.get("read_through"),
+                   "stale": (dd.get("reading") or {}).get("stale"), "stop": stop,
+                   "drawdown": dd}}
+
+
+def _thin_target_kw(thin: dict | None, record: dict, stop: dict | None = None) -> dict:
+    """The sleeve-call keywords for te4: {} when the key is absent, so the call is
+    the one before the key existed. Set: the paper declaration and
+    extras["thin_rule"] with K0's stop, or `stop` when given (gate 7's)."""
+    if thin is None:
+        return {}
+    use = stop if stop is not None else record["thin_session"]["k0"]["stop"]
+    return {"account": thin["account"], "thin_rule": {"stop": None if use is None else dict(use)}}
+
+
+def _thin_record(targets, thin: dict, stop: dict | None) -> dict:
+    """The sleeve's te4 record, read from its targets' `meta["cef_thin"]` (a
+    structured field, never a reason string; §4.2), checked:
+      * every target carries it and every copy is identical, or this raises: a
+        mixed answer is a sleeve bug, as for `_short_of_min_names`;
+      * its floor and min_names are the spec's (`thin`);
+      * a reduced build with a stop passed, or a `stopped_by` that is not the
+        stop passed, raises: the sleeve ignored or invented a stop.
+    Returns the fields `thin_session` takes."""
+    from src.deploy.sleeves.cef_discount import THIN_META
+    infos = [t.meta.get(THIN_META) for t in targets]
+    if not infos or any(not isinstance(i, dict) for i in infos):
+        raise SessionError(f"CEF trial 55: the sleeve returned {len(infos)} targets and not "
+                           f"every one carries meta[{THIN_META!r}]; not deciding on it")
+    if any(i != infos[0] for i in infos):
+        raise SessionError(f"CEF trial 55: the sleeve's meta[{THIN_META!r}] differs between "
+                           f"targets; not deciding on a mixed answer")
+    i = infos[0]
+    if (i["floor"], i["min_names"]) != (thin["floor"], thin["min_names"]):
+        raise SessionError(f"CEF trial 55: the sleeve read floor {i['floor']} / min_names "
+                           f"{i['min_names']}, the spec says {thin['floor']} / "
+                           f"{thin['min_names']}")
+    if stop is not None and i["reduced"]:
+        raise SessionError(f"CEF trial 55: {stop['by']} stopped the reduced build and the "
+                           f"sleeve built it anyway")
+    if i["stopped_by"] is not None and (stop is None or i["stopped_by"] != stop["by"]):
+        raise SessionError(f"CEF trial 55: the sleeve says {i['stopped_by']} stopped the build "
+                           f"and the runner passed {stop!r}")
+    return {"decided": True, "eligible": i["n"], "eligible_names": list(i["eligible"]),
+            "holds": i["holds"], "reduced": i["reduced"], "stopped_by": i["stopped_by"]}
+
+
+def _thin_after_targets(thin: dict | None, record: dict, targets) -> None:
+    """Records the sleeve's te4 answer on `record["thin_session"]`; nothing when
+    the key is absent."""
+    if thin is None:
+        return
+    ts = record["thin_session"]
+    ts.update(_thin_record(targets, thin, ts["k0"]["stop"]))
+
+
+def _thin_gate7(thin: dict | None, record: dict, decision, *, retarget, recheck, redecide):
+    """THE GATE-7 FLATTEN (pre-registration §1.3 item 6, §7.5; §10 Q7, approved). Returns the
+    decision to plan: `decision` itself, unless the key is set, the sleeve built the reduced
+    book (`thin_session.reduced`) and gate 7 dropped a short-opening order
+    (`Decision.dropped_shorts`, decide's "not shortable today").
+
+    Then the reduced targets are not sent. The sleeve is asked again with the stop
+    {"by": "gate7"} (`retarget`), so it takes today's flatten path with the reason in every
+    target; the stale-NAV gate's panel check is asked again (`recheck`), because the sleeve
+    read the panel again; and the flat targets are decided (`redecide`). Why: on 4-5 names a
+    dropped short can be the whole short side (10.3% of fit reduced decisions have one fund
+    there), and the book left is net long by up to the long side, a book the trial never
+    scored. It costs one round trip each time it fires.
+
+    No loop: an all-FLAT book opens no short, so the re-decision can drop none; if it did,
+    that is a bug and this raises. `thin_session` records `stopped_by` "gate7", `reduced`
+    False and `gate7` {"dropped": [...]}. Runs BEFORE the buying-power scaling, which only
+    shrinks opening orders. A short skipped later, at the late-market SEND, is not this
+    (team lead 2026-11-03: accepted and labelled; `thin_stops.send_skip`)."""
+    if thin is None:
+        return decision
+    ts = record["thin_session"]
+    if ts["reduced"] is not True or not decision.dropped_shorts:
+        return decision
+    dropped = list(decision.dropped_shorts)
+    stop = {"by": "gate7",
+            "why": (f"gate 7 dropped the short-opening order(s) of {dropped} (not shortable "
+                    f"today); a reduced book without its short leg is not the book the trial "
+                    f"scored")}
+    targets = retarget(stop)
+    recheck()
+    info = _thin_record(targets, thin, stop)
+    if info["reduced"] or info["stopped_by"] != "gate7":
+        raise SessionError(f"CEF trial 55: gate 7's stop did not flatten the reduced build "
+                           f"({info}); not deciding")
+    redone = redecide(targets)
+    if redone.dropped_shorts:
+        raise SessionError(f"CEF trial 55: the flattened decision still drops shorts "
+                           f"{list(redone.dropped_shorts)}; an all-FLAT book opens none")
+    ts.update(info)
+    ts["gate7"] = {"dropped": dropped}
+    return redone
+
+
+def _thin_recheck(deps, gate_res) -> None:
+    """The stale-NAV gate's panel check after a second sleeve read (`_thin_gate7`): the same
+    check, and the same refusal, as after the first."""
+    if gate_res is not None:
+        changed = deps.nav_gate.still_holds(gate_res)
+        if changed:
+            raise SessionError(f"the NAV panel changed between the stale-NAV gate and the "
+                               f"sleeve's second read (gate 7's flatten): {changed}; not "
+                               f"deciding on it")
+
+
+def _thin_read_day(state: Path, d: dt.date, cid_prefix: str) -> dict:
+    """{"plan", "send", "started", "orders_log", "reconcile", "order_prefix"}: the session d's
+    plan.json and send.json under `state`, each a dict, or None where the file is not there,
+    and whether <d>/STARTED exists (written before the first order of a set and never
+    otherwise: with send.json's `exit` and `final` / `not_final`, what `drawdown._send_state`
+    reads to say whether a decision's targets were sent; quantt/session/tests/
+    test_thin_send_state.py reads what the real send writes). Creates nothing (never
+    `records.day_dir`). A file that is there and cannot be read or parsed raises, and
+    `drawdown.thin_stop_record` records the episode UNMEASURED, naming the session.
+
+    `orders_log` and `reconcile` are <d>/orders.jsonl (`_transmit`'s event log) and
+    <d>/reconcile.json (verify's), as BYTES or None where absent, and `order_prefix` the
+    session's client_order_id prefix, `<cid_prefix>-<YYYYMMDD>-` (decide.client_order_id's
+    scheme; the prefix gate 6 matches on). Only a late-market FAIL whose send.json records no
+    order reads them (`drawdown._zero_submissions`: "not sent" only on proof that no POST was
+    made, the runner owner's round-2 answer (a), 2026-11-05), and it parses them itself: read
+    as bytes here, a damaged log cannot make the whole walk UNMEASURED on a session whose
+    send.json already says what went."""
+    day = state / d.isoformat()
+    out = {}
+    for name in ("plan", "send"):
+        f = day / f"{name}.json"
+        out[name] = json.loads(f.read_text()) if os.path.lexists(f) else None
+    out["started"] = os.path.lexists(day / "STARTED")
+    for key, name in (("orders_log", "orders.jsonl"), ("reconcile", "reconcile.json")):
+        f = day / name
+        out[key] = f.read_bytes() if os.path.lexists(f) else None
+    out["order_prefix"] = f"{cid_prefix}-{d:%Y%m%d}-"
+    return out
+
+
+def _thin_stops(thin: dict | None, spec: dict, state: Path, asof: dt.date,
+                session_date: dt.date, positions: dict, record: dict, out, *,
+                cid_prefix: str) -> None:
+    """THE K0-K3 REPORT LINES (pre-registration §6.3: required in the activation release, in
+    report mode, tested; drawdown.py `thin_stop_record`). Nothing when the key is absent;
+    with it, `record["thin_stops"]` (plan.json's too) and the log lines. REPORT ONLY:
+    nothing in this session reads them, and the team lead acts on a stop that reads true
+    through the revert spec. K0's ACTION is `_thin_k0_stop`, not this.
+
+    Its inputs, all read now: K0's own drawdown record (`thin_session.k0.drawdown`, read
+    through the session before the as-of); the official eod_equity series through the same
+    date (team lead's ruling 2026-11-03, applied to these report lines as to K0: at the 22:00
+    decide the as-of's own row never exists, so read through the as-of they would all read
+    UNMEASURED; a series that cannot be read is passed as its reason, never a fallback, and
+    a K0 record with no read-through date makes the whole record UNMEASURED, naming why);
+    the earlier sessions' plan.json
+    and send.json (`_thin_read_day`; with orders.jsonl and reconcile.json, under the book's own
+    order-id prefix `cid_prefix`, for a FAIL that records no order), which carry the episode,
+    K3's earlier closes and the
+    previous session's send-time skip (team lead 2026-11-03: a short skipped at the SEND is
+    accepted and labelled here, `_send_planned` unchanged); the broker's positions now; the
+    closes DATED the as-of only (a staler close is not a close of the session K2 and K3
+    judge); and the spec's `risk.thin_*` lines (registry `cef_thin_stop_levels`; absent: the
+    line reads UNMEASURED). Report mode: an unexpected error is recorded as UNMEASURED with
+    its type, as `_drawdown` records its own."""
+    if thin is None:
+        return
+    from ops.schedule.nyse_calendar import previous_trading_day
+    from src.deploy.registry import cef_thin_stop_levels
+    try:
+        k0 = record["thin_session"]["k0"]
+        through = k0["read_through"]
+        if through is None:
+            raise ddm.Unmeasured(f"K0's drawdown record names no read-through date: "
+                                 f"{k0['drawdown'].get('why')}")
+        try:
+            series = ddm.read_series(state / ddm.OFFICIAL_FILE, through)
+        except ddm.Unmeasured as e:
+            series = str(e)
+        closes = {s: c["close"] for s, c in record["closes"].items()
+                  if c["date"] == asof and c["close"] is not None}
+        res = ddm.thin_stop_record(
+            asof=asof, session_date=session_date, drawdown=k0["drawdown"],
+            current=record["thin_session"], previous_session=previous_trading_day,
+            read_day=lambda d: _thin_read_day(state, d, cid_prefix), series=series,
+            positions=positions,
+            closes=closes, thresholds=cef_thin_stop_levels(spec), read_through=through)
+        lines = ddm.thin_stop_lines(res)
+    except Exception as e:  # report only: recorded in plan.json and printed, never swallowed
+        res = ddm.thin_unmeasured_record(asof, f"{type(e).__name__}: {e}")
+        lines = ddm.thin_stop_lines(res)
+    record["thin_stops"] = res
+    for line in lines:
+        print(line, file=out)
+
+
 def _nav_gate(deps, asof: dt.date, universe, refresh_exit, final: bool, record_csv):
     """Step 1b, the stale-NAV gate (quantt/session/nav_gate.py). Returns
     (record dict, GateResult or None).
@@ -688,9 +1919,31 @@ def _nav_gate(deps, asof: dt.date, universe, refresh_exit, final: bool, record_c
     stop. In report mode it changes nothing that trades, so an error is
     recorded as UNMEASURED and the session goes on, like the pre-flight.
     `record_csv(result)` is the gate's record; in act mode the gate writes it
-    BEFORE it writes the panel (nav_gate.PanelGate.run, RECORD FIRST)."""
+    BEFORE it writes the panel (nav_gate.PanelGate.run, RECORD FIRST).
+
+    A COMBINED BOOK ON AN INCOMPLETE REFRESH (combine.py; release-check of
+    00ec423). There, exit 4 is not "nothing is decided": gate 5 holds the
+    sleeves whose names are incomplete from the final check and the others
+    DECIDE (`gate.gate_data_by_sleeve`), so skipping the gate sent those
+    sleeves with no stale-NAV check while plan.json said gate 5 refused the
+    day. So on a combined book the gate runs on exit 4, over every enabled
+    sleeve's names, exactly as on exit 0. That is safe because the gate never
+    acts on a name with no NAV dated as-of (`nav_gate.judge`: "not this
+    gate's", gate 5's) and only ever rewrites a row dated as-of that exists;
+    fetch_daily wrote the panel whole before it returned 4. The record says so
+    (`refresh_exit`). The single-sleeve book is unchanged: any failed refresh
+    there is gate 5's refusal of the day.
+
+    THE MISSING-NAV HOLD (book json `data.missing_nav`, 2026-10-29) makes the
+    single-sleeve book the same case: on exit 4 gate 5 holds the names without
+    an as-of NAV from the final check and the rest DECIDE
+    (`gate.missing_nav_hold`), so the gate runs on exit 4 there too, over every
+    deployed name, for the same reason and with the same safety. Key absent:
+    unchanged."""
     mode = deps.stale_nav
-    if refresh_exit is not None and refresh_exit != 0:
+    on_incomplete = ((deps.sleeves is not None or deps.missing_nav is not None)
+                     and gt.refresh_incomplete(refresh_exit))
+    if refresh_exit is not None and refresh_exit != 0 and not on_incomplete:
         return {"mode": mode, "not_run": f"the refresh did not pass ({refresh_exit}); "
                                          f"gate 5 refuses the day"}, None
     if deps.nav_gate is None:
@@ -702,8 +1955,28 @@ def _nav_gate(deps, asof: dt.date, universe, refresh_exit, final: bool, record_c
     except Exception as e:  # report mode only: recorded, never swallowed (docstring)
         if mode != ng.REPORT:
             raise
-        return {"mode": mode, "unmeasured": f"{type(e).__name__}: {e}"}, None
-    return res.to_dict(), res
+        out = {"mode": mode, "unmeasured": f"{type(e).__name__}: {e}"}
+        if on_incomplete:
+            out["refresh_exit"] = _incomplete_note(deps)
+        return out, None
+    if not on_incomplete:
+        return res.to_dict(), res
+    return {**res.to_dict(), "refresh_exit": _incomplete_note(deps)}, res
+
+
+# What a combined book's stale-NAV record says when the gate ran on exit 4 (`_nav_gate`).
+INCOMPLETE_NOTE = (f"{gt.REFRESH_INCOMPLETE} (INCOMPLETE): the gate ran over every enabled "
+                   f"sleeve's names; a name with no NAV dated as-of is gate 5's, which holds "
+                   f"its sleeve from the final check or refuses the decide before it")
+# ... and the single-sleeve book's, with data.missing_nav set.
+INCOMPLETE_NOTE_HOLD = (f"{gt.REFRESH_INCOMPLETE} (INCOMPLETE): the gate ran over every "
+                        f"deployed name; a name with no NAV dated as-of is gate 5's, which "
+                        f"holds it from the final check (data.missing_nav) or refuses the "
+                        f"decide before it")
+
+
+def _incomplete_note(deps) -> str:
+    return INCOMPLETE_NOTE if deps.sleeves is not None else INCOMPLETE_NOTE_HOLD
 
 
 @dataclass
@@ -731,28 +2004,62 @@ class Deps:
     # The drawdown check (step 2b): its mode from the book json (None = off,
     # today's behaviour; `drawdown_for`).
     drawdown: str | None = None
+    # The multi-sleeve combiner (combine.py; dark): the book's enabled sleeves as
+    # `combine.load_sleeves` read them, or None = the single-spec book above,
+    # today's behaviour, which never reads this field.
+    sleeves: tuple | None = None
+    # Gate 5's missing-NAV hold (dark; `missing_nav_for`): None = gate 5 refuses
+    # the day on one missing as-of NAV, today's behaviour; "hold" =
+    # `gate.missing_nav_hold`. Single-sleeve book only (`run_session` raises
+    # with a combined book, which holds per sleeve).
+    missing_nav: str | None = None
+    # ... and its age limit (`missing_nav_max_sessions_for`); required with it.
+    missing_nav_max_sessions: int | None = None
+    # The corporate-action gate (step 3b): its mode from the book json (None =
+    # off, today's behaviour; `corporate_actions_for`). The read itself is
+    # `client.corporate_actions`.
+    corp_actions: str | None = None
+    # `execution.opening_session_fills` (`opening_session_fills_for`): None = "any",
+    # today's opening-session rule; "own_prefix" counts only this book's own fills.
+    opening_session_fills: str | None = None
+
+
+def _sleeve_target_fn(sleeve_spec: dict):
+    """A combined sleeve's target callable: `sleeve_targets` on its own spec at
+    its own spec's capital (the single-sleeve rule), with the sleeve_nav the
+    combiner sizes it on in the equity argument (the sleeve's extras[sleeve_nav])."""
+    cap = float(sleeve_spec["capital_usd"])
+    return lambda asof, h, nav, op, **kw: sleeve_targets(sleeve_spec, cap, asof, h, nav, op, **kw)
 
 
 def default_deps(book: Book, spec: dict, env) -> Deps:
+    """The session's real dependencies. Every panel read goes through the book's
+    `BookPanels` (PER-SLEEVE PANELS): for the released book json one entry, the
+    core spec on `data/cef/`, so each reader is the call it replaced. Nothing
+    here reads a panel file: the 15:52 send builds this too, and reads none."""
     from quantt.broker.alpaca import AlpacaClient
     if not env.get("QUANTT_ENV_FILE"):
         raise SessionError("QUANTT_ENV_FILE is not set: it must name the key file")
-    from src.deploy.sleeves import cef_discount as cefmod
     p = spec_params(spec)
+    # None for the released book json (combine.load_sleeves, OFF BY DEFAULT).
+    sleeves = cmb.load_sleeves(book.book_path, book.spec_path, REPO, _sleeve_target_fn,
+                               panel_of=spec_panel)
+    panels = book_panels(spec, sleeves)
     stale_nav = stale_nav_for(book)
     gate = None
     if stale_nav is not None:
-        # The sleeve's own NAV path: the gate certifies the file the sleeve reads.
-        # The fallback log and the panel lock are fetch_daily's, resolved only when
-        # the gate writes, so no run imports scripts/ here (`nav_gate.PanelGate`).
-        gate = ng.PanelGate(nav_path=cefmod.NAV_PATH)
+        # The sleeves' own NAV file, which must be the core's (`stale_nav_panel`):
+        # the gate certifies the file the sleeve reads. The fallback log and the
+        # panel lock are fetch_daily's, resolved only when the gate writes, so no
+        # run imports scripts/ here (`nav_gate.PanelGate`).
+        gate = ng.PanelGate(nav_path=stale_nav_panel(panels, stale_nav))
     return Deps(
         client=AlpacaClient.from_environment(book.name),
         env=dict(env),
-        refresh=lambda asof, timeout_s: refresh_subprocess(asof, book, timeout_s),
-        closes=lambda asof, uni: last_closes(cefmod.PX_PATH, asof, uni),
-        navs=lambda asof, uni: last_navs(cefmod.NAV_PATH, asof, uni),
-        history=lambda asof, uni, rows: close_history(cefmod.PX_PATH, asof, uni, rows),
+        refresh=book_refresh(book, panels),
+        closes=lambda asof, uni: panel_closes(panels, asof, uni),
+        navs=lambda asof, uni: panel_navs(panels, asof, uni),
+        history=lambda asof, uni, rows: panel_history(panels, asof, uni, rows),
         targets=lambda asof, h, eq, op, **kw: sleeve_targets(spec, p["capital_usd"], asof, h,
                                                              eq, op, **kw),
         halts=lambda: halts_for(book),
@@ -760,6 +2067,12 @@ def default_deps(book: Book, spec: dict, env) -> Deps:
         stale_nav=stale_nav,
         nav_gate=gate,
         drawdown=drawdown_for(book),
+        sleeves=sleeves,
+        # None for the released book json (missing_nav_for; dark, 2026-10-29).
+        missing_nav=missing_nav_for(book),
+        missing_nav_max_sessions=missing_nav_max_sessions_for(book),
+        corp_actions=corporate_actions_for(book),
+        opening_session_fills=opening_session_fills_for(book),
     )
 
 
@@ -805,8 +2118,26 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                              "skip_refresh": skip_refresh, "scheduled": scheduled}}
     state = day = None
     try:
-        state = rec.state_dir_from_env(deps.env)    # required; nothing runs without it
+        given = rec.state_dir_from_env(deps.env)    # required; nothing runs without it
+        # A book whose state dir must carry its own name (C4: records.STATE_DIR_NAMES)
+        # is refused in any other BEFORE `state` is set, so even the FAIL's run
+        # record is not written there. No entry for the core: `state` is the
+        # directory it always was.
+        rec.require_book_state_dir(book.name, given)
+        state = given
         p = spec_params(spec)
+        if deps.sleeves is not None:     # combined book: everything below covers the union
+            p = cmb.book_params(p, deps.sleeves)
+        if deps.missing_nav is not None and deps.sleeves is not None:
+            raise SessionError(f"data.missing_nav={deps.missing_nav!r} is built for the "
+                               f"single-sleeve book; a combined book holds a whole sleeve "
+                               f"from the final check (gate.gate_data_by_sleeve). Delete the "
+                               f"key or the risk_budgets")
+        if deps.missing_nav is not None and not gt.max_sessions_ok(deps.missing_nav_max_sessions):
+            raise SessionError(f"data.missing_nav={deps.missing_nav!r} needs "
+                               f"data.missing_nav_max_sessions, a positive int; got "
+                               f"{deps.missing_nav_max_sessions!r}")
+        thin = thin_rule_for(spec, deps)     # CEF trial 55 (te4): None unless the spec sets it
         record["spec_id"] = p["spec_id"]
         c = deps.client
         clock = c.clock()
@@ -925,26 +2256,76 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
         nav_dates = deps.navs(asof, p["universe"])
         record["closes"] = {s: {"close": v[0], "date": v[1]} for s, v in closes_dated.items()}
         record["nav_dates"] = nav_dates
-        data_refusals = gt.gate_data(asof, refresh_exit, close_dates, nav_dates, p["universe"])
+        data_held, data_final, missing_held, min_names, held_before = {}, None, {}, None, None
+        short_refusal = None      # the missing-NAV hold short of min_names (below)
+        if deps.sleeves is None and deps.missing_nav is None:
+            data_refusals = gt.gate_data(asof, refresh_exit, close_dates, nav_dates, p["universe"])
+        elif deps.sleeves is None:
+            # Gate 5's missing-NAV hold (gate.missing_nav_hold; book json
+            # data.missing_nav). Before the final check -- every evening slot and
+            # the morning slots before close - 90 min, on the same clock as the
+            # stale-NAV gate's -- a name without an as-of NAV DEFERS the decide,
+            # as today it refuses it; from the final check it is HELD and the
+            # rest decide.
+            final_at = (ng.final_check_at(session_date, cal_today[0]["close"])
+                        if len(cal_today) == 1 else None)
+            data_final = final_at is not None and clock["timestamp"] >= final_at
+            min_names = min_names_of(spec)
+            # The age limit's count, read only at the final check, where a hold
+            # can be granted: each name with a NAV older than as-of, from the
+            # prior sessions' plan.json (missing_nav_streaks).
+            # (`nav_late`, never `late`: that name is the late-market flag here)
+            nav_late = sorted(s for s in p["universe"]
+                              if nav_dates.get(s) is not None and nav_dates[s] != asof)
+            held_before = (missing_nav_streaks(state, session_date, nav_late,
+                                               deps.missing_nav_max_sessions)
+                           if data_final and nav_late else None)
+            mv = gt.missing_nav_hold(asof, refresh_exit, close_dates, nav_dates,
+                                     p["universe"], data_final, min_names,
+                                     deps.missing_nav_max_sessions, held_before)
+            data_refusals, missing_held = mv["refusals"], mv["held"]
+            record["missing_nav"] = {
+                "mode": deps.missing_nav, "asof": asof, "final_check": data_final,
+                "final_check_at": final_at, "n_universe": len(p["universe"]),
+                "min_names": min_names, "max_held": mv["max_held"],
+                "max_sessions": deps.missing_nav_max_sessions, "held_before": held_before,
+                "action": mv["action"], "why": mv["why"], "missing": mv["missing"],
+                "held": sorted(missing_held)}
+            print(f"  MISSING NAV ({deps.missing_nav}) as-of {asof}"
+                  f"{', final check' if data_final else ''}: {mv['action'].upper()}: "
+                  f"{mv['why']}", file=out)
+        else:
+            # Gate 5 per sleeve (gate.gate_data_by_sleeve): from the final check
+            # (the stale-NAV gate's, on the same clock) a sleeve whose own names
+            # fail is held and the rest decide; before it the book is refused.
+            data_final = len(cal_today) == 1 and clock["timestamp"] >= ng.final_check_at(
+                session_date, cal_today[0]["close"])
+            data_refusals, data_held = gt.gate_data_by_sleeve(
+                asof, refresh_exit, close_dates, nav_dates, cmb.universes(deps.sleeves),
+                data_final)
 
         # 2. read
         acct = c.account()
         pos = c.positions().qty
         # From midnight before the as-of date: an evening run's set (sent on the
         # as-of date, possibly a Friday for a Monday auction) must be in view.
+        # Gate 6's own lists (status=all after it, and open) are NOT read here:
+        # they are the last broker read before the gate's clock read, at step 4
+        # (`_gate6_orders`). The closed-order history is read here because the
+        # decide needs it (is_opening_session) and step 3b dates held names on it.
         midnight = dt.datetime.combine(asof - dt.timedelta(days=1), dt.time(0),
                                        tzinfo=gt.ET)
-        orders_recent = c.orders(status="all", after=midnight)
-        orders_open = c.orders(status="open")
         closed = c.orders(status="closed")
-        opening = is_opening_session(pos, closed)
+        # The book's opening-session rule (`opening_session_fills_for`; None = "any", the
+        # core's and today's): the prefix is the runner's own, `book.cid_prefix`.
+        opening = is_opening_session(pos, closed,
+                                     fills=deps.opening_session_fills or OPENING_FILLS_ANY,
+                                     cid_prefix=book.cid_prefix)
         assets = {s: c.asset(s) for s in p["universe"]}
         shortable = {s: a["shortable"] for s, a in assets.items()}
         record.update(
             account={k: v for k, v in acct.items() if k != "raw"},
             positions=pos, opening_session=opening,
-            orders_recent=[_order_summary(o) for o in orders_recent],
-            orders_open=[_order_summary(o) for o in orders_open],
             assets={s: {k: a.get(k) for k in ("tradable", "shortable", "borrow_status",
                                               "easy_to_borrow", "marginable")}
                     for s, a in assets.items()})
@@ -952,11 +2333,17 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
 
         # 2b. the drawdown check (quantt/session/drawdown.py). Off unless the
         # book json sets risk.drawdown; in `report` mode it is recorded and
-        # printed, and nothing below reads it.
+        # printed, and nothing below reads it. Under CEF trial 55's key K0 makes
+        # its OWN reading of the same check, through the previous session's EOD
+        # row (`_thin_k0_drawdown`; team lead's ruling 2026-11-03), and can only
+        # stop a reduced build (`_thin_k0`).
         if deps.drawdown is not None:
             record["drawdown"], dd_lines = _drawdown(deps, state, spec, asof)
             for line in dd_lines:
                 print(line, file=out)
+        if thin is not None:                 # CEF trial 55 (te4): K0 reads through D-1
+            record["thin_session"] = _thin_k0(
+                thin, _thin_k0_drawdown(deps, state, spec, asof, cal))
 
         # 3. decide -- only on data that passed gate 5
         if data_refusals:
@@ -964,11 +2351,33 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                 "not decided: the data gate refused"]}, plan_sha=dec.plan_sha(()))
         else:
             hold = gate_res.hold if gate_res is not None else {}
-            if hold:
+            if missing_held:
+                # Gate 5's missing-NAV holds reach the sleeve through the stale-NAV
+                # gate's extra, `nav_hold` (cef_discount._nav_hold): same contract,
+                # current shares, out of the cross-section, never the flatten. The
+                # two never name one fund: the stale-NAV gate judges only a NAV
+                # dated as-of (nav_gate.judge), and these have none.
+                both = sorted(set(hold) & set(missing_held))
+                if both:
+                    raise SessionError(f"{both} held both by the stale-NAV gate and for a "
+                                       f"missing NAV; the two cannot both be true")
+                hold = {**hold, **missing_held}
+            if deps.sleeves is not None:
+                # The combined book (combine.py): every enabled sleeve on its own
+                # spec and sleeve_nav, the stale-NAV holds to the sleeve owning
+                # each name, then ONE decide on the netted targets.
+                decision, record["combine"] = cmb.decide(
+                    deps.sleeves, asof=asof, positions=pos, equity=equity, closes=closes,
+                    shortable=shortable, opening=opening, nav_hold=hold, held=data_held,
+                    book_vol=cmb.book_vol_target(spec), session_date=session_date,
+                    cid_prefix=book.cid_prefix, min_trade_usd=p["min_trade_usd"],
+                    time_in_force="day" if late else dec.TIME_IN_FORCE)
+            elif hold:
                 targets = deps.targets(asof, pos, equity, opening,
-                                       nav_hold={"asof": asof, "names": hold})
+                                       nav_hold={"asof": asof, "names": hold},
+                                       **_thin_target_kw(thin, record))
             else:
-                targets = deps.targets(asof, pos, equity, opening)
+                targets = deps.targets(asof, pos, equity, opening, **_thin_target_kw(thin, record))
             if gate_res is not None:
                 # The sleeve has read the panel; was it the panel the gate
                 # certified? (PanelGate.still_holds: a fetch between the two.)
@@ -976,11 +2385,47 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                 if changed:
                     raise SessionError(f"the NAV panel changed between the stale-NAV gate and "
                                        f"the sleeve's read: {changed}; not deciding on it")
-            decision = dec.decide(targets, pos, equity, closes, shortable,
-                                  session_date=session_date, universe=p["universe"],
-                                  cid_prefix=book.cid_prefix,
-                                  min_trade_usd=p["min_trade_usd"],
-                                  time_in_force="day" if late else dec.TIME_IN_FORCE)
+            _thin_after_targets(thin, record, None if deps.sleeves is not None else targets)
+            if missing_held:
+                # THE HOLD SHORT OF min_names (release-check of 6d42f4f; the
+                # execution-trader's case, reproduced). With the missing-NAV holds
+                # out of the cross-section, the sleeve's own exclusions (illiquid,
+                # ADV unmeasured, NAV stale, no z, no panel) can leave fewer than
+                # `min_names` names eligible on their signal. The sleeve then holds
+                # the whole book: no order, NOTHING_TO_SEND, DONE, and the 15:00
+                # slot idles on a day no name was decided. Its own rule counts
+                # exactly those eligible names (`len(row)` against min_names), so
+                # the runner keys on that count, which the sleeve tags on every
+                # target (`cef_discount._tag_short`), not on reason text, and
+                # refuses the day exactly as without the key, naming the cause.
+                short = _short_of_min_names(targets)
+                if short is not None:
+                    short_refusal = gt.Refusal("data", (
+                        f"missing-NAV hold (data.missing_nav=hold): with {sorted(missing_held)} "
+                        f"held, {len(short['eligible'])} names are eligible on their signal "
+                        f"{short['eligible']}, under min_names {short['min_names']}; the "
+                        f"sleeve's own exclusions: "
+                        f"{ {t: w for t, w in short['excluded'].items() if t not in missing_held} }"
+                        f"; refused, as without the key"))
+                    record["missing_nav"].update(action="refused", why=short_refusal.detail,
+                                                 held=[], short_of_min_names=short)
+            if deps.sleeves is None and short_refusal is not None:
+                decision = dec.Decision(orders=(), targets={}, notes={"*": [
+                    "not decided: the data gate refused"]}, plan_sha=dec.plan_sha(()))
+            elif deps.sleeves is None:
+                def decide_single(tg):
+                    return dec.decide(tg, pos, equity, closes, shortable,
+                                      session_date=session_date, universe=p["universe"],
+                                      cid_prefix=book.cid_prefix,
+                                      min_trade_usd=p["min_trade_usd"],
+                                      time_in_force="day" if late else dec.TIME_IN_FORCE)
+                decision = decide_single(targets)
+                # CEF trial 55 (te4): a reduced decision that loses a short flattens.
+                decision = _thin_gate7(
+                    thin, record, decision, redecide=decide_single,
+                    retarget=lambda stop: deps.targets(asof, pos, equity, opening,
+                                                       **_thin_target_kw(thin, record, stop)),
+                    recheck=lambda: _thin_recheck(deps, gate_res))
         if decision.orders and deps.execution.get("bp_shortfall") == "scale":
             scaled, factor, binding = fit_to_buying_power(
                 decision.orders, pos, closes, equity, acct["buying_power"], _gross_now(acct),
@@ -995,12 +2440,51 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                                         notes={**decision.notes, "*": list(decision.notes.get("*", []))
                                                + [f"opening orders scaled x{factor:.4f} to fit "
                                                   f"{binding}"]},
-                                        plan_sha=dec.plan_sha(scaled))
+                                        plan_sha=dec.plan_sha(scaled),
+                                        # kept: decide.py, "rebuilt ... must carry it across"
+                                        dropped_shorts=decision.dropped_shorts)
         record["decision"] = decision.to_dict()
         borrow_warnings = hard_to_borrow_short_opens(decision.orders, pos, assets)
         record["borrow_warnings"] = borrow_warnings
+        _thin_stops(thin, spec, state, asof, session_date, pos, record, out,  # CEF trial 55: K0-K3
+                    cid_prefix=book.cid_prefix)
 
-        # 4. gate -- on a clock read NOW, not the one from before the refresh.
+        # 3b. the corporate-action gate (quantt/session/corp_actions.py). Off
+        # unless the book json sets corporate_actions.mode. It runs before the
+        # gate's clock read, so gate 4 judges a time after this read too. The
+        # held names' dates come from the closed-order history read in step 2,
+        # and the held names from the broker's positions. The targets are the
+        # decision's and, on a combined book, every sleeve's (`_plan_targets`).
+        ca_refusal = None
+        if deps.corp_actions is not None:
+            record["corporate_actions"], ca_refusal, ca_lines = _corporate_actions(
+                deps, lambda: closed, pos,
+                _plan_targets(decision.targets, record.get("combine")), asof, session_date,
+                universe=p["universe"], state=state, book_name=book.name)
+            for line in ca_lines:
+                print(line, file=out)
+
+        # 4. gate. Gate 6's lists first, as the last broker read before the
+        # gate's clock read (`_gate6_orders`, review 2026-10-29): read at step 2
+        # they were as old as the asset GETs, the sleeve and the corporate-action
+        # pages, and a second runner's set placed meanwhile went unseen. A failed
+        # read is a gate-6 refusal; nothing else stands in for it.
+        orders_recent, orders_open, orders_unread = _gate6_orders(c, midnight)
+        if orders_unread is None:
+            record.update(orders_recent=[_order_summary(o) for o in orders_recent],
+                          orders_open=[_order_summary(o) for o in orders_open])
+        # THE FIRST-SESSION GATE (OPENING_REQUIRED_BOOKS; None for the core), on the same
+        # closed-order history and on gate 6's open orders.
+        first_rec, first_refusal, first_lines = first_session_gate(
+            book, first_session_check(book, pos, closed,
+                                      orders_open if orders_unread is None else None,
+                                      deps.opening_session_fills, orders_unread),
+            _armed(deps.env, approve, state))
+        if first_rec is not None:
+            record["first_session"] = first_rec
+        for line in first_lines:
+            print(line, file=out)
+        # Then a clock read NOW, not the one from before the refresh.
         # Review 2026-09-28: the refresh, 13 asset GETs (each with retries) and
         # the sleeve all run after the first read; gating on it let a session
         # that reached here after 19:00 ET pass gate 4 and have its orders
@@ -1015,7 +2499,7 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
             nyse_trading_today=_nyse_trading(session_date),
             asof=asof, refresh_exit=refresh_exit, close_dates=close_dates, nav_dates=nav_dates,
             started_exists=(day / "STARTED").exists(), orders_recent=orders_recent,
-            orders_open=orders_open, cid_prefix=book.cid_prefix,
+            orders_open=orders_open, orders_unread=orders_unread, cid_prefix=book.cid_prefix,
             orders=decision.orders, positions=pos, shortable=shortable,
             shorting_enabled=acct["shorting_enabled"], closes=closes, equity=equity,
             sized_equity=equity,               # decide: the plan is sized on this equity
@@ -1027,10 +2511,29 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
             max_gross_stress=p["max_gross_stress"], universe=p["universe"],
             account_flags={k: acct[k] for k in ("trading_blocked", "account_blocked",
                                                 "trade_suspended_by_user")})
+        if deps.sleeves is not None:     # gate 5 per sleeve, as decided above
+            facts = replace(facts, sleeve_universes=cmb.universes(deps.sleeves),
+                            data_final=data_final)
+        elif deps.missing_nav is not None and short_refusal is None:   # the hold, as above
+            facts = replace(facts, missing_nav=deps.missing_nav, min_names=min_names,
+                            data_final=data_final,
+                            missing_nav_max_sessions=deps.missing_nav_max_sessions,
+                            missing_nav_held_before=held_before)
         refusals = gt.evaluate(facts)
         if gate_res is not None and gate_res.deferred:
             # The stale-NAV gate's deferral (module docstring, DEFERRAL AND THE ORDER PATH).
             refusals.append(gt.Refusal("data", gate_res.deferral_text()))
+        if short_refusal is not None:
+            # Gate 5 above ran as without the key (facts not replaced), so these
+            # are today's refusals; this line names why the hold could not stand.
+            refusals.append(short_refusal)
+        if ca_refusal is not None:
+            # The corporate-action gate under `halt` (corp_actions.py, WHY A `data` REFUSAL).
+            refusals.append(gt.Refusal("data", ca_refusal))
+        if first_refusal is not None:
+            # THE FIRST-SESSION GATE, armed: its own gate (a MISSED day in verify, not a
+            # human's choice). Shown at a late-market DECIDE too: it judges the account.
+            refusals.append(gt.Refusal("first_session", first_refusal))
         record["refusals"] = [{"gate": r.gate, "detail": r.detail} for r in refusals]
 
         plan = {"book": book.name, "spec_id": p["spec_id"], "session_date": session_date,
@@ -1041,8 +2544,20 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
             plan["nav_gate"] = record["nav_gate"]
         if "drawdown" in record:             # only when the book turns the check on
             plan["drawdown"] = record["drawdown"]
+        if "corporate_actions" in record:    # only when the book turns the gate on
+            plan["corporate_actions"] = record["corporate_actions"]
+        if "first_session" in record:        # only a book in OPENING_REQUIRED_BOOKS
+            plan["first_session"] = record["first_session"]
         if "bp_scale" in record:
             plan["bp_scale"] = record["bp_scale"]
+        if "combine" in record:              # only a combined book (combine.py)
+            plan["combine"] = record["combine"]
+        if "missing_nav" in record:          # only when the book sets data.missing_nav
+            plan["missing_nav"] = record["missing_nav"]
+        if "thin_session" in record:         # only when the spec sets below_min_names "trade_eligible"
+            plan["thin_session"] = record["thin_session"]
+        if "thin_stops" in record:           # the same: the K0-K3 report lines
+            plan["thin_stops"] = record["thin_stops"]
         shown = refusals
         if late:
             # DECIDE phase: dry-run, arming and the clock belong to the SEND phase.
@@ -1069,6 +2584,9 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
 
         print(f"{book.name} session {session_date} (as-of {asof}), equity ${equity:,.2f}, "
               f"opening_session={opening}", file=out)
+        if "combine" in record:
+            for line in cmb.lines(record["combine"]):
+                print(line, file=out)
         print(order_table(decision.orders), file=out)
         for sym, ns in sorted(decision.notes.items()):
             for n in ns:
@@ -1187,18 +2705,20 @@ def _send_planned(book: Book, spec: dict, deps: Deps, record: dict, *, state: Pa
     broker reads, sent as market `day` orders inside the late window."""
     out, c = deps.out, deps.client
     p = spec_params(spec)
+    if deps.sleeves is not None:     # combined book: the assets and gate 9 cover the union
+        p = cmb.book_params(p, deps.sleeves)
     plan, orders = load_decided_plan(day, session_date)
     record.update(plan_sha=plan["plan_sha"], asof=plan["asof"])
     acct = c.account()
     pos = c.positions().qty
     asof = dt.date.fromisoformat(plan["asof"])
+    # Gate 6's lists are read after everything else, just before the gate's
+    # clock read (`_gate6_orders`), and nowhere earlier: nothing before the
+    # gate needs them.
     midnight = dt.datetime.combine(asof - dt.timedelta(days=1), dt.time(0), tzinfo=gt.ET)
-    orders_recent = c.orders(status="all", after=midnight)
-    orders_open = c.orders(status="open")
     assets = {s: c.asset(s) for s in p["universe"]}
     shortable = {s: a["shortable"] for s, a in assets.items()}
-    record.update(account={k: v for k, v in acct.items() if k != "raw"}, positions=pos,
-                  orders_open=[_order_summary(o) for o in orders_open])
+    record.update(account={k: v for k, v in acct.items() if k != "raw"}, positions=pos)
     # The plan was sized on these holdings; if they moved, it is not the plan any more.
     moved = {s: {"plan": t["current"], "now": pos.get(s, 0)}
              for s, t in plan["targets"].items() if pos.get(s, 0) != t["current"]}
@@ -1238,7 +2758,33 @@ def _send_planned(book: Book, spec: dict, deps: Deps, record: dict, *, state: Pa
         # is a missed day, and verify must be able to say which limit did it.
         record["bp_scale_at_send"] = {"kept": kept, "binding": binding,
                                       "orders_in": n_in, "orders_out": len(orders)}
+    # Step 3b again, on fresh reads (module docstring, PAPER EXECUTION): Alpaca
+    # can list an action effective today only after the evening decide. Before
+    # the gate's clock read, so the send budget is judged after it.
+    ca_refusal, ca_lines = None, []
+    if deps.corp_actions is not None:
+        record["corporate_actions"], ca_refusal, ca_lines = _corporate_actions(
+            deps, lambda: c.orders(status="closed"), pos,
+            _plan_targets(plan["targets"], plan.get("combine")),
+            asof, session_date, universe=p["universe"], state=state, book_name=book.name)
     approve_sha = approve or approval_for(day)
+    # THE FIRST-SESSION GATE's closed-order history, on the account as it is at the send
+    # (OPENING_REQUIRED_BOOKS only; the core reads nothing more here).
+    first_closed = c.orders(status="closed") if book.name in OPENING_REQUIRED_BOOKS else None
+    # Gate 6's lists: the last broker read before the gate's clock read, after
+    # the asset GETs, the closed-order history and the corporate-action pages
+    # (`_gate6_orders`, review 2026-10-29). A failed read is a gate-6 refusal.
+    orders_recent, orders_open, orders_unread = _gate6_orders(c, midnight)
+    if orders_unread is None:
+        record["orders_open"] = [_order_summary(o) for o in orders_open]
+    first_rec, first_refusal, first_lines = (None, None, [])
+    if first_closed is not None:
+        first_rec, first_refusal, first_lines = first_session_gate(
+            book, first_session_check(book, pos, first_closed,
+                                      orders_open if orders_unread is None else None,
+                                      deps.opening_session_fills, orders_unread),
+            _armed(deps.env, approve_sha, state))
+        record["first_session"] = first_rec
     clock_gate = c.clock()
     record["clock_at_gate"] = clock_gate["timestamp"]
     cal_today = [r for r in cal if r["date"] == session_date]
@@ -1254,7 +2800,7 @@ def _send_planned(book: Book, spec: dict, deps: Deps, record: dict, *, state: Pa
         # #6): see gate.gate_late_send_budget for the budget and its provenance.
         *budget_short,
         *gt.gate_no_set_in_auction((day / "STARTED").exists(), orders_recent, orders_open,
-                                   book.cid_prefix, session_date),
+                                   book.cid_prefix, session_date, unread=orders_unread),
         *gt.gate_shortability(orders, pos, shortable, acct["shorting_enabled"]),
         *gt.gate_exposure(orders, pos, closes, acct["equity"], acct["buying_power"],
                           p["max_gross_usd"], p["max_gross_stress"],
@@ -1266,11 +2812,19 @@ def _send_planned(book: Book, spec: dict, deps: Deps, record: dict, *, state: Pa
     ]
     if moved:
         refusals.append(gt.Refusal("sanity", f"positions moved since the plan was decided: {moved}"))
+    if ca_refusal is not None:
+        refusals.append(gt.Refusal("data", ca_refusal))
+    if first_refusal is not None:
+        refusals.append(gt.Refusal("first_session", first_refusal))
     record["refusals"] = [{"gate": r.gate, "detail": r.detail} for r in refusals]
     print(f"{book.name} SEND {session_date} (plan decided on as-of {plan['asof']}), equity "
           f"${acct['equity']:,.2f}, window {win[0]:%H:%M}-{win[1]:%H:%M} ET", file=out)
     print(order_table(orders), file=out)
     print(f"plan_sha {plan['plan_sha']}", file=out)
+    for line in ca_lines:
+        print(line, file=out)
+    for line in first_lines:
+        print(line, file=out)
     for x in skipped:
         print(f"  SKIPPED {x}", file=out)
     for w in borrow_warnings:
@@ -1283,7 +2837,13 @@ def _send_planned(book: Book, spec: dict, deps: Deps, record: dict, *, state: Pa
     def outcome(code):
         # verify and shadow read this (review 2026-09-29): without it a day the
         # SEND refused (dry run, halt, moved positions) read as a crash.
-        rec.write_json_atomic(day / "send.json", {
+        # `corporate_actions` is added only when the book turns the gate on, so
+        # send.json is unchanged when it is off.
+        extra = ({"corporate_actions": record["corporate_actions"]}
+                 if "corporate_actions" in record else {})
+        if record.get("first_session") is not None:     # a book in OPENING_REQUIRED_BOOKS
+            extra["first_session"] = record["first_session"]
+        rec.write_json_atomic(day / "send.json", {**extra,
             "session_date": session_date, "plan_sha": plan["plan_sha"], "at": stamp,
             "exit": EXIT_NAMES[code], "refusals": record["refusals"], "skipped": skipped,
             "final": record.get("final", {}), "unfilled": record.get("unfilled", {}),
@@ -1333,6 +2893,7 @@ def approve_main(argv=None) -> int:
     a = ap.parse_args(argv)
     try:
         state = rec.state_dir_from_env(os.environ)
+        rec.require_book_state_dir(a.book, state)
         day = rec.day_dir(state, a.date)
         if (day / "STARTED").exists():
             raise SessionError(f"a set already STARTED for {a.date}; nothing to approve")
@@ -1348,6 +2909,150 @@ def approve_main(argv=None) -> int:
     print(f"APPROVED {a.date} plan_sha {a.sha} ({len(plan['orders'])} orders); it is sent in "
           f"the window {plan['send_window'][0]} -> {plan['send_window'][1]} if every gate passes")
     return 0
+
+
+def _latest_ca_record(state: Path) -> tuple[Path, dict]:
+    """The gate's most recent record that read the feed: (file, its
+    `corporate_actions`). Day directories newest first; in each, send.json (the
+    later read, at the late-market send) before plan.json. Raises when none has
+    a `query`: then there is no window to read the feed on."""
+    days = sorted((d for d in state.iterdir()
+                   if d.is_dir() and len(d.name) == 10 and d.name[4] == d.name[7] == "-"),
+                  key=lambda d: d.name, reverse=True)
+    for d in days:
+        for name in ("send.json", "plan.json"):
+            f = d / name
+            if f.exists():
+                ca = json.loads(f.read_text()).get("corporate_actions")
+                if isinstance(ca, dict) and ca.get("query"):
+                    return f, ca
+    raise SessionError(f"no corporate-action record with a feed read in {state}: the window "
+                       f"to look the id up in is the gate's own last read, so run a session "
+                       f"(it may refuse) and acknowledge after it")
+
+
+def ca_ack_main(argv=None, *, client=None, now: dt.datetime | None = None) -> int:
+    """`python3 -m quantt.session ca-ack --book cef --id ACTION_ID --reason "one line"`.
+
+    Records the team lead's acknowledgement of ONE corporate action, by its
+    Alpaca id, in `<state>/ca_acks.json` (corp_actions.py, ACKNOWLEDGEMENTS;
+    team lead 2026-10-29). The gate then clears that id only. This is the ONLY
+    writer of the file, and it is run by the team lead or on the team lead's
+    explicit instruction for that id (docs/RUNBOOK.md §6.1). It sends nothing:
+    its one broker call is the read-only corporate-action read (`client`, in
+    tests a fake; otherwise `AlpacaClient.from_environment`, keys from
+    QUANTT_ENV_FILE, never printed).
+
+    The entry keeps the feed row exactly as listed (`row`) and its type
+    (`event.type`): the gate clears the id only while the feed's row still
+    equals it and its type is unchanged (corp_actions.py, ACKNOWLEDGEMENTS).
+    An UNRESOLVED row (docs/SYSTEM.md §5, team lead 2026-11-02 (unresolved corporate-action rows)) is acknowledged the same way, by its id or,
+    when its id is null too, by the `row-sha256:` key the refusal names; the
+    read never raises on such a row, so this works on it.
+
+    Refuses (exit 11 REFUSED, the file untouched) unless: the id is one token
+    and the reason one non-empty line; the file, if there, parses
+    (`cam.parse_acks`; never read as empty);
+    the state dir holds a gate record that read the feed (`_latest_ca_record`);
+    an id already acknowledged is refused unless its row has since been
+    revised, when the new entry replaces the old (kept as `supersedes`);
+    and the feed, read for that record's names over that record's window (how
+    the gate read it), lists the id. An unknown id is refused, so a typo
+    cannot acknowledge nothing and leave the halt on unexplained. Writes with
+    `records.write_json_atomic` (temp file, fsync, rename): a reader sees the
+    old file or the new one, never half of either.
+    """
+    ap = argparse.ArgumentParser(prog="python3 -m quantt.session ca-ack")
+    ap.add_argument("--book", required=True, choices=sorted(BOOKS))
+    ap.add_argument("--id", required=True, help="the Alpaca corporate-action id")
+    ap.add_argument("--reason", required=True, help="the team lead's reason, one line")
+    a = ap.parse_args(argv)
+    book = BOOKS[a.book]
+    try:
+        aid, reason = a.id.strip(), a.reason.strip()
+        if not aid or any(ch.isspace() for ch in aid):
+            raise SessionError(f"--id {a.id!r} is not one action id")
+        if not reason or "\n" in reason or "\r" in reason:
+            raise SessionError("--reason must be one non-empty line")
+        state = rec.state_dir_from_env(os.environ)
+        # A book whose state dir must carry its own name (C4: records.STATE_DIR_NAMES)
+        # is refused in any other, before anything is read or written: `--book c4`
+        # pointed at the core's directory would otherwise write a c4 acknowledgement
+        # into the core's ca_acks.json, which the core's gate then cannot parse
+        # (parse_acks: another book's entry) and, under `halt`, refuses on. No entry
+        # for the core: its directory is checked exactly as before (approve_main does
+        # the same; merge of c4-integrate onto 862b1d0, 2026-11-02).
+        rec.require_book_state_dir(book.name, state)
+        path = state / cam.ACKS_FILE
+        existing, known = [], {}
+        if os.path.lexists(path):
+            raw = json.loads(path.read_text())
+            known = cam.parse_acks(raw, book.name)        # raises: never read as empty
+            existing = raw["acks"]
+        src, ca = _latest_ca_record(state)
+        names = sorted(ca["names"])
+        qs, qe = (dt.date.fromisoformat(x) for x in ca["query"])
+        universe = sorted(set(spec_params(load_spec(book.spec_path))["universe"]) | set(names))
+        c = client if client is not None else _ca_ack_client(book)
+        rows: dict = {}
+        events = c.corporate_actions(names, qs, qe, universe=universe, skipped=[], rows=rows)
+        found = [e for e in events if e["id"] == aid]
+        if not found:
+            raise SessionError(f"{aid} is not in the feed for {names} over {qs}..{qe} (the "
+                               f"window of {src.relative_to(state)}); nothing acknowledged")
+        e = found[0]
+        from quantt.broker.alpaca import ca_row_canonical
+        seen_rows = rows.get(aid, [])
+        canon = ca_row_canonical(seen_rows[0]) if seen_rows else None
+        if not seen_rows or any(ca_row_canonical(r) != canon for r in seen_rows):
+            raise SessionError(f"{aid}: the feed returned {len(seen_rows)} differing or no "
+                               f"row(s) for it; an acknowledgement must name one row")
+        # One entry per id. The same row again is refused; a REVISED row (the
+        # gate halts on it again) replaces the old entry, which is kept inside
+        # the new one as `supersedes`, so this stays the file's only writer.
+        old = known.get(aid)
+        if (old is not None and cam.ack_row_canonical(old) == canon
+                and old["event"]["type"] == e["type"]):
+            # A changed TYPE is a revision too: the raw row carries none (it is
+            # which list Alpaca put the row in), so the row alone cannot show it.
+            raise SessionError(f"{aid} is already acknowledged, at {old['acked_utc']}, and its "
+                               f"row and type are unchanged: {old['reason']}")
+        existing = [x for x in existing if x.get("id") != aid]
+        stamp = (now or dt.datetime.now(dt.timezone.utc)).astimezone(dt.timezone.utc)
+        entry = {"id": aid, "reason": reason, "acked_utc": stamp.isoformat(), "book": book.name,
+                 "event": {k: e[k] for k in ("type", "date", "date_field", "process_date",
+                                             "parties", "missing", "row_id") if k in e},
+                 "row": seen_rows[0],     # as Alpaca listed it (any JSON value)
+                 # the ONE form the gate and parse_acks match on (ack_row_canonical)
+                 "row_canonical": canon,
+                 "feed_window": [qs, qe], "from_record": str(src.relative_to(state))}
+        if old is not None:
+            entry["supersedes"] = old
+        blocked = any(b["id"] == aid for b in ca.get("blocking", []))
+    except Exception as ex:  # printed, never swallowed: nothing is written
+        print(f"REFUSED: {type(ex).__name__}: {ex}")
+        return EXIT_REFUSED
+    try:
+        rec.write_json_atomic(path, {"acks": [*existing, entry]})
+    except Exception as ex:  # printed, never swallowed: the rename did not happen
+        print(f"FAIL: {type(ex).__name__}: {ex}; {path} was not changed, nothing acknowledged")
+        return EXIT_FAIL
+    print(f"ACKNOWLEDGED {aid}: {e['type']} {e['parties']} ({e['date_field']} {e['date']}, "
+          f"process_date {e['process_date']}), book {book.name}, at {entry['acked_utc']}: "
+          f"{reason}")
+    print(f"  {'it blocked' if blocked else 'it did not block'} in {entry['from_record']}; the "
+          f"gate clears this id only, and any other action still halts. Written to {path}")
+    if e["type"] not in cam.PROCESS_DATE_TYPES:
+        print(f"  NOTE: {e['type']} is not one of the types dated by process_date alone "
+              f"{sorted(cam.PROCESS_DATE_TYPES)}: the halt clears, but the paper share count "
+              f"is not fixed (docs/RUNBOOK.md §6.1)")
+    return 0
+
+
+def _ca_ack_client(book: Book):
+    """The read-only client `ca_ack_main` reads the feed with; a seam for tests."""
+    from quantt.broker.alpaca import AlpacaClient
+    return AlpacaClient.from_environment(book.name)
 
 
 def _opening_part(o, cur: int) -> int:
@@ -1735,13 +3440,128 @@ def _poll_final(c, sent, log: Path, record: dict, deps: Deps, out, until: dt.dat
           + (f"; not final by {until:%H:%M:%S}: {sorted(pending)}" if pending else ""), file=out)
 
 
+# A 429 TO AN ORDER IS WAITED OUT, THEN LOOKED UP, NEVER RESENT BLIND (2026-11-23).
+# The events book's first armed send had 173 of 219 orders answered HTTP 429 "rate limit
+# exceeded", and each was booked as a rejection, so a partial, unhedged book was left
+# (`docs/SYSTEM.md` §5, 2026-11-23; EVIDENCE_LOG E-2026-11-23-03). The client now paces the
+# trading host (alpaca.TRADING_MAX_PER_MIN), so a 429 should be rare; when one still comes,
+# `_submit_one` waits POST_429_WAITS_S[i], reads the id, and resends only on "not found".
+# A 429 is answered before the order service, so "not found" is the expected answer; the
+# read is what makes a resend safe if it is not, because a filled day order is no longer
+# active and Alpaca would accept the same client_order_id twice [V: Alpaca Learn, 2026-09-28].
+# Whether the by-id read can lag an order created a moment earlier is not documented [U]; the
+# wait before it is the margin. After the last wait the order is a rejection, as before.
+# The waits come out of the send window: `in_window` is checked again before every resend.
+#
+# EVERY ORDER THAT MET A 429 ENDS WITH A TERMINAL EVENT (release check of 81e1071, 2026-11-23).
+# The events VERIFY books the ledger only if each recorded order Alpaca does not hold has
+# `rejected`, `ambiguous` or `error` among its events (quantt/sleeves/run.py NOT_AT_BROKER_OK);
+# otherwise nothing is booked and the next PLAN refuses. So a batch that stops on the clock or the
+# window after a 429 first writes `rejected` for that order (it was last read as not at Alpaca),
+# and a read that fails after a 429 is a rejection (no resend) and the batch goes on, as a 429
+# did before 2026-11-23.
+POST_429_WAITS_S = (5.0, 15.0, 30.0)
+
+
+def _submit_one(c, o, log: Path, deps: Deps, out, *,
+                in_window: Callable[[dt.datetime], bool], window_text: str):
+    """Send one order to a known outcome: ("accepted", order dict), ("rejected", error),
+    ("stop", reason) when its state is unknown or the window has closed, or ("stop_rejected",
+    reason) when the batch stops while this order, after a 429, is known not to be at Alpaca
+    (`_transmit` counts it as rejected, then stops)."""
+    from quantt.broker.alpaca import AmbiguousSubmit, OrderRejected
+    now = deps.utcnow
+    cid = o.client_order_id
+    last_429 = None
+
+    def stop(reason):
+        if last_429 is None:
+            return "stop", reason
+        rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                               "error": f"HTTP 429, read as not at Alpaca, not resent: {reason}"})
+        return "stop_rejected", reason
+
+    for attempt in range(len(POST_429_WAITS_S) + 1):
+        try:
+            ts = c.clock()["timestamp"]
+        except Exception as e:
+            rec.append_jsonl(log, {"event": "clock_error", "at": now(), "client_order_id": cid,
+                                   "error": f"{type(e).__name__}: {e}"})
+            return stop(f"clock read failed before {cid}; batch stopped")
+        if not in_window(ts):
+            rec.append_jsonl(log, {"event": "cutoff", "at": now(), "clock": ts,
+                                   "client_order_id": cid, "window": window_text})
+            return stop(f"Alpaca clock {ts.astimezone(gt.ET):%Y-%m-%d %H:%M:%S} ET is outside "
+                        f"the send window -- {window_text} -- before {cid}; batch stopped")
+        rec.append_jsonl(log, {"event": "submit", "at": now(), **o.wire()})
+        try:
+            return "accepted", c.submit_order(o.symbol, o.qty, o.side, cid,
+                                              time_in_force=o.time_in_force)
+        except AmbiguousSubmit as e:
+            rec.append_jsonl(log, {"event": "ambiguous", "at": now(), "client_order_id": cid,
+                                   "error": str(e)})
+            try:
+                found = c.order_by_client_id(cid)
+                rec.append_jsonl(log, {"event": "lookup", "at": now(), "client_order_id": cid,
+                                       "found": found is not None,
+                                       "order": _order_summary(found) if found else None})
+            except Exception as le:
+                rec.append_jsonl(log, {"event": "lookup_error", "at": now(), "client_order_id": cid,
+                                       "error": f"{type(le).__name__}: {le}"})
+            return "stop", f"AmbiguousSubmit on {cid}; batch stopped"
+        except OrderRejected as e:
+            if e.status != 429:
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": str(e)})
+                return "rejected", e
+            # Every 429, the last one included, is waited out and the id read: a 429 can come
+            # back for an order Alpaca made (release check of 93021c8: the last attempt booked
+            # `rejected` unread, so a made order was never confirmed or polled). After the last
+            # one, "not found" is a rejection and nothing is resent.
+            last_429 = e
+            final = attempt == len(POST_429_WAITS_S)
+            wait = POST_429_WAITS_S[min(attempt, len(POST_429_WAITS_S) - 1)]
+            rec.append_jsonl(log, {"event": "rate_limited", "at": now(), "client_order_id": cid,
+                                   "attempt": attempt + 1, "wait_s": wait, "error": str(e)})
+            print(f"  RATE-LIMITED {cid} (HTTP 429): waiting {wait:.0f}s, then reading the id "
+                  + ("(the last attempt: it is not resent)" if final else "before any resend"),
+                  file=out)
+            deps.sleep(wait)
+            try:
+                found = c.order_by_client_id(cid)
+            except Exception as le:
+                rec.append_jsonl(log, {"event": "lookup_error", "at": now(), "client_order_id": cid,
+                                       "error": f"{type(le).__name__}: {le}"})
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": f"HTTP 429, and the read that says whether it exists "
+                                                f"failed ({type(le).__name__}); not resent"})
+                return "rejected", e
+            rec.append_jsonl(log, {"event": "lookup", "at": now(), "client_order_id": cid,
+                                   "found": found is not None,
+                                   "order": _order_summary(found) if found else None})
+            if found is not None:
+                return "accepted", found
+            if final:
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": f"HTTP 429 on all {attempt + 1} attempts, read as not "
+                                                f"at Alpaca; not resent: {e}"})
+                return "rejected", e
+        except Exception as e:
+            rec.append_jsonl(log, {"event": "error", "at": now(), "client_order_id": cid,
+                                   "error": f"{type(e).__name__}: {e}"})
+            return "stop", f"{type(e).__name__} on {cid}; batch stopped"
+    raise AssertionError("unreachable: the last attempt returns")
+
+
 def _transmit(c, orders, log: Path, record: dict, deps: Deps, out, *,
               in_window: Callable[[dt.datetime], bool], window_text: str,
               poll_until: dt.datetime | None = None) -> int:
     """POST each order in list order.
 
     A REJECTED order (Alpaca answered 4xx: it definitely does not exist) skips
-    that symbol and the rest are still sent -- team lead, 2026-09-28: better
+    that symbol and the rest are still sent. A 429 is first waited out and the id
+    read before any resend (`_submit_one`, 2026-11-23); only after the last wait is
+    it a rejection -- team lead, 2026-09-28: better
     fill coverage, accepting that the book can be net long or short that day.
     The day is still FAIL, loudly, naming every rejection. If EVERY order is
     rejected (e.g. paper refuses `cls` outright) nothing was sent, and the
@@ -1757,7 +3577,6 @@ def _transmit(c, orders, log: Path, record: dict, deps: Deps, out, *,
     retry or a slow response can carry a batch across either line. A clock read that fails also stops the batch -- an unmeasured
     time is not "before the cutoff".
     """
-    from quantt.broker.alpaca import AmbiguousSubmit, OrderRejected
     now = deps.utcnow
     sent, failed, rejected = [], None, []
     for o in orders:
@@ -1766,53 +3585,21 @@ def _transmit(c, orders, log: Path, record: dict, deps: Deps, out, *,
             rec.append_jsonl(log, {"event": "skipped_after_rejection", "at": now(),
                                    "client_order_id": o.client_order_id})
             continue
-        try:
-            ts = c.clock()["timestamp"]
-        except Exception as e:
-            rec.append_jsonl(log, {"event": "clock_error", "at": now(),
-                                   "client_order_id": o.client_order_id,
-                                   "error": f"{type(e).__name__}: {e}"})
-            failed = f"clock read failed before {o.client_order_id}; batch stopped"
+        kind, val = _submit_one(c, o, log, deps, out, in_window=in_window,
+                                window_text=window_text)
+        if kind == "stop":
+            failed = val
             break
-        t_et = ts.astimezone(gt.ET)
-        if not in_window(ts):
-            rec.append_jsonl(log, {"event": "cutoff", "at": now(), "clock": ts,
-                                   "client_order_id": o.client_order_id,
-                                   "window": window_text})
-            failed = (f"Alpaca clock {t_et:%Y-%m-%d %H:%M:%S} ET is outside the send window "
-                      f"-- {window_text} -- before {o.client_order_id}; batch stopped")
-            break
-        rec.append_jsonl(log, {"event": "submit", "at": now(), **o.wire()})
-        try:
-            resp = c.submit_order(o.symbol, o.qty, o.side, o.client_order_id,
-                                  time_in_force=o.time_in_force)
-        except AmbiguousSubmit as e:
-            rec.append_jsonl(log, {"event": "ambiguous", "at": now(),
-                                   "client_order_id": o.client_order_id, "error": str(e)})
-            try:
-                found = c.order_by_client_id(o.client_order_id)
-                rec.append_jsonl(log, {"event": "lookup", "at": now(),
-                                       "client_order_id": o.client_order_id,
-                                       "found": found is not None,
-                                       "order": _order_summary(found) if found else None})
-            except Exception as le:
-                rec.append_jsonl(log, {"event": "lookup_error", "at": now(),
-                                       "client_order_id": o.client_order_id,
-                                       "error": f"{type(le).__name__}: {le}"})
-            failed = f"AmbiguousSubmit on {o.client_order_id}; batch stopped"
-            break
-        except OrderRejected as e:
-            rec.append_jsonl(log, {"event": "rejected", "at": now(),
-                                   "client_order_id": o.client_order_id, "error": str(e)})
+        if kind == "stop_rejected":
             rejected.append((o.client_order_id, o.symbol))
-            print(f"  REJECTED {o.client_order_id}: {e}", file=out)
-            continue
-        except Exception as e:
-            rec.append_jsonl(log, {"event": "error", "at": now(),
-                                   "client_order_id": o.client_order_id,
-                                   "error": f"{type(e).__name__}: {e}"})
-            failed = f"{type(e).__name__} on {o.client_order_id}; batch stopped"
+            print(f"  REJECTED {o.client_order_id}: HTTP 429, not resent; {val}", file=out)
+            failed = val
             break
+        if kind == "rejected":
+            rejected.append((o.client_order_id, o.symbol))
+            print(f"  REJECTED {o.client_order_id}: {val}", file=out)
+            continue
+        resp = val
         rec.append_jsonl(log, {"event": "accepted", "at": now(),
                                "client_order_id": o.client_order_id,
                                "order": _order_summary(resp)})

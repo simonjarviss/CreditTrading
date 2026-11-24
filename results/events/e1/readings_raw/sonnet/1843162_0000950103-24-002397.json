@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1843162,
+  "episode_accession": "0000950103-24-002397",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Chicago Atlantic Loan Portfolio, LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Silver Spike Investment Corp.", "cik": 1843162, "ticker": "SSIC"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001140361-24-019711", "quote": "The membership interests of CALP will not be registered under"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000950103-24-002396", "date": "2024-02-20", "quote": "Silver Spike Investment Corp. (the “Company”) (Nasdaq: SSIC), a specialty finance company that has elected to be treated as a business development company, today announced that it entered into a definitive agreement with Chicago Atlantic Loan Portfolio, LLC (“CALP”) for the purchase (the “Loan Portfolio Acquisition”) from CALP of a sizeable portfolio of loans (the “CALP Loan Portfolio”)."},
+      "outcome_evidence": {"accession": "0000950103-24-014651", "date": "2024-10-07", "quote": "today announced the completion of its previously announced acquisition from Chicago Atlantic Loan Portfolio, LLC (“CALP”) of a portfolio of loans (the “CALP Loan Portfolio”) in exchange for newly issued shares of the Company’s common stock (the “Loan Portfolio Acquisition”)."},
+      "notes": "Acquisition of a loan portfolio held in an unlisted LLC for newly issued SSIC shares, not a merger of two listed funds. Stockholders approved it on 2024-09-23 (8-K 0000950103-24-014013) and it was completed on 2024-10-01 per the 2024-10-07 8-K. SSIC was renamed Chicago Atlantic BDC, Inc. (NASDAQ: LIEN)."
+    }
+  ],
+  "problems": "The parties line shows no CIK for CALP."
+}

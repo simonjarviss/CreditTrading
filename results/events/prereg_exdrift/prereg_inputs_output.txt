@@ -1,0 +1,51 @@
+spec cef_discount.v7.20260928; deployed 13: ['AWF', 'BIT', 'DSL', 'HYT', 'JFR', 'MHD', 'MQY', 'PCN', 'PDI', 'PDO', 'PFN', 'PHK', 'PTY']; +4 munis -> 17
+
+GATE (r6 check_credit.py): events 3226, CAR(+1..+3) -20.454bp, month t -6.765
+GATE PASS: reproduces r6 (3,226 events, -20.454bp, t -6.765)
+profile          17 (n 3226): -5:+2.6(1.4) -4:+4.2(1.4) -3:+5.1(1.3) -2:+5.1(1.4) -1:+11.1(1.4) +0:-3.2(1.4) +1:-10.1(1.5) +2:-4.8(1.4) +3:-5.6(1.5) +4:+1.5(1.6) +5:-1.9(1.5) +6:+0.2(1.5)
+profile deployed 13 (n 2352): -5:+5.4(1.8) -4:+5.3(1.7) -3:+6.4(1.7) -2:+6.7(1.7) -1:+9.1(1.6) +0:-3.9(1.7) +1:-11.4(1.8) +2:-7.4(1.8) +3:-6.5(1.9) +4:-1.2(1.9) +5:-0.7(1.9) +6:+1.0(2.0)
+profile     4 munis (n 874): -5:-4.9(2.0) -4:+1.4(2.2) -3:+1.7(2.1) -2:+0.9(2.3) -1:+16.6(2.7) +0:-1.2(2.6) +1:-6.5(2.6) +2:+2.2(2.4) +3:-3.2(2.4) +4:+8.9(2.7) +5:-5.1(2.4) +6:-2.1(2.1)
+cum abnormal (bp) a buy decided at offset j earns over rows j+2..+3, 17 names: j-7:+4.6 j-6:+2.0 j-5:-2.2 j-4:-7.3 j-3:-12.5 j-2:-23.6 j-1:-20.5 j+0:-10.4 j+1:-5.6
+
+fit ex-dates, 17 names, 2005-22: 3228 fund-ex-dates on 791 distinct dates; funds per date mean 4.08, median 4, max 15; share of events on a date shared with >=3 funds 0.889
+fund-events whose next own ex-date is within 3 sessions (fit): 13
+
+(b) declared hedge, fit 2005-22: events with a fund return 3226; basket size median 1, p10 0, share < 3 (not traded) 0.731
+(b) traded events 869 on 266 dates, 153 months: mean +31.98bp [descriptive, post-hoc], per-event sd 189.1bp, month-clustered t +3.50, date-clustered t +3.37; sd of monthly means 128.3bp; share > 0 0.596
+(b) ETF alternative (HYG $1/$1), dispersion only: events 2876, per-event sd 199.9bp (declared basket 189.1bp on its own events)
+   deployed 13: events 577, mean +29.80bp, sd 178.5bp, month t +3.48
+   4 munis: events 292, mean +36.28bp, sd 208.8bp, month t +1.56
+   era 2005-09: events 205, mean +66.23bp, month t +2.40
+   era 2010-14: events 200, mean +13.47bp, month t +1.26
+   era 2015-19: events 289, mean +6.41bp, month t +0.53
+   era 2020-22: events 175, mean +55.24bp, month t +2.48
+NAV leg, same events/basket (control; descriptive): events 861, mean -0.63bp, month t -0.29
+(b) raw sleeve, $1 short + $1 basket per event, evaluate(): sessions 4519 from 2005-01-20, gross SR 0.571 [descriptive], ann +15.50% per unit, active share 0.158, turnover 113.4/yr; per-event sum check passes
+   by era SR: 2005-09 0.71, 2010-14 0.24, 2015-19 0.17, 2020-22 1.52; k = vol_target 0.06 / sigma_active 0.6814 = 0.09
+
+(a) live policy band 4.8% + gmax 1.80x on the deployed 13, fit 2013-06-21..2022-12-30 (9.5 yrs): turnover 13.55/yr; buys in window [-2,+1]: 276 (29.0/yr), 1.011 of capital/yr = 0.149 of buy turnover; window holds 0.193 of held name-days
+(a) A_j = abnormal return a buy decided at j earns through +3, 13-name fit events (bp): j-2:-29.1 (sd 166) j-1:-25.3 (sd 148) j+0:-13.8 (sd 125) j+1:-6.5 (sd 91)
+(a) first-order gain if every in-window buy were moved past +3 [U arithmetic]: +17.03bp/yr of capital, sd 41.42bp/yr, 'Sharpe' 0.41
+
+TEST SET (dates only): sessions 2023-01-03..2026-10-15 = 950; distribution panel last ex-date 2026-09-03; ex-dates of the 17 with a hold inside the price panel 752 (575 on the deployed 13) on 169 dates in 45 months; not a session 0; basket >= 3 by calendar 173 (128 on the 13); next own ex within 3 sessions 0
+   last price date by name: [datetime.date(2026, 10, 15)]
+   events by year: {2023: 205, 2024: 205, 2025: 205, 2026: 137}
+   settlement regime: T+2 (ex <= 2024-05-27) 290, T+1 462
+
+POWER (b), per-event, month-clustered: fit sd of monthly means 128.3bp (fit 5.7 events/month; test 3.8); test months 45
+   true mean  32.0bp (1.00 x fit): expected t 1.67; P(t >= 2.0) 0.37; P(t >= 1.645) 0.51
+   true mean  16.0bp (0.50 x fit): expected t 0.84; P(t >= 2.0) 0.12; P(t >= 1.645) 0.21
+   true mean   8.0bp (0.25 x fit): expected t 0.42; P(t >= 2.0) 0.06; P(t >= 1.645) 0.11
+   sleeve bar at N 6, T 950: Sharpe needed 1.825; P(pass) at fit SR 0.57 0.01, at half 0.00, at a quarter 0.00
+   sleeve bar at N 7, T 950: Sharpe needed 1.867; P(pass) at fit SR 0.57 0.01, at half 0.00, at a quarter 0.00
+   sleeve bar at N 8, T 950: Sharpe needed 1.901; P(pass) at fit SR 0.57 0.00, at half 0.00, at a quarter 0.00
+   (CEF bar) N 53: Sharpe needed 2.303
+POWER (a) gain series: N 6 needs 1.825; P(pass) at the arithmetic SR 0.41: 0.003
+POWER (a) gain series: N 7 needs 1.867; P(pass) at the arithmetic SR 0.41: 0.002
+POWER (a) gain series: N 8 needs 1.901; P(pass) at the arithmetic SR 0.41: 0.002
+POWER (a) gain series: N 53 needs 2.303; P(pass) at the arithmetic SR 0.41: 0.000
+POWER (a): expected t of the gain over the test 0.80; P(t >= 2) 0.11
+FORWARD paper 12 months: expected per-event t 0.86, P(t >= 2) 0.13 (half effect 0.06); sleeve bar N 6 needs 3.56, P(pass) 0.00 (half 0.00)
+FORWARD paper 24 months: expected per-event t 1.22, P(t >= 2) 0.22 (half effect 0.08); sleeve bar N 6 needs 2.51, P(pass) 0.00 (half 0.00)
+
+wrote /private/tmp/claude-501/-Users-simonjarvis-Downloads-2027-Projects-Quant---PM2027-2027/767b4ac8-7cb7-4bf6-953a-b785b037a5b4/scratchpad/r8_prereg_exdrift/prereg_inputs.json

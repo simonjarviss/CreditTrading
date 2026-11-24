@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1137887,
+  "episode_accession": "0001193125-15-302555",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Premium Income Municipal Fund 4, Inc.", "cik": 896061, "ticker": "NPT"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund 3", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-302555", "date": "2015-08-26", "quote": "Nuveen Premium Income Municipal Fund 4, Inc. NPT Nuveen Dividend Advantage Municipal Fund 3, to be renamed NZF Nuveen Dividend Advantage Municipal Fund 2 NXZ Nuveen Enhanced Municipal Credit Opportunities Fund Nuveen Municipal Advantage Fund, Inc. NMA"},
+      "outcome_evidence": null,
+      "notes": "CIK 896061 is from the header of the 2016-01-21 425. Shareholder meeting was set for 2016-02-10 and the 2016-01-21 solicitation letters urge voting before it; a 2016-02-11 425 is titled 'Nuveen Closed-End Funds Provide Update on Fund Mergers' but its body is not in the excerpt. The 2016-06-24 DEF 14A is filed under the name Nuveen Enhanced Municipal Credit Opportunities Fund (NZF), the renamed acquirer, but no excerpt states that any merger was completed. Tickers appear without an exchange name."
+    },
+    {
+      "target": {"name": "Nuveen Dividend Advantage Municipal Fund 2", "cik": null, "ticker": "NXZ"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund 3", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-302555", "date": "2015-08-26", "quote": "Nuveen Premium Income Municipal Fund 4, Inc. NPT Nuveen Dividend Advantage Municipal Fund 3, to be renamed NZF Nuveen Dividend Advantage Municipal Fund 2 NXZ Nuveen Enhanced Municipal Credit Opportunities Fund Nuveen Municipal Advantage Fund, Inc. NMA"},
+      "outcome_evidence": null,
+      "notes": "Still a subject company of the 2016-02-11 425. No excerpt states the outcome."
+    },
+    {
+      "target": {"name": "Nuveen Municipal Advantage Fund, Inc.", "cik": 857361, "ticker": "NMA"},
+      "acquirer": {"name": "Nuveen Dividend Advantage Municipal Fund 3", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-302555", "date": "2015-08-26", "quote": "Nuveen Premium Income Municipal Fund 4, Inc. NPT Nuveen Dividend Advantage Municipal Fund 3, to be renamed NZF Nuveen Dividend Advantage Municipal Fund 2 NXZ Nuveen Enhanced Municipal Credit Opportunities Fund Nuveen Municipal Advantage Fund, Inc. NMA"},
+      "outcome_evidence": null,
+      "notes": "CIK 857361 is from the header of the 2015-08-26 425 (seq 2). No excerpt states the outcome."
+    }
+  ],
+  "problems": "No excerpt states the outcome of any of the three mergers. The same 2015-08-26 release proposes a second merger group (NVG as acquirer) not involving this episode's fund; not recorded."
+}

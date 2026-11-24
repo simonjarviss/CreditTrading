@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1457200,
+  "episode_accession": "0001193125-13-422785",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Goldman Sachs Credit Strategies Fund", "cik": 1457200, "ticker": null},
+      "acquirer": {"name": "Goldman Sachs Long Short Credit Strategies Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-13-449899", "quote": "the Goldman Sachs Long Short Credit Strategies Fund, a newly-organized series of the Goldman Sachs Trust, an open-end management investment company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-13-444924", "date": "2013-11-18", "quote": "in anticipation of the proxy vote regarding the proposed reorganization of the Fund with and into the Goldman Sachs Long Short Credit Strategies Fund, a newly-organized series of Goldman Sachs Trust (the “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "The target converts to an open-end series. The N-8F (2014-07-07, reason: Merger) shows shareholder approval on February 14, 2014 and a distribution; completion not stated in the excerpt. The earliest 425 (2013-11-01) is a courtesy letter that only refers to the proposed reorganization generally."
+    }
+  ],
+  "problems": ""
+}

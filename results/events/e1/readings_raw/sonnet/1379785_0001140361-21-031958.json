@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1379785,
+  "episode_accession": "0001140361-21-031958",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Sierra Income Corporation", "cik": 1523526, "ticker": null},
+      "acquirer": {"name": "Barings BDC, Inc.", "cik": 1379785, "ticker": "BBDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001140361-21-031958", "date": "2021-09-21", "quote": "SIERRA INCOME CORPORATION TO MERGE WITH BARINGS BDC, INC. AND COMBINED COMPANY TO BE MANAGED BY BARINGS LLC"},
+      "outcome_evidence": {"accession": "0001140361-22-007670", "date": "2022-03-03", "quote": "announced today the closing of the previously announced merger with Sierra Income Corporation (“Sierra”)."},
+      "notes": "Barings BDC is shown as NYSE: BBDC; the excerpts do not show Sierra's listing status or ticker, so both_listed is null. Closing press release dated February 25, 2022 was filed in an 8-K on 2022-03-03."
+    }
+  ],
+  "problems": ""
+}

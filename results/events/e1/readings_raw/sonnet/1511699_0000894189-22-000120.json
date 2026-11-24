@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1511699,
+  "episode_accession": "0000894189-22-000120",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Kensington Managed Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Income Fund", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-22-002019", "quote": "The Target Trust and Acquiring Trust are separate registered open-end management investment"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-22-000120", "date": "2022-01-10", "quote": "If the Reorganization of only one Target Fund is approved by its shareholders, then the Target Fund that received approval of the Reorganization will implement the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Open-end mutual fund series of Advisors Preferred Trust (CIK 1556505, subject company on the 425s) reorganized into a series of Managed Portfolio Series (the registrant, CIK 1511699). The acquiring fund is named in the excerpts only as the 'Acquiring Income Fund'; the CIK shown is the acquiring trust's. The Special Meeting set for May 17, 2022 was adjourned for lack of quorum, to May 31, 2022 and later adjourned a fourth time (425 of 2022-06-08). The outcome is not stated in the excerpts. A later N-14 (2022-08-25) covers a single Target Fund and is not identified in the excerpts."
+    },
+    {
+      "target": {"name": "Kensington Dynamic Growth Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Growth Fund", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-22-002019", "quote": "The Target Trust and Acquiring Trust are separate registered open-end management investment"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-22-000120", "date": "2022-01-10", "quote": "If the Reorganization of only one Target Fund is approved by its shareholders, then the Target Fund that received approval of the Reorganization will implement the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Same filings as the Managed Income Fund deal; open-end mutual funds, so not a listed pair."
+    }
+  ],
+  "problems": "Funds' own CIKs and tickers for the acquiring series are not in the excerpts. The 2023 PRE 14A and DEF 14A filings concern advisory agreements after a change of control, not a fund merger; the 8-K of 2023-10-03 shows only XBRL header text."
+}

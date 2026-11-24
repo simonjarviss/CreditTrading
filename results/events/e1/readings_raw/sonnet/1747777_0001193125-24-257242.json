@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1747777,
+  "episode_accession": "0001193125-24-257242",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Blue Owl Technology Finance Corp. II", "cik": 1889668, "ticker": null},
+      "acquirer": {"name": "Blue Owl Technology Finance Corp.", "cik": 1747777, "ticker": "OTF"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-25-134115", "quote": "announced today that it intends to list the Company’s shares of common stock on the New York Stock Exchange (“NYSE”)."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-24-257192", "date": "2024-11-13", "quote": "Blue Owl Technology Finance Corp. (“OTF”) and Blue Owl Technology Finance Corp. II (“OTF II”) today announced that they have entered into a definitive merger agreement, with OTF as the surviving company"},
+      "outcome_evidence": {"accession": "0001628280-25-014413", "date": "2025-03-24", "quote": "Blue Owl Technology Finance Corp. (“OTF”) today announced the closing of its merger with Blue Owl Technology Finance Corp. II (“OTF II”), with OTF as the surviving company."},
+      "notes": "Merger completed 2025-03-24 (shareholder approvals 2025-03-20), but OTF only announced an intention to list on the NYSE on 2025-06-03 (after closing), so it was not exchange-listed at the time of the deal; no excerpt shows OTF II as listed either. outcome_evidence shows the merger completed; outcome is not_a_listed_pair because both_listed is false."
+    }
+  ],
+  "problems": ""
+}

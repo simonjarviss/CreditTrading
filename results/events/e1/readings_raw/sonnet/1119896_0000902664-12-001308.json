@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1119896,
+  "episode_accession": "0000902664-12-001308",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "EXCELSIOR MULTI-STRATEGY HEDGE FUND OF FUNDS (TI), LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Excelsior Multi-Strategy Hedge Fund of Funds Master Fund, LLC", "cik": 1119896, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000902664-12-001308", "date": "2012-10-15", "quote": "the Merger Fund would merge with and into the Master Fund"},
+      "outcome_evidence": null,
+      "notes": "Only the N-14 registration statement is in the window. Excerpts do not say whether the funds' units are exchange-listed, nor how the merger ended."
+    },
+    {
+      "target": {"name": "EXCELSIOR MULTI-STRATEGY HEDGE FUND OF FUNDS (TE), LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Excelsior Multi-Strategy Hedge Fund of Funds Master Fund, LLC", "cik": 1119896, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000902664-12-001308", "date": "2012-10-15", "quote": "the Merger Fund would merge with and into the Master Fund"},
+      "outcome_evidence": null,
+      "notes": "Only the N-14 registration statement is in the window. Excerpts do not say whether the funds' units are exchange-listed, nor how the merger ended."
+    },
+    {
+      "target": {"name": "EXCELSIOR MULTI-STRATEGY HEDGE FUND OF FUNDS (TI 2), LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Excelsior Multi-Strategy Hedge Fund of Funds Master Fund, LLC", "cik": 1119896, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000902664-12-001308", "date": "2012-10-15", "quote": "the Merger Fund would merge with and into the Master Fund"},
+      "outcome_evidence": null,
+      "notes": "Only the N-14 registration statement is in the window. Excerpts do not say whether the funds' units are exchange-listed, nor how the merger ended."
+    },
+    {
+      "target": {"name": "EXCELSIOR MULTI-STRATEGY HEDGE FUND OF FUNDS (TE 2), LLC", "cik": null, "ticker": null},
+      "acquirer": {"name": "Excelsior Multi-Strategy Hedge Fund of Funds Master Fund, LLC", "cik": 1119896, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000902664-12-001308", "date": "2012-10-15", "quote": "the Merger Fund would merge with and into the Master Fund"},
+      "outcome_evidence": null,
+      "notes": "Only the N-14 registration statement is in the window. Excerpts do not say whether the funds' units are exchange-listed, nor how the merger ended."
+    }
+  ],
+  "problems": "Single filing. The four feeder funds are listed in the cover text; the excerpt says 'the Merger Fund' generically, so the pairing of each feeder as a target is read from the list of funds on the cover. No target CIKs are printed."
+}

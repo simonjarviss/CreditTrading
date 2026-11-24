@@ -1,0 +1,145 @@
+{
+ "sample_n": 88,
+ "sample_hits": 22,
+ "pooled_precision": 0.25,
+ "pooled_precision_wilson95": [
+  0.171,
+  0.35
+ ],
+ "sample_kinds": {
+  "baby_bond": 59,
+  "preferred": 17,
+  "other": 6,
+  "warrant_or_right": 4,
+  "common": 2
+ },
+ "sample_hits_by_8a_kind": {
+  "preferred": 13,
+  "baby_bond": 7,
+  "other": 2
+ },
+ "sample_coupon_mismatch": 3,
+ "per_year": {
+  "2015": {
+   "candidates": 218,
+   "n": 8,
+   "k": 1,
+   "est_pooled_precision": 54.0,
+   "est_lo": 37.0,
+   "est_hi": 76.0
+  },
+  "2016": {
+   "candidates": 259,
+   "n": 8,
+   "k": 3,
+   "est_pooled_precision": 65.0,
+   "est_lo": 44.0,
+   "est_hi": 91.0
+  },
+  "2017": {
+   "candidates": 209,
+   "n": 8,
+   "k": 4,
+   "est_pooled_precision": 52.0,
+   "est_lo": 36.0,
+   "est_hi": 73.0
+  },
+  "2018": {
+   "candidates": 197,
+   "n": 8,
+   "k": 1,
+   "est_pooled_precision": 49.0,
+   "est_lo": 34.0,
+   "est_hi": 69.0
+  },
+  "2019": {
+   "candidates": 269,
+   "n": 8,
+   "k": 1,
+   "est_pooled_precision": 67.0,
+   "est_lo": 46.0,
+   "est_hi": 94.0
+  },
+  "2020": {
+   "candidates": 247,
+   "n": 8,
+   "k": 3,
+   "est_pooled_precision": 62.0,
+   "est_lo": 42.0,
+   "est_hi": 86.0
+  },
+  "2021": {
+   "candidates": 311,
+   "n": 8,
+   "k": 4,
+   "est_pooled_precision": 78.0,
+   "est_lo": 53.0,
+   "est_hi": 109.0
+  },
+  "2022": {
+   "candidates": 146,
+   "n": 8,
+   "k": 2,
+   "est_pooled_precision": 36.0,
+   "est_lo": 25.0,
+   "est_hi": 51.0
+  },
+  "2023": {
+   "candidates": 119,
+   "n": 8,
+   "k": 1,
+   "est_pooled_precision": 30.0,
+   "est_lo": 20.0,
+   "est_hi": 42.0
+  },
+  "2024": {
+   "candidates": 454,
+   "n": 8,
+   "k": 0,
+   "est_pooled_precision": 114.0,
+   "est_lo": 78.0,
+   "est_hi": 159.0
+  },
+  "2025": {
+   "candidates": 290,
+   "n": 8,
+   "k": 2,
+   "est_pooled_precision": 72.0,
+   "est_lo": 50.0,
+   "est_hi": 102.0
+  }
+ },
+ "recall_on_survivors": {
+  "survivors_first_bar_2016_03_to_2022_12": 346,
+  "with_candidate_8a12b": 287,
+  "recall": 0.829,
+  "with_any_8a12b_same_window": 324
+ },
+ "gap_424b_to_first_exchange_bar_days": {
+  "n": 287,
+  "median": 8.0,
+  "quartiles": [
+   7.0,
+   8.0,
+   11.0
+  ],
+  "share_gt_5d": 0.885
+ },
+ "gap_8a12b_to_first_exchange_bar_days": {
+  "median": 5.0,
+  "quartiles": [
+   2.0,
+   5.0,
+   6.0
+  ]
+ },
+ "gap_424b_to_8a12b_days_candidates": {
+  "n": 2719,
+  "median": 5.0,
+  "quartiles": [
+   2.0,
+   5.0,
+   7.0
+  ]
+ }
+}

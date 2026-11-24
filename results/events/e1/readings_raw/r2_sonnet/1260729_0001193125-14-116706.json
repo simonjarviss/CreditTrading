@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1260729,
+  "episode_accession": "0001193125-14-116706",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "The Gabelli Dividend & Income Trust", "cik": 1260729, "ticker": null},
+      "acquirer": {"name": "The Gabelli Global Small and Mid Cap Value Trust", "cik": 1585855, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-116706", "date": "2014-03-26", "quote": "The Fund is seeking additional shareholder participation in order to approve the contribution of a portion of the Fund’s assets to a newly formed, diversified, closed-end investment company, The Gabelli Global Small and Mid Cap Value Trust."},
+      "outcome_evidence": null,
+      "notes": "Not a merger of two funds: the filing describes a contribution of a portion of the Fund's assets to a newly formed closed-end fund (the Fund continues). Recorded as the only transaction described; the Fund is neither absorbed nor an issuer-survivor in a merger, so role is 'other'. Exchange listing of either fund is not stated in the excerpts. No excerpt states the result of the April 15, 2014 special meeting (the 2014 and 2015 DEF 14A/DEFA14A shown are annual-meeting trustee elections only)."
+    }
+  ],
+  "problems": "Only a proxy-solicitation letter (seq 1) mentions the transaction, and it is an asset contribution to a newly formed fund rather than a fund merger; target/acquirer labels are a best fit to the schema."
+}

@@ -1,0 +1,48 @@
+{
+ "episode_cik": 902722,
+ "episode_accession": "0001341004-09-002127",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {"name": "BlackRock California Investment Quality Municipal Trust Inc.", "cik": 902722, "ticker": "RAA"},
+   "acquirer": {"name": "BlackRock California Municipal Income Trust", "cik": 1137391, "ticker": "BFZ"},
+   "both_listed": true,
+   "listed_quote": {"accession": "0001341004-09-002127", "quote": "BlackRock California Municipal Income Trust II (NYSE Amex: BCL), BlackRock California Insured Municipal Income Trust (NYSE: BCK), BlackRock California Municipal Bond Trust (NYSE: BZA), BlackRock California Investment Quality Municipal Trust Inc. (NYSE Amex: RAA) and BlackRock California Municipal Income Trust (NYSE: BFZ)"},
+   "outcome": "vote_failed",
+   "announcement": {"accession": "0001341004-09-002127", "date": "2009-10-26", "quote": "in connection with the proposed reorganization of each of BCL, BCK, BZA and RAA into BFZ, with BFZ being the surviving fund"},
+   "outcome_evidence": {"accession": "0001341004-09-002576", "date": "2009-12-28", "quote": "failed to receive sufficient RAA common shareholder votes required to approve the Reorganization. Consequent to today’s announcement, the Reorganization will not occur, and RAA will continue to be managed according to its investment guidelines."},
+   "notes": "Joint meeting adjourned Oct 26 to Nov 30, then RAA vote failed Dec 28, 2009. Earlier DEFA14A of 2009-10-13 refers to the joint meeting but does not name the merger. RAA later proposed liquidation (PRE 14A 2010-06-29; N-8F 2010-10-05 checks Liquidation)."
+  },
+  {
+   "target": {"name": "BlackRock California Municipal Income Trust II", "cik": 1176196, "ticker": "BCL"},
+   "acquirer": {"name": "BlackRock California Municipal Income Trust", "cik": 1137391, "ticker": "BFZ"},
+   "both_listed": true,
+   "listed_quote": {"accession": "0001341004-09-002127", "quote": "BlackRock California Municipal Income Trust II (NYSE Amex: BCL), BlackRock California Insured Municipal Income Trust (NYSE: BCK), BlackRock California Municipal Bond Trust (NYSE: BZA), BlackRock California Investment Quality Municipal Trust Inc. (NYSE Amex: RAA) and BlackRock California Municipal Income Trust (NYSE: BFZ)"},
+   "outcome": null,
+   "announcement": {"accession": "0001341004-09-002127", "date": "2009-10-26", "quote": "in connection with the proposed reorganization of each of BCL, BCK, BZA and RAA into BFZ, with BFZ being the surviving fund"},
+   "outcome_evidence": null,
+   "notes": "Companion pair in the same filings. Dec 28, 2009 release says reorganizations expected to conclude on or about January 29, 2010; completion not stated in any excerpt."
+  },
+  {
+   "target": {"name": "BlackRock California Insured Municipal Income Trust", "cik": 1181027, "ticker": "BCK"},
+   "acquirer": {"name": "BlackRock California Municipal Income Trust", "cik": 1137391, "ticker": "BFZ"},
+   "both_listed": true,
+   "listed_quote": {"accession": "0001341004-09-002127", "quote": "BlackRock California Municipal Income Trust II (NYSE Amex: BCL), BlackRock California Insured Municipal Income Trust (NYSE: BCK), BlackRock California Municipal Bond Trust (NYSE: BZA), BlackRock California Investment Quality Municipal Trust Inc. (NYSE Amex: RAA) and BlackRock California Municipal Income Trust (NYSE: BFZ)"},
+   "outcome": null,
+   "announcement": {"accession": "0001341004-09-002127", "date": "2009-10-26", "quote": "in connection with the proposed reorganization of each of BCL, BCK, BZA and RAA into BFZ, with BFZ being the surviving fund"},
+   "outcome_evidence": null,
+   "notes": "Companion pair; completion not stated in any excerpt (expected about January 29, 2010)."
+  },
+  {
+   "target": {"name": "BlackRock California Municipal Bond Trust", "cik": 1169027, "ticker": "BZA"},
+   "acquirer": {"name": "BlackRock California Municipal Income Trust", "cik": 1137391, "ticker": "BFZ"},
+   "both_listed": true,
+   "listed_quote": {"accession": "0001341004-09-002127", "quote": "BlackRock California Municipal Income Trust II (NYSE Amex: BCL), BlackRock California Insured Municipal Income Trust (NYSE: BCK), BlackRock California Municipal Bond Trust (NYSE: BZA), BlackRock California Investment Quality Municipal Trust Inc. (NYSE Amex: RAA) and BlackRock California Municipal Income Trust (NYSE: BFZ)"},
+   "outcome": null,
+   "announcement": {"accession": "0001341004-09-002127", "date": "2009-10-26", "quote": "in connection with the proposed reorganization of each of BCL, BCK, BZA and RAA into BFZ, with BFZ being the surviving fund"},
+   "outcome_evidence": null,
+   "notes": "Companion pair; completion not stated in any excerpt (expected about January 29, 2010)."
+  }
+ ],
+ "problems": ""
+}

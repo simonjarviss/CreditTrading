@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1847518,
+  "episode_accession": "0001193125-23-145191",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": null, "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-145191", "date": "2023-05-15", "quote": "IN CONNECTION WITH THE PROPOSED FUND MERGERS DESCRIBED HEREIN, EACH ACQUIRING FUND AND TARGET FUND INTEND TO FILE A REGISTRATION STATEMENT ON FORM N-14"},
+      "outcome_evidence": null,
+      "notes": "The excerpts list fourteen Puerto Rico residents funds in the header but never state which funds are targets and which are acquirers; the letter body is cut off. The text calls them 'the closed-ended Funds' without stating exchange listing."
+    }
+  ],
+  "problems": "Target-acquirer pairs, this fund's role, listing and outcome are not stated in the excerpts."
+}

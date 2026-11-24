@@ -1,0 +1,28 @@
+{
+  "episode_cik": 884216,
+  "episode_accession": "0001193125-17-362953",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock New Jersey Municipal Bond Trust", "cik": 1169031, "ticker": "BLJ"},
+      "acquirer": {"name": "BlackRock MuniYield New Jersey Fund, Inc.", "cik": 884216, "ticker": "MYJ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-18-175528", "quote": "BlackRock New Jersey Municipal Bond Trust (NYSE:BLJ), BlackRock New Jersey Municipal Income Trust (NYSE:BNJ) and BlackRock MuniYield New Jersey Fund, Inc. (NYSE:MYJ)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-17-362953", "date": "2017-12-06", "quote": "The transactions contemplated by each Reorganization Agreement, including an Issuance, are referred to herein as a “Reorganization” and collectively, the “Reorganizations.” The term “Combined Fund” refers to the Acquiring Fund as the surviving Fund after the consummation of the Reorganizations."},
+      "outcome_evidence": null,
+      "notes": "The 2018-03-29 vote-results 425 is shown only as its first 800 characters, cut before the results. The 2018-05-25 425 announces special distributions 'Related to the Reorganization' but the excerpt does not state completion."
+    },
+    {
+      "target": {"name": "BlackRock New Jersey Municipal Income Trust", "cik": 1137440, "ticker": "BNJ"},
+      "acquirer": {"name": "BlackRock MuniYield New Jersey Fund, Inc.", "cik": 884216, "ticker": "MYJ"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-18-175528", "quote": "BlackRock New Jersey Municipal Bond Trust (NYSE:BLJ), BlackRock New Jersey Municipal Income Trust (NYSE:BNJ) and BlackRock MuniYield New Jersey Fund, Inc. (NYSE:MYJ)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-17-362953", "date": "2017-12-06", "quote": "The BNJ Reorganization is contingent upon the completion of the VMTP Refinancing. If the VMTP Refinancing is not completed prior to the Closing Date of the BNJ Reorganization, then the BNJ Reorganization will not be consummated."},
+      "outcome_evidence": null,
+      "notes": "BNJ's reorganization was contingent on a VMTP Refinancing. The 2018-05-17 425 says BNJ 'has successfully issued Variable Rate Demand Preferred Shares', but the excerpt does not state the merger closed or failed."
+    }
+  ],
+  "problems": "No filing excerpt states the outcome for either target; the vote-results press release (2018-03-29) is truncated before the results."
+}

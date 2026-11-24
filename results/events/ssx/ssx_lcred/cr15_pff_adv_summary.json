@@ -1,0 +1,33 @@
+{
+ "additions": 317,
+ "mapped_to_alpaca_symbol": 5,
+ "map_methods": {
+  "unmapped": 312,
+  "ticker": 5
+ },
+ "with_volume": 4,
+ "days_of_adv_median_all": 3.37,
+ "days_of_adv_quartiles_all": [
+  2.62,
+  3.37,
+  4.12
+ ],
+ "share_ge_1_day": 1.0,
+ "by_flag": {
+  "in_quarter_listing": {
+   "n": 2,
+   "median_days_of_adv": 3.37
+  },
+  "pre_event": {
+   "n": 2,
+   "median_days_of_adv": 3.38
+  }
+ },
+ "new_issue_share": 0.5,
+ "by_year": {
+  "2022": {
+   "n": 4,
+   "median_days_of_adv": 3.37
+  }
+ }
+}

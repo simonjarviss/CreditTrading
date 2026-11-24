@@ -1,0 +1,94 @@
+{
+ "borrow_today": {
+  "alpaca_clock": "2026-10-19T11:37:12.811168-04:00",
+  "4.01": {
+   "filers_2025": 696,
+   "listed_today": 416,
+   "at_alpaca": 411,
+   "shortable": 220,
+   "etb": 220,
+   "shortable_share": 0.5353,
+   "ci95": [
+    0.487,
+    0.5829
+   ]
+  },
+  "4.02": {
+   "filers_2025": 122,
+   "listed_today": 64,
+   "at_alpaca": 63,
+   "shortable": 37,
+   "etb": 37,
+   "shortable_share": 0.5873,
+   "ci95": [
+    0.4642,
+    0.7004
+   ]
+  },
+  "5.02": {
+   "filers_2025": 4476,
+   "listed_today": 3330,
+   "at_alpaca": 3307,
+   "shortable": 2538,
+   "etb": 2538,
+   "shortable_share": 0.7675,
+   "ci95": [
+    0.7528,
+    0.7815
+   ]
+  },
+  "1.03": {
+   "filers_2025": 58,
+   "listed_today": 4,
+   "at_alpaca": 4,
+   "shortable": 3,
+   "etb": 3,
+   "shortable_share": 0.75,
+   "ci95": [
+    0.3006,
+    0.9544
+   ]
+  }
+ },
+ "gate_counts": {
+  "4.01": {
+   "liquid_events_2010_22": 1467,
+   "liquid_issuers_2010_22": 1192,
+   "listed_events_2010_22": 3073
+  },
+  "4.02": {
+   "liquid_events_2010_22": 621,
+   "liquid_issuers_2010_22": 525,
+   "listed_events_2010_22": 1376
+  },
+  "5.02": {
+   "liquid_events_2010_22": 77107,
+   "liquid_issuers_2010_22": 5413,
+   "listed_events_2010_22": 108331
+  }
+ },
+ "census_note": "every 8-K (original) in the bulk archive of the 24,296 CIKs that filed 10-K/10-Q/NT/8-K in 2008-2025",
+ "share_8k_with_items": 0.999998,
+ "ceo_turnover_r2": {
+  "rows": 1438,
+  "anndate_range": [
+   "1993-06-19",
+   "2021-10-21"
+  ],
+  "forced_values": {
+   "1": 1438
+  },
+  "1993_2004": {
+   "n": 520,
+   "forced": 520
+  },
+  "2005_2014": {
+   "n": 584,
+   "forced": 584
+  },
+  "2015_2021": {
+   "n": 334,
+   "forced": 334
+  }
+ }
+}

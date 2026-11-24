@@ -52,6 +52,70 @@ N = 6) · **Plan** `results/cef/RESEARCH_PLAN_2026-10-09.md` §3 row 2; gates G1
 > -3 stay halted until the team lead's `fetch-edgar` and `pull-crsp` runs and the 273 readings
 > that follow them.
 >
+> **Amendment 3 (team lead, 2026-10-20, at Stage 0, before any E1 return): DG-E1-3's readings
+> ruled.** The ruling: "Accept all" to items 1–7 of `results/events/E1_DG3_RULINGS_FORM_2026-10-20.md`,
+> with both extra reading rounds chosen (relayed by the coordinator; recorded in
+> `results/events/e1/e1_dg3_rulings.csv`):
+> - **1. One deal, one count.** A is the earliest announcement and F the earliest public failure
+>   across the deal's episodes.
+> - **2. CRSP settles a listing the reader left null** (§4.3's share-code definition).
+> - **3. BHV, BKN, MIY and MPA → MYI are withdrawn, F = 2023-11-01** (MYI's RW), in the time
+>   holdout.
+> - **4. MCC → CIK 1523526 is not a listed pair.**
+> - **5. Rows that cannot change the trial** (triage classes C1–C3, and deals announced after
+>   2024-12-31) are read and excluded, not blocking.
+> - **6. The N-8F rule.** Batches 40 and 45 are re-read to it.
+> - **8. A second, full-excerpt reading** of the 47 episodes that could still change the trial.
+> - **9. A supplementary census** of the 149 acquirer-side episodes that the 730-day rule
+>   explains, which is how SBI → MMU (§2.3) was missed.
+>
+> §4.3's census rule is widened by item 9 only. No kill rule changes.
+>
+> **Amendment 4 (team lead, 2026-10-21, at Stage 0, before any E1 return): the deal universe
+> takes 331, and the CRSP outcome rule.** The rulings: "Amend: include 331" and "Accept the CRSP
+> rule" (relayed by the coordinator; recorded in `results/events/e1/e1_dg3_rulings.csv` items 10–11).
+> - **§4.1's universe:** CRSP delisting codes **231 and 331**, when the delisting maps to the
+>   acquirer's permno. CRSP codes many CEF reorganisations 331, an exchange. They are priced by
+>   `merger_pairs._announcement_row` unchanged; its code guard is widened for E1 only, and the
+>   default is unchanged and tested.
+> - **The new deals:** the fit gains 10 (muni +4 to 99 deals in 51 groups) and the name holdout
+>   gains 1. Five more are excluded because their acquirer, HYT, is a spec name. Counts:
+>   `results/events/e1/e1_universe_counts_2026-10-21.json`, made with no return read.
+> - **The census** counts a 331 completion too.
+> - **The CRSP outcome rule (DG-E1-3):** a blank outcome is settled from CRSP within 730 days of A:
+>   - a 2xx or 3xx delisting into the acquirer's permno → completed;
+>   - a 2xx into another permno → completed under another structure;
+>   - liquidated, or still listed → not completed. A third reading then looks for the filing that
+>     dates the failure (§6.1 needs F).
+>   - anything else → unsettled.
+>
+> No kill rule changes.
+>
+> **Amendment 5 (team lead, 2026-10-21, at Stage 0, before any E1 return): DG-E1-3's remaining
+> rows.** The ruling: "Accept 12–15" (relayed by the coordinator; recorded in
+> `results/events/e1/e1_dg3_rulings.csv` items 12–15):
+> - **12.** Listing follows CRSP share codes (§4.3), by ticker or else by CIK, BDCs included. A deal
+>   whose counterparty nobody identifies is excluded and counted.
+> - **13.** A deal CRSP shows never completed, with no dated failure, is excluded and counted
+>   (§6.1 needs F).
+> - **14.** An outcome still unstated after the readings is excluded and counted.
+> - **15.** SBI → MMU and NCU → NKX (2011) are read in each target's own filings. If that settles
+>   nothing, SBI → MMU is excluded and counted, and NCU → NKX takes §4.3's superseded rule with
+>   F = 2013-11-22.
+>
+> No kill rule changes.
+>
+> **Amendment 6 (team lead, 2026-10-22, after Stage 0 cleared, before any E1 return): a fit deal
+> with no control-2 candidate.** The ruling: "Keep, with no comparison" (relayed by the coordinator;
+> recorded in `results/events/e1/e1_dg3_rulings.csv` item 16):
+> - **16.** ALD → PSEC (BDC, failed 2010-03-05) stays in the trial with no control 2. It is
+>   recorded as "no candidate: no CEF has the first name word ALLIED", and counted.
+>   - **Why a ruling was needed:** §8.2 is silent on a non-muni deal with no candidate.
+>   - **Why no verdict moves:** stage 3's 75% coverage rule is over fit muni deals, and BDC deals
+>     never decide (§0).
+>
+> No kill rule changes.
+>
 > *Was:* DRAFT — awaiting team-lead approval; the counter moves only in the commit that records approval.
 >
 > **No E1 return of any kind was computed to write this.** No pair return, no

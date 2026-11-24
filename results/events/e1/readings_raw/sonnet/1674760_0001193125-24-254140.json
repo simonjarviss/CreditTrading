@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1674760,
+  "episode_accession": "0001193125-24-254140",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Goldman Sachs Private Middle Market Credit LLC", "cik": 1674760, "ticker": null},
+      "acquirer": {"name": "Pantheon Silver Holdings LLC", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-24-249313", "quote": "on which registered None N/A N/A"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-24-249313", "date": "2024-11-01", "quote": "On October 31, 2024, Goldman Sachs Private Middle Market Credit LLC, a Delaware limited liability company (“ PMMC ”), entered into an Agreement and Plan of Merger (the “ Merger Agreement ”) with Pantheon Silver Holdings LLC, a Delaware limited liability company (“ Pantheon ”), and Silver Merger Sub LLC"},
+      "outcome_evidence": null,
+      "notes": "PMMC is an LLC regulated as a BDC whose 8-K cover page lists no securities registered under Section 12(b) and no exchange (Title of each class / Trading Symbol / Name of each exchange on which registered: None, N/A, N/A); members, not stockholders, vote. The acquirer is Pantheon Silver Holdings LLC through its merger subsidiary Silver Merger Sub LLC (merging into PMMC, PMMC surviving); Pantheon's listing status is not stated. Later 8-Ks (from 2024-12-26) are filed under the name Silver Capital Holdings LLC for the same CIK, but the compact excerpts do not state a completion, so no outcome beyond not_a_listed_pair is recorded."
+    }
+  ],
+  "problems": ""
+}

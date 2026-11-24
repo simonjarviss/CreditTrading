@@ -1,0 +1,58 @@
+{
+ "window": [
+  "2016-01-01",
+  "2022-12-31"
+ ],
+ "symbols_with_bars": 414,
+ "census_non_otc": 575,
+ "price_fields": "dropped at fetch (volume only)",
+ "first_bar_year_survivors": {
+  "2016": {
+   "baby_bond": 1,
+   "preferred": 14
+  },
+  "2017": {
+   "baby_bond": 7,
+   "preferred": 36
+  },
+  "2018": {
+   "baby_bond": 9,
+   "preferred": 24
+  },
+  "2019": {
+   "baby_bond": 14,
+   "preferred": 56
+  },
+  "2020": {
+   "baby_bond": 13,
+   "preferred": 41
+  },
+  "2021": {
+   "baby_bond": 19,
+   "preferred": 82
+  },
+  "2022": {
+   "baby_bond": 14,
+   "preferred": 18
+  }
+ },
+ "left_censored_listed_by_2016_01": 66,
+ "first21_median_daily_shares_by_year": {
+  "2016": 68943.0,
+  "2017": 97602.0,
+  "2018": 60643.0,
+  "2019": 118989.0,
+  "2020": 90132.0,
+  "2021": 58591.0,
+  "2022": 30804.0
+ },
+ "first21_median_daily_par_usd_by_year": {
+  "2016": 1723575.0,
+  "2017": 2440050.0,
+  "2018": 1516075.0,
+  "2019": 2974725.0,
+  "2020": 2253312.0,
+  "2021": 1464775.0,
+  "2022": 770088.0
+ }
+}

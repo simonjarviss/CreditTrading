@@ -1,0 +1,58 @@
+{
+  "episode_cik": 890196,
+  "episode_accession": "0001193125-20-170532",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Maryland Municipal Bond Trust", "cik": 1169029, "ticker": "BZM"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund, Inc.", "cik": 890196, "ticker": "MQY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-318209", "quote": "BlackRock Maryland Municipal Bond Trust (NYSE: BZM)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170528", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations"},
+      "outcome_evidence": {"accession": "0001193125-21-121023", "date": "2021-04-19", "quote": "Announces Closing of Reorganizations of Six Municipal Closed-End Funds"},
+      "notes": "Acquirer MQY NYSE listing: accession 0001193125-21-013575, quote 'MuniYield Quality Fund, Inc. (NYSE: MQY and collectively with BZM, MHE, MZA, MYF and MEN, the “Funds,”'. Jan 21 2021 release: shareholders of BZM, MYF and MEN approved. Closing press release sentence is cut off in the excerpt after listing BZM, MHE, MZA; completion rests on its heading."
+    },
+    {
+      "target": {"name": "BlackRock Massachusetts Tax-Exempt Trust", "cik": 901824, "ticker": "MHE"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund, Inc.", "cik": 890196, "ticker": "MQY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-318209", "quote": "BlackRock Massachusetts Tax-Exempt Trust (NYSE: MHE)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170532", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations"},
+      "outcome_evidence": {"accession": "0001193125-21-121026", "date": "2021-04-19", "quote": "Announces Closing of Reorganizations of Six Municipal Closed-End Funds"},
+      "notes": "Jan 21 2021 release (accession 0001193125-21-013610): MHE, MZA and MQY did not obtain the requisite common-shareholder votes at that meeting and it was adjourned to February 12, 2021; the Feb 12 vote results are not in the excerpts. Closing press release dated April 19, 2021 carries the heading used as evidence; its sentence is cut off after listing BZM, MHE, MZA. Acquirer MQY NYSE listing: accession 0001193125-21-013575, quote 'MuniYield Quality Fund, Inc. (NYSE: MQY and collectively with BZM, MHE, MZA, MYF and MEN, the “Funds,”'."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield Arizona Fund, Inc.", "cik": 911308, "ticker": "MZA"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund, Inc.", "cik": 890196, "ticker": "MQY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-318209", "quote": "BlackRock MuniYield Arizona Fund, Inc. (NYSE: MZA)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170526", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations"},
+      "outcome_evidence": {"accession": "0001193125-21-121032", "date": "2021-04-19", "quote": "Announces Closing of Reorganizations of Six Municipal Closed-End Funds"},
+      "notes": "Jan 21 2021 release (accession 0001193125-21-013596): MHE, MZA and MQY did not obtain the requisite common-shareholder votes at that meeting and it was adjourned to February 12, 2021; the Feb 12 vote results are not in the excerpts. Closing press release dated April 19, 2021 carries the heading used as evidence; its sentence is cut off after listing BZM, MHE, MZA. Acquirer MQY NYSE listing: accession 0001193125-21-013575, quote 'MuniYield Quality Fund, Inc. (NYSE: MQY and collectively with BZM, MHE, MZA, MYF and MEN, the “Funds,”'."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield Investment Fund", "cik": 882153, "ticker": "MYF"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund, Inc.", "cik": 890196, "ticker": "MQY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-170520", "quote": "BlackRock MuniYield Investment Fund (NYSE: MYF)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170520", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations"},
+      "outcome_evidence": {"accession": "0001193125-21-121040", "date": "2021-04-19", "quote": "Announces Closing of Reorganizations of Six Municipal Closed-End Funds"},
+      "notes": "Jan 21 2021 release: shareholders of BZM, MYF and MEN approved the reorganization into MQY. Acquirer MQY NYSE listing: accession 0001193125-21-013575, quote 'MuniYield Quality Fund, Inc. (NYSE: MQY and collectively with BZM, MHE, MZA, MYF and MEN, the “Funds,”'. Closing press release sentence is cut off in the excerpt; completion rests on its heading."
+    },
+    {
+      "target": {"name": "BlackRock MuniEnhanced Fund, Inc.", "cik": 844172, "ticker": "MEN"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund, Inc.", "cik": 890196, "ticker": "MQY"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170517", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations"},
+      "outcome_evidence": {"accession": "0001193125-21-121045", "date": "2021-04-19", "quote": "Announces Closing of Reorganizations of Six Municipal Closed-End Funds"},
+      "notes": "No excerpt prints an exchange listing for MEN (only the ticker MEN, and a Jan 21 2021 passage calling MEN one of the 'Funds'); MQY is shown as NYSE: MQY, so both_listed is left null. Jan 21 2021 release: shareholders of BZM, MYF and MEN approved. Closing press release sentence is cut off in the excerpt; completion rests on its heading."
+    }
+  ],
+  "problems": "Excerpts show only the first 800 characters of the closing releases and the Feb 12 2021 vote-result releases, so the closing sentence listing every fund and the final vote tallies for MHE and MZA are not in front of me. The text shows no target that did not complete, but it also does not itself list the funds closed."
+}

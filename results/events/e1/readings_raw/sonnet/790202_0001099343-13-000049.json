@@ -1,0 +1,85 @@
+{
+ "episode_cik": 790202,
+ "episode_accession": "0001099343-13-000049",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "First Opportunity Fund, Inc.",
+    "cik": 790202,
+    "ticker": "FOFI"
+   },
+   "acquirer": {
+    "name": "Boulder Growth & Income Fund, Inc.",
+    "cik": null,
+    "ticker": "BIF"
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001099343-14-000031",
+    "quote": "First Opportunity Fund, Inc. (OTC: FOFI) (the “Fund”) announced today"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001099343-13-000049",
+    "date": "2013-11-04",
+    "quote": "have approved the reorganization of each of BTF, DNY and FOFI (the “Target Funds”) into BIF, with BIF continuing as the surviving fund"
+   },
+   "outcome_evidence": null,
+   "notes": "FOFI is shown as OTC in the Sept 2014 release, so not exchange-listed then. The N-8F (0001104659-15-038210, 2015-05-14) states the merger closed March 20, 2015."
+  },
+  {
+   "target": {
+    "name": "Boulder Total Return Fund, Inc.",
+    "cik": null,
+    "ticker": "BTF"
+   },
+   "acquirer": {
+    "name": "Boulder Growth & Income Fund, Inc.",
+    "cik": null,
+    "ticker": "BIF"
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": "completed",
+   "announcement": {
+    "accession": "0001099343-13-000049",
+    "date": "2013-11-04",
+    "quote": "have approved the reorganization of each of BTF, DNY and FOFI (the “Target Funds”) into BIF, with BIF continuing as the surviving fund"
+   },
+   "outcome_evidence": {
+    "accession": "0001104659-15-038210",
+    "date": "2015-05-14",
+    "quote": "with the reorganization of the Fund, Boulder Total Return Fund, Inc. and The Denali Fund Inc. (collectively, the “Acquired Funds”) into Boulder Growth & Income Fund, Inc. (“BIF”) (the “Merger”). The distribution represented substantially all of the Fund’s net investment income and net capital gain estimated through March 20, 2015, the closing date of the Merger."
+   },
+   "notes": "Exchange listing of BTF and BIF is not stated in the excerpts. Completion is read from FOFI's N-8F."
+  },
+  {
+   "target": {
+    "name": "The Denali Fund Inc.",
+    "cik": null,
+    "ticker": "DNY"
+   },
+   "acquirer": {
+    "name": "Boulder Growth & Income Fund, Inc.",
+    "cik": null,
+    "ticker": "BIF"
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": "completed",
+   "announcement": {
+    "accession": "0001099343-13-000049",
+    "date": "2013-11-04",
+    "quote": "have approved the reorganization of each of BTF, DNY and FOFI (the “Target Funds”) into BIF, with BIF continuing as the surviving fund"
+   },
+   "outcome_evidence": {
+    "accession": "0001104659-15-038210",
+    "date": "2015-05-14",
+    "quote": "with the reorganization of the Fund, Boulder Total Return Fund, Inc. and The Denali Fund Inc. (collectively, the “Acquired Funds”) into Boulder Growth & Income Fund, Inc. (“BIF”) (the “Merger”). The distribution represented substantially all of the Fund’s net investment income and net capital gain estimated through March 20, 2015, the closing date of the Merger."
+   },
+   "notes": "Exchange listing of DNY and BIF is not stated in the excerpts. Completion is read from FOFI's N-8F."
+  }
+ ],
+ "problems": "BIF CIK does not appear in any FILING header line, so null."
+}

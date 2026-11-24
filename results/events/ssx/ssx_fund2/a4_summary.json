@@ -1,0 +1,81 @@
+{
+ "candidates": {
+  "built_utc": "2026-10-19T20:26:48+00:00",
+  "bdc_ciks_2008_2025": 292,
+  "bdc_ciks_matched_to_crsp_cef": 53,
+  "listed_in_window_any_history": 54,
+  "candidates_prior_history": 21,
+  "candidates_by_basis": {
+   "crsp_first_trade": 20,
+   "8-A12B_after_history": 1
+  },
+  "candidates_a8_within_30d_of_crsp": 20,
+  "candidates_by_year": {
+   "2011": 1,
+   "2014": 2,
+   "2017": 2,
+   "2018": 1,
+   "2019": 1,
+   "2020": 2,
+   "2021": 5,
+   "2024": 5,
+   "2025": 2
+  },
+  "withdrew_before_listing_excluded": 4,
+  "elected_after_listing_excluded": 1,
+  "sensitivity_rows": [
+   {
+    "cik": "1370755",
+    "crsp_tickers": "TCPC",
+    "sensitivity": "prior_NCSR_history"
+   },
+   {
+    "cik": "1501729",
+    "crsp_tickers": "FSSL",
+    "sensitivity": "withdrew_election_<=60d_before_listing"
+   }
+  ]
+ },
+ "terms": {
+  "built_utc": "2026-10-19T20:26:52+00:00",
+  "listings_read": 20,
+  "listings_with_coded_releases": 13,
+  "listings_none_found": 6,
+  "listings_not_established": 1,
+  "release_events_strict_total": 40,
+  "release_events_strict_le_2025_12_31": 37,
+  "release_events_strict_le_2022_12_31": 18,
+  "listings_with_release_le_2022_12_31": 6,
+  "release_events_by_year": {
+   "2014": 2,
+   "2017": 1,
+   "2018": 1,
+   "2019": 3,
+   "2020": 3,
+   "2022": 8,
+   "2023": 1,
+   "2024": 10,
+   "2025": 8,
+   "2026": 3
+  },
+  "distinct_release_months": 30,
+  "excluded_by_reading": {
+   "1577134": "8-A12B of 2021-02-10 registered 7.00% Notes due 2026 (424B1 0001104659-21-012259); no common listing"
+  }
+ },
+ "adv_fit_releases": {
+  "built_utc": "2026-10-19T20:26:56+00:00",
+  "events": 18,
+  "median_adv_usd": 2966013.1525,
+  "min_adv_usd": 559770.711,
+  "share_ge_1m": 0.7777777777777778,
+  "by_ticker_median_adv_usd": {
+   "BCSF": 1547028.0,
+   "BXSL": 3799679.0,
+   "CGBD": 4000580.0,
+   "ORCC": 9600064.0,
+   "RWAY": 774448.0,
+   "TSLX": 2405151.0
+  }
+ }
+}

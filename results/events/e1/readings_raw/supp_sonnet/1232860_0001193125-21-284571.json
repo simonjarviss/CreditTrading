@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1232860,
+  "episode_accession": "0001193125-21-284571",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock MuniHoldings Investment Quality Fund", "cik": 1045126, "ticker": "MFL"},
+      "acquirer": {"name": "BlackRock Muni Intermediate Duration Fund, Inc. (renamed BlackRock Municipal Income Fund, Inc.)", "cik": 1232860, "ticker": "MUI"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-21-284571", "quote": "BlackRock MuniHoldings Investment Quality Fund (NYSE: MFL) and BlackRock Muni Intermediate Duration Fund, Inc. (to be renamed “BlackRock Municipal Income Fund, Inc.” effective October 1, 2021) (NYSE: MUI)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-21-284571", "date": "2021-09-28", "quote": "have approved the reorganization of MFL with and into MUI, with MUI continuing as the surviving Fund (the “Reorganization”)."},
+      "outcome_evidence": {"accession": "0001193125-22-101846", "date": "2022-04-11", "quote": "BlackRock Announces Closing of Reorganization of Two Municipal Closed-End Funds"},
+      "notes": "On 2022-02-04 MUI shareholders approved but MFL common shareholders did not reach the requisite vote and the meeting was adjourned to 2022-03-04; the 2022-03-04 release says the requisite vote of MFL shareholders approved. The 2022-04-11 release excerpt is cut off mid-sentence ('is effective as of the opening for')."
+    }
+  ],
+  "problems": ""
+}

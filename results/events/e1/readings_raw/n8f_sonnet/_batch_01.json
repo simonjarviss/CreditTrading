@@ -1,0 +1,17 @@
+{
+  "batch": "01",
+  "model_id": "claude-sonnet-5-5",
+  "episodes": [
+    "35315_0001193125-18-111651",
+    "790202_0001099343-14-000015",
+    "880366_0001193125-13-109270",
+    "904112_0001104659-09-043691",
+    "924727_0001104659-23-065511",
+    "1137360_0000930413-15-003742",
+    "1222922_0000950156-09-000158",
+    "1412495_0001193125-12-502942",
+    "1885551_0001794202-21-000227"
+  ],
+  "parts_read": 11,
+  "problems": "I ran one extra no-op shell command (a cd) outside the permitted parse checks; it touched no files. For 790202 (First Opportunity Fund, shown as OTC-quoted) I recorded not_a_listed_pair, with the target's N-8F merger statement noted in notes only."
+}

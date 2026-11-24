@@ -1,0 +1,1580 @@
+{
+ "generated_utc": "2026-10-28T20:54:14+00:00",
+ "git_head": "b288619",
+ "git_clean": true,
+ "zero_trials": true,
+ "n_trials_read_result": 1,
+ "book": {
+  "spec": "cef_discount.v7.20260928",
+  "spec_summary": "cef_discount.v7.20260928 | live policy: band 4.8% + gmax 1.80x | universe 13",
+  "live_policy": "band 4.8% + gmax 1.80x",
+  "cef_prices_panel_last": "2026-10-15",
+  "cef_prices_cut_last": "2022-12-30",
+  "cef_nav_panel_last": "2026-10-14",
+  "cef_nav_cut_last": "2022-12-30",
+  "return_inputs": {
+   "distribution_rows_after_cut_ignored": 1831,
+   "split_rows_after_cut_ignored": 1,
+   "yield_and_split_factor_identical_with_inputs_cut": true
+  },
+  "targets_first": "2005-01-03",
+  "targets_last": "2022-12-30",
+  "band_width": 0.048,
+  "max_gross_stress": 1.8
+ },
+ "a1_census_inputs": {
+  "edgar_index_quarters": [
+   "2008Q1",
+   "2026Q4"
+  ],
+  "n_quarters": 76,
+  "edgar_last_date_filed": "2026-10-16",
+  "sec_ticker_file_fetched_utc": "2026-10-13T22:30:42+00:00",
+  "crsp_dsf_extracts": [
+   "dsf_44015b5199.parquet",
+   "dsf_71f42b22d4.parquet",
+   "dsf_3167e2a2e5.parquet",
+   "dsf_b144cf3b02.parquet",
+   "dsf_bdb3669ade.parquet",
+   "dsf_f222c3fbd6.parquet",
+   "dsf_f510ab61cd.parquet",
+   "dsf_72242dbb2c.parquet",
+   "dsf_81ef409d68.parquet",
+   "dsf_caffed83c1.parquet",
+   "dsf_1b9b242a04.parquet",
+   "dsf_26fa9ef44a.parquet",
+   "dsf_29efead87e.parquet",
+   "dsf_2f469f764d.parquet",
+   "dsf_a42d983e30.parquet",
+   "dsf_b07bc7c247.parquet",
+   "dsf_d2633781cf.parquet",
+   "dsf_ede348d640.parquet"
+  ],
+  "crsp_dsf_last_date": "2022-12-30",
+  "crsp_names_end": "2024-12-31"
+ },
+ "a1_reproduced": {
+  "windows_equal_a1_committed": true,
+  "short_name_days_all": 9285,
+  "short_name_days_inside": 1681,
+  "first_live_decision": "2013-06-21"
+ },
+ "first_held_session": "2013-06-25",
+ "fit_last_session": "2022-12-30",
+ "declared_before_returns": {
+  "block_added_turnover_total": -9.9983,
+  "block_added_turn_per_yr": -1.0507,
+  "in_window_short_name_days_with_fit_return": 1677,
+  "original_rule_formable": false,
+  "meaningful_rule": "15bp x 2 x sum over in-window spells of mean|w| / in-window name-days (per unit weight: x 2 x spells / name-days); revision 1",
+  "hurdle": {
+   "short": {
+    "spells": 24,
+    "name_days": 1677,
+    "median_spell_sessions": 24.5,
+    "meaningful_pnl_bp": 0.04624,
+    "meaningful_unit_bp": 0.42934
+   },
+   "long": {
+    "spells": 21,
+    "name_days": 1642,
+    "median_spell_sessions": 18.0,
+    "meaningful_pnl_bp": 0.0282,
+    "meaningful_unit_bp": 0.38368
+   }
+  },
+  "kill_line_bp_per_yr": -5.253,
+  "kill_line_rule": "block's added turn/yr x 5bp (A1 \u00a77 item 1)",
+  "kill_line_can_bind": false
+ },
+ "views": {
+  "total": {
+   "short": {
+    "pnl_per_name_day": {
+     "inside": {
+      "mean_bp": 0.9051,
+      "se_bp": 0.5355,
+      "n": 1677,
+      "dates": 937
+     },
+     "outside": {
+      "mean_bp": -0.0299,
+      "se_bp": 0.3073,
+      "n": 7596,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": -0.9351,
+     "se_bp": 0.5516,
+     "dates": 2398,
+     "meaningful_bp": 0.0462,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -2.0162,
+      "hi_bp": 0.1461,
+      "t": -1.695,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.051,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "unit_return_per_name_day": {
+     "inside": {
+      "mean_bp": 2.8797,
+      "se_bp": 4.0743,
+      "n": 1677,
+      "dates": 937
+     },
+     "outside": {
+      "mean_bp": -2.1683,
+      "se_bp": 2.0427,
+      "n": 7596,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": -5.048,
+     "se_bp": 3.6923,
+     "dates": 2398,
+     "meaningful_bp": 0.4293,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -12.2848,
+      "hi_bp": 2.1887,
+      "t": -1.367,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.052,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "within_date_pnl": {
+     "dates": 937,
+     "dates_dropped_one_side_only": 1461,
+     "mean_bp": -0.2915,
+     "nw_t": -0.265
+    },
+    "mean_abs_weight": {
+     "inside": 0.10394,
+     "outside": 0.16132
+    },
+    "by_era_pnl": {
+     "2010-14": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1414,
+       "mean_bp": -0.019
+      }
+     },
+     "2015-19": {
+      "inside": {
+       "n": 226,
+       "mean_bp": 3.7064
+      },
+      "outside": {
+       "n": 3854,
+       "mean_bp": -0.466
+      }
+     },
+     "2020-22": {
+      "inside": {
+       "n": 1451,
+       "mean_bp": 0.4688
+      },
+      "outside": {
+       "n": 2328,
+       "mean_bp": 0.6853
+      }
+     }
+    },
+    "by_name_pnl": {
+     "AWF": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 721,
+       "mean_bp": -0.8836
+      }
+     },
+     "BIT": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 28,
+       "mean_bp": 3.5546
+      }
+     },
+     "DSL": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1178,
+       "mean_bp": -0.0871
+      }
+     },
+     "HYT": {
+      "inside": {
+       "n": 93,
+       "mean_bp": 3.1262
+      },
+      "outside": {
+       "n": 748,
+       "mean_bp": 0.8272
+      }
+     },
+     "JFR": {
+      "inside": {
+       "n": 50,
+       "mean_bp": -3.9747
+      },
+      "outside": {
+       "n": 1627,
+       "mean_bp": 0.2774
+      }
+     },
+     "MQY": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 34,
+       "mean_bp": 3.6839
+      }
+     },
+     "PCN": {
+      "inside": {
+       "n": 521,
+       "mean_bp": 0.0955
+      },
+      "outside": {
+       "n": 177,
+       "mean_bp": -1.1704
+      }
+     },
+     "PDI": {
+      "inside": {
+       "n": 201,
+       "mean_bp": 1.3053
+      },
+      "outside": {
+       "n": 984,
+       "mean_bp": -0.4017
+      }
+     },
+     "PDO": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 82,
+       "mean_bp": 2.2797
+      }
+     },
+     "PFN": {
+      "inside": {
+       "n": 349,
+       "mean_bp": 0.0648
+      },
+      "outside": {
+       "n": 1,
+       "mean_bp": 8.5842
+      }
+     },
+     "PHK": {
+      "inside": {
+       "n": 146,
+       "mean_bp": 0.4303
+      },
+      "outside": {
+       "n": 1055,
+       "mean_bp": 0.1663
+      }
+     },
+     "PTY": {
+      "inside": {
+       "n": 317,
+       "mean_bp": 3.244
+      },
+      "outside": {
+       "n": 961,
+       "mean_bp": -0.5734
+      }
+     }
+    },
+    "by_window_pnl_total_bp": {
+     "PCN 2020-12-03..2022-12-30": {
+      "name_days": 521,
+      "pnl_total_bp": 49.73
+     },
+     "PTY 2018-06-12..2020-11-24": {
+      "name_days": 317,
+      "pnl_total_bp": 1028.35
+     },
+     "PHK 2022-06-01..2022-12-30": {
+      "name_days": 146,
+      "pnl_total_bp": 62.82
+     },
+     "HYT 2022-02-10..2022-12-30": {
+      "name_days": 93,
+      "pnl_total_bp": 290.74
+     },
+     "JFR 2016-11-22..2017-02-28": {
+      "name_days": 50,
+      "pnl_total_bp": -198.73
+     },
+     "PFN 2018-09-10..2022-12-30": {
+      "name_days": 349,
+      "pnl_total_bp": 22.62
+     },
+     "PDI 2019-11-08..2022-06-23": {
+      "name_days": 201,
+      "pnl_total_bp": 262.37
+     }
+    },
+    "in_window_short_pnl_bp_per_yr": 159.512,
+    "largest_in_window_short_days": [
+     {
+      "decided": "2018-06-12",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -4.862,
+      "pnl_bp": 233.4,
+      "crsp_ret_t2_pct": -4.862
+     },
+     {
+      "decided": "2018-11-16",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -4.314,
+      "pnl_bp": 207.1,
+      "crsp_ret_t2_pct": -4.314
+     },
+     {
+      "decided": "2018-10-09",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -3.518,
+      "pnl_bp": 168.9,
+      "crsp_ret_t2_pct": -3.518
+     },
+     {
+      "decided": "2020-03-10",
+      "ticker": "PTY",
+      "w": -0.1461,
+      "ret_t2_pct": -10.119,
+      "pnl_bp": 147.8,
+      "crsp_ret_t2_pct": -10.119
+     },
+     {
+      "decided": "2018-11-15",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -3.059,
+      "pnl_bp": 146.8,
+      "crsp_ret_t2_pct": -3.08
+     }
+    ]
+   },
+   "long": {
+    "pnl_per_name_day": {
+     "inside": {
+      "mean_bp": 0.4308,
+      "se_bp": 0.4687,
+      "n": 1642,
+      "dates": 1026
+     },
+     "outside": {
+      "mean_bp": 0.2937,
+      "se_bp": 0.161,
+      "n": 13320,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": -0.1371,
+     "se_bp": 0.4094,
+     "dates": 2398,
+     "meaningful_bp": 0.0282,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -0.9395,
+      "hi_bp": 0.6654,
+      "t": -0.335,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.051,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "unit_return_per_name_day": {
+     "inside": {
+      "mean_bp": 3.1745,
+      "se_bp": 6.6706,
+      "n": 1642,
+      "dates": 1026
+     },
+     "outside": {
+      "mean_bp": 3.466,
+      "se_bp": 1.7979,
+      "n": 13320,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": 0.2914,
+     "se_bp": 5.5774,
+     "dates": 2398,
+     "meaningful_bp": 0.3837,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -10.64,
+      "hi_bp": 11.2229,
+      "t": 0.052,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.051,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "within_date_pnl": {
+     "dates": 1026,
+     "dates_dropped_one_side_only": 1372,
+     "mean_bp": -0.254,
+     "nw_t": -0.765
+    },
+    "mean_abs_weight": {
+     "inside": 0.08424,
+     "outside": 0.10172
+    },
+    "by_era_pnl": {
+     "2010-14": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 2164,
+       "mean_bp": 0.5614
+      }
+     },
+     "2015-19": {
+      "inside": {
+       "n": 598,
+       "mean_bp": 1.0544
+      },
+      "outside": {
+       "n": 7902,
+       "mean_bp": 0.3831
+      }
+     },
+     "2020-22": {
+      "inside": {
+       "n": 1044,
+       "mean_bp": 0.0736
+      },
+      "outside": {
+       "n": 3254,
+       "mean_bp": -0.1013
+      }
+     }
+    },
+    "by_name_pnl": {
+     "AWF": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1677,
+       "mean_bp": -0.1466
+      }
+     },
+     "BIT": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 2328,
+       "mean_bp": 0.2568
+      }
+     },
+     "DSL": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1138,
+       "mean_bp": 0.4937
+      }
+     },
+     "HYT": {
+      "inside": {
+       "n": 129,
+       "mean_bp": 0.7618
+      },
+      "outside": {
+       "n": 1305,
+       "mean_bp": 0.8004
+      }
+     },
+     "JFR": {
+      "inside": {
+       "n": 16,
+       "mean_bp": 0.0904
+      },
+      "outside": {
+       "n": 705,
+       "mean_bp": 0.655
+      }
+     },
+     "MQY": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 142,
+       "mean_bp": -0.3946
+      }
+     },
+     "PCN": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1665,
+       "mean_bp": 0.318
+      }
+     },
+     "PDI": {
+      "inside": {
+       "n": 459,
+       "mean_bp": 0.1926
+      },
+      "outside": {
+       "n": 754,
+       "mean_bp": 0.3834
+      }
+     },
+     "PDO": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 279,
+       "mean_bp": -1.5441
+      }
+     },
+     "PFN": {
+      "inside": {
+       "n": 735,
+       "mean_bp": -0.0223
+      },
+      "outside": {
+       "n": 1313,
+       "mean_bp": 0.1654
+      }
+     },
+     "PHK": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1197,
+       "mean_bp": 0.1888
+      }
+     },
+     "PTY": {
+      "inside": {
+       "n": 303,
+       "mean_bp": 1.7678
+      },
+      "outside": {
+       "n": 817,
+       "mean_bp": 0.8776
+      }
+     }
+    }
+   },
+   "block": {
+    "window": {
+     "book": {
+      "start": "2013-06-25",
+      "end": "2022-12-30",
+      "n": 2398,
+      "gross_sr": 0.9554,
+      "ann_ret_pct": 6.2108,
+      "vol_pct": 6.5008,
+      "turn_per_yr": 13.4677,
+      "net_sr": {
+       "5bp": 0.8518,
+       "15bp": 0.6446,
+       "30bp": 0.3339
+      }
+     },
+     "block": {
+      "start": "2013-06-25",
+      "end": "2022-12-30",
+      "n": 2398,
+      "gross_sr": 0.735,
+      "ann_ret_pct": 4.6156,
+      "vol_pct": 6.2794,
+      "turn_per_yr": 12.417,
+      "net_sr": {
+       "5bp": 0.6362,
+       "15bp": 0.4384,
+       "30bp": 0.1418
+      }
+     },
+     "change": {
+      "gross_sr": -0.2204,
+      "ann_ret_pct": -1.5952,
+      "turn_per_yr": -1.0507,
+      "net_sr": {
+       "5bp": -0.2156,
+       "15bp": -0.2062,
+       "30bp": -0.1921
+      }
+     }
+    },
+    "2010-14": {
+     "book": {
+      "start": "2013-06-25",
+      "end": "2014-12-31",
+      "n": 384,
+      "gross_sr": 1.2983,
+      "ann_ret_pct": 7.333,
+      "vol_pct": 5.6481,
+      "turn_per_yr": 16.3375,
+      "net_sr": {
+       "5bp": 1.1537,
+       "15bp": 0.8644,
+       "30bp": 0.4305
+      }
+     },
+     "block": {
+      "start": "2013-06-25",
+      "end": "2014-12-31",
+      "n": 384,
+      "gross_sr": 1.2983,
+      "ann_ret_pct": 7.333,
+      "vol_pct": 5.6481,
+      "turn_per_yr": 16.3375,
+      "net_sr": {
+       "5bp": 1.1537,
+       "15bp": 0.8644,
+       "30bp": 0.4305
+      }
+     },
+     "change": {
+      "gross_sr": 0.0,
+      "ann_ret_pct": 0.0,
+      "turn_per_yr": 0.0,
+      "net_sr": {
+       "5bp": 0.0,
+       "15bp": 0.0,
+       "30bp": 0.0
+      }
+     }
+    },
+    "2015-19": {
+     "book": {
+      "start": "2015-01-02",
+      "end": "2019-12-31",
+      "n": 1258,
+      "gross_sr": 0.8354,
+      "ann_ret_pct": 5.7022,
+      "vol_pct": 6.8257,
+      "turn_per_yr": 7.7928,
+      "net_sr": {
+       "5bp": 0.7783,
+       "15bp": 0.6641,
+       "30bp": 0.4929
+      }
+     },
+     "block": {
+      "start": "2015-01-02",
+      "end": "2019-12-31",
+      "n": 1258,
+      "gross_sr": 0.656,
+      "ann_ret_pct": 3.9824,
+      "vol_pct": 6.071,
+      "turn_per_yr": 7.6744,
+      "net_sr": {
+       "5bp": 0.5928,
+       "15bp": 0.4664,
+       "30bp": 0.2767
+      }
+     },
+     "change": {
+      "gross_sr": -0.1794,
+      "ann_ret_pct": -1.7198,
+      "turn_per_yr": -0.1184,
+      "net_sr": {
+       "5bp": -0.1855,
+       "15bp": -0.1977,
+       "30bp": -0.2162
+      }
+     }
+    },
+    "2020-22": {
+     "book": {
+      "start": "2020-01-02",
+      "end": "2022-12-30",
+      "n": 756,
+      "gross_sr": 1.0204,
+      "ann_ret_pct": 6.487,
+      "vol_pct": 6.3571,
+      "turn_per_yr": 21.4533,
+      "net_sr": {
+       "5bp": 0.8517,
+       "15bp": 0.5142,
+       "30bp": 0.008
+      }
+     },
+     "block": {
+      "start": "2020-01-02",
+      "end": "2022-12-30",
+      "n": 756,
+      "gross_sr": 0.6215,
+      "ann_ret_pct": 4.2891,
+      "vol_pct": 6.901,
+      "turn_per_yr": 18.3176,
+      "net_sr": {
+       "5bp": 0.4888,
+       "15bp": 0.2234,
+       "30bp": -0.1748
+      }
+     },
+     "change": {
+      "gross_sr": -0.3989,
+      "ann_ret_pct": -2.1979,
+      "turn_per_yr": -3.1357,
+      "net_sr": {
+       "5bp": -0.3629,
+       "15bp": -0.2908,
+       "30bp": -0.1828
+      }
+     }
+    },
+    "era_turn_cv_book": 0.4542,
+    "mean_net_held_weight": {
+     "book": 0.03899,
+     "block": 0.11168,
+     "block_days_net_long_by_more_than_book": 937
+    }
+   },
+   "in_window_short_daily_pnl": {
+    "mean_bp_per_day": 0.633,
+    "nw_t": 1.493,
+    "sessions": 2398
+   },
+   "kill_line": {
+    "in_window_short_pnl_bp_per_yr": 159.512,
+    "block_gain_gross_bp_per_yr": -159.512,
+    "added_turn_x_5bp_bp_per_yr": -5.253,
+    "immaterial": "cannot bind: the block lowers turnover, so it has no cost to clear"
+   },
+   "in_window_short_sources": {
+    "by_year_bp": {
+     "2013": 0.0,
+     "2014": 0.0,
+     "2015": 0.0,
+     "2016": -44.2,
+     "2017": -154.5,
+     "2018": 1047.7,
+     "2019": 9.6,
+     "2020": -39.5,
+     "2021": -74.1,
+     "2022": 773.0
+    },
+    "crash_span": [
+     "2020-02-15",
+     "2020-04-30"
+    ],
+    "crash_span_total_bp": 155.3,
+    "ex_crash_bp_per_yr": 146.36,
+    "on_borrow_span_gross_bp_per_yr": 601.43,
+    "on_borrow_span_net_of_borrow_bp_per_yr": 156.22
+   }
+  },
+  "paper": {
+   "short": {
+    "pnl_per_name_day": {
+     "inside": {
+      "mean_bp": 1.2751,
+      "se_bp": 0.5502,
+      "n": 1677,
+      "dates": 937
+     },
+     "outside": {
+      "mean_bp": 0.6462,
+      "se_bp": 0.3142,
+      "n": 7596,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": -0.6289,
+     "se_bp": 0.5671,
+     "dates": 2398,
+     "meaningful_bp": 0.0462,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -1.7405,
+      "hi_bp": 0.4826,
+      "t": -1.109,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.051,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "unit_return_per_name_day": {
+     "inside": {
+      "mean_bp": 6.698,
+      "se_bp": 4.1923,
+      "n": 1677,
+      "dates": 937
+     },
+     "outside": {
+      "mean_bp": 1.7742,
+      "se_bp": 2.0708,
+      "n": 7596,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": -4.9238,
+     "se_bp": 3.8042,
+     "dates": 2398,
+     "meaningful_bp": 0.4293,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -12.3798,
+      "hi_bp": 2.5322,
+      "t": -1.294,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.051,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "within_date_pnl": {
+     "dates": 937,
+     "dates_dropped_one_side_only": 1461,
+     "mean_bp": -0.0948,
+     "nw_t": -0.084
+    },
+    "mean_abs_weight": {
+     "inside": 0.10394,
+     "outside": 0.16132
+    },
+    "by_era_pnl": {
+     "2010-14": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1414,
+       "mean_bp": 0.8332
+      }
+     },
+     "2015-19": {
+      "inside": {
+       "n": 226,
+       "mean_bp": 5.0222
+      },
+      "outside": {
+       "n": 3854,
+       "mean_bp": 0.2185
+      }
+     },
+     "2020-22": {
+      "inside": {
+       "n": 1451,
+       "mean_bp": 0.6915
+      },
+      "outside": {
+       "n": 2328,
+       "mean_bp": 1.2406
+      }
+     }
+    },
+    "by_name_pnl": {
+     "AWF": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 721,
+       "mean_bp": -0.3391
+      }
+     },
+     "BIT": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 28,
+       "mean_bp": 3.8506
+      }
+     },
+     "DSL": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1178,
+       "mean_bp": 0.4913
+      }
+     },
+     "HYT": {
+      "inside": {
+       "n": 93,
+       "mean_bp": 3.5218
+      },
+      "outside": {
+       "n": 748,
+       "mean_bp": 1.3093
+      }
+     },
+     "JFR": {
+      "inside": {
+       "n": 50,
+       "mean_bp": -3.4791
+      },
+      "outside": {
+       "n": 1627,
+       "mean_bp": 0.5757
+      }
+     },
+     "MQY": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 34,
+       "mean_bp": 4.1213
+      }
+     },
+     "PCN": {
+      "inside": {
+       "n": 521,
+       "mean_bp": 0.2369
+      },
+      "outside": {
+       "n": 177,
+       "mean_bp": -1.0036
+      }
+     },
+     "PDI": {
+      "inside": {
+       "n": 201,
+       "mean_bp": 2.0021
+      },
+      "outside": {
+       "n": 984,
+       "mean_bp": 0.722
+      }
+     },
+     "PDO": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 82,
+       "mean_bp": 3.1991
+      }
+     },
+     "PFN": {
+      "inside": {
+       "n": 349,
+       "mean_bp": 0.1519
+      },
+      "outside": {
+       "n": 1,
+       "mean_bp": 8.5842
+      }
+     },
+     "PHK": {
+      "inside": {
+       "n": 146,
+       "mean_bp": 0.6469
+      },
+      "outside": {
+       "n": 1055,
+       "mean_bp": 1.3402
+      }
+     },
+     "PTY": {
+      "inside": {
+       "n": 317,
+       "mean_bp": 4.1371
+      },
+      "outside": {
+       "n": 961,
+       "mean_bp": 0.2002
+      }
+     }
+    },
+    "by_window_pnl_total_bp": {
+     "PCN 2020-12-03..2022-12-30": {
+      "name_days": 521,
+      "pnl_total_bp": 123.43
+     },
+     "PTY 2018-06-12..2020-11-24": {
+      "name_days": 317,
+      "pnl_total_bp": 1311.45
+     },
+     "PHK 2022-06-01..2022-12-30": {
+      "name_days": 146,
+      "pnl_total_bp": 94.45
+     },
+     "HYT 2022-02-10..2022-12-30": {
+      "name_days": 93,
+      "pnl_total_bp": 327.53
+     },
+     "JFR 2016-11-22..2017-02-28": {
+      "name_days": 50,
+      "pnl_total_bp": -173.95
+     },
+     "PFN 2018-09-10..2022-12-30": {
+      "name_days": 349,
+      "pnl_total_bp": 53.03
+     },
+     "PDI 2019-11-08..2022-06-23": {
+      "name_days": 201,
+      "pnl_total_bp": 402.42
+     }
+    },
+    "in_window_short_pnl_bp_per_yr": 224.714,
+    "largest_in_window_short_days": [
+     {
+      "decided": "2018-06-12",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -4.862,
+      "pnl_bp": 233.4,
+      "crsp_retx_t2_pct": -4.862
+     },
+     {
+      "decided": "2018-11-16",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -4.314,
+      "pnl_bp": 207.1,
+      "crsp_retx_t2_pct": -4.314
+     },
+     {
+      "decided": "2018-10-09",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -4.268,
+      "pnl_bp": 204.9,
+      "crsp_retx_t2_pct": -4.268
+     },
+     {
+      "decided": "2020-03-10",
+      "ticker": "PTY",
+      "w": -0.1461,
+      "ret_t2_pct": -10.119,
+      "pnl_bp": 147.8,
+      "crsp_retx_t2_pct": -10.119
+     },
+     {
+      "decided": "2018-11-15",
+      "ticker": "PTY",
+      "w": -0.4801,
+      "ret_t2_pct": -3.059,
+      "pnl_bp": 146.8,
+      "crsp_retx_t2_pct": -3.08
+     }
+    ]
+   },
+   "long": {
+    "pnl_per_name_day": {
+     "inside": {
+      "mean_bp": 0.1303,
+      "se_bp": 0.4728,
+      "n": 1642,
+      "dates": 1026
+     },
+     "outside": {
+      "mean_bp": -0.0861,
+      "se_bp": 0.1639,
+      "n": 13320,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": -0.2164,
+     "se_bp": 0.4137,
+     "dates": 2398,
+     "meaningful_bp": 0.0282,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -1.0272,
+      "hi_bp": 0.5945,
+      "t": -0.523,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.051,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "unit_return_per_name_day": {
+     "inside": {
+      "mean_bp": -0.7364,
+      "se_bp": 6.6978,
+      "n": 1642,
+      "dates": 1026
+     },
+     "outside": {
+      "mean_bp": -0.3322,
+      "se_bp": 1.825,
+      "n": 13320,
+      "dates": 2398
+     },
+     "estimate_out_minus_in_bp": 0.4042,
+     "se_bp": 5.6059,
+     "dates": 2398,
+     "meaningful_bp": 0.3837,
+     "read_result": {
+      "outcome": "INCONCLUSIVE",
+      "lo_bp": -10.5831,
+      "hi_bp": 11.3916,
+      "t": 0.072,
+      "alpha_adj": 0.050000000000000044,
+      "power_at_meaningful": 0.051,
+      "vs_meaningful": "STRADDLES"
+     }
+    },
+    "within_date_pnl": {
+     "dates": 1026,
+     "dates_dropped_one_side_only": 1372,
+     "mean_bp": -0.351,
+     "nw_t": -1.032
+    },
+    "mean_abs_weight": {
+     "inside": 0.08424,
+     "outside": 0.10172
+    },
+    "by_era_pnl": {
+     "2010-14": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 2164,
+       "mean_bp": 0.167
+      }
+     },
+     "2015-19": {
+      "inside": {
+       "n": 598,
+       "mean_bp": 0.6623
+      },
+      "outside": {
+       "n": 7902,
+       "mean_bp": 0.0011
+      }
+     },
+     "2020-22": {
+      "inside": {
+       "n": 1044,
+       "mean_bp": -0.1744
+      },
+      "outside": {
+       "n": 3254,
+       "mean_bp": -0.4661
+      }
+     }
+    },
+    "by_name_pnl": {
+     "AWF": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1677,
+       "mean_bp": -0.5131
+      }
+     },
+     "BIT": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 2328,
+       "mean_bp": 0.1272
+      }
+     },
+     "DSL": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1138,
+       "mean_bp": 0.0288
+      }
+     },
+     "HYT": {
+      "inside": {
+       "n": 129,
+       "mean_bp": 0.4137
+      },
+      "outside": {
+       "n": 1305,
+       "mean_bp": 0.0387
+      }
+     },
+     "JFR": {
+      "inside": {
+       "n": 16,
+       "mean_bp": -0.0878
+      },
+      "outside": {
+       "n": 705,
+       "mean_bp": 0.4941
+      }
+     },
+     "MQY": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 142,
+       "mean_bp": -0.7407
+      }
+     },
+     "PCN": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1665,
+       "mean_bp": 0.1355
+      }
+     },
+     "PDI": {
+      "inside": {
+       "n": 459,
+       "mean_bp": -0.1069
+      },
+      "outside": {
+       "n": 754,
+       "mean_bp": 0.2044
+      }
+     },
+     "PDO": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 279,
+       "mean_bp": -2.2195
+      }
+     },
+     "PFN": {
+      "inside": {
+       "n": 735,
+       "mean_bp": -0.1338
+      },
+      "outside": {
+       "n": 1313,
+       "mean_bp": 0.0915
+      }
+     },
+     "PHK": {
+      "inside": {
+       "n": 0,
+       "mean_bp": null
+      },
+      "outside": {
+       "n": 1197,
+       "mean_bp": -0.7842
+      }
+     },
+     "PTY": {
+      "inside": {
+       "n": 303,
+       "mean_bp": 1.0211
+      },
+      "outside": {
+       "n": 817,
+       "mean_bp": 0.1831
+      }
+     }
+    }
+   },
+   "block": {
+    "window": {
+     "book": {
+      "start": "2013-06-25",
+      "end": "2022-12-30",
+      "n": 2398,
+      "gross_sr": 0.9593,
+      "ann_ret_pct": 6.4251,
+      "vol_pct": 6.6978,
+      "turn_per_yr": 13.4677,
+      "net_sr": {
+       "5bp": 0.8588,
+       "15bp": 0.6577,
+       "30bp": 0.3561
+      }
+     },
+     "block": {
+      "start": "2013-06-25",
+      "end": "2022-12-30",
+      "n": 2398,
+      "gross_sr": 0.6468,
+      "ann_ret_pct": 4.178,
+      "vol_pct": 6.4592,
+      "turn_per_yr": 12.417,
+      "net_sr": {
+       "5bp": 0.5507,
+       "15bp": 0.3585,
+       "30bp": 0.0701
+      }
+     },
+     "change": {
+      "gross_sr": -0.3125,
+      "ann_ret_pct": -2.2471,
+      "turn_per_yr": -1.0507,
+      "net_sr": {
+       "5bp": -0.3081,
+       "15bp": -0.2992,
+       "30bp": -0.286
+      }
+     }
+    },
+    "2010-14": {
+     "book": {
+      "start": "2013-06-25",
+      "end": "2014-12-31",
+      "n": 384,
+      "gross_sr": 1.6313,
+      "ann_ret_pct": 9.6416,
+      "vol_pct": 5.9102,
+      "turn_per_yr": 16.3375,
+      "net_sr": {
+       "5bp": 1.4931,
+       "15bp": 1.2167,
+       "30bp": 0.8021
+      }
+     },
+     "block": {
+      "start": "2013-06-25",
+      "end": "2014-12-31",
+      "n": 384,
+      "gross_sr": 1.6313,
+      "ann_ret_pct": 9.6416,
+      "vol_pct": 5.9102,
+      "turn_per_yr": 16.3375,
+      "net_sr": {
+       "5bp": 1.4931,
+       "15bp": 1.2167,
+       "30bp": 0.8021
+      }
+     },
+     "change": {
+      "gross_sr": 0.0,
+      "ann_ret_pct": 0.0,
+      "turn_per_yr": 0.0,
+      "net_sr": {
+       "5bp": 0.0,
+       "15bp": 0.0,
+       "30bp": 0.0
+      }
+     }
+    },
+    "2015-19": {
+     "book": {
+      "start": "2015-01-02",
+      "end": "2019-12-31",
+      "n": 1258,
+      "gross_sr": 0.7188,
+      "ann_ret_pct": 5.0372,
+      "vol_pct": 7.0081,
+      "turn_per_yr": 7.7928,
+      "net_sr": {
+       "5bp": 0.6632,
+       "15bp": 0.552,
+       "30bp": 0.3852
+      }
+     },
+     "block": {
+      "start": "2015-01-02",
+      "end": "2019-12-31",
+      "n": 1258,
+      "gross_sr": 0.438,
+      "ann_ret_pct": 2.7217,
+      "vol_pct": 6.2144,
+      "turn_per_yr": 7.6744,
+      "net_sr": {
+       "5bp": 0.3762,
+       "15bp": 0.2527,
+       "30bp": 0.0675
+      }
+     },
+     "change": {
+      "gross_sr": -0.2808,
+      "ann_ret_pct": -2.3155,
+      "turn_per_yr": -0.1184,
+      "net_sr": {
+       "5bp": -0.287,
+       "15bp": -0.2993,
+       "30bp": -0.3177
+      }
+     }
+    },
+    "2020-22": {
+     "book": {
+      "start": "2020-01-02",
+      "end": "2022-12-30",
+      "n": 756,
+      "gross_sr": 1.0842,
+      "ann_ret_pct": 7.101,
+      "vol_pct": 6.5498,
+      "turn_per_yr": 21.4533,
+      "net_sr": {
+       "5bp": 0.9204,
+       "15bp": 0.5928,
+       "30bp": 0.1015
+      }
+     },
+     "block": {
+      "start": "2020-01-02",
+      "end": "2022-12-30",
+      "n": 756,
+      "gross_sr": 0.5391,
+      "ann_ret_pct": 3.8262,
+      "vol_pct": 7.0971,
+      "turn_per_yr": 18.3176,
+      "net_sr": {
+       "5bp": 0.4101,
+       "15bp": 0.152,
+       "30bp": -0.2352
+      }
+     },
+     "change": {
+      "gross_sr": -0.5451,
+      "ann_ret_pct": -3.2748,
+      "turn_per_yr": -3.1357,
+      "net_sr": {
+       "5bp": -0.5103,
+       "15bp": -0.4408,
+       "30bp": -0.3367
+      }
+     }
+    },
+    "era_turn_cv_book": 0.4542,
+    "mean_net_held_weight": {
+     "book": 0.03899,
+     "block": 0.11168,
+     "block_days_net_long_by_more_than_book": 937
+    }
+   },
+   "in_window_short_daily_pnl": {
+    "mean_bp_per_day": 0.8917,
+    "nw_t": 1.991,
+    "sessions": 2398
+   },
+   "kill_line": {
+    "in_window_short_pnl_bp_per_yr": 224.714,
+    "block_gain_gross_bp_per_yr": -224.714,
+    "added_turn_x_5bp_bp_per_yr": -5.253,
+    "immaterial": "cannot bind: the block lowers turnover, so it has no cost to clear"
+   },
+   "in_window_short_sources": {
+    "by_year_bp": {
+     "2013": 0.0,
+     "2014": 0.0,
+     "2015": 0.0,
+     "2016": -44.2,
+     "2017": -129.7,
+     "2018": 1286.0,
+     "2019": 43.9,
+     "2020": 15.4,
+     "2021": -2.8,
+     "2022": 969.8
+    },
+    "crash_span": [
+     "2020-02-15",
+     "2020-04-30"
+    ],
+    "crash_span_total_bp": 155.3,
+    "ex_crash_bp_per_yr": 213.01,
+    "on_borrow_span_gross_bp_per_yr": 757.92,
+    "on_borrow_span_net_of_borrow_bp_per_yr": 312.71
+   }
+  }
+ },
+ "borrow_real_money_only": {
+  "fee_panel_first": "2021-09-13",
+  "fee_panel_last_used": "2022-12-30",
+  "in_window_shorts": {
+   "cost_bp_per_yr": 445.21,
+   "covered_share_on_span": 0.9897,
+   "sessions": 328
+  },
+  "all_book_shorts": {
+   "cost_bp_per_yr": 1311.5,
+   "covered_share_on_span": 0.988,
+   "sessions": 328
+  }
+ },
+ "crsp_check": {
+  "permnos_per_ticker": {
+   "AWF": 1,
+   "BIT": 1,
+   "DSL": 1,
+   "HYT": 1,
+   "JFR": 1,
+   "MHD": 1,
+   "MQY": 1,
+   "PCN": 1,
+   "PDI": 1,
+   "PDO": 1,
+   "PFN": 1,
+   "PHK": 1,
+   "PTY": 1
+  },
+  "total": {
+   "inside_mean_bp": 0.9049,
+   "outside_mean_bp": -0.0295,
+   "estimate_out_minus_in_bp": -0.9344,
+   "se_bp": 0.5518,
+   "outcome": "INCONCLUSIVE",
+   "in_window_short_pnl_bp_per_yr": 159.475,
+   "agrees_in_sign_with_panel": {
+    "estimate": true,
+    "in_window_short_pnl": true
+   }
+  },
+  "paper": {
+   "inside_mean_bp": 1.2745,
+   "outside_mean_bp": 0.6258,
+   "estimate_out_minus_in_bp": -0.6487,
+   "se_bp": 0.567,
+   "outcome": "INCONCLUSIVE",
+   "in_window_short_pnl_bp_per_yr": 224.603,
+   "agrees_in_sign_with_panel": {
+    "estimate": true,
+    "in_window_short_pnl": true
+   }
+  }
+ },
+ "active_years": 9.516
+}

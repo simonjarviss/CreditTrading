@@ -71,6 +71,7 @@ sys.path.insert(0, str(REPO / "scripts" / "cef"))
 
 CACHE = REPO / "results" / "events" / "_cache_mand"                # gitignored
 OUT_DIR = REPO / "results" / "events"
+MANDATORY_DIR = OUT_DIR / "mandatory"       # the census's outputs: its notes sit in OUT_DIR, its data here
 
 AGENT_WINDOW = ("2026-07-01", "2026-10-07")      # the agent's liquidity window
 HEDGE_PAIRS = [("DHR.PRA", "DHR"), ("DHR.PRB", "DHR"), ("BDXB", "BDX"), ("AVTR.PRA", "AVTR")]
@@ -256,11 +257,12 @@ def main(argv=None) -> int:
 
     active, inactive = fetch_assets(c, "active"), fetch_assets(c, "inactive")
     cen = census(active, inactive, asof.strftime("%Y-%m-%d"))
-    snap = OUT_DIR / f"alpaca_convertible_assets_{asof.strftime('%Y-%m-%d')}.csv"
+    MANDATORY_DIR.mkdir(parents=True, exist_ok=True)
+    snap = MANDATORY_DIR / f"alpaca_convertible_assets_{asof.strftime('%Y-%m-%d')}.csv"
     cen.to_csv(snap, index=False)
     meta = {"asof_et": asof.isoformat(), "endpoint": "GET /v2/assets?asset_class=us_equity (paper, cef key)",
             "n_active": len(active), "n_inactive": len(inactive), "n_convertible_named": len(cen)}
-    (OUT_DIR / f"alpaca_convertible_assets_{asof.strftime('%Y-%m-%d')}.meta.json").write_text(json.dumps(meta, indent=1) + "\n")
+    (MANDATORY_DIR / f"alpaca_convertible_assets_{asof.strftime('%Y-%m-%d')}.meta.json").write_text(json.dumps(meta, indent=1) + "\n")
     print(f"assets: active {len(active)}, inactive {len(inactive)}; convertible-named rows written to {snap.relative_to(REPO)}")
     act = cen[cen.status == "active"]
     print("\n== census, active list, flags as of", asof.date())
@@ -293,9 +295,9 @@ def main(argv=None) -> int:
           f"of {len(G)} mandatory-named symbols on the lists")
     probed = [m for m, _ in HEDGE_PAIRS if m not in set(G.index)]
     print(f"   agent-probed pre-2023 mandatories NOT on either list but with bars: {probed}")
-    G.reset_index().to_csv(OUT_DIR / "mandatory_g4_history.csv", index=False)
-    L.reset_index().to_csv(OUT_DIR / "mandatory_liquidity.csv", index=False)
-    H.to_csv(OUT_DIR / "mandatory_hedged_vol.csv", index=False)
+    G.reset_index().to_csv(MANDATORY_DIR / "mandatory_g4_history.csv", index=False)
+    L.reset_index().to_csv(MANDATORY_DIR / "mandatory_liquidity.csv", index=False)
+    H.to_csv(MANDATORY_DIR / "mandatory_hedged_vol.csv", index=False)
     return 0
 
 

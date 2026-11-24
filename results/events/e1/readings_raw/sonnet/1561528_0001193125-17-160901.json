@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1561528,
+  "episode_accession": "0001193125-17-160901",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "NF Investment Corp.", "cik": 1561528, "ticker": null},
+      "acquirer": {"name": "TCG BDC, Inc.", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-17-160901", "quote": "Until a Qualified IPO, TCG BDC does not intend to list its common stock on a stock exchange and it will not be publicly traded."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-17-164335", "date": "2017-05-09", "quote": "Pursuant to the Agreement, among other things and subject to certain conditions described therein, the Company will merge with and into TCG BDC (the “Merger”), with TCG BDC as the surviving entity."},
+      "outcome_evidence": {"accession": "0001193125-17-160901", "date": "2017-05-05", "quote": "Until a Qualified IPO, TCG BDC does not intend to list its common stock on a stock exchange and it will not be publicly traded."},
+      "notes": "Both are non-traded BDCs (NFIC: 'We do not intend to list our common stock on a stock exchange and it will not be publicly traded.'). The merger was completed: the 8-K filed 2017-06-12 (0001193125-17-201535) says 'the Company merged with and into TCG BDC (the “Merger”), with TCG BDC as the surviving entity.' The PREM14A of 2017-05-05 is the earliest filing but its excerpts do not name the merger; the 8-K of 2017-05-09 is the earliest excerpt that does."
+    }
+  ],
+  "problems": ""
+}

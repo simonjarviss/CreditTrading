@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1176433,
+  "episode_accession": "0001193125-15-362852",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Quality Preferred Income Fund", "cik": null, "ticker": "JTP"},
+      "acquirer": {"name": "Nuveen Quality Preferred Income Fund 2", "cik": 1176433, "ticker": "JPS"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-431001", "date": "2016-01-15", "quote": "ISS has recommended that shareholders vote in favor of a plan to merge three preferred securities closed-end funds"},
+      "outcome_evidence": null,
+      "notes": "The 425 filings show the annual meeting adjourned several times (to March 22, 2016); no excerpt states an outcome."
+    },
+    {
+      "target": {"name": "Nuveen Quality Preferred Income Fund 3", "cik": null, "ticker": "JHP"},
+      "acquirer": {"name": "Nuveen Quality Preferred Income Fund 2", "cik": 1176433, "ticker": "JPS"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-431001", "date": "2016-01-15", "quote": "ISS has recommended that shareholders vote in favor of a plan to merge three preferred securities closed-end funds"},
+      "outcome_evidence": null,
+      "notes": "Same proposal as the JTP deal; the Acquired Fund table lists JTP and JHP against acquiring fund JPS. The 2017 DEF 14A names the fund as Nuveen Preferred Securities Income Fund (JPS) but its excerpts do not state the merger outcome."
+    }
+  ],
+  "problems": "No exchange named for any of the three funds; target CIKs do not appear in any FILING header; no outcome stated."
+}

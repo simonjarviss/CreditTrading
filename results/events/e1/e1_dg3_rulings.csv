@@ -1,0 +1,17 @@
+item,question,ruling,ruled_by,ruled_on
+1,"one deal, one count","a deal read from several episodes counts once (deal_id = target CIK > acquirer CIK); A = earliest announcement, F = earliest public failure",team lead (Simon Jarvis): accept all recommended,2026-10-20
+2,CRSP settles a listing the reader left null,"both parties' tickers on A map to a CRSP CEF (14/44) or BDC (11) on NYSE, NYSE American or Nasdaq: the pair is listed (adds NXJ->NAD, NQP->NVG, NMT->NEA)",team lead (Simon Jarvis): accept all recommended,2026-10-20
+3,BHV->MYI and its co-targets,"BHV, BKN, MIY and MPA -> MYI: withdrawn, F = 2023-11-01 (MYI's RW 0001193125-23-268272); time holdout; listed by CRSP",team lead (Simon Jarvis): accept all recommended,2026-10-20
+4,MCC -> CIK 1523526,not a listed pair; its quote failure is moot,team lead (Simon Jarvis): accept all recommended,2026-10-20
+5,rows that cannot change the trial,"triage classes C1, C2, C3 and deals announced after 2024-12-31: read, excluded from every E1 set, not blocking",team lead (Simon Jarvis): accept all recommended,2026-10-20
+6,the N-8F rule,a target's N-8F naming its merger into the acquirer = completed; naming another survivor or a liquidation = completed_other_structure; else null; batches 40 and 45 re-read to it,team lead (Simon Jarvis): accept all recommended,2026-10-20
+7,in-trial rows with a quote not found,none; nothing to rule,team lead (Simon Jarvis): accept all recommended,2026-10-20
+8,the residual 67 rows / 47 episodes,CHOSEN: a second reading with full excerpts; a disagreement with the first pass is adjudicated by a third reading,team lead (Simon Jarvis): both extra reading rounds chosen,2026-10-20
+9,the census gap (SBI->MMU),"CHOSEN: a supplementary census of the 149 acquirer-side episodes a completion explained, read for named targets that did not complete",team lead (Simon Jarvis): both extra reading rounds chosen,2026-10-20
+10,settle a blank outcome from CRSP,730 days from A: a 2xx or 3xx delisting into the acquirer's permno = completed (dated); a 2xx into another = completed_other_structure; liquidated or still listed = not completed (a third reading dates the failure); else unsettled,team lead (Simon Jarvis),2026-10-21
+11,the deal universe (amendment 4),§4.1 takes CRSP delisting codes 231 AND 331 when the delisting maps to the acquirer's permno,team lead (Simon Jarvis),2026-10-21
+12,listing that no reading settles,"listing follows CRSP share codes (§4.3): by printed ticker, else by CIK through the trial's CRSP-CIK match incl. share-code-11 BDCs; a counterparty nobody identifies -> excluded and counted",team lead (Simon Jarvis),2026-10-21
+13,"never completed per CRSP, no dated failure",excluded and counted (§6.1 needs F); ruling 10's 730 days run from the episode's first merger filing where a reading gives no A,team lead (Simon Jarvis),2026-10-21
+14,outcome still unstated after the readings,excluded and counted,team lead (Simon Jarvis),2026-10-21
+15,the two muni deals SBI->MMU and NCU->NKX (2011),read in each target's own filings (round r4); if that settles nothing: SBI->MMU excluded and counted; NCU->NKX superseded per §4.3 with F = 2013-11-22,team lead (Simon Jarvis),2026-10-21
+16,"a fit deal with no control-2 candidate (ALD->PSEC, BDC): §8.2 is silent outside the 75% muni coverage rule","keep, with no comparison: ALD->PSEC stays in the trial with no control 2, recorded as 'no candidate: no CEF has the first name word ALLIED', and counted (relayed by the coordinator)",team lead (Simon Jarvis),2026-10-22

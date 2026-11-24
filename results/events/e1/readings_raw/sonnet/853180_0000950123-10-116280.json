@@ -1,0 +1,18 @@
+{
+  "episode_cik": 853180,
+  "episode_accession": "0000950123-10-116280",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco Prime Income Trust", "cik": 854904, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Senior Loan Fund", "cik": 853180, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000950123-10-116280", "quote": "An early withdrawal charge is imposed on repurchases of shares at the following rates:"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000950123-10-116299", "date": "2010-12-23", "quote": "The Invesco Funds Board of Trustees has approved a reorganization of Invesco Prime Income Trust into Invesco Van Kampen Senior Loan Fund, pending shareholder approval."},
+      "outcome_evidence": null,
+      "notes": "Both funds issue Class IB shares subject to an early withdrawal charge on repurchase and show XPITX/XPRTX symbols; no exchange listing is stated, so judged not listed. The April 14, 2011 meeting failed to reach quorum because of a tabulation error and votes were re-solicited for a September 14, 2011 meeting (seq 5, 6). Completion is not stated in the excerpts. The 2012 DEFA14As (seq 9-13) list Senior Loan Fund among several Van Kampen closed-end fund registrants but the excerpts do not describe a merger."
+    }
+  ],
+  "problems": "Outcome of the Prime Income Trust reorganization is not stated in the excerpts. The 2012 filings (seq 7-13) are compact and do not show what proposal is voted on."
+}

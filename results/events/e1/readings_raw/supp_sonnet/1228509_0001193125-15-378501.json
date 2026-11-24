@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1228509,
+  "episode_accession": "0001193125-15-378501",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Western Asset Global Partners Income Fund Inc.", "cik": 911638, "ticker": "GDF"},
+      "acquirer": {"name": "Western Asset Global High Income Fund Inc.", "cik": 1228509, "ticker": "EHI"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-15-378501", "quote": "Western Asset Global Partners Income Fund Inc. (NYSE: GDF) and Western Asset Global High Income Fund Inc. (NYSE: EHI) today announced approval by each Fund’s Board of Directors of a proposal to merge Western Asset Global Partners Income Fund Inc. with and into Western Asset Global High Income Fund Inc., subject to approval by the stockholders of each Fund."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-15-378490", "date": "2015-11-16", "quote": "today announced approval by each Fund’s Board of Directors of a proposal to merge Western Asset Global Partners Income Fund Inc. with and into Western Asset Global High Income Fund Inc., subject to approval by the stockholders of each Fund."},
+      "outcome_evidence": null,
+      "notes": "Joint special meeting set for 2016-07-22; the DEFA14A filed 2016-07-25 says it was adjourned to 2016-08-12 because there were insufficient votes cast. A further DEFA14A (2016-08-01) repeats this. No excerpt states the result of the 2016-08-12 meeting or whether the merger closed or failed; the 2016-09-01 DEF 14A, 2017-08-17 8-K and 2017-08-29 DEF 14A excerpts (compact) show no outcome language."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts."
+}

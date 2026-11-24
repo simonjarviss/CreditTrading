@@ -1,0 +1,37 @@
+{
+ "episode_cik": 1649363,
+ "episode_accession": "0001398344-15-006219",
+ "episode_role": "acquirer",
+ "deals": [
+  {
+   "target": {
+    "name": "ABS 3(C)(1) LP",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "ABS Global Equity Long/Short RIC",
+    "cik": 1649363,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001398344-15-006219",
+    "quote": "We are furnishing this Prospectus/Proxy Statement to the limited partners of ABS 3(C)(1) LP (the \u201cPartnership\u201d)."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001398344-15-006219",
+    "date": "2015-09-10",
+    "quote": "We are furnishing this Prospectus/Proxy Statement to the limited partners of ABS 3(C)(1) LP (the \u201cPartnership\u201d). ABS proposes to convert the Partnership into a registered closed-end management investment company."
+   },
+   "outcome_evidence": {
+    "accession": "0001398344-15-006219",
+    "date": "2015-09-10",
+    "quote": "We are furnishing this Prospectus/Proxy Statement to the limited partners of ABS 3(C)(1) LP (the \u201cPartnership\u201d)."
+   },
+   "notes": "This is a conversion of a private limited partnership into a registered closed-end fund, not a merger of two exchange-listed funds. The excerpt does not state any exchange listing for either entity; the target is a partnership whose limited partners are asked to consent. Outcome of the conversion is not stated (only one filing in the window)."
+  }
+ ],
+ "problems": "Only the N-14 8C is in the window and only its first 2,500 characters plus outcome-language passages are shown. both_listed=false rests on the target being a limited partnership; the text shown does not explicitly say the partnership is unlisted."
+}

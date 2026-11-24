@@ -1,0 +1,66 @@
+{
+ "episode_cik": 787441,
+ "episode_accession": "0001104659-21-012810",
+ "episode_role": "acquirer",
+ "deals": [
+  {
+   "target": {
+    "name": "MainStay Epoch U.S. All Cap Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "MainStay WMC Enduring Capital Fund",
+    "cik": 787441,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001104659-21-012810",
+    "quote": "A CDSC may not be imposed on redemptions of Class A and Investor Class shares purchased at NAV through financial intermediaries or by persons that are affiliated with New York Life or its affiliates."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001104659-21-012810",
+    "date": "2021-02-05",
+    "quote": "The Board of Trustees of MainStay Funds Trust (the “Board”) has approved the reorganization of the MainStay Epoch U.S. All Cap Fund, a series of MainStay Funds Trust, with and into the MainStay WMC Enduring Capital Fund (formerly known as MainStay MacKay Common Stock Fund), a series of The MainStay Funds (the “Acquiring Fund”)."
+   },
+   "outcome_evidence": {
+    "accession": "0001104659-21-012810",
+    "date": "2021-02-05",
+    "quote": "A CDSC may not be imposed on redemptions of Class A and Investor Class shares purchased at NAV through financial intermediaries or by persons that are affiliated with New York Life or its affiliates."
+   },
+   "notes": "Series of open-end trusts (share classes, CDSC, purchases at NAV; no exchange listing shown), inferred rather than stated outright. Acquirer CIK 787441 is the registrant The MainStay Funds. Filing says reorganization expected on or about April 26, 2021; no completion stated in the excerpt."
+  },
+  {
+   "target": {
+    "name": "MainStay MacKay U.S. Equity Opportunities Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "MainStay WMC Enduring Capital Fund",
+    "cik": 787441,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001104659-21-012817",
+    "quote": "A CDSC may not be imposed on redemptions of Class A and Investor Class shares purchased at NAV through financial intermediaries or by persons that are affiliated with New York Life or its affiliates."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001104659-21-012817",
+    "date": "2021-02-05",
+    "quote": "The Board of Trustees of MainStay Funds Trust (the “Board”) has approved the reorganization of the MainStay MacKay U.S. Equity Opportunities Fund, a series of MainStay Funds Trust, with and into the MainStay WMC Enduring Capital Fund (formerly known as MainStay MacKay Common Stock Fund), a series of The MainStay Funds (the “Acquiring Fund”)."
+   },
+   "outcome_evidence": {
+    "accession": "0001104659-21-012817",
+    "date": "2021-02-05",
+    "quote": "A CDSC may not be imposed on redemptions of Class A and Investor Class shares purchased at NAV through financial intermediaries or by persons that are affiliated with New York Life or its affiliates."
+   },
+   "notes": "Second N-14 filed same day for a second target into the same acquirer; open-end status inferred as for the first deal. No outcome stated in the excerpt."
+  }
+ ],
+ "problems": "Open-end status is inferred from share-class and NAV-purchase language, not stated outright. Only the initial N-14 is in the window; no outcome shown."
+}

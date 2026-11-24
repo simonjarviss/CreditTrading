@@ -1,0 +1,54 @@
+{
+ "asof_alpaca_clock": "2026-10-19 15:58:05.688290-04:00",
+ "endpoint": "GET /v2/assets?status=active (paper, cef key)",
+ "all_2024_25_listed_supplement_filers": {
+  "funds": 199,
+  "found": 192,
+  "shortable": 113,
+  "etb": 113,
+  "share_shortable_of_found": 0.5885416666666666,
+  "share_shortable_of_all": 0.5678391959798995
+ },
+ "by_type_2024_25": {
+  "bdc": {
+   "funds": 48,
+   "found": 48,
+   "shortable": 29,
+   "etb": 29,
+   "share_shortable_of_found": 0.6041666666666666,
+   "share_shortable_of_all": 0.6041666666666666
+  },
+  "rcef": {
+   "funds": 149,
+   "found": 142,
+   "shortable": 83,
+   "etb": 83,
+   "share_shortable_of_found": 0.5845070422535211,
+   "share_shortable_of_all": 0.5570469798657718
+  },
+  "unknown": {
+   "funds": 2,
+   "found": 2,
+   "shortable": 1,
+   "etb": 1,
+   "share_shortable_of_found": 0.5,
+   "share_shortable_of_all": 0.5
+  }
+ },
+ "sample_2024_25_atm_common_filers": {
+  "funds": 23,
+  "found": 23,
+  "shortable": 12,
+  "etb": 12,
+  "share_shortable_of_found": 0.5217391304347826,
+  "share_shortable_of_all": 0.5217391304347826
+ },
+ "sample_2024_25_common_issuers": {
+  "funds": 24,
+  "found": 24,
+  "shortable": 13,
+  "etb": 13,
+  "share_shortable_of_found": 0.5416666666666666,
+  "share_shortable_of_all": 0.5416666666666666
+ }
+}

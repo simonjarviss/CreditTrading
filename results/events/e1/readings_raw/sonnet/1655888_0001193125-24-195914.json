@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1655888,
+  "episode_accession": "0001193125-24-195914",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Blue Owl Capital Corporation III", "cik": 1807427, "ticker": "OBDE"},
+      "acquirer": {"name": "Blue Owl Capital Corporation", "cik": 1655888, "ticker": "OBDC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-24-195906", "quote": "Blue Owl Capital Corporation (NYSE: OBDC) and Blue Owl Capital Corporation III (NYSE: OBDE) today announced that they have entered into a definitive merger agreement, with OBDC as the surviving company"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-24-195906", "date": "2024-08-07", "quote": "Blue Owl Capital Corporation and Blue Owl Capital Corporation III Announce Merger Agreement"},
+      "outcome_evidence": {"accession": "0001628280-25-001250", "date": "2025-01-13", "quote": "Blue Owl Capital Corporation (NYSE: OBDC) today announced the closing of its merger with Blue Owl Capital Corporation III (\"OBDE\"), with OBDC as the surviving company."},
+      "notes": "Shareholders of both funds approved on 2025-01-08 (8-K 0001628280-25-000946); closing announced 2025-01-13."
+    },
+    {
+      "target": {"name": "Blue Owl Capital Corporation II", "cik": 1655887, "ticker": null},
+      "acquirer": {"name": "Blue Owl Capital Corporation", "cik": 1655888, "ticker": "OBDC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "terminated",
+      "announcement": {"accession": "0001193125-25-267102", "date": "2025-11-05", "quote": "Blue Owl Capital Corporation and Blue Owl Capital Corporation II Announce Merger Agreement"},
+      "outcome_evidence": {"accession": "0001628280-25-053061", "date": "2025-11-19", "quote": "Blue Owl Capital Corporation and Blue Owl Capital Corporation II Announce Termination of Merger"},
+      "notes": "Termination press release (filed also as 425 accession 0001628280-25-053062 on the same date) says the previously proposed merger of OBDC and OBDC II has been terminated, due to current market conditions. The excerpts print a ticker and NYSE listing for OBDC only; nothing in them states whether OBDC II is exchange-listed, so both_listed is null."
+    }
+  ],
+  "problems": "Listing status of Blue Owl Capital Corporation II is not stated in the excerpts."
+}

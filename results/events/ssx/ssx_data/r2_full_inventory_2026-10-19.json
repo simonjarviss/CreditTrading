@@ -1,0 +1,15 @@
+{
+  "run_utc": "2026-10-19 15:25:41",
+  "script": "scripts/events/ssx/ssx_data_r2_inventory.py",
+  "objects_under_wrds": 1148,
+  "parquet_tables": 1146,
+  "schemas": 81,
+  "non_parquet_objects": [
+    "s3://<bucket>/wrds/coverage.json",
+    "s3://<bucket>/wrds/manifest.json"
+  ],
+  "manifest_json_entries": 412,
+  "portfolios_prefix_objects_not_read": 32,
+  "describe_errors": 0,
+  "total_size_gb": 433.1
+}

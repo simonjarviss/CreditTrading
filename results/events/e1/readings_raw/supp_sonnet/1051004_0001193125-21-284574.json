@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1051004,
+  "episode_accession": "0001193125-21-284574",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock MuniYield California Fund, Inc.", "cik": 882152, "ticker": "MYC"},
+      "acquirer": {"name": "BlackRock MuniHoldings California Quality Fund, Inc.", "cik": 1051004, "ticker": "MUC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-028568", "quote": "of BlackRock MuniYield California Fund, Inc. (NYSE: MYC), BlackRock MuniYield California Quality Fund, Inc. (NYSE: MCA) and BlackRock"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-21-284574", "date": "2021-09-28", "quote": "BlackRock Announces Board Approval of California Municipal Closed-End Fund Reorganizations New York, September 27, 2021 – BlackRock Advisors, LLC announced today that the Boards of Directors of"},
+      "outcome_evidence": {"accession": "0001193125-22-101851", "date": "2022-04-11", "quote": "BlackRock Announces Closing of Reorganizations of Three Municipal Closed-End Funds New York, April 11, 2022 – BlackRock Advisors, LLC today announced the reorganizations of each of BlackRock MuniYield"},
+      "notes": "MYC shareholders approved at the 2022-02-04 meeting (0001193125-22-028562: 'the requisite vote of shareholders of MYC have approved the reorganization of MYC with and into MUC'); MYC reorganization was conditional on MUC approval. The excerpt of the closing release is truncated, so completion rests on its headline. The listed quote covers MYC and MCA; MUC is shown as NYSE: MUC in 0001193125-22-028562 and as 'NYSE Ticker: MUC' in the N-14 (0001193125-21-295492)."
+    },
+    {
+      "target": {"name": "BlackRock MuniYield California Quality Fund, Inc.", "cik": 888410, "ticker": "MCA"},
+      "acquirer": {"name": "BlackRock MuniHoldings California Quality Fund, Inc.", "cik": 1051004, "ticker": "MUC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-028562", "quote": "California Quality Fund, Inc. (NYSE: MCA) and BlackRock MuniHoldings California Quality Fund, Inc. (NYSE: MUC"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-21-284577", "date": "2021-09-28", "quote": "BlackRock Announces Board Approval of California Municipal Closed-End Fund Reorganizations New York, September 27, 2021 – BlackRock Advisors, LLC announced today that the Boards of Directors of"},
+      "outcome_evidence": {"accession": "0001193125-22-101850", "date": "2022-04-11", "quote": "BlackRock Announces Closing of Reorganizations of Three Municipal Closed-End Funds New York, April 11, 2022 – BlackRock Advisors, LLC today announced the reorganizations of each of BlackRock"},
+      "notes": "At the 2022-02-04 meeting MCA and MUC common shareholders did not obtain the requisite votes ('MCA and MUC did not obtain the requisite votes of common shareholders'); meeting adjourned to March 4, 2022, and a 2022-03-04 results release and 2022-04-11 closing release followed. The closing release excerpt is truncated, so completion rests on its headline; the March 4 vote result itself is not in the excerpt."
+    }
+  ],
+  "problems": "Both closing-release excerpts are truncated after 'the reorganizations of each of BlackRock', so completion is read from the headline 'Announces Closing of Reorganizations of Three Municipal Closed-End Funds'. The March 4 2022 vote result text is not shown."
+}

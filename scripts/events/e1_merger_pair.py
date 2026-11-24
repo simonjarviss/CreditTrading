@@ -142,7 +142,21 @@ STAGE0_OUT = OUT_DIR / "e1_stage0_output.txt"
 STAGE0_FLAGS = OUT_DIR / "e1_stage0_flags.csv"
 RULINGS = OUT_DIR / "e1_stage0_rulings.csv"                       # reading R7
 READINGS = OUT_DIR / "e1_failed_deal_readings.csv"                # DG-E1-3, written by a reader
+# The readings after every round and ruling (`e1_failed_reading.dg3_state`), written by Stage 0
+# and committed with its record: the ONLY failed-deal source the fit and the holdout read. The
+# round-1 file above holds 3 in-trial deals; the ruled set Stage 0 cleared holds 13 (2026-10-22).
+READINGS_RULED = OUT_DIR / "e1_failed_deal_readings_ruled.csv"
 CENSUS = OUT_DIR / "e1_failed_census.csv"                         # DG-E1-3 candidates (EDGAR facts only)
+CENSUS_SUPP = OUT_DIR / "e1_failed_census_supp.csv"               # ruling 9 (amendment 3): acquirer episodes a completion explained
+DG3_RULINGS = OUT_DIR / "e1_dg3_rulings.csv"                       # amendments 3 and 4's record (items 1-11)
+# Amendment 4 (team lead, 2026-10-21, before any E1 return): the deal universe of §4.1 takes CRSP
+# delisting codes 231 AND 331 when the delisting maps to the acquirer's permno (CRSP codes many CEF
+# reorganisations 331). Its counts: UNIVERSE_COUNTS; the 331 deals' EDGAR dates: DATES_331.
+UNIVERSE_CODES = (231, 331)
+UNIVERSE_COUNTS = OUT_DIR / "e1_universe_counts_2026-10-21.json"
+DATES_331 = CACHE / "e1_331_edgar_dates.csv"                       # gitignored: CRSP permnos
+DATES_331_SUMMARY = OUT_DIR / "e1_331_edgar_dates_summary.json"
+A4_CRSP_PERMNOS = CACHE / "amendment4_crsp_permnos.txt"
 FIT_JSON = OUT_DIR / "e1_fit_verdict.json"
 FIT_OUT = OUT_DIR / "e1_fit_output.txt"
 HOLDOUT_JSON = OUT_DIR / "e1_holdout.json"
@@ -182,6 +196,9 @@ FMAX_MARGIN = 0.5                 # §5.3 (report-only under amendment 1)
 CAPITALS = (1e5, 1e6, 1e7)
 PARTICIPATION_GUARD = 0.05        # the desk's convention (plan_diagnostics.py prints it); reported only
 FIT_START, FIT_END = pd.Timestamp("2009-07-01"), pd.Timestamp("2022-12-31")
+# The market calendar must hold every fit deal's window; a 2010 completion can be announced in 2009
+# (amendment 4's BZA, BCL, BCK -> BFZ: A = 2009-06-23). Not a rule parameter: where the sessions start.
+CAL_START = pd.Timestamp("2008-07-01")
 HOLDOUT_START, CRSP_END = ce.TIME_HOLDOUT, pd.Timestamp("2024-12-31")
 ERAS = (("2010-14", "2010-01-01", "2014-12-31"), ("2015-19", "2015-01-01", "2019-12-31"),
         ("2020-22", "2020-01-01", "2022-12-31"))
@@ -199,10 +216,19 @@ HOLDOUT_OPENS_AFTER_FIT_KILL: bool | None = True
 READING_COLUMNS = ("episode_cik", "episode_accession", "deal_id", "role", "counterparty_cik",
                    "counterparty_name", "both_listed", "outcome", "in_trial",
                    "target_cik", "acquirer_cik", "target_ticker", "acquirer_ticker", "ann_date", "ann_accession", "ann_quote",
-                   "fail_date", "fail_accession", "fail_quote", "read_by", "read_on")
+                   "fail_date", "fail_accession", "fail_quote", "outcome_date", "outcome_accession",
+                   "outcome_quote", "read_by", "read_on")
 OUTCOMES = ("completed", "completed_other_structure", "completed_after_crsp", "terminated",
             "vote_failed", "withdrawn", "superseded", "not_a_listed_pair")
 FAILED_OUTCOMES = ("terminated", "vote_failed", "withdrawn", "superseded")
+# The filings DG-E1-3's readers see for each census episode: these forms, filed from 30 days
+# before the episode's first filing to 730 days after (`fetch-edgar` fetched exactly these).
+CENSUS_FORMS = ("425", "N-14", "N-14/A", "N-14 8C", "N-14 8C/A", "PREM14A", "DEFM14A", "DEFA14A", "DEF 14A",
+                "PRE 14A", "8-K", "RW", "N-8F")
+CENSUS_PRE_DAYS = 30
+# A targeted fetch (`fetch-edgar --cik`) also takes the fund's annual and semi-annual reports, which
+# report shareholder-meeting results (how SBI -> MMU's 2023 vote ended is not in MMU's filings).
+TARGETED_FORMS = CENSUS_FORMS + ("N-CSR", "N-CSRS", "DEFA14A")
 
 
 class GateError(RuntimeError):
@@ -366,11 +392,19 @@ def spec_names() -> set:
     return set(spec.frozen("universe"))
 
 
-def deal_table(nm: pd.DataFrame, dl: pd.DataFrame) -> pd.DataFrame:
-    """The declared partition (`e1_prereg_counts.build`, unchanged) on the full delisting table:
-    one row per completed stock-for-stock deal, with `part` and `seg`."""
+def deal_table(nm: pd.DataFrame, dl: pd.DataFrame, codes: tuple = UNIVERSE_CODES) -> pd.DataFrame:
+    """The declared partition on the full delisting table: one row per completed deal, with `part`
+    and `seg`. `e1_prereg_counts.build`'s steps, with amendment 4's universe: delisting codes
+    `codes` with an acquirer permno (`codes=(231,)` reproduces `pc.build` exactly: checked equal, 264
+    rows, on the 2026-10-12 CRSP cache, 2026-10-21)."""
     from scripts.events import e1_prereg_counts as pc
-    x = pc.build(nm, dl, spec_names())
+    x = mp.build_events(nm, dl, start=pc.START, end=pc.END, extra_codes=tuple(c for c in codes if c // 100 != 2))
+    x = mp.flag_universe(x, nm)
+    x = x[x["dlstcd"].isin(codes) & (x["kind"] == "stock") & (x["nwperm"] > 0)].copy()
+    x["seg"] = x["comnam"].map(mp.classify)
+    x["spec_touch"] = pc.spec_touch(x, nm, spec_names())
+    x["part"] = pc.partition(x)
+    pc.assert_groups_whole(x)
     for c in ("dlpdt", "dlret", "dlamt"):
         if c not in x:
             raise GateError(f"the delisting table lacks {c}")
@@ -378,16 +412,28 @@ def deal_table(nm: pd.DataFrame, dl: pd.DataFrame) -> pd.DataFrame:
 
 
 def counts_vs_prereg(x: pd.DataFrame) -> tuple[pd.DataFrame, bool]:
-    """Deals and acquirer x completion groups by set and segment, beside the pre-registration's
-    own counts file (H14: reprinted, re-measured, never assumed)."""
+    """Deals and acquirer x completion groups by set and segment, beside amendment 4's counts file
+    (which must match: H14, re-measured, never assumed) and the pre-registration's 231-only counts."""
     from scripts.events import e1_prereg_counts as pc
-    now = pd.DataFrame(pc.counts(x)).set_index(["set", "segment"])
+    now = pd.DataFrame(pc.counts(x)).set_index(["set", "segment"])[["events", "groups_acq_x_completion"]]
+    a4 = pd.DataFrame(json.loads(UNIVERSE_COUNTS.read_text())["counts"]).set_index(["set", "segment"])
     was = pd.DataFrame(json.loads(PREREG_COUNTS.read_text())["counts"]).set_index(["set", "segment"])
-    t = now[["events", "groups_acq_x_completion"]].join(
-        was[["events", "groups_acq_x_completion"]], rsuffix="_prereg", how="outer")
-    ok = bool((t["events"] == t["events_prereg"]).all()
-              and (t["groups_acq_x_completion"] == t["groups_acq_x_completion_prereg"]).all())
+    t = now.join(a4[["events", "groups_acq_x_completion"]], rsuffix="_a4", how="outer").join(
+        was[["events", "groups_acq_x_completion"]], rsuffix="_prereg231", how="outer").fillna(0).astype(int)
+    ok = bool((t["events"] == t["events_a4"]).all() and (t["groups_acq_x_completion"] == t["groups_acq_x_completion_a4"]).all())
     return t, ok
+
+
+def universe_counts(nm: pd.DataFrame, dl: pd.DataFrame) -> dict:
+    """Amendment 4's deal counts by set and segment (no return of any kind is read)."""
+    from scripts.events import e1_prereg_counts as pc
+    x = deal_table(nm, dl)
+    res = {"what": "E1 deal counts under amendment 4 (delisting codes 231 and 331 into the acquirer's permno); "
+                   "counts only, no return read", "codes": list(UNIVERSE_CODES), "counts": pc.counts(x),
+           "deals_331_by_set": x.loc[x["dlstcd"] == 331, "part"].value_counts().to_dict(),
+           "run_utc": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+    UNIVERSE_COUNTS.write_text(json.dumps(res, indent=1) + "\n")
+    return res
 
 
 def attach_dates(x: pd.DataFrame, dates: pd.DataFrame) -> pd.DataFrame:
@@ -403,20 +449,31 @@ def attach_dates(x: pd.DataFrame, dates: pd.DataFrame) -> pd.DataFrame:
     return y
 
 
+def dates_331() -> pd.DataFrame:
+    """Amendment 4's 331 deals dated by `edgar_merger_dates.date_deals`, unchanged (empty if not yet run)."""
+    if not DATES_331.exists():
+        return pd.DataFrame(columns=["permno", "ann_date", "date_basis", "why_undated", "t_status"])
+    return pd.read_csv(DATES_331)
+
+
 def load_fit_dates(x: pd.DataFrame) -> pd.DataFrame:
-    """`merger_edgar_dates.csv` must date exactly the fit set's deals (DG-E1-2, fit half)."""
+    """`merger_edgar_dates.csv` must date exactly the fit set's 231 deals (DG-E1-2, fit half); the
+    331 deals' dates (amendment 4) come from `dates_331`, and a 331 deal it lacks is left undated
+    for the caller to count."""
     if not FIT_DATES.exists():
         raise GateError(f"DG-E1-2: {FIT_DATES.relative_to(REPO)} is missing; run "
                         "`python3 scripts/events/edgar_merger_dates.py --offline` against the cache that dated it")
     d = pd.read_csv(FIT_DATES)
-    fit = set(x.loc[x["part"] == FIT_SET, "permno"].astype(int))
+    fit = set(x.loc[(x["part"] == FIT_SET) & (x["dlstcd"] == 231), "permno"].astype(int))
     if set(d["permno"].astype(int)) != fit:
         raise GateError(f"DG-E1-2: {FIT_DATES.name} dates {len(d)} deals; the fit set has {len(fit)}, "
                         "and they are not the same deals")
     summ = json.loads(FIT_DATES_SUMMARY.read_text())
     if summ["events"] != len(d) or summ["dated"] != int(d["ann_date"].notna().sum()):
         raise GateError(f"DG-E1-2: {FIT_DATES.name} disagrees with its committed summary")
-    return d
+    d3 = dates_331()
+    d3 = d3[d3["permno"].isin(x.loc[(x["part"] == FIT_SET) & (x["dlstcd"] == 331), "permno"])]
+    return pd.concat([d, d3], ignore_index=True)
 
 
 # =========================================================================== DG-E1-2, DG-E1-3 (EDGAR)
@@ -506,12 +563,13 @@ def merger_episodes() -> pd.DataFrame:
 
 
 def completion_ciks(nm: pd.DataFrame, dl: pd.DataFrame, names: pd.DataFrame) -> pd.DataFrame:
-    """(cik, completion date, role, permno) for every CRSP merger delisting (dlstcd 2xx) of a
+    """(cik, completion date, role, permno) for every CRSP merger delisting (dlstcd 2xx, and 331 under
+    amendment 4) of a
     CEF permno, 2009-07-01 .. 2024-12-31, target and acquirer each matched to a CIK by
     `edgar_merger_dates.match_cik` with the dating script's own windows. Unmatched parties are
     returned with cik NaN and their status (they explain no episode)."""
     from scripts.events import edgar_merger_dates as emd
-    x = mp.build_events(nm, dl, EPISODE_START, EPISODE_END)
+    x = mp.build_events(nm, dl, EPISODE_START, EPISODE_END, extra_codes=tuple(c for c in UNIVERSE_CODES if c // 100 != 2))
     rows = []
     for e in x.itertuples():
         C = pd.Timestamp(e.dlstdt)
@@ -550,53 +608,110 @@ def failed_census(episodes: pd.DataFrame, comp: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(out)
 
 
-def check_readings(census: pd.DataFrame, client) -> tuple[pd.DataFrame, list[str]]:
-    """DG-E1-3: every candidate episode has one reading row; every quote is re-found in its
-    filing on THIS run (`conditional_tender_census.quote_in`, the merger_arb_readings design).
-    Returns (readings, problems); any problem fails the gate."""
+def supp_census(episodes: pd.DataFrame, comp: pd.DataFrame) -> pd.DataFrame:
+    """Ruling 9 (amendment 3, 2026-10-20): the merger episodes that a CRSP completion with the
+    episode's CIK as ACQUIRER explains (within 730 days). The 730-day rule drops them, and with them
+    any co-target that failed while another merged: SBI -> MMU (2023, §2.3) is the case that showed it."""
+    c = comp[(comp["role"] == "acquirer")].dropna(subset=["cik"])
+    by = {int(k): g["C"].values for k, g in c.groupby("cik")}
+    out = []
+    for e in episodes.itertuples():
+        cs = by.get(int(e.cik), np.array([], dtype="datetime64[ns]"))
+        lo, hi = np.datetime64(e.first_date), np.datetime64(e.first_date + pd.Timedelta(days=FAIL_WINDOW_DAYS))
+        if ((cs >= lo) & (cs <= hi)).any():
+            out.append({"episode_cik": int(e.cik), "episode_accession": e.first_accession,
+                        "first_date": e.first_date.date(), "first_form": e.first_form,
+                        "last_date": e.last_date.date(), "n_filings": int(e.n_filings), "forms": e.forms,
+                        "company_last": e.company_last,
+                        "window_past_crsp": bool(e.first_date + pd.Timedelta(days=FAIL_WINDOW_DAYS) > CRSP_END)})
+    return pd.DataFrame(out)
+
+
+def deal_keys(r: pd.DataFrame) -> pd.Series:
+    """One deal's key across rows: a CIK-based deal_id as it is; a positional id (ep<cik>:<k>) only
+    within its episode (positions are not comparable across episodes)."""
+    ep = r["deal_id"].str.startswith("ep")
+    return r["deal_id"].where(~ep, r["episode_cik"] + "_" + r["episode_accession"] + "|" + r["deal_id"])
+
+
+def check_readings(census: pd.DataFrame, client, readings: pd.DataFrame | None = None,
+                   exempt: pd.Series | None = None) -> tuple[pd.DataFrame, list[str]]:
+    """DG-E1-3: every candidate episode has at least one reading row (one per deal its filings
+    describe, `deal_id` distinct within the episode); every quote is re-found, on THIS run, in the
+    episode CIK's own cached filing it cites (`conditional_tender_census.quote_in`, the
+    merger_arb_readings design); a deal read from two episodes (its target's and its acquirer's)
+    agrees on its parties, outcome and in_trial. Returns (readings, problems); any problem fails
+    the gate. A blank outcome is a problem: an episode whose filings do not settle the outcome
+    blocks Stage 0 until someone reads further."""
     from scripts.data.edgar_client import filing_txt_url
     from scripts.events.conditional_tender_census import quote_in
-    if not READINGS.exists():
+    if readings is None and not READINGS.exists():
         return pd.DataFrame(columns=READING_COLUMNS), [f"{_rel(READINGS)} does not exist: "
                                                        f"{len(census)} candidate episode(s) unread"]
-    r = pd.read_csv(READINGS, dtype=str, keep_default_na=False)
+    r = pd.read_csv(READINGS, dtype=str, keep_default_na=False) if readings is None else readings.reset_index(drop=True)
+    # Ruling 5 (amendment 3): a row that cannot change the trial is read and does not block; its
+    # blank outcome, quote and conflicts are not checked. Every episode must still have a reading.
+    ex = (pd.Series(False, index=r.index) if exempt is None else exempt.reset_index(drop=True).astype(bool))
     probs = []
     miss_c = [c for c in READING_COLUMNS if c not in r.columns]
     if miss_c:
         return r, [f"{READINGS.name} lacks columns {miss_c}"]
-    key = census["episode_cik"].astype(str) + "|" + census["episode_accession"]
+    key = set(census["episode_cik"].astype(str) + "|" + census["episode_accession"])
     rk = r["episode_cik"] + "|" + r["episode_accession"]
-    unread = sorted(set(key) - set(rk))
+    unread = sorted(key - set(rk))
     if unread:
         probs.append(f"{len(unread)} candidate episode(s) have no reading (first {unread[:5]})")
-    if rk.duplicated().any():
-        probs.append("an episode is read twice")
-    bad_o = sorted(set(r["outcome"]) - set(OUTCOMES))
-    if bad_o:
-        probs.append(f"unknown outcome(s) {bad_o}")
-    for row in r.itertuples(index=False):
-        for acc_col, q_col, cik_col in (("ann_accession", "ann_quote", "target_cik"),
-                                        ("fail_accession", "fail_quote", "target_cik")):
+    extra = sorted(set(rk) - key)
+    if extra:
+        probs.append(f"{len(extra)} reading(s) of an episode not in the census (first {extra[:3]})")
+    # A deal read again from ANOTHER fund's filings (round r4, `doc_cik`) is a second reading, not a duplicate.
+    dup_keys = ["episode_cik", "episode_accession", "deal_id"] + (["doc_cik"] if "doc_cik" in r else [])
+    if r.duplicated(dup_keys).any():
+        probs.append("an episode reads one deal twice")
+    # Ruling 1 (one deal, one count): a blank row of a deal another row settles is not a gap.
+    dk = deal_keys(r)
+    settled = set(dk[r["outcome"] != ""])
+    bad = ~r["outcome"].isin(OUTCOMES) & ~ex & ~dk.isin(settled)
+    if bad.any():
+        probs.append(f"{int(bad.sum())} row(s) with an unknown or blank outcome {sorted(set(r.loc[bad, 'outcome']))} "
+                     f"in {int((r.loc[bad, 'episode_cik'] + r.loc[bad, 'episode_accession']).nunique())} episode(s)")
+    # A failure whose listing nobody settled can still be a failed listed pair: it blocks too.
+    unl = r["outcome"].isin(FAILED_OUTCOMES) & (r["both_listed"] == "") & ~ex
+    if unl.any():
+        probs.append(f"{int(unl.sum())} failure row(s) whose listing is unsettled, in "
+                     f"{int((r.loc[unl, 'episode_cik'] + r.loc[unl, 'episode_accession']).nunique())} episode(s)")
+    for row in r[~ex].itertuples(index=False):
+        for acc_col, q_col in (("ann_accession", "ann_quote"), ("fail_accession", "fail_quote"),
+                               ("outcome_accession", "outcome_quote")):
             acc, q = getattr(row, acc_col), getattr(row, q_col)
+            if getattr(row, "ruled", "") == "15" and acc_col == "fail_accession" and not q:
+                continue        # ruling 15: F is §4.3's superseded date (a later proposal's first filing), not a quote
             if not acc and not q:
                 continue
             if not (acc and q):
                 probs.append(f"{row.episode_accession}: {acc_col} and {q_col} must both be given")
                 continue
-            cik = getattr(row, cik_col) or row.episode_cik
-            try:
-                txt = client.get_text(filing_txt_url(int(cik), acc))
+            try:   # a row read from another fund's filings (round r4) names them in doc_cik
+                txt = client.get_text(filing_txt_url(int(getattr(row, "doc_cik", "") or row.episode_cik), acc))
             except Exception as ex:  # a missing document is a gate failure, named
                 probs.append(f"{row.episode_accession}: {acc} cannot be read ({type(ex).__name__})")
                 continue
             if not quote_in(txt, q):
                 probs.append(f"{row.episode_accession}: quote not found in {acc}")
-        if row.in_trial == "Y" and row.outcome not in FAILED_OUTCOMES:
-            probs.append(f"{row.episode_accession}: in_trial but outcome {row.outcome!r} is not a failure")
-        if row.in_trial == "Y" and not (row.ann_quote and row.fail_quote and row.fail_date
-                                        and row.target_ticker and row.acquirer_ticker):
-            probs.append(f"{row.episode_accession}: a failed deal needs its announcement and failure quotes "
-                         "and both parties' tickers")
+        if row.in_trial == "Y":
+            if row.outcome not in FAILED_OUTCOMES or row.both_listed != "Y":
+                probs.append(f"{row.episode_accession}: in_trial needs a failure outcome and both parties listed")
+            by_rule = getattr(row, "ruled", "") == "15"     # F set by §4.3's superseded rule, not a quote
+            if not all((row.ann_quote or by_rule, row.fail_quote or by_rule, row.fail_date, row.target_ticker,
+                        row.acquirer_ticker, row.target_cik or by_rule, row.acquirer_cik or by_rule)):
+                probs.append(f"{row.episode_accession}: a failed deal needs its announcement and failure quotes, "
+                             "the failure date, and both parties' CIKs and tickers")
+    # A blank is a reader who did not see the answer, not a contradiction: only two DIFFERENT
+    # non-blank outcomes or parties for one deal disagree (fixed 2026-10-20; the first version
+    # counted a blank against a value and flagged 63 deals that no reading contradicted).
+    for d, g in r[(r["deal_id"] != "") & ~ex].groupby("deal_id"):
+        if len(g) > 1 and any(g.loc[g[c] != "", c].nunique() > 1 for c in ("outcome", "target_cik", "acquirer_cik")):
+            probs.append(f"deal {d}: its readings disagree on outcome or parties")
     return r, probs
 
 
@@ -710,7 +825,7 @@ def price_completed(e: pd.Series, px: dict, lag: int = 0) -> dict:
         nxt = entry_session(T, a)
         a = nxt if nxt is not None else a
     skips: dict = {}
-    rec = mp._announcement_row(e, a, {}, px, skips)
+    rec = mp._announcement_row(e, a, {}, px, skips, stock_codes=UNIVERSE_CODES)
     rec["skip"] = next(iter(skips), None)
     return rec
 
@@ -1228,21 +1343,56 @@ def stage0(args) -> int:
         f"({PREREG_COUNTS.name}); CRSP names pulled {man['dsenames']['pulled_utc']}, delistings "
         f"{man['dsedelist']['pulled_utc']}")
     say(t.to_string())
-    say(f"  identical to the pre-registration's counts: {ok}")
+    say(f"  identical to amendment 4's counts ({UNIVERSE_COUNTS.name}): {ok}; 331 deals by set: "
+        f"{x.loc[x['dlstcd'] == 331, 'part'].value_counts().to_dict()}")
+    if not ok:
+        gates["COUNTS"] = {"status": "FAIL", "detail": f"the deal table differs from {UNIVERSE_COUNTS.name}"}
 
     # ---------------------------------------------------------------- DG-E1-2
     fd = load_fit_dates(x)
-    xf = attach_dates(x[x["part"] == FIT_SET], fd)
-    say(f"\n[DG-E1-2] fit set: {len(fd)} deals dated by {FIT_DATES.name} ({int(fd['ann_date'].notna().sum())} dated); "
+    xf_all = attach_dates(x[x["part"] == FIT_SET], fd)
+    d331 = dates_331()
+    need331 = x[(x["dlstcd"] == 331) & x["part"].isin((FIT_SET,) + HOLDOUT_SETS)]
+    undated331 = sorted(set(need331["ticker"]) - set(need331.loc[need331["permno"].isin(d331["permno"]), "ticker"]))
+    say(f"\n[DG-E1-2] fit set: {len(fd)} deals with a date row ({FIT_DATES.name} for 231, {DATES_331.name} for 331); "
         f"date basis {fd['date_basis'].value_counts().to_dict()}")
-    fit_groups = xf.groupby("seg")["group"].nunique().to_dict()
+    say(f"  amendment 4: {len(need331)} 331 deals in the fit and holdouts; without a date row: {len(undated331)} "
+        f"({', '.join(undated331)})" + (" -> the team lead runs `fetch-edgar --amendment4`" if undated331 else ""))
+    u331 = d331[d331["ann_date"].isna() & d331["permno"].isin(need331["permno"])].merge(
+        need331[["permno", "part", "seg"]], on="permno", how="left")
+    if len(u331):
+        say("  amendment 4's 331 deals undatable by the unchanged rule (excluded and counted, §13 DG-E1-2): "
+            + "; ".join(f"{r.ticker} -> {r.a_ticker}, completed {r.completion}, {r.part}, {r.seg}: {r.why_undated}"
+                        for r in u331.itertuples()))
+    fit_groups = xf_all[xf_all["ann"].notna()].groupby("seg")["group"].nunique().to_dict()
+    say(f"  fit deals dated: {int(xf_all['ann'].notna().sum())} of {len(xf_all)}")
     say(f"  fit groups (acquirer x announcement date) by segment: {fit_groups}")
     if HOLDOUT_DATES.exists():
-        hd = pd.read_csv(HOLDOUT_DATES)
-        want = set(x.loc[x["part"].isin(HOLDOUT_SETS), "permno"].astype(int))
-        hold_ok = set(hd["permno"].astype(int)) == want
-        gates["DG-E1-2"] = {"status": "PASS" if hold_ok else "FAIL",
-                            "detail": f"holdout dates file covers the holdout deals: {hold_ok}"}
+        xh = x[x["part"].isin(HOLDOUT_SETS)]
+        hd = pd.concat([pd.read_csv(HOLDOUT_DATES), d331[d331["permno"].isin(xh["permno"])]], ignore_index=True)
+        hold_ok = (set(hd["permno"].astype(int)) == set(xh.loc[xh["dlstcd"] == 231, "permno"].astype(int))
+                   | set(d331["permno"].astype(int)) & set(xh["permno"].astype(int))) and not hd["permno"].duplicated().any()
+        und = hd[hd["ann_date"].isna()].merge(xh[["permno", "part", "seg"]], on="permno", how="left")
+        # §13: "every deal dated, or counted as undatable and excluded". Undatable means the
+        # unchanged rule found no candidate or none passed its text test (or a name match
+        # failed); a document the cache lacked would have raised in `date_deals`.
+        und_ok = bool((und["why_undated"].notna() | und["t_status"].ne("matched")).all())
+        yh = attach_dates(xh, hd)
+        dated = yh[yh["ann"].notna()]
+        basis = {s_: g["date_basis"].value_counts().to_dict() for s_, g in dated.groupby("part")}
+        groups = {s_: g.groupby("seg")["group"].nunique().to_dict() for s_, g in dated.groupby("part")}
+        say(f"  holdout sets: {len(hd)} deals in {HOLDOUT_DATES.name} ({_rel(HOLDOUT_DATES_SUMMARY)} is its summary); "
+            f"dated {len(dated)}; undatable and excluded {len(und)}: "
+            + "; ".join(f"{r.ticker} -> {r.a_ticker}, completed {r.completion}, {r.part}, {r.seg}: {r.why_undated}"
+                        for r in und.itertuples()))
+        say(f"  date basis by set (an N-14 date is an upper bound): {basis}")
+        say(f"  holdout groups (acquirer x announcement date) by set and segment: {groups}")
+        gates["DG-E1-2"] = {"status": "PASS" if (hold_ok and und_ok and not undated331) else "FAIL",
+                            "detail": f"holdout dates cover the 231 holdout deals: {hold_ok}; dated {len(dated)}, "
+                                      f"undatable and excluded {len(und)} ({', '.join(und['ticker'])}); amendment 4's "
+                                      f"331 deals without a date row: {len(undated331)} ({', '.join(undated331)})",
+                            "dated": int(len(dated)), "undatable": int(len(und)), "basis_by_set": basis,
+                            "groups_by_set": groups}
     else:
         today = date.fromisoformat(args.today)
         miss, stopped = missing_documents(x, today)
@@ -1275,11 +1425,55 @@ def stage0(args) -> int:
         f"{int(cen['window_past_crsp'].sum())} run past CRSP's last delisting; first filing cached offline: {cached}")
     say(f"  by first form: {cen['first_form'].value_counts().to_dict()}")
     say(f"  -> {CENSUS.relative_to(REPO)} (EDGAR facts only)")
-    readings, probs = check_readings(cen, client)
+    supp = supp_census(ep, comp)
+    supp.to_csv(CENSUS_SUPP, index=False)
+    say(f"  supplementary census (ruling 9): {len(supp)} acquirer-side episodes a completion explains "
+        f"-> {_rel(CENSUS_SUPP)}; MMU 2023 (SBI -> MMU) among them: {bool((supp['episode_cik'] == 886043).any())}")
+    extra = {}
+    if DG3_RULINGS.exists() and READINGS.exists():
+        from scripts.events import e1_failed_reading as fr
+        st = fr.dg3_state(nm, dl, names, cen, supp)            # rounds merged; rulings 2-4, 10 applied; triage
+        Rr, T, ex = st["R"], st["T"], st["exempt"]
+        T.to_csv(OUT_DIR / "e1_failed_reading_triage.csv", index=False)
+        Rr.to_csv(READINGS_RULED, index=False)
+        readings, probs = check_readings(st["census"], client, readings=Rr, exempt=ex)
+        adj = Rr["merge_note"].str.startswith("adjudicate") & ~ex
+        if adj.any():
+            probs.insert(0, f"{int(adj.sum())} deal(s) the readings disagree on: a third reading (ruling 8)")
+        crsp_open = Rr["crsp_note"].str.startswith("not_completed") & (Rr["outcome"] == "") & ~ex
+        trial = Rr.loc[Rr["in_trial"] == "Y"]
+        say(f"  rounds merged: {Rr['round'].value_counts().to_dict()}; readings of episodes amendment 4 moved out of "
+            f"the census set aside: {st['moot_rows']}; ruling 10 settled {int((Rr['ruled'] == '10').sum())} row(s) from CRSP, "
+            f"and found {int(crsp_open.sum())} never completed (a third reading dates their failure)")
+        say(f"  rulings applied: {int(ex.sum())} of {len(Rr)} rows cannot change the trial (ruling 5); in-trial deals "
+            f"{trial['deal_id'].nunique()}: " + ", ".join(sorted(set(trial['target_ticker'] + '->' + trial['acquirer_ticker']))))
+        r3f = OUT_DIR / fr.ROUNDS["r3"][2]
+        if r3f.exists() and not (OUT_DIR / fr.ROUNDS["r3"][0]).exists():
+            probs.append(f"round r3 (rulings 8, 10): {len(pd.read_csv(r3f))} episode(s) unread")
+        if not (OUT_DIR / fr.ROUNDS["r4"][0]).exists():
+            r4f = OUT_DIR / fr.ROUNDS["r4"][2]
+            probs.append("round r4 (ruling 15: SBI -> MMU, NCU -> NKX in each target's own filings): "
+                         + (f"{len(pd.read_csv(r4f))} fund(s) unread" if r4f.exists()
+                            else "awaiting the team lead's `fetch-edgar --cik`, then freeze-r4"))
+        say(f"  excluded and counted (rulings 12-15): "
+            f"{Rr[Rr['excluded'] != ''].groupby('excluded')['deal_id'].nunique().to_dict()} deal ids by ruling")
+        extra = {"in_trial_deals_ruled": int(trial["deal_id"].nunique()),
+                 "in_trial_deal_list": sorted(set(trial["target_ticker"] + "->" + trial["acquirer_ticker"])),
+                 "exempt_rows": int(ex.sum()),
+                 "moot_rows": st["moot_rows"], "crsp_settled": int((Rr["ruled"] == "10").sum())}
+    else:
+        readings, probs = check_readings(cen, client)
     gates["DG-E1-3"] = {"status": "FAIL" if probs else "PASS", "detail": "; ".join(probs) if probs else
                         f"{len(readings)} readings, every quote re-found", "candidates": int(len(cen)),
-                        "first_filing_cached": cached}
-    say(f"  readings: {gates['DG-E1-3']['detail']}")
+                        "first_filing_cached": cached, "supp_episodes": int(len(supp)), **extra}
+    for pr in (probs or [gates["DG-E1-3"]["detail"]]):
+        say(f"  DG-E1-3: {pr}")
+    failed_fit = None
+    if gates["DG-E1-3"]["status"] == "PASS" and extra:
+        Fd = failed_deal_rows(Rr, nm)
+        failed_fit = Fd[Fd["part"] == FIT_SET].reset_index(drop=True)
+        say(f"  failed deals in the trial by set: {Fd['part'].value_counts().to_dict()}; by segment: "
+            f"{Fd['seg'].value_counts().to_dict()}")
 
     # ---------------------------------------------------------------- DG-E1-1
     etf_perm = {}
@@ -1288,12 +1482,15 @@ def stage0(args) -> int:
         if r["permno"].nunique() != 1:
             raise GateError(f"{tk}: {r['permno'].nunique()} CRSP ETF permnos")
         etf_perm[tk] = int(r["permno"].iloc[0])
-    fit_perms = set(xf["permno"].astype(int)) | set(xf["nwperm"].astype(int)) | set(etf_perm.values())
-    try:
-        dsf = fit_daily(fit_perms)
-        fit_reader = f"PASS: {len(fit_perms)} permnos, {len(dsf):,} rows, last {dsf['date'].max().date()} (< 2023)"
-    except GateError as e:
-        dsf, fit_reader = None, f"FAIL: {e}"
+    # every fit deal's parties (231 and 331, as `stage-crsp` stages them) and the factor ETFs
+    fit_perms = set(xf_all["permno"].astype(int)) | set(xf_all["nwperm"].astype(int)) | set(etf_perm.values())
+    if failed_fit is not None:                  # the failed fit deals' parties too, once DG-E1-3 has passed
+        fit_perms |= set(failed_fit["permno"].astype(int)) | set(failed_fit["nwperm"].astype(int))
+    CACHE.mkdir(parents=True, exist_ok=True)
+    (CACHE / "fit_reader_permnos.txt").write_text("\n".join(map(str, sorted(fit_perms))) + "\n")
+    xd = xf_all[xf_all["ann"].notna()]          # the dated fit deals (an undatable one is excluded, counted)
+    base = set(xf_all["permno"].astype(int)) | set(xf_all["nwperm"].astype(int)) | set(etf_perm.values())
+    dsf, loaded, fit_reader = fit_extract(fit_perms, base if failed_fit is not None else None)
     try:
         holdout_gate()
         hold_guard = "FAIL: the holdout reader did not refuse"
@@ -1304,40 +1501,53 @@ def stage0(args) -> int:
     pool = set()
     if dsf is not None:
         px0 = price_series(dsf)
-        cal0 = market_calendar(dsf, FIT_START, FIT_END)
-        for _, e in xf.iterrows():
+        cal0 = market_calendar(dsf, CAL_START, FIT_END)
+        for _, e in xd.iterrows():
             w = deal_window(e, px0, cal0)
             if w is None or w["why"]:
                 continue
             pool |= set(control2_candidates(e, nm, cal0, w, set()).permno.astype(int))
+        for _, e in (failed_fit.iterrows() if failed_fit is not None else []):
+            w = deal_window(e, px0, cal0, failed=True, fail_date=e["fail_date"])
+            if w is not None and not w["why"]:
+                pool |= set(control2_candidates(e, nm, cal0, w, set()).permno.astype(int))
     in_cache = set()
     for f in ce.CACHE.glob("dsf_*.parquet"):
         in_cache |= set(pd.read_parquet(f, columns=["permno"])["permno"].astype(int))
     pool_missing = sorted(pool - in_cache)
+    p331 = need331[need331["part"] == FIT_SET]
+    a4_missing = sorted((set(p331["permno"].astype(int)) | set(p331["nwperm"].astype(int))) - in_cache)
     CACHE.mkdir(parents=True, exist_ok=True)
+    A4_CRSP_PERMNOS.write_text("\n".join(map(str, a4_missing)) + ("\n" if a4_missing else ""))
     (CACHE / "control2_pool_permnos.txt").write_text("\n".join(map(str, sorted(pool))) + "\n")
     (CACHE / "control2_pool_missing_permnos.txt").write_text("\n".join(map(str, pool_missing)) + "\n")
     say(f"\n[DG-E1-1] fit reader (crsp_events.daily, cached extract only): {fit_reader}")
     say(f"  holdout reader guard: {hold_guard}")
     say(f"  factor ETFs: {sorted(etf_perm)}, one CRSP ETF permno each (share code 73)")
-    say(f"  control-2 name pool over the completed fit deals: {len(pool)} CEF permnos; without CRSP rows in the "
-        f"local cache: {len(pool_missing)}; failed deals' parties and pools: not known until DG-E1-3")
-    dg1_fail = dsf is None or not hold_guard.startswith("PASS") or bool(pool_missing)
-    gates["DG-E1-1"] = {"status": "FAIL" if dg1_fail else "INCOMPLETE",
+    say("  control-2 name pool over the dated completed fit deals"
+        + (f" and the {len(failed_fit)} failed fit deals" if failed_fit is not None else "")
+        + f": {len(pool)} CEF permnos; without CRSP rows in the local cache: {len(pool_missing)}"
+        + ("" if failed_fit is not None else "; failed deals' parties and pools: not known until DG-E1-3"))
+    say(f"  amendment 4: the 331 fit deals' parties without CRSP rows in the local cache: {len(a4_missing)}"
+        + (f" -> the team lead runs `pull-crsp --permnos {_rel(A4_CRSP_PERMNOS)}`" if a4_missing else ""))
+    gates["DG-E1-1"] = {"status": dg1_status(fit_reader, hold_guard, pool_missing, a4_missing, failed_fit is not None),
                         "detail": f"fit reader {fit_reader.split(':')[0]}; holdout guard {hold_guard.split(' ')[0]}; "
-                                  f"control-2 pool missing {len(pool_missing)}; the failed deals' parties wait on DG-E1-3",
+                                  f"control-2 pool missing {len(pool_missing)}; 331 fit parties missing {len(a4_missing)}; "
+                                  + ("the failed deals' parties wait on DG-E1-3" if failed_fit is None else
+                                     f"the fit reader's set ({_rel(CACHE / 'fit_reader_permnos.txt')}) includes the "
+                                     f"{len(failed_fit)} failed fit deals' parties"),
                         "pool": len(pool), "pool_missing": len(pool_missing)}
 
     # ---------------------------------------------------------------- DG-E1-4, DG-E1-7, the quality screen
     if dsf is not None:
         px = price_series(dsf)
-        cal = market_calendar(dsf, FIT_START, FIT_END)
+        cal = market_calendar(dsf, CAL_START, FIT_END)
         say(f"\n[DG-E1-4] bridging check (merger_pairs.bridging_check) on the fit parties' extract: "
             f"{mp.bridging_check(dsf[~dsf['permno'].isin(etf_perm.values())])}")
-        neg = raw_prc_negative(fit_perms)
+        neg = raw_prc_negative(loaded)
         neg_set = set(zip(neg["permno"].astype(int), neg["date"]))
         excl, nflag, excl_perm = {}, 0, set()
-        for _, e in xf.iterrows():
+        for _, e in xd.iterrows():
             w = deal_window(e, px, cal)
             if w is None or w["why"]:
                 excl[(w or {}).get("why", "no window")] = excl.get((w or {}).get("why", "no window"), 0) + 1
@@ -1357,17 +1567,45 @@ def stage0(args) -> int:
                     flags.append({"check": "quality screen: no closing trade on the fill day", "ticker": str(tk),
                                   "date": str(w["d_in"].date()),
                                   "detail": f"CRSP prc < 0 on d_in (deal target {e['ticker']}); report-only per §8.2"})
-        unpriced = {int(e["permno"]) for _, e in xf.iterrows()
+        unpriced = {int(e["permno"]) for _, e in xd.iterrows()
                     if not np.isfinite(price_completed(e, px).get("pair_A1_to_close", np.nan))}
         say(f"  fit deals excluded by the window or the hold guard: {excl}; the same deals the published "
             f"buy-and-hold sample leaves unpriced: {excl_perm == unpriced} ({len(unpriced)} unpriced)")
         say(f"  fill-day quality screen: {nflag} leg(s) with no closing trade on the fill day (flags written)")
-        say("  the failed deals' windows: not known until DG-E1-3")
-        gates["DG-E1-4"] = {"status": "INCOMPLETE", "detail": f"completed fit deals checked ({excl}); failed deals wait on DG-E1-3"}
+        fexcl = {}
+        if failed_fit is not None:              # the failed fit deals' windows and fill days
+            unchecked = unpriced_failed(failed_fit, px)
+            for _, e in failed_fit.iterrows():
+                if f"{e['ticker']} -> {e.get('a_ticker', '')}" in unchecked:
+                    continue
+                w = deal_window(e, px, cal, failed=True, fail_date=e["fail_date"])
+                if w is None or w["why"]:
+                    why = (w or {}).get("why", "no window")
+                    fexcl[why] = fexcl.get(why, 0) + 1
+                    flags.append({"check": "DG-E1-4 failed-deal window", "ticker": e["ticker"],
+                                  "date": str(pd.Timestamp(e["ann"]).date()), "detail": f"{why} (deal excluded and counted)"})
+                    continue
+                R1 = returns_matrix(px, cal, pd.DataFrame([e]))
+                g = hold_gaps(R1[int(e["permno"])], w["d_in"], w["exit"]) or hold_gaps(R1[int(e["nwperm"])], w["d_in"], w["exit"])
+                if g:
+                    fexcl[g] = fexcl.get(g, 0) + 1
+                    flags.append({"check": "DG-E1-4 hold gap", "ticker": e["ticker"], "date": str(w["d_in"].date()),
+                                  "detail": f"{g} (failed deal excluded and counted)"})
+                for p_, tk in ((int(e["permno"]), e["ticker"]), (int(e["nwperm"]), e.get("a_ticker", ""))):
+                    if (p_, w["d_in"]) in neg_set:
+                        flags.append({"check": "quality screen: no closing trade on the fill day", "ticker": str(tk),
+                                      "date": str(w["d_in"].date()), "detail": "CRSP prc < 0 on d_in; report-only per §8.2"})
+            say(f"  failed fit deals ({len(failed_fit)}): excluded by the window or the hold guard: {fexcl}; "
+                f"unchecked (no CRSP prices yet): {unchecked}")
+            gates["DG-E1-4"] = dg4_gate(excl, fexcl, unchecked)
+        else:
+            say("  the failed deals' windows: not known until DG-E1-3")
+            gates["DG-E1-4"] = {"status": "INCOMPLETE", "detail": f"completed fit deals checked ({excl}); failed deals wait on DG-E1-3"}
 
-        i1 = _identity_check_1(x[x["part"] == FIT_SET], px, fd)
+        x231 = x[(x["part"] == FIT_SET) & (x["dlstcd"] == 231)]          # the published sample
+        i1 = _identity_check_1(x231, px, fd[fd["permno"].isin(x231["permno"])])
         say(f"\n[DG-E1-7] identity check 1 (reading R1): {i1}")
-        i2 = _identity_check_2(x[x["part"] == FIT_SET], px, fd, cal)
+        i2 = _identity_check_2(x231, px, fd[fd["permno"].isin(x231["permno"])], cal)
         say(f"  identity check 2 (printed, not a gate): constant-weight sleeve vs buy-and-hold per deal: "
             f"median |diff| {i2['median_abs_diff']*1e4:.2f}bp, p95 {i2['p95_abs_diff']*1e4:.2f}bp over {i2['deals']} deals; "
             f"excluded {i2['excluded']}")
@@ -1388,7 +1626,7 @@ def stage0(args) -> int:
     if dsf is not None:
         for tk, p in etf_perm.items():
             s = dsf[dsf["permno"] == p]
-            inwin = s[(s["date"] >= FIT_START) & (s["date"] <= FIT_END)]
+            inwin = s[(s["date"] >= CAL_START) & (s["date"] <= FIT_END)]
             etf_span[tk] = (str(s["date"].min().date()), str(s["date"].max().date()),
                             int(inwin["ret"].isna().sum()))   # missing returns inside the fit window
     bh = pd.read_parquet(BORROW, columns=["date"])
@@ -1396,8 +1634,9 @@ def stage0(args) -> int:
     say(f"\n[DG-E1-5] French FF5+UMD daily: {ffd} (first, last, fetched, CRSP vintage)")
     say(f"  CRSP ETFs (first, last, missing ret inside 2009-07..2022-12) via the fit reader: {etf_span}")
     say(f"  {BORROW.relative_to(REPO)} last date: {b_last}")
-    fit_cov = bool(ffd and ffd[0] <= "2009-07-01" and ffd[1] >= "2024-12-31"
-                   and all(v[0] <= "2009-07-01" and v[1] >= "2022-12-30" and v[2] == 0 for v in etf_span.values())
+    c0 = str(CAL_START.date())
+    fit_cov = bool(ffd and ffd[0] <= c0 and ffd[1] >= "2024-12-31"
+                   and all(v[0] <= c0 and v[1] >= "2022-12-30" and v[2] == 0 for v in etf_span.values())
                    and len(etf_span) == 3)
     gates["DG-E1-5"] = {"status": "PASS" if fit_cov else "FAIL",
                         "detail": "French covers 2009-07..2024-12; CRSP ETFs cover the fit window, which is what "
@@ -1428,10 +1667,57 @@ def stage0(args) -> int:
 
 # =========================================================================== the fit and the holdout
 
+def fit_extract(full: set, base: set | None, reader=None) -> tuple[pd.DataFrame | None, set, str]:
+    """Stage 0's read of the fit extract: (rows, the permno set they cover, DG-E1-1's reader text).
+
+    The full set (every fit deal's parties, the failed fit deals' included, and the ETFs) must
+    load, or DG-E1-1 FAILS, naming it. If it fails and `base` (the completed fit deals' parties
+    and the ETFs) is given, `base` is read instead so that DG-E1-4's completed deals, -5 and -7,
+    which never read a failed deal's party, are still evaluated; the text says so, and the failed
+    deals whose prices are missing are counted unchecked (`unpriced_failed`, `dg4_gate`). Before
+    2026-10-22 one missing party (ALD) failed all four gates with one cause."""
+    reader = reader or fit_daily
+    try:
+        d = reader(full)
+        return d, full, f"PASS: {len(full)} permnos, {len(d):,} rows, last {d['date'].max().date()} (< 2023)"
+    except GateError as e:
+        text = f"FAIL: {e}"
+    if base is None:
+        return None, full, text
+    try:
+        d = reader(base)
+    except GateError:
+        return None, full, text
+    return d, base, text + f" (gates DG-E1-4/5/7 evaluated on the completed fit deals' extract, {len(base)} permnos)"
+
+
+def unpriced_failed(failed_fit: pd.DataFrame, px: dict) -> list[str]:
+    """The failed fit deals with a party that has no prices in `px` ("TGT -> ACQ")."""
+    return [f"{e['ticker']} -> {e.get('a_ticker', '')}" for _, e in failed_fit.iterrows()
+            if int(e["permno"]) not in px or int(e["nwperm"]) not in px]
+
+
+def dg4_gate(excl: dict, fexcl: dict, unchecked: list) -> dict:
+    """DG-E1-4 once the failed deals are known: PASS only if every failed fit deal was checked."""
+    return {"status": "INCOMPLETE" if unchecked else "PASS",
+            "detail": f"completed fit deals {excl}; failed fit deals {fexcl}"
+                      + (f"; unchecked until their prices are pulled: {unchecked}" if unchecked else "")}
+
+
+def dg1_status(fit_reader: str, hold_guard: str, pool_missing, a4_missing, failed_known: bool) -> str:
+    """DG-E1-1: FAIL unless the FULL fit set loaded (a fallback read for other gates never passes
+    it), the holdout reader refused, and no control-2 pool fund or 331 party lacks rows;
+    INCOMPLETE while the failed deals are unknown."""
+    if (not fit_reader.startswith("PASS") or not hold_guard.startswith("PASS") or len(pool_missing)
+            or len(a4_missing)):
+        return "FAIL"
+    return "PASS" if failed_known else "INCOMPLETE"
+
+
 def _require_stage0_clear() -> None:
     """The fit's entry gate: the Stage-0 record is committed, says CLEAR, and every Stage-0 flag
     has a recorded ruling (`require_stage0_rulings`, reading R7)."""
-    _committed_clean(STAGE0_JSON, STAGE0_FLAGS)
+    _committed_clean(STAGE0_JSON, STAGE0_FLAGS, READINGS_RULED)
     if json.loads(STAGE0_JSON.read_text())["verdict"] != "STAGE 0: CLEAR":
         raise GateError(f"{STAGE0_JSON.name} does not say STAGE 0: CLEAR; no E1 statistic is computed past a halt")
     from scripts.cef.data_guards import require_stage0_rulings
@@ -1439,13 +1725,18 @@ def _require_stage0_clear() -> None:
                            context="E1 Stage 0")
 
 
-def crsp_cik_map(nm: pd.DataFrame, names: pd.DataFrame) -> dict:
+def crsp_cik_map(nm: pd.DataFrame, names: pd.DataFrame, bdc: bool = False) -> dict:
     """permno -> EDGAR CIK for every CEF permno (share code 14/44) with a name record in
     2009-07-01 .. 2024-12-31: each (permno, CRSP name) is matched by `match_cik` over the dates
     the name was in force. A permno whose names match two CIKs, or none, is left out (reading
-    R4: such a fund cannot be a control, because its merger filings cannot be checked)."""
+    R4: such a fund cannot be a control, because its merger filings cannot be checked).
+    `bdc` (ruling 12, 2026-10-21) adds share-code-11 names that `merger_pairs.classify` labels a
+    BDC, so a BDC party's listing can be read through its CIK too (ALD, CIK 3906)."""
     from scripts.events import edgar_merger_dates as emd
-    cef = nm[nm["shrcd"].isin(ce.CEF_SHRCD) & (nm["nameendt"] >= EPISODE_START) & (nm["namedt"] <= CRSP_END)]
+    keep = nm["shrcd"].isin(ce.CEF_SHRCD)
+    if bdc:
+        keep |= (nm["shrcd"] == 11) & (nm["comnam"].map(mp.classify) == "bdc")
+    cef = nm[keep & (nm["nameendt"] >= EPISODE_START) & (nm["namedt"] <= CRSP_END)]
     g = cef.groupby(["permno", "comnam"]).agg(lo=("namedt", "min"), hi=("nameendt", "max")).reset_index()
     found: dict[int, set] = {}
     for r in g.itertuples():
@@ -1469,7 +1760,19 @@ def failed_deal_rows(readings: pd.DataFrame, nm: pd.DataFrame) -> pd.DataFrame:
     announcing the deal, F = the filing that made the failure public; the set follows F by §4.2's
     rules (a spec name on either side: excluded; F in 2023+: time holdout; a cef_universe.csv
     name: name holdout; else fit)."""
-    r = readings[readings["in_trial"] == "Y"].drop_duplicates("deal_id")
+    # One deal may be read from two episodes (its target's and its acquirer's filings; their
+    # agreement is checked by `check_readings`): A is the earlier first public announcement and
+    # F the earlier public failure.
+    y = readings[readings["in_trial"] == "Y"].copy()
+    r = (y.assign(ann_date=pd.to_datetime(y["ann_date"]), fail_date=pd.to_datetime(y["fail_date"]))
+         .groupby("deal_id", as_index=False)
+         .agg(ann_date=("ann_date", "min"), fail_date=("fail_date", "min"), target_ticker=("target_ticker", "first"),
+              acquirer_ticker=("acquirer_ticker", "first")))
+    # Ruling 1: A is the deal's EARLIEST announcement over every reading of it, not only the rows
+    # that carry the failure (SBI -> MMU: MMU's filings announce it 2023-03-17; SBI's own, read for
+    # the failure, first mention it 2023-07-28).
+    allann = pd.to_datetime(readings["ann_date"].replace("", None)).groupby(readings["deal_id"]).min()
+    r["ann_date"] = [min(a, allann.get(d, a)) if pd.notna(allann.get(d)) else a for d, a in zip(r["deal_id"], r["ann_date"])]
     up = ce.universe_permnos(nm)
     uni = {p for ps in up.values() for p in ps}
     spec_p = {p for tk, ps in up.items() if tk in spec_names() for p in ps}
@@ -1501,7 +1804,7 @@ def price_deals(D: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, R: pd.DataFram
     def drop(why):
         excl[why] = excl.get(why, 0) + 1
 
-    for _, e in D.iterrows():
+    for i, e in D.iterrows():
         failed = bool(e["failed"])
         if failed:
             w = deal_window(e, px, cal, failed=True, fail_date=e["fail_date"], lag=lag)
@@ -1527,12 +1830,23 @@ def price_deals(D: pd.DataFrame, px: dict, cal: pd.DatetimeIndex, R: pd.DataFram
             continue
         end_t = w["exit"] if failed else pd.Timestamp(e["dlstdt"])
         c1 = control1(e, px, w["d_in"], end_t)
-        rows.append({**{k: e[k] for k in ("permno", "nwperm", "ticker", "seg", "group", "ann", "failed", "dlstdt", "dlpdt")},
-                     "a_ticker": e.get("a_ticker"), "comnam": e.get("comnam"), "d_in": w["d_in"], "exit": w["exit"],
+        rows.append({"row": i, **{k: e[k] for k in ("permno", "nwperm", "ticker", "seg", "group", "ann", "failed", "dlstdt", "dlpdt")},
+                     "part": e.get("part"), "a_ticker": e.get("a_ticker"), "comnam": e.get("comnam"), "d_in": w["d_in"], "exit": w["exit"],
                      "first": w["first"], "last": w["last"], "pair": float(pair),
                      "units": 4.0 if failed else 2.0 + abs(float(pair)),
                      "ctrl1": c1["ctrl"], "ctrl1_why": c1["why"], "days": int((w["exit"] - w["d_in"]).days)})
     return pd.DataFrame(rows), excl
+
+
+def attach_ctrl2(P: pd.DataFrame, c2: dict) -> pd.DataFrame:
+    """`P` (from `price_deals`) with `ctrl2` = control 2's pair for each deal, keyed by the deal's
+    row in the deal table (`P['row']`), never by the target's permno: NCU is the target of two fit
+    deals (failed 2011-12-19 -> 2013-11-22, completed 2013-11-22 -> 2014-06-06), and a permno key
+    gave both the last one's control (found 2026-10-22, before the fit ran). A deal with no
+    control 2 is NaN, counted at stage 3."""
+    if "row" not in P or P["row"].duplicated().any():
+        raise ValueError("attach_ctrl2: P needs one `row` per deal (price_deals output)")
+    return P.assign(ctrl2=P["row"].map(c2).astype(float))
 
 
 def holdout_windows(H: pd.DataFrame) -> pd.DataFrame:
@@ -1615,6 +1929,27 @@ def _book_pnl() -> pd.Series:
     return bf.evaluate(H, bf.total_returns(Rb))["pnl"]
 
 
+def trial_failed_deals(nm: pd.DataFrame) -> pd.DataFrame:
+    """The failed deals the fit and the holdout trade: `failed_deal_rows` on the RULED readings
+    Stage 0 wrote and committed (`READINGS_RULED`), checked against the in-trial deal list in
+    the committed Stage-0 record. Raises if either is missing or they disagree.
+
+    Why: until 2026-10-22 the fit read `READINGS`, the round-1 readings alone (3 in-trial deals),
+    while Stage 0 cleared the 13 of every round and ruling; nothing would have errored."""
+    if not READINGS_RULED.exists():
+        raise GateError(f"{_rel(READINGS_RULED)} does not exist: run stage0 (DG-E1-3 writes it)")
+    rec = json.loads(STAGE0_JSON.read_text())["gates"]["DG-E1-3"] if STAGE0_JSON.exists() else {}
+    want = rec.get("in_trial_deal_list")
+    if want is None:
+        raise GateError(f"{STAGE0_JSON.name} records no in-trial deal list (DG-E1-3): re-run stage0")
+    F = failed_deal_rows(pd.read_csv(READINGS_RULED, dtype=str, keep_default_na=False), nm)
+    got = sorted(set(F["ticker"] + "->" + F["a_ticker"]))
+    if got != sorted(want):
+        raise GateError(f"the ruled readings give {len(got)} failed deals, the Stage-0 record {len(want)}: "
+                        f"only here {sorted(set(got) - set(want))}, only in the record {sorted(set(want) - set(got))}")
+    return F
+
+
 def _load_trial_deals(nm, dl, today: date) -> tuple[pd.DataFrame, pd.DataFrame]:
     """(every completed deal dated, every failed deal) with `part`, `failed`, `group`."""
     x = deal_table(nm, dl)
@@ -1623,8 +1958,7 @@ def _load_trial_deals(nm, dl, today: date) -> tuple[pd.DataFrame, pd.DataFrame]:
         raise GateError("DG-E1-2: no holdout dates")
     hd = pd.read_csv(HOLDOUT_DATES)
     comp = attach_dates(x, pd.concat([fd, hd], ignore_index=True)).assign(failed=False, fail_date=pd.NaT)
-    readings = pd.read_csv(READINGS, dtype=str, keep_default_na=False)
-    return comp, failed_deal_rows(readings, nm)
+    return comp, trial_failed_deals(nm)
 
 
 def fit(args) -> int:  # pragma: no cover - runs only once Stage 0 is CLEAR; its core is tested (fit_core)
@@ -1643,7 +1977,7 @@ def fit(args) -> int:  # pragma: no cover - runs only once Stage 0 is CLEAR; its
                 for tk in ETF_TICKERS}
     perms0 = set(D["permno"].astype(int)) | set(D["nwperm"].astype(int)) | set(etf_perm.values())
     px0 = price_series(fit_daily(perms0))
-    cal = market_calendar(pd.concat([v.reset_index()[["date"]] for v in px0.values()]), FIT_START, FIT_END)
+    cal = market_calendar(pd.concat([v.reset_index()[["date"]] for v in px0.values()]), CAL_START, FIT_END)
     pool = {}
     for i, e in D.iterrows():
         w = deal_window(e, px0, cal, failed=bool(e["failed"]), fail_date=e["fail_date"])
@@ -1661,8 +1995,8 @@ def fit(args) -> int:  # pragma: no cover - runs only once Stage 0 is CLEAR; its
             continue
         w, cands = pool[i]
         pick = pick_control2(e, cands, px, w, cikmap, episodes, hw, cal)
-        c2[int(e["permno"])] = control2_pair(e, px, pick["permno"], w) if pick["permno"] else np.nan
-    P["ctrl2"] = P["permno"].astype(int).map(c2)
+        c2[i] = control2_pair(e, px, pick["permno"], w) if pick["permno"] else np.nan
+    P = attach_ctrl2(P, c2)
     X = factor_frame(px, etf_perm)
     res = fit_core(P, R, cal, X, vol_target=VOL_TARGET, cap=MAX_GROSS_STRESS, book_pnl=_book_pnl())
     S = res.pop("sleeve")
@@ -1702,13 +2036,13 @@ def holdout(args) -> int:  # pragma: no cover - OPENED ONCE, after the committed
     HOLDOUT_MARKER.write_text(f"opened {datetime.now(timezone.utc).isoformat(timespec='seconds')}\n")
     dsf = holdout_daily(perms)
     px = price_series(dsf)
-    cal = market_calendar(dsf, FIT_START, CRSP_END)
+    cal = market_calendar(dsf, CAL_START, CRSP_END)
     R = returns_matrix(px, cal, D)
     P, excl = price_deals(D, px, cal, R)
     M = P[P["seg"] == "muni"]
     out = {"excluded": excl, "fit_verdict": v["verdict"], "frozen": v["frozen"], "sets": {}}
-    for lab, mask in (("pooled", M.index == M.index), ("name_holdout", M["permno"].isin(D.loc[D["part"] == "name_holdout", "permno"])),
-                      ("time_holdout", M["permno"].isin(D.loc[D["part"] == "time_holdout", "permno"]))):
+    for lab, mask in (("pooled", M.index == M.index), ("name_holdout", M["part"] == "name_holdout"),
+                      ("time_holdout", M["part"] == "time_holdout")):   # by the deal's own set, not its permno
         m = M[mask]
         if not len(m):
             out["sets"][lab] = {"deals": 0}
@@ -1738,25 +2072,61 @@ def fetch_edgar(args) -> int:  # pragma: no cover - loads the SEC contact; the t
     from scripts.data import fetch_edgar_events as fe
     from scripts.data.edgar_client import filing_txt_url
     client = edgar_client(online=True)
-    nm, dl = crsp_tables()
-    x = deal_table(nm, dl)
-    res, summ = date_holdouts(client, x, date.today())
-    CACHE.mkdir(parents=True, exist_ok=True)
-    res.to_csv(HOLDOUT_DATES, index=False)
-    HOLDOUT_DATES_SUMMARY.write_text(json.dumps(summ, indent=1, default=str))
-    cen = pd.read_csv(CENSUS)
-    forms = ("425", "N-14", "N-14/A", "N-14 8C", "N-14 8C/A", "PREM14A", "DEFM14A", "DEFA14A", "DEF 14A",
-             "PRE 14A", "8-K", "RW", "N-8F")
+    if getattr(args, "cik", None):              # one fund's filings around a date (e.g. SBI, CIK 882300)
+        f0 = pd.Timestamp(args.around)
+        sb = fe.submissions(client, int(args.cik), max_age_s=30 * fe.DAY)
+        sb = sb[sb["form"].isin(TARGETED_FORMS) & (sb["filingDate"] >= f0 - pd.Timedelta(days=CENSUS_PRE_DAYS))
+                & (sb["filingDate"] <= f0 + pd.Timedelta(days=FAIL_WINDOW_DAYS))]
+        for a in sb["accessionNumber"]:
+            client.get(filing_txt_url(int(args.cik), a))
+        print(f"CIK {args.cik}: {len(sb)} filings cached ({sb['form'].value_counts().to_dict()})")
+        return 0
+    if getattr(args, "amendment4", False):     # date amendment 4's 331 deals (fit and holdouts), unchanged rule
+        nm, dl = crsp_tables()
+        x = deal_table(nm, dl)
+        s3 = x[(x["dlstcd"] == 331) & x["part"].isin((FIT_SET,) + HOLDOUT_SETS)]
+        from scripts.events import edgar_merger_dates as emd
+        res, summ = emd.date_deals(client, date.today(), sample=s3)
+        CACHE.mkdir(parents=True, exist_ok=True)
+        res.to_csv(DATES_331, index=False)
+        DATES_331_SUMMARY.write_text(json.dumps(summ, indent=1, default=str))
+        print(f"amendment 4: {summ['dated']} of {summ['events']} 331 deals dated -> {_rel(DATES_331)}")
+        return 0
+    if getattr(args, "supp", False):
+        cen = pd.read_csv(CENSUS_SUPP)          # ruling 9: the supplementary census only
+        summ = None
+    else:
+        nm, dl = crsp_tables()
+        x = deal_table(nm, dl)
+        res, summ = date_holdouts(client, x, date.today())
+        CACHE.mkdir(parents=True, exist_ok=True)
+        res.to_csv(HOLDOUT_DATES, index=False)
+        HOLDOUT_DATES_SUMMARY.write_text(json.dumps(summ, indent=1, default=str))
+        cen = pd.read_csv(CENSUS)
+    forms = CENSUS_FORMS
     n = 0
     for r in cen.itertuples():
         sb = fe.submissions(client, int(r.episode_cik), max_age_s=30 * fe.DAY)
         f0 = pd.Timestamp(r.first_date)
-        sb = sb[sb["form"].isin(forms) & (sb["filingDate"] >= f0 - pd.Timedelta(days=30))
+        sb = sb[sb["form"].isin(forms) & (sb["filingDate"] >= f0 - pd.Timedelta(days=CENSUS_PRE_DAYS))
                 & (sb["filingDate"] <= f0 + pd.Timedelta(days=FAIL_WINDOW_DAYS))]
         for a in sb["accessionNumber"]:
             client.get(filing_txt_url(int(r.episode_cik), a))
             n += 1
-    print(f"holdout deals dated: {summ['dated']} of {summ['events']}; census filings cached: {n}")
+    print((f"holdout deals dated: {summ['dated']} of {summ['events']}; " if summ else "") + f"census filings cached: {n}")
+    return 0
+
+
+def refresh_edgar_index(args) -> int:  # pragma: no cover - loads the SEC contact; the team lead runs it
+    """Refresh the one EDGAR file Stage 0 cannot read offline: the OPEN quarter's full index, which
+    `fetch_edgar_events.quarter_is_closed` re-fetches once a day (max_age one day; its semantics are
+    unchanged here). Writes into the union cache Stage 0 reads; computes nothing. An offline
+    `stage0` then works until the refreshed file is a day old (probe of 2026-10-20: it is the only
+    stale or missing URL Stage 0 asks for)."""
+    from scripts.events import edgar_merger_dates as emd
+    today = date.fromisoformat(args.today)
+    emd.name_table(edgar_client(online=True), today)
+    print(f"EDGAR indexes current to {today} in {_rel(EDGAR_UNION)}; run `stage0 --today {today}` within a day")
     return 0
 
 
@@ -1788,17 +2158,27 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     s0 = sub.add_parser("stage0")
-    s0.add_argument("--today", default="2026-10-19",
-                    help="EDGAR index horizon for the offline name table (the run date)")
+    s0.add_argument("--today", default=str(date.today()),
+                    help="EDGAR index horizon for the offline name table (the run date). Was the fixed 2026-10-19 "
+                         "until 2026-10-20: the open quarter's index must be refreshed by `refresh-edgar-index` on "
+                         "the run date either way (its one-day max_age is unchanged)")
     for name in ("fit", "holdout"):
         sp = sub.add_parser(name)
-        sp.add_argument("--today", default="2026-10-19", help="EDGAR index horizon for the offline name table")
+        sp.add_argument("--today", default=str(date.today()),
+                        help="EDGAR index horizon for the offline name table (the run date; `refresh-edgar-index` keeps it current)")
     sc = sub.add_parser("stage-crsp")
     sc.add_argument("--from", dest="sources", action="append", type=Path, required=True)
     sc.add_argument("--permnos", type=Path, help="a file of permnos; default: the fit parties and the ETFs")
     sc.add_argument("--partial", action="store_true",
                     help="stage the permnos found and list the rest (for the control-2 pool's coverage)")
-    sub.add_parser("fetch-edgar")
+    fe_p = sub.add_parser("fetch-edgar")
+    fe_p.add_argument("--supp", action="store_true", help="only the supplementary census's filings (ruling 9)")
+    fe_p.add_argument("--amendment4", action="store_true", help="date amendment 4's 331 deals (fit and holdouts)")
+    fe_p.add_argument("--cik", help="one fund's filings around --around (TARGETED_FORMS, -30 to +730 days)")
+    fe_p.add_argument("--around", help="the date the --cik window is built around (YYYY-MM-DD)")
+    sub.add_parser("universe-counts")
+    ri = sub.add_parser("refresh-edgar-index")
+    ri.add_argument("--today", default=str(date.today()))
     pc = sub.add_parser("pull-crsp")
     pc.add_argument("--permnos", type=Path, required=True)
     ph = sub.add_parser("pull-holdout")
@@ -1806,6 +2186,11 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     if a.cmd == "stage0":
         return stage0(a)
+    if a.cmd == "universe-counts":
+        nm, dl = crsp_tables()
+        r = universe_counts(nm, dl)
+        print(json.dumps({k: r[k] for k in ("codes", "deals_331_by_set")}), f"-> {_rel(UNIVERSE_COUNTS)}")
+        return 0
     if a.cmd == "stage-crsp":
         nm, dl = crsp_tables()
         x = deal_table(nm, dl)
@@ -1822,6 +2207,7 @@ def main(argv=None) -> int:
             (CACHE / "stage_crsp_missing_permnos.txt").write_text("\n".join(map(str, missing)) + "\n")
         return 0
     return {"fit": fit, "holdout": holdout, "fetch-edgar": fetch_edgar, "pull-crsp": pull_crsp,
+            "refresh-edgar-index": refresh_edgar_index,
             "pull-holdout": pull_holdout}[a.cmd](a)
 
 

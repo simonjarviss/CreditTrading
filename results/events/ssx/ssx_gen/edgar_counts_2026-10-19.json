@@ -1,0 +1,49 @@
+{
+ "index_window": "2008Q1..2026-09-30 (offline cache; 2026 quarters partial)",
+ "bdc_set": {
+  "n_ciks": 368,
+  "listed_proxy": 100
+ },
+ "bdc_n14_episodes": {
+  "all": 90,
+  "by_year": {
+   "2008": 3,
+   "2009": 2,
+   "2010": 1,
+   "2011": 1,
+   "2012": 0,
+   "2013": 0,
+   "2014": 2,
+   "2015": 2,
+   "2016": 2,
+   "2017": 0,
+   "2018": 4,
+   "2019": 5,
+   "2020": 7,
+   "2021": 3,
+   "2022": 10,
+   "2023": 5,
+   "2024": 16,
+   "2025": 14,
+   "2026": 13
+  },
+  "mean_2010_2025": 4.5,
+  "listed_acquirer_with_unlisted_bdc_target": 10,
+  "listed_acq_unlisted_target_by_year": {
+   "2016": 1,
+   "2019": 1,
+   "2020": 2,
+   "2021": 1,
+   "2022": 1,
+   "2023": 1,
+   "2024": 3
+  }
+ },
+ "grayscale_trusts_filing_10k_10q": 19,
+ "grayscale_with_8a12b": 12,
+ "grayscale_8a12b_by_year": {
+  "2024": 4,
+  "2025": 5,
+  "2026": 3
+ }
+}

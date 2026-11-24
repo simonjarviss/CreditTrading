@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1688479,
+  "episode_accession": "0001144204-18-066743",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Stira Alcentra Global Credit Fund", "cik": 1688479, "ticker": null},
+      "acquirer": {"name": "Priority Income Fund, Inc.", "cik": 1554625, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-19-018687", "quote": "Priority is a non-traded, closed-end fund registered as an investment company under the Investment Company Act of 1940."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-18-066743", "date": "2018-12-31", "quote": "The purpose of this Supplement No. 7 is to disclose the Fund’s entry into an Agreement and Plan of Merger with Priority Income Fund, Inc. (“Priority”), whereby the Fund would merge with and into Priority"},
+      "outcome_evidence": null,
+      "notes": "Neither fund is exchange-listed: the target is described as having offered Class A, T, D, I and C shares in a continuous public offering with quarterly repurchase offers, and the acquirer as non-traded. For information, the merger was completed: 0001144204-19-025853 (2019-05-14) says 'Priority Income Fund, Inc. (“Priority”) announced today it has completed its acquisition of Stira Alcentra Global Credit Fund (“SAGC”).' Shareholders approved on May 6, 2019 (0001144204-19-024098); the N-8F (0001144204-19-028190) names Merger as the reason for deregistration."
+    }
+  ],
+  "problems": ""
+}

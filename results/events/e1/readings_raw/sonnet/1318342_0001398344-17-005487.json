@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1318342,
+  "episode_accession": "0001398344-17-005487",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "RidgeWorth Capital Innovations Global Resources and Infrastructure Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Oak Ridge Global Resources & Infrastructure Fund", "cik": 1318342, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-17-005487", "date": "2017-05-01", "quote": "A Special Meeting of Shareholders of the RidgeWorth Capital Innovations Global Resources and Infrastructure Fund (the “Acquired Fund”), a series of RidgeWorth Funds (the “Trust”), has been scheduled for June 28, 2017 (the “Special Meeting”)."},
+      "outcome_evidence": null,
+      "notes": "Acquiring fund is a newly created series of Investment Managers Series Trust (CIK 1318342 is the trust). Listing status and outcome are not stated in the excerpts."
+    },
+    {
+      "target": {"name": "Phocas Real Estate Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "AAM/Phocas Real Estate Fund", "cik": 1318342, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-18-007799", "date": "2018-05-18", "quote": "called to vote on a proposal to reorganize the Acquired Fund into the AAM/Phocas Real Estate Fund (the “Acquiring Fund”) (the “Reorganization”), a newly created series of Investment Managers Series Trust (“IMST”)."},
+      "outcome_evidence": null,
+      "notes": "Target is a series of Forum Funds II; acquirer a newly created series of Investment Managers Series Trust. Special meeting scheduled for August 13, 2018. Listing status and outcome are not stated in the excerpts."
+    }
+  ],
+  "problems": "The CIK is a fund trust (Investment Managers Series Trust), so episode_role is 'other'. The window also mentions further reorganizations whose excerpts are only headers: Horizon Spin-off and Corporate Restructuring Fund (supplement filed by Kinetics Mutual Funds, Inc., CIK 1083387, 2017-11-16), Center Coast MLP Focus Fund (filed by Brookfield Investment Funds, CIK 1520738, 2017-12-14 and 2018-01-05; special meeting January 23, 2018), and Oak Ridge Small Cap Growth Fund (filed by North Square Investments Trust, CIK 1750821, 2019-02-15). The excerpts name no acquiring fund or outcome for them, so they are not recorded as deals. Palmer Square advisory agreement proxies in 2018 are not mergers."
+}

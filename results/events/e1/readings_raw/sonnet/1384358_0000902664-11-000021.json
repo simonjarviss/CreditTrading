@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1384358,
+  "episode_accession": "0000902664-11-000021",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Old Mutual Emerging Managers Fund, L.L.C.; Old Mutual Emerging Managers Institutional Fund, L.L.C.; Old Mutual Emerging Managers Master Fund, L.L.C. (the EM Funds)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Old Mutual Absolute Return Institutional Fund, L.L.C.", "cik": 1384358, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0000902664-11-000021", "date": "2011-01-11", "quote": "At the Meeting, members of each EM Fund will vote on a proposal to reorganize each of the EM Funds into corresponding closed-end investment companies that,"},
+      "outcome_evidence": {"accession": "0000902664-11-000445", "date": "2011-02-14", "quote": "hereby respectfully requests withdrawal of the Company's Registration Statement on Form N-14 (Registration File No. 333-171635), together with all exhibits thereto"},
+      "notes": "Excerpts cut off before naming the surviving funds; acquirer is the N-14 registrant that registers its Interests. Three EM Funds treated as one proposal. Listing is not stated in the excerpts (units sold through selected dealers; funds are LLCs). Later N-8F (2011-08-15) is a liquidation of this fund, not a merger."
+    }
+  ],
+  "problems": ""
+}

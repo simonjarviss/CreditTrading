@@ -1,0 +1,33 @@
+{
+ "episode_cik": 24238,
+ "episode_accession": "0000024238-10-000013",
+ "episode_role": "other",
+ "deals": [
+  {
+   "target": {
+    "name": "Fidelity Advisor Fifty Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Fidelity Advisor New Insights Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0000024238-10-000013",
+    "quote": "will be bought at the offering price or NAV, as applicable, next calculated after the order is received by the authorized intermediary."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0000024238-10-000013",
+    "date": "2010-08-02",
+    "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity Advisor Fifty Fund to Fidelity Advisor New Insights Fund in exchange solely for shares of beneficial interest of Fidelity Advisor New Insights Fund"
+   },
+   "outcome_evidence": null,
+   "notes": "Funds are series of Fidelity trusts sold at NAV (open-end); no exchange ticker printed. Episode CIK 24238 is Fidelity Contrafund, the N-14 registrant, not named as target or acquirer in the excerpts, hence role other. No filing states how the Nov 16, 2010 vote ended."
+  }
+ ],
+ "problems": "Listing status inferred from NAV purchase language in the prospectus excerpt; no sentence says 'open-end' outright."
+}

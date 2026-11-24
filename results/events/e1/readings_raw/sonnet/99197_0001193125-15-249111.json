@@ -1,0 +1,18 @@
+{
+  "episode_cik": 99197,
+  "episode_accession": "0001193125-15-249111",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Transamerica Income Shares, Inc.", "cik": 99197, "ticker": "TAI"},
+      "acquirer": {"name": "Transamerica Flexible Income", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-15-249111", "quote": "Transamerica Income Shares, Inc. (NYSE: TAI) and Transamerica Flexible Income, a series of Transamerica Funds, announced today that each fund’s board has approved a plan for TAI, a closed-end fund, to reorganize into Transamerica Flexible Income, an open-end fund."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-15-249111", "date": "2015-07-09", "quote": "Transamerica Income Shares, Inc. (NYSE: TAI) and Transamerica Flexible Income, a series of Transamerica Funds, announced today that each fund’s board has approved a plan for TAI, a closed-end fund, to reorganize into Transamerica Flexible Income, an open-end fund."},
+      "outcome_evidence": {"accession": "0001193125-15-249111", "date": "2015-07-09", "quote": "Transamerica Income Shares, Inc. (NYSE: TAI) and Transamerica Flexible Income, a series of Transamerica Funds, announced today that each fund’s board has approved a plan for TAI, a closed-end fund, to reorganize into Transamerica Flexible Income, an open-end fund."},
+      "notes": "Acquirer is an open-end fund, so not a listed pair. For the record: shareholders approved on 2015-11-06 (accession 0001193125-15-370138) and the N-8F (0001193125-16-617951) shows the merger vote and a distribution on December 4, 2015, so the reorganization appears to have been carried out."
+    }
+  ],
+  "problems": ""
+}

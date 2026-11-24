@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1106838,
+  "episode_accession": "0001493152-19-015383",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Sonnet BioTherapeutics, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Chanticleer Holdings, Inc.", "cik": 1106838, "ticker": "BURG"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001493152-19-017463", "quote": "Chanticleer Holdings, Inc. (NASDAQ: BURG) (“Chanticleer,” or the “Company”), owner, operator and franchisor of multiple branded restaurants in the U.S. and abroad"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001493152-19-015382", "date": "2019-10-11", "quote": "Holdings Announces Merger Agreement with Sonnet BioTherapeutics to Advance Pipeline of Novel Immune Therapeutics"},
+      "outcome_evidence": {"accession": "0001493152-20-005741", "date": "2020-04-03", "quote": "today announced that its merger with Sonnet BioTherapeutics, Inc. (“Sonnet”) closed April 1, 2020."},
+      "notes": "Not a fund merger: Chanticleer is a restaurant operating company and Sonnet BioTherapeutics, Inc. a private biopharmaceutical company (reverse merger). The merger closed April 1, 2020 (amended agreement approved by stockholders March 18, 2020)."
+    }
+  ],
+  "problems": ""
+}

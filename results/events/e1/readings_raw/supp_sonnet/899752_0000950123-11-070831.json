@@ -1,0 +1,38 @@
+{
+  "episode_cik": 899752,
+  "episode_accession": "0000950123-11-070831",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Connecticut Dividend Advantage Municipal Fund", "cik": 1090118, "ticker": "NFC"},
+      "acquirer": {"name": "Nuveen Connecticut Premium Income Municipal Fund", "cik": 899752, "ticker": "NTC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070831", "date": "2011-08-01", "quote": "• Nuveen Connecticut Dividend Advantage Municipal Fund NFC Nuveen Connecticut Premium Income Municipal Fund NTC • Nuveen Connecticut Dividend Advantage Municipal Fund 2 NGK • Nuveen Connecticut Dividend Advantage Municipal Fund 3 NGO"},
+      "outcome_evidence": null,
+      "notes": "Same release also lists Georgia and North Carolina mergers (other acquirers, not recorded here). Annual meeting adjourned repeatedly (to 2012-03-05, then next adjournment ending 2012-04-13). From 2012-03-12 NFC is no longer among the subject companies of the filings shown; the excerpts do not say why. Tickers shown without an exchange name."
+    },
+    {
+      "target": {"name": "Nuveen Connecticut Dividend Advantage Municipal Fund 2", "cik": 1166572, "ticker": "NGK"},
+      "acquirer": {"name": "Nuveen Connecticut Premium Income Municipal Fund", "cik": 899752, "ticker": "NTC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070831", "date": "2011-08-01", "quote": "• Nuveen Connecticut Dividend Advantage Municipal Fund NFC Nuveen Connecticut Premium Income Municipal Fund NTC • Nuveen Connecticut Dividend Advantage Municipal Fund 2 NGK • Nuveen Connecticut Dividend Advantage Municipal Fund 3 NGO"},
+      "outcome_evidence": null,
+      "notes": "Still a subject company of the 2012-04-18 425 ('Annual Meeting - Last Chance to Vote May 14, 2012'). No excerpt states the outcome."
+    },
+    {
+      "target": {"name": "Nuveen Connecticut Dividend Advantage Municipal Fund 3", "cik": 1177218, "ticker": "NGO"},
+      "acquirer": {"name": "Nuveen Connecticut Premium Income Municipal Fund", "cik": 899752, "ticker": "NTC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070831", "date": "2011-08-01", "quote": "• Nuveen Connecticut Dividend Advantage Municipal Fund NFC Nuveen Connecticut Premium Income Municipal Fund NTC • Nuveen Connecticut Dividend Advantage Municipal Fund 2 NGK • Nuveen Connecticut Dividend Advantage Municipal Fund 3 NGO"},
+      "outcome_evidence": null,
+      "notes": "Still a subject company of the 2012-04-18 425. No excerpt states the outcome."
+    }
+  ],
+  "problems": "No excerpt states the outcome of any of the three Connecticut mergers."
+}

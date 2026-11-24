@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1362481,
+  "episode_accession": "0001104659-22-089395",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Delaware Enhanced Global Dividend and Income Fund", "cik": 1396167, "ticker": "DEX"},
+      "acquirer": {"name": "abrdn Global Dynamic Dividend Fund", "cik": 1362481, "ticker": "AGD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-22-089395", "date": "2022-08-11", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by one or more affiliates of Delaware Management Company into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "Special meetings were scheduled for 2022-11-09. No excerpted filing states an exchange listing for either fund or the outcome of the meeting."
+    },
+    {
+      "target": {"name": "Delaware Investments Dividend and Income Fund, Inc.", "cik": 896923, "ticker": "DDF"},
+      "acquirer": {"name": "abrdn Global Dynamic Dividend Fund", "cik": 1362481, "ticker": "AGD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-22-089395", "date": "2022-08-11", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by one or more affiliates of Delaware Management Company into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "Each reorganization is stated not to be contingent on the other. No excerpted filing states an exchange listing or the outcome."
+    }
+  ],
+  "problems": "The press release also lists IVH into ACP and MGU into ASGI, which belong to other acquirers and are not recorded here. Later DEFA14A and DEF 14A excerpts (2022-10 to 2024) show only headers and no outcome."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1668543,
+  "episode_accession": "0001193125-16-755522",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Highland Opportunistic Credit Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "NexPoint Opportunistic Credit Fund", "cik": 1668543, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-755522", "date": "2016-11-01", "quote": "This is a brief overview of the reorganization proposed for Highland Opportunistic Credit Fund (the “Selling Fund”) and NexPoint Opportunistic Credit Fund (the “Buying Fund”)."},
+      "outcome_evidence": null,
+      "notes": "Three N-14 filings (original and two pre-effective amendments, to 2017-01-11) all describe the proposed reorganization; none states an outcome. The fund classes shown (Class A, C, Z with sales loads and CDSC) are not stated to be exchange-listed."
+    }
+  ],
+  "problems": "Outcome not stated; listing status of both funds not stated."
+}

@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1227862,
+  "episode_accession": "0001193125-16-465965",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Western Asset Emerging Markets Income Fund Inc.", "cik": 902978, "ticker": "EMD"},
+      "acquirer": {"name": "Western Asset Emerging Markets Debt Fund Inc.", "cik": 1227862, "ticker": "ESD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-16-465956", "quote": "Western Asset Emerging Markets Income Fund Inc. (NYSE: EMD), Western Asset Worldwide Income Fund Inc. (NYSE: SBW) and Western Asset Emerging Markets Debt Fund Inc. (NYSE: ESD)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-465956", "date": "2016-02-17", "quote": "announced approval by each Fund’s Board of Directors of a proposal to merge (i) EMD with and into ESD and (ii) SBW with and into ESD, subject to approval by the stockholders of each Fund."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show the February 2016 announcement, the N-14 amendments (through Sept 2016) and Oct-Dec 2016 DEFA14A reminders (headers only), a 2017 DEF 14A and an Aug 2017 8-K (headers only). None of the excerpted text states how this merger ended."
+    },
+    {
+      "target": {"name": "Western Asset Worldwide Income Fund Inc.", "cik": 914035, "ticker": "SBW"},
+      "acquirer": {"name": "Western Asset Emerging Markets Debt Fund Inc.", "cik": 1227862, "ticker": "ESD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-16-465956", "quote": "Western Asset Emerging Markets Income Fund Inc. (NYSE: EMD), Western Asset Worldwide Income Fund Inc. (NYSE: SBW) and Western Asset Emerging Markets Debt Fund Inc. (NYSE: ESD)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-16-465956", "date": "2016-02-17", "quote": "announced approval by each Fund’s Board of Directors of a proposal to merge (i) EMD with and into ESD and (ii) SBW with and into ESD, subject to approval by the stockholders of each Fund."},
+      "outcome_evidence": null,
+      "notes": "The announcement says: The approval of each merger is not contingent upon the approval of the other merger. No excerpt states whether either merger completed or failed."
+    }
+  ],
+  "problems": ""
+}

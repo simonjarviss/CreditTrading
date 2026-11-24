@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1608741,
+  "episode_accession": "0001193125-14-211567",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Equity Premium Advantage Fund", "cik": 1320492, "ticker": "JLA"},
+      "acquirer": {"name": "Nuveen NASDAQ 100 Dynamic Overwrite Fund", "cik": 1608741, "ticker": "QQQX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-211567", "date": "2014-05-23", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN EQUITY PREMIUM ADVANTAGE FUND (JLA) AND NASDAQ PREMIUM INCOME & GROWTH FUND INC. (QQQX)"},
+      "outcome_evidence": {"accession": "0001193125-14-450502", "date": "2014-12-22", "quote": "today announced that the restructuring of its family of covered call closed-end funds was completed prior to the opening of the New York Stock Exchange on December 22, 2014. As part of the previously announced plan, the funds have been restructured as follows:"},
+      "notes": "The same release's table says 'JLA was combined with NASDAQ Premium Income & Growth Fund Inc. (QQQX) The combined fund’s new name is Nuveen Nasdaq 100 Dynamic Overwrite Fund (ticker will be QQQX)'. The 8-K body says the two funds were combined 'into a single new fund, Nuveen NASDAQ 100 Dynamic Overwrite Fund'. Shareholder meeting was adjourned repeatedly (to 2014-10-20, 2014-11-17, then 'for a final time to Friday, November 21, 2014' per the 2014-11-18 425). The excerpts give tickers but never say in so many words that the shares trade on an exchange, so both_listed is null. The 2014-12-22 release also lists other Nuveen fund combinations (DPD/DPO, JPZ/JSN) that are not part of this acquirer's filings."
+    },
+    {
+      "target": {"name": "NASDAQ Premium Income & Growth Fund Inc.", "cik": 1381186, "ticker": "QQQX"},
+      "acquirer": {"name": "Nuveen NASDAQ 100 Dynamic Overwrite Fund", "cik": 1608741, "ticker": "QQQX"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-14-211567", "date": "2014-05-23", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN EQUITY PREMIUM ADVANTAGE FUND (JLA) AND NASDAQ PREMIUM INCOME & GROWTH FUND INC. (QQQX)"},
+      "outcome_evidence": {"accession": "0001193125-14-450502", "date": "2014-12-22", "quote": "today announced that the restructuring of its family of covered call closed-end funds was completed prior to the opening of the New York Stock Exchange on December 22, 2014. As part of the previously announced plan, the funds have been restructured as follows:"},
+      "notes": "The release's table says 'QQQX was combined with Equity Premium Advantage Fund (JLA) The combined fund’s new name is Nuveen Nasdaq 100 Dynamic Overwrite Fund (ticker remains QQQX)'. Here the acquirer is a newly formed fund that took the QQQX ticker, so target and acquirer tickers coincide. Meeting for this fund was adjourned to 2014-11-17 and then 2014-11-21 (425s of 2014-10-31 and 2014-11-18). Exchange listing not stated in so many words, so both_listed is null."
+    }
+  ],
+  "problems": "Excerpts give tickers but never state an exchange listing for the funds in so many words, so both_listed is null. The acquirer CIK 1608741 is a new fund formed for the combination."
+}

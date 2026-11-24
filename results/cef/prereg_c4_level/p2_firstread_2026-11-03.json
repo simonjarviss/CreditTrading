@@ -1,0 +1,25 @@
+{
+ "verdict": "PASS (the desk bar gates CEF: docs/SYSTEM.md \u00a75, 2026-10-28; the paper bar is refused by construction, not_qualified)",
+ "bars": {
+  "counter": "CEF",
+  "trial": "CEF-54",
+  "variant": "blend",
+  "judged": true,
+  "T": 4497,
+  "sr": 0.09332425400271914,
+  "sr_annual": 1.4814766042909142,
+  "skew": 0.2771323660892908,
+  "kurt": 6.280380618143511,
+  "canonical_trials": 54,
+  "desk": {
+   "n_trials": 54,
+   "T": 4497,
+   "sr0": 0.042119645156923,
+   "sr0_annual": 0.6686286383730262,
+   "dsr": 0.999728215660583
+  },
+  "paper": null,
+  "paper_refused": "CEF does not qualify: 3 of its 54 trials have a stored series",
+  "paper_refused_code": "not_qualified"
+ }
+}

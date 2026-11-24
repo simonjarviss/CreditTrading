@@ -34,9 +34,14 @@ because they go stale.
 
 ## What you'll work on this year
 
-Each of you owns a lane. You keep its folders working, keep its trial counter honest,
-and bring me results. You can still propose a change anywhere in the repo through a
-pull request.
+Each of you starts in a lane. You keep its folders working and bring me results. The
+lanes are starting points, not limits: any of you can propose a signal, or any other
+addition that helps the book, and I approve every test before it runs. You can propose
+a change anywhere in the repo through a pull request.
+
+Each of you pitches one idea to the execs at the end of November, as a short talk with
+slides. It can be an addition to the strategy, a signal, or anything else that helps us
+overall. I'll confirm the date.
 
 All of it feeds one book. The CEF discount book is the core, the corporate-event
 sleeves sit beside it, and anything you find joins them in one of three ways: as a
@@ -50,10 +55,14 @@ mine. The live status of every project is in
 plan to the end of December from me directly. It isn't in the repo because it has
 your names in it.
 
-### Fixed income
+### FICC risk
 
-Counter MACRO, new this month, and every test you run adds to it. Folders
-`scripts/macro/` and `results/macro/`. Branch `ryan`.
+Counter MACRO, and every test you run adds to it. Folders `scripts/macro/` and
+`results/macro/`. Branch `ryan`.
+
+Start with the risk in the book we hold: its rate, credit and muni exposure
+(`scripts/cef/exposure_readout.py`) and what moved the live P&L
+(`scripts/cef/live_attribution.py`). From there, go wherever it helps most.
 
 Anything in fixed income that can help the book: macro events (central-bank
 decisions, economic releases, Treasury auctions), credit events, and the
@@ -72,9 +81,13 @@ or as a sleeve of its own.
 The goal is one fixed-income signal that improves the book after costs, or a clean
 record of what doesn't.
 
-### Equities and ETFs
+### Equity risk
 
 Counter XASSET. Folders `scripts/xasset/` and `results/xasset/`. Branch `james`.
+
+Start with the equity risk in the book we hold, first C4: its market, sector and factor
+exposures (`scripts/xasset/book_profile.py` and `scripts/xasset/specialist_betas.py`).
+From there, go wherever it helps most.
 
 Signals in single stocks and ETFs that add to the book without adding market
 exposure. We trade alpha only, so a signal that turns out to be beta in disguise
@@ -91,14 +104,18 @@ earnings-date delays, 8-K red flags, index changes) and their ETF hedge stay wit
 The goal is one equity or ETF sleeve passing on paper, or a slate that settles the
 question either way.
 
-### Dashboard and data
+### Cross-asset signals, dashboard and data
+
+Look for signals from other markets, starting from why the first four failed
+([`results/xasset/XASSET_RESULTS_2026-10-14.md`](results/xasset/XASSET_RESULTS_2026-10-14.md)),
+and build the dashboard. Counter XASSET for signals.
 
 Folders `dashboard/` and the research data platform (`scripts/data/` and its
 neighbours, listed in [`docs/TEAM.md`](docs/TEAM.md#1-the-lanes)). Branch `lucy`.
 
-A read-only dashboard for the book: what it holds, what it traded and how each day
-scored. Nothing on it may be able to send an order. Its data is a nightly snapshot
-that the VM writes and the repo holds under `dashboard/snapshots/`
+The public site (event-driven.quantt.ca) and its read-only dashboard: every book's live
+paper results, built on the VM every 30 minutes from the runners' own records. Nothing
+on it may be able to send an order, and nothing about positions or P&L is committed
 ([`dashboard/README.md`](dashboard/README.md)).
 
 - Define the snapshot: what it carries and what it never carries. Then write the spec

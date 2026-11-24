@@ -1,0 +1,59 @@
+1. SUMMED FACTOR BETAS (Dimson t, t-1; HAC 5), unit books, W1, gross daily P&L
+  core PR: mktrf -0.0072 (t -0.28)  credit +0.0366 (t +0.84)  rates +0.1167 (t +1.76)  muni +0.0655 (t +0.89)  loans -0.0515 (t -1.00) | R2 0.020 | alpha +6.40%/yr t 3.02
+  c4   PR: mktrf -0.0220 (t -1.05)  credit -0.0076 (t -0.14)  rates +0.0484 (t +0.69)  muni -0.0662 (t -0.96)  loans -0.0139 (t -0.28) | R2 0.022 | alpha +9.87%/yr t 5.14
+  core TR: mktrf -0.0038 (t -0.15)  credit +0.0316 (t +0.75)  rates +0.1030 (t +1.53)  muni +0.0605 (t +0.77)  loans -0.0488 (t -0.95) | R2 0.019 | alpha +6.16%/yr t 3.03
+  c4   TR: mktrf -0.0208 (t -1.01)  credit -0.0128 (t -0.25)  rates +0.0610 (t +0.90)  muni -0.0510 (t -0.75)  loans -0.0233 (t -0.48) | R2 0.027 | alpha +8.93%/yr t 4.82
+
+  PR, at the approved multipliers (core x1.13, C4 x1.27), account betas:
+    core mktrf -0.0082  credit +0.0414  rates +0.1319  muni +0.0741  loans -0.0582
+    C4   mktrf -0.0279  credit -0.0097  rates +0.0615  muni -0.0840  loans -0.0177
+    comb mktrf -0.0180  credit +0.0158  rates +0.0967  muni -0.0050  loans -0.0379   (combined $200k = half of each)
+    same sign: {'mktrf': True, 'credit': False, 'rates': True, 'muni': False, 'loans': True}
+    factor share of each account's variance: core 0.4%, C4 2.7%; combined factor vol 0.74%/yr; cross term +0.099 (x1e-4) = -21.8% of the parts' factor variance offset (positive = offset)
+
+  TR, at the approved multipliers (core x1.13, C4 x1.27), account betas:
+    core mktrf -0.0043  credit +0.0357  rates +0.1164  muni +0.0684  loans -0.0551
+    C4   mktrf -0.0264  credit -0.0163  rates +0.0775  muni -0.0647  loans -0.0295
+    comb mktrf -0.0154  credit +0.0097  rates +0.0970  muni +0.0018  loans -0.0423   (combined $200k = half of each)
+    same sign: {'mktrf': True, 'credit': False, 'rates': True, 'muni': False, 'loans': True}
+    factor share of each account's variance: core 0.3%, C4 3.2%; combined factor vol 0.75%/yr; cross term +0.083 (x1e-4) = -17.3% of the parts' factor variance offset (positive = offset)
+
+2. EX-ANTE NET WEIGHT BY GROUP, decided unit book H_t, W1 (a weight of +0.10 = long 10% of the account at x1.0)
+  core hy    ['AWF', 'HYT']: mean +0.105 sd 0.288 | long on 61% of sessions | half-life 71 sessions | era means +0.117 / +0.094
+  core loan  ['JFR']: mean -0.058 sd 0.127 | long on 30% of sessions | half-life 37 sessions | era means -0.075 / -0.042
+  core multi ['BIT', 'DSL', 'PCN', 'PDI', 'PDO', 'PFN', 'PHK', 'PTY']: mean -0.018 sd 0.307 | long on 54% of sessions | half-life 59 sessions | era means +0.025 / -0.057
+  core muni  ['MHD', 'MQY']: mean +0.010 sd 0.051 | long on 6% of sessions | half-life 42 sessions | era means +0.000 / +0.019
+  C4   equity_covered_call : mean -0.062 sd 0.274 | long on 43% of sessions
+  C4   equity_domestic     : mean -0.012 sd 0.123 | long on 39% of sessions
+  C4   equity_sector       : mean +0.091 sd 0.287 | long on 59% of sessions
+  C4   multi_asset         : mean -0.011 sd 0.114 | long on 44% of sessions
+  C4   preferred           : mean +0.000 sd 0.077 | long on 53% of sessions
+
+3. THE CORE'S PRICE-ONLY P&L SPLIT INTO NAV AND DISCOUNT COMPONENTS (unit book, W1, execution lag of evaluate())
+  price-only P&L                                           +6.43%/yr  vol  6.70%  NW t +3.47  corr with P&L +1.00
+  NAV component                                            -0.27%/yr  vol  2.48%  NW t -0.39  corr with P&L +0.14
+  discount component                                       +6.70%/yr  vol  6.81%  NW t +3.69  corr with P&L +0.93
+  NAV, muni names                                          -0.07%/yr  vol  0.46%  NW t -0.24  corr with P&L +0.05
+  NAV, other names                                         -0.20%/yr  vol  2.45%  NW t -0.28  corr with P&L +0.13
+  muni NAV: persistent tilt (mean net weight x muni NAV)   -0.01%/yr  vol  0.07%  NW t -0.49  corr with P&L +0.02
+  muni NAV: time-varying                                   -0.05%/yr  vol  0.45%  NW t -0.20  corr with P&L +0.05
+  corr(NAV component, discount component) daily -0.228; on 21-session sums -0.079
+  mean net muni weight on W1 +0.0102; muni names' NAV return -1.36%/yr
+  NAV component on the factors: R2 0.037; muni beta -0.0007 (t -0.04), rates -0.0428 (t -1.63); alpha -0.25%/yr (t -0.34)
+  muni-names NAV component on the factors: R2 0.025; muni beta +0.0037 (t +0.50); rates +0.0140 (t +1.51)
+  live 09-15..10-30 NAV component          -2.25% of $100k [doc PR #26] | fit 34-session sums: mean -0.04%, sd 0.80% -> z -2.77, percentile 0.8%
+  live 09-15..10-30 NAV, muni names        -1.85% of $100k [doc PR #26] | fit 34-session sums: mean -0.01%, sd 0.33% -> z -5.56, percentile 0.9%
+  live 09-15..10-30 discount component     +1.58% of $100k [doc PR #26] | fit 34-session sums: mean +0.89%, sd 2.05% -> z +0.34, percentile 69.3%
+  live 09-15..10-30 price-only P&L         -0.98% of $100k [doc PR #26] | fit 34-session sums: mean +0.85%, sd 2.07% -> z -0.88, percentile 14.7%
+  of the variance of 34-session muni NAV components on the fit, the persistent tilt explains 7.1%; the rest is the time-varying tilt and name selection
+
+4. UPPER BOUND ON A FACTOR HEDGE: every summed beta hedged at its own in-sample fit value, no cost, W1
+  PR: Sharpe unhedged -> hedged: core 0.959 -> 0.948; C4 1.574 -> 1.647; combined 1.782 -> 1.826 (vol 5.41% -> 5.39%)
+  TR: Sharpe unhedged -> hedged: core 0.955 -> 0.941; C4 1.471 -> 1.544; combined 1.706 -> 1.748 (vol 5.23% -> 5.21%)
+
+5. WHAT THE FIT BOOK NEVER HELD (the ADV floor, spec min_adv_usd, read through scripts/cef/spec.py)
+  share of W1 sessions on which each muni name clears the floor, by year: 2013: MHD 0%, MQY 0%; 2014: MHD 0%, MQY 0%; 2015: MHD 0%, MQY 0%; 2016: MHD 0%, MQY 0%; 2017: MHD 0%, MQY 0%; 2018: MHD 0%, MQY 0%; 2019: MHD 0%, MQY 0%; 2020: MHD 0%, MQY 0%; 2021: MHD 0%, MQY 0%; 2022: MHD 0%, MQY 35%
+  sessions with fewer than min_names = 6 eligible names (the harness HOLDS its last target; the live sleeve flattens, docs/JOURNAL.md 2026-11-02): 56.4% of W1
+  the two muni names' equal-weight NAV return on W1 (price-only NAV): vol 6.39%/yr; on MUB - rf (Dimson): beta +1.373 (t +16.4), R2 0.642
+  a net muni weight of 0.10 of NAV carries a 34-session NAV-leg sd of 0.23% of NAV unhedged, 0.14% after a MUB hedge at that beta (in-sample R2)
+  a net muni weight of 0.30 of NAV carries a 34-session NAV-leg sd of 0.70% of NAV unhedged, 0.42% after a MUB hedge at that beta (in-sample R2)

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 30125,
+  "episode_accession": "0001104659-10-015481",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "The Hartford Income Shares Fund, Inc.", "cik": null, "ticker": "HSF"},
+      "acquirer": {"name": "Rivus Bond Fund", "cik": 30125, "ticker": "BDF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000950123-10-026889", "quote": "Cutwater Asset Management Corp., the investment adviser to Rivus Bond Fund (“BDF”) (NYSE: BDF), announced today that the Board of Trustees of BDF has approved on behalf of BDF the reorganization of The Hartford Income Shares Fund, Inc. (“HSF”) (NYSE: HSF) with and into BDF (the “Reorganization”)."},
+      "outcome": null,
+      "announcement": {"accession": "0000950123-10-026889", "date": "2010-03-22", "quote": "ANNOUNCEMENT OF PROPOSED REORGANIZATION OF THE HARTFORD INCOME SHARES FUND, INC INTO RIVUS BOND FUND"},
+      "outcome_evidence": null,
+      "notes": "Excerpts show the proposal, the June 15, 2010 meeting date, DEF 14A and many DEFA14A filings through 2010-09-29, but no excerpt states how it ended."
+    }
+  ],
+  "problems": ""
+}

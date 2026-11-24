@@ -1,0 +1,4 @@
+total_ret_crsp|treatment                   2012-17: IC +0.0220 t +3.07 | FM +6.13bp/z t +3.81  2018-22: IC +0.0304 t +4.38 | FM +15.95bp/z t +4.96  fit 2012-22: IC +0.0258 t +5.14 | FM +10.59bp/z t +6.20
+total_ret_crsp|control                     2012-17: IC +0.0070 t +0.96 | FM +2.79bp/z t +1.94  2018-22: IC +0.0215 t +2.96 | FM +20.09bp/z t +0.98  fit 2012-22: IC +0.0136 t +2.62 | FM +10.65bp/z t +1.14
+price_ret_adj_DIAGNOSTIC|treatment         2012-17: IC +0.0303 t +4.25 | FM +7.77bp/z t +4.78  2018-22: IC +0.0394 t +5.61 | FM +19.23bp/z t +5.69  fit 2012-22: IC +0.0344 t +6.85 | FM +12.98bp/z t +7.30
+price_ret_adj_DIAGNOSTIC|control           2012-17: IC +0.0134 t +1.83 | FM +4.04bp/z t +2.76  2018-22: IC +0.0300 t +4.13 | FM +23.47bp/z t +1.14  fit 2012-22: IC +0.0209 t +4.04 | FM +12.86bp/z t +1.37

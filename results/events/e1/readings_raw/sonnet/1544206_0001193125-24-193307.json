@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1544206,
+  "episode_accession": "0001193125-24-193307",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Carlyle Secured Lending III", "cik": 1851277, "ticker": null},
+      "acquirer": {"name": "Carlyle Secured Lending, Inc.", "cik": 1544206, "ticker": "CGBD"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-24-193292", "date": "2024-08-05", "quote": "Announces Financial Results For Second Quarter Ended 2024, Declares Third Quarter 2024 Dividends of $0.47 Per Common Share and Announces Merger Agreement with Carlyle Secured Lending III"},
+      "outcome_evidence": {"accession": "0001193125-25-068793", "date": "2025-03-31", "quote": "On March 27, 2025, the Company was merged with and into Carlyle Secured Lending, Inc. (“CGBD”)."},
+      "notes": "CGBD (NASDAQ: CGBD) is the surviving fund; CSL III shows no exchange or ticker in the excerpts, so listing of the target is not settled. Shareholder approval announced 2025-03-28 filing (0001193125-25-065938); later 8-K (0001544206-25-000069) also refers to the completion of the CSL III Merger effective March 27, 2025."
+    }
+  ],
+  "problems": ""
+}

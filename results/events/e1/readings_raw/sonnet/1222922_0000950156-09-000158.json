@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1222922,
+  "episode_accession": "0000950156-09-000158",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Eaton Vance Credit Opportunities Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Eaton Vance Limited Duration Income Fund", "cik": 1222922, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950156-09-000158", "date": "2009-08-28", "quote": "Recourse for liabilities assumed from EOE by EVV in the Reorganization will be limited to the assets acquired by EVV."},
+      "outcome_evidence": null,
+      "notes": "N-14 8C registers EVV common shares for the shareholders of EOE (Eaton Vance Credit Opportunities Fund); the agreement also provides cash consideration. The agreement conditions the deal on the NYSE Amex approving the listing of the additional EVV common shares, so EVV appears listed, but the excerpts do not state that EOE is listed. The amended N-14 8C/A (2009-12-09) raised the registered shares to 4,560,463. The 2009 and 2010 DEF 14A filings are annual-meeting proxies and do not mention the merger. Outcome not stated."
+    }
+  ],
+  "problems": ""
+}

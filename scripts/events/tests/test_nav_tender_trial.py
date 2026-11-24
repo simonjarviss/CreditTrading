@@ -400,13 +400,16 @@ def _synthetic_crsp(tmp_path, monkeypatch):
                        "rf": 0.0001})
     monkeypatch.setattr(T, "load_ff", lambda: ff.assign(date=pd.to_datetime(ff["date"])))
     ev = []
-    for i, (tk, d0) in enumerate((("AAA", "2018-03-05"), ("BBB", "2019-06-03"), ("CCC", "2021-09-01"))):
+    for i, (tk, d0, cls) in enumerate((("AAA", "2018-03-05", "high_yield"), ("BBB", "2019-06-03", "high_yield"),
+                                       ("CCC", "2021-09-01", "muni"))):
         d0 = pd.Timestamp(d0)
         e0 = T.add_sessions(d0, 1)
         xp = T.add_sessions(d0, 22)
         F = T.add_sessions(xp, 5)
+        px_prev = float(dsf.loc[(dsf.permno == 101 + i) & (dsf.date == T.add_sessions(xp, -1)), "prc"].iloc[0])
         ev.append({"event_id": f"ACC{i}", "cik": 1000 + i, "label": tk, "fund": f"{tk} INCOME FUND INC", "ticker": tk,
-                   "ticker_now": tk, "sponsor": f"S{i}", "asset_class": "high_yield", "ann_date": d0, "day0": d0,
+                   "ticker_now": tk, "sponsor": f"S{i}", "asset_class": cls, "ann_date": d0, "day0": d0,
+                   "outcome_session": T.add_sessions(xp, 2), "k_pct": 98.0, "nav": px_prev * 1.05, "nav_date": e0,
                    "entry_session": e0, "x_p": xp, "expiry": xp, "F": F, "last_session": T.add_sessions(F, 1),
                    "outcome": "completed", "pi": 0.3, "p_final": float(dsf.loc[(dsf.permno == 101 + i) & (dsf.date == T.add_sessions(xp, -1)), "prc"].iloc[0]) * 1.02,
                    "period": "fit", "cutoff_ok": True, "in_universe": False, "merger_open": False, "group": f"S{i}@{d0.date()}",
@@ -423,16 +426,94 @@ def test_stage0_partB_blocks_until_ruled_then_fit_runs(tmp_path, monkeypatch):
     rec = {}
     with pytest.raises(T.Stage0Halt, match="rulings block"):
         T.stage0_partB(ev, names, flags, rec)
-    assert T.RULINGS.exists() and rec["traded_fit"]["events"] == 3 and rec["traded_fit"]["ibkr_routed"] == 0
+    assert T.RULINGS.exists() and rec["traded_fit"]["events"] == 3 and rec["traded_fit"]["ibkr_routed"] == 1
     R = pd.read_csv(T.RULINGS, dtype=str, keep_default_na=False)
     R["ruling"], R["ruled_by"], R["ruled_on"] = "keep h = 1", "test", "2026-10-19"
     R.to_csv(T.RULINGS, index=False)
     out = T.stage0_partB(ev, names, flags, {})
     D = out["data"]
-    assert set(D.ev["etf"]) == {"HYG"} and D.ev["beta"].between(0.6, 1.0).all()
+    assert set(D.ev["etf"]) == {"HYG", "MUB"} and D.ev.loc[D.ev["etf"] == "HYG", "beta"].between(0.6, 1.0).all()
+    assert D.ev["adv_usd"].notna().all() and D.ev["disc_post"].notna().all()
+    book = pd.Series(np.random.default_rng(5).normal(0, 0.003, len(S)), index=S)
     res = T.fit_on(D, pd.DataFrame(columns=["cik", "kind", "first_date", "last_date"]), 100_000.0, 1.8,
-                   placebo_draws=20)
+                   placebo_draws=20, quality_ids={"ACC1"}, book=book)
     assert res["verdict"] and set(res["stages"]) == {"1", "2", "3", "4", "5"}
     assert res["stages"]["1"]["n"] == 3 and res["sizing"]["k"] > 0
     assert set(res["grid_tradable"]) >= {"gross", "net5", "net15", "net30", "flips"}
-    assert res["borrow_tradable"]["fees_pct"] == {"HYG": 0.0}
+    assert res["borrow_tradable"]["fees_pct"] == {"HYG": 0.0, "MUB": 7.73}
+    ro, rb = res["report_only"], res["robustness"]
+    assert ro["r_book"]["n"] > 60 and -1 <= ro["r_book"]["corr"] <= 1
+    assert ro["capacity"]["events"] == 3 and "at_1000000" in ro["capacity"]
+    assert ro["mechanism_slope"]["n"] == 3 and "not computed" in ro["mechanism_slope"]   # fewer than 5 events
+    assert 0 <= res["stages"]["2"]["share_draw_means_ge_real"] <= 1
+    keys = " | ".join(rb)
+    for want in ("residual lag 0", "residual lag 10", "quality-screen events removed (1 removed)", "muni hedged with IEF"):
+        assert want in keys
+    assert rb["quality-screen events removed (1 removed)"]["per_event"]["n"] == 2
+
+
+def test_capacity_and_mechanism_slope_arithmetic():
+    ev = pd.DataFrame({"eid": ["a", "b", "c", "d", "e", "f"], "adv_usd": [1e6, 2e6, 5e5, 1e6, 3e6, 1e6],
+                       "k_pct": 98.0, "disc_post": [-0.05, -0.10, -0.15, -0.08, -0.12, -0.02]})
+    evs = [T.Ev(i, i, pd.Timestamp("2015-01-05"), pd.Timestamp("2015-02-05"), None, 0.0, None, 1.0, 1.0, "HYG")
+           for i in ev["eid"]]
+    w = {i: 0.5 for i in ev["eid"]}
+    c = T.capacity(ev, evs, w)
+    # median event: ADV 1e6, weight 0.5 -> 1% of ADV at capital 0.01 * 1e6 / 0.5 = 20,000
+    assert c["capital_at_1pct_adv_median_event_usd"] == pytest.approx(20_000.0)
+    assert c["at_100000"]["participation_median"] == pytest.approx(0.05)
+    assert c["at_100000"]["election_fee_bp_of_notional_median"] == pytest.approx(100 / 50_000 * 1e4)
+    from scripts.events.cef_corp_action_census import accepted_slice_spread
+    spread = np.array([accepted_slice_spread(98.0, d) for d in ev["disc_post"]])
+    pe = pd.DataFrame({"eid": ev["eid"], "per_notional": 0.5 * spread + 0.001, "group": list("abcdef")})
+    m = T.mechanism_slope(ev, pe)
+    assert m["n"] == 6 and m["slope"] == pytest.approx(0.5)
+
+
+def test_r_book_needs_overlap():
+    S = sessions(200)
+    x = pd.Series(np.random.default_rng(2).normal(0, 0.01, len(S)), index=S)
+    r = T.r_book(x, 2 * x)
+    assert r["corr"] == pytest.approx(1.0) and r["beta_on_book"] == pytest.approx(0.5)
+    assert "not computed" in T.r_book(x, None)
+
+
+def test_second_method_agrees_with_the_first_on_synthetic_data(tmp_path, monkeypatch):
+    """`rederive` (plain loops, CRSP rows read again) must reproduce fit_on's per-event mean, cluster t
+    and both sleeve Sharpes."""
+    import json as _json
+    from scripts.events import crsp_events as ce
+    ev, S = _synthetic_crsp(tmp_path, monkeypatch)
+    names = ce.names()
+    flags = pd.DataFrame([{"check": "spec_beta_window", "ticker": "-", "date": "2026-10-19", "period": "all",
+                           "event_id": "-", "note": "x"}])
+    pd.DataFrame([{"check": "spec_beta_window", "ticker": "-", "date": "2026-10-19", "ruling": "keep", "ruled_by": "t",
+                   "ruled_on": "2026-10-19"}]).to_csv(T.RULINGS, index=False)
+    out = T.stage0_partB(ev, names, flags, {})
+    res = T.fit_on(out["data"], pd.DataFrame(columns=["cik", "kind", "first_date", "last_date"]), 100_000.0, 1.8,
+                   placebo_draws=5)
+    monkeypatch.setattr(T, "FIT_JSON", tmp_path / "fit.json")
+    monkeypatch.setattr(T, "TRIAL_DIR", tmp_path)
+    T.FIT_JSON.write_text(_json.dumps(T._jsonable(res)))
+    monkeypatch.setattr(T, "stage0", lambda **kw: {"data": out["data"]})
+    r = T.rederive()
+    fm = r["first_method"]
+    assert r["per_event_mean"] == pytest.approx(fm["per_event_mean"], rel=1e-9)
+    assert r["per_event_cluster_t"] == pytest.approx(fm["per_event_cluster_t"], rel=1e-9)
+    assert r["raw_sleeve_sr"] == pytest.approx(fm["raw_sleeve_sr"], rel=1e-9)
+    assert r["tradable_sleeve_sr"] == pytest.approx(fm["tradable_sleeve_sr"], rel=1e-9)
+
+
+def test_holdout_halts_at_its_gate_without_prices(tmp_path, monkeypatch):
+    import json as _json
+    monkeypatch.setattr(T, "FIT_JSON", tmp_path / "fit.json")
+    monkeypatch.setattr(T, "HOLDOUT_JSON", tmp_path / "holdout.json")
+    T.FIT_JSON.write_text(_json.dumps({"verdict": "KILL D1"}))
+    monkeypatch.setattr(T, "fit_verdict_committed", lambda: True)
+    ev = _gate_frame(42, 14).assign(period="holdout", label="X")
+    monkeypatch.setattr(T, "stage0", lambda **kw: {"rec": {"gate_holdout_count_only": T.dg_nt2_gate(ev, "holdout")},
+                                                   "ev": ev})
+    out = T.holdout()
+    assert out["verdict"].startswith("HALTED") and T.HOLDOUT_JSON.exists()
+    with pytest.raises(T.TrialError, match="opens once"):
+        T.holdout()

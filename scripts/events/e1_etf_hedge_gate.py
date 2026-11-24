@@ -137,10 +137,10 @@ OUT = REPO / "results" / "events"
 CACHE = OUT / "_cache_e1_hedge"
 SAMPLE = OUT / "merger_ann_sample_edgar.csv"          # merger_pairs.py --edgar-dates (gitignored)
 EDGAR_DATES = OUT / "merger_edgar_dates.csv"          # edgar_merger_dates.py (gitignored): target CIKs
-G1A_DEALS = OUT / "g1a_historical_deals.csv"          # g1a_shortability.py (gitignored): H3 flags
+G1A_DEALS = OUT / "g1a" / "g1a_historical_deals.csv"  # g1a_shortability.py (gitignored): H3 flags
 IBKR_FILE = OUT / "_cache_g1a" / "ibkr_usa_2026-10-13.txt"   # cached by g1a_shortability.py
 # The earlier Alpaca read of ETF flags on file (tracked; XASSET slate check, 2026-10-12).
-EARLIER_FLAGS = (REPO / "results" / "xasset" / "slate_feasibility_2026-10-12.csv",)
+EARLIER_FLAGS = (REPO / "results" / "xasset" / "feasibility" / "slate_feasibility_2026-10-12.csv",)
 
 TIME_HOLDOUT = pd.Timestamp("2023-01-01")
 N_SAMPLE = 167

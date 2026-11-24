@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1742912,
+  "episode_accession": "0001999371-24-010891",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Unusual Whales Subversive Democratic Trading ETF (a series of Series Portfolios Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Unusual Whales Subversive Democratic Trading ETF (a series of Tidal ETF Trust)", "cik": 1742912, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010891", "quote": "Shares of Unusual Whales Subversive Democratic Trading ETF and Shares of Unusual Whales Subversive Republican Trading ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010891", "date": "2024-08-28", "quote": "For the Reorganization of Unusual Whales Subversive Democratic Trading ETF Unusual Whales Subversive Republican Trading ETF Each a series of Series Portfolios Trust"},
+      "outcome_evidence": null,
+      "notes": "ETF-to-ETF reorganization between trusts (Series Portfolios Trust into Tidal ETF Trust); ETFs, not closed-end funds or BDCs. The excerpts do not state how it ended. CIK 1742912 is the Tidal ETF Trust (the header FILER), not the series."
+    },
+    {
+      "target": {"name": "Unusual Whales Subversive Republican Trading ETF (a series of Series Portfolios Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Unusual Whales Subversive Republican Trading ETF (a series of Tidal ETF Trust)", "cik": 1742912, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010891", "quote": "Shares of Unusual Whales Subversive Democratic Trading ETF and Shares of Unusual Whales Subversive Republican Trading ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010891", "date": "2024-08-28", "quote": "For the Reorganization of Unusual Whales Subversive Democratic Trading ETF Unusual Whales Subversive Republican Trading ETF Each a series of Series Portfolios Trust"},
+      "outcome_evidence": null,
+      "notes": "Second of the two ETF reorganizations in the same N-14; ETFs, not closed-end funds or BDCs. Outcome not stated in the excerpts."
+    },
+    {
+      "target": {"name": "ATAC Rotation Fund (a series of Managed Portfolio Series)", "cik": null, "ticker": null},
+      "acquirer": {"name": "ATAC Rotation Fund (a series of Tidal ETF Trust)", "cik": 1742912, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-25-002648", "quote": "a proposal to reorganize the Target Fund into a newly-created mutual fund within Tidal ETF Trust (the “Acquiring Entity”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-25-002648", "date": "2025-03-14", "quote": "The enclosed Proxy Statement/Prospectus describes a proposal to reorganize the Target Fund into a newly-created mutual fund within Tidal ETF Trust (the “Acquiring Entity”), which is also called the ATAC Rotation Fund (the “Acquiring Fund”)."},
+      "outcome_evidence": null,
+      "notes": "Mutual fund reorganized into a newly created mutual fund (Institutional and Investor Class shares); not closed-end or listed. Outcome not stated in the excerpts."
+    },
+    {
+      "target": {"name": "God Bless America ETF", "cik": null, "ticker": "YALL"},
+      "acquirer": {"name": "a newly created actively-managed exchange-traded fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-26-008853", "quote": "all shareholders of the God Bless America ETF are being asked to consider and vote on a proposal which will result in shareholders of the God Bless America ETF exchanging their shares for those of a newly created actively-managed exchange-traded fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-26-008853", "date": "2026-04-23", "quote": "all shareholders of the God Bless America ETF are being asked to consider and vote on a proposal which will result in shareholders of the God Bless America ETF exchanging their shares for those of a newly created actively-managed exchange-traded fund"},
+      "outcome_evidence": null,
+      "notes": "ETF-to-new-ETF reorganization of a Tidal Trust I series; special meeting adjourned on April 21, 2026 until May 12 for lack of votes. The acquirer is unnamed in the excerpt. ETFs, not closed-end funds or BDCs. Outcome not stated."
+    }
+  ],
+  "problems": "Episode is ETF and mutual-fund reorganizations of Tidal trusts, not closed-end fund mergers; CIK 1742912 appears under two registrant names (Tidal ETF Trust, Tidal Trust I), so episode_role is 'other'."
+}

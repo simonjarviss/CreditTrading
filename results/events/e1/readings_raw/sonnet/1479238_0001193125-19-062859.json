@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1479238,
+  "episode_accession": "0001193125-19-062859",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund 2", "cik": 1479238, "ticker": "JMT"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062859", "date": "2019-03-05", "quote": "As part of the proposal, shareholders will be asked to vote on a merger of their fund with a new fund, Nuveen Mortgage and Income Fund."},
+      "outcome_evidence": {"accession": "0001193125-19-155549", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal"},
+      "notes": "JMT is shown as NYSE-listed; the acquirer was a new, not-yet-existing fund and no listing is stated, so both_listed is null. The 2019-05-23 alternate proposals were to amend the charter to eliminate the term structure, followed by a tender offer for up to 100 percent of shares at NAV. The N-8F filed 2020-03-11 says the fund deregistered by liquidation (not merger)."
+    },
+    {
+      "target": {"name": "Nuveen Mortgage Opportunity Term Fund", "cik": null, "ticker": "JLS"},
+      "acquirer": {"name": "Nuveen Mortgage and Income Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "superseded",
+      "announcement": {"accession": "0001193125-19-062859", "date": "2019-03-05", "quote": "As part of the proposal, shareholders will be asked to vote on a merger of their fund with a new fund, Nuveen Mortgage and Income Fund."},
+      "outcome_evidence": {"accession": "0001193125-19-155549", "date": "2019-05-23", "quote": "these alternate proposals, which replace a previously announced merger proposal"},
+      "notes": "Sister fund merger proposed in the same release; replaced by the same alternate proposals. Fund shown as NYSE: JLS; acquirer not shown as listed."
+    }
+  ],
+  "problems": ""
+}

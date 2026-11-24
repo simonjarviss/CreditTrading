@@ -1,0 +1,333 @@
+{
+ "episode_cik": 914036,
+ "episode_accession": "0001193125-22-311201",
+ "episode_role": "other",
+ "deals": [
+  {
+   "target": {
+    "name": "JPMorgan Insurance Trust Core Bond Portfolio",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Acquiring Funds",
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-23-016334",
+    "quote": "Shares of the JPMorgan Portfolios and Acquiring Funds are available only through the purchase of variable contracts issued by certain life"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-22-311201",
+    "date": "2022-12-22",
+    "quote": "If such conditions are not met or waived, none of the Reorganizations will be consummated, even if shareholders of the JPMorgan Portfolios approved the Agreement, and the JPMorgan Portfolios will not be reorganized into the Acquiring Funds."
+   },
+   "outcome_evidence": null,
+   "notes": "Insurance-dedicated portfolio, not listed. Acquiring fund (a series of Lincoln Variable Insurance Products Trust) not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "JPMorgan Insurance Trust Mid Cap Value Portfolio",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Acquiring Funds",
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-23-016334",
+    "quote": "Shares of the JPMorgan Portfolios and Acquiring Funds are available only through the purchase of variable contracts issued by certain life"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-22-311201",
+    "date": "2022-12-22",
+    "quote": "If such conditions are not met or waived, none of the Reorganizations will be consummated, even if shareholders of the JPMorgan Portfolios approved the Agreement, and the JPMorgan Portfolios will not be reorganized into the Acquiring Funds."
+   },
+   "outcome_evidence": null,
+   "notes": "Insurance-dedicated portfolio, not listed. Acquiring fund (a series of Lincoln Variable Insurance Products Trust) not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "JPMorgan Insurance Trust Small Cap Core Portfolio",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Acquiring Funds",
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-23-016334",
+    "quote": "Shares of the JPMorgan Portfolios and Acquiring Funds are available only through the purchase of variable contracts issued by certain life"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-22-311201",
+    "date": "2022-12-22",
+    "quote": "If such conditions are not met or waived, none of the Reorganizations will be consummated, even if shareholders of the JPMorgan Portfolios approved the Agreement, and the JPMorgan Portfolios will not be reorganized into the Acquiring Funds."
+   },
+   "outcome_evidence": null,
+   "notes": "Insurance-dedicated portfolio, not listed. Acquiring fund (a series of Lincoln Variable Insurance Products Trust) not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "JPMorgan Insurance Trust U.S. Equity Portfolio",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Acquiring Funds",
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-23-016334",
+    "quote": "Shares of the JPMorgan Portfolios and Acquiring Funds are available only through the purchase of variable contracts issued by certain life"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-22-311201",
+    "date": "2022-12-22",
+    "quote": "If such conditions are not met or waived, none of the Reorganizations will be consummated, even if shareholders of the JPMorgan Portfolios approved the Agreement, and the JPMorgan Portfolios will not be reorganized into the Acquiring Funds."
+   },
+   "outcome_evidence": null,
+   "notes": "Insurance-dedicated portfolio, not listed. Acquiring fund (a series of Lincoln Variable Insurance Products Trust) not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Balanced Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Capital Appreciation Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Disciplined Core Value Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP International Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Large Company Value Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Mid Cap Value Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Ultra Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Value Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  },
+  {
+   "target": {
+    "name": "VP Inflation Protection Fund",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001193125-24-004515",
+    "quote": "In general, Variable Contract Owners are taxed only on underlying Fund amounts they withdraw from their variable accounts."
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001193125-24-004515",
+    "date": "2024-01-08",
+    "quote": "We are asking you to vote at a Special Shareholders Meeting on April 4, 2024, on a proposed reorganization of the fund(s) that you hold."
+   },
+   "outcome_evidence": null,
+   "notes": "Variable-contract fund, not listed. Acquiring series not named in the excerpts. Outcome not stated."
+  }
+ ],
+ "problems": "All variable insurance funds. The 2024-05-16 N-14 (single Lincoln reorganization) shows only a compact excerpt without fund names, so no deal is recorded for it."
+}

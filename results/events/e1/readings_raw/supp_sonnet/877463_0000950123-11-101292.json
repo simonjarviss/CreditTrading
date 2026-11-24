@@ -1,0 +1,38 @@
+{
+  "episode_cik": 877463,
+  "episode_accession": "0000950123-11-101292",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco Van Kampen Massachusetts Value Municipal Income Trust", "cik": 890515, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Municipal Trust", "cik": 877463, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101292", "date": "2011-12-01", "quote": "Invesco Van Kampen Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Target and acquirer roles inferred from the filer set of the 2012 PRE 14A / DEF 14A (Municipal Trust, Massachusetts, Ohio, New Jersey) and from 877463 being the N-14 registrant; the excerpts never say which fund survives. No excerpt states an outcome or whether the funds are exchange listed."
+    },
+    {
+      "target": {"name": "Invesco Van Kampen Ohio Quality Municipal Trust", "cik": 877649, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Municipal Trust", "cik": 877463, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101292", "date": "2011-12-01", "quote": "Invesco Van Kampen Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "See Massachusetts note."
+    },
+    {
+      "target": {"name": "Invesco Van Kampen Trust for Investment Grade New Jersey Municipals", "cik": 883269, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Municipal Trust", "cik": 877463, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101292", "date": "2011-12-01", "quote": "Invesco Van Kampen Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "See Massachusetts note."
+    }
+  ],
+  "problems": "Excerpts are cover pages and boilerplate only; no outcome language, no listing language, and the press release excerpt ends before naming the mergers."
+}

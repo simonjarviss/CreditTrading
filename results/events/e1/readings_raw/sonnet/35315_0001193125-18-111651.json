@@ -1,0 +1,18 @@
+{
+  "episode_cik": 35315,
+  "episode_accession": "0001193125-18-111651",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Fidelity Inflation-Protected Bond Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Inflation-Protected Bond Index Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-18-111651", "quote": "The price to buy one share is its NAV."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-18-111651", "date": "2018-04-09", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity Inflation-Protected Bond Fund to Fidelity Inflation-Protected Bond Index Fund in exchange solely for shares of beneficial interest of Fidelity Inflation-Protected Bond Index Fund and the assumption by Fidelity Inflation-Protected Bond Index Fund of Fidelity Inflation-Protected Bond Fund’s liabilities, in complete liquidation of Fidelity Inflation-Protected Bond Fund."},
+      "outcome_evidence": null,
+      "notes": "Both funds are series of Fidelity Salem Street Trust (CIK 35315, the filer); fund-level CIKs do not appear. Shares are bought at NAV (open-end style); the excerpts never say exchange-listed. Completion is not stated in the excerpts (a DEFA14A only says the merger is expected to close in late August 2018 if approved)."
+    }
+  ],
+  "problems": ""
+}

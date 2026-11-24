@@ -1,0 +1,18 @@
+{
+  "episode_cik": 817473,
+  "episode_accession": "0001104659-16-122686",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "American Capital, Ltd.", "cik": 817473, "ticker": "ACAS"},
+      "acquirer": {"name": "Ares Capital Corporation", "cik": 1287750, "ticker": "ARCC"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-17-001138", "quote": "Ares Capital Corporation (NASDAQ: ARCC) announced today that it has completed its previously announced acquisition of American Capital, Ltd. (NASDAQ: ACAS)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001104659-16-122506", "date": "2016-05-23", "quote": "ARES CAPITAL CORPORATION TO ACQUIRE AMERICAN CAPITAL, LTD IN TRANSACTION VALUED AT $3.4 BILLION"},
+      "outcome_evidence": {"accession": "0001193125-17-001138", "date": "2017-01-04", "quote": "ARES CAPITAL CORPORATION COMPLETES ACQUISITION OF AMERICAN CAPITAL, LTD."},
+      "notes": "Both are BDCs (American Capital withdrew its BDC election after the merger; Ares is called the largest business development company). Stockholders of both approved on 2016-12-15 (8-K filed 2016-12-16); mergers effective 2017-01-03 per the 8-K filed 2017-01-04. Consideration was cash plus Ares shares."
+    }
+  ],
+  "problems": ""
+}

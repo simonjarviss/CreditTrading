@@ -1,0 +1,94 @@
+excluded from returns (split and distribution on one date, basis ambiguous): ['HERZ']
+split rulings: 6 from the team lead's file + 8 added here (drop_split): ASA 2010-05-04, ZTR 2012-06-27, AGD 2014-01-21, AOD 2014-01-21, CLM 2014-12-29, CRF 2014-12-29, SRV 2015-09-14, SRV 2020-06-15
+events in: 137; dropped: 0 
+no control in family (W1): 7; median controls 17
+return panel last date read: 2022-12-30 (asserted <= 2022-12-30)
+
+== SIGNED abnormal total return (prediction: W1 > 0 pressure, W2 < 0 reversal). Gross.
+W1:
+  treatment                                    n  130  clusters  30  mean     50.4bp  t_cl   2.23  pos  55.4%
+  control (a) same-family non-changers         n  127  clusters  30  mean      0.0bp  t_cl   0.29  pos  35.4%
+  control (b) placebo, 21 sessions earlier     n  130  clusters  30  mean     19.6bp  t_cl   1.19  pos  59.2%
+  discount change, treatment (signed)          n  126  clusters  30  mean     61.3bp  t_cl   2.51  pos  57.1%
+  discount change, placebo                     n  126  clusters  30  mean      4.0bp  t_cl   0.34  pos  53.2%
+W2:
+  treatment                                    n  130  clusters  30  mean    -72.9bp  t_cl  -3.58  pos  36.2%
+  control (a) same-family non-changers         n  127  clusters  30  mean      0.0bp  t_cl   0.94  pos  34.6%
+  control (b) placebo, 21 sessions earlier     n  130  clusters  30  mean    113.1bp  t_cl   2.87  pos  60.0%
+  discount change, treatment (signed)          n  126  clusters  30  mean    -48.2bp  t_cl  -3.02  pos  39.7%
+  discount change, placebo                     n  126  clusters  30  mean    118.0bp  t_cl   2.98  pos  65.9%
+
+== by ETF and kind (supplementary; the verdict uses the pooled rows above)
+ PCEF add
+  W1                                           n   15  clusters  12  mean    242.3bp  t_cl   4.01  pos  86.7%
+  W2                                           n   15  clusters  12  mean   -203.5bp  t_cl  -3.37  pos  20.0%
+ PCEF drop
+  W1                                           n   12  clusters   7  mean    214.5bp  t_cl   2.37  pos  83.3%
+  W2                                           n   12  clusters   7  mean   -100.5bp  t_cl  -3.76  pos  16.7%
+ PCEF reweight
+  W1                                           n   16  clusters   8  mean    106.7bp  t_cl   3.32  pos  81.2%
+  W2                                           n   16  clusters   8  mean    -56.2bp  t_cl  -1.93  pos  43.8%
+ XMPT drop
+  W1                                           n    1  clusters   1  mean    -28.8bp  t_cl    nan  pos   0.0%
+  W2                                           n    1  clusters   1  mean     78.4bp  t_cl    nan  pos 100.0%
+ XMPT reweight
+  W1                                           n    2  clusters   2  mean     53.0bp  t_cl   1.18  pos 100.0%
+  W2                                           n    2  clusters   2  mean    -54.1bp  t_cl  -0.90  pos  50.0%
+ YYY add
+  W1                                           n   41  clusters   9  mean     -9.6bp  t_cl  -0.49  pos  39.0%
+  W2                                           n   41  clusters   9  mean    -84.0bp  t_cl  -1.25  pos  34.1%
+ YYY drop
+  W1                                           n   36  clusters   9  mean    -11.3bp  t_cl  -0.75  pos  47.2%
+  W2                                           n   36  clusters   9  mean    -13.3bp  t_cl  -0.25  pos  47.2%
+ YYY reweight
+  W1                                           n    7  clusters   5  mean    -92.2bp  t_cl  -7.15  pos  14.3%
+  W2                                           n    7  clusters   5  mean    -51.4bp  t_cl  -1.02  pos  28.6%
+ PCEF all kinds
+  W1                                           n   43  clusters  19  mean    184.1bp  t_cl   5.46  pos  83.7%
+  W1 placebo                                   n   43  clusters  19  mean      7.9bp  t_cl   0.23  pos  60.5%
+  W2                                           n   43  clusters  19  mean   -120.0bp  t_cl  -5.61  pos  27.9%
+  W2 placebo                                   n   43  clusters  19  mean      6.8bp  t_cl   0.31  pos  41.9%
+ XMPT all kinds
+  W1                                           n    3  clusters   2  mean     25.7bp  t_cl   2.18  pos  66.7%
+  W1 placebo                                   n    3  clusters   2  mean     -5.6bp  t_cl  -0.09  pos  66.7%
+  W2                                           n    3  clusters   2  mean     -9.9bp  t_cl  -0.93  pos  66.7%
+  W2 placebo                                   n    3  clusters   2  mean     33.0bp  t_cl   0.51  pos  66.7%
+ YYY all kinds
+  W1                                           n   84  clusters   9  mean    -17.2bp  t_cl  -1.43  pos  40.5%
+  W1 placebo                                   n   84  clusters   9  mean     26.5bp  t_cl   1.39  pos  58.3%
+  W2                                           n   84  clusters   9  mean    -51.0bp  t_cl  -1.86  pos  39.3%
+  W2 placebo                                   n   84  clusters   9  mean    170.4bp  t_cl   2.71  pos  69.0%
+ W1+W2 combined (pressure minus reversal: W1 - W2), treatment and placebo
+  event W1 - W2                                n  130  clusters  30  mean    123.2bp  t_cl   3.39  pos  69.2%
+  placebo W1 - W2                              n  130  clusters  30  mean    -93.4bp  t_cl  -2.09  pos  43.8%
+
+== SUPPLEMENTARY, post-hoc (not used for the verdict)
+ PCEF: discount change (signed)
+  W1 treatment                                 n   43  clusters  19  mean    203.0bp  t_cl   5.91  pos  88.4%
+  W1 placebo                                   n   43  clusters  19  mean      4.3bp  t_cl   0.14  pos  48.8%
+  W2 treatment                                 n   43  clusters  19  mean    -99.4bp  t_cl  -3.97  pos  23.3%
+  W2 placebo                                   n   43  clusters  19  mean      8.4bp  t_cl   0.37  pos  44.2%
+ XMPT: discount change (signed)
+  W1 treatment                                 n    3  clusters   2  mean     32.5bp  t_cl   1.37  pos  33.3%
+  W1 placebo                                   n    3  clusters   2  mean      0.0bp  t_cl   0.00  pos  66.7%
+  W2 treatment                                 n    3  clusters   2  mean     -6.1bp  t_cl  -6.58  pos  33.3%
+  W2 placebo                                   n    3  clusters   2  mean     30.7bp  t_cl   0.49  pos  66.7%
+ YYY: discount change (signed)
+  W1 treatment                                 n   80  clusters   9  mean    -13.9bp  t_cl  -0.93  pos  41.2%
+  W1 placebo                                   n   80  clusters   9  mean      4.0bp  t_cl   0.46  pos  55.0%
+  W2 treatment                                 n   80  clusters   9  mean    -22.3bp  t_cl  -1.25  pos  48.8%
+  W2 placebo                                   n   80  clusters   9  mean    180.2bp  t_cl   2.88  pos  77.5%
+ PCEF 2013-17
+  W1                                           n    6  clusters   5  mean    268.1bp  t_cl  10.44  pos 100.0%
+  W2                                           n    6  clusters   5  mean   -162.7bp  t_cl  -1.84  pos  16.7%
+ PCEF 2018-22
+  W1                                           n   37  clusters  14  mean    170.5bp  t_cl   4.44  pos  81.1%
+  W2                                           n   37  clusters  14  mean   -113.0bp  t_cl  -5.49  pos  29.7%
+ PCEF, deployed-13 names only
+  W1                                           n   12  clusters   9  mean    260.0bp  t_cl   2.73  pos  83.3%
+  W2                                           n   12  clusters   9  mean   -154.4bp  t_cl  -2.38  pos  33.3%
+ PCEF reversal with a late entry (close E+1 / E+2 -> close E+10)
+  fill E+1                                     n   43  clusters  19  mean    -74.0bp  t_cl  -3.56  pos  32.6%
+  fill E+2                                     n   43  clusters  19  mean    -43.5bp  t_cl  -1.52  pos  44.2%
+
+VERDICT (rule §2.6): ARTIFACT; predicted-sign |t|>=2 windows: ['W1', 'W2']; controls |t|<1: {'W1': False, 'W2': False}; control as large as treatment: ['W2']

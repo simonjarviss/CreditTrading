@@ -1,0 +1,38 @@
+{
+  "episode_cik": 790202,
+  "episode_accession": "0001099343-14-000015",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "First Opportunity Fund, Inc.", "cik": 790202, "ticker": "FOFI"},
+      "acquirer": {"name": "Boulder Growth & Income Fund, Inc.", "cik": 102426, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001099343-14-000031", "quote": "First Opportunity Fund, Inc. (OTC: FOFI)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001099343-14-000014", "date": "2014-05-28", "quote": "As we move closer to the stockholder vote on the proposed reorganization of the First Opportunity Fund, Inc. (the “Fund”), Boulder Total Return Fund, Inc., The Denali Fund Inc., and Boulder Growth & Income Fund, Inc. into a single surviving fund"},
+      "outcome_evidence": {"accession": "0001104659-15-038210", "date": "2015-05-14", "quote": "Also, on March 20, 2015, the Fund’s stockholders received common shares of BIF in connection with the Merger."},
+      "notes": "FOFI traded OTC, not on an exchange, so flagged not a listed pair; the merger itself was completed 2015-03-20 per the N-8F ('the closing date of the Merger'). Shareholder vote date given as November 14, 2014. Also merged into BIF in the same transaction: Boulder Total Return Fund and The Denali Fund (see other deals)."
+    },
+    {
+      "target": {"name": "Boulder Total Return Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Boulder Growth & Income Fund, Inc.", "cik": 102426, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001099343-14-000014", "date": "2014-05-28", "quote": "As we move closer to the stockholder vote on the proposed reorganization of the First Opportunity Fund, Inc. (the “Fund”), Boulder Total Return Fund, Inc., The Denali Fund Inc., and Boulder Growth & Income Fund, Inc. into a single surviving fund"},
+      "outcome_evidence": {"accession": "0001104659-15-038210", "date": "2015-05-14", "quote": "The distribution represented substantially all of the Fund’s net investment income and net capital gain estimated through March 20, 2015, the closing date of the Merger."},
+      "notes": "Listing status of this fund is not stated in the excerpts. Completion inferred from the FOFI N-8F describing the combined Merger of the three Acquired Funds into BIF with a closing date of March 20, 2015."
+    },
+    {
+      "target": {"name": "The Denali Fund Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Boulder Growth & Income Fund, Inc.", "cik": 102426, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "completed",
+      "announcement": {"accession": "0001099343-14-000014", "date": "2014-05-28", "quote": "As we move closer to the stockholder vote on the proposed reorganization of the First Opportunity Fund, Inc. (the “Fund”), Boulder Total Return Fund, Inc., The Denali Fund Inc., and Boulder Growth & Income Fund, Inc. into a single surviving fund"},
+      "outcome_evidence": {"accession": "0001104659-15-038210", "date": "2015-05-14", "quote": "The distribution represented substantially all of the Fund’s net investment income and net capital gain estimated through March 20, 2015, the closing date of the Merger."},
+      "notes": "Listing status not stated in the excerpts. Same basis as the Boulder Total Return Fund entry."
+    }
+  ],
+  "problems": "Filing seq=1 (accession 0001099343-14-000014) and seq=2 (0001099343-14-000015) are the same letter; the episode id uses seq=2. A September 2014 press release says the surviving fund was to be listed on the NYSE, which the text treats as a future event."
+}

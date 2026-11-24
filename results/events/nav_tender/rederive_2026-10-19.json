@@ -1,0 +1,18 @@
+{
+ "first_method": {
+  "per_event_cluster_t": 2.79537586726137,
+  "per_event_mean": 0.01083816080163601,
+  "per_event_net15_cluster_t": 1.5343438831062406,
+  "per_event_net15_mean": 0.005937098199499878,
+  "raw_sleeve_sr": 0.5009054013517373,
+  "tradable_sleeve_sr": 0.4500642608985372
+ },
+ "groups": 96,
+ "n": 104,
+ "per_event_cluster_t": 2.7953758672613698,
+ "per_event_mean": 0.010838160801636009,
+ "per_event_net15_cluster_t": 1.5343438831062404,
+ "per_event_net15_mean": 0.005937098199499876,
+ "raw_sleeve_sr": 0.5009054013517372,
+ "tradable_sleeve_sr": 0.4500642608985374
+}

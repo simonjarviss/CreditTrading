@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1195737,
+  "episode_accession": "0001193125-19-168287",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen North Carolina Quality Municipal Income Fund", "cik": 899761, "ticker": "NNC"},
+      "acquirer": {"name": "Nuveen AMT-Free Quality Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-19-168287", "date": "2019-06-07", "quote": "IMPORTANT NOTICE TO SHAREHOLDERS OF NUVEEN AMT-FREE QUALITY MUNICIPAL INCOME FUND (NEA) AND NUVEEN NORTH CAROLINA QUALITY MUNICIPAL INCOME FUND (NNC)"},
+      "outcome_evidence": null,
+      "notes": "2019 N-14 names only NNC as target of NEA. The 425s of 2019-08-16 and 2019-09-24 also list Nuveen Connecticut Quality Municipal Income Fund (NTC) and Nuveen Texas Quality Municipal Income Fund (NTX) beside NNC, but the excerpts do not say they are targets of NEA, so they are not recorded. 2019-09-24 425: 'Shareholder Meeting Adjourned to October 25, 2019'. No excerpt states a vote result, completion or termination."
+    },
+    {
+      "target": {"name": "Nuveen Michigan Quality Municipal Income Fund", "cik": 878198, "ticker": "NUM"},
+      "acquirer": {"name": "Nuveen AMT-Free Quality Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-213270", "date": "2020-08-07", "quote": "The Board of Trustees for eleven Nuveen municipal closed-end funds approved five reorganization proposals. The reorganizations are subject to customary conditions, including shareholder approval."},
+      "outcome_evidence": null,
+      "notes": "Second proposal for NEA (2020). N-14 of 2020-09-11 amended 2020-10-21; meeting set for 2020-12-07; 425 of 2021-01-06: 'Unfortunately, because not enough votes were received to satisfy the vote requirement, your Nuveen Closed End Fund(s) shareholder meeting was adjourned to January 15, 2021.' The window ends there; no excerpt states a vote result, completion or termination. The 2020 8-K excerpt shows NEA as NYSE-listed but is cut off before NUM."
+    }
+  ],
+  "problems": ""
+}

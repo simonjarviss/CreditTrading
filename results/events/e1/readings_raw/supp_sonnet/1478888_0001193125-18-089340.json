@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1478888,
+  "episode_accession": "0001193125-18-089340",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Build America Bond Opportunity Fund", "cik": 1493523, "ticker": "NBD"},
+      "acquirer": {"name": "Nuveen Build America Bond Fund", "cik": 1478888, "ticker": "NBB"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-18-201207", "quote": "The Nuveen Build America Bond Fund (NYSE: NBB) and Nuveen Build America Bond Opportunity Fund (NYSE: NBD) announced certain results of their Annual Meeting of Shareholders."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-18-091717", "date": "2018-03-22", "quote": "The merger of NBD into NBB"},
+      "outcome_evidence": null,
+      "notes": "The N-14 filed 2018-03-20 (0001193125-18-089340) precedes the 425 but its excerpts show only the cover and notice to shareholders of NBD and NBB; the 425 of 2018-03-22 is the earliest excerpt that states the board approved 'The merger of NBD into NBB'. On 2018-06-22 (0001193125-18-201207): 'NBB announced that shareholders at its Annual Meeting have approved the issuance of additional common shares in connection with the proposed merger of NBD into NBB' and 'NBD announced that its Annual Meeting of Shareholders has been adjourned to solicit additional proxies necessary to obtain shareholder approval for the merger.' The NBD meeting was then repeatedly adjourned: reconvened 2018-07-19, 2018-08-22, 2018-09-18 and 2018-10-19 (425s filed 2018-06-22, 2018-07-20, 2018-07-26, 2018-08-23, 2018-09-19, 2018-10-05). The last filing in the window about the merger is the 2018-10-05 425 saying the meeting is on October 19, 2018; no filing in the excerpts states the outcome of the NBD vote or whether the merger was completed, terminated or failed. The 2019-06-28 DEF 14A is a cover page only."
+    }
+  ],
+  "problems": "Outcome not stated in the excerpts; repeated NBD adjournments are stated but no filing says the vote failed, the merger closed, or it was terminated."
+}

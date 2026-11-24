@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1137360,
+  "episode_accession": "0000930413-15-003742",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Yorkville High Income MLP ETF", "cik": null, "ticker": "YMLP"},
+      "acquirer": {"name": "Market Vectors High Income MLP ETF", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-15-003742", "quote": "Yorkville High Income MLP ETF and Yorkville High Income Infrastructure MLP ETF, each a series of Exchange Traded Concepts Trust"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-15-003742", "date": "2015-09-23", "quote": "Combined Proxy Statement and Prospectus regarding the reorganization of the Yorkville High Income MLP ETF and Yorkville High Income Infrastructure MLP ETF into Market Vectors High Income MLP ETF and Market Vectors High Income Infrastructure MLP ETF"},
+      "outcome_evidence": {"accession": "0000930413-15-003742", "date": "2015-09-23", "quote": "Yorkville High Income MLP ETF and Yorkville High Income Infrastructure MLP ETF, each a series of Exchange Traded Concepts Trust"},
+      "notes": "Both are ETFs, not closed-end funds. Ticker YMLP printed in the 2016-01-08 DEFA14A. Special meeting January 19, 2016 was adjourned to February 2, 2016 (DEFA14A 0000930413-16-005088); the excerpts do not say how it ended."
+    },
+    {
+      "target": {"name": "Yorkville High Income Infrastructure MLP ETF", "cik": null, "ticker": "YMLI"},
+      "acquirer": {"name": "Market Vectors High Income Infrastructure MLP ETF", "cik": 1137360, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000930413-15-003742", "quote": "Yorkville High Income MLP ETF and Yorkville High Income Infrastructure MLP ETF, each a series of Exchange Traded Concepts Trust"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000930413-15-003742", "date": "2015-09-23", "quote": "Combined Proxy Statement and Prospectus regarding the reorganization of the Yorkville High Income MLP ETF and Yorkville High Income Infrastructure MLP ETF into Market Vectors High Income MLP ETF and Market Vectors High Income Infrastructure MLP ETF"},
+      "outcome_evidence": {"accession": "0000930413-15-003742", "date": "2015-09-23", "quote": "Yorkville High Income MLP ETF and Yorkville High Income Infrastructure MLP ETF, each a series of Exchange Traded Concepts Trust"},
+      "notes": "Ticker YMLI printed in the 2016-01-08 DEFA14A. The excerpts say the Reorganizations are conditioned on approval by both acquired funds."
+    }
+  ],
+  "problems": ""
+}

@@ -1,0 +1,38 @@
+{
+  "episode_cik": 884152,
+  "episode_accession": "0000950123-11-101289",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Invesco Municipal Premium Income Trust", "cik": 842891, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Municipal Opportunity Trust", "cik": 884152, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101289", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Target identified from the filing headers only: the 425 (seq 1) names it as SUBJECT COMPANY with the acquirer as filer, and it is a co-filer with the acquirer on the 2012 PRE 14A/DEF 14A. The excerpts say 'PIA' for this fund without a printed exchange ticker. No excerpt states listing or the outcome of the merger; the 2013 DEF 14A lists the acquirer (as Invesco Municipal Opportunity Trust) with other funds in an annual-meeting context only."
+    },
+    {
+      "target": {"name": "Invesco Van Kampen Trust for Value Municipals", "cik": 880893, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Municipal Opportunity Trust", "cik": 884152, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-12-008239", "date": "2012-05-15", "quote": "However, the dividend reinvestment plan for VKL, VIM and the Acquiring Fund imposes a fee of $2.50 to process a shareholder’s withdrawal from, and sale of shares held via, the dividend reinvestment plan, while PIA’s plan does not."},
+      "outcome_evidence": null,
+      "notes": "Inferred from the 2012 PRE 14A/DEF 14A joint filer list (four funds: the acquirer plus Municipal Premium Income Trust, Select Sector Municipal Trust and Trust for Value Municipals) and the N-14 abbreviations VKL, VIM, PIA; the excerpts never spell out the abbreviations. This fund is not among the Subject Companies in the 2011 425 excerpts, so the quote above is the earliest excerpt that refers to it as a merger participant. Outcome not stated."
+    },
+    {
+      "target": {"name": "Invesco Van Kampen Select Sector Municipal Trust", "cik": 912022, "ticker": null},
+      "acquirer": {"name": "Invesco Van Kampen Municipal Opportunity Trust", "cik": 884152, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-101289", "date": "2011-12-01", "quote": "Invesco Closed-End Funds Announce Approval of Plan to Redeem Auction Rate Preferred Shares at Par and Approval of Fund Redomestications and Mergers"},
+      "outcome_evidence": null,
+      "notes": "Target identified from the filing headers only: seq 2 (accession 0000950123-11-101295) has it as SUBJECT COMPANY with the acquirer as filer; the same fund is listed among the Subject Companies in seq 1. Excerpts do not state listing or the outcome."
+    }
+  ],
+  "problems": "The excerpts never state which funds are merger targets of this acquirer in words; targets were taken from the filing headers (subject company / co-filers of the merger proxy) and from the N-14's 'Target Fund' language. The 2011 press release lists many other subject funds (redeemed ARPS and redomestications), which were not recorded as targets because no excerpt ties them to this acquirer's merger."
+}

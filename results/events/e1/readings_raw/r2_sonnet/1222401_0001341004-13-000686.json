@@ -1,0 +1,58 @@
+{
+  "episode_cik": 1222401,
+  "episode_accession": "0001341004-13-000686",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock High Yield Trust", "cik": 1068234, "ticker": "BHY"},
+      "acquirer": {"name": "BlackRock Corporate High Yield Fund VI, Inc.", "cik": 1222401, "ticker": "HYT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000685", "quote": "BlackRock High Yield Trust (NYSE:BHY), BlackRock Corporate High Yield Fund, Inc. (NYSE:COY), BlackRock Corporate High Yield Fund III, Inc. (NYSE:CYE), BlackRock High Income Shares (NYSE:HIS), BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000685", "date": "2013-06-27", "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Shareholders of all six funds approved on 2013-10-11 (filing 0001341004-13-001061: 'the shareholders of the Funds have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT'), effective date expected November 18, 2013, but no excerpt states the merger was completed; outcome left null."
+    },
+    {
+      "target": {"name": "BlackRock Corporate High Yield Fund, Inc.", "cik": 900724, "ticker": "COY"},
+      "acquirer": {"name": "BlackRock Corporate High Yield Fund VI, Inc.", "cik": 1222401, "ticker": "HYT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000686", "quote": "BlackRock Corporate High Yield Fund, Inc. (NYSE:COY), BlackRock Corporate High Yield Fund III, Inc. (NYSE:CYE), BlackRock High Income Shares (NYSE:HIS), BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000686", "date": "2013-06-27", "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Shareholder approval announced 2013-10-15 filing 0001341004-13-001062; completion not stated in any excerpt."
+    },
+    {
+      "target": {"name": "BlackRock Corporate High Yield Fund III, Inc.", "cik": 1049549, "ticker": "CYE"},
+      "acquirer": {"name": "BlackRock Corporate High Yield Fund VI, Inc.", "cik": 1222401, "ticker": "HYT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000687", "quote": "BlackRock Corporate High Yield Fund III, Inc. (NYSE:CYE), BlackRock High Income Shares (NYSE:HIS), BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000687", "date": "2013-06-27", "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Shareholder approval announced 2013-10-15 filing 0001341004-13-001063; completion not stated in any excerpt."
+    },
+    {
+      "target": {"name": "BlackRock High Income Shares", "cik": 830474, "ticker": "HIS"},
+      "acquirer": {"name": "BlackRock Corporate High Yield Fund VI, Inc.", "cik": 1222401, "ticker": "HYT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000689", "quote": "BlackRock High Income Shares (NYSE:HIS), BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000689", "date": "2013-06-27", "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "HIS reorganization is via an HYT Merger Subsidiary per the N-14. Shareholder approval announced 2013-10-15 filing 0001341004-13-001065; completion not stated in any excerpt."
+    },
+    {
+      "target": {"name": "BlackRock Corporate High Yield Fund V, Inc.", "cik": 1160469, "ticker": "HYV"},
+      "acquirer": {"name": "BlackRock Corporate High Yield Fund VI, Inc.", "cik": 1222401, "ticker": "HYT"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-13-000688", "quote": "BlackRock Corporate High Yield Fund V, Inc. (NYSE:HYV) and BlackRock Corporate High Yield Fund VI, Inc. (NYSE:HYT)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-13-000688", "date": "2013-06-27", "quote": "have approved the reorganization of each of BHY, COY, CYE, HIS and HYV into HYT, with HYT continuing as the surviving fund (each, a “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "Shareholder approval announced 2013-10-15 filing 0001341004-13-001064; completion not stated in any excerpt."
+    }
+  ],
+  "problems": "No filing in the window states completion; the last merger filings are the 2013-10-15 approval press releases. Later filings (2014, 2015 DEF 14A proxies) are annual-meeting director elections and do not mention the mergers in the excerpts."
+}

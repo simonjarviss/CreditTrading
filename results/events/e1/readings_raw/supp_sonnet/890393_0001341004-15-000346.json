@@ -1,0 +1,18 @@
+{
+  "episode_cik": 890393,
+  "episode_accession": "0001341004-15-000346",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock MuniYield Michigan Quality Fund II, Inc.", "cik": 882151, "ticker": "MYM"},
+      "acquirer": {"name": "BlackRock MuniYield Michigan Quality Fund, Inc.", "cik": 890393, "ticker": "MIY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001341004-15-000346", "quote": "BlackRock MuniYield Michigan Quality Fund II, Inc. (NYSE:MYM) and BlackRock MuniYield Michigan Quality Fund, Inc. (NYSE:MIY)"},
+      "outcome": null,
+      "announcement": {"accession": "0001341004-15-000346", "date": "2015-05-01", "quote": "approved the re orga nization of MYM into MIY, with MIY being the surviving Fund (the “Reorganization”)."},
+      "outcome_evidence": null,
+      "notes": "The 2015-08-07 425 (0001341004-15-000609) is titled 'BlackRock Announces Results of Shareholder Vote at Joint Special Shareholder Meeting Relating to the Reorganization of Two Michigan Municipal Closed-End Funds' but the excerpt shows only that title, not the result. No excerpt states completion, failure or termination."
+    }
+  ],
+  "problems": ""
+}

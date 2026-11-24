@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1527385,
+  "episode_accession": "0001144204-15-023632",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": null, "cik": null, "ticker": null},
+      "acquirer": {"name": "VII Peaks Co-Optivist Income BDC II Inc.", "cik": 1527385, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001144204-15-039059", "quote": "a publicly registered non-traded business development company (BDC)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "The 2015-04-20 N-14 excerpts only show a governance comparison with an unnamed 'Target Fund' (members, manager); target, acquirer role and outcome are not stated in the excerpts. The registrant is described as non-traded. Separately, 2016 filings propose withdrawing BDC status, reorganizing the same company as a Delaware statutory trust and becoming an interval fund; shareholders approved these on 2016-12-28 (8-K filed 2017-01-05). That is a reorganization of one fund, not a merger of two listed funds."
+    }
+  ],
+  "problems": "Merger counterparty and names not visible in the excerpts; deal entry is low confidence. The company is non-traded so no listed pair either way."
+}

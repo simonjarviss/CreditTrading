@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1356115,
+  "episode_accession": "0001437749-24-036101",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "NexPoint Hospitality Trust", "cik": null, "ticker": "NHT.U"},
+      "acquirer": {"name": "NexPoint Diversified Real Estate Trust", "cik": 1356115, "ticker": "NXDT"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001437749-24-036101", "quote": "NexPoint Hospitality Trust (“ NHT ” or the “ REIT ” 1 ), (TSX-V: NHT.U) and NexPoint Diversified Real Estate Trust (NYSE: NXDT)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001437749-24-036100", "date": "2024-11-25", "quote": "NexPoint Hospitality Trust to be Acquired by NexPoint Diversified Real Estate Trust"},
+      "outcome_evidence": null,
+      "notes": "Target is a hospitality REIT (units on the TSX Venture Exchange, not a closed-end fund or BDC); acquirer is an NYSE-listed real estate trust. Not a listed closed-end pair, so outcome set to not_a_listed_pair. For information only: the 2025-04-17 8-K (0001437749-25-012294) states 'NexPoint Hospitality Trust Completes Going Private Transaction with NexPoint Diversified Real Estate Trust', and the 2025-02-21 425 reports unitholder approval of the merger."
+    }
+  ],
+  "problems": "Many 8-K excerpts are only XBRL header text. The 2026 proxy filings and the 2026-06-02 8-K concern an annual meeting and a shareholder proposal to liquidate NXDT's assets (not approved), not a fund merger."
+}

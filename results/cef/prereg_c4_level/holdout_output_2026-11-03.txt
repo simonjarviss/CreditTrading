@@ -1,0 +1,8 @@
+CEF trial 54 HOLDOUT, opened ONCE (2023-01-03..2026-09-30), commit 4badc45; C4 spec c4_families.v4.20261102, m 1.26, cap 1.9; CRSP ret to 2024-12-31, yfinance ruled leg from 2025
+  IGR fill APPLIED (C4's ruling 2026-10-14, Alpaca split-adjusted): 2026-09-08 -0.4454%, 2026-09-09 -3.5048%
+  z      holdout: gross SR +1.497  ann +10.32%  vol 6.89%  turn 63.1/yr  net @5/15/30 +1.040 / +0.125 / -1.247  flips YES;  2023-24 SR +2.21 ann +15.43%; 2025-26 SR +0.66 ann +4.45%
+  level  holdout: gross SR +1.636  ann +12.18%  vol 7.44%  turn 36.0/yr  net @5/15/30 +1.394 / +0.911 / +0.186  flips no;  2023-24 SR +1.37 ann +10.57%; 2025-26 SR +1.97 ann +14.03%
+  blend  holdout: gross SR +2.065  ann +14.56%  vol 7.05%  turn 57.4/yr  net @5/15/30 +1.658 / +0.843 / -0.378  flips YES;  2023-24 SR +2.34 ann +16.80%; 2025-26 SR +1.74 ann +11.99%
+  rule: level gross SR +1.636 > 0 AND blend ann +14.56% > z-only ann +10.32%: PASS
+  net at 15bp: blend +0.843 vs z-only +0.125 -> no D2
+  evidence (report): level-on-z alpha +10.43%/yr, SE 3.80, NW t 2.74 (lag 7); read_result at N 54, meaningful 0.8%/yr: INCONCLUSIVE

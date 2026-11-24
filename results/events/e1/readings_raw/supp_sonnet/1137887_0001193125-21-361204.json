@@ -1,0 +1,38 @@
+{
+  "episode_cik": 1137887,
+  "episode_accession": "0001193125-21-361204",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Enhanced Municipal Value Fund", "cik": 1469392, "ticker": "NEV"},
+      "acquirer": {"name": "Nuveen Municipal Credit Income Fund", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-21-361204", "quote": "The Boards of Trustees of Nuveen Enhanced Municipal Value Fund (NYSE: NEV) and Nuveen Municipal Credit Income Fund (NYSE: NZF) have approved a proposal to reorganize the funds."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-21-361204", "date": "2021-12-17", "quote": "The Boards of Trustees of Nuveen Enhanced Municipal Value Fund (NYSE: NEV) and Nuveen Municipal Credit Income Fund (NYSE: NZF) have approved a proposal to reorganize the funds."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show N-14 filings (2022-01-21, amended 2022-03-03) and a 2022-03-18 proxy reminder for NEV, but no excerpt states how the NEV proposal ended."
+    },
+    {
+      "target": {"name": "Nuveen Ohio Quality Municipal Income Fund", "cik": 878200, "ticker": "NUO"},
+      "acquirer": {"name": "Nuveen Municipal Credit Income Fund", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-262266", "quote": "The Boards of Trustees of Nuveen Ohio Quality Municipal Income Fund (NYSE: NUO), Nuveen Georgia Quality Municipal Income Fund (NYSE: NKG), and Nuveen Municipal Credit Income Fund (NYSE: NZF) have approved a proposal to reorganize the funds."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-22-262266", "date": "2022-10-13", "quote": "The proposed reorganizations, if approved by shareholders, would combine NUO and NKG into NZF."},
+      "outcome_evidence": null,
+      "notes": "Meeting set for 2023-02-08; reminder 425s of 2023-01-06 and an 8-K of 2023-02-10 (cover only) are shown, but no excerpt states the vote result or completion."
+    },
+    {
+      "target": {"name": "Nuveen Georgia Quality Municipal Income Fund", "cik": 1177219, "ticker": "NKG"},
+      "acquirer": {"name": "Nuveen Municipal Credit Income Fund", "cik": 1137887, "ticker": "NZF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-22-262266", "quote": "The Boards of Trustees of Nuveen Ohio Quality Municipal Income Fund (NYSE: NUO), Nuveen Georgia Quality Municipal Income Fund (NYSE: NKG), and Nuveen Municipal Credit Income Fund (NYSE: NZF) have approved a proposal to reorganize the funds."},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-22-262266", "date": "2022-10-13", "quote": "The proposed reorganizations, if approved by shareholders, would combine NUO and NKG into NZF."},
+      "outcome_evidence": null,
+      "notes": "NKG voted at its annual meeting on 2023-02-08 per the press release; a 2023-02-08 425 still urged NKG holders to vote. No excerpt states the result or completion."
+    }
+  ],
+  "problems": "No excerpt states the outcome of any of the three proposed reorganizations."
+}

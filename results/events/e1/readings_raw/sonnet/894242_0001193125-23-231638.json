@@ -1,0 +1,28 @@
+{
+  "episode_cik": 894242,
+  "episode_accession": "0001193125-23-231638",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Investment Quality Municipal Trust, Inc.", "cik": 894242, "ticker": "BKN"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": "MYI"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-231638", "quote": "BlackRock Investment Quality Municipal Trust, Inc. (NYSE: BKN) and BlackRock MuniYield Quality Fund III, Inc. (NYSE: MYI)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-231638", "date": "2023-09-08", "quote": "have approved the mergers of each of MIY, MPA, BHV and BKN with and into MYI, with MYI continuing as the surviving Fund"},
+      "outcome_evidence": null,
+      "notes": "The same filing also proposed MIY, MPA and BHV into MYI (not recorded here; they are other funds). The excerpts never state how the BKN-into-MYI merger ended. The BKN merger was contingent on a VMTP refinancing. A later proposal (January 2025) puts BKN into a different acquirer, MQY, but no excerpt says the MYI proposal was replaced or terminated, so outcome is left null."
+    },
+    {
+      "target": {"name": "BlackRock Investment Quality Municipal Trust, Inc.", "cik": 894242, "ticker": "BKN"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund, Inc.", "cik": 890196, "ticker": "MQY"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-25-009600", "quote": "BlackRock Investment Quality Municipal Trust, Inc. (NYSE: BKN), BlackRock MuniYield Quality Fund II, Inc. (NYSE: MQT) and BlackRock MuniYield Fund, Inc. (NYSE: MYD) into BlackRock MuniYield Quality Fund, Inc. (NYSE: MQY)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-25-009600", "date": "2025-01-21", "quote": "BlackRock Investment Quality Municipal Trust, Inc. (NYSE: BKN), BlackRock MuniYield Quality Fund II, Inc. (NYSE: MQT) and BlackRock MuniYield Fund, Inc. (NYSE: MYD) into BlackRock MuniYield Quality Fund, Inc. (NYSE: MQY), with MQY continuing as the surviving Fund"},
+      "outcome_evidence": null,
+      "notes": "Also covers MQT and MYD into MQY (other funds). Later filings (425 of 2025-06-09 and 2025-08-12, PRE 14A of 2025-08-08 with a title naming MQY reorg) show the BKN-MQY proposal continuing to a shareholder vote, but no excerpt states a result."
+    }
+  ],
+  "problems": "Excerpts of later filings are compact (first lines and few passages); no completion, termination or vote result for either BKN proposal appears in them."
+}

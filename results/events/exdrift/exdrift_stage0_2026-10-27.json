@@ -1,0 +1,451 @@
+{
+ "all_flags_ruled": true,
+ "calendar": {
+  "first": "1992-07-20",
+  "last": "2026-10-15",
+  "nyse_not_panel": [],
+  "panel_not_nyse": [],
+  "test_sessions": 950
+ },
+ "counts": {
+  "data_panel": {
+   "T1": 461,
+   "T2": 290,
+   "basket_ge3": 713,
+   "basket_ge3_13": 536,
+   "by_year": {
+    "2023": 205,
+    "2024": 205,
+    "2025": 204,
+    "2026": 137
+   },
+   "dates": 169,
+   "events": 751,
+   "events_13": 574,
+   "excluded_next_ex_within3": 0,
+   "excluded_split_mask": 1,
+   "label": "data/ panel, as \u00a75.1 counted it",
+   "months": 45
+  },
+  "prereg": {
+   "basket_ge3": 714,
+   "basket_ge3_13": 537,
+   "dates": 169,
+   "events": 752,
+   "events_13": 575,
+   "months": 45
+  },
+  "refreshed": {
+   "T1": 478,
+   "T2": 290,
+   "basket_ge3": 729,
+   "basket_ge3_13": 548,
+   "by_year": {
+    "2023": 205,
+    "2024": 205,
+    "2025": 204,
+    "2026": 154
+   },
+   "dates": 173,
+   "events": 768,
+   "events_13": 587,
+   "excluded_next_ex_within3": 0,
+   "excluded_split_mask": 1,
+   "label": "refreshed panel, to the frozen end",
+   "months": 46
+  }
+ },
+ "dg_x1_refresh": {
+  "fit_identical_to_data": true,
+  "last_ex": "2026-10-15",
+  "rows": 4616,
+  "sha16": "9656cc3d4c536b19",
+  "test_end_ex": "2026-10-12",
+  "test_only_in_data": 0,
+  "test_only_in_refresh": 33,
+  "test_overlap_identical": true,
+  "written_utc": "2026-10-27T20:56:43+00:00"
+ },
+ "dg_x1_second": {
+  "agree": 737,
+  "agree_exact": 254,
+  "alpaca_ex_dates": 769,
+  "yf_ex_dates": 769
+ },
+ "dg_x2": {
+  "by_sponsor": {
+   "AllianceBernstein": {
+    "by_e-1_crsp": 0,
+    "by_e-1_release": 48,
+    "declared_late": 0,
+    "not_found": 0
+   },
+   "BlackRock": {
+    "by_e-1_crsp": 2,
+    "by_e-1_release": 177,
+    "declared_late": 0,
+    "not_found": 0
+   },
+   "DoubleLine": {
+    "by_e-1_crsp": 0,
+    "by_e-1_release": 45,
+    "declared_late": 0,
+    "not_found": 0
+   },
+   "Nuveen": {
+    "by_e-1_crsp": 84,
+    "by_e-1_release": 42,
+    "declared_late": 0,
+    "not_found": 100
+   },
+   "PIMCO": {
+    "by_e-1_crsp": 0,
+    "by_e-1_release": 270,
+    "declared_late": 0,
+    "not_found": 0
+   }
+  },
+  "declared_by_e_minus_1": 668,
+  "declared_by_e_minus_2": 668,
+  "declared_late": 0,
+  "declared_on_e_minus_1": 0,
+  "events": 768,
+  "lead_sessions_min_median_max": [
+   4,
+   8.0,
+   74
+  ],
+  "not_found": 100,
+  "of_which_from_crsp": 86,
+  "releases": 191
+ },
+ "dg_x2_alpaca_vs_sponsor": {
+  "announcements": 785,
+  "notices": 679,
+  "notices_agree": 0,
+  "notices_contradict": 679,
+  "record_minus_declaration_weekdays": {
+   "-1": 6,
+   "1": 86,
+   "2": 688,
+   "3": 5
+  }
+ },
+ "dg_x2_crsp": {
+  "attempted": 86,
+  "crsp_rows": 412,
+  "crsp_vs_release_where_both": {
+   "crsp_earlier": 0,
+   "crsp_later": 4,
+   "events": 324,
+   "same_day": 319,
+   "within_1_day": 320
+  },
+  "how": "pull (R2, live)",
+  "no_crsp_row": 0,
+  "pulled_utc": "2026-10-28T20:39:10+00:00",
+  "record_mismatch": 0,
+  "recovered": 86,
+  "recovered_late": 0
+ },
+ "dg_x2_field_check": {
+  "announcements": 785,
+  "contradictions": [
+   "PCN ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12",
+   "PTY ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12",
+   "PHK ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12",
+   "PFN ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12",
+   "PDI ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12",
+   "PDO ex 2025-10-14: notice 2025-10-01, Alpaca 2025-10-12"
+  ],
+  "notices": 6,
+  "notices_agree": 0,
+  "notices_contradict": 6,
+  "record_minus_declaration_weekdays": {
+   "-1": 6,
+   "1": 86,
+   "2": 688,
+   "3": 5
+  }
+ },
+ "dg_x3": {
+  "events": 768,
+  "regime_ok": 768
+ },
+ "dg_x4_guard": {
+  "spike_revert": 0,
+  "unreverted": 0
+ },
+ "dg_x5": {
+  "fit_event_rows": {
+   "by_era": {
+    "2005-09": 0.17,
+    "2010-14": 0.165,
+    "2015-19": 0.212,
+    "2020-22": 0.179
+   },
+   "cells": 9600,
+   "on_e": {
+    "cells": 3197,
+    "rate": 0.03065373787926181,
+    "repeats": 98
+   },
+   "rate": 0.183125,
+   "repeats": 1758
+  },
+  "test_basket_rows": {
+   "by_year": {
+    "2023": 0.249,
+    "2024": 0.247,
+    "2025": 0.251,
+    "2026": 0.206
+   },
+   "cells": 36864,
+   "rate": 0.240478515625,
+   "repeats": 8865
+  },
+  "test_event_rows": {
+   "by_year": {
+    "2023": 0.223,
+    "2024": 0.263,
+    "2025": 0.243,
+    "2026": 0.225
+   },
+   "cells": 2304,
+   "rate": 0.23958333333333334,
+   "repeats": 552
+  }
+ },
+ "dg_x6": {
+  "French FF5+UMD (fetch_ff_factors.py)": {
+   "first": "1963-07-01",
+   "first_missing": "2026-10-01",
+   "last": "2026-09-30",
+   "last_missing": "2026-10-06",
+   "missing_in_window": 4
+  },
+  "HYG in data/etf_daily.parquet": {
+   "first": "2007-04-12",
+   "first_missing": null,
+   "last": "2026-10-09",
+   "last_missing": null,
+   "missing_in_window": 0
+  },
+  "HYG yfinance (fetch_exdrift_mub.py)": {
+   "first": "2007-09-04",
+   "first_missing": null,
+   "last": "2026-10-27",
+   "last_missing": null,
+   "missing_in_window": 0
+  },
+  "IEF in data/etf_daily.parquet": {
+   "first": "2002-07-29",
+   "first_missing": null,
+   "last": "2026-10-09",
+   "last_missing": null,
+   "missing_in_window": 0
+  },
+  "IEF yfinance (fetch_exdrift_mub.py)": {
+   "first": "2007-09-04",
+   "first_missing": null,
+   "last": "2026-10-27",
+   "last_missing": null,
+   "missing_in_window": 0
+  },
+  "MUB in data/etf_daily.parquet": {
+   "first": null,
+   "first_missing": "2023-01-13",
+   "last": null,
+   "last_missing": "2026-10-06",
+   "missing_in_window": 935
+  },
+  "MUB yfinance (fetch_exdrift_mub.py)": {
+   "first": "2007-09-10",
+   "first_missing": null,
+   "last": "2026-10-27",
+   "last_missing": null,
+   "missing_in_window": 0
+  }
+ },
+ "dg_x7": {
+  "beside": {
+   "he_events_traded": 3009,
+   "he_events_with_return": 3226,
+   "he_median_basket": 12.0,
+   "he_sd_month_mean_bp": 41.44744324191998,
+   "he_sd_month_mean_published_bp": 41.4,
+   "he_share_basket_lt3": 0.06726596404215747,
+   "r6_months": 216
+  },
+  "k_and_cap_share": "not formed (reading R9)",
+  "pass": true,
+  "table": [
+   {
+    "figure": "r6 events (17, 2005-22)",
+    "ok": true,
+    "published": 3226.0,
+    "reproduced": 3226.0,
+    "tolerance": 0.0
+   },
+   {
+    "figure": "r6 CAR(+1..+3), bp",
+    "ok": true,
+    "published": -20.454,
+    "reproduced": -20.45417974249565,
+    "tolerance": 0.001
+   },
+   {
+    "figure": "r6 month-clustered t",
+    "ok": true,
+    "published": -6.765,
+    "reproduced": -6.765470670740928,
+    "tolerance": 0.001
+   },
+   {
+    "figure": "H-E per-event sd, bp",
+    "ok": true,
+    "published": 150.3,
+    "reproduced": 150.27995061126146,
+    "tolerance": 0.05
+   }
+  ]
+ },
+ "dg_x8": {
+  "fault_any": true,
+  "fault_with_numexpr_on": true,
+  "numexpr": "2.10.1",
+  "numpy_path_clean": true,
+  "status": "PASS",
+  "use_numexpr_option": false
+ },
+ "eligible": {
+  "as ruled: X4 cells filled; no-declaration basket legs KEPT (R10, team lead 2026-10-28)": {
+   "basket_lt3": 19,
+   "calendar_surprise_legs": {
+    "declared_after_e_minus_1_legs_kept": 69,
+    "no_release_legs": 690,
+    "no_release_treatment": "keep"
+   },
+   "dates": 152,
+   "events": 649,
+   "events_13": 548,
+   "excluded_declaration": 100,
+   "excluded_no_bar": 0,
+   "months": 46
+  },
+  "beside: X4 cells not filled": {
+   "basket_lt3": 19,
+   "calendar_surprise_legs": {
+    "declared_after_e_minus_1_legs_kept": 69,
+    "no_release_legs": 690,
+    "no_release_treatment": "keep"
+   },
+   "dates": 147,
+   "events": 635,
+   "events_13": 534,
+   "excluded_declaration": 100,
+   "excluded_no_bar": 14,
+   "months": 46
+  },
+  "beside: no-declaration basket legs excluded": {
+   "basket_lt3": 37,
+   "calendar_surprise_legs": {
+    "declared_after_e_minus_1_legs_kept": 69,
+    "no_release_legs": 690,
+    "no_release_treatment": "exclude"
+   },
+   "dates": 135,
+   "events": 631,
+   "events_13": 530,
+   "excluded_declaration": 100,
+   "excluded_no_bar": 0,
+   "months": 46
+  }
+ },
+ "factor_window": [
+  "2023-01-13",
+  "2026-10-06"
+ ],
+ "flags": 757,
+ "flags_by_check": {
+  "R1": 1,
+  "R10": 1,
+  "R2": 1,
+  "R3": 1,
+  "R4": 1,
+  "R5": 1,
+  "R6": 1,
+  "R7": 1,
+  "R8": 1,
+  "R9": 1,
+  "X1_amount_mismatch": 32,
+  "X2_not_found": 100,
+  "X4_no_bar": 24,
+  "X4_split": 1,
+  "X5_nav_repeat": 552,
+  "X5_nav_repeat_on_e": 37,
+  "X6_FF6_uncovered": 1
+ },
+ "gates": {
+  "DG-X1": "FLAGGED",
+  "DG-X2": "FLAGGED",
+  "DG-X3": "PASS",
+  "DG-X4": "FLAGGED",
+  "DG-X5": "FLAGGED",
+  "DG-X6": "FLAGGED",
+  "DG-X7": "PASS (identity; k committed by fit-k)",
+  "DG-X8": "PASS"
+ },
+ "input_pins_sha256": {
+  "alpaca_adjacent_bars": "4c0c058fdee1109fba35333f2bc11aa1607f094ac234eb870b69b3e2bbb37e56",
+  "alpaca_bars": "7fd6968b14dccddcc0f1738f6b511d8a6e205d323af8b30f8a26d11db96714d9",
+  "alpaca_dividends": "0b1380f221e89806c7f641dbcfef53dbfa7d6aa8885b4640e05c4fedc36445a0",
+  "declarations_final": "bdf817974d18ccca70263017a1df2b5c15c79ba230a350b3f756c0b6cebe4e18",
+  "dist_refresh": "9656cc3d4c536b1908ae734d2f901a98410f988d649979a83e9e6dc6f0f365ec",
+  "mub": "29e2a437345c79b620a91677f331563ac2ee6712cf1141891994387d4c6b1ef7",
+  "navs": "410d374fddf9e4cec52cb4f6c8a3f64545e40a3996c0da28cfd4d19b254fa2c4",
+  "prices": "d6bb16cf3c44d15a7040cb1e5870e44d684428d6e4f7cbfa7f15c6fdf33c2440",
+  "splits_refresh": "67a1f007312a155fd835fe50e3b357dfb060fcf6905cf90089c204ef3a5489cb",
+  "sponsor_table": "47681e9da0a67736fffec078e4f4d6db5da2ec9fb150b795b6d95efc28ec64aa"
+ },
+ "k_committed": true,
+ "missing_close_cells": {
+  "cells": 24,
+  "dates": [
+   "2026-02-12",
+   "2026-02-13",
+   "2026-02-18",
+   "2026-03-18",
+   "2026-09-15"
+  ],
+  "on_own_ex_date": 24
+ },
+ "names": [
+  "AWF",
+  "BIT",
+  "DSL",
+  "HYT",
+  "JFR",
+  "MHD",
+  "MQY",
+  "PCN",
+  "PDI",
+  "PDO",
+  "PFN",
+  "PHK",
+  "PTY",
+  "NAD",
+  "NEA",
+  "NVG",
+  "NZF"
+ ],
+ "stage0": "CLEAR",
+ "stamp": "2026-10-27",
+ "x4_basis_check_O4": {
+  "cells": 24,
+  "fail": 0,
+  "largest_gap_cents": 0.0,
+  "pass": 24,
+  "tolerance_usd": 0.01
+ }
+}

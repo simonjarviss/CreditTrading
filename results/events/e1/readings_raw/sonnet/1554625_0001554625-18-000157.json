@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1554625,
+  "episode_accession": "0001554625-18-000157",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Stira Alcentra Global Credit Fund", "cik": 1688479, "ticker": null},
+      "acquirer": {"name": "Priority Income Fund, Inc.", "cik": 1554625, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001554625-19-000013", "quote": "the Priority Income Fund is a unique, distinctive alternative investment set up as a closed end mutual fund that is currently in its offering period, raising assets in a subscription offering"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001554625-18-000159", "date": "2018-12-27", "quote": "On December 21, 2018, the Company entered into an agreement and plan of merger (the “Merger Agreement”) with Stira Alcentra Global Credit Fund, a Delaware statutory trust (“Stira Alcentra”) in connection with the proposed combination of both entities by a merger and related transactions (the “Merger”)"},
+      "outcome_evidence": null,
+      "notes": "Both funds are non-traded: the acquirer is described as in a subscription offering with quarterly tender offers and a possible later exchange listing (same filing: 'Sometime after Nov 2 nd the fund is expected to pursue a liquidity event, such as an exchange listing'), and the target is also described as offering shares and doing repurchase offers. No completion, termination or vote result appears in the excerpts."
+    }
+  ],
+  "problems": ""
+}

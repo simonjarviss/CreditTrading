@@ -1,0 +1,78 @@
+{
+ "years": [
+  2010,
+  2025
+ ],
+ "n_bdc_ciks": 270,
+ "n_cef_ciks": 1839,
+ "n_universe44": 44,
+ "nt_filings_total_by_group_kind": {
+  "bdc|NT 10-K": 53,
+  "bdc|NT 10-Q": 89,
+  "cef|NT 10-K": 84,
+  "cef|NT 10-Q": 114,
+  "cef|NT N-CEN": 75,
+  "cef|NT N-CSR": 126,
+  "cef|NT N-SAR": 37,
+  "cef|NT NPORT": 50,
+  "universe44|NT N-CEN": 2,
+  "universe44|NT N-CSR": 4
+ },
+ "distinct_nt_filers_per_year_median": {
+  "bdc": 4.0,
+  "cef": 14.5,
+  "universe44": 0.0
+ },
+ "universe44_nt_rows": [
+  [
+   "VVR",
+   "NT-NCSR",
+   "2016-05-10"
+  ],
+  [
+   "VKQ",
+   "NT-NCSR",
+   "2016-05-10"
+  ],
+  [
+   "VMO",
+   "NT-NCSR",
+   "2016-05-10"
+  ],
+  [
+   "NXP",
+   "NT N-CEN",
+   "2021-06-15"
+  ],
+  [
+   "NIM",
+   "NT N-CEN",
+   "2021-06-15"
+  ],
+  [
+   "BGH",
+   "NTFNCSR",
+   "2025-03-20"
+  ]
+ ],
+ "auditor_401": {
+  "listed_bdcs": 42,
+  "live_requests": 28,
+  "filings_8k_401_2010_2025": 26,
+  "distinct_bdcs_with_401": 16,
+  "per_year": {
+   "2010": 1,
+   "2013": 1,
+   "2014": 2,
+   "2015": 3,
+   "2016": 1,
+   "2017": 1,
+   "2018": 1,
+   "2019": 6,
+   "2021": 1,
+   "2023": 1,
+   "2024": 2,
+   "2025": 3
+  }
+ }
+}

@@ -1,0 +1,189 @@
+{
+ "panel_last_date": "2025-12-31",
+ "micro: $2, $100k to $1M a day": {
+  "deals_eligible": 541,
+  "deals_per_year": 20.88803088803089,
+  "live_deals_median": 4.0,
+  "flat_day_share": 0.519558214450069,
+  "share_withdrawn": 0.14417744916820702,
+  "held_sessions_median": 60.0,
+  "per_deal_return_pct": {
+   "mean": 3.8371809611829946,
+   "median": 2.5258000000000003,
+   "p5": -13.4417,
+   "worst": -90.5492,
+   "share_positive": 0.8817005545286506
+  },
+  "raw": {
+   "first": "2000-02-01",
+   "last": "2025-12-31",
+   "n_days": 6519,
+   "n_active_days": 3133,
+   "ann_ret": 0.04228667761229787,
+   "ann_vol": 0.09207147147266576,
+   "sharpe": 0.4592810013344032,
+   "t": 2.3359777446646777,
+   "mean_bp_per_active_day": 3.4915929677748103,
+   "hit_rate_active_days": 0.5442068305138844,
+   "max_drawdown": -0.35311266309523726
+  },
+  "over_bills": {
+   "first": "2000-02-01",
+   "last": "2025-12-31",
+   "n_days": 6519,
+   "n_active_days": 3133,
+   "ann_ret": 0.029839507800977112,
+   "ann_vol": 0.09206715527163074,
+   "sharpe": 0.3241058954514234,
+   "t": 1.648455208226419,
+   "mean_bp_per_active_day": 2.4638354555774646,
+   "hit_rate_active_days": 0.5323970635173955,
+   "max_drawdown": -0.4040854599206346
+  },
+  "market": {
+   "beta": 0.062051039784318196,
+   "beta_same_day": 0.046018697003979266,
+   "alpha_per_year": 0.024941552395724095,
+   "alpha_t_newey_west": 1.542678244767482,
+   "months_market_below_minus_4pct": 41,
+   "beta_in_those_months": 0.34575122778501916,
+   "mean_return_in_those_months": -0.003124868505868562,
+   "beta_other_months": -0.01367723978983445
+  },
+  "over_bills_by_era": {
+   "2000-07": 1.3466601465898722,
+   "2008-12": 0.16807789436175938,
+   "2013-17": 0.30608524493938016,
+   "2018-22": 0.21076713526709678,
+   "2023-25": -0.5219959131243214
+  },
+  "over_bills_halves": [
+   0.8188338888249805,
+   -0.1506115658433779
+  ]
+ },
+ "original: $5, $1M and over": {
+  "deals_eligible": 1865,
+  "deals_per_year": 72.00772200772201,
+  "live_deals_median": 21.0,
+  "flat_day_share": 0.03788924681699647,
+  "share_withdrawn": 0.06541554959785523,
+  "held_sessions_median": 59.0,
+  "per_deal_return_pct": {
+   "mean": 1.7707594638069706,
+   "median": 1.4809999999999997,
+   "p5": -3.94966,
+   "worst": -85.4205,
+   "share_positive": 0.8552278820375335
+  },
+  "raw": {
+   "first": "2000-02-01",
+   "last": "2025-12-31",
+   "n_days": 6519,
+   "n_active_days": 6272,
+   "ann_ret": 0.06817030180733687,
+   "ann_vol": 0.06944685611836629,
+   "sharpe": 0.9816182562842924,
+   "t": 4.992669833444929,
+   "mean_bp_per_active_day": 2.8117040555785167,
+   "hit_rate_active_days": 0.5454400510204082,
+   "max_drawdown": -0.2178978552859423
+  },
+  "over_bills": {
+   "first": "2000-02-01",
+   "last": "2025-12-31",
+   "n_days": 6519,
+   "n_active_days": 6272,
+   "ann_ret": 0.0492938637033332,
+   "ann_vol": 0.06944953673805403,
+   "sharpe": 0.7097795898805935,
+   "t": 3.6100542386056054,
+   "mean_bp_per_active_day": 2.0331398397135994,
+   "hit_rate_active_days": 0.5325255102040817,
+   "max_drawdown": -0.21986095052403687
+  },
+  "market": {
+   "beta": 0.16086410746836047,
+   "beta_same_day": 0.18365291353545551,
+   "alpha_per_year": 0.03668190329953091,
+   "alpha_t_newey_west": 3.578359810381203,
+   "months_market_below_minus_4pct": 41,
+   "beta_in_those_months": 0.0012834529778486654,
+   "mean_return_in_those_months": -0.004202089560114669,
+   "beta_other_months": 0.10850512826451096
+  },
+  "over_bills_by_era": {
+   "2000-07": 0.9721414471409503,
+   "2008-12": 0.8147736255666264,
+   "2013-17": 1.2476589815371184,
+   "2018-22": 0.3343450080600178,
+   "2023-25": 0.5719907140877595
+  },
+  "over_bills_halves": [
+   0.8506586925310423,
+   0.5625747149780449
+  ]
+ },
+ "between: $2, $1M to $5M": {
+  "deals_eligible": 542,
+  "deals_per_year": 20.92664092664093,
+  "live_deals_median": 5.0,
+  "flat_day_share": 0.4520631998772818,
+  "share_withdrawn": 0.08671586715867159,
+  "held_sessions_median": 55.0,
+  "per_deal_return_pct": {
+   "mean": 2.1423918819188192,
+   "median": 1.8361000000000003,
+   "p5": -3.9496900000000004,
+   "worst": -135.74940000000004,
+   "share_positive": 0.8745387453874539
+  },
+  "raw": {
+   "first": "2000-02-01",
+   "last": "2025-12-31",
+   "n_days": 6519,
+   "n_active_days": 3569,
+   "ann_ret": 0.05758378566031268,
+   "ann_vol": 0.07691332010890674,
+   "sharpe": 0.7486841756249234,
+   "t": 3.8079292785051617,
+   "mean_bp_per_active_day": 4.173823741472849,
+   "hit_rate_active_days": 0.541608293639675,
+   "max_drawdown": -0.2684839523809526
+  },
+  "over_bills": {
+   "first": "2000-02-01",
+   "last": "2025-12-31",
+   "n_days": 6519,
+   "n_active_days": 3570,
+   "ann_ret": 0.04478148469390679,
+   "ann_vol": 0.07687553396605498,
+   "sharpe": 0.5825193320111496,
+   "t": 2.962787904270863,
+   "mean_bp_per_active_day": 3.2449701960737443,
+   "hit_rate_active_days": 0.5302521008403361,
+   "max_drawdown": -0.2706331587301589
+  },
+  "market": {
+   "beta": 0.07374739891588185,
+   "beta_same_day": 0.07535101428914139,
+   "alpha_per_year": 0.038987807814819926,
+   "alpha_t_newey_west": 2.610045945961982,
+   "months_market_below_minus_4pct": 41,
+   "beta_in_those_months": 0.18008073547825898,
+   "mean_return_in_those_months": -0.004458063977378431,
+   "beta_other_months": 0.0870260998210109
+  },
+  "over_bills_by_era": {
+   "2000-07": 0.9364684526366249,
+   "2008-12": 0.48724750406178396,
+   "2013-17": -0.1422479416814916,
+   "2018-22": 0.471191194828728,
+   "2023-25": 1.0131015265771783
+  },
+  "over_bills_halves": [
+   0.7195777445401998,
+   0.4499117104359573
+  ]
+ }
+}

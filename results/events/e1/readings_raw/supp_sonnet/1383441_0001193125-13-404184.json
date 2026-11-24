@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1383441,
+  "episode_accession": "0001193125-13-404184",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "AllianzGI Global Equity & Convertible Income Fund", "cik": 1398481, "ticker": "NGZ"},
+      "acquirer": {"name": "AllianzGI Equity & Convertible Income Fund", "cik": 1383441, "ticker": "NIE"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-13-404184", "date": "2013-10-21", "quote": "We are proposing to merge AllianzGI Global Equity & Convertible Income Fund (“NGZ”) into AllianzGI Equity & Convertible Income Fund (“NIE” and, together with NGZ, the “Funds”)."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show only the proposal (N-14, amendment, 425 proxy fact sheet for a joint meeting on January 14, 2014) and later annual-meeting proxies that do not mention the merger. No excerpt states the outcome. Exchange listing is only implied by a mention of NYSE listing fees, which does not settle it."
+    }
+  ],
+  "problems": ""
+}

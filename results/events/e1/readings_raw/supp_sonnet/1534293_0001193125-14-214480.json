@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1534293,
+  "episode_accession": "0001193125-14-214480",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Salient MLP & Energy Infrastructure Fund", "cik": 1513970, "ticker": "SMF"},
+      "acquirer": {"name": "Salient Midstream & MLP Fund", "cik": 1534293, "ticker": "SMM"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-14-214480", "quote": "Salient MLP & Energy Infrastructure Fund (NYSE: SMF) and Salient Midstream & MLP Fund (NYSE: SMM)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-14-214480", "date": "2014-05-28", "quote": "The Boards of Trustees for Salient MLP & Energy Infrastructure Fund (NYSE: SMF) and Salient Midstream & MLP Fund (NYSE: SMM) (together, the “Funds” and each a “Fund”) have approved a proposed reorganization (the “Reorganization”), subject to shareholder approval, under which shareholders of SMF will receive SMM common shares and SMM would acquire substantially all of the assets and liabilities of SMF."},
+      "outcome_evidence": null,
+      "notes": "SMF's CIK 1513970 is taken from the FILED BY line of seq 2 (0000894189-14-002684). The window ends with the 2014-09-30 N-14 8C/A and two later SMM annual-meeting proxy statements (2015, 2016) that mention only trustee elections; no excerpt states a vote result, completion or termination."
+    }
+  ],
+  "problems": "No filing in the excerpts states how the proposed reorganization ended."
+}

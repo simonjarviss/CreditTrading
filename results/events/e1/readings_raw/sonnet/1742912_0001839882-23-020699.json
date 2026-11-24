@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1742912,
+  "episode_accession": "0001839882-23-020699",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Gotham Short Strategies Fund (a series of FundVantage Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Gotham Short Strategies ETF (a newly-created series of Tidal ETF Trust)", "cik": 1742912, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001839882-23-020699", "quote": "by the Gotham Short Strategies ETF (the “Acquiring Fund”), a newly-created series of Tidal ETF Trust (the “ETF Trust”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001839882-23-020699", "date": "2023-08-04", "quote": "To approve an Agreement and Plan of Reorganization (the “Plan”) pursuant to which the assets and the liabilities of the Target Fund will be acquired and assumed, respectively, by the Gotham Short Strategies ETF (the “Acquiring Fund”), a newly-created series of Tidal ETF Trust (the “ETF Trust”), in exchange solely for shares of the Acquiring Fund (“Acquiring Fund Shares”)."},
+      "outcome_evidence": null,
+      "notes": "Acquirer is an ETF; target is a series of a trust and is not described as exchange listed. Special meeting set for October 13, 2023; result not shown."
+    },
+    {
+      "target": {"name": "Unusual Whales Subversive Democratic Trading ETF (a series of Series Portfolios Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Unusual Whales Subversive Democratic Trading ETF (a series of Tidal ETF Trust)", "cik": 1742912, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010891", "quote": "Unusual Whales Subversive Democratic Trading ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010891", "date": "2024-08-28", "quote": "COMBINED PROXY STATEMENT AND PROSPECTUS For the Reorganization of Unusual Whales Subversive Democratic Trading ETF Unusual Whales Subversive Republican Trading ETF"},
+      "outcome_evidence": null,
+      "notes": "Both funds are ETFs by name. Closing expected on or about December 9, 2024 per the N-14; result not shown."
+    },
+    {
+      "target": {"name": "Unusual Whales Subversive Republican Trading ETF (a series of Series Portfolios Trust)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Unusual Whales Subversive Republican Trading ETF (a series of Tidal ETF Trust)", "cik": 1742912, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010891", "quote": "Unusual Whales Subversive Republican Trading ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010891", "date": "2024-08-28", "quote": "COMBINED PROXY STATEMENT AND PROSPECTUS For the Reorganization of Unusual Whales Subversive Democratic Trading ETF Unusual Whales Subversive Republican Trading ETF"},
+      "outcome_evidence": null,
+      "notes": "See the Democratic ETF deal."
+    },
+    {
+      "target": {"name": "ATAC Rotation Fund (a series of Managed Portfolio Series)", "cik": null, "ticker": null},
+      "acquirer": {"name": "ATAC Rotation Fund (a newly-created mutual fund within Tidal ETF Trust)", "cik": 1742912, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-25-002648", "quote": "The enclosed Proxy Statement/Prospectus describes a proposal to reorganize the Target Fund into a newly-created mutual fund within Tidal ETF Trust (the “Acquiring Entity”), which is also called the ATAC Rotation Fund"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-25-002648", "date": "2025-03-14", "quote": "The enclosed Proxy Statement/Prospectus describes a proposal to reorganize the Target Fund into a newly-created mutual fund within Tidal ETF Trust (the “Acquiring Entity”), which is also called the ATAC Rotation Fund"},
+      "outcome_evidence": null,
+      "notes": "Acquirer is described as a mutual fund; meeting date left blank in the filing; result not shown."
+    }
+  ],
+  "problems": "Tidal ETF Trust is the registrant for several unrelated reorganizations into its series. The 2024-03-22 PRE 14A and 2024-04-04 DEF 14A concern a sub-advisory agreement for the Adasina Social Justice All Cap Global ETF, not a merger, and were not recorded as a deal. Target fund CIKs are not shown in the filing headers (all four filings list only the Tidal ETF Trust as filer)."
+}

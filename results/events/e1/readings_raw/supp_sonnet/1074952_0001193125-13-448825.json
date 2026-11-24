@@ -1,0 +1,68 @@
+{
+  "episode_cik": 1074952,
+  "episode_accession": "0001193125-13-448825",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen California Performance Plus Municipal Fund, Inc.", "cik": 856227, "ticker": null},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named as a Subject Company (Commission File No. 811-05930) in the 2014-02-24 425 (0001193125-14-064474) filed by NAC; absent from the Subject Company list of the 2014-03-19 425. The excerpts do not say why, and no outcome is stated. Roles inferred from the N-14 registrant (NAC) and the 'Filed by' lines; the excerpts shown do not spell out who merges into whom."
+    },
+    {
+      "target": {"name": "Nuveen California Municipal Market Opportunity Fund, Inc.", "cik": 862313, "ticker": null},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named as a Subject Company (811-06081) in the 425s of 2014-02-24 and 2014-03-19; absent from the 2014-04-07 425. No outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Nuveen California Investment Quality Municipal Fund, Inc.", "cik": 868440, "ticker": "NQC"},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named as a Subject Company (811-06177) in the 425s of 2014-02-24, 2014-03-19, 2014-04-07 and 2014-04-14. The 2014-04-14 425 (0001193125-14-142753) is headed 'IMPORTANT ANNOUNCEMENT TO SHAREHOLDERS OF NUVEEN CLOSED-END FUNDS' and begins 'On April 14, 2014, TIAA-CREF, a national financial services organization, announced that it had entered into an agreement' but the excerpt is cut off before saying what; no outcome is stated."
+    },
+    {
+      "target": {"name": "Nuveen California Select Quality Municipal Fund, Inc.", "cik": 874142, "ticker": "NVC"},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named as a Subject Company (811-06294) in the 425s of 2014-02-24, 2014-03-19, 2014-04-07 and 2014-04-14. Same cut-off 2014-04-14 TIAA-CREF announcement as for Investment Quality; no outcome stated."
+    },
+    {
+      "target": {"name": "Nuveen California Quality Income Municipal Fund, Inc.", "cik": 879826, "ticker": null},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Named as a Subject Company (811-06425) in the 425s of 2014-02-24 and 2014-03-19; absent from the 2014-04-07 425. No outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Nuveen CA Premium Income Municipal Fund", "cik": 905000, "ticker": "NCU"},
+      "acquirer": {"name": "Nuveen California Dividend Advantage Municipal Fund", "cik": 1074952, "ticker": "NAC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": null,
+      "outcome_evidence": null,
+      "notes": "Printed with ticker NCU in the Subject Company block of the 425s of 2014-03-19 and 2014-04-07 (CIK 905000 is taken from the filer list of seq 21, by name). Whether NCU is a merger target of NAC is not stated in the excerpts; included because the filings name it with the subject companies. No outcome stated."
+    }
+  ],
+  "problems": "Compact excerpts show only the first 800 characters of each filing, so none states what was proposed or how it ended; the N-14 and proxy excerpts are cover pages and risk-factor text. Announcement and outcome are null for every deal. Exchange listing is not stated, so both_listed is null. A later 2014 proxy (DEF 14A 0001193125-14-241379) concerns NKX and NAC (Nuveen California AMT-Free Municipal Income Fund and NAC) but its excerpt does not describe a merger outcome."
+}

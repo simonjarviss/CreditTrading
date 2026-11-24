@@ -1,0 +1,68 @@
+{
+  "episode_cik": 1318342,
+  "episode_accession": "0001081400-22-000837",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "361 Domestic Long/Short Equity Fund", "cik": 1318342, "ticker": null},
+      "acquirer": {"name": "Allspring Funds Trust (a newly constituted corresponding series)", "cik": 1081400, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001081400-22-000837", "date": "2022-10-05", "quote": "The proposals for consideration at the Meeting relate to the reorganization of each Target Fund into a newly constituted series of the Allspring Funds (each an “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "Special meeting slated for November 4, 2022. Listing status not stated. CIK given is the trust named in the header (Investment Managers Series Trust), not a fund CIK. The later 2022-11 proxy filings were excerpted only at their cover pages, so no outcome is shown."
+    },
+    {
+      "target": {"name": "361 Global Long/Short Equity Fund", "cik": 1318342, "ticker": null},
+      "acquirer": {"name": "Allspring Funds Trust (a newly constituted corresponding series)", "cik": 1081400, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001081400-22-000837", "date": "2022-10-05", "quote": "The proposals for consideration at the Meeting relate to the reorganization of each Target Fund into a newly constituted series of the Allspring Funds (each an “Acquiring Fund”)"},
+      "outcome_evidence": null,
+      "notes": "See the Domestic fund deal."
+    },
+    {
+      "target": {"name": "Zacks All-Cap Core Fund", "cik": 1318342, "ticker": null},
+      "acquirer": {"name": "Zacks Trust (new identically-named series)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001398344-23-014644", "quote": "New Fund shares issued to Fund shareholders in the Reorganization will be duly authorized, validly issued, fully paid and non-assessable when issued, will be redeemable without restriction and will have no preemptive or conversion rights."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001398344-23-014644", "date": "2023-08-11", "quote": "The proposal is to approve the reorganization of each Fund into a corresponding new, identically-named series (the “New Funds” and each a “New Fund”) of the Zacks Trust, a Delaware statutory trust"},
+      "outcome_evidence": null,
+      "notes": "Redeemable shares indicate open-end funds; the text does not use the words mutual fund. Meeting scheduled for October 26, 2023. Completion not shown."
+    },
+    {
+      "target": {"name": "Zacks Small-Cap Core Fund", "cik": 1318342, "ticker": null},
+      "acquirer": {"name": "Zacks Trust (new identically-named series)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001398344-23-014644", "quote": "New Fund shares issued to Fund shareholders in the Reorganization will be duly authorized, validly issued, fully paid and non-assessable when issued, will be redeemable without restriction and will have no preemptive or conversion rights."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001398344-23-014644", "date": "2023-08-11", "quote": "The proposal is to approve the reorganization of each Fund into a corresponding new, identically-named series (the “New Funds” and each a “New Fund”) of the Zacks Trust, a Delaware statutory trust"},
+      "outcome_evidence": null,
+      "notes": "See Zacks All-Cap Core Fund."
+    },
+    {
+      "target": {"name": "Zacks Dividend Fund", "cik": 1318342, "ticker": null},
+      "acquirer": {"name": "Zacks Trust (new identically-named series)", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001398344-23-014644", "quote": "New Fund shares issued to Fund shareholders in the Reorganization will be duly authorized, validly issued, fully paid and non-assessable when issued, will be redeemable without restriction and will have no preemptive or conversion rights."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001398344-23-014644", "date": "2023-08-11", "quote": "The proposal is to approve the reorganization of each Fund into a corresponding new, identically-named series (the “New Funds” and each a “New Fund”) of the Zacks Trust, a Delaware statutory trust"},
+      "outcome_evidence": null,
+      "notes": "See Zacks All-Cap Core Fund."
+    },
+    {
+      "target": {"name": "KL Allocation Fund", "cik": 1318342, "ticker": null},
+      "acquirer": {"name": "Investment Managers Series Trust II (acquiring fund not named in the excerpt)", "cik": 1587982, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001213900-24-045407", "date": "2024-05-21", "quote": "The Special Meeting (the “Meeting”) of shareholders of KL Allocation Fund (the “Fund”), a series of Investment Managers Series Trust (the “Trust”), originally scheduled for April 11, 2024, has been adjourned for a third time to May 31, 2024, due to insufficient shareholder participation."},
+      "outcome_evidence": null,
+      "notes": "Combined proxy statement and prospectus dated March 4, 2024; meeting adjourned a third time to May 31, 2024. The excerpt does not say what the shareholders were voting on beyond a combined proxy statement and prospectus, nor how it ended. Announcement given is the earliest excerpted filing that mentions it, not necessarily the first public announcement."
+    }
+  ],
+  "problems": "Funds are series of a trust; fund-level CIKs not shown, so the trust CIK from the header is used for targets. Whether each fund is open-end is not stated for the 361 and KL funds."
+}

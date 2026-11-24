@@ -1,0 +1,58 @@
+{
+  "episode_cik": 924727,
+  "episode_accession": "0001213900-24-070845",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Credit Suisse Managed Futures Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Manteio Managed Futures Strategy Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-24-070845", "quote": "shareholders of an Acquired Fund who do not wish to become shareholders of the corresponding Acquiring Fund may redeem their Acquired Fund shares before the Reorganization"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "A Joint Special Meeting of Shareholders (the “Special Meeting”) of the Credit Suisse Managed Futures Strategy Fund and Credit Suisse Multialternative Strategy Fund (each, an “Acquired Fund” and together, the “Acquired Funds”)"},
+      "outcome_evidence": null,
+      "notes": "Open-end funds with Class A/C/I shares, redeemable. Meeting date moved from October 31, 2024 to November 15, 2024 (seq 2); outcome not stated in the excerpts."
+    },
+    {
+      "target": {"name": "Credit Suisse Multialternative Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Manteio Multialternative Strategy Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-24-070845", "quote": "shareholders of an Acquired Fund who do not wish to become shareholders of the corresponding Acquiring Fund may redeem their Acquired Fund shares before the Reorganization"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "A Joint Special Meeting of Shareholders (the “Special Meeting”) of the Credit Suisse Managed Futures Strategy Fund and Credit Suisse Multialternative Strategy Fund (each, an “Acquired Fund” and together, the “Acquired Funds”)"},
+      "outcome_evidence": null,
+      "notes": "Companion to the Managed Futures deal; same filings and same reasoning."
+    },
+    {
+      "target": {"name": "Centerstone Investors Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA Crescent Fund", "cik": 924727, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-25-073151", "date": "2025-08-01", "quote": "A Special Meeting of Shareholders of the Centerstone Investors Fund (the “Acquired Fund”), a series of Northern Lights Fund Trust III (the “Trust”), has been scheduled for October [ ], 2025"},
+      "outcome_evidence": null,
+      "notes": "Excerpts show only performance tables and the cover; they do not say whether either fund is open-end or exchange-listed, nor the outcome. The title reads 'FPA Cresent Fund' (typo in the filing)."
+    },
+    {
+      "target": {"name": "FPA Queens Road Value Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA Queens Road Value ETF", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-25-125371", "quote": "reorganization of the Target Fund, a mutual fund, into the FPA Queens Road Value ETF (the “Acquiring ETF”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-25-125371", "date": "2025-12-23", "quote": "At the Special Meeting, you will be asked to vote on an Agreement and Plan of Reorganization (the “Plan”) providing for the reorganization of the Target Fund, a mutual fund, into the FPA Queens Road Value ETF (the “Acquiring ETF”)"},
+      "outcome_evidence": null,
+      "notes": "Mutual fund into a newly organized ETF; not a closed-end pair. Outcome not stated."
+    },
+    {
+      "target": {"name": "Mast Managed Futures Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Mast HedgeIndex Managed Futures ETF", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-26-022464", "quote": "reorganization of the Target Fund, a mutual fund, into the Mast HedgeIndex Managed Futures ETF (the “Acquiring ETF”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-26-022464", "date": "2026-03-02", "quote": "At the Special Meeting, you will be asked to vote on an Agreement and Plan of Reorganization (the “Plan”) providing for the reorganization of the Target Fund, a mutual fund, into the Mast HedgeIndex Managed Futures ETF (the “Acquiring ETF”)"},
+      "outcome_evidence": null,
+      "notes": "Mutual fund into a newly organized ETF; not a closed-end pair. The registration title calls the ETF 'Mast HedgeIndex Managed Futures Strategy ETF'. Outcome not stated."
+    }
+  ],
+  "problems": "Episode window spans five unrelated proposals filed by the same trust. The episode fund CIK 924727 is a trust (Investment Managers Series Trust III); it is used as the acquirer CIK because no series CIK appears."
+}

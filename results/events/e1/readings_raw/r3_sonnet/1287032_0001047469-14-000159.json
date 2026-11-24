@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1287032,
+  "episode_accession": "0001047469-14-000159",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nicholas Financial-Canada", "cik": null, "ticker": null},
+      "acquirer": {"name": "Prospect Capital Corporation", "cik": 1287032, "ticker": "PSEC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "terminated",
+      "announcement": {"accession": "0001047469-14-000159", "date": "2014-01-14", "quote": "Once the arrangement becomes effective, none of the resulting changes to Nicholas Financial-Canada will affect the rights of the Dissenting Securityholders or Nicholas Financial-Canada or Prospect, or the price to be paid for the Dissenting Securityholder's shares or options, as the case may be."},
+      "outcome_evidence": {"accession": "0001287032-14-000126", "date": "2014-06-25", "quote": "The Company has elected to withdraw the N-14 Registration Statement because the Arrangement Agreement related to the transaction described in the N-14 Registration Statement has been terminate d."},
+      "notes": "Prospect Capital Corporation is shown as a NASDAQ-listed BDC (8-K exhibit 0001287032-14-000035: 'Prospect Capital Corporation (NASDAQ: PSEC) ... is a business development company'). The excerpts never say what Nicholas Financial-Canada is (no exchange, ticker or fund type for it), so both_listed is null. The deal is an arrangement under British Columbia law, shares of Prospect issued to Nicholas Financial-Canada shareholders. N-14 filed 2014-01-14, amended 2014-02-28; RW filed 2014-06-25 states the arrangement agreement was terminated. Later filings (PRE 14A/DEF 14A, 8-Ks to 2016-01-08) are Prospect's annual meetings and earnings and do not concern this deal. Nicholas Financial-Canada's CIK does not appear in any FILING header."
+    }
+  ],
+  "problems": ""
+}

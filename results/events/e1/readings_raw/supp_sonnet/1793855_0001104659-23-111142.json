@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1793855,
+  "episode_accession": "0001104659-23-111142",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Macquarie/First Trust Global Infrastructure/Utilities Dividend & Income Fund", "cik": 1276469, "ticker": "MFD"},
+      "acquirer": {"name": "abrdn Global Infrastructure Income Fund", "cik": 1793855, "ticker": "ASGI"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-23-110924", "date": "2023-10-24", "quote": "The Board of Trustees of each of the Acquiring Funds, listed below, announces the proposed reorganization of several closed-end investment companies advised by First Trust Advisors, L.P. into the respective Acquiring Funds (“Reorganizations”)."},
+      "outcome_evidence": null,
+      "notes": "Special meeting of the acquired fund scheduled for 2024-02-22 (N-14/A 0001104659-23-125324). No excerpted filing states an exchange listing for either fund or how the reorganization ended."
+    },
+    {
+      "target": {"name": "abrdn Japan Equity Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "abrdn Global Infrastructure Income Fund", "cik": 1793855, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001104659-25-036328", "date": "2025-04-18", "quote": "of abrdn Japan Equity Fund, Inc., a Maryland corporation (the “Fund” or the “Acquired Fund,” as context requires)."},
+      "outcome_evidence": null,
+      "notes": "A second proposal, found only in the 2025 N-14 (0001104659-25-036328) and its amendment (0001104659-25-059944, annual meeting moved from 2025-06-13 to 2025-07-25). The excerpts do not print the acquiring fund's name next to the acquired fund; the pairing rests on ASGI being the N-14 registrant. No listing or outcome is stated."
+    }
+  ],
+  "problems": "The 2023 press releases also list FSD into ACP, FAM into ACP and FGB into AOD, which belong to other acquirers and are not recorded here. The abrdn Japan Equity Fund CIK is not in any header. No excerpt states the outcome of either proposal."
+}

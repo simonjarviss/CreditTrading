@@ -1,0 +1,38 @@
+{
+  "episode_cik": 102426,
+  "episode_accession": "0001099343-13-000045",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Boulder Total Return Fund, Inc.", "cik": 895422, "ticker": "BTF"},
+      "acquirer": {"name": "Boulder Growth & Income Fund, Inc.", "cik": 102426, "ticker": "BIF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-14-089202", "quote": "BIF, BTF and DNY (which are all NYSE listed companies)"},
+      "outcome": null,
+      "announcement": {"accession": "0001099343-13-000045", "date": "2013-11-04", "quote": "have approved the reorganization of each of BTF, DNY and FOFI (the “Target Funds”) into BIF, with BIF continuing as the surviving fund"},
+      "outcome_evidence": null,
+      "notes": "Excerpts never state completion. The 2015-10-06 DEF 14A says only 'in connection with the Reorganization' BIA no longer acts as adviser and that Mr. Looney served as portfolio manager of BTF, DNY and FOFI (2013 to March 2015); that implies but does not state the merger closed."
+    },
+    {
+      "target": {"name": "The Denali Fund Inc.", "cik": 1187520, "ticker": "DNY"},
+      "acquirer": {"name": "Boulder Growth & Income Fund, Inc.", "cik": 102426, "ticker": "BIF"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-14-089202", "quote": "BIF, BTF and DNY (which are all NYSE listed companies)"},
+      "outcome": null,
+      "announcement": {"accession": "0001099343-13-000045", "date": "2013-11-04", "quote": "have approved the reorganization of each of BTF, DNY and FOFI (the “Target Funds”) into BIF, with BIF continuing as the surviving fund"},
+      "outcome_evidence": null,
+      "notes": "Excerpts never state completion; see BTF note."
+    },
+    {
+      "target": {"name": "First Opportunity Fund, Inc.", "cik": 790202, "ticker": "FOFI"},
+      "acquirer": {"name": "Boulder Growth & Income Fund, Inc.", "cik": 102426, "ticker": "BIF"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001099343-14-000032", "quote": "First Opportunity Fund, Inc. (OTC: FOFI)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001099343-13-000045", "date": "2013-11-04", "quote": "have approved the reorganization of each of BTF, DNY and FOFI (the “Target Funds”) into BIF, with BIF continuing as the surviving fund"},
+      "outcome_evidence": {"accession": "0001099343-14-000032", "date": "2014-09-05", "quote": "First Opportunity Fund, Inc. (OTC: FOFI) (the “Fund”) announced today that it had given its notice of redemption with respect to its remaining hedge fund investments."},
+      "notes": "FOFI shown as OTC-quoted in Sept 2014; the N-14 also speaks of 'the benefits of being listed on a national exchange' for FOFI stockholders. Outcome of the merger itself is not stated."
+    }
+  ],
+  "problems": ""
+}

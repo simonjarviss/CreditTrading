@@ -1,0 +1,58 @@
+{
+  "episode_cik": 1511699,
+  "episode_accession": "0000894189-21-000100",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "Delaware U.S. Growth Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Jackson Square Large-Cap Growth Fund", "cik": 1511699, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000894189-21-000100", "date": "2021-01-08", "quote": "Title of Securities being Registered: Investor Class, Institutional Class, and IS Class shares of the Jackson Square Large-Cap Growth Fund."},
+      "outcome_evidence": null,
+      "notes": "Target named from the shareholder letter heading (Delaware U.S. Growth Fund, a series of Delaware Group Adviser Funds); Jackson Square Large-Cap Growth Fund is the fund whose shares are registered. The excerpts do not state that either is open-end or listed, and do not state the outcome."
+    },
+    {
+      "target": {"name": "Kensington Managed Income Fund", "cik": null, "ticker": "KAMIX"},
+      "acquirer": {"name": "Acquiring Income Fund (a fund of Managed Portfolio Series; full name not in the excerpts)", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-22-002019", "quote": "The Target Trust and Acquiring Trust are separate registered open-end management investment"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-22-000120", "date": "2022-01-10", "quote": "Fund is approved by its shareholders, then the Target Fund that received approval of the Reorganization will implement the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Kensington funds are described as mutual funds in the 425 of 2022-06-01 (accession 0000894189-22-004121). The special meeting was adjourned for lack of quorum (425 of 2022-05-20, accession 0000894189-22-003970: adjourned from May 17 to May 31, 2022) and a 425 of 2022-06-08 says adjourned a fourth time. No excerpt states the final result. Pairing of Kensington Managed Income with the Acquiring Income Fund is inferred from the names."
+    },
+    {
+      "target": {"name": "Kensington Dynamic Growth Fund", "cik": null, "ticker": "KAGIX"},
+      "acquirer": {"name": "Acquiring Growth Fund (a fund of Managed Portfolio Series; full name not in the excerpts)", "cik": 1511699, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000894189-22-002019", "quote": "The Target Trust and Acquiring Trust are separate registered open-end management investment"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000894189-22-000120", "date": "2022-01-10", "quote": "Fund is approved by its shareholders, then the Target Fund that received approval of the Reorganization will implement the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "See previous deal; same filings and adjournments."
+    },
+    {
+      "target": {"name": "Target Fund (name not shown in the excerpts)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund (name not shown in the excerpts)", "cik": 1511699, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000894189-21-002187", "date": "2021-04-13", "quote": "If shareholders of the Target Fund do not approve the Plan or if the Reorganization does not otherwise close, the Board will consider what additional action to take with respect to the Target Fund."},
+      "outcome_evidence": null,
+      "notes": "N-14 filed 2021-04-13; fund names, type and outcome are not in the compact excerpt."
+    },
+    {
+      "target": {"name": "Target Fund (name not shown in the excerpts)", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Fund (name not shown in the excerpts)", "cik": 1511699, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000894189-22-006235", "date": "2022-08-25", "quote": "If the Target Fund does not receive shareholder approval of the Reorganization it will continue to operate under its current structure, and the Target Fund Board will consider other possible courses of action."},
+      "outcome_evidence": null,
+      "notes": "N-14 filed 2022-08-25 (amended 2022-09-28); fund names, type and outcome are not in the compact excerpts."
+    }
+  ],
+  "problems": "Most filings are compact excerpts without fund names. The TorrayResolute Small/Mid Cap Growth Fund proxy of 2021 concerns a change of control of its adviser, not a merger, so no deal is recorded for it. Whether the Acquiring Fund CIK equals the episode CIK is assumed only because the filer is Managed Portfolio Series."
+}

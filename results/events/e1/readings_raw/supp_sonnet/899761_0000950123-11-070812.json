@@ -1,0 +1,38 @@
+{
+  "episode_cik": 899761,
+  "episode_accession": "0000950123-11-070812",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen North Carolina Dividend Advantage Municipal Fund", "cik": 1090121, "ticker": "NRB"},
+      "acquirer": {"name": "Nuveen North Carolina Premium Income Municipal Fund", "cik": 899761, "ticker": "NNC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070812", "date": "2011-08-01", "quote": "today announced the Board of Trustees of Nuveen’s closed-end funds approved a series of mergers of single-state Nuveen municipal closed-end funds."},
+      "outcome_evidence": null,
+      "notes": "Excerpts show the proposal, the adjourned annual meetings (to March 5, 2012, then April 13, 2012, then May 14, 2012) and no stated outcome. The 2012-04-18 425 (0001193125-12-167696) lists only Dividend Advantage Municipal Fund 3 and Fund 2 as Subject Companies, no longer this fund; the excerpt does not say why, so no outcome is inferred."
+    },
+    {
+      "target": {"name": "Nuveen North Carolina Dividend Advantage Municipal 2 Fund", "cik": 1158730, "ticker": "NNO"},
+      "acquirer": {"name": "Nuveen North Carolina Premium Income Municipal Fund", "cik": 899761, "ticker": "NNC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070812", "date": "2011-08-01", "quote": "today announced the Board of Trustees of Nuveen’s closed-end funds approved a series of mergers of single-state Nuveen municipal closed-end funds."},
+      "outcome_evidence": null,
+      "notes": "Vote adjourned several times (2012-02-07, 2012-03-12, 2012-04-18 notices); no outcome stated in the excerpts."
+    },
+    {
+      "target": {"name": "Nuveen North Carolina Dividend Advantage Municipal 3 Fund", "cik": 1177216, "ticker": "NII"},
+      "acquirer": {"name": "Nuveen North Carolina Premium Income Municipal Fund", "cik": 899761, "ticker": "NNC"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000950123-11-070812", "date": "2011-08-01", "quote": "today announced the Board of Trustees of Nuveen’s closed-end funds approved a series of mergers of single-state Nuveen municipal closed-end funds."},
+      "outcome_evidence": null,
+      "notes": "Vote adjourned several times (2012-02-07, 2012-03-12, 2012-04-18 notices); no outcome stated in the excerpts."
+    }
+  ],
+  "problems": "No excerpt states how any of the three North Carolina mergers ended. Exchange listing is not stated in the excerpts (tickers only, without an exchange name), so both_listed is null."
+}

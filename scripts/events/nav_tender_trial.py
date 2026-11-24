@@ -1452,6 +1452,7 @@ class Data:
     factors: pd.DataFrame | None
     t_first: pd.Timestamp       # the first P&L session (first day 0 + 2)
     t_last: pd.Timestamp        # 2022-12-30 (fit) / 2024-12-31 (holdout)
+    etf_frames: dict | None = None   # symbol -> e1_etf_hedge_gate.series frame (beta re-estimation rows)
 
 
 def to_events(ev: pd.DataFrame, beta_mode: str = "dimson", unit: str = "group") -> list[Ev]:
@@ -1528,64 +1529,74 @@ def per_event(D: Data, events: list[Ev], led: dict, c_bp: float = 0.0) -> pd.Dat
 def placebo(D: Data, events: list[Ev], episodes: pd.DataFrame, ev: pd.DataFrame,
             draws: int = PLACEBO_DRAWS, seed: int = SEED) -> dict:
     """Stage 2 (prereg §8): each event's day 0 replaced by a session drawn uniformly from the same
-    fund's fit sessions with no tender episode of the fund within PLACEBO_CLEAR sessions, no merger
-    or contest episode open, a beta history, and the real hold length fitting inside the fit. A
-    plain sale (pi = 0, no fee), the same u and ETF, beta re-estimated at the placebo date. The
-    statistic is each draw's mean per-event gross P&L in raw units."""
+    fund's fit sessions with no tender episode of the fund (any class) within PLACEBO_CLEAR
+    sessions, no merger or contest episode open, a beta history (enough valid sessions for
+    `windows`), and the real hold length fitting inside the fit with every return priced. A plain
+    sale (pi = 0, no fee), the same u and ETF, beta re-estimated at the placebo date. The statistic
+    is each draw's mean per-event gross P&L in raw units (u-weighted, as stage 1)."""
+    from scripts.events import e1_etf_hedge_gate as g
     rng = np.random.default_rng(seed)
     sess = D.sessions
+    n = len(sess)
     pos = {d: i for i, d in enumerate(sess)}
-    fit_last = pos[sess[sess <= D.t_last][-1]]
+    lo_i = int(np.searchsorted(sess.values, np.datetime64(D.t_first)))
+    hi_i = int(np.searchsorted(sess.values, np.datetime64(D.t_last), side="right")) - 1
+    need_hist = g.EST_SESSIONS + g.GUARD_SESSIONS + BETA_TEST_H + 1
     cand, holds = {}, {}
+    idx = np.arange(n)
     for e in events:
         r = ev.loc[ev["eid"] == e.eid].iloc[0]
         L = pos[e.F] - pos[e.day0]
         holds[e.eid] = L
-        fr = D.fund[e.eid]["full_ret"]
-        ok = fr.notna()
+        fr = D.fund[e.eid]["full_ret"].reindex(sess)
+        valid = fr.notna().to_numpy()
+        hist = np.concatenate([[0], np.cumsum(valid)[:-1]])          # valid sessions strictly before t
+        nan_cum = np.concatenate([[0], np.cumsum(~valid)])            # NaNs in [0, i)
+        ok = valid & (hist >= need_hist) & (idx >= lo_i) & (idx + L + 1 <= hi_i)
+        # the P&L window [i + 2, i + L + 1] has no missing return
+        s_, e_ = np.minimum(idx + 2, n), np.minimum(idx + L + 2, n)
+        ok &= (nan_cum[e_] - nan_cum[s_]) == 0
         eps = episodes[episodes["cik"] == r.cik]
-        ten = eps[eps["kind"] == "tender"]
-        oth = eps[eps["kind"].isin(("merger", "contest"))]
-        c = []
-        for t in sess[(sess >= D.t_first) & (sess <= D.t_last)]:
-            i = pos[t]
-            if i + L + 1 > fit_last or not ok.get(t, False):
-                continue
-            lo, hi = sess[max(0, i - PLACEBO_CLEAR)], sess[min(len(sess) - 1, i + PLACEBO_CLEAR)]
-            if ((ten["first_date"] <= hi) & (ten["last_date"] >= lo)).any():
-                continue
-            if ((oth["first_date"] <= t) & (oth["last_date"] >= t)).any():
-                continue
-            seg = fr.loc[sess[i + 2]: sess[i + L + 1]]
-            if seg.isna().any():
-                continue
-            c.append(t)
-        cand[e.eid] = c
-    beta_memo = {}
+        for x in eps[eps["kind"] == "tender"].itertuples():
+            a_ = int(np.searchsorted(sess.values, np.datetime64(pd.Timestamp(x.first_date))))
+            b_ = int(np.searchsorted(sess.values, np.datetime64(pd.Timestamp(x.last_date)), side="right")) - 1
+            ok[max(0, a_ - PLACEBO_CLEAR): min(n, b_ + PLACEBO_CLEAR + 1)] = False
+        for x in eps[eps["kind"].isin(("merger", "contest"))].itertuples():
+            a_ = int(np.searchsorted(sess.values, np.datetime64(pd.Timestamp(x.first_date))))
+            b_ = int(np.searchsorted(sess.values, np.datetime64(pd.Timestamp(x.last_date)), side="right")) - 1
+            ok[a_: b_ + 1] = False
+        cand[e.eid] = idx[ok]
+    beta_memo: dict = {}
+    fr_np = {e.eid: D.fund[e.eid]["full_ret"].reindex(sess).to_numpy() for e in events}
+    et_np = {s_: D.etf[s_].reindex(sess).to_numpy() for s_ in {e.etf for e in events}}
     means = np.empty(draws)
+    skipped = 0
     for k_ in range(draws):
         vals = []
         for e in events:
             c = cand[e.eid]
-            if not c:
+            if not len(c):
                 continue
-            t = c[rng.integers(0, len(c))]
-            key = (e.eid, t)
+            i = int(c[rng.integers(0, len(c))])
+            key = (e.eid, i)
             if key not in beta_memo:
-                bb = beta_for(D.fund[e.eid]["full_frame"], D.fund[e.eid]["etf_frame"], t)
-                beta_memo[key] = bb["beta"]
+                beta_memo[key] = beta_for(D.fund[e.eid]["full_frame"], D.fund[e.eid]["etf_frame"], sess[i])["beta"]
             b = beta_memo[key]
             if b is None:
+                skipped += 1
                 continue
-            i = pos[t]
-            pl = sess[i + 2: i + holds[e.eid] + 2]
-            rf = D.fund[e.eid]["full_ret"].reindex(pl).fillna(0.0)
-            re_ = D.etf[e.etf].reindex(pl)
-            vals.append(e.u * float((rf - b * re_).sum()))
+            w = slice(i + 2, i + holds[e.eid] + 2)
+            re_ = et_np[e.etf][w]
+            if not np.isfinite(re_).all():
+                skipped += 1
+                continue
+            vals.append(e.u * float(np.sum(fr_np[e.eid][w] - b * re_)))
         means[k_] = np.mean(vals) if vals else np.nan
     return {"draws": draws, "p95": float(np.nanquantile(means, 0.95)), "mean": float(np.nanmean(means)),
-            "events_with_candidates": int(sum(1 for v in cand.values() if v)),
-            "median_candidates": float(np.median([len(v) for v in cand.values()]))}
+            "p50": float(np.nanquantile(means, 0.5)), "share_draw_means_ge_real": None,
+            "events_with_candidates": int(sum(1 for v in cand.values() if len(v))),
+            "median_candidates": float(np.median([len(v) for v in cand.values()])),
+            "skipped_event_draws": int(skipped), "draw_means": means}
 
 
 # ===================================================================== Stage 0
@@ -1827,8 +1838,25 @@ def stage0_partB(ev: pd.DataFrame, names: pd.DataFrame, flags: pd.DataFrame, rec
         fund_data[r.event_id] = {"ret": fs["ret"].reindex(sessions), "close": fs["close"].reindex(sessions),
                                  "bridged": fs["bridged"], "full_ret": full["ret"].reindex(sessions),
                                  "full_frame": fund_frames[r.permno], "etf_frame": etf_frames[need_etf[sym]]}
+        # report-only inputs (prereg §10): the residual sold 10 sessions after pricing needs a
+        # longer priced window; None (counted) where it runs past the fit or cannot be priced.
+        F10 = exit_session(r.outcome_session, r.x_p, 10, terminated=(r.outcome == "terminated"))
+        try:
+            if add_sessions(F10, 1) > FIT_LAST_SESSION:
+                raise TrialError("past the fit")
+            f10 = series_on(dsf, r.permno, sessions, add_sessions(r.day0, 2) - pd.Timedelta(days=10),
+                            add_sessions(F10, 1), dl)
+            fund_data[r.event_id].update(ret10=f10["ret"].reindex(sessions), close10=f10["close"].reindex(sessions))
+        except TrialError:
+            fund_data[r.event_id].update(ret10=None, close10=None)
+        from scripts.events.cef_corp_action_census import adv_before, post_discount
+        adv = adv_before(dsf, r.permno, r.day0)
+        disc, why = None, "no offer-stated NAV"
+        if not pd.isna(r.nav) and not pd.isna(r.nav_date):
+            cl = dsf.loc[(dsf["permno"] == r.permno) & (dsf["date"] == pd.Timestamp(r.nav_date)), "prc"]
+            disc, why = post_discount(float(r.nav), r.nav_date, r.day0, float(cl.iloc[0]) if len(cl) else None)
         rows.append({"eid": r.event_id, "excluded": None, "etf": sym, "route": route, "fee_pct": fee, "beta": b["beta"],
-                     "beta_ols": b["beta_ols"], "beta_n": b["n"]})
+                     "beta_ols": b["beta_ols"], "beta_n": b["n"], "adv_usd": adv, "disc_post": disc, "disc_post_why": why})
     X = pd.DataFrame(rows)
     rec["excluded_partB"] = X.loc[X["excluded"].notna(), "excluded"].value_counts().to_dict() if len(X) else {}
     X = X[X["excluded"].isna()].drop(columns="excluded")
@@ -1855,7 +1883,7 @@ def stage0_partB(ev: pd.DataFrame, names: pd.DataFrame, flags: pd.DataFrame, rec
         raise Stage0Halt(f"the rulings block (prereg skill §4b): {e}") from None
     first_pl = add_sessions(t["day0"].min(), 2)
     D = Data(ev=t, fund=fund_data, etf=etf_ret, sessions=sessions, factors=fac, t_first=first_pl,
-             t_last=FIT_LAST_SESSION)
+             t_last=FIT_LAST_SESSION, etf_frames={s: etf_frames[p] for s, p in need_etf.items()})
     return {"data": D, "ruled": ruled, "flags": flags}
 
 
@@ -1875,7 +1903,7 @@ def verdict_of(stages: dict) -> str:
 
 
 def fit_on(D: Data, episodes: pd.DataFrame, capital: float, cap: float | None,
-           placebo_draws: int = PLACEBO_DRAWS) -> dict:
+           placebo_draws: int = PLACEBO_DRAWS, quality_ids: set | None = None, book: pd.Series | None = None) -> dict:
     """Every statistic of every fit stage, whatever the verdict (prereg §12), plus the grid,
     borrow, fees, the report-only rows and the robustness block. Aggregates only."""
     from scripts.cef.spec import VOL_TARGET
@@ -1888,6 +1916,8 @@ def fit_on(D: Data, episodes: pd.DataFrame, capital: float, cap: float | None,
     s1["mean_of_group_means"] = float(pe.groupby("group")["gross"].sum().mean())
     s1["pass"] = s1["cluster_t"] >= T_BAR
     pl = placebo(D, events, episodes, ev, draws=placebo_draws)
+    dm = pl.pop("draw_means")
+    pl["share_draw_means_ge_real"] = float(np.nanmean(dm >= s1["mean"]))
     s2 = {**pl, "real_mean": s1["mean"], "pass": bool(s1["mean"] > pl["p95"])}
     pe15 = per_event(D, events, run["raw"]["ledger"], STAGE3_BP)
     s3 = cluster_stats(pe15["net"], pe15["group"])
@@ -1934,8 +1964,78 @@ def fit_on(D: Data, episodes: pd.DataFrame, capital: float, cap: float | None,
     logo = [(pe.loc[pe["group"] != gg, "gross"].mean()) for gg in gsum.index]
     out["leave_one_group_out_mean"] = {"min": float(np.min(logo)), "median": float(np.median(logo)), "max": float(np.max(logo))}
     out["report_only"] = report_only_rows(D, events, run, pe)
-    out["robustness"] = robustness(D, ev, episodes, cap)
+    out["report_only"]["mechanism_slope"] = mechanism_slope(ev, pe)
+    out["report_only"]["capacity"] = capacity(ev, events, run["w"])
+    out["report_only"]["r_book"] = r_book(run["pnl_trad"].loc[a:b], book)
+    out["robustness"] = robustness(D, ev, episodes, cap, quality_ids or set())
     return out
+
+
+def mechanism_slope(ev: pd.DataFrame, pe: pd.DataFrame) -> dict:
+    """Report-only (prereg §8): per-event gross P&L per unit notional on the terms-implied spread of
+    the accepted slice, (k x NAV) / price - 1 (`census.accepted_slice_spread`), on the events whose
+    offer-stated NAV is dated on or after day 0 (the census's `disc_post` rule,
+    `census.post_discount`, applied at the trial's day 0). OLS, t clustered by group. The
+    mechanism predicts a positive slope."""
+    import statsmodels.api as sm
+    from scripts.events.cef_corp_action_census import accepted_slice_spread
+    x = ev[["eid", "k_pct", "disc_post"]].merge(pe[["eid", "per_notional", "group"]], on="eid")
+    x = x[x["disc_post"].notna() & x["k_pct"].notna()].copy()
+    if len(x) < 5 or x["group"].nunique() < 3:
+        return {"n": int(len(x)), "not computed": "fewer than 5 events with a post-announcement NAV"}
+    x["spread"] = [accepted_slice_spread(float(k), float(d)) for k, d in zip(x["k_pct"], x["disc_post"])]
+    m = sm.OLS(x["per_notional"].astype(float), sm.add_constant(x["spread"].astype(float))).fit(
+        cov_type="cluster", cov_kwds={"groups": pd.factorize(x["group"])[0]})
+    return {"n": int(len(x)), "groups": int(x["group"].nunique()), "slope": float(m.params["spread"]),
+            "slope_t_cluster": float(m.tvalues["spread"]), "spread_median": float(x["spread"].median())}
+
+
+def capacity(ev: pd.DataFrame, events: list[Ev], w: dict) -> dict:
+    """Report-only (prereg §10): each event's entry is its tradable weight times capital; against
+    its 63-session ADV before day 0 (`census.adv_before`). The capital at which the median event's
+    entry reaches 1% and 5% of ADV; participation and the election fee (bp of the event's
+    notional) at $100k, $1m and $10m."""
+    adv = ev.set_index("eid")["adv_usd"]
+    rows = [(e.eid, w.get(e.eid, 0.0), adv.get(e.eid)) for e in events]
+    rows = [(i, ww, a) for i, ww, a in rows if ww > 0 and a is not None and np.isfinite(a) and a > 0]
+    if not rows:
+        return {"not computed": "no entered event with an ADV"}
+    W = np.array([r[1] for r in rows])
+    A = np.array([r[2] for r in rows])
+    out = {"events": len(rows), "adv_median_usd": float(np.median(A))}
+    for x in (0.01, 0.05):
+        out[f"capital_at_{int(x * 100)}pct_adv_median_event_usd"] = float(np.median(x * A / W))
+    for C in (100_000.0, 1_000_000.0, 10_000_000.0):
+        part = W * C / A
+        out[f"at_{int(C)}"] = {"participation_median": float(np.median(part)), "participation_max": float(part.max()),
+                               "election_fee_bp_of_notional_median": float(np.median(ELECTION_FEE_USD / (W * C) * 1e4))}
+    return out
+
+
+def book_pnl() -> pd.Series:
+    """The deployed CEF book's daily total-return P&L, as `scripts/xasset/book_profile.py` builds it
+    (band to edge, gross-capped by the spec, evaluate() on total returns)."""
+    from scripts.cef.band_frontier import band_gross_capped, build_targets, evaluate, total_returns
+    from scripts.cef.spec import BAND_WIDTH, MAX_GROSS_STRESS
+    if MAX_GROSS_STRESS is None:
+        raise TrialError("spec has no max_gross_stress")
+    T_, R_ = build_targets()
+    H_ = band_gross_capped(T_, BAND_WIDTH, MAX_GROSS_STRESS)
+    return evaluate(H_, total_returns(R_))["pnl"]
+
+
+def r_book(pnl: pd.Series, book: pd.Series | None) -> dict:
+    """R-BOOK (prereg §9), report-only, never a kill: correlation and beta of the tradable sleeve's
+    daily P&L with the deployed book's, on the dates both exist and the book holds a position."""
+    if book is None:
+        return {"not computed": "no book P&L supplied"}
+    d = pd.concat([pnl.rename("s"), book.rename("b")], axis=1, join="inner").dropna()
+    d = d[d["b"] != 0]
+    if len(d) < 60:
+        return {"not computed": f"{len(d)} overlapping sessions"}
+    beta = float(np.cov(d["s"], d["b"])[0, 1] / d["b"].var())
+    return {"n": int(len(d)), "first": str(d.index[0].date()), "last": str(d.index[-1].date()),
+            "corr": float(d["s"].corr(d["b"])), "beta_on_book": beta}
 
 
 def report_only_rows(D: Data, events: list[Ev], run: dict, pe: pd.DataFrame) -> dict:
@@ -1975,17 +2075,19 @@ def report_only_rows(D: Data, events: list[Ev], run: dict, pe: pd.DataFrame) -> 
     return out
 
 
-def robustness(D: Data, ev: pd.DataFrame, episodes: pd.DataFrame, cap: float | None) -> dict:
+def robustness(D: Data, ev: pd.DataFrame, episodes: pd.DataFrame, cap: float | None,
+               quality_ids: set | None = None) -> dict:
     """Reported, never chosen from, and none of it rescues a failed headline (prereg §10)."""
     out = {}
 
-    def row(events, label, **kw):
+    def row(events, label, D_=None, **kw):
+        D_ = D_ or D
         try:
-            r = run_pnl(D, events, None, cap, **kw)
-            pe = per_event(D, events, r["raw"]["ledger"])
+            r = run_pnl(D_, events, None, cap, **kw)
+            pe = per_event(D_, events, r["raw"]["ledger"])
             cs = cluster_stats(pe["gross"], pe["group"]) if pe["group"].nunique() >= 2 else {"n": len(pe)}
             out[label] = {"per_event": {k: cs.get(k) for k in ("n", "groups", "mean", "cluster_t")},
-                          "sleeve": grid(r["pnl_trad"], r["turn_trad"], D.t_first, D.t_last)}
+                          "sleeve": grid(r["pnl_trad"], r["turn_trad"], D_.t_first, D_.t_last)}
         except (TrialError, AssertionError, ValueError) as e:
             out[label] = {"not computed": str(e)}
     row(to_events(ev, unit="event"), "one unit per event")
@@ -2002,6 +2104,33 @@ def robustness(D: Data, ev: pd.DataFrame, episodes: pd.DataFrame, cap: float | N
             row(to_events(ev[mask]), lab)
         else:
             out[lab] = {"n": int(mask.sum())}
+    # the residual decided at the outcome filing alone (lag 0) and 10 sessions after pricing
+    ev0 = ev.copy()
+    ev0["F"] = [exit_session(o, x, 0, terminated=(oc == "terminated"))
+                for o, x, oc in zip(ev0["outcome_session"], ev0["x_p"], ev0["outcome"])]
+    row(to_events(ev0), "residual lag 0 (outcome filing only)")
+    ok10 = [i for i in ev["eid"] if D.fund[i].get("ret10") is not None]
+    ev10 = ev[ev["eid"].isin(ok10)].copy()
+    ev10["F"] = [exit_session(o, x, 10, terminated=(oc == "terminated"))
+                 for o, x, oc in zip(ev10["outcome_session"], ev10["x_p"], ev10["outcome"])]
+    D10 = Data(ev=ev10, fund={i: {**D.fund[i], "ret": D.fund[i]["ret10"], "close": D.fund[i]["close10"]} for i in ok10},
+               etf=D.etf, sessions=D.sessions, factors=D.factors, t_first=D.t_first, t_last=D.t_last,
+               etf_frames=D.etf_frames)
+    row(to_events(ev10), f"residual lag 10 ({len(ok10)} of {len(ev)} events priced to F + 1)", D_=D10)
+    q = ev[~ev["eid"].isin(quality_ids or set())]
+    row(to_events(q), f"quality-screen events removed ({len(ev) - len(q)} removed)")
+    # muni events hedged with IEF (duration only), beta re-estimated on IEF with the declared rule
+    if D.etf_frames is not None and "IEF" in D.etf_frames:
+        evI = ev.copy()
+        dropped = 0
+        for i in evI.index[evI["asset_class"] == "muni"]:
+            b = beta_for(D.fund[evI.at[i, "eid"]]["full_frame"], D.etf_frames["IEF"], evI.at[i, "day0"])
+            if b["beta"] is None:
+                dropped += 1
+                evI = evI.drop(index=i)
+                continue
+            evI.at[i, "etf"], evI.at[i, "beta"], evI.at[i, "route"] = "IEF", b["beta"], "alpaca"
+        row(to_events(evI), f"muni hedged with IEF ({int((ev['asset_class'] == 'muni').sum())} muni events, {dropped} without an IEF beta)")
     try:
         r = run_pnl(D, to_events(ev), None, None)
         out["uncapped sized sleeve"] = grid(r["pnl_trad"], r["turn_trad"], D.t_first, D.t_last)
@@ -2028,7 +2157,14 @@ def fit() -> dict:
         raise TrialError(f"{FIT_JSON.name} exists: the fit runs once")
     S = stage0(edgar_only=False)
     inp = load_inputs()
-    res = fit_on(S["data"], inp["episodes"], CAPITAL_USD, MAX_GROSS_STRESS)
+    fl = S["flags"]
+    quality = set(fl.loc[fl["check"].str.startswith("quality_"), "event_id"])
+    try:
+        book = book_pnl()
+    except Exception as e:  # noqa: BLE001 -- report-only (§9): the failure is recorded, never filled
+        book = None
+        S["rec"]["r_book_error"] = f"{type(e).__name__}: {e}"
+    res = fit_on(S["data"], inp["episodes"], CAPITAL_USD, MAX_GROSS_STRESS, quality_ids=quality, book=book)
     res["stage0"] = S["rec"]
     FIT_JSON.write_text(json.dumps(_jsonable(res), indent=1, sort_keys=True))
     return res
@@ -2058,13 +2194,105 @@ def holdout_daily(permnos, refresh: bool = False) -> pd.DataFrame:
 def holdout() -> dict:
     """Stage 7, opened once after the fit verdict's commit: (a) the mean per-event gross P&L > 0
     and (b) the tradable sleeve's mean daily gross P&L > 0, with k and the beta rule frozen from
-    the fit (beta rolls). Its own 20% gate and its own Stage-0 flags apply first."""
+    the fit (beta rolls). Its own Stage 0 comes first, and its 20% unread gate first of all
+    (prereg §4.3, §11.1: "If it fails on the holdout, the holdout halts and is reported; the fit
+    verdict stands"). That gate reads EDGAR only, so a failing holdout is recorded without any
+    2023-24 price being read."""
     if HOLDOUT_JSON.exists():
         raise TrialError(f"{HOLDOUT_JSON.name} exists: the holdout opens once")
     if not fit_verdict_committed():
         raise TrialError("the fit verdict is not committed: the holdout stays sealed")
-    raise Stage0Halt("the holdout run needs the 2023-24 CRSP extract (`stage --holdout`, the team lead) and the holdout "
-                     "events' own Stage-0 rulings; it is not run in this checkout")
+    S = stage0(edgar_only=False, write=False)
+    g = S["rec"]["gate_holdout_count_only"]
+    out = {"opened_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+           "fit_verdict": json.loads(FIT_JSON.read_text())["verdict"], "gate": g,
+           "holdout_events_unread": S["ev"].loc[eligible(S["ev"]) & (S["ev"]["period"] == "holdout")
+                                                & (S["ev"]["outcome"] == "unread"), "label"].tolist()}
+    if g["verdict"] == "FAIL":
+        out["verdict"] = ("HALTED at the holdout's 20% unread gate (prereg §4.3, §11.1): no 2023-24 price or return "
+                          "was read; the fit verdict stands")
+        HOLDOUT_JSON.write_text(json.dumps(_jsonable(out), indent=1, sort_keys=True))
+        return out
+    raise Stage0Halt("the holdout's gate passes: its Stage 0 needs the 2023-24 CRSP extract (`stage --holdout`, the "
+                     "team lead) and the holdout events' DG-NT-1 readings and rulings")
+
+
+def rederive() -> dict:
+    """A second method for the fit's headline numbers (CLAUDE.md data rules: double-check what
+    drives a decision). Independent of `build_matrices`, `evaluate`, `cluster_t` and the Stage-0
+    return series: it reads CRSP's rows again through `crsp_events.daily`, writes each event's
+    daily P&L in a plain loop (the fund's return, the tender row on X_p, (1 - pi) after it, minus
+    beta times the ETF's return, on sessions day 0 + 2 .. F + 1), and computes the per-event mean,
+    a CR1 cluster t and both sleeves' Sharpes by hand. Sizing (k and the cap) is taken from the
+    first method: this checks the P&L arithmetic and the alignment, not the sizing rule."""
+    from scripts.events import crsp_events as ce
+    fit_res = json.loads(FIT_JSON.read_text())
+    S = stage0(edgar_only=False, write=False)
+    D = S["data"]
+    ev = D.ev
+    plist = json.loads(PERMNO_LIST.read_text())["permnos"]
+    dsf = ce.daily(plist)
+    names = ce.names()
+    etf_p, _ = etf_permnos_resolved(names, hedge_symbols())
+    by = {p: g.set_index("date").sort_index() for p, g in dsf.groupby("permno")}
+    sess = D.sessions
+    pos = {d: i for i, d in enumerate(sess)}
+    m = ev.groupby("group")["eid"].transform("size")
+    daily_raw_, per = {}, []
+    for (_, r), mm in zip(ev.iterrows(), m):
+        u = 1.0 / mm
+        f, x = by[int(r["permno"])], by[etf_p[r["etf"]]]
+        pl = sess[pos[r["day0"]] + 2: pos[r["F"]] + 2]
+        tot, rows = 0.0, {}
+        for d in pl:
+            rf = float(f.at[d, "ret"])
+            if r["outcome"] == "completed":
+                if d == r["x_p"]:
+                    prev = sess[pos[d] - 1]
+                    rf = r["pi"] * (r["p_final"] / float(f.at[prev, "prc"]) - 1) + (1 - r["pi"]) * rf
+                elif d > r["x_p"]:
+                    rf = (1 - r["pi"]) * rf
+            v = rf - r["beta"] * float(x.at[d, "ret"])
+            rows[d] = v
+            tot += v
+        daily_raw_[r["eid"]] = (u, pd.Series(rows))
+        pi_exit = r["pi"] if r["outcome"] == "completed" else 0.0
+        per.append({"eid": r["eid"], "group": r["group"], "x": u * tot,
+                    "x15": u * tot - u * STAGE3_BP / 1e4 * (1 + (1 - pi_exit) + 2 * abs(r["beta"]))})
+    P = pd.DataFrame(per)
+
+    def cr1(col):
+        xb = P[col].mean()
+        Gs = P.groupby("group")[col].apply(lambda v: (v - xb).sum())
+        nG_ = len(Gs)
+        return float(xb), float(xb / np.sqrt(nG_ / (nG_ - 1) * (Gs ** 2).sum() / len(P) ** 2)), nG_
+    xbar, t_cr1, nG = cr1("x")
+    x15, t15, _ = cr1("x15")
+    N = len(P)
+    k = fit_res["sizing"]["k"]
+    from scripts.cef.spec import MAX_GROSS_STRESS
+    w, _ = capped_weights(to_events(ev), k, sess, MAX_GROSS_STRESS)
+    raw = pd.Series(0.0, index=sess)
+    trad = pd.Series(0.0, index=sess)
+    for eid, (u, ser) in daily_raw_.items():
+        raw.loc[ser.index] += u * ser.values
+        trad.loc[ser.index] += w[eid] * ser.values
+    a, b = D.t_first, D.t_last
+
+    def sr(x):
+        x = x.loc[a:b]
+        return float(x.mean() / x.std() * np.sqrt(252))
+    out = {"per_event_mean": float(xbar), "per_event_cluster_t": float(t_cr1), "n": N, "groups": nG,
+           "per_event_net15_mean": x15, "per_event_net15_cluster_t": t15,
+           "raw_sleeve_sr": sr(raw), "tradable_sleeve_sr": sr(trad),
+           "first_method": {"per_event_mean": fit_res["stages"]["1"]["mean"],
+                            "per_event_cluster_t": fit_res["stages"]["1"]["cluster_t"],
+                            "per_event_net15_mean": fit_res["stages"]["3"]["mean"],
+                            "per_event_net15_cluster_t": fit_res["stages"]["3"]["cluster_t"],
+                            "raw_sleeve_sr": fit_res["grid_raw"]["gross"],
+                            "tradable_sleeve_sr": fit_res["stages"]["5"]["gross_sr"]}}
+    (TRIAL_DIR / f"rederive_{STAMP}.json").write_text(json.dumps(_jsonable(out), indent=1, sort_keys=True))
+    return out
 
 
 # ===================================================================== staging (the team lead's run)
@@ -2124,6 +2352,7 @@ def main(argv=None) -> int:
     s0.add_argument("--edgar-only", action="store_true")
     sub.add_parser("fit")
     sub.add_parser("holdout")
+    sub.add_parser("rederive")
     st = sub.add_parser("stage")
     st.add_argument("--ibkr")
     st.add_argument("--holdout", action="store_true")
@@ -2136,6 +2365,8 @@ def main(argv=None) -> int:
             print(json.dumps(_jsonable(fit()), indent=1, sort_keys=True))
         elif a.cmd == "holdout":
             print(json.dumps(_jsonable(holdout()), indent=1, sort_keys=True))
+        elif a.cmd == "rederive":
+            print(json.dumps(_jsonable(rederive()), indent=1, sort_keys=True))
         else:
             stage(a.ibkr, a.holdout)
     except Stage0Halt as e:

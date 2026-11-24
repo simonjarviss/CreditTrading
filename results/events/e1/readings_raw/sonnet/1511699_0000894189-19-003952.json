@@ -1,0 +1,38 @@
+{
+ "episode_cik": 1511699,
+ "episode_accession": "0000894189-19-003952",
+ "episode_role": null,
+ "deals": [
+  {
+   "target": {"name": null, "cik": null, "ticker": null},
+   "acquirer": {"name": null, "cik": null, "ticker": null},
+   "both_listed": false,
+   "listed_quote": {"accession": "0000894189-19-006222", "quote": "The Target Trust and Acquiring Trust are separate registered open-end management"},
+   "outcome": "not_a_listed_pair",
+   "announcement": {"accession": "0000894189-19-003952", "date": "2019-06-28", "quote": "If the shareholders of one of the Target Funds approve the Reorganization but the shareholders of the other Target Fund do not approve the Reorganization, then the Reorganization will be implemented with regard to the Target Fund that received shareholder approval of the Reorganization."},
+   "outcome_evidence": null,
+   "notes": "Two Target Funds of ARI (Advisory Research Inc.) reorganizing into Acquiring Funds in connection with ARI selling its midstream energy business to Tortoise; fund names are not given in the excerpts. Open-end funds, so not a listed pair. Outcome of the merger itself not stated in any excerpt."
+  },
+  {
+   "target": {"name": null, "cik": null, "ticker": null},
+   "acquirer": {"name": null, "cik": null, "ticker": null},
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {"accession": "0000894189-21-000100", "date": "2021-01-08", "quote": "If shareholders of the Target Fund do not approve the Plan or if the Reorganization does not otherwise close, the Target Fund Board will consider what additional action to take with respect to the Target Fund."},
+   "outcome_evidence": null,
+   "notes": "Second N-14 (2021-01-08); fund names and listing status not shown in excerpts; outcome not stated."
+  },
+  {
+   "target": {"name": null, "cik": null, "ticker": null},
+   "acquirer": {"name": null, "cik": null, "ticker": null},
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": {"accession": "0000894189-21-002187", "date": "2021-04-13", "quote": "If shareholders of the Target Fund do not approve the Plan or if the Reorganization does not otherwise close, the Board will consider what additional action to take with respect to the Target Fund."},
+   "outcome_evidence": null,
+   "notes": "Third N-14 (2021-04-13); fund names and listing status not shown in excerpts; outcome not stated."
+  }
+ ],
+ "problems": "Fund names are not in the excerpts. The episode CIK is a trust (Managed Portfolio Series) whose role (target or acquirer trust) is not stated. Most other filings are sub-adviser and advisory agreement proxies, not mergers."
+}

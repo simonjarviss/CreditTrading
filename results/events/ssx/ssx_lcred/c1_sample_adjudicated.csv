@@ -1,0 +1,89 @@
+filename,year,company,kind8a,coupon_in_424b,denom25,denom_inst,retail25,why
+edgar/data/931061/0001104659-15-020010.txt,2015,ABBEY NATIONAL TREASURY SERVICES PLC/ENG,baby_bond,True,False,True,False,424B text
+edgar/data/1318885/0000919574-15-004681.txt,2015,DIANA SHIPPING INC.,baby_bond,True,True,True,True,424B text
+edgar/data/1045609/0001193125-15-185329.txt,2015,"Prologis, Inc.",baby_bond,True,False,True,False,424B text
+edgar/data/1114446/0001193125-15-340379.txt,2015,UBS AG,warrant_or_right,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1523700/0000930413-15-001550.txt,2015,XLIT Ltd.,baby_bond,True,False,True,False,424B text
+edgar/data/864270/0001193125-15-402329.txt,2015,AMERICAN HONDA FINANCE CORP,other,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1114446/0001193125-15-172340.txt,2015,UBS AG,warrant_or_right,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1114446/0001193125-15-340367.txt,2015,UBS AG,warrant_or_right,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1167581/0001193125-16-777625.txt,2016,BP CAPITAL MARKETS PLC,baby_bond,True,False,True,False,424B text
+edgar/data/1333621/0001193125-16-707116.txt,2016,Shell International Finance B.V.,baby_bond,True,False,True,False,424B text
+edgar/data/1301236/0001193125-16-687125.txt,2016,Sotherly Hotels Inc.,preferred,True,True,True,True,424B text
+edgar/data/1557157/0001292814-16-005280.txt,2016,Petrobras Global Finance B.V.,baby_bond,True,False,True,False,424B text
+edgar/data/31462/0001104659-16-161301.txt,2016,ECOLAB INC.,baby_bond,True,False,False,False,424B text
+edgar/data/93751/0001193125-16-537042.txt,2016,STATE STREET CORP,preferred,True,True,True,True,424B text
+edgar/data/49196/0001193125-16-511940.txt,2016,HUNTINGTON BANCSHARES INC/MD,preferred,True,True,False,True,424B text
+edgar/data/906780/0001193125-16-419302.txt,2016,EMPIRE RESORTS INC,common,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1166663/0001193125-17-109484.txt,2017,TSAKOS ENERGY NAVIGATION LTD,preferred,True,True,True,True,424B text
+edgar/data/68622/0001193125-17-141535.txt,2017,QWEST CORP,baby_bond,True,True,True,True,424B text
+edgar/data/1029730/0001493152-17-013696.txt,2017,LADENBURG THALMANN FINANCIAL SERVICES INC.,baby_bond,True,True,False,True,424B text
+edgar/data/1314513/0001306830-17-000273.txt,2017,"Ticona Polymers, Inc.",baby_bond,True,False,True,False,424B text
+edgar/data/1053092/0000891092-17-003419.txt,2017,CREDIT SUISSE AG,other,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1413329/0001193125-17-050068.txt,2017,Philip Morris International Inc.,baby_bond,True,False,True,False,424B text
+edgar/data/320193/0001193125-17-181871.txt,2017,APPLE INC,baby_bond,True,False,True,False,424B text
+edgar/data/798359/0001104659-17-059729.txt,2017,INVESTORS REAL ESTATE TRUST,preferred,True,True,False,True,424B text
+edgar/data/844150/0000950103-18-011114.txt,2018,ROYAL BANK OF SCOTLAND GROUP PLC,baby_bond,True,False,True,False,424B text
+edgar/data/1688568/0001193125-18-085853.txt,2018,DXC Technology Co,baby_bond,True,False,True,False,424B text
+edgar/data/314590/0001104659-18-058939.txt,2018,SASOL LTD,baby_bond,True,False,True,False,424B text
+edgar/data/72971/0001387131-18-005773.txt,2018,WELLS FARGO & COMPANY/MN,other,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/14930/0001140361-18-040042.txt,2018,BRUNSWICK CORP,baby_bond,True,True,True,True,424B text
+edgar/data/769218/0001193125-18-113769.txt,2018,AEGON NV,baby_bond,True,False,True,False,424B text
+edgar/data/1131399/0001193125-18-164272.txt,2018,GLAXOSMITHKLINE PLC,baby_bond,True,False,True,False,424B text
+edgar/data/1314514/0001306830-18-000241.txt,2018,Celanese US Holdings LLC,baby_bond,True,False,True,False,424B text
+edgar/data/1129137/0001193125-19-113584.txt,2019,AMERICA MOVIL SAB DE CV/,baby_bond,True,False,True,False,424B text
+edgar/data/927628/0001193125-19-171318.txt,2019,CAPITAL ONE FINANCIAL CORP,baby_bond,True,False,True,False,424B text
+edgar/data/1568162/0001144204-19-015659.txt,2019,"American Finance Trust, Inc",preferred,True,True,False,True,424B text
+edgar/data/1032208/0001193125-19-182705.txt,2019,SEMPRA ENERGY,baby_bond,False,False,True,False,424B text
+edgar/data/1262823/0001193125-19-195736.txt,2019,WESTLAKE CHEMICAL CORP,baby_bond,True,False,False,False,424B text
+edgar/data/38009/0000038009-19-000164.txt,2019,FORD MOTOR CREDIT CO LLC,baby_bond,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1413329/0001193125-19-211062.txt,2019,Philip Morris International Inc.,baby_bond,True,False,False,False,424B text
+edgar/data/732712/0001193125-19-257348.txt,2019,VERIZON COMMUNICATIONS INC,baby_bond,False,False,False,False,424B text
+edgar/data/1114446/0001193125-20-193648.txt,2020,UBS AG,warrant_or_right,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1747565/0001104659-20-139082.txt,2020,Prologis Euro Finance LLC,baby_bond,True,False,True,False,424B text
+edgar/data/732717/0001193125-20-177750.txt,2020,AT&T INC.,baby_bond,True,False,True,False,424B text
+edgar/data/1495240/0001193125-20-270267.txt,2020,GLADSTONE LAND Corp,preferred,True,True,True,True,424B text
+edgar/data/1089113/0001193125-20-302713.txt,2020,HSBC HOLDINGS PLC,baby_bond,True,False,True,False,424B text
+edgar/data/92230/0001193125-20-208297.txt,2020,TRUIST FINANCIAL CORP,preferred,True,True,True,True,424B text
+edgar/data/1483934/0000919574-20-003902.txt,2020,Scorpio Tankers Inc.,baby_bond,True,True,True,True,424B text
+edgar/data/1597033/0001193125-20-239147.txt,2020,Sabre Corp,preferred,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1089113/0001193125-21-171063.txt,2021,HSBC HOLDINGS PLC,baby_bond,True,False,True,False,424B text
+edgar/data/1716951/0001716951-21-000067.txt,2021,"OFS Credit Company, Inc.",preferred,True,True,False,True,424B text
+edgar/data/844150/0000950103-21-008735.txt,2021,NatWest Group plc,baby_bond,True,False,True,False,424B text
+edgar/data/1393311/0001193125-21-186737.txt,2021,Public Storage,preferred,True,True,True,True,424B text
+edgar/data/1833418/0001140361-21-003837.txt,2021,MercadoLibre Chile Ltda.,baby_bond,True,False,True,False,424B text
+edgar/data/1451448/0001493152-21-028192.txt,2021,"ESPORTS ENTERTAINMENT GROUP, INC.",preferred,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1837419/0001193125-21-352266.txt,2021,BEP Subco Inc.,other,True,True,True,True,424B text
+edgar/data/1482512/0001193125-21-330124.txt,2021,"Hudson Pacific Properties, Inc.",preferred,True,True,True,True,424B text
+edgar/data/1287032/0001287032-22-000073.txt,2022,PROSPECT CAPITAL CORP,preferred,True,True,True,True,424B text
+edgar/data/773840/0001193125-22-277026.txt,2022,HONEYWELL INTERNATIONAL INC,baby_bond,True,False,True,False,424B text
+edgar/data/1303523/0001193125-22-077997.txt,2022,British American Tobacco p.l.c.,baby_bond,True,False,True,False,424B text
+edgar/data/1750625/0001193125-22-265221.txt,2022,B.A.T. International Finance p.l.c.,baby_bond,True,False,True,False,424B text
+edgar/data/1089113/0001193125-22-170866.txt,2022,HSBC HOLDINGS PLC,baby_bond,True,False,True,False,424B text
+edgar/data/1750625/0001193125-22-077997.txt,2022,B.A.T. International Finance p.l.c.,baby_bond,True,False,True,False,424B text
+edgar/data/1861318/0001104659-22-006283.txt,2022,Brookfield Infrastructure US Holdings I Corp,other,True,True,True,True,424B text
+edgar/data/64670/0001193125-22-248118.txt,2022,MEDTRONIC INC,baby_bond,True,False,True,False,424B text
+edgar/data/38009/0001104659-23-121476.txt,2023,FORD MOTOR CREDIT CO LLC,baby_bond,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/17313/0000017313-23-000066.txt,2023,CAPITAL SOUTHWEST CORP,baby_bond,True,True,True,True,424B text
+edgar/data/864270/0001193125-23-193420.txt,2023,AMERICAN HONDA FINANCE CORP,other,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1089113/0001193125-23-066071.txt,2023,HSBC HOLDINGS PLC,baby_bond,True,False,True,False,424B text
+edgar/data/773840/0001193125-23-154266.txt,2023,HONEYWELL INTERNATIONAL INC,baby_bond,True,False,True,False,424B text
+edgar/data/1960262/0001903596-23-000932.txt,2023,"LUDWIG ENTERPRISES, INC.",common,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/833444/0001193125-23-157851.txt,2023,Johnson Controls International plc,baby_bond,True,False,True,False,424B text
+edgar/data/839923/0001104659-23-018044.txt,2023,VODAFONE GROUP PUBLIC LTD CO,baby_bond,True,False,False,False,424B text
+edgar/data/1089113/0001193125-24-260818.txt,2024,HSBC HOLDINGS PLC,baby_bond,True,False,True,False,424B text
+edgar/data/8818/0001193125-24-250673.txt,2024,Avery Dennison Corp,baby_bond,True,False,False,False,424B text
+edgar/data/2036337/0001193125-24-233869.txt,2024,Perrigo Ireland 2 Designated Activity Co,baby_bond,True,False,True,False,424B text
+edgar/data/1015551/0001140361-24-024963.txt,2024,SPRINT SPECTRUM LLC,baby_bond,True,False,True,False,424B text
+edgar/data/1649824/0001193125-24-198400.txt,2024,"D.R. Horton - Iowa, LLC",baby_bond,True,False,True,False,424B text
+edgar/data/1167583/0001193125-24-141415.txt,2024,BP CAPITAL MARKETS AMERICA INC,baby_bond,True,False,True,False,424B text
+edgar/data/1444406/0001104659-24-110078.txt,2024,ECOPETROL S.A.,baby_bond,True,False,True,False,424B text
+edgar/data/1649819/0001193125-24-198400.txt,2024,"D.R. Horton - CHAustin, LLC",baby_bond,True,False,True,False,424B text
+edgar/data/1390777/0001193125-25-056677.txt,2025,Bank of New York Mellon Corp,preferred,True,True,False,True,424B text
+edgar/data/930236/0001104659-25-113832.txt,2025,REDWOOD TRUST INC,baby_bond,True,True,True,True,424B text
+edgar/data/1129137/0001140361-25-023080.txt,2025,AMERICA MOVIL SAB DE CV/,baby_bond,True,False,True,False,424B text
+edgar/data/1065059/0001628280-25-054898.txt,2025,CENTRUS ENERGY CORP,preferred,True,False,False,False,424B text
+edgar/data/1748790/0001104659-25-113222.txt,2025,Amcor plc,baby_bond,True,False,True,False,424B text
+edgar/data/80424/0001193125-25-262624.txt,2025,PROCTER & GAMBLE Co,baby_bond,False,False,True,False,424B text
+edgar/data/1794669/0001193125-25-112892.txt,2025,"Shift4 Payments, Inc.",preferred,,,,False,convertible/ETN/MTN/common/warrant by 8-A title
+edgar/data/1570561/0001193125-25-028665.txt,2025,"UVNV, LLC",baby_bond,True,False,True,False,424B text

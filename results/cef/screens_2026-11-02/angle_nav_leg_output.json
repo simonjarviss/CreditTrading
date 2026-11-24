@@ -1,0 +1,231 @@
+{
+ "spec": "cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13",
+ "panel_last": "2022-12-30",
+ "split_coverage": 1.0,
+ "decomposition": [
+  {
+   "era": "2010-14",
+   "days": 384,
+   "nav_ann_pct": -0.3111561758978726,
+   "nav_t": -0.13170241664095478,
+   "disc_ann_pct": 9.952742536824731,
+   "disc_t": 2.0622570878187463,
+   "hold_ann_pct": 9.641586360926857,
+   "hold_sr": 1.6313478313201601,
+   "vol_nav_pct": 3.412867511534852,
+   "vol_disc_pct": 6.167336687371849,
+   "vol_hold_pct": 5.910196572318028,
+   "corr_daily": -0.3504625274094835,
+   "corr_25d": -0.19366108179234912,
+   "share_25d_nav_bigger_than_hold": 0.3125,
+   "share_25d_nav_neg_disc_pos": 0.375
+  },
+  {
+   "era": "2015-19",
+   "days": 1258,
+   "nav_ann_pct": -0.41009102543542547,
+   "nav_t": -0.4424719155443101,
+   "disc_ann_pct": 5.447246278208386,
+   "disc_t": 1.822278140496696,
+   "hold_ann_pct": 5.037155252772959,
+   "hold_sr": 0.7187650028562791,
+   "vol_nav_pct": 2.215712266274469,
+   "vol_disc_pct": 6.995083196590281,
+   "vol_hold_pct": 7.008069720640205,
+   "corr_daily": -0.1525098590901891,
+   "corr_25d": 0.06750919997068637,
+   "share_25d_nav_bigger_than_hold": 0.2549019607843137,
+   "share_25d_nav_neg_disc_pos": 0.3333333333333333
+  },
+  {
+   "era": "2020-22",
+   "days": 756,
+   "nav_ann_pct": -0.01598458515848396,
+   "nav_t": -0.012064824447938148,
+   "disc_ann_pct": 7.117010079144226,
+   "disc_t": 2.1796432175613427,
+   "hold_ann_pct": 7.101025493985742,
+   "hold_sr": 1.0841590070584664,
+   "vol_nav_pct": 2.3166348606408556,
+   "vol_disc_pct": 6.823936265205352,
+   "vol_hold_pct": 6.549800765159164,
+   "corr_daily": -0.28569990655860567,
+   "corr_25d": -0.45037311876221586,
+   "share_25d_nav_bigger_than_hold": 0.22580645161290322,
+   "share_25d_nav_neg_disc_pos": 0.3225806451612903
+  },
+  {
+   "era": "fit 2005-22",
+   "days": 2398,
+   "nav_ann_pct": -0.27000117928372075,
+   "nav_t": -0.36285058897873046,
+   "disc_ann_pct": 6.695141189307706,
+   "disc_t": 3.28898037635488,
+   "hold_ann_pct": 6.425140010023985,
+   "hold_sr": 0.9592958569026686,
+   "vol_nav_pct": 2.4751053549464794,
+   "vol_disc_pct": 6.812838411416264,
+   "vol_hold_pct": 6.697766871181107,
+   "corr_daily": -0.22774902717100845,
+   "corr_25d": -0.19752531671359333,
+   "share_25d_nav_bigger_than_hold": 0.23958333333333334,
+   "share_25d_nav_neg_disc_pos": 0.375
+  }
+ ],
+ "lag_forecast": {
+  "nav_part": {
+   "slope": -0.004065704484473095,
+   "nw_t": -0.026730482478828213,
+   "n": 2398
+  },
+  "disc_part": {
+   "slope": 0.005838906243767717,
+   "nw_t": 0.018217495726054227,
+   "n": 2398
+  },
+  "hold_NEGATIVE_CONTROL": {
+   "slope": 0.001773201759294923,
+   "nw_t": 0.0069121598899436806,
+   "n": 2398
+  },
+  "corr_pred_navpart": -0.0010003252536952133,
+  "sd_pred_vs_sd_navpart": 0.24603983332173673,
+  "AR_nav_part": {
+   "slope": 0.051692437508052774,
+   "nw_t": 0.4318203644590344,
+   "n": 2398
+  },
+  "AR_disc_part": {
+   "slope": 0.18440735349741644,
+   "nw_t": 0.9321012818357253,
+   "n": 2398
+  },
+  "AR_hold_NEGATIVE_CONTROL": {
+   "slope": 0.23609979100546916,
+   "nw_t": 1.1907258514842276,
+   "n": 2398
+  },
+  "AR_corr_pred_navpart": 0.013895307124058629
+ },
+ "hedge": [
+  {
+   "series": "hold (price)",
+   "names": "MUB+HYG+IEF+LQD",
+   "start": "2013-06-25",
+   "end": "2022-12-30",
+   "n": 2398,
+   "r2_in_sample": 0.020632833023490837,
+   "oos_var_reduction": -0.20153964363635501,
+   "factor_component_mean_ann": 0.005126207711892219,
+   "factor_component_nw_t": 0.5503672039538697
+  },
+  {
+   "series": "hold (price)",
+   "names": "MUB+HYG+IEF+LQD+BKLN",
+   "start": "2013-06-25",
+   "end": "2022-12-30",
+   "n": 2398,
+   "r2_in_sample": 0.021387526665370693,
+   "oos_var_reduction": -0.3571655891127956,
+   "factor_component_mean_ann": 0.0019302898085575581,
+   "factor_component_nw_t": 0.1846936710992478
+  },
+  {
+   "series": "hold (price)",
+   "names": "MUB+HYG+IEF+LQD+BKLN",
+   "start": "2015-01-02",
+   "end": "2022-12-30",
+   "n": 2014,
+   "r2_in_sample": 0.027115039790341244,
+   "oos_var_reduction": -0.4485398295051042,
+   "factor_component_mean_ann": 0.003960446614513285,
+   "factor_component_nw_t": 0.3212312582398708
+  },
+  {
+   "series": "hold (total return)",
+   "names": "MUB+HYG+IEF+LQD",
+   "start": "2013-06-25",
+   "end": "2022-12-30",
+   "n": 2398,
+   "r2_in_sample": 0.0193271916760277,
+   "oos_var_reduction": -0.23499020369596124,
+   "factor_component_mean_ann": 0.0032645536180213514,
+   "factor_component_nw_t": 0.3416776013655544
+  },
+  {
+   "series": "hold (total return)",
+   "names": "MUB+HYG+IEF+LQD+BKLN",
+   "start": "2013-06-25",
+   "end": "2022-12-30",
+   "n": 2398,
+   "r2_in_sample": 0.020207014737238738,
+   "oos_var_reduction": -0.3877036038297361,
+   "factor_component_mean_ann": 0.0010342999451815487,
+   "factor_component_nw_t": 0.09848033803258228
+  },
+  {
+   "series": "hold (total return)",
+   "names": "MUB+HYG+IEF+LQD+BKLN",
+   "start": "2015-01-02",
+   "end": "2022-12-30",
+   "n": 2014,
+   "r2_in_sample": 0.025502365040920405,
+   "oos_var_reduction": -0.4930841176151559,
+   "factor_component_mean_ann": 0.002607943553083493,
+   "factor_component_nw_t": 0.20947524747840165
+  },
+  {
+   "series": "NAV part",
+   "names": "MUB+HYG+IEF+LQD",
+   "start": "2013-06-25",
+   "end": "2022-12-30",
+   "n": 2364,
+   "r2_in_sample": 0.0322136719312881,
+   "oos_var_reduction": -0.1751593399602276,
+   "factor_component_mean_ann": 0.0002925940455015134,
+   "factor_component_nw_t": 0.0700532523265691
+  },
+  {
+   "series": "NAV part",
+   "names": "MUB+HYG+IEF+LQD+BKLN",
+   "start": "2013-06-25",
+   "end": "2022-12-30",
+   "n": 2364,
+   "r2_in_sample": 0.03882883034013085,
+   "oos_var_reduction": -0.17405632599766374,
+   "factor_component_mean_ann": -0.0008576555723033033,
+   "factor_component_nw_t": -0.2021611621354687
+  },
+  {
+   "series": "NAV part",
+   "names": "MUB+HYG+IEF+LQD+BKLN",
+   "start": "2015-01-02",
+   "end": "2022-12-30",
+   "n": 1980,
+   "r2_in_sample": 0.050575175619714585,
+   "oos_var_reduction": -0.15076841351809067,
+   "factor_component_mean_ann": 0.0021376774465416844,
+   "factor_component_nw_t": 0.4993844956866779
+  }
+ ],
+ "hedge_position_based": [
+  {
+   "series": "hold (price)",
+   "names": "MUB+HYG+IEF+LQD",
+   "n": 2398,
+   "oos_var_reduction": -0.08741989852096288,
+   "corr": 0.09897838578696776,
+   "hedge_mean_ann": 0.007408247900874167,
+   "hedge_nw_t": 0.6905255591909895
+  },
+  {
+   "series": "hold (price)",
+   "names": "MUB+HYG+IEF+LQD+BKLN",
+   "n": 2398,
+   "oos_var_reduction": -0.136480573791272,
+   "corr": 0.08168373916856901,
+   "hedge_mean_ann": 0.007972100911016517,
+   "hedge_nw_t": 0.6538116929441096
+  }
+ ]
+}

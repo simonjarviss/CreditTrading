@@ -15,6 +15,19 @@ config/.env.*
 *.pyc
 .pytest_cache/
 results/**/_cache_*
+# The live attribution's cache (scripts/cef/live_attribution.py fetch): the cef
+# paper account's FILL activities and EOD equity series. This repository is
+# public; account fills are never committed (docs/REFERENCES.md §12an keeps the
+# series of record outside the repository for the same reason).
+results/cef/live_attribution/_cache/
+# Its analyse outputs carry the same account data (daily.csv holds the EOD equity
+# of every session); the tool refuses to write either where git can see it.
+results/cef/live_attribution/_out/
+results/cef/live_attribution/_out_c4/
+# The evidence pack's row-level live records (per name, per fill, positions). Team lead,
+# 2026-11-03: "Aggregates in repo, rows private". results/**/_cache_* covers it too; this line
+# says so by name, and scripts/report/tests pins it.
+results/report/_cache_live/
 .ipynb_checkpoints/
 *.log
 
@@ -42,6 +55,11 @@ results/events/merger_acquirers_2010_2022.csv
 results/events/merger_ann_sample.csv
 results/events/alpaca_acquirers_2026-10-11.csv
 results/events/term_pull_to_par_measure.csv
+# Since 2026-10-22 their writers write into a project folder (acquirer_shortability.py
+# -> g1a/, term_pull_to_par.py -> term_cef/). The two lines above stay: copies
+# already on disk at the old paths must remain ignored.
+results/events/g1a/alpaca_acquirers_2026-10-11.csv
+results/events/term_cef/term_pull_to_par_measure.csv
 results/events/term_cef_census.csv
 results/events/convert_issuance_events.csv
 # EDGAR-dated merger tables (2026-10-12) join CRSP rows (permnos, CRSP names and
@@ -50,6 +68,9 @@ results/events/convert_issuance_events.csv
 results/events/merger_edgar_dates.csv
 results/events/merger_ann_sample_edgar.csv
 results/events/g6_events_13_names.csv
+# g6_corporate_action_shorts.py writes into g6/ since 2026-10-22; the line above
+# stays for a copy already on disk at the old path.
+results/events/g6/g6_events_13_names.csv
 
 # EDGAR (public, but large and re-fetchable): the response cache is
 # results/events/_cache_edgar/ (already covered by results/**/_cache_*); the
@@ -63,6 +84,10 @@ results/events/edgar_cef_bdc_filings.csv.gz
 # (EDGAR, Alpaca and IBKR only).
 results/events/g1a_historical_deals.csv
 results/events/g1a_detail_*.json
+# g1a_shortability.py writes into g1a/ since 2026-10-22; the two lines above stay
+# for copies already on disk at the old paths.
+results/events/g1a/g1a_historical_deals.csv
+results/events/g1a/g1a_detail_*.json
 # E1 ETF-hedge gate (2026-10-15, scripts/events/e1_etf_hedge_gate.py): the
 # per-target x hedge table carries CRSP permnos and statistics computed on CRSP
 # returns (licensed); the tracked output is e1_etf_hedge_summary_<date>.json
@@ -79,3 +104,18 @@ results/events/conditional_tender_census_full.csv
 # tracked cef_corp_action_events.csv carries EDGAR facts only, and the per-type
 # cef_corp_action_census.csv and the summary JSON are aggregates.
 results/events/cef_corp_action_events_full.csv
+
+# Trial P&L series (scripts/research/registry.py): the repo is public and an event
+# book's series can be a licensed security's return. The tracked ledger holds each
+# series' sha256.
+/results/research/trials/series/
+
+# Exposure readout (scripts/cef/exposure_readout.py, 2026-11-02, report only): the keyless
+# yfinance cache, and the analyse outputs, which carry the caller's positions and equity.
+# This repository is public; the module also refuses any path git can see.
+results/cef/exposure_readout/_cache/
+results/cef/exposure_readout/_out/
+results/cef/exposure_readout/_out_c4/
+
+# Generated site pages (dashboard/build.py, dashboard/site.py); rebuilt from a snapshot, never committed.
+/dashboard/out/

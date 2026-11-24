@@ -1,0 +1,58 @@
+{
+  "episode_cik": 313212,
+  "episode_accession": "0000313212-19-000123",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "T. Rowe Price Institutional Global Focused Growth Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Global Stock Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-19-000123", "quote": "a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-19-000123", "date": "2019-08-01", "quote": "We are writing to inform you about reorganizations that will affect your investment in T. Rowe Price Institutional Global Focused Growth Equity Fund"},
+      "outcome_evidence": null,
+      "notes": "Reorganization of an institutional fund into a mutual fund; no exchange listing. Outcome of the merger not stated in the excerpts."
+    },
+    {
+      "target": {"name": "T. Rowe Price Institutional Global Growth Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-19-000123", "quote": "a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-19-000123", "date": "2019-08-01", "quote": "We are writing to inform you about reorganizations that will affect your investment in T. Rowe Price Institutional Global Focused Growth Equity Fund"},
+      "outcome_evidence": null,
+      "notes": "Acquiring fund name not visible in the excerpts."
+    },
+    {
+      "target": {"name": "T. Rowe Price Institutional U.S. Structured Research Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "U.S. Equity Research Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-19-000123", "quote": "a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-19-000123", "date": "2019-08-01", "quote": "We are writing to inform you about reorganizations that will affect your investment in T. Rowe Price Institutional Global Focused Growth Equity Fund"},
+      "outcome_evidence": null,
+      "notes": "Acquiring fund name from the N-14/A expense discussion."
+    },
+    {
+      "target": {"name": "T. Rowe Price Institutional International Core Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-20-000124", "quote": "a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-20-000124", "date": "2020-06-08", "quote": "We are writing to inform you about reorganizations that will affect your investment in T. Rowe Price Institutional International Core Equity Fund and T. Rowe Price Institutional International Growth Equity Fund"},
+      "outcome_evidence": null,
+      "notes": "Second set of reorganizations (2020)."
+    },
+    {
+      "target": {"name": "T. Rowe Price Institutional International Growth Equity Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": null, "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000313212-20-000124", "quote": "a corresponding mutual fund advised by T. Rowe Price Associates, Inc."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000313212-20-000124", "date": "2020-06-08", "quote": "We are writing to inform you about reorganizations that will affect your investment in T. Rowe Price Institutional International Core Equity Fund and T. Rowe Price Institutional International Growth Equity Fund"},
+      "outcome_evidence": null,
+      "notes": "Second set of reorganizations (2020)."
+    }
+  ],
+  "problems": "Mutual-fund reorganizations, not listed funds. Episode role not stated in the excerpts. Later 2021 DEF 14A filings are only header excerpts."
+}

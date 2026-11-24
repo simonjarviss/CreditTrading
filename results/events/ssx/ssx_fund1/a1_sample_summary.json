@@ -1,0 +1,339 @@
+{
+ "ran_utc": "2026-10-19T20:25:43+00:00",
+ "seed": 20261019,
+ "docs_read": 339,
+ "fund_years": 140,
+ "by_stratum": {
+  "bdc|2010-15": {
+   "fund_years_in_stratum": 145,
+   "common_issue": {
+    "k": 9,
+    "n": 15,
+    "share": 0.6,
+    "wilson95": [
+     0.357464427565077,
+     0.8017577191740534
+    ]
+   },
+   "atm_common": {
+    "k": 1,
+    "n": 15,
+    "share": 0.06666666666666667,
+    "wilson95": [
+     0.011866588606194856,
+     0.2981707755242399
+    ]
+   },
+   "senior_securities": {
+    "k": 6,
+    "n": 15,
+    "share": 0.4,
+    "wilson95": [
+     0.19824228082594664,
+     0.642535572434923
+    ]
+   },
+   "fund_years_capped_at_4_docs": 3
+  },
+  "bdc|2016-19": {
+   "fund_years_in_stratum": 103,
+   "common_issue": {
+    "k": 8,
+    "n": 15,
+    "share": 0.5333333333333333,
+    "wilson95": [
+     0.3011663015105079,
+     0.7519077474025355
+    ]
+   },
+   "atm_common": {
+    "k": 5,
+    "n": 15,
+    "share": 0.3333333333333333,
+    "wilson95": [
+     0.15176100694691236,
+     0.5828687484878701
+    ]
+   },
+   "senior_securities": {
+    "k": 10,
+    "n": 15,
+    "share": 0.6666666666666666,
+    "wilson95": [
+     0.41713125151212976,
+     0.8482389930530876
+    ]
+   },
+   "fund_years_capped_at_4_docs": 6
+  },
+  "bdc|2020-22": {
+   "fund_years_in_stratum": 95,
+   "common_issue": {
+    "k": 5,
+    "n": 15,
+    "share": 0.3333333333333333,
+    "wilson95": [
+     0.15176100694691236,
+     0.5828687484878701
+    ]
+   },
+   "atm_common": {
+    "k": 3,
+    "n": 15,
+    "share": 0.2,
+    "wilson95": [
+     0.07047420643610414,
+     0.4518593533465045
+    ]
+   },
+   "senior_securities": {
+    "k": 8,
+    "n": 15,
+    "share": 0.5333333333333333,
+    "wilson95": [
+     0.3011663015105079,
+     0.7519077474025355
+    ]
+   },
+   "fund_years_capped_at_4_docs": 2
+  },
+  "bdc|2024-25": {
+   "fund_years_in_stratum": 73,
+   "common_issue": {
+    "k": 14,
+    "n": 25,
+    "share": 0.56,
+    "wilson95": [
+     0.37067017019564436,
+     0.7333462505299744
+    ]
+   },
+   "atm_common": {
+    "k": 13,
+    "n": 25,
+    "share": 0.52,
+    "wilson95": [
+     0.334982179531473,
+     0.6996899607103998
+    ]
+   },
+   "senior_securities": {
+    "k": 15,
+    "n": 25,
+    "share": 0.6,
+    "wilson95": [
+     0.40739127785127344,
+     0.7659694233580909
+    ]
+   },
+   "fund_years_capped_at_4_docs": 7
+  },
+  "rcef|2010-15": {
+   "fund_years_in_stratum": 431,
+   "common_issue": {
+    "k": 9,
+    "n": 15,
+    "share": 0.6,
+    "wilson95": [
+     0.357464427565077,
+     0.8017577191740534
+    ]
+   },
+   "atm_common": {
+    "k": 6,
+    "n": 15,
+    "share": 0.4,
+    "wilson95": [
+     0.19824228082594664,
+     0.642535572434923
+    ]
+   },
+   "senior_securities": {
+    "k": 2,
+    "n": 15,
+    "share": 0.13333333333333333,
+    "wilson95": [
+     0.0373604698913593,
+     0.3788249920651624
+    ]
+   },
+   "fund_years_capped_at_4_docs": 4
+  },
+  "rcef|2016-19": {
+   "fund_years_in_stratum": 247,
+   "common_issue": {
+    "k": 10,
+    "n": 15,
+    "share": 0.6666666666666666,
+    "wilson95": [
+     0.41713125151212976,
+     0.8482389930530876
+    ]
+   },
+   "atm_common": {
+    "k": 9,
+    "n": 15,
+    "share": 0.6,
+    "wilson95": [
+     0.357464427565077,
+     0.8017577191740534
+    ]
+   },
+   "senior_securities": {
+    "k": 2,
+    "n": 15,
+    "share": 0.13333333333333333,
+    "wilson95": [
+     0.0373604698913593,
+     0.3788249920651624
+    ]
+   },
+   "fund_years_capped_at_4_docs": 1
+  },
+  "rcef|2020-22": {
+   "fund_years_in_stratum": 295,
+   "common_issue": {
+    "k": 7,
+    "n": 15,
+    "share": 0.4666666666666667,
+    "wilson95": [
+     0.24809225259746442,
+     0.6988336984894921
+    ]
+   },
+   "atm_common": {
+    "k": 7,
+    "n": 15,
+    "share": 0.4666666666666667,
+    "wilson95": [
+     0.24809225259746442,
+     0.6988336984894921
+    ]
+   },
+   "senior_securities": {
+    "k": 0,
+    "n": 15,
+    "share": 0.0,
+    "wilson95": [
+     -1.3877787807814457e-17,
+     0.20388926630434784
+    ]
+   },
+   "fund_years_capped_at_4_docs": 5
+  },
+  "rcef|2024-25": {
+   "fund_years_in_stratum": 211,
+   "common_issue": {
+    "k": 11,
+    "n": 25,
+    "share": 0.44,
+    "wilson95": [
+     0.2666537494700256,
+     0.6293298298043557
+    ]
+   },
+   "atm_common": {
+    "k": 11,
+    "n": 25,
+    "share": 0.44,
+    "wilson95": [
+     0.2666537494700256,
+     0.6293298298043557
+    ]
+   },
+   "senior_securities": {
+    "k": 2,
+    "n": 25,
+    "share": 0.08,
+    "wilson95": [
+     0.02221993369109193,
+     0.24966512122957818
+    ]
+   },
+   "fund_years_capped_at_4_docs": 2
+  }
+ },
+ "estimated_fund_years_per_year": {
+  "2010-15|common_issue": {
+   "per_year": 57.6,
+   "wilson_lo": 34.3,
+   "wilson_hi": 77.0
+  },
+  "2010-15|atm_common": {
+   "per_year": 30.3,
+   "wilson_lo": 14.5,
+   "wilson_hi": 53.4
+  },
+  "2010-15|senior_securities": {
+   "per_year": 19.2,
+   "wilson_lo": 7.5,
+   "wilson_hi": 42.7
+  },
+  "2016-19|common_issue": {
+   "per_year": 54.9,
+   "wilson_lo": 33.5,
+   "wilson_hi": 71.7
+  },
+  "2016-19|atm_common": {
+   "per_year": 45.6,
+   "wilson_lo": 26.0,
+   "wilson_hi": 64.5
+  },
+  "2016-19|senior_securities": {
+   "per_year": 25.4,
+   "wilson_lo": 13.0,
+   "wilson_hi": 45.2
+  },
+  "2020-22|common_issue": {
+   "per_year": 56.4,
+   "wilson_lo": 29.2,
+   "wilson_hi": 87.2
+  },
+  "2020-22|atm_common": {
+   "per_year": 52.2,
+   "wilson_lo": 26.6,
+   "wilson_hi": 83.0
+  },
+  "2020-22|senior_securities": {
+   "per_year": 16.9,
+   "wilson_lo": 9.5,
+   "wilson_hi": 43.9
+  },
+  "2024-25|common_issue": {
+   "per_year": 66.9,
+   "wilson_lo": 41.7,
+   "wilson_hi": 93.2
+  },
+  "2024-25|atm_common": {
+   "per_year": 65.4,
+   "wilson_lo": 40.4,
+   "wilson_hi": 91.9
+  },
+  "2024-25|senior_securities": {
+   "per_year": 30.3,
+   "wilson_lo": 17.2,
+   "wilson_hi": 54.3
+  }
+ },
+ "premium_at_filing_pre2023_ex44": {
+  "n": 65,
+  "share_at_premium": 0.7692307692307693,
+  "median_prem": 0.08978328173374628,
+  "by_kind": {
+   "atm": {
+    "n": 24,
+    "share_at_premium": 0.75
+   },
+   "underwritten": {
+    "n": 41,
+    "share_at_premium": 0.7804878048780488
+   }
+  },
+  "funds": 27
+ },
+ "fetch": {
+  "live": 0,
+  "cache_hits": 339,
+  "seat_total": 443
+ }
+}

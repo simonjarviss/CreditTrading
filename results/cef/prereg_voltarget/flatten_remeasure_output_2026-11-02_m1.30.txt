@@ -1,0 +1,29 @@
+W1 2013-06-25..2022-12-30: 2398 sessions; the flatten core earns on 1045 (43.6%)
+  core unit sd (hold) 0.004095 daily = 6.50%/yr; corr with C4 +0.011; implied core multiplier 1.2642 x 0.003659 / 0.004095 = 1.1294 (written 1.12)
+  core unit sd (flatten_calendar) 0.002351 daily = 3.73%/yr; corr with C4 +0.023; implied core multiplier 1.2642 x 0.003659 / 0.002351 = 1.9676 (written 1.96)
+  core unit sd (flatten_active) 0.003556 daily = 5.65%/yr; corr with C4 +0.030; implied core multiplier 1.2642 x 0.003659 / 0.003556 = 1.3007 (written 1.30)
+
+3. CORE ACCOUNT STOPS at x1.3, by the series they are calibrated on (fit edge)
+  hold            R1 D_R 12.00% (p95 12.31%) | R2 -3.81% | R3 13.60%
+  flatten_all     R1 D_R  7.84% (p95 7.84%) | R2 -2.57% | R3 8.32%
+  flatten_active  R1 D_R 10.14% (p95 10.14%) | R2 -3.06% | R3 12.07%
+
+4. P(the stop fires within its horizon) | the truth series (rows) and the calibration (columns); SB21, fit edge. The nominal rate is 5% on the diagonal
+  truth hold            R1: hold   1.0% | flatten_all  12.4% | flatten_active   3.4%
+  truth hold            R2: hold   5.0% | flatten_all   8.5% | flatten_active   7.1%
+  truth hold            R3: hold   5.0% | flatten_all  33.4% | flatten_active   8.8%
+  truth flatten_all     R1: hold   0.0% | flatten_all   1.4% | flatten_active   0.2%
+  truth flatten_all     R2: hold   1.9% | flatten_all   5.0% | flatten_active   3.6%
+  truth flatten_all     R3: hold   1.4% | flatten_all   5.0% | flatten_active   2.2%
+  truth flatten_active  R1: hold   0.5% | flatten_all   8.0% | flatten_active   1.8%
+  truth flatten_active  R2: hold   3.5% | flatten_all   6.5% | flatten_active   5.0%
+  truth flatten_active  R3: hold   3.6% | flatten_all  18.5% | flatten_active   5.0%
+
+5. CORE ACCOUNT at x1.3 on the EARNING sessions only (the live book while it trades)
+  zero edge, P(HALVE) / P(KILL) in 12 months: flatten earning 16.68% / 1.68% | flatten all sessions 1.98% / 0.01% | hold 22.50% / 3.07%
+  fit edge, P(HALVE) / P(KILL) in 12 months: flatten earning 1.81% / 0.07% | flatten all sessions 0.25% / 0.00% | hold 5.72% / 0.36%
+  cap binding (decided gross above 1.80) at x1.3: 16.5% of the sessions with a decided book, 7.2% of all W1 sessions
+
+6. THROUGH 2008 ON TRADING SESSIONS (W2 2005-02-22..2022-12-30; core proxied before 2013-06-25 by each non-thin year-end flatten book), x1.3
+  5 non-thin books: zero-edge P(HALVE) 5.08/15.07/47.09% | P(KILL) 0.18/1.78/14.40% | worst drawdown 9.7/18.3/39.1% (min/median/max; worst book 2018-12-31)
+  earning-session series at x1.3, TR: 8.69%/yr while trading, vol 7.19%, SR 1.209, maxDD 8.52% (sessions concatenated)

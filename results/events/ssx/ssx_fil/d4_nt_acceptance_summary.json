@@ -1,0 +1,42 @@
+{
+ "all_2015_25": {
+  "n": 100,
+  "pre_open_lt_0930": 10,
+  "market_0930_1600": 35,
+  "after_close_1600_1730": 47,
+  "after_1730_next_day_filing_date": 8,
+  "after_close_share": 0.55,
+  "after_close_ci95": [
+   0.4524,
+   0.6439
+  ],
+  "api_offset_h_counts": {
+   "-5.0": 16,
+   "-4.0": 47,
+   "0.0": 21,
+   "4.0": 12,
+   "5.0": 4
+  }
+ },
+ "listed_2015_22": {
+  "n": 150,
+  "pre_open_lt_0930": 19,
+  "market_0930_1600": 22,
+  "after_close_1600_1730": 96,
+  "after_1730_next_day_filing_date": 13,
+  "after_close_share": 0.7267,
+  "after_close_ci95": [
+   0.6504,
+   0.7917
+  ],
+  "api_offset_h_counts": {
+   "-5.0": 17,
+   "-4.0": 53,
+   "0.0": 38,
+   "4.0": 28,
+   "5.0": 14
+  }
+ },
+ "errors": 0,
+ "live_requests_ledger_total": 250
+}

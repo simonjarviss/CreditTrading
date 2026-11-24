@@ -1,0 +1,28 @@
+{
+  "episode_cik": 836267,
+  "episode_accession": "0001398344-18-004154",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Greater China Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "International Select Equity Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-18-004154", "date": "2018-03-13", "quote": "China Fund will receive Institutional Class shares of the International Select Equity Fund. The shares of the Greater China Fund will be cancelled following the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Funds are series of SCM Trust (filer CIK 836267); excerpts never say whether they are listed or open-end. N-14 and many N-14/A amendments through 2018-06-12; no excerpt states the outcome."
+    },
+    {
+      "target": {"name": "European Growth and Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "International Select Equity Fund", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001398344-18-004150", "date": "2018-03-13", "quote": "will receive Institutional Class shares of the International Select Equity Fund. The shares of the European Growth and Income Fund will be cancelled following the Reorganization."},
+      "outcome_evidence": null,
+      "notes": "Acquired fund is a Shelton Funds series per the closing-conditions excerpt; listed status not stated. No excerpt states the outcome."
+    }
+  ],
+  "problems": "Excerpts are mostly boilerplate; no outcome stated for either deal. The 2019-04-01 and 2020-02-14 N-14 filings show no merger language in their excerpts."
+}

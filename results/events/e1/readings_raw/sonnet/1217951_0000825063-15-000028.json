@@ -1,0 +1,26 @@
+{
+ "episode_cik": 1217951,
+ "episode_accession": "0000825063-15-000028",
+ "episode_role": "target",
+ "deals": [
+  {
+   "target": {
+    "name": "Franklin Mutual Recovery Fund",
+    "cik": 1217951,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": null,
+    "cik": null,
+    "ticker": null
+   },
+   "both_listed": null,
+   "listed_quote": null,
+   "outcome": null,
+   "announcement": null,
+   "outcome_evidence": null,
+   "notes": "The only merger language is the fund's Form N-8F (2015-10-23): reason for deregistration Merger, board vote 2015-02-25, shareholder vote 2015-08-07, assets distributed to shareholders. The acquirer is not named in the excerpts, the 425 excerpt (an annual report) describes no merger, and nothing shows either fund is exchange-listed. Completion is therefore not recorded."
+  }
+ ],
+ "problems": "Acquirer and listing status are not stated in the excerpts; the 425 excerpt contains no merger announcement."
+}

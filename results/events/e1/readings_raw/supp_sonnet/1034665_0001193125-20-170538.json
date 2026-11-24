@@ -1,0 +1,48 @@
+{
+  "episode_cik": 1034665,
+  "episode_accession": "0001193125-20-170538",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "BlackRock Municipal Income Investment Quality Trust", "cik": 1181026, "ticker": "BAF"},
+      "acquirer": {"name": "BlackRock MuniHoldings Fund, Inc.", "cik": 1034665, "ticker": "MHD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-318194", "quote": "MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund, Inc. (NYSE: MHD and collectively with BAF, BBK, MUH and MUS, the “Funds,” and each, a “Fund”)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170535", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Directors or Trustees, as applicable, of BlackRock Municipal Income Investment Quality Trust (NYSE: BAF), BlackRock Municipal Bond Trust (NYSE: BBK), BlackRock MuniHoldings Fund II, Inc. (NYSE: MUH), BlackRock MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund,"},
+      "outcome_evidence": {"accession": "0001193125-21-072919", "date": "2021-03-08", "quote": "BlackRock Announces Closing of Reorganizations of Five Municipal Closed-End Funds"},
+      "notes": "Dec 15 2020 release: BAF, MUH and MUS did not obtain the requisite common-shareholder votes or quorum and the meeting was adjourned to January 21, 2021 (BBK reorganization approved). The Jan 21 2021 results release is cut off in the excerpt. The Mar 8 2021 closing release title covers all five funds; its body is cut off after the names, so the closing statement is the title only. Announcement quote joins the headline with the first sentence from the 2020-06-16 425 (the same release was also filed under each other target's accession)."
+    },
+    {
+      "target": {"name": "BlackRock Municipal Bond Trust", "cik": 1167467, "ticker": "BBK"},
+      "acquirer": {"name": "BlackRock MuniHoldings Fund, Inc.", "cik": 1034665, "ticker": "MHD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-318194", "quote": "MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund, Inc. (NYSE: MHD and collectively with BAF, BBK, MUH and MUS, the “Funds,” and each, a “Fund”)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170535", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Directors or Trustees, as applicable, of BlackRock Municipal Income Investment Quality Trust (NYSE: BAF), BlackRock Municipal Bond Trust (NYSE: BBK), BlackRock MuniHoldings Fund II, Inc. (NYSE: MUH), BlackRock MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund,"},
+      "outcome_evidence": {"accession": "0001193125-21-072918", "date": "2021-03-08", "quote": "BlackRock Announces Closing of Reorganizations of Five Municipal Closed-End Funds"},
+      "notes": "Dec 15 2020 release: shareholders of BBK and MHD approved the BBK reorganization into MHD. Mar 8 2021 closing release title covers all five funds; its body is cut off after the names."
+    },
+    {
+      "target": {"name": "BlackRock MuniHoldings Fund II, Inc.", "cik": 1038190, "ticker": "MUH"},
+      "acquirer": {"name": "BlackRock MuniHoldings Fund, Inc.", "cik": 1034665, "ticker": "MHD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-318194", "quote": "MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund, Inc. (NYSE: MHD and collectively with BAF, BBK, MUH and MUS, the “Funds,” and each, a “Fund”)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170535", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Directors or Trustees, as applicable, of BlackRock Municipal Income Investment Quality Trust (NYSE: BAF), BlackRock Municipal Bond Trust (NYSE: BBK), BlackRock MuniHoldings Fund II, Inc. (NYSE: MUH), BlackRock MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund,"},
+      "outcome_evidence": {"accession": "0001193125-21-072917", "date": "2021-03-08", "quote": "BlackRock Announces Closing of Reorganizations of Five Municipal Closed-End Funds"},
+      "notes": "Dec 15 2020 release: MUH did not obtain the requisite votes or quorum and the meeting was adjourned to January 21, 2021; the Jan 21 results text is cut off in the excerpt. Mar 8 2021 closing release title covers all five funds; its body is cut off after the names."
+    },
+    {
+      "target": {"name": "BlackRock MuniHoldings Quality Fund, Inc.", "cik": 1058234, "ticker": "MUS"},
+      "acquirer": {"name": "BlackRock MuniHoldings Fund, Inc.", "cik": 1034665, "ticker": "MHD"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-318194", "quote": "MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund, Inc. (NYSE: MHD and collectively with BAF, BBK, MUH and MUS, the “Funds,” and each, a “Fund”)"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-170535", "date": "2020-06-16", "quote": "BlackRock Announces Board Approval of Municipal Closed-End Fund Reorganizations New York, June 16, 2020 – BlackRock Advisors, LLC announced today that the Boards of Directors or Trustees, as applicable, of BlackRock Municipal Income Investment Quality Trust (NYSE: BAF), BlackRock Municipal Bond Trust (NYSE: BBK), BlackRock MuniHoldings Fund II, Inc. (NYSE: MUH), BlackRock MuniHoldings Quality Fund, Inc. (NYSE: MUS) and BlackRock MuniHoldings Fund,"},
+      "outcome_evidence": {"accession": "0001193125-21-072920", "date": "2021-03-08", "quote": "BlackRock Announces Closing of Reorganizations of Five Municipal Closed-End Funds"},
+      "notes": "Dec 15 2020 release: MUS did not obtain the requisite votes or quorum and the meeting was adjourned to January 21, 2021; the Jan 21 results text is cut off in the excerpt. Mar 8 2021 closing release title covers all five funds; its body is cut off after the names."
+    }
+  ],
+  "problems": "The 2021-03-08 closing releases and the 2021-01-21 vote-results releases are shown only to 800 characters, so the sentence naming which funds closed is cut off; completion rests on the headline. No target is shown failing."
+}

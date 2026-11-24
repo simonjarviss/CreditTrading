@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1195737,
+  "episode_accession": "0001193125-23-250041",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Nuveen Massachusetts Quality Municipal Income Fund", "cik": null, "ticker": "NMT"},
+      "acquirer": {"name": "Nuveen AMT-Free Quality Municipal Income Fund", "cik": 1195737, "ticker": "NEA"},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-23-250041", "date": "2023-10-03", "quote": "You are receiving the Joint Proxy Statement/Prospectus as a holder of common shares of Nuveen Massachusetts Quality Municipal Income Fund (the “Target Fund”) or as a holder of preferred shares of Nuveen AMT-Free Quality Municipal Income Fund (the “Acquiring Fund”"},
+      "outcome_evidence": {"accession": "0001193125-23-274363", "date": "2023-11-09", "quote": "the filing was prepared in connection with a proposed issuance of the Fund’s shares as part of a proposed merger transaction that is no longer contemplated; (2) no securities were sold or exchanged in connection with this offering; and (3) the filing did not become effective."},
+      "notes": "Form RW (2023-11-09) withdraws the N-14 (File No. 333-274848). NEA is shown as a New York Stock Exchange common share in the 8-K, but the excerpts show only a bare ticker (NMT) for the target with no exchange, so both_listed is left null. Later filings (2024-2025 DEF 14A, DEFA14A, 8-K) excerpted here describe annual meetings and a shareholder letter, not this merger."
+    }
+  ],
+  "problems": ""
+}

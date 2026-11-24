@@ -1,0 +1,67 @@
+spec {'Z_WINDOW': 252, 'MIN_PERIODS': 120, 'MIN_NAMES': 6, 'MIN_ADV_USD': 3000000.0, 'DEPLOYED_WIN': [2, 3]}
+nav_exclusions {'rows_in': 2385, 'null_rdq': 124, 'null_ceqq_or_cshoq_after_rdq': 15, 'cshoq_nonpositive': 0, 'dup_keys_collapsed': 3, 'dup_keys_disagree_dropped': 0, 'rows_usable': 2243, 'gvkeys_usable': 61, 'datadate_before_first_crsp_row': 86, 'no_crsp_permno_rows': 167}
+permnos {'entities': 61, 'with_crsp_rows': 54}
+calendar {'first': '2009-01-02', 'last': '2022-12-30', 'sessions_per_year_min_max_2012_22': [250, 253]}
+filing_sensitivity_unmatched_nav_rows 21
+filing_minus_rdq_days_p10_p50_p90 [0.0, 1.0, 1.0]
+filing_before_rdq_rows 34
+
+=== rdq_primary  panel: {'nav_rows_in_use': 1983, 'name_days_with_nav': 122993, 'name_days_expired': 308, 'price_rows_close_le_0p5_dropped_by_build_panel': 289, 'bdcs_with_z': 54, 'notrade_share_of_signal_name_days': 0.006604155365553346, 'first_date_ge_min_names': '2010-10-25'}
+ phase0: IC on s=-z (IC>0 = works)   2012-17 | 2018-22 | fit 2012-22    rank corr(T,C) median 0.840
+ [primary] names/date median 42.0
+  treatment                          +0.0220 (+3.07, nw +3.12, n  755)  +0.0304 (+4.38, nw +4.15, n  628)  +0.0258 (+5.14, nw +5.07, n 1383) 
+  control                            +0.0070 (+0.96, nw +0.93, n  755)  +0.0215 (+2.96, nw +2.90, n  628)  +0.0136 (+2.62, nw +2.55, n 1383) 
+  partial                            +0.0325 (+4.81, nw +5.05, n  755)  +0.0200 (+3.00, nw +3.01, n  627)  +0.0268 (+5.62, nw +5.77, n 1382) 
+ [deployed_style_adv] names/date median 14.0
+  treatment                          +0.0024 (+0.21, nw +0.21, n  755)  +0.0270 (+2.33, nw +2.26, n  627)  +0.0136 (+1.65, nw +1.61, n 1382) 
+  control                            -0.0113 (-0.99, nw -0.96, n  755)  +0.0236 (+1.96, nw +2.00, n  624)  +0.0045 (+0.54, nw +0.53, n 1379) 
+  partial                            +0.0283 (+2.56, nw +2.73, n  754)  +0.0089 (+0.80, nw +0.78, n  624)  +0.0195 (+2.47, nw +2.54, n 1378) 
+ [post-filing split, primary]  dates with >= MIN_NAMES post names: 254
+  treatment_post                     +0.0256 (+0.83, nw +0.94, n  130)  +0.0569 (+2.00, nw +2.16, n  124)  +0.0409 (+1.95, nw +2.12, n  254) 
+  treatment_rest                     +0.0186 (+2.49, nw +2.55, n  755)  +0.0266 (+3.64, nw +3.54, n  628)  +0.0223 (+4.23, nw +4.24, n 1383) 
+  control_post_context               -0.0149 (-0.55, nw -0.59, n  130)  -0.0091 (-0.34, nw -0.35, n  124)  -0.0120 (-0.64, nw -0.66, n  254) 
+  control_rest_context               +0.0054 (+0.72, nw +0.72, n  755)  +0.0222 (+2.89, nw +2.90, n  628)  +0.0131 (+2.41, nw +2.42, n 1383) 
+ phase1: IC on s=-z (IC>0 = works)   2012-17 | 2018-22 | fit 2012-22    rank corr(T,C) median 0.839
+ [primary] names/date median 42.0
+  treatment                          +0.0211 (+3.00, nw +2.83, n  754)  +0.0356 (+5.31, nw +5.37, n  628)  +0.0277 (+5.65, nw +5.44, n 1382) 
+  control                            +0.0054 (+0.74, nw +0.70, n  754)  +0.0270 (+3.81, nw +3.75, n  627)  +0.0152 (+2.95, nw +2.82, n 1381) 
+  partial                            +0.0320 (+4.83, nw +5.20, n  754)  +0.0219 (+3.20, nw +3.50, n  627)  +0.0274 (+5.75, nw +6.20, n 1381) 
+ [deployed_style_adv] names/date median 14.0
+  treatment                          +0.0032 (+0.28, nw +0.27, n  754)  +0.0260 (+2.29, nw +2.32, n  627)  +0.0135 (+1.69, nw +1.65, n 1381) 
+  control                            -0.0120 (-1.06, nw -0.99, n  754)  +0.0186 (+1.61, nw +1.65, n  626)  +0.0019 (+0.24, nw +0.23, n 1380) 
+  partial                            +0.0254 (+2.27, nw +2.54, n  754)  +0.0173 (+1.53, nw +1.58, n  626)  +0.0217 (+2.73, nw +2.94, n 1380) 
+ [post-filing split, primary]  dates with >= MIN_NAMES post names: 255
+  treatment_post                     -0.0010 (-0.04, nw -0.04, n  133)  +0.0268 (+0.90, nw +0.86, n  122)  +0.0123 (+0.59, nw +0.61, n  255) 
+  treatment_rest                     +0.0202 (+2.67, nw +2.42, n  754)  +0.0383 (+5.42, nw +5.49, n  628)  +0.0284 (+5.43, nw +5.10, n 1382) 
+  control_post_context               -0.0173 (-0.52, nw -0.54, n  133)  -0.0373 (-1.21, nw -1.05, n  122)  -0.0269 (-1.17, nw -1.13, n  255) 
+  control_rest_context               +0.0061 (+0.80, nw +0.76, n  754)  +0.0324 (+4.31, nw +4.28, n  627)  +0.0181 (+3.35, nw +3.19, n 1381) 
+
+=== filingdate_sensitivity  panel: {'nav_rows_in_use': 1962, 'name_days_with_nav': 121734, 'name_days_expired': 393, 'price_rows_close_le_0p5_dropped_by_build_panel': 289, 'bdcs_with_z': 54, 'notrade_share_of_signal_name_days': 0.0066797710786786575, 'first_date_ge_min_names': '2010-10-26'}
+ phase0: IC on s=-z (IC>0 = works)   2012-17 | 2018-22 | fit 2012-22    rank corr(T,C) median 0.837
+ [primary] names/date median 42.0
+  treatment                          +0.0217 (+2.98, nw +2.95, n  755)  +0.0308 (+4.43, nw +4.19, n  628)  +0.0258 (+5.09, nw +4.94, n 1383) 
+  control                            +0.0066 (+0.90, nw +0.86, n  755)  +0.0215 (+2.97, nw +2.91, n  628)  +0.0134 (+2.57, nw +2.48, n 1383) 
+  partial                            +0.0323 (+4.66, nw +4.85, n  755)  +0.0200 (+3.00, nw +3.03, n  627)  +0.0267 (+5.52, nw +5.65, n 1382) 
+ [deployed_style_adv] names/date median 14.0
+  treatment                          +0.0010 (+0.09, nw +0.08, n  755)  +0.0272 (+2.34, nw +2.27, n  627)  +0.0129 (+1.57, nw +1.53, n 1382) 
+  control                            -0.0114 (-0.99, nw -0.96, n  755)  +0.0236 (+1.96, nw +2.00, n  624)  +0.0045 (+0.54, nw +0.53, n 1379) 
+  partial                            +0.0251 (+2.28, nw +2.46, n  754)  +0.0091 (+0.82, nw +0.79, n  624)  +0.0179 (+2.27, nw +2.33, n 1378) 
+ [post-filing split, primary]  dates with >= MIN_NAMES post names: 256
+  treatment_post                     +0.0728 (+2.21, nw +2.65, n  132)  +0.0778 (+2.50, nw +2.77, n  124)  +0.0752 (+3.32, nw +3.81, n  256) 
+  treatment_rest                     +0.0197 (+2.60, nw +2.57, n  755)  +0.0259 (+3.53, nw +3.53, n  628)  +0.0225 (+4.24, nw +4.20, n 1383) 
+  control_post_context               +0.0114 (+0.36, nw +0.35, n  132)  +0.0257 (+0.89, nw +0.82, n  124)  +0.0183 (+0.86, nw +0.80, n  256) 
+  control_rest_context               +0.0068 (+0.89, nw +0.86, n  755)  +0.0205 (+2.63, nw +2.67, n  628)  +0.0130 (+2.38, nw +2.33, n 1383) 
+ phase1: IC on s=-z (IC>0 = works)   2012-17 | 2018-22 | fit 2012-22    rank corr(T,C) median 0.837
+ [primary] names/date median 42.0
+  treatment                          +0.0205 (+2.90, nw +2.66, n  754)  +0.0363 (+5.41, nw +5.52, n  628)  +0.0277 (+5.63, nw +5.34, n 1382) 
+  control                            +0.0049 (+0.67, nw +0.62, n  754)  +0.0270 (+3.81, nw +3.74, n  627)  +0.0149 (+2.89, nw +2.73, n 1381) 
+  partial                            +0.0321 (+4.80, nw +5.08, n  754)  +0.0229 (+3.32, nw +3.64, n  627)  +0.0279 (+5.81, nw +6.20, n 1381) 
+ [deployed_style_adv] names/date median 14.0
+  treatment                          +0.0015 (+0.13, nw +0.13, n  754)  +0.0269 (+2.38, nw +2.40, n  627)  +0.0130 (+1.63, nw +1.58, n 1381) 
+  control                            -0.0123 (-1.08, nw -1.02, n  754)  +0.0186 (+1.61, nw +1.65, n  626)  +0.0017 (+0.21, nw +0.21, n 1380) 
+  partial                            +0.0244 (+2.17, nw +2.37, n  754)  +0.0187 (+1.66, nw +1.69, n  626)  +0.0218 (+2.73, nw +2.89, n 1380) 
+ [post-filing split, primary]  dates with >= MIN_NAMES post names: 254
+  treatment_post                     +0.0042 (+0.15, nw +0.18, n  128)  +0.0330 (+1.07, nw +1.16, n  126)  +0.0185 (+0.88, nw +1.00, n  254) 
+  treatment_rest                     +0.0173 (+2.26, nw +2.00, n  754)  +0.0363 (+5.12, nw +5.12, n  628)  +0.0259 (+4.92, nw +4.52, n 1382) 
+  control_post_context               -0.0242 (-0.76, nw -0.78, n  128)  -0.0238 (-0.79, nw -0.69, n  126)  -0.0240 (-1.10, nw -1.04, n  254) 
+  control_rest_context               +0.0041 (+0.53, nw +0.50, n  754)  +0.0279 (+3.71, nw +3.58, n  627)  +0.0149 (+2.73, nw +2.57, n 1381) 

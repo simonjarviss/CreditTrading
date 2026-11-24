@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1627515,
+  "episode_accession": "0001144204-18-062040",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "Golub Capital Investment Corporation", "cik": 1627515, "ticker": null},
+      "acquirer": {"name": "Golub Capital BDC, Inc.", "cik": 1476765, "ticker": "GBDC"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001476765-18-000091", "quote": "has gone through a careful methodical process to evaluate options for GCIC, including an IPO, a listing of the company’s shares on a national securities exchange, a merger with various parties including GBDC, and the status quo."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001144204-18-062032", "date": "2018-11-28", "quote": "announced today that it has entered into a definitive agreement to merge with Golub Capital BDC, Inc. (“GBDC”) with GBDC as the surviving company, subject to certain stockholder approvals and customary closing conditions."},
+      "outcome_evidence": {"accession": "0001144204-19-044648", "date": "2019-09-16", "quote": "On September 16, 2019, Golub Capital BDC, Inc., a Delaware corporation (“GBDC”), completed its previously announced acquisition of Golub Capital Investment Corporation, a Maryland Corporation (the “Company”)"},
+      "notes": "GCIC appears unlisted: its filings show capital drawdown notices and Regulation D private sales to stockholders, and its 8-K cover pages show no exchange registration, while the acquirer GBDC is on The Nasdaq Global Select Market. The merger itself was approved by both sets of stockholders on 2019-09-04 and completed 2019-09-16 (the evidence shown), so it is not a failed deal."
+    }
+  ],
+  "problems": ""
+}

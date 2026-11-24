@@ -1,0 +1,58 @@
+reopen_c5_open_cost, stamp 2026-10-28. Zero trials; offline; no network, broker or key.
+
+=== 1. DEFINITION CHECK: C5's s_open on its frozen 2016-22 quote sample ===
+frozen copy <main checkout>/.claude/worktrees/trial-c5/results/cef/c5/_cache_c5_frozen: 131 files under exec/ and w4/ match results/cef/c5/c5_frozen_inputs_2026-10-14.json (SHA-256)
+  h1: re-computed +5.995263bp, trial record +5.995263bp, diff +0.0e+00
+  h5: re-computed +6.516430bp, trial record +6.516430bp, diff +0.0e+00
+  h1 on 126 sessions: +5.995bp  SE 0.836 (lag0 0.593, lag4 0.836)  t +7.17  [1461 name-days, 126 dates]
+  h5 on 126 sessions: +6.516bp  SE 1.003 (lag0 0.736, lag4 1.003)  t +6.50  [1459 name-days, 126 dates]
+  s_open (fit) = max(h1, h5) = +6.516bp, set by h5. REPRODUCED.
+  by year (beside; cost only, so the fit period's years may be read):
+    year   h1 mean (SE)        h5 mean (SE)        dates
+    2016    +4.32 (2.08)      +3.92 (1.49)    18
+    2017    +1.54 (1.04)      +2.12 (1.07)    18
+    2018    +6.47 (1.22)      +7.47 (1.68)    18
+    2019    +5.82 (1.05)      +4.55 (1.51)    18
+    2020    +9.87 (2.66)     +13.01 (3.28)    18
+    2021    +4.32 (0.94)      +3.71 (0.90)    18
+    2022    +9.29 (1.45)     +10.47 (1.74)    18
+
+=== 2. RECENT WINDOW: the EXEC note's last 60 sessions (the only cached 2023+ quotes) ===
+cache <main checkout>/.claude/worktrees/research-exec-capacity/results/cef/exec_capacity/_cache_exec: 60 sessions 2026-07-21..2026-10-13; combined SHA-256 of the 62 files read eaf3a9a1fae455d9... (every hash in the JSON)
+crosses classified: close none 1; close round 779; open round 780
+  [h1] reference methods: close nbbo 779, open nbbo 780
+  [h5] reference methods: close nbbo 779, open nbbo 780
+  h1: +2.021bp  SE 0.814 (lag0 0.769, lag3 0.814)  t +2.48  [779 name-days, 60 dates]; mean of date means +2.022
+  h5: +1.394bp  SE 0.649 (lag0 0.649, lag3 0.628)  t +2.15  [779 name-days, 60 dates]; mean of date means +1.393
+  s_open (recent) = max(h1, h5) = +2.021bp, set by h1; SE 0.814bp
+  the EXEC note's own t for this horizon (mean of date means / its SE, X._date_t): +2.61
+  second method [h1] (raw O/6 prints and cached mids, round crosses only): mean +2.021bp on 779 name-days (skipped {'no_open_print': 0, 'no_close_print': 1, 'no_open_quote': 0, 'no_close_quote': 0}); against the primary path: max |diff| on common name-days 0.0e+00, only in primary 0, only in second 0
+  second method [h5] (raw O/6 prints and cached mids, round crosses only): mean +1.394bp on 779 name-days (skipped {'no_open_print': 0, 'no_close_print': 1, 'no_open_quote': 0, 'no_close_quote': 0}); against the primary path: max |diff| on common name-days 0.0e+00, only in primary 0, only in second 0
+
+  by name (each name's series over the sessions, NW automatic lag):
+        h1_mean  h1_se  h1_n  h5_mean  h5_se  h5_n
+ticker                                            
+AWF        2.43   1.67    60    -0.06   1.78    60
+BIT        5.09   1.81    60     3.73   1.91    60
+DSL        2.14   1.85    60     0.77   2.33    60
+HYT        0.75   2.32    60    -1.90   2.59    60
+JFR       -2.27   1.92    60    -3.56   1.91    60
+MHD        4.34   1.64    60     2.40   1.71    60
+MQY        4.69   1.67    60     3.54   2.71    60
+PCN        2.53   1.47    60     2.72   1.74    60
+PDI        7.60   2.95    60     7.41   2.85    60
+PDO        4.09   1.49    60     5.25   1.86    60
+PFN       -3.31   3.55    60    -1.30   3.05    60
+PHK       -0.98   2.08    59    -2.61   2.73    59
+PTY       -0.85   2.66    60     1.65   2.61    60
+  by year: h1 2026 +2.021bp  SE 0.814 (lag0 0.769, lag3 0.814)  t +2.48  [779 name-days, 60 dates]; h5 2026 +1.394bp  SE 0.649 (lag0 0.649, lag3 0.628)  t +2.15  [779 name-days, 60 dates]
+  cut at 2026-09-30 (beside): h1 +2.696bp  SE 0.744 (lag0 0.727, lag3 0.744)  t +3.63  [662 name-days, 51 dates]; h5 +1.512bp  SE 0.690 (lag0 0.690, lag3 0.690)  t +2.19  [662 name-days, 51 dates]; s_open +2.696bp (h1)
+
+=== 3. THE READING: holdout gain per unit of turnover [S] minus s_open ===
+gain [S] results/cef/c5/C5_HOLDOUT_RESULT.json: +7.117bp per unit of turnover over 939 sessions (mean +313.6bp/yr, so 44.06 turns/yr); t's t21 4.665, t5 4.574, t_auto 4.683; SE = gain / t5 = 1.556bp
+declared before computing: meaningful = 1.0bp per unit of turnover; n_trials = 1
+  PRIMARY, recent s_open 2.021bp, N = 1: net +5.096bp (SE 1.756; +224.5bp/yr of capital), interval [+1.655, +8.538] at alpha 0.05000: PRESENT, meaningful ABOVE; power at meaningful 0.09
+  beside, the fit's s_open 6.516bp, N = 1: net +0.601bp (SE 1.851; +26.5bp/yr of capital), interval [-3.028, +4.230] at alpha 0.05000: INCONCLUSIVE, meaningful STRADDLES; power at meaningful 0.08
+  beside, recent s_open, N = 52: net +5.096bp (SE 1.756; +224.5bp/yr of capital), interval [-0.689, +10.882] at alpha 0.00099: INCONCLUSIVE, meaningful STRADDLES; power at meaningful 0.00
+  beside, recent cut at 2026-09-30, N = 1: net +4.421bp (SE 1.725; +194.8bp/yr of capital), interval [+1.041, +7.801] at alpha 0.05000: PRESENT, meaningful ABOVE; power at meaningful 0.09
+  cost grid 5/15/30bp: does not apply. G compares two fills of one holdings path with one turnover, so a per-unit cost charged to both cancels; the net is the same at 0, 5, 15 and 30bp.

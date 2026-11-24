@@ -1,0 +1,48 @@
+{
+  "episode_cik": 914036,
+  "episode_accession": "0001193125-19-007543",
+  "episode_role": "other",
+  "deals": [
+    {
+      "target": {"name": "LVIP Invesco Diversified Equity-Income Managed Volatility Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "LVIP Invesco Select Equity Income Managed Volatility Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-007543", "quote": "The Acquired Fund is a series of Lincoln Variable Insurance Products Trust (the “Trust”)."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-007543", "date": "2019-01-11", "quote": "The Trust’s Board of Trustees (the “Board”) has called the Meeting to request shareholder approval of the reorganization of the Acquired Fund into the LVIP Invesco Select Equity Income Managed Volatility Fund (formerly, LVIP Invesco Select Equity Managed Volatility Fund), a series of the Trust"},
+      "outcome_evidence": null,
+      "notes": "Both are series of a variable insurance trust sold to insurance contract owners, not exchange-listed. Outcome not stated in excerpts."
+    },
+    {
+      "target": {"name": "LVIP ClearBridge Large Cap Managed Volatility Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "LVIP ClearBridge QS Select Large Cap Managed Volatility Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-007544", "quote": "The Acquired Fund is a series of Lincoln Variable Insurance Products Trust (the “Trust”)."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-007544", "date": "2019-01-11", "quote": "The Trust’s Board of Trustees (the “Board”) has called the Meeting to request shareholder approval of the reorganization of the Acquired Fund into the LVIP ClearBridge QS Select Large Cap Managed Volatility Fund (formerly, LVIP Blended Core Equity Managed Volatility Fund), a series of the Trust"},
+      "outcome_evidence": null,
+      "notes": "Insurance-dedicated series, not listed."
+    },
+    {
+      "target": {"name": "LVIP Franklin Templeton Value Managed Volatility Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "LVIP BlackRock Dividend Value Managed Volatility Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-208716", "quote": "The Acquired Fund is a series of Lincoln Variable Insurance Products Trust (the “Trust”)."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-208716", "date": "2019-07-31", "quote": "which provides for the reorganization of the Acquired Fund into the LVIP BlackRock Dividend Value Managed Volatility Fund (the “Acquiring Fund”), also a series of the Trust"},
+      "outcome_evidence": null,
+      "notes": "Insurance-dedicated series, not listed. A 2019-10-03 DEFA14A urges a vote for the October 31, 2019 meeting; no result shown."
+    },
+    {
+      "target": {"name": "Delaware Funds", "cik": null, "ticker": null},
+      "acquirer": {"name": "Acquiring Funds", "cik": null, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0001193125-20-323472", "date": "2020-12-22", "quote": "none of the Reorganizations will be consummated, even if shareholders of the Delaware Funds approved the Agreement, and the Delaware Funds will not be reorganized into the Acquiring Funds."},
+      "outcome_evidence": null,
+      "notes": "Only a compact excerpt of the December 2020 N-14 is shown; individual fund names are not visible. Listing status not settled."
+    }
+  ],
+  "problems": "Variable insurance trust series. The LVIP Goldman Sachs Income Builder Fund proposals are a liquidation, not a merger, and are not recorded as a deal."
+}

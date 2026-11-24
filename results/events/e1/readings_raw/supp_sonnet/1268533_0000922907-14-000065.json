@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1268533,
+  "episode_accession": "0000922907-14-000065",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Tortoise Energy Capital Corporation", "cik": 1319869, "ticker": "TYY"},
+      "acquirer": {"name": "Tortoise Energy Infrastructure Corporation", "cik": 1268533, "ticker": "TYG"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000922907-14-000088", "quote": "However, any holder of any Fund’s common shares may sell his or her shares on the NYSE at any time prior to the Mergers."},
+      "outcome": null,
+      "announcement": {"accession": "0000922907-14-000063", "date": "2014-01-28", "quote": "Tortoise Capital Advisors Announces Proposed Merger of Three MLP Closed-End Funds"},
+      "outcome_evidence": null,
+      "notes": "Excerpts show the proposal, the April-May 2014 proxy solicitation and a May 28 meeting reference, but no filing in the excerpts states an outcome. both_listed rests on the N-14 sentence about any Fund's common shares trading on the NYSE (TYY and TYN are also said to be removed from NYSE listing); TYG's own listing is not stated separately."
+    },
+    {
+      "target": {"name": "Tortoise North American Energy Corporation", "cik": 1314104, "ticker": "TYN"},
+      "acquirer": {"name": "Tortoise Energy Infrastructure Corporation", "cik": 1268533, "ticker": "TYG"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0000922907-14-000088", "quote": "However, any holder of any Fund’s common shares may sell his or her shares on the NYSE at any time prior to the Mergers."},
+      "outcome": null,
+      "announcement": {"accession": "0000922907-14-000060", "date": "2014-01-28", "quote": "Tortoise Capital Advisors Announces Proposed Merger of Three MLP Closed-End Funds"},
+      "outcome_evidence": null,
+      "notes": "The 2014-05-20 DEFA14A (seq 14) is filed by TYG alone, but its excerpt does not say why or state an outcome. No outcome stated."
+    }
+  ],
+  "problems": "No filing in the excerpts states whether either merger closed."
+}

@@ -1,0 +1,48 @@
+{
+  "episode_cik": 275309,
+  "episode_accession": "0000275309-13-000008",
+  "episode_role": null,
+  "deals": [
+    {
+      "target": {"name": "Fidelity 130/30 Large Cap Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000275309-13-000008", "quote": "The fund may stop offering shares completely or may offer shares only on a limited basis, for a period of time or permanently."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000275309-13-000008", "date": "2013-02-01", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of 130/30 Large Cap to Fidelity Stock Selector All Cap Fund in exchange solely for shares of beneficial interest of Fidelity Stock Selector All Cap Fund and the"},
+      "outcome_evidence": null,
+      "notes": "Funds are series of Fidelity trusts that sell shares to investors with purchase minimums (open-end mutual funds; no exchange listing is stated). Judged not listed on that basis. Excerpts show the meeting adjourned from May 14, 2013 to June 11, 2013 for Large Cap Growth and Tax Managed Stock; the 130/30 fund adjournment is not stated. No excerpt states the merger outcome."
+    },
+    {
+      "target": {"name": "Fidelity Large Cap Growth Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000275309-13-000008", "quote": "The fund may stop offering shares completely or may offer shares only on a limited basis, for a period of time or permanently."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000275309-13-000028", "date": "2013-03-15", "quote": "In each case, a target fund is proposed to be acquired by Fidelity Stock Selector All Cap Fund."},
+      "outcome_evidence": null,
+      "notes": "The N-14 (seq 1) names this fund in its heading but the notice sentence excerpted covers only 130/30. Meeting adjourned to June 11, 2013 for insufficient participation (seq 5). Outcome not stated."
+    },
+    {
+      "target": {"name": "Fidelity Tax Managed Stock Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Stock Selector All Cap Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000275309-13-000008", "quote": "The fund may stop offering shares completely or may offer shares only on a limited basis, for a period of time or permanently."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000275309-13-000028", "date": "2013-03-15", "quote": "In each case, a target fund is proposed to be acquired by Fidelity Stock Selector All Cap Fund."},
+      "outcome_evidence": null,
+      "notes": "Meeting adjourned to June 11, 2013 for insufficient participation (seq 5). Outcome not stated."
+    },
+    {
+      "target": {"name": "Fidelity Fifty", "cik": null, "ticker": null},
+      "acquirer": {"name": "Fidelity Focused Stock Fund", "cik": null, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0000880195-15-000121", "quote": "The fund may stop offering shares completely or may offer shares only on a limited basis, for a period of time or permanently."},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0000880195-15-000121", "date": "2015-01-30", "quote": "To approve an Agreement and Plan of Reorganization providing for the transfer of all of the assets of Fidelity Fifty to Fidelity ® Focused Stock Fund in exchange solely for shares of beneficial interest of Fidelity ® Focused Stock Fund and the assumption by Fidelity Focused Stock Fund of Fidelity Fifty's liabilities, in complete liquidation of Fidelity Fifty."},
+      "outcome_evidence": null,
+      "notes": "Separate 2015 proposal (series of Fidelity Hastings Street Trust). Open-end judgement as above. Outcome not stated."
+    }
+  ],
+  "problems": "Episode fund role not stated in the text (Fidelity Capital Trust is the filer; which fund it contains is not shown). CIKs of the funds are not printed in the headers (only trust CIKs), so left null. Open-end status inferred from purchase-minimum language, not stated outright."
+}

@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1177162,
+  "episode_accession": "0000940394-18-001383",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Eaton Vance New York Municipal Bond Fund II", "cik": 1196875, "ticker": null},
+      "acquirer": {"name": "Eaton Vance New York Municipal Bond Fund", "cik": 1177162, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": null,
+      "announcement": {"accession": "0000940394-18-001575", "date": "2018-09-19", "quote": "Meeting of Shareholders of Eaton Vance New York Municipal Bond Fund II (the “Acquired Fund”) on October 12, 2018"},
+      "outcome_evidence": null,
+      "notes": "The first filing (N-14 8C, 0000940394-18-001383, 2018-07-24) shows Eaton Vance New York Municipal Bond Fund II only as the fund addressed in the shareholder letter, so the quote comes from the pre-effective amendment. The 2018-10-12 DEFA14A (0000940394-18-001667) says 'the Special Meetings of Shareholders ... have been adjourned to November 15, 2018 due to a lack of shareholder participation'; no excerpt gives the result of the adjourned meeting. The 2018-10-12 425 also lists other Eaton Vance funds (California Municipal Bond Fund II, Massachusetts, Michigan Municipal Bond Fund, Michigan Municipal Income Trust) whose acquirers are not named in the excerpts, so no deals are recorded for them. The 2019 and 2020 DEF 14As are annual-meeting proxies that do not mention the reorganization."
+    }
+  ],
+  "problems": "Whether the funds are exchange listed is not stated in the excerpts. The excerpts do not show the November 15, 2018 meeting result or any N-8F."
+}

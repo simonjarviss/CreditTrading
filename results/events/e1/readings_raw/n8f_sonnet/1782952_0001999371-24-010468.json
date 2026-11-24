@@ -1,0 +1,158 @@
+{
+ "episode_cik": 1782952,
+ "episode_accession": "0001999371-24-010468",
+ "episode_role": "acquirer",
+ "deals": [
+  {
+   "target": {
+    "name": "Kurv Yield Premium Strategy Amazon (AMZN) ETF (a series of NEOS ETF Trust)",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Kurv Yield Premium Strategy Amazon (AMZN) ETF (a series of Kurv ETF Trust)",
+    "cik": 1782952,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001999371-24-010468",
+    "quote": "Kurv Yield Premium Strategy Amazon (AMZN) ETF"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001999371-24-010468",
+    "date": "2024-08-21",
+    "quote": "COMBINED PROXY STATEMENT AND PROSPECTUS For the Reorganization of Kurv Yield Premium Strategy Amazon (AMZN) ETF"
+   },
+   "outcome_evidence": null,
+   "notes": "One of six ETF series moved from NEOS ETF Trust into the same-named series of Kurv ETF Trust in one N-14; ETFs, not closed-end funds or BDCs. CIK 1782952 is the Kurv ETF Trust (header FILER), not the series. The ticker in parentheses is the underlying stock named in the fund title, not a printed fund ticker, so ticker is null. The 2024-10-25 DEFA14A (shareholder letter asking for votes) does not state an outcome."
+  },
+  {
+   "target": {
+    "name": "Kurv Yield Premium Strategy Apple (APPL) ETF (a series of NEOS ETF Trust)",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Kurv Yield Premium Strategy Apple (APPL) ETF (a series of Kurv ETF Trust)",
+    "cik": 1782952,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001999371-24-010468",
+    "quote": "Kurv Yield Premium Strategy Apple (APPL) ETF"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001999371-24-010468",
+    "date": "2024-08-21",
+    "quote": "Kurv Yield Premium Strategy Apple (APPL) ETF"
+   },
+   "outcome_evidence": null,
+   "notes": "One of six ETF series moved from NEOS ETF Trust into the same-named series of Kurv ETF Trust in one N-14; ETFs, not closed-end funds or BDCs. CIK 1782952 is the Kurv ETF Trust (header FILER), not the series. The ticker in parentheses is the underlying stock named in the fund title, not a printed fund ticker, so ticker is null. The 2024-10-25 DEFA14A (shareholder letter asking for votes) does not state an outcome."
+  },
+  {
+   "target": {
+    "name": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF (a series of NEOS ETF Trust)",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF (a series of Kurv ETF Trust)",
+    "cik": 1782952,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001999371-24-010468",
+    "quote": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001999371-24-010468",
+    "date": "2024-08-21",
+    "quote": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF"
+   },
+   "outcome_evidence": null,
+   "notes": "One of six ETF series moved from NEOS ETF Trust into the same-named series of Kurv ETF Trust in one N-14; ETFs, not closed-end funds or BDCs. CIK 1782952 is the Kurv ETF Trust (header FILER), not the series. The ticker in parentheses is the underlying stock named in the fund title, not a printed fund ticker, so ticker is null. The 2024-10-25 DEFA14A (shareholder letter asking for votes) does not state an outcome."
+  },
+  {
+   "target": {
+    "name": "Kurv Yield Premium Strategy Google (GOOGL) ETF (a series of NEOS ETF Trust)",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Kurv Yield Premium Strategy Google (GOOGL) ETF (a series of Kurv ETF Trust)",
+    "cik": 1782952,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001999371-24-010468",
+    "quote": "Kurv Yield Premium Strategy Google (GOOGL) ETF"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001999371-24-010468",
+    "date": "2024-08-21",
+    "quote": "Kurv Yield Premium Strategy Google (GOOGL) ETF"
+   },
+   "outcome_evidence": null,
+   "notes": "One of six ETF series moved from NEOS ETF Trust into the same-named series of Kurv ETF Trust in one N-14; ETFs, not closed-end funds or BDCs. CIK 1782952 is the Kurv ETF Trust (header FILER), not the series. The ticker in parentheses is the underlying stock named in the fund title, not a printed fund ticker, so ticker is null. The 2024-10-25 DEFA14A (shareholder letter asking for votes) does not state an outcome."
+  },
+  {
+   "target": {
+    "name": "Kurv Yield Premium Strategy Tesla (TSLA) ETF (a series of NEOS ETF Trust)",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Kurv Yield Premium Strategy Tesla (TSLA) ETF (a series of Kurv ETF Trust)",
+    "cik": 1782952,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001999371-24-010468",
+    "quote": "Kurv Yield Premium Strategy Tesla (TSLA) ETF"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001999371-24-010468",
+    "date": "2024-08-21",
+    "quote": "Kurv Yield Premium Strategy Tesla (TSLA) ETF"
+   },
+   "outcome_evidence": null,
+   "notes": "One of six ETF series moved from NEOS ETF Trust into the same-named series of Kurv ETF Trust in one N-14; ETFs, not closed-end funds or BDCs. CIK 1782952 is the Kurv ETF Trust (header FILER), not the series. The ticker in parentheses is the underlying stock named in the fund title, not a printed fund ticker, so ticker is null. The 2024-10-25 DEFA14A (shareholder letter asking for votes) does not state an outcome."
+  },
+  {
+   "target": {
+    "name": "Kurv Yield Premium Strategy Netflix (NFLX) ETF (a series of NEOS ETF Trust)",
+    "cik": null,
+    "ticker": null
+   },
+   "acquirer": {
+    "name": "Kurv Yield Premium Strategy Netflix (NFLX) ETF (a series of Kurv ETF Trust)",
+    "cik": 1782952,
+    "ticker": null
+   },
+   "both_listed": false,
+   "listed_quote": {
+    "accession": "0001999371-24-010468",
+    "quote": "Kurv Yield Premium Strategy Netflix (NFLX) ETF"
+   },
+   "outcome": "not_a_listed_pair",
+   "announcement": {
+    "accession": "0001999371-24-010468",
+    "date": "2024-08-21",
+    "quote": "Kurv Yield Premium Strategy Netflix (NFLX) ETF"
+   },
+   "outcome_evidence": null,
+   "notes": "One of six ETF series moved from NEOS ETF Trust into the same-named series of Kurv ETF Trust in one N-14; ETFs, not closed-end funds or BDCs. CIK 1782952 is the Kurv ETF Trust (header FILER), not the series. The ticker in parentheses is the underlying stock named in the fund title, not a printed fund ticker, so ticker is null. The 2024-10-25 DEFA14A (shareholder letter asking for votes) does not state an outcome."
+  }
+ ],
+ "problems": "ETF-to-ETF trust reorganizations, not closed-end fund mergers. The 2026-08-12 PRE 14A concerns an advisory agreement for Kurv Technology Titans Select ETF, unrelated to the reorganization. Outcome of the reorganization not stated."
+}

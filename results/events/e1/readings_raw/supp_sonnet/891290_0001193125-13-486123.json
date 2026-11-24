@@ -1,0 +1,18 @@
+{
+  "episode_cik": 891290,
+  "episode_accession": "0001193125-13-486123",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Cohen & Steers Dividend Majors Fund, Inc.", "cik": 1302868, "ticker": "DVM"},
+      "acquirer": {"name": "Cohen & Steers Total Return Realty Fund, Inc.", "cik": 891290, "ticker": "RFI"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-13-486123", "quote": "its shares will be removed from listing on the NYSE and its"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-13-486123", "date": "2013-12-27", "quote": "You are being asked to vote on a proposed transaction related to Cohen & Steers Dividend Majors Fund, Inc. (“DVM” or the “Acquired Fund”) and Cohen & Steers Total Return Realty Fund, Inc. (“RFI” or the “Acquiring Fund” and, together with DVM, the “Funds” and each a “Fund”)."},
+      "outcome_evidence": null,
+      "notes": "DVM's NYSE listing is shown by the quote (its shares would be removed from listing on the NYSE); RFI's by 'RFI, a publicly traded company listed on the NYSE' in the same filing. The latest merger-related filing in the window is the 2014-04-01 425 (vote still pending, meeting 2014-04-24). Later filings (2014-03-05 DEF 14A, 2015 PRE 14A/DEF 14A/DEFA14A) show only their openings and annual-meeting cards; none states the outcome."
+    }
+  ],
+  "problems": "No excerpt states how the DVM/RFI reorganization ended."
+}

@@ -1,0 +1,97 @@
+{
+ "run_utc": "2026-11-11T16:54:04+00:00",
+ "code_head": "c433265ed84c6ef8bf09b77c0fba78f481db4e12",
+ "uncommitted_edits": true,
+ "spec_id": "c4_families.v5.20261103",
+ "spec_sha256": "65c19a9e498fb917cf5d7ba4ca3cc87129d9ba4242ec3018455bce4ab55d1d10",
+ "m": 1.26,
+ "cap": 1.9,
+ "band": 0.048,
+ "z_share": 0.5,
+ "fit_end": "2022-12-30",
+ "gate": {
+  "total_sr": 1.216957834377122,
+  "price_sr": 1.3595907627768347
+ },
+ "section_3_3": {
+  "z_only_spec_book": {
+   "target_gross": 1.513082077602,
+   "p_target_above_cap": 0.22382751722605024,
+   "uncapped_held_gross": 2.100905895084071,
+   "p_uncapped_above_cap": 0.5896865970215603,
+   "held_gross": 1.5496921831280643,
+   "p_at_cap": 0.21493665258946432,
+   "turn_per_yr": 48.456485237925314,
+   "live_sessions": 4499
+  },
+  "blend_spec_book": {
+   "target_gross": 1.5672586740653274,
+   "p_target_above_cap": 0.2609468770837964,
+   "uncapped_held_gross": 2.118728995497703,
+   "p_uncapped_above_cap": 0.6016892642809514,
+   "held_gross": 1.5882985675773822,
+   "p_at_cap": 0.2400533451878195,
+   "turn_per_yr": 51.210635997265534,
+   "live_sessions": 4499
+  }
+ },
+ "l1": {
+  "price_only": {
+   "first_held": "2005-02-22",
+   "last": "2022-12-30",
+   "sessions": 4497,
+   "ann_pct": 8.614417968420868,
+   "vol_pct": 8.721527582193564,
+   "gross_sr": 0.9877189388254214,
+   "p5_120_sb21": -0.05865067978528522,
+   "p50_120_sb21": 0.039582786225132005,
+   "p5_120_rolling_empirical": -0.06500207425722931,
+   "rolling_windows": 4378,
+   "bootstrap": {
+    "method": "stationary bootstrap, mean block 21 (_common.Paths: stops.py R2's)",
+    "reps": 10000,
+    "seed": 20261030,
+    "horizon": 120
+   }
+  },
+  "total_return": {
+   "first_held": "2005-02-22",
+   "last": "2022-12-30",
+   "sessions": 4497,
+   "ann_pct": 7.461355967521143,
+   "vol_pct": 8.453428250378165,
+   "gross_sr": 0.8826426091908165,
+   "p5_120_sb21": -0.06102561601091639,
+   "p50_120_sb21": 0.03360562421919466,
+   "p5_120_rolling_empirical": -0.06643032847752538,
+   "rolling_windows": 4378,
+   "bootstrap": {
+    "method": "stationary bootstrap, mean block 21 (_common.Paths: stops.py R2's)",
+    "reps": 10000,
+    "seed": 20261030,
+    "horizon": 120
+   }
+  }
+ },
+ "design_run_for_comparison": {
+  "source": "results/cef/screens_2026-11-02/prereg_c4_level_design_output_v4.txt section B [S]",
+  "z_only_spec_book": {
+   "target_gross": 1.513,
+   "p_target_above_cap": 0.22399999999999998,
+   "uncapped_held_gross": 2.101,
+   "p_uncapped_above_cap": 0.59,
+   "held_gross": 1.55,
+   "p_at_cap": 0.215,
+   "turn_per_yr": 48.5
+  },
+  "blend_spec_book": {
+   "target_gross": 2.279,
+   "p_target_above_cap": 0.72,
+   "uncapped_held_gross": 2.536,
+   "p_uncapped_above_cap": 0.846,
+   "held_gross": 1.719,
+   "p_at_cap": 0.28300000000000003,
+   "turn_per_yr": 32.9
+  }
+ }
+}

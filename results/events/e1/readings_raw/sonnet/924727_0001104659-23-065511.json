@@ -1,0 +1,78 @@
+{
+  "episode_cik": 924727,
+  "episode_accession": "0001104659-23-065511",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "FPA New Income, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA New Income Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "notes": "Acquirer is a new series of FPA Funds Trust (CIK 924727 is the trust)."
+    },
+    {
+      "target": {"name": "FPA Queens Road Small Cap Value Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA Queens Road Small Cap Value Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "notes": "Target is a series of Bragg Capital Trust."
+    },
+    {
+      "target": {"name": "FPA Queens Road Value Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA Queens Road Value Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "notes": "Target is a series of Bragg Capital Trust."
+    },
+    {
+      "target": {"name": "FPA U.S. Core Equity Fund, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "FPA U.S. Core Equity Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-065511", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "we are pleased to inform you of our plan to reorganize each Acquired Fund into a corresponding, newly created shell series (each, an “Acquiring Fund”) of FPA Funds Trust (the “Trust”)"},
+      "outcome_evidence": {"accession": "0001104659-23-065511", "date": "2023-05-26", "quote": "As an investor in one or more of the mutual funds listed below (each, a “Acquired Fund”)"},
+      "notes": ""
+    },
+    {
+      "target": {"name": "FPA Global Equity ETF (series of Northern Lights Fund Trust III)", "cik": null, "ticker": "FPAG"},
+      "acquirer": {"name": "FPA Global Equity ETF (newly created series of FPA Funds Trust)", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001104659-23-129760", "quote": "Fund is an ETF, and, as a result of an ETF’s structure, it is exposed to the following risks:"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001104659-23-129760", "date": "2023-12-27", "quote": "At the Special Meeting, shareholders of the Acquired Fund will consider a proposal to approve an Agreement and Plan of Reorganization (the “Plan”)."},
+      "outcome_evidence": {"accession": "0001104659-23-129760", "date": "2023-12-27", "quote": "Fund is an ETF, and, as a result of an ETF’s structure, it is exposed to the following risks:"},
+      "notes": "A change of trust for the same ETF, not a merger of two funds; recorded because the filing proposes a reorganization. ETFs, so not a listed closed-end pair."
+    },
+    {
+      "target": {"name": "Credit Suisse Managed Futures Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Manteio Managed Futures Strategy Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-24-070845", "quote": "may redeem their Acquired Fund shares before the Reorganization"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "shareholders of each Acquired Fund will consider a proposal to approve an Agreement and Plan of Reorganization (each, a “Reorganization Agreement” and together, the “Reorganization Agreements”) of their Acquired Fund into a corresponding, newly created series"},
+      "outcome_evidence": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "may redeem their Acquired Fund shares before the Reorganization"},
+      "notes": "Registrant is Investment Managers Series Trust III (same CIK as the episode, renamed from FPA Funds Trust). Mutual funds with share classes and redemption. Meeting scheduled Oct 31, 2024, then Nov 15, 2024 (N-14/A 0001213900-24-089049); no outcome stated."
+    },
+    {
+      "target": {"name": "Credit Suisse Multialternative Strategy Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Manteio Multialternative Strategy Fund", "cik": 924727, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001213900-24-070845", "quote": "may redeem their Acquired Fund shares before the Reorganization"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "shareholders of each Acquired Fund will consider a proposal to approve an Agreement and Plan of Reorganization (each, a “Reorganization Agreement” and together, the “Reorganization Agreements”) of their Acquired Fund into a corresponding, newly created series"},
+      "outcome_evidence": {"accession": "0001213900-24-070845", "date": "2024-08-20", "quote": "may redeem their Acquired Fund shares before the Reorganization"},
+      "notes": "Same filing as the Managed Futures deal."
+    }
+  ],
+  "problems": "Fund-level CIKs are not in the headers; the acquirer CIK given is the trust's (924727)."
+}

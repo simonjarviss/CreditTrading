@@ -1,0 +1,28 @@
+{
+  "episode_cik": 1372807,
+  "episode_accession": "0001193125-20-178045",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Garrison Capital Inc.", "cik": 1509892, "ticker": "GARS"},
+      "acquirer": {"name": "Portman Ridge Finance Corporation", "cik": 1372807, "ticker": "PTMN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-178041", "quote": "Garrison Capital Inc. (Nasdaq: GARS) (“GARS”) and Portman Ridge Finance Corporation (“PTMN”) (Nasdaq: PTMN) announced today that they have entered into a definitive agreement under which GARS will merge with and into PTMN"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-178041", "date": "2020-06-25", "quote": "Garrison Capital Inc. (Nasdaq: GARS) (“GARS”) and Portman Ridge Finance Corporation (“PTMN”) (Nasdaq: PTMN) announced today that they have entered into a definitive agreement under which GARS will merge with and into PTMN"},
+      "outcome_evidence": {"accession": "0001193125-20-279845", "date": "2020-10-28", "quote": "Portman Ridge Finance Corporation (Nasdaq: PTMN) (the “Company” or “PTMN”) and Garrison Capital Inc. (formerly Nasdaq: GARS) (“GARS”) announced today the closing (the “Closing”) of the previously announced transaction under which GARS will be merged into PTMN."},
+      "notes": "PTMN stockholders approved the share issuance at a special meeting reported in the 8-K filed 2020-10-20."
+    },
+    {
+      "target": {"name": "Harvest Capital Credit Corporation", "cik": 1559909, "ticker": "HCAP"},
+      "acquirer": {"name": "Portman Ridge Finance Corporation", "cik": 1372807, "ticker": "PTMN"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-20-326734", "quote": "Harvest Capital Credit Corporation (NASDAQ: HCAP) (“HCAP”) and Portman Ridge Finance Corporation (NASDAQ: PTMN) (the “Company” or “PTMN”) announced today that they have entered into a definitive agreement under which HCAP will merge with and into PTMN"},
+      "outcome": "completed",
+      "announcement": {"accession": "0001193125-20-326222", "date": "2020-12-28", "quote": "Harvest Capital Credit Corporation to Merge into Portman Ridge Finance Corporation"},
+      "outcome_evidence": {"accession": "0001193125-21-186945", "date": "2021-06-10", "quote": "Portman Ridge Finance Corporation (NASDAQ: PTMN) (the “Company” or “PTMN”) announced today the closing of the previously announced merger with Harvest Capital Credit Corporation (formerly NASDAQ: HCAP) (“HCAP”)."},
+      "notes": "Press release dated 2020-12-23, filed 2020-12-28 (same day as the 8-K 0001193125-20-326734)."
+    }
+  ],
+  "problems": ""
+}

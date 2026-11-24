@@ -1,0 +1,18 @@
+{
+  "episode_cik": 890393,
+  "episode_accession": "0001193125-23-231639",
+  "episode_role": "target",
+  "deals": [
+    {
+      "target": {"name": "BlackRock MuniYield Michigan Quality Fund, Inc.", "cik": 890393, "ticker": "MIY"},
+      "acquirer": {"name": "BlackRock MuniYield Quality Fund III, Inc.", "cik": 883412, "ticker": "MYI"},
+      "both_listed": true,
+      "listed_quote": {"accession": "0001193125-23-231639", "quote": "BlackRock MuniYield Michigan Quality Fund, Inc. (NYSE: MIY), BlackRock MuniYield Pennsylvania Quality Fund (NYSE: MPA), BlackRock Virginia Municipal Bond Trust (NYSE: BHV), BlackRock Investment Quality Municipal Trust, Inc. (NYSE: BKN) and BlackRock MuniYield Quality Fund III, Inc. (NYSE: MYI)"},
+      "outcome": null,
+      "announcement": {"accession": "0001193125-23-231639", "date": "2023-09-08", "quote": "have approved the mergers of each of MIY, MPA, BHV and BKN with and into MYI, with MYI continuing as the surviving Fund"},
+      "outcome_evidence": null,
+      "notes": "MIY into MYI was announced 2023-09-08 (expected completion first half of 2024). No excerpt states how the 2023 proposal ended. A 2025-06-09 press release (accession 0001193125-25-137843) again lists MIY, with MVF and MVT, to be reorganized into MYI, with a shareholder meeting on October 15, 2025, and the 2025-08-08 PRE 14A is for MYI, MIY, MVF, MVT; this suggests the 2023 proposal was not completed but the excerpts do not say so, so outcome is null. The 2025 proposal's outcome is also not in the excerpts. Other targets in the same filings (MPA, BHV, BKN, MVF, MVT) not recorded as deals because the episode is MIY's."
+    }
+  ],
+  "problems": "Outcome of the 2023 proposal is not stated; the 2025 re-proposal of the same pair is seen but its result is not in the excerpts."
+}

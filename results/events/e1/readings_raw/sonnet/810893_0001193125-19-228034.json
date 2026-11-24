@@ -1,0 +1,18 @@
+{
+  "episode_cik": 810893,
+  "episode_accession": "0001193125-19-228034",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "PIMCO EqS ® Long/Short Fund", "cik": 1479360, "ticker": null},
+      "acquirer": {"name": "PIMCO RAE Worldwide Long/Short PLUS Fund", "cik": 810893, "ticker": null},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001193125-19-294804", "quote": "a Delaware statutory trust and an open-end management investment company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001193125-19-228034", "date": "2019-08-23", "quote": "announcing the Board of Trustees’ approval of submitting to PIMCO EqS ® Long/Short Fund shareholders a proposal to reorganize the PIMCO EqS ® Long/Short Fund with and into the PIMCO RAE Worldwide Long/Short PLUS Fund."},
+      "outcome_evidence": null,
+      "notes": "Open-end (mutual fund) series reorganization; target CIK 1479360 is the trust PIMCO Equity Series, acquirer CIK 810893 is the trust PIMCO Funds. Excerpts do not state how it ended (last filing 2019-11-21 is a pre-vote solicitation about reaching quorum)."
+    }
+  ],
+  "problems": ""
+}

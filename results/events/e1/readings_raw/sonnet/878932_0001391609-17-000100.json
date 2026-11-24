@@ -1,0 +1,18 @@
+{
+  "episode_cik": 878932,
+  "episode_accession": "0001391609-17-000100",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "U.S. Gas & Electric, Inc.", "cik": null, "ticker": null},
+      "acquirer": {"name": "Equus Total Return, Inc.", "cik": 878932, "ticker": "EQS"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001391609-17-000098", "quote": "U.S. Gas & Electric, Inc. (“USG&E”), a residential and commercial energy services company"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001391609-17-000098", "date": "2017-04-24", "quote": "Equus Total Return, Inc. (NYSE: EQS) (“Equus” or the “Company”) today announced that it has executed a definitive agreement to acquire and consolidate its operations with U.S. Gas & Electric, Inc. (“USG&E”)"},
+      "outcome_evidence": {"accession": "0001391609-17-000098", "date": "2017-04-24", "quote": "U.S. Gas & Electric, Inc. (“USG&E”), a residential and commercial energy services company"},
+      "notes": "Target is an operating company, not a listed fund. The agreement was later terminated: 8-K filed 2017-05-31 (accession 0001391609-17-000151) says USG&E and MVC Capital terminated the Merger Agreement dated April 24, 2017 after accepting a proposal from Crius Energy Trust. Evidence field cites the filing that settles not-a-listed-pair; the termination is only in notes."
+    }
+  ],
+  "problems": ""
+}

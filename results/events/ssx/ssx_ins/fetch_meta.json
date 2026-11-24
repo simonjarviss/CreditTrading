@@ -1,0 +1,431 @@
+{
+ "fetch_2015Q1_2015Q1": {
+  "ran_utc": "2026-10-19T15:25:55+00:00",
+  "live_requests": 1,
+  "cache_hits": 0,
+  "quarters": [
+   {
+    "quarter": "2015Q1",
+    "bytes": 14689945,
+    "live": 1
+   }
+  ]
+ },
+ "extract_2015Q1_2015Q1": {
+  "ran_utc": "2026-10-19T15:25:58+00:00",
+  "live_requests": 0,
+  "cache_hits": 1
+ },
+ "fetch_2006Q1_2025Q4": {
+  "ran_utc": "2026-10-19T15:28:04+00:00",
+  "live_requests": 79,
+  "cache_hits": 1,
+  "quarters": [
+   {
+    "quarter": "2006Q1",
+    "bytes": 17306804,
+    "live": 1
+   },
+   {
+    "quarter": "2006Q2",
+    "bytes": 14116730,
+    "live": 1
+   },
+   {
+    "quarter": "2006Q3",
+    "bytes": 11083649,
+    "live": 1
+   },
+   {
+    "quarter": "2006Q4",
+    "bytes": 13180511,
+    "live": 1
+   },
+   {
+    "quarter": "2007Q1",
+    "bytes": 17151240,
+    "live": 1
+   },
+   {
+    "quarter": "2007Q2",
+    "bytes": 14744238,
+    "live": 1
+   },
+   {
+    "quarter": "2007Q3",
+    "bytes": 12700224,
+    "live": 1
+   },
+   {
+    "quarter": "2007Q4",
+    "bytes": 13861041,
+    "live": 1
+   },
+   {
+    "quarter": "2008Q1",
+    "bytes": 16075732,
+    "live": 1
+   },
+   {
+    "quarter": "2008Q2",
+    "bytes": 13824775,
+    "live": 1
+   },
+   {
+    "quarter": "2008Q3",
+    "bytes": 10862303,
+    "live": 1
+   },
+   {
+    "quarter": "2008Q4",
+    "bytes": 10836597,
+    "live": 1
+   },
+   {
+    "quarter": "2009Q1",
+    "bytes": 13143873,
+    "live": 1
+   },
+   {
+    "quarter": "2009Q2",
+    "bytes": 10091884,
+    "live": 1
+   },
+   {
+    "quarter": "2009Q3",
+    "bytes": 9012661,
+    "live": 1
+   },
+   {
+    "quarter": "2009Q4",
+    "bytes": 9888102,
+    "live": 1
+   },
+   {
+    "quarter": "2010Q1",
+    "bytes": 13765513,
+    "live": 1
+   },
+   {
+    "quarter": "2010Q2",
+    "bytes": 11197221,
+    "live": 1
+   },
+   {
+    "quarter": "2010Q3",
+    "bytes": 8833546,
+    "live": 1
+   },
+   {
+    "quarter": "2010Q4",
+    "bytes": 10842841,
+    "live": 1
+   },
+   {
+    "quarter": "2011Q1",
+    "bytes": 14431321,
+    "live": 1
+   },
+   {
+    "quarter": "2011Q2",
+    "bytes": 11265081,
+    "live": 1
+   },
+   {
+    "quarter": "2011Q3",
+    "bytes": 8440873,
+    "live": 1
+   },
+   {
+    "quarter": "2011Q4",
+    "bytes": 8958649,
+    "live": 1
+   },
+   {
+    "quarter": "2012Q1",
+    "bytes": 14219288,
+    "live": 1
+   },
+   {
+    "quarter": "2012Q2",
+    "bytes": 10535239,
+    "live": 1
+   },
+   {
+    "quarter": "2012Q3",
+    "bytes": 9104710,
+    "live": 1
+   },
+   {
+    "quarter": "2012Q4",
+    "bytes": 10438069,
+    "live": 1
+   },
+   {
+    "quarter": "2013Q1",
+    "bytes": 14032058,
+    "live": 1
+   },
+   {
+    "quarter": "2013Q2",
+    "bytes": 11427360,
+    "live": 1
+   },
+   {
+    "quarter": "2013Q3",
+    "bytes": 9557012,
+    "live": 1
+   },
+   {
+    "quarter": "2013Q4",
+    "bytes": 10117129,
+    "live": 1
+   },
+   {
+    "quarter": "2014Q1",
+    "bytes": 14560119,
+    "live": 1
+   },
+   {
+    "quarter": "2014Q2",
+    "bytes": 11012390,
+    "live": 1
+   },
+   {
+    "quarter": "2014Q3",
+    "bytes": 8979142,
+    "live": 1
+   },
+   {
+    "quarter": "2014Q4",
+    "bytes": 10294808,
+    "live": 1
+   },
+   {
+    "quarter": "2015Q1",
+    "bytes": 14689945,
+    "live": 0
+   },
+   {
+    "quarter": "2015Q2",
+    "bytes": 11336215,
+    "live": 1
+   },
+   {
+    "quarter": "2015Q3",
+    "bytes": 8908570,
+    "live": 1
+   },
+   {
+    "quarter": "2015Q4",
+    "bytes": 9384596,
+    "live": 1
+   },
+   {
+    "quarter": "2016Q1",
+    "bytes": 13630106,
+    "live": 1
+   },
+   {
+    "quarter": "2016Q2",
+    "bytes": 10388337,
+    "live": 1
+   },
+   {
+    "quarter": "2016Q3",
+    "bytes": 8704557,
+    "live": 1
+   },
+   {
+    "quarter": "2016Q4",
+    "bytes": 9107157,
+    "live": 1
+   },
+   {
+    "quarter": "2017Q1",
+    "bytes": 14209324,
+    "live": 1
+   },
+   {
+    "quarter": "2017Q2",
+    "bytes": 10633369,
+    "live": 1
+   },
+   {
+    "quarter": "2017Q3",
+    "bytes": 7972500,
+    "live": 1
+   },
+   {
+    "quarter": "2017Q4",
+    "bytes": 9036107,
+    "live": 1
+   },
+   {
+    "quarter": "2018Q1",
+    "bytes": 13941852,
+    "live": 1
+   },
+   {
+    "quarter": "2018Q2",
+    "bytes": 10757463,
+    "live": 1
+   },
+   {
+    "quarter": "2018Q3",
+    "bytes": 8493817,
+    "live": 1
+   },
+   {
+    "quarter": "2018Q4",
+    "bytes": 9225725,
+    "live": 1
+   },
+   {
+    "quarter": "2019Q1",
+    "bytes": 13745081,
+    "live": 1
+   },
+   {
+    "quarter": "2019Q2",
+    "bytes": 10594521,
+    "live": 1
+   },
+   {
+    "quarter": "2019Q3",
+    "bytes": 8188905,
+    "live": 1
+   },
+   {
+    "quarter": "2019Q4",
+    "bytes": 8416016,
+    "live": 1
+   },
+   {
+    "quarter": "2020Q1",
+    "bytes": 13886112,
+    "live": 1
+   },
+   {
+    "quarter": "2020Q2",
+    "bytes": 10237249,
+    "live": 1
+   },
+   {
+    "quarter": "2020Q3",
+    "bytes": 8765495,
+    "live": 1
+   },
+   {
+    "quarter": "2020Q4",
+    "bytes": 10162651,
+    "live": 1
+   },
+   {
+    "quarter": "2021Q1",
+    "bytes": 15891333,
+    "live": 1
+   },
+   {
+    "quarter": "2021Q2",
+    "bytes": 12494758,
+    "live": 1
+   },
+   {
+    "quarter": "2021Q3",
+    "bytes": 10198876,
+    "live": 1
+   },
+   {
+    "quarter": "2021Q4",
+    "bytes": 10818822,
+    "live": 1
+   },
+   {
+    "quarter": "2022Q1",
+    "bytes": 14253893,
+    "live": 1
+   },
+   {
+    "quarter": "2022Q2",
+    "bytes": 10603723,
+    "live": 1
+   },
+   {
+    "quarter": "2022Q3",
+    "bytes": 8024500,
+    "live": 1
+   },
+   {
+    "quarter": "2022Q4",
+    "bytes": 8400983,
+    "live": 1
+   },
+   {
+    "quarter": "2023Q1",
+    "bytes": 13882049,
+    "live": 1
+   },
+   {
+    "quarter": "2023Q2",
+    "bytes": 10742628,
+    "live": 1
+   },
+   {
+    "quarter": "2023Q3",
+    "bytes": 8202487,
+    "live": 1
+   },
+   {
+    "quarter": "2023Q4",
+    "bytes": 8497639,
+    "live": 1
+   },
+   {
+    "quarter": "2024Q1",
+    "bytes": 13874620,
+    "live": 1
+   },
+   {
+    "quarter": "2024Q2",
+    "bytes": 10286787,
+    "live": 1
+   },
+   {
+    "quarter": "2024Q3",
+    "bytes": 8163472,
+    "live": 1
+   },
+   {
+    "quarter": "2024Q4",
+    "bytes": 8954329,
+    "live": 1
+   },
+   {
+    "quarter": "2025Q1",
+    "bytes": 12804783,
+    "live": 1
+   },
+   {
+    "quarter": "2025Q2",
+    "bytes": 9860984,
+    "live": 1
+   },
+   {
+    "quarter": "2025Q3",
+    "bytes": 7956025,
+    "live": 1
+   },
+   {
+    "quarter": "2025Q4",
+    "bytes": 8309708,
+    "live": 1
+   }
+  ]
+ },
+ "extract_2006Q1_2025Q4": {
+  "ran_utc": "2026-10-19T15:29:28+00:00",
+  "live_requests": 0,
+  "cache_hits": 80
+ }
+}

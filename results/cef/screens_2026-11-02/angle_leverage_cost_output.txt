@@ -1,0 +1,7 @@
+muni - loan              short-only: b +0.614 pp disc per pp rate (t +1.20); with IEF: b +0.677 (t +1.42); n 215
+taxable_fixed - loan     short-only: b -0.174 pp disc per pp rate (t -0.26); with IEF: b -0.144 (t -0.18); n 215
+muni alone               short-only: b -0.184 pp disc per pp rate (t -0.68); with IEF: b -0.144 (t -0.48); n 215
+loan alone (control)     short-only: b -0.798 pp disc per pp rate (t -1.48); with IEF: b -0.821 (t -1.67); n 215
+3m: muni - loan          short-only: b +0.574 (t +0.64); n 213
+3m: taxable_fixed - loan short-only: b -0.769 (t -0.51); n 213
+episodes: 34 months with |3m change| >= 50bp, in 12 runs

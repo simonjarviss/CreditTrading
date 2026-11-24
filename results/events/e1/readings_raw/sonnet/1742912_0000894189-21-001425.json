@@ -1,0 +1,9 @@
+{"episode_cik":1742912,"episode_accession":"0000894189-21-001425","episode_role":"acquirer",
+"deals":[{"target":{"name":"American Customer Satisfaction ETF, a series of ETF Series Solutions","cik":null,"ticker":null},
+"acquirer":{"name":"American Customer Satisfaction ETF, a series of Tidal ETF Trust","cik":1742912,"ticker":null},
+"both_listed":false,"listed_quote":{"accession":"0000894189-21-001425","quote":"For the Reorganization of American Customer Satisfaction ETF a series of ETF Series Solutions"},
+"outcome":"not_a_listed_pair",
+"announcement":{"accession":"0000894189-21-001425","date":"2021-03-05","quote":"For the Reorganization of American Customer Satisfaction ETF a series of ETF Series Solutions"},
+"outcome_evidence":null,
+"notes":"Both funds are ETF series (not closed-end funds). CIK 1742912 is the Tidal ETF Trust filer CIK."}],
+"problems":""}

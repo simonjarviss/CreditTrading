@@ -1,0 +1,18 @@
+{
+  "episode_cik": 1796233,
+  "episode_accession": "0001193125-19-314107",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Resource Credit Income Fund", "cik": null, "ticker": null},
+      "acquirer": {"name": "Goldman Sachs Credit Income Fund", "cik": 1796233, "ticker": null},
+      "both_listed": null,
+      "listed_quote": null,
+      "outcome": "withdrawn",
+      "announcement": {"accession": "0001193125-19-314107", "date": "2019-12-16", "quote": "On behalf of the Board of Trustees (the “Board”) of Resource Credit Income Fund (the “Acquired Fund”), we are pleased to invite you to a special meeting of shareholders"},
+      "outcome_evidence": {"accession": "0001193125-20-164346", "date": "2020-06-09", "quote": "Goldman Sachs Credit Income Fund (the “Registrant”) respectfully requests withdrawal of the Registration Statement on Form N-14 (File No. 333-235513), together with all exhibits thereto"},
+      "notes": "The RW (filed 2020-06-09) states: 'The N-14 related to the reorganization of the Resource Credit Income Fund with and into the Registrant.' and gives 'further consideration and business reasons' as the reason. The excerpts do not state that either fund is exchange-listed (the pre-effective excerpts mention Private Investment Funds and no ticker or exchange for either fund), so both_listed is null. Resource Credit Income Fund has no CIK in any FILING header."
+    }
+  ],
+  "problems": "Only the first 2,500 characters and outcome-language passages of the ~1 million character N-14 documents were shown; none of them state exchange listing or tickers."
+}

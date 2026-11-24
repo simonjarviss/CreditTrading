@@ -1,0 +1,68 @@
+{
+  "episode_cik": 1782952,
+  "episode_accession": "0001999371-24-010468",
+  "episode_role": "acquirer",
+  "deals": [
+    {
+      "target": {"name": "Kurv Yield Premium Strategy Amazon (AMZN) ETF", "cik": null, "ticker": "AMZN"},
+      "acquirer": {"name": "Kurv Yield Premium Strategy Amazon (AMZN) ETF (a series of Kurv ETF Trust)", "cik": null, "ticker": "AMZN"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010468", "quote": "Kurv Yield Premium Strategy Amazon (AMZN) ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010468", "date": "2024-08-21", "quote": "the Reorganization of Kurv Yield Premium Strategy Amazon (AMZN) ETF"},
+      "outcome_evidence": null,
+      "notes": "ETF series moving from NEOS ETF Trust to Kurv ETF Trust; closing expected on or about November 15, 2024; no outcome stated. CIK 1782952 is Kurv ETF Trust (filer), not fund-level."
+    },
+    {
+      "target": {"name": "Kurv Yield Premium Strategy Apple (APPL) ETF", "cik": null, "ticker": "APPL"},
+      "acquirer": {"name": "Kurv Yield Premium Strategy Apple (APPL) ETF (a series of Kurv ETF Trust)", "cik": null, "ticker": "APPL"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010468", "quote": "Kurv Yield Premium Strategy Apple (APPL) ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010468", "date": "2024-08-21", "quote": "the Reorganization of Kurv Yield Premium Strategy Amazon (AMZN) ETF Kurv Yield Premium Strategy Apple (APPL) ETF"},
+      "outcome_evidence": null,
+      "notes": "Same transaction as the Amazon ETF entry."
+    },
+    {
+      "target": {"name": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF", "cik": null, "ticker": "MSFT"},
+      "acquirer": {"name": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF (a series of Kurv ETF Trust)", "cik": null, "ticker": "MSFT"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010468", "quote": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010468", "date": "2024-08-21", "quote": "Kurv Yield Premium Strategy Microsoft (MSFT) ETF"},
+      "outcome_evidence": null,
+      "notes": "Same transaction as the Amazon ETF entry."
+    },
+    {
+      "target": {"name": "Kurv Yield Premium Strategy Google (GOOGL) ETF", "cik": null, "ticker": "GOOGL"},
+      "acquirer": {"name": "Kurv Yield Premium Strategy Google (GOOGL) ETF (a series of Kurv ETF Trust)", "cik": null, "ticker": "GOOGL"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010468", "quote": "Kurv Yield Premium Strategy Google (GOOGL) ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010468", "date": "2024-08-21", "quote": "Kurv Yield Premium Strategy Google (GOOGL) ETF"},
+      "outcome_evidence": null,
+      "notes": "Same transaction as the Amazon ETF entry."
+    },
+    {
+      "target": {"name": "Kurv Yield Premium Strategy Tesla (TSLA) ETF", "cik": null, "ticker": "TSLA"},
+      "acquirer": {"name": "Kurv Yield Premium Strategy Tesla (TSLA) ETF (a series of Kurv ETF Trust)", "cik": null, "ticker": "TSLA"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010468", "quote": "Kurv Yield Premium Strategy Tesla (TSLA) ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010468", "date": "2024-08-21", "quote": "Kurv Yield Premium Strategy Tesla (TSLA) ETF"},
+      "outcome_evidence": null,
+      "notes": "Same transaction as the Amazon ETF entry."
+    },
+    {
+      "target": {"name": "Kurv Yield Premium Strategy Netflix (NFLX) ETF", "cik": null, "ticker": "NFLX"},
+      "acquirer": {"name": "Kurv Yield Premium Strategy Netflix (NFLX) ETF (a series of Kurv ETF Trust)", "cik": null, "ticker": "NFLX"},
+      "both_listed": false,
+      "listed_quote": {"accession": "0001999371-24-010468", "quote": "Kurv Yield Premium Strategy Netflix (NFLX) ETF"},
+      "outcome": "not_a_listed_pair",
+      "announcement": {"accession": "0001999371-24-010468", "date": "2024-08-21", "quote": "Kurv Yield Premium Strategy Netflix (NFLX) ETF"},
+      "outcome_evidence": null,
+      "notes": "Same transaction as the Amazon ETF entry."
+    }
+  ],
+  "problems": "The later filings (DEFA14A 2024-10-25 and PRE 14A 2026-08-12) do not state the outcome of the reorganizations; the PRE 14A concerns an advisory agreement for a different fund."
+}
