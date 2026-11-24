@@ -51,8 +51,8 @@ s3://<bucket>/options/<SYM>/tick/<YYYY-MM>.parquet   one file per underlying-mon
 
 ### What is in it
 
-**`results/data/R2_CATALOG.md` is the inventory.** Since 2026-11-09 it is git-ignored,
-because this repository is public, so it exists only on a machine that has generated
+**`results/data/R2_CATALOG.md` is the inventory.** It is git-ignored (decided 2026-11-09,
+out of the tree from 2026-11-24, pull request #70) because this repository is public, so it exists only on a machine that has generated
 it. Generate it with
 `python3 scripts/data/r2_catalog.py` (read-only, about 2 minutes). For each curated
 table it gives the columns, the row count and the min/max of every DATE-typed column.
