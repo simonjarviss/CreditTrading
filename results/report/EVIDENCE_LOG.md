@@ -5717,3 +5717,33 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `a4385db` (`book_section` printed `equity_snapshot.kind`); the VM's site journal, read 2026-11-24 ~05:00 ET; the caption is in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-09-61 · Four row-level CRSP tables and the R2 inventories leave the repository and are git-ignored
+- kind: incident
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - none (a repository clean-up asked for by the team lead; no figure)
+- source: `.gitignore` @ `3595ec8` (the block is added by this commit, on top of that main)
+- supports: §5
+- status: current
+
+### E-2026-11-09-62 · Rulings on the repository's public exposure: secret scanning and push protection on, the halt alert's address moves to config, the admin list stays as it is
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - none (rulings by the team lead: "Turn both on", "Gmail in ops/halt.py", "Keep all four")
+- source: `.gitignore` @ `3595ec8` (the section is added by this commit, on top of that main)
+- supports: §5
+- status: current. The address change is PR #73
+
+### E-2026-11-24-09 · Pull request #70 brought up to date, and a fifth CRSP-derived table joins it: the C4 families names table
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (the team lead's go, by question prompt: "Update it now"; no figure)
+- source: `.gitignore` @ `b5c9913` (the `names_*.csv` line and its comment are added by the commit that carries this entry, on top of that main); `results/cef/cef_families/names_2026-10-12.csv` @ `b5c9913` (its columns include `current_shrcds`, `crsp_first`, `crsp_last` and `crsp_trade_rows` per fund)
+- supports: §5
+- status: current. E-2026-11-09-61 and -62 are this pull request's entries of 2026-11-09, renumbered on the merge because main had since used -01 and -02. The files leave the tree from this merge on; they stay in git history until the history rewrite, which is the team lead's to push

@@ -51,7 +51,9 @@ s3://<bucket>/options/<SYM>/tick/<YYYY-MM>.parquet   one file per underlying-mon
 
 ### What is in it
 
-**`results/data/R2_CATALOG.md` is the inventory.** Regenerate it with
+**`results/data/R2_CATALOG.md` is the inventory.** It is git-ignored (decided 2026-11-09,
+out of the tree from 2026-11-24, pull request #70) because this repository is public, so it exists only on a machine that has generated
+it. Generate it with
 `python3 scripts/data/r2_catalog.py` (read-only, about 2 minutes). For each curated
 table it gives the columns, the row count and the min/max of every DATE-typed column.
 It lists every object under the research schemas, and it enumerates every options
@@ -87,7 +89,8 @@ The following are consequences of those dates. Re-measure before you act on any 
   MSRB trades, OTC end-of-day, FJC bankruptcies and others), written as one snapshot
   2026-06-26 → 07-03 and not refreshed since. Inventory:
   `results/events/ssx/ssx_data/R2_FULL_INVENTORY_2026-10-19.md`, by
-  `python3 scripts/events/ssx/ssx_data_r2_inventory.py` [V]. `docs/REFERENCES.md` §12ssx.)*
+  `python3 scripts/events/ssx/ssx_data_r2_inventory.py` [V]. `docs/REFERENCES.md` §12ssx.
+  Git-ignored since 2026-11-09, like the catalogue above: run the script to get it.)*
 - The only options underlyings present are SPY, QQQ, TLT, IWM, GLD and SLV. **There is no
   HYG or LQD.** `docs/SYSTEM.md` names "the R2 trades source if it carries HYG/LQD/TLT"
   for options. As of this run, R2 carries only TLT of those three.
