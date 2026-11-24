@@ -5814,3 +5814,14 @@ that adds it does not exist when it is written.
 - source: `dashboard/site.py` @ `0535b46` (`POD_RULES`); the change is in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-17 · Ruling: the performance page drops the record before 24 Nov and its date heading; positioning in detail
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead: "on performance, delete since 24 Nov 2026"; "on performance delte: Record before 24 Nov 2026 section (this is repalced by new starting nowthat will be at the top"; "the position could also be more detailed" (verbatim) [V]
+  - from the VM's records exported 2026-11-24 16:46 UTC, positioning after the close of 23 Nov 2026 read: capital $299,610; long $166,319 and short $153,647; Fixed Income Book largest position 29% and top three 70% of gross; Equity Cross-Asset Book 15% and 42%; the event book's largest strategy by capital, unit trust termination, $34,750 in 15 names [V]
+- source: `dashboard/build.py` @ `4c72747` (the record before 24 Nov and the four positioning charts); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

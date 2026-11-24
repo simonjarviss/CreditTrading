@@ -40,7 +40,7 @@ def test_every_book_has_its_section(snap):
     """Team lead, 2026-11-24: "performance should be graphs and bar charts demonstrate returns, risk and
     positioning ... with tables for overall stats"; no fund facts, sources or method."""
     h = page(snap)
-    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio since", "Returns: cumulative",
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "<h2>Portfolio</h2>", "Returns: cumulative",
                   "Returns: P&amp;L by session", "Risk: drawdown from peak", "Key figures", "Positioning"):
         assert title in h, title
     for gone in ("Fund facts", "Sources and method", "Latest session", "Strategies in simulation"):
@@ -73,7 +73,6 @@ def test_the_portfolio_takes_each_book_from_its_first_send_and_the_event_book_on
     book has no end-of-day history, so it joins on its after-close readings, labelled; a session a
     trading book has no record for is left out and counted."""
     h = page(snap)
-    assert "Portfolio since 17 Nov 2026" in h
     head = h.split("Key figures", 1)[1].split("</thead>", 1)[0]
     assert "Equity Cross-Asset Book<br><span class=\"meta\">from 19 Nov 2026" in head
     assert "Event Book<br><span class=\"meta\">from 23 Nov 2026" in head
@@ -229,36 +228,25 @@ def test_the_record_starts_on_the_ruled_date():
     assert re.search(r'^RECORD_START = "2026-11-24"$', Path(B.__file__).read_text(), re.M)  # the shipped value
 
 
-def test_the_record_counts_from_its_start_and_keeps_the_earlier_record_apart(snap, monkeypatch):
-    """From 20 Nov: the Fixed Income Book's 20 Nov session (-$50) is the record; its 17-19 Nov sessions
-    (+$250, -$350, +$200) are the earlier record, shown apart and summed apart."""
+def test_the_record_counts_from_its_start(snap, monkeypatch):
+    """From 20 Nov: the Fixed Income Book's 20 Nov session (-$50) is the record; its 17-19 Nov sessions are not
+    in it, and the page no longer shows them (team lead, 2026-11-24: "delete: Record before 24 Nov 2026")."""
     monkeypatch.setattr(B, "RECORD_START", "2026-11-20")
     pf = B.portfolio(snap)
     cef = next(x for x in pf["books"] if x["b"]["name"] == "cef")
     assert cef["first"] == "2026-11-20" and cef["base"] == "2026-11-19" and cef["p"]["pnl"] == -50.0
     ev = next(x for x in pf["books"] if x["b"]["name"] == "events")
     assert ev["first"] == "2026-11-23"                                   # a book that starts later joins later
-    old = B.portfolio(snap, before="2026-11-20")
-    ocef = next(x for x in old["books"] if x["b"]["name"] == "cef")
-    assert ocef["first"] == "2026-11-17" and ocef["p"]["last_date"] == "2026-11-19" and ocef["p"]["pnl"] == 100.0
-    assert [why for b, why in old["excluded"]] == ["it began trading on 23 Nov 2026"]
     h = page(snap)
-    assert "Portfolio since 20 Nov 2026" in h
-    earlier = h.split("Record before 20 Nov 2026", 1)[1].split("</table>", 1)[0]
-    assert "17 Nov 2026" in earlier and "19 Nov 2026" in earlier and "+$100" in earlier
-
+    assert "<h2>Portfolio</h2>" in h and "Record before" not in h and "since 20 Nov" not in h
 
 def test_before_its_first_session_closes_the_record_says_when_it_starts(snap, monkeypatch):
-    """24 Nov 2026, before the close: no session of the record yet. The page says when it starts, and
-    shows the latest session and the earlier record; it never shows an empty figure."""
+    """24 Nov 2026, before the close: no session of the record yet. The page says when its figures start
+    and shows the positioning; it never shows an empty figure."""
     monkeypatch.setattr(B, "RECORD_START", "2026-11-24")
     h = page(snap)
-    assert "Portfolio since 24 Nov 2026" in h and "First figures after the close of 24 Nov 2026" in h
-    assert "Positioning" in h and "Record before 24 Nov 2026" in h and "Key figures" not in h
-    earlier = h.split("Record before 24 Nov 2026", 1)[1].split("</table>", 1)[0]
-    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
-        assert title in earlier, title
-
+    assert "First figures after the close of 24 Nov 2026" in h and "Positioning" in h
+    assert "Key figures" not in h and "Record before" not in h
 
 def test_the_positioning_totals_only_when_every_book_is_read_and_priced(snap):
     """The portfolio's bar in each positioning chart is the books' sum, or absent; never a sum over part of
@@ -279,7 +267,24 @@ def test_with_no_portfolio_every_book_left_out_is_named(snap, monkeypatch):
     unreadable one."""
     monkeypatch.setattr(B, "RECORD_START", "2026-11-24")
     book(snap, "cef")["official"] = {"UNMEASURED": "eod_equity.csv: read failed"}
-    h = page(snap).split("Portfolio since 24 Nov 2026", 1)[1].split("</section>", 1)[0]
+    h = page(snap).split("<h2>Portfolio</h2>", 1)[1].split("</section>", 1)[0]
     assert "Not included: Fixed Income Book" in h
     assert "Equity Cross-Asset Book not included: its first session from 24 Nov 2026 has not closed yet" in h
     assert "Event Book not included: its first session from 24 Nov 2026 has not closed yet" in h
+
+
+def test_the_positioning_is_detailed_in_aggregates(snap):
+    """Team lead, 2026-11-24: "the position could also be more detailed". A table by book; the core books'
+    exposure by fund group and concentration from their risk reports; the event book's capital and names
+    by strategy; never a holding."""
+    h = page(snap)
+    pos = h.split("<h2>Positioning</h2>", 1)[1].split("</section>", 1)[0]
+    for head in ("Capital", "Long", "Short", "Gross", "Net", "Largest position", "Top 3"):
+        assert f">{head}</th>" in pos, head
+    for title in ("Fixed Income Book: exposure by fund group", "Equity Cross-Asset Book: exposure by fund group",
+                  "Event Book: capital by strategy", "Concentration, share of gross"):
+        assert title in pos, title
+    ev_row = pos.split("Event Book</td>", 1)[1].split("</tr>", 1)[0]
+    assert ev_row.count("no report") == 2                          # the event book has no risk report
+    for sym in ("AAA", "BBB", "CCC"):
+        assert sym not in pos, sym

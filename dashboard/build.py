@@ -43,14 +43,15 @@ PORTFOLIO_COLOUR = COMBINED_COLOUR
 # first day for all books, but keep the old records too"). It is the first session on which all three
 # books trade a full plan: the event book's first send, on 2026-11-23, placed 46 of its 219 orders
 # before Alpaca's rate limit refused the rest (fixed in release-20261123-2). Every figure of the
-# portfolio and of each book counts from the close of the session before it; each book's record before
-# it is kept and shown apart, as the earlier record, never merged into the figures from this date.
+# portfolio and of each book counts from the close of the session before it. The record before it was
+# shown apart until the team lead took it off the page the same day ("this is replaced by new starting
+# now"); it stays in each book's own records.
 RECORD_START = "2026-11-24"
 
 
-def portfolio(snap: dict, before: str | None = None) -> dict:
-    """The books that trade and their composite, from RECORD_START; with `before`, the earlier record
-    instead: each book from its first traded session to the last session before that date.
+def portfolio(snap: dict) -> dict:
+    """The books that trade and their composite, from RECORD_START (a book that starts later, from its
+    first traded session).
 
     A book's daily record is its official end-of-day history, or, while it has none, its
     after-close readings (the event book), labelled as such. A book that has not sent an order is
@@ -81,15 +82,10 @@ def portfolio(snap: dict, before: str | None = None) -> dict:
             excluded.append((b, "it has not sent an order yet"))
             continue
         first = st["value"]["first_send"]
-        if before is not None and first >= before:
-            excluded.append((b, f"it began trading on {fmt_short(first)}"))
-            continue
         # From RECORD_START, or from the first send when that is later; the base is the close before.
-        start = first if before is not None else max(first, RECORD_START)
+        start = max(first, RECORD_START)
         try:
             tr = M.trading_rows(rows, start)
-            if before is not None:
-                tr = [r for r in tr if r["date"] < before]
             dated = M.daily(tr)
         except ValueError as e:
             blocked.append((b, str(e)))
@@ -226,10 +222,68 @@ def _x(v: float, signed: bool = False) -> str:
     return (f"{v:+.2f}x" if signed else f"{v:.2f}x").replace("-", "−")
 
 
+# Display names of the event strategies and of the core books' fund groups, in the investor deck's words.
+STRATEGY_NAMES = {
+    "cef_exdate_after": "Fund ex-date, short after",
+    "cef_exdate_before_after": "Fund ex-date, both sides",
+    "units_exdate_after": "Unit ex-date, short after",
+    "units_exdate_before_after": "Unit ex-date, both sides",
+    "specdiv_wait": "Special dividend",
+    "specdiv_wait_small": "Special dividend, small caps",
+    "pead_small_long": "Earnings drift",
+    "uit_termination": "Unit trust termination",
+    "uit_termination_big_sale": "Unit trust termination, large sales",
+}
+GROUP_NAMES = {
+    "hy": "High yield", "loan": "Loans", "multi": "Multi-sector", "muni": "Municipal",
+    "equity_covered_call": "Covered call", "equity_domestic": "Domestic equity", "equity_sector": "Sector equity",
+    "multi_asset": "Multi-asset", "preferred": "Preferred",
+}
+
+
+def _name(table: dict, key: str) -> str:
+    return table.get(key) or key.replace("_", " ").capitalize()
+
+
+def positioning_table(snap: dict, ps: dict) -> str:
+    """One row per book and the portfolio: capital, positions, long and short market value, gross and net
+    exposure as a multiple of equity, and the risk report's concentration (largest position and top three
+    as a share of gross). Aggregates only; a figure that was not read says so."""
+    nm = '<span class="meta">not measured</span>'
+    rows = []
+    for r in ps["rows"]:
+        b, p = r["b"], r["pos"]
+        risk = b.get("risk", {}).get("value") or {}
+        long_usd = short_usd = None
+        if r["priced"] and p["gross_usd"] is not None:
+            long_usd, short_usd = (p["gross_usd"] + p["net_usd"]) / 2, (p["gross_usd"] - p["net_usd"]) / 2
+        rows.append([f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)}"></span>'
+                     f'{escape(b["title"])}',
+                     usd(r["equity"]) if r["equity"] is not None else nm,
+                     f'{p["n"]} <span class="meta">({p["n_long"]} long, {p["n_short"]} short)</span>' if p["n"] else "none",
+                     usd(long_usd) if long_usd is not None else (nm if p["n"] else "none"),
+                     usd(short_usd) if short_usd is not None else (nm if p["n"] else "none"),
+                     _x(p["gross_x"]) if r["priced"] and p["n"] else (nm if p["n"] else "none"),
+                     _x(p["net_x"], True) if r["priced"] and p["n"] else (nm if p["n"] else "none"),
+                     pct(risk["largest_share"], dp=0) if "largest_share" in risk else '<span class="meta">no report</span>',
+                     pct(risk["top3_share"], dp=0) if "top3_share" in risk else '<span class="meta">no report</span>'])
+    t = ps["total"]
+    if t:
+        g, n = t["gross_x"] * t["equity"], t["net_x"] * t["equity"]
+        rows.append(["<b>Portfolio</b>", usd(t["equity"]),
+                     f'{t["n_long"] + t["n_short"]} <span class="meta">({t["n_long"]} long, {t["n_short"]} short)</span>',
+                     usd((g + n) / 2), usd((g - n) / 2), _x(t["gross_x"]), _x(t["net_x"], True), "", ""])
+    return tbl(["Book", "Capital", "Positions", "Long", "Short", "Gross", "Net", "Largest position", "Top 3"],
+               rows, right=(1, 2, 3, 4, 5, 6, 7, 8))
+
+
 def positioning_section(snap: dict) -> str:
-    """Positioning after each book's newest session, as four bar charts: its P&L, gross and net exposure as
-    a multiple of equity, and its long and short positions. Books whose session could not be read are
-    named; a book with an unpriced position has no exposure bar."""
+    """Positioning after each book's newest session (team lead, 2026-11-24: "the position could also be more
+    detailed"): a table of capital, positions, long and short value, exposure and concentration; bar charts
+    of each book's session P&L, positions, gross and net exposure; the core books' exposure by fund group
+    (their risk reports); the event book's capital and names by strategy (its sleeve reading); and
+    concentration. Books whose session could not be read are named; a book with an unpriced position has
+    no exposure bar. Aggregates only, never a holding."""
     ps = positioning(snap)
     colour = lambda b: BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)                        # noqa: E731
     t = ps["total"]
@@ -250,19 +304,45 @@ def positioning_section(snap: dict) -> str:
             net.append((b["title"], colour(b), [(p["net_x"], 1.0)], _x(p["net_x"], True)))
         held.append((b["title"], colour(b), [(p["n_long"], 1.0), (-p["n_short"], 0.45)],
                      f'{p["n_long"]} long · {p["n_short"]} short'))
+    cell = lambda title, rows, label: (f'<div><h3 class="chart-title">{title}</h3>'                    # noqa: E731
+                                        + charts.hbar_chart(rows, label) + '</div>')
+    cells = [cell("Session P&amp;L", pnl, "P&L of the latest session by book"),
+             cell("Positions, long and short", held, "Long and short positions by book"),
+             cell("Gross exposure, x equity", gross, "Gross exposure by book"),
+             cell("Net exposure, x equity", net, "Net exposure by book")]
+    conc = []
+    for b in snap["books"]:
+        risk = b.get("risk", {}).get("value")
+        if not risk:
+            continue
+        groups = sorted(risk.get("groups", {}).items(), key=lambda kv: -kv[1])
+        if groups:
+            cells.append(cell(f'{escape(b["title"])}: exposure by fund group, x equity',
+                              [(_name(GROUP_NAMES, k), colour(b), [(v, 1.0)], _x(v)) for k, v in groups],
+                              f"{b['title']} gross exposure by fund group"))
+        if "largest_share" in risk and "top3_share" in risk:
+            conc.append((b["title"], colour(b), [(risk["top3_share"], 0.45), (risk["largest_share"], 1.0)],
+                         f'{pct(risk["largest_share"], dp=0)} largest · {pct(risk["top3_share"], dp=0)} top 3'))
+    ev = next((b for b in snap["books"] if b["name"] == "events"), None)
+    if ev is not None and "value" in ev["sleeves"] and ev["sleeves"]["value"]["rows"]:
+        srows = ev["sleeves"]["value"]["rows"]
+        last = max(r["date"] for r in srows)
+        strat = sorted((r for r in srows if r["date"] == last and r["slug"] != "_book" and r["capital_usd"] is not None),
+                       key=lambda r: -r["capital_usd"])
+        if strat:
+            cells.append(cell("Event Book: capital by strategy",
+                              [(_name(STRATEGY_NAMES, r["slug"]), colour(ev), [(r["capital_usd"], 1.0)],
+                                f'{usd(r["capital_usd"])} · {r["n_names"]:.0f} {"name" if r["n_names"] == 1 else "names"}') for r in strat],
+                              "Event Book capital and names held by strategy"))
+    if conc:
+        cells.append(cell("Concentration, share of gross", conc, "Largest position and top three as a share of gross"))
     missing = [b for b in snap["books"] if "value" not in b["session"]]
     gap_txt = "".join(f'<p class="gap">{escape(b["title"])}: session not read.</p>' for b in missing)
     when_txt = fmt_short(ps["date"]) if ps["date"] else "each book's latest session"
-    cell = lambda title, rows, label: (f'<div><h3 class="chart-title">{title}</h3>'                    # noqa: E731
-                                        + charts.hbar_chart(rows, label) + '</div>')
     return ('<section class="section soft"><div class="wrap">'
             f'<h2>Positioning</h2><p class="meta">After the close of {when_txt}.</p>{gap_txt}'
-            '<div class="chart-grid">'
-            + cell("Session P&amp;L", pnl, "P&L of the latest session by book")
-            + cell("Positions, long and short", held, "Long and short positions by book")
-            + cell("Gross exposure, x equity", gross, "Gross exposure by book")
-            + cell("Net exposure, x equity", net, "Net exposure by book")
-            + '</div></div></section>')
+            + positioning_table(snap, ps)
+            + f'<div class="chart-grid">{"".join(cells)}</div></div></section>')
 
 
 # The Portfolio / By book switch. Every switch on the page sets every chart (static/site.js).
@@ -285,7 +365,7 @@ def portfolio_section(snap: dict) -> str:
         why = (warn + "".join(f'<p class="meta">{escape(b["title"])} not included: {escape(w)}.</p>'
                               for b, w in pf["excluded"]) if pf["blocked"]
                else f'<p class="meta">First figures after the close of {fmt_short(RECORD_START)}.</p>')
-        return f'<section class="section"><div class="wrap"><h2>Portfolio since {fmt_short(RECORD_START)}</h2>{why}</div></section>'
+        return f'<section class="section"><div class="wrap"><h2>Portfolio</h2>{why}</div></section>'
     p = pf["p"]
     colour = lambda x: BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR)                    # noqa: E731
     notes = "".join([f'<p class="meta">{pf["left"]} {"session" if pf["left"] == 1 else "sessions"} left out: a '
@@ -310,7 +390,7 @@ def portfolio_section(snap: dict) -> str:
     switch = SWITCH
     cols = [("Portfolio", PORTFOLIO_COLOUR, p, pf["first"])] + [(x["b"]["title"], colour(x), x["p"], x["first"])
                                                               for x in pf["books"]]
-    return (f'<section class="section"><div class="wrap"><h2>Portfolio since {fmt_short(pf["first"])}</h2>'
+    return (f'<section class="section"><div class="wrap"><h2>Portfolio</h2>'
             f'{warn}{notes}<div class="figures kpis">{"".join(kpis)}</div>'
             f'<div class="chart-head"><h3 class="chart-title">Returns: cumulative</h3>{switch}</div>'
             + charts.line_chart(growth, "Cumulative return of the portfolio and of each book", fmt="pct")
@@ -321,61 +401,13 @@ def portfolio_section(snap: dict) -> str:
             + '<h3 class="block-title">Key figures</h3>' + stats_table(cols, pf["first"]) + '</div></section>')
 
 
-def record_table(pf: dict, span: bool = False) -> str:
-    """The portfolio and each book of one record (a `portfolio` result), one row each: when it starts
-    (and, with `span`, ends), P&L, time-weighted return, Sharpe and maximum drawdown."""
-    dot = lambda c: f'<span class="dot" style="background:{c}"></span>'                    # noqa: E731
-    rows = []
-
-    def row(name, colour, since, p):
-        n = f'{p["n"]} {"session" if p["n"] == 1 else "sessions"}'
-        ratio = (f'{_ratio_s(p["sharpe"])} <span class="meta">({n})</span>' if p["sharpe"] is not None
-                 else f'<span class="meta">{n}; needs {M.MIN_RETURNS_FOR_RATIOS}</span>')
-        rows.append([dot(colour) + name, fmt_short(since)] + ([fmt_short(p["last_date"])] if span else [])
-                    + [f'<span class="{tone(p["pnl"])}">{usd(p["pnl"], True)}</span>', _sgn(p["cum_return"]), ratio,
-                       pct(p["max_drawdown"])])
-
-    if pf["p"]:
-        row("<b>Portfolio</b>", PORTFOLIO_COLOUR, pf["first"], pf["p"])
-    for x in pf["books"]:
-        row(escape(x["b"]["title"]), BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR), x["first"], x["p"])
-    head = ["", "From"] + (["To"] if span else []) + ["P&L", "Return, time-weighted", "Sharpe", "Max drawdown"]
-    for b, why in pf["excluded"] + pf["blocked"]:
-        rows.append([dot(BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)) + escape(b["title"]),
-                     f'<span class="meta">{escape(why[:1].upper() + why[1:])}</span>'] + [""] * (len(head) - 2))
-    num = len(head) - 4
-    th = "".join(f'<th class="{"r" if i >= num else ""}">{escape(h)}</th>' for i, h in enumerate(head))
-    body = "".join("<tr>" + "".join(f'<td class="{"r" if i >= num else ""}">{c}</td>' for i, c in enumerate(r)) + "</tr>"
-                   for r in rows)
-    return f'<div class="tbl-wrap"><table class="summary"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table></div>'
-
-
-def earlier_record(snap: dict) -> str:
-    """Each book's record before RECORD_START, from its first traded session, and their composite, as it
-    stood (team lead, 2026-11-24: "keep the old records too"): its cumulative return and its table.
-    Empty when no book traded before it."""
-    old = portfolio(snap, before=RECORD_START)
-    if not old["books"] and not old["blocked"]:
-        return ""
-    chart = ""
-    if old["p"]:
-        line = [{"name": "Portfolio", "color": PORTFOLIO_COLOUR, "bold": True,
-                 "points": M.index_points(old["dated"], old["base"])}]
-        line += [{"name": x["b"]["title"], "color": BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR), "cls": "bk",
-                  "points": M.index_points(x["dated"], x["base"])} for x in old["books"]]
-        chart = (f'<div class="chart-head"><h3 class="chart-title">Returns: cumulative</h3>{SWITCH}</div>'
-                 + charts.line_chart(line, "Cumulative return before the portfolio's record", fmt="pct", height=260))
-    return (f'<section class="section"><div class="wrap"><h2>Record before {fmt_short(RECORD_START)}</h2>'
-            + chart + record_table(old, span=True) + '</div></section>')
-
-
 def render_body(snap: dict) -> str:
     exported = snap["exported_at_utc"]
     banner = ('<div class="wrap"><p class="gap" style="margin-top:20px">Synthetic data: every number on this page is '
               'invented for testing and is not the book.</p></div>') if snap["synthetic"] else ""
     head = page_head("Performance", "Performance", "Live results of our three paper-trading books.",
                      f'<p class="meta" style="color:rgba(255,255,255,0.7);margin-top:14px">Updated {escape(when(exported))}</p>')
-    return head + banner + portfolio_section(snap) + positioning_section(snap) + earlier_record(snap)
+    return head + banner + portfolio_section(snap) + positioning_section(snap)
 
 
 def render(snap: dict) -> str:

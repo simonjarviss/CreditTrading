@@ -97,7 +97,7 @@ def bar_chart(points: list, label: str, height: int = 240) -> str:
 
 # A horizontal bar chart has its own, narrower canvas: it sits two to a row, and text drawn on the
 # 960-wide canvas would shrink to half size there.
-HB_W, HB_LEFT, HB_RIGHT, HB_ROW = 560, 168, 150, 38
+HB_W, HB_LEFT, HB_RIGHT, HB_ROW = 560, 168, 172, 38
 
 
 def hbar_chart(rows: list, label: str) -> str:
