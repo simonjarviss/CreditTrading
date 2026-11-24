@@ -334,21 +334,19 @@ def after_close(book: str, book_dir: Path, kind: str) -> dict:
 
     NO SESSION IS SKIPPED (release-check review of 904bd35, 2026-11-24). Each reading's change is
     one session's P&L, so a session left out would vanish from the record and understate it. So:
-    from the session before the first send, every session directory must carry a reading, except
-    the newest ones that verify has not reached yet (pending, not gaps); and each reading's
-    `last_equity` must be the previous reading's equity, to $1 or 0.1%, which catches a session
-    whose directory is missing altogether. Either gap makes the record UNMEASURED, never smaller."""
+    from the first send, every session directory must carry a reading, except the newest ones that
+    verify has not reached yet (pending, not gaps); and each session's plan must have been decided
+    on the previous reading's session (plan.json `asof`), which catches a session whose directory is
+    missing altogether, whatever the account's size (release-check review of 455eff4: an equity
+    tolerance of 0.1% let a $1,000 session through on a $1M account). Either gap makes the record
+    UNMEASURED, never smaller."""
     if kind != "sleeves":
         return absent("the official end-of-day history is this book's daily record")
     first = oldest_day_with(book_dir, "STARTED")
     if first is None:
         return absent("no session has sent an order yet")
     days = sorted(d for d in book_dir.iterdir() if d.is_dir() and DAY_DIR.match(d.name))
-    i0 = days.index(first)
-    if i0 == 0:
-        return unmeasured(f"{book} after-close readings: no session directory before the first send {first.name}, "
-                          "so the starting equity is unknown")
-    span = days[i0:]
+    span = days[days.index(first):]
     verified = [d for d in span if (d / "verify.json").is_file()]
     if not verified:
         return absent("the first traded session has not been verified yet")
@@ -368,12 +366,17 @@ def after_close(book: str, book_dir: Path, kind: str) -> dict:
             last = _float(eq.get("last_equity"), f"{d.name} last equity")
             if equity is None or last is None:
                 raise Unreadable(f"{d.name}/verify.json: no account equity")
+            if not (d / "plan.json").is_file():
+                raise Unreadable(f"{d.name}: a traded session has no plan.json to date it")
+            asof = read_json(d / "plan.json").get("asof")
+            if not (isinstance(asof, str) and DAY_DIR.match(asof) and asof < d.name):
+                raise Unreadable(f"{d.name}/plan.json: asof {asof!r} is not an earlier session")
             if not rows:
-                # The base: Alpaca's own equity at the previous close, dated by the session before.
-                rows.append({"date": days[i0 - 1].name, "equity": last, "change_usd": None})
-            elif abs(last - rows[-1]["equity"]) > max(1.0, 0.001 * rows[-1]["equity"]):
-                raise Unreadable(f"{d.name}/verify.json: the previous close's equity {last:,.2f} is not the last "
-                                 f"reading's {rows[-1]['equity']:,.2f}, so a session is missing")
+                # The base: Alpaca's own equity at the close of the session this plan was decided on.
+                rows.append({"date": asof, "equity": last, "change_usd": None})
+            elif asof != rows[-1]["date"]:
+                raise Unreadable(f"{d.name}: its plan was decided on {asof}, not on the last reading's session "
+                                 f"{rows[-1]['date']}, so a session is missing")
             rows.append({"date": d.name, "equity": equity, "change_usd": _float(eq.get("change_usd"), f"{d.name} change")})
             t = iso_to_z(r["read_at"]) if r.get("read_at") else mtime_z(d / "verify.json")
             newest = max(newest or t, t)

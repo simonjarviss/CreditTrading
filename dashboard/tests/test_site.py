@@ -232,3 +232,20 @@ def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content):
     ev["start"] = {"UNMEASURED": "STARTED unreadable"}
     h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
     assert ">2<" in h and "Books trading (1 not read tonight)" in h
+
+
+def test_the_overview_names_a_book_left_out_beside_every_portfolio_figure(snap, tmp_path, content):
+    """Release-check review of 455eff4: with one book unreadable, the overview's P&L figure and chart
+    did not name it."""
+    next(b for b in snap["books"] if b["name"] == "c4")["official"] = {"UNMEASURED": "eod_equity.csv: not a number"}
+    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    assert h.count("without the Equity Cross-Asset Book: not read tonight") == 2         # return and P&L figures
+    assert "Not included tonight: Equity Cross-Asset Book (its official history could not be read)." in h
+
+
+def test_with_every_book_unreadable_the_page_says_why(snap, tmp_path, content):
+    for b in snap["books"]:
+        b["official"] = {"UNMEASURED": "unreadable"}
+        b["after_close"] = {"UNMEASURED": "unreadable"}
+    h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
+    assert "No book has a traded session" not in h and "Not included tonight, because its record could not be read" in h

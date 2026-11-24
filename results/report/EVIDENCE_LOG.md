@@ -5658,3 +5658,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/export.py` @ `0c03c96` (`after_close` read only the days with a verify.json); `dashboard/build.py` @ `0c03c96` (`portfolio_section` withheld on any unreadable book); the VM's site journal and `/srv/quantt-site`, read 2026-11-24 01:4x ET; the fixes are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-04 · Release: release-20261124-3 on the VM; the event book's sessions are now dated by their plans, and every portfolio figure names a book left out
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-3 on 6a50403 (PR #109 merged `--admin --match-head-commit` 455eff4, trees equal), tagged after the release check's pytest, doc_audit, orient and preview steps passed on 455eff4; its reviewers then returned GO (workflow run wf_c19c6252-09b). The VM's site clone moved to it and the build published; Cloudflare's build of 6a50403 succeeded. The trading clone still at release-20261123-2, cef and c4 AUTO_ARMED present [V]
+  - the reviewers' site findings, fixed in the commit that carries this entry: the missing-session check compared equity to $1 or 0.1%, which on a $1M account lets a $1,000 session through; it now requires each session's plan to have been decided on the previous reading's session (plan.json `asof`). The overview's P&L figure and chart now name a book left out, and a page with every book unreadable says why instead of "no traded session yet" [V]
+  - on the VM's event records (2026-11-20, 2026-11-23): plan `asof` 2026-11-19 and 2026-11-20; the record reads 100,000.00 then 99,970.14 (−$29.86), as before [V]
+- source: `dashboard/export.py` @ `6a50403` (the equity tolerance); `dashboard/site.py` @ `6a50403`; the VM's `quantt_state/events/<day>/plan.json` and verify.json, read 2026-11-24; the fixes are in the commit that carries this entry
+- supports: §5
+- status: current
