@@ -93,7 +93,8 @@ def overview(snap: dict) -> str:
     if series:
         rows, _ = M.combined(series)
         c = M.summary(rows)
-        figs.append(perf.fig(usd(c["cum_pnl"], True), f"Combined paper P&amp;L to {fmt_date(c['last_date'])}"))
+        figs.append(perf.fig(usd(c["cum_pnl"], True),
+                             f"Combined paper P&amp;L, {fmt_short(c['first_date'])} to {fmt_short(c['last_date'])}"))
     hero = ('<section class="hero"><div class="wrap"><div class="eyebrow">QUANTT · Queen\'s University</div>'
             '<h1>Event Driven Trading</h1>'
             '<p class="lede">We are a systematic trading team. We run three automated books that trade closed-end '
