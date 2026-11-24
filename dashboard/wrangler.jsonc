@@ -1,0 +1,19 @@
+// The public site's Cloudflare Worker (dashboard/worker/index.js; dashboard/README.md section 1).
+// Deployed by Cloudflare Workers Builds from `main` with `npx wrangler deploy`, with the build's ROOT
+// DIRECTORY SET TO `dashboard`. WHY: at the repository root the build image finds requirements.txt and
+// pip-installs the trading system's packages; pyarrow 19 has no wheel for its Python 3.14 and the build
+// failed there before wrangler ran (build log 6d2786ba, 2026-11-24 00:06 UTC). dashboard/ holds no Python
+// requirements, so nothing is installed and only this Worker is built.
+// ORIGIN (the VM's address) is a variable set in the Cloudflare dashboard, never here: the repository is
+// public (CLAUDE.md, "Where it runs"). keep_vars keeps it across deploys.
+{
+  "name": "quantt-event-driven",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "keep_vars": true,
+  // Only the custom domain serves the site: no public workers.dev address and no preview URLs, so an
+  // unreviewed branch build can never run with ORIGIN on a public address.
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": true }
+}

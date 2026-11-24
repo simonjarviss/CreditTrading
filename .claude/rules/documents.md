@@ -42,19 +42,23 @@ into the established column because it has been repeated a few times.
    weeks ago — several figures in these documents have already gone stale. Date
    them so the reader can tell.
 3. **Record negative results against yourself.** The archived `pre-clean-slate:_archive/docs/PLAN.md` §0.3 records a claim
-   its own author made and then measured to be false. Do that. The graveyard is the
-   most valuable artefact this project has.
+   its own author made and then measured to be false. Do that. Say plainly when
+   something did not work: one line in `results/IDEA_LEDGER.md` is enough.
 4. **No decision rule may key on a number written in a document** (H14). If a
    passage reads "X is 59.6%, therefore do Y", it is wrong and should read "measure
    X this way; if it is high, Y follows; if not, Z."
 5. **Correct in place, visibly.** When a figure was wrong, leave a dated correction
-   note rather than a silent edit — `RESEARCH_STATE.md`'s CEF-counter correction and
-   the ex-distribution arithmetic correction in the brief are the model. Someone is
-   relying on the old number somewhere.
+   note rather than a silent edit — the ex-distribution arithmetic correction in
+   the brief is the model. Someone is relying on the old number somewhere.
 6. **Cite externally-sourced claims into `docs/REFERENCES.md`** with a verification
    status. Prompts cite that file; they do not re-derive it.
 7. **British spelling, plain sentences, no marketing.** Tables for anything with
    more than two dimensions. The audience is a competent agent picking this up cold.
+8. **Research results are gross, and say so.** No cost grid, borrow haircut or
+   slippage assumption in a research note (team lead, 2026-11-09, `docs/SYSTEM.md`
+   §5). Lead with the result; show the time split, the regimes, the exposures and
+   the capacity table beside it; one chart per idea. Measured costs appear only in
+   a go-live proposal.
 
 ## Where things belong
 
@@ -65,21 +69,44 @@ short version:
 | file | holds |
 |---|---|
 | `docs/SYSTEM.md` | what we trade, how it runs, what we know, standing decisions |
-| `docs/RESEARCH_STATE.md` | **canonical trial counters**, the D1–D7 legend, killed/watch/active/closed |
+| `docs/MISSION.md` | the team lead's standing brief: the pipeline and the tooling |
+| `results/IDEA_LEDGER.md` | every idea tested, one line each, with its gross result and status |
+| `results/ideas/YYYY-MM-DD_<slug>.md` | idea cards |
+| `docs/RESEARCH_STATE.md` | history before 2026-11-09: the frozen counters, the D1–D7 legend, the evidence behind each older row |
 | `docs/BRIEF.md` | the theory, market structure and harness rules every prompt opens with |
 | `docs/REFERENCES.md` | every external claim, with a verification status |
-| `results/<family>/` | dated findings notes and pre-registrations |
+| `results/<family>/` | dated findings notes (and, before 2026-11-09, pre-registrations) |
 | `pre-clean-slate:_archive/` | superseded documents — provenance, never authority (`pre-clean-slate:_archive/README.md`) |
 
 **Before writing a fact into a document, find its owner in the index and link to
 it.** A second copy is how this repo came to hold four different arm rates.
 
-`docs/RESEARCH_STATE.md` is the canonical trial record — **update it in the same
-commit as the trial, not at the end of a session.** It has already drifted once,
-for five weeks.
+`results/IDEA_LEDGER.md` is the record of what has been tested — **add the line
+in the same commit as the test, not at the end of a session.** The record it
+replaced drifted once, for five weeks.
 
-## Pre-registrations
+## Idea cards and the ledger
 
-`results/cef/PREREG_BAND_2026-09-06.md` is the shape. Every one states, before the
-session that trades it: what changes, why, what is committed in advance, what would
-falsify it, and the divergences from backtest **stated up front**. Use `/prereg`.
+These replace pre-registrations for research (team lead, 2026-11-09,
+`docs/SYSTEM.md` §5). The pre-registrations already under `results/` are history
+and are not rewritten.
+
+**An idea card** lives at `results/ideas/YYYY-MM-DD_<slug>.md` and answers, in at
+most a page (`docs/MISSION.md` §4.1; `/idea`):
+
+- **Mechanism**: the economic force that creates the mispricing.
+- **Counterparty**: who is on the other side, and why they keep trading that way.
+- **Persistence**: why it has not been arbitraged away.
+- **History**: named episodes and what happened to the edge in each; citations
+  labelled, anything not re-read marked `[U]`.
+- **Data**: the free source that tests it, how far back, its publication lag.
+- **Capacity**: rough size against average daily volume at $1M, $5M and $10M.
+- **Expected correlation** with the sleeves already held.
+
+**A ledger line** has five cells: date, idea, data (with its last date), gross
+result, status. The status words are defined at the top of the ledger. It is a
+record, not a gate: an idea set aside may return with a new angle, and the
+re-test is another line.
+
+A **go-live proposal** (`/go-live`) is the one document that carries measured
+costs and a bar, and the bar is specific to its strategy.

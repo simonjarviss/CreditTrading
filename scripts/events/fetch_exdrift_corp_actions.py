@@ -164,7 +164,8 @@ def get(session, base: str, path: str, params: dict, *, sleep=time.sleep) -> tup
     if base not in (DATA_BASE, PAPER_BASE) or not path.startswith("/"):
         raise ValueError(f"refusing {base}{path}: only Alpaca's data and paper hosts are read")
     for k in range(RETRIES_429 + 1):
-        r = session.get(base + path, params=params, timeout=30)
+        # never follow a redirect: the session carries the key headers (quantt.broker.alpaca.refuse_redirects)
+        r = session.get(base + path, params=params, timeout=30, allow_redirects=False)
         if r.status_code != 429 or k == RETRIES_429:
             break
         sleep(3.0 * (k + 1))

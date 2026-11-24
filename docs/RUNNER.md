@@ -127,6 +127,16 @@ settled these points. Alpaca facts, each with its source and status:
 - **A rejected order skips its symbol and the rest are sent** (team lead,
   2026-09-28); the day is FAIL naming it. Anything with an unknown outcome
   (ambiguous submit, unexpected error, clock) still stops the batch.
+- **Alpaca's rate limit** (2026-11-23, after the events book's first armed send had
+  173 of 219 orders answered HTTP 429). The client paces every request to the trading
+  host: a burst of `TRADING_BURST`, then `TRADING_MAX_PER_MIN` a minute, under Alpaca's
+  200 [S] (`quantt/broker/alpaca.py`). A 429 to an order is not a rejection at first:
+  `_submit_one` waits `POST_429_WAITS_S`, reads the order by its `client_order_id`, and
+  resends only if Alpaca has none, up to four POSTs. A found order counts as sent. A
+  failed read is a rejection (never a resend) and the rest of the batch goes on. After
+  the fourth 429 the id is still read: found counts as sent, not found is a rejection.
+  The send window is checked again before every resend; a batch stopped there after a
+  429 records that order as `rejected` (the events VERIFY needs a terminal event).
 - **Gate 7** checks `shortable` only; hard-to-borrow is a preview warning (team
   lead, 2026-09-28).
 - **Gate 4** re-reads the Alpaca clock at the gate and again before every POST; the
@@ -208,6 +218,29 @@ gets one recorded exception, **paper only**: `ops/books/cef_discount_book.json`
 - **Scoring is unchanged:** verify marks every fill against the official closing
   print (`fill_vs_auction_bp`), beside the shadow benchmark. Revisit after a week.
 - **Revert:** delete the `execution` block; the runner sends `cls` exactly as before.
+
+## As built (2026-11-09): the daily P&L report, beside the runner and outside its order path
+
+**The job.** `scripts/ops/pnl_report.py` (timers `quantt-{cef,c4}-pnl`, 20:30 and 20:35 ET;
+`docs/RUNBOOK.md` 8.12), report-only, one per book: the attribution
+(`scripts/cef/live_attribution.py`) and the factor readout (`scripts/cef/exposure_readout.py`)
+of the session just closed and cumulative from the first trade, written to
+`<state>/reports/pnl/<date>.{md,json}`, which `scripts/ops/risk_daily.py` reads into its
+attribution and factor blocks. The runner does not read these, and they cannot reach it:
+the job holds no order code, no broker client and no panel lock, and it reads the account
+through `scripts/ops/alpaca_read.py`, a GET-only reader with no method that can change
+anything (`scripts/ops/tests/test_report_no_order_path.py` walks every import from the job and
+fails on any path to order code). A review-line breach appears in the report and goes no
+further: no ACT, no push (team lead, 2026-11-09).
+
+**The reader is a copy on purpose.** It re-implements the reads the job needs from
+`quantt/broker/alpaca.py` (EOD history mapped to sessions, FILL and FEE activities, calendar,
+SIP daily bars, distributions, the strict corporate-action read) instead of importing
+them, because that module holds `submit_order`; `scripts/ops/tests/test_alpaca_read.py` keeps
+the copy honest by running both on the same fixture responses and requiring equal output,
+read by read, and equal raises on the malformed shapes. Its keys are `ALPACA_<BOOK>_KEY_ID` /
+`_SECRET_KEY` from the process environment only, which systemd loads from a tmpfs file of
+its own per book (RUNBOOK 8.12), never `QUANTT_ENV_FILE`.
 
 ## As built (2026-11-03): CEF trial 55 ("te4"), the thin-session rule, PAPER ONLY, dark
 
@@ -476,13 +509,15 @@ note** (`_thin_k1_episode_drawdown_note`, `_thin_k2_max_name_frac_note`, `_thin_
 `_thin_k3_net_once_note`). `src/deploy/tests/test_thin_k3_run_provenance.py` fails the activation
 commit if a cited file is missing or records no run length or another one (the files of
 2026-11-03 record none, so a spec citing them fails).
-3. **Three fixes required before activation** (the owner's release-check of 78e3483, 2026-11-09:
-GO to merge dark, these before the key is set).
-   - `thin_rule_for` must check the execution mode. It does not, so under `cls` on paper an
-     episode can open on STARTED alone, with no fill known.
-   - `_send_state`: a reduced plan emptied by the buying-power fit reads as sent. It must not.
-   - The K3 drift guard (`test_thin_k3_run_provenance.py`) compares only the run length. It must
-     also compare the four K-line values and the compose run's m and floor with the spec.
+3. **Three fixes from the owner's release-check of 78e3483 (2026-11-09), done before the key is set.**
+   - `thin_rule_for` refuses, at session start, any execution mode but `late_market`: under `cls`
+     an episode could open on STARTED alone, with no fill known.
+   - `_send_state`: a reduced plan the buying-power fit scaled to nothing (`bp_scale` orders_in >
+     0, orders_out 0) is not sent. An empty plan with no such record still means the account
+     already held its targets.
+   - The drift guard (`test_thin_k3_run_provenance.py`) also compares the four K-line values and
+     the compose run's m and floor with the spec. A spec value may be the compose value rounded,
+     at 3 decimals or more; any other difference fails the activation commit.
 4. **A known limit to revisit at activation** (the owner, 2026-11-08). A set rejected in full at
 the POST (a 4xx on every order) has a `submit` line per order, so it reads UNMEASURED even though
 each `rejected` event shows the order does not exist. It is rare and fails closed.

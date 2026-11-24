@@ -1,0 +1,444 @@
+{
+ "summary": {
+  "wait_events_2019_on": 597,
+  "with_a_current_sec_ticker": 475,
+  "sampled": 60,
+  "classes": {
+   "N": 26,
+   "B": 15,
+   "C": 12,
+   "A": 7
+  },
+  "days_mention_minus_declared": {
+   "0.0": 16,
+   "1.0": 12,
+   "2.0": 3,
+   "3.0": 2,
+   "4.0": 1
+  },
+  "read_on": "2026-11-15",
+  "requests": 112
+ },
+ "events": [
+  {
+   "ticker": "THG",
+   "cik": 944695,
+   "accession": "0001193125-19-000842",
+   "first_mention_accepted_ny": "2019-01-02T18:47:38-05:00",
+   "class": "C"
+  },
+  {
+   "ticker": "BKE",
+   "cik": 885245,
+   "accession": "0000885245-18-000031",
+   "first_mention_accepted_ny": "2018-12-11T15:03:17-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "BANR",
+   "cik": 946673,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "GSBC",
+   "cik": 854560,
+   "accession": "0000927089-20-000024",
+   "first_mention_accepted_ny": "2020-01-16T09:54:34-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "OMF",
+   "cik": 1584207,
+   "accession": "0001584207-20-000004",
+   "first_mention_accepted_ny": "2020-02-10T16:39:09-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "RGR",
+   "cik": 95029,
+   "accession": "0001174947-20-000851",
+   "first_mention_accepted_ny": "2020-07-29T17:02:21-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "WINA",
+   "cik": 908315,
+   "accession": "0000908315-20-000027",
+   "first_mention_accepted_ny": "2020-10-14T13:48:55-04:00",
+   "class": "A"
+  },
+  {
+   "ticker": "BSET",
+   "cik": 10329,
+   "accession": "0001437749-20-024820",
+   "first_mention_accepted_ny": "2020-12-04T09:00:21-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "TG",
+   "cik": 850429,
+   "accession": "0001140361-20-027202",
+   "first_mention_accepted_ny": "2020-12-03T09:36:08-05:00",
+   "class": "C"
+  },
+  {
+   "ticker": "ORI",
+   "cik": 74260,
+   "accession": "0000074260-20-000125",
+   "first_mention_accepted_ny": "2020-12-18T13:47:16-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "PGR",
+   "cik": 80661,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "WSBF",
+   "cik": 1569994,
+   "accession": "0001569994-21-000028",
+   "first_mention_accepted_ny": "2021-06-01T16:01:25-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "CLWT",
+   "cik": 1026662,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "CNS",
+   "cik": 1284812,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "TTSH",
+   "cik": 1552800,
+   "accession": "0001104659-21-134035",
+   "first_mention_accepted_ny": "2021-11-04T07:30:59-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "RLI",
+   "cik": 84246,
+   "accession": "0001564590-21-056194",
+   "first_mention_accepted_ny": "2021-11-10T16:11:48-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "BBW",
+   "cik": 1113809,
+   "accession": "0001157523-21-001458",
+   "first_mention_accepted_ny": "2021-11-30T16:36:02-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "UTMD",
+   "cik": 706698,
+   "accession": "0001096906-21-002618",
+   "first_mention_accepted_ny": "2021-11-02T12:51:02-04:00",
+   "class": "A"
+  },
+  {
+   "ticker": "CMRE",
+   "cik": 1503584,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "HR",
+   "cik": 1360604,
+   "accession": "0001360604-22-000043",
+   "first_mention_accepted_ny": "2022-07-06T16:10:54-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "PSA",
+   "cik": 1393311,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "FLNG",
+   "cik": 1772253,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "EOG",
+   "cik": 821189,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "LOCO",
+   "cik": 1606366,
+   "accession": "0001606366-22-000053",
+   "first_mention_accepted_ny": "2022-10-11T17:11:18-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "WINA",
+   "cik": 908315,
+   "accession": "0000908315-22-000033",
+   "first_mention_accepted_ny": "2022-10-12T12:33:06-04:00",
+   "class": "A"
+  },
+  {
+   "ticker": "BCC",
+   "cik": 1328581,
+   "accession": "0001328581-22-000092",
+   "first_mention_accepted_ny": "2022-10-27T16:15:26-04:00",
+   "class": "B"
+  },
+  {
+   "ticker": "AMSF",
+   "cik": 1018979,
+   "accession": "0001157523-22-001401",
+   "first_mention_accepted_ny": "2022-10-26T16:41:04-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "CBL",
+   "cik": 910612,
+   "accession": "0000950170-22-025802",
+   "first_mention_accepted_ny": "2022-11-29T16:47:55-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "DDS",
+   "cik": 28917,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "REFI",
+   "cik": 1867949,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "LSTR",
+   "cik": 853816,
+   "accession": "0001193125-22-300206",
+   "first_mention_accepted_ny": "2022-12-07T16:49:11-05:00",
+   "class": "C"
+  },
+  {
+   "ticker": "MOV",
+   "cik": 72573,
+   "accession": "0000950142-23-000769",
+   "first_mention_accepted_ny": "2023-03-23T07:20:47-04:00",
+   "class": "A"
+  },
+  {
+   "ticker": "NREF",
+   "cik": 1786248,
+   "accession": "0001437749-23-011250",
+   "first_mention_accepted_ny": "2023-04-27T08:20:39-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "CVI",
+   "cik": 1376139,
+   "accession": "0001376139-23-000044",
+   "first_mention_accepted_ny": "2023-07-31T17:16:26-04:00",
+   "class": "B"
+  },
+  {
+   "ticker": "NREF",
+   "cik": 1786248,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "RLI",
+   "cik": 84246,
+   "accession": "0000084246-23-000045",
+   "first_mention_accepted_ny": "2023-11-08T16:15:25-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "INSW",
+   "cik": 1679049,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "PCAR",
+   "cik": 75362,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "SITC",
+   "cik": 894315,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "HST",
+   "cik": 1070750,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "YOU",
+   "cik": 1856314,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "FF",
+   "cik": 1337298,
+   "accession": "0001437749-24-007794",
+   "first_mention_accepted_ny": "2024-03-14T12:03:47-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "CLRO",
+   "cik": 840715,
+   "accession": "0001753926-24-000510",
+   "first_mention_accepted_ny": "2024-03-11T17:13:39-04:00",
+   "class": "B"
+  },
+  {
+   "ticker": "LPG",
+   "cik": 1596993,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "TNK",
+   "cik": 1419945,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "WLFC",
+   "cik": 1018164,
+   "accession": "0001018164-24-000038",
+   "first_mention_accepted_ny": "2024-05-17T09:41:05-04:00",
+   "class": "A"
+  },
+  {
+   "ticker": "INSW",
+   "cik": 1679049,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "CRCT",
+   "cik": 1828962,
+   "accession": "0001828962-24-000046",
+   "first_mention_accepted_ny": "2024-05-07T16:08:04-04:00",
+   "class": "C"
+  },
+  {
+   "ticker": "BORR",
+   "cik": 1715497,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "TDG",
+   "cik": 1260221,
+   "accession": "0001193125-24-222468",
+   "first_mention_accepted_ny": "2024-09-20T08:22:59-04:00",
+   "class": "B"
+  },
+  {
+   "ticker": "PPSI",
+   "cik": 1449792,
+   "accession": "0001493152-24-045405",
+   "first_mention_accepted_ny": "2024-11-14T09:05:30-05:00",
+   "class": "A"
+  },
+  {
+   "ticker": "SGHC",
+   "cik": 1878057,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "DRH",
+   "cik": 1298946,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "AFG",
+   "cik": 1042046,
+   "accession": "0001140361-25-006485",
+   "first_mention_accepted_ny": "2025-02-28T14:03:51-05:00",
+   "class": "A"
+  },
+  {
+   "ticker": "SITC",
+   "cik": 894315,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "INSW",
+   "cik": 1679049,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "TIGO",
+   "cik": 912958,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  },
+  {
+   "ticker": "AFG",
+   "cik": 1042046,
+   "accession": "0001193125-25-265722",
+   "first_mention_accepted_ny": "2025-11-05T07:16:29-05:00",
+   "class": "B"
+  },
+  {
+   "ticker": "AMSF",
+   "cik": 1018979,
+   "accession": "0001193125-25-256323",
+   "first_mention_accepted_ny": "2025-10-29T16:10:13-04:00",
+   "class": "B"
+  },
+  {
+   "ticker": "PCAR",
+   "cik": 75362,
+   "accession": null,
+   "first_mention_accepted_ny": null,
+   "class": "N"
+  }
+ ]
+}

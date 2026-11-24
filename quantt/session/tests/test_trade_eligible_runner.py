@@ -49,6 +49,7 @@ from pathlib import Path
 import pytest
 
 from quantt.broker import alpaca
+from quantt.session import drawdown as ddm
 from quantt.session import nav_gate as ng
 from quantt.session import run as rn
 from quantt.session.tests import test_missing_nav_hold as M
@@ -242,6 +243,95 @@ def test_a_non_paper_endpoint_refuses_before_any_sleeve_is_built(tmp_path, monke
     monkeypatch.setattr(alpaca, "PAPER_BASE", LIVE)
     code, _, _, spy = run(tmp_path / "moved", TE4_SPEC, bk["held"], "ok", endpoint=LIVE)
     assert code == rn.EXIT_PLANNED and spy.calls
+
+
+def test_an_execution_mode_other_than_late_market_refuses_before_any_sleeve_is_built(
+        tmp_path, monkeypatch, books):
+    """The owner's release-check of 78e3483 (2026-11-09). K1-K3 count a reduced decision only if
+    it filled, read from send.json, and a cls set writes none, so under cls an episode could open
+    on STARTED alone. With the key set, cls refuses at session start. Fails on 9ca0b44, which
+    never read the mode and planned."""
+    base, bk = books
+    N.thin_panel(base, tmp_path / "p", monkeypatch, 5)
+    code, state, c, spy = run(tmp_path / "cls", TE4_SPEC, bk["held"], "ok",
+                              execution={"mode": "cls", "bp_shortfall": "refuse"})
+    assert code == rn.EXIT_FAIL
+    err = last_run(state)["error"]
+    assert "SessionError" in err and "trade_eligible" in err and "'cls'" in err
+    assert spy.calls == [] and not c.accepted
+    assert not (state / M.SESSION.isoformat() / "plan.json").exists()
+
+
+def test_a_reduced_plan_the_buying_power_fit_scaled_to_nothing_was_not_sent(
+        tmp_path, monkeypatch, books):
+    """The owner's release-check of 78e3483 (2026-11-09), through the real decide: buying power
+    too small for one whole share, so the fit takes every order out and the plan is empty.
+    `plan.json` says so (`bp_scale` orders_in > 0, orders_out 0), the account did not move to the
+    reduced build's targets, and the decision is not sent. Fails on 9ca0b44, which read any empty
+    plan as "the account already held its targets"."""
+    base, bk = books
+    N.thin_panel(base, tmp_path / "p", monkeypatch, 5)
+    code, state, c, spy = run(tmp_path / "r", TE4_SPEC, bk["flat"], "ok",
+                              client_attrs={"bp": 1.0})
+    plan = M._plan(state)
+    assert plan["thin_session"]["reduced"] is True and plan["orders"] == []
+    assert plan["bp_scale"]["orders_in"] > 0 and plan["bp_scale"]["orders_out"] == 0
+    went, how = ddm._send_state(M.SESSION, {"plan": plan, "started": False, "send": None})
+    assert went is False and "scaled the plan's" in how and "to none" in how
+
+
+def test_an_empty_plan_without_a_fit_still_means_the_account_held_its_targets():
+    """A PIN (9ca0b44 reads it the same): no `bp_scale` key at all."""
+    day = {"plan": {"orders": [], "execution": "late_market"}, "started": False, "send": None}
+    assert ddm._send_state(M.SESSION, day)[0] is True
+
+
+@pytest.mark.parametrize("fit", [
+    {"factor": 1.0, "binding": None, "orders_in": 0, "orders_out": 0},
+    {"factor": 0.5, "binding": "buying_power", "orders_in": 5, "orders_out": 3},
+    {"factor": 0.0, "binding": "buying_power", "orders_in": -1, "orders_out": 0},
+    {"factor": 0.0, "binding": "buying_power", "orders_in": 2, "orders_out": 5}])
+def test_an_empty_plan_beside_a_fit_record_run_py_cannot_write_is_unmeasured(fit):
+    """The independent review of PR #69 (2026-11-10): run.py writes `bp_scale` only for a decide
+    that had orders and makes the fitted set the plan's orders, so beside an empty plan only
+    orders_in > 0 with orders_out 0 can be its own record. Each of these read SENT ("already held
+    its targets") on 0c5d747."""
+    day = {"plan": {"orders": [], "execution": "late_market", "bp_scale": fit},
+           "started": False, "send": None}
+    with pytest.raises(ddm.Unmeasured, match="contradict each other"):
+        ddm._send_state(M.SESSION, day)
+
+
+@pytest.mark.parametrize("fit", [None, {"orders_in": True, "orders_out": False}])
+def test_an_empty_plan_with_a_null_or_bool_fit_record_is_malformed(fit):
+    """The independent review of PR #69 (2026-11-10): run.py never writes a null `bp_scale` or a
+    bool count. On 0c5d747 the null read SENT and the bools read not sent."""
+    day = {"plan": {"orders": [], "execution": "late_market", "bp_scale": fit},
+           "started": False, "send": None}
+    with pytest.raises(ddm.Unmeasured, match="malformed `bp_scale`"):
+        ddm._send_state(M.SESSION, day)
+
+
+@pytest.mark.parametrize("started,why", [(True, "contradict each other"),
+                                         (None, "was not read")])
+def test_a_fit_emptied_plan_beside_started_or_an_unread_started_is_unmeasured(started, why):
+    """The independent review of PR #69 (2026-11-10): STARTED precedes the first order of a set
+    (CLAUDE.md order-path rule 2), so a set with no orders never starts; on 0c5d747 this branch
+    never looked at STARTED and read both as not sent."""
+    fit = {"factor": 0.0, "binding": "buying_power", "orders_in": 5, "orders_out": 0}
+    day = {"plan": {"orders": [], "execution": "late_market", "bp_scale": fit},
+           "started": started, "send": None}
+    with pytest.raises(ddm.Unmeasured, match=why):
+        ddm._send_state(M.SESSION, day)
+
+
+@pytest.mark.parametrize("fit", ["x", {"orders_in": 2}, {"orders_in": "2", "orders_out": 0}])
+def test_an_empty_plan_with_a_malformed_fit_record_is_unmeasured(fit):
+    """Fails on 9ca0b44, which never read the record."""
+    day = {"plan": {"orders": [], "execution": "late_market", "bp_scale": fit}, "started": False,
+           "send": None}
+    with pytest.raises(ddm.Unmeasured, match="malformed `bp_scale`"):
+        ddm._send_state(M.SESSION, day)
 
 
 def test_a_client_that_names_no_endpoint_refuses(tmp_path, monkeypatch, books):

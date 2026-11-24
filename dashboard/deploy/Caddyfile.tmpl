@@ -1,0 +1,45 @@
+# The public site's web server (rendered by dashboard/deploy/install_site_vm.sh; do not hand-edit
+# the installed copy at /etc/caddy/Caddyfile).
+#
+# STATIC FILES ONLY. Caddy serves the directory the nightly build publishes and nothing else:
+# no reverse proxy, no PHP, no directory listing, no upload. It runs as the `caddy` user, which
+# cannot read the trading state (/home/quantt is 0750, its state 0700) or any key file. TLS
+# certificates come from Let's Encrypt automatically for each name below.
+#
+# The host names are NOT written in this repository (CLAUDE.md, "Where it runs": the repository is
+# public and the VM's address never goes in a tracked file). The installer takes them as --hosts.
+{
+	admin off
+}
+
+{{HOSTS}} {
+	root * /srv/quantt-site/current
+	encode zstd gzip
+	file_server
+	try_files {path} {path}/ {path}/index.html
+	handle_errors {
+		root * /srv/quantt-site/current
+		rewrite * /404.html
+		file_server
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+		Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+		-Server
+	}
+	@static path /static/*
+	header @static Cache-Control "public, max-age=3600"
+	@pages not path /static/*
+	header @pages Cache-Control "no-cache"
+	log {
+		output file /var/log/caddy/quantt-site.log {
+			roll_size 20MiB
+			roll_keep 5
+		}
+		format json
+	}
+}

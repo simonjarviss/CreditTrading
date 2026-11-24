@@ -146,9 +146,9 @@ def check_json(path: str, findings: list):
             "byte-for-byte with the key absent; (2) add a sibling `_<key>_note` "
             "recording what was measured, what was rejected, and the exact "
             "REVERT (usually: delete this key); (3) a change that alters "
-            "traded behaviour needs a pre-registration in results/cef/ and a "
-            "trial on the CEF or GAMMA counter before the session that trades "
-            "it. Run /spec-change if you have not already.")
+            "traded behaviour needs a dated note under results/ (what changes, "
+            "why, the revert) and a line in results/IDEA_LEDGER.md before the "
+            "session that trades it. Run /spec-change if you have not already.")
 
 
 def main() -> int:

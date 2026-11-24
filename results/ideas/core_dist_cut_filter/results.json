@@ -1,0 +1,2568 @@
+{
+ "written": "2026-11-18",
+ "event_source_last_date": "2025-12-31",
+ "CORE": {
+  "panel_last": "2026-10-14",
+  "first_held": "2013-06-25",
+  "funds": 13,
+  "band_width": 0.048,
+  "events": {
+   "cuts": 38,
+   "funds_with_a_cut": 10,
+   "per_year": 2.86,
+   "by_year": {
+    "2013": 2,
+    "2014": 2,
+    "2015": 4,
+    "2016": 2,
+    "2017": 4,
+    "2018": 7,
+    "2019": 6,
+    "2020": 4,
+    "2021": 2,
+    "2022": 3,
+    "2023": 2
+   },
+   "by_fund": {
+    "AWF": 3,
+    "DSL": 1,
+    "HYT": 2,
+    "JFR": 5,
+    "MHD": 6,
+    "MQY": 7,
+    "PCN": 3,
+    "PFN": 3,
+    "PHK": 4,
+    "PTY": 4
+   },
+   "median_change": -0.125,
+   "last_cut_known": "2023-03-02",
+   "unchanged_declarations_control": 1558,
+   "raises_same_definition": 34
+  },
+  "variants": {
+   "UNCHANGED": {
+    "ann_ret_pct": 7.602,
+    "vol_pct": 6.597,
+    "sharpe": 1.152,
+    "t": 4.2,
+    "max_dd_pct": -14.36,
+    "turnover_per_year": 22.491,
+    "mean_gross": 1.3271,
+    "mean_abs_net": 0.0762,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.867,
+     "late": 1.445
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.393,
+      "ann_ret_pct": 9.767
+     },
+     "2016-2019": {
+      "sharpe": 0.56,
+      "ann_ret_pct": 3.707
+     },
+     "2020-2022": {
+      "sharpe": 1.007,
+      "ann_ret_pct": 6.894
+     },
+     "2023-2026": {
+      "sharpe": 1.791,
+      "ann_ret_pct": 10.843
+     }
+    }
+   },
+   "NNL/20": {
+    "ann_ret_pct": 7.032,
+    "vol_pct": 6.75,
+    "sharpe": 1.042,
+    "t": 3.8,
+    "max_dd_pct": -15.91,
+    "turnover_per_year": 22.371,
+    "mean_gross": 1.3254,
+    "mean_abs_net": 0.0836,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.72,
+     "late": 1.386
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.482,
+      "ann_ret_pct": 10.718
+     },
+     "2016-2019": {
+      "sharpe": 0.258,
+      "ann_ret_pct": 1.787
+     },
+     "2020-2022": {
+      "sharpe": 0.889,
+      "ann_ret_pct": 6.128
+     },
+     "2023-2026": {
+      "sharpe": 1.791,
+      "ann_ret_pct": 10.843
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -56.95,
+     "t": -1.14,
+     "sharpe_diff": -0.11,
+     "turnover_change": -0.0053,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 95.02,
+      "2016-2019": -191.97,
+      "2020-2022": -76.61,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -79.26,
+      -34.6
+     ]
+    },
+    "target_cells_changed": 298,
+    "share_of_live_fund_days_changed": 0.00685
+   },
+   "NNL/60": {
+    "ann_ret_pct": 6.205,
+    "vol_pct": 6.791,
+    "sharpe": 0.914,
+    "t": 3.33,
+    "max_dd_pct": -18.95,
+    "turnover_per_year": 22.239,
+    "mean_gross": 1.3195,
+    "mean_abs_net": 0.1062,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.479,
+     "late": 1.389
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.185,
+      "ann_ret_pct": 8.744
+     },
+     "2016-2019": {
+      "sharpe": 0.042,
+      "ann_ret_pct": 0.292
+     },
+     "2020-2022": {
+      "sharpe": 0.892,
+      "ann_ret_pct": 6.114
+     },
+     "2023-2026": {
+      "sharpe": 1.791,
+      "ann_ret_pct": 10.843
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -139.71,
+     "t": -2.16,
+     "sharpe_diff": -0.238,
+     "turnover_change": -0.0112,
+     "by_era_ann_ret_bp": {
+      "2013-2015": -102.3,
+      "2016-2019": -341.49,
+      "2020-2022": -78.06,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -244.09,
+      -35.25
+     ]
+    },
+    "target_cells_changed": 950,
+    "share_of_live_fund_days_changed": 0.02183
+   },
+   "FLAT/20": {
+    "ann_ret_pct": 7.238,
+    "vol_pct": 6.533,
+    "sharpe": 1.108,
+    "t": 4.04,
+    "max_dd_pct": -14.36,
+    "turnover_per_year": 22.46,
+    "mean_gross": 1.3111,
+    "mean_abs_net": 0.0871,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.816,
+     "late": 1.404
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.482,
+      "ann_ret_pct": 10.307
+     },
+     "2016-2019": {
+      "sharpe": 0.413,
+      "ann_ret_pct": 2.683
+     },
+     "2020-2022": {
+      "sharpe": 0.905,
+      "ann_ret_pct": 6.154
+     },
+     "2023-2026": {
+      "sharpe": 1.8,
+      "ann_ret_pct": 10.875
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -36.36,
+     "t": -1.14,
+     "sharpe_diff": -0.044,
+     "turnover_change": -0.0014,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 53.92,
+      "2016-2019": -102.4,
+      "2020-2022": -74.0,
+      "2023-2026": 3.12
+     },
+     "halves_ann_ret_bp": [
+      -42.16,
+      -30.54
+     ]
+    },
+    "target_cells_changed": 373,
+    "share_of_live_fund_days_changed": 0.00857
+   },
+   "FLAT/60": {
+    "ann_ret_pct": 6.939,
+    "vol_pct": 6.416,
+    "sharpe": 1.082,
+    "t": 3.94,
+    "max_dd_pct": -14.12,
+    "turnover_per_year": 22.232,
+    "mean_gross": 1.2866,
+    "mean_abs_net": 0.1079,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.711,
+     "late": 1.477
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.391,
+      "ann_ret_pct": 9.723
+     },
+     "2016-2019": {
+      "sharpe": 0.289,
+      "ann_ret_pct": 1.875
+     },
+     "2020-2022": {
+      "sharpe": 0.997,
+      "ann_ret_pct": 6.247
+     },
+     "2023-2026": {
+      "sharpe": 1.822,
+      "ann_ret_pct": 10.994
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -66.27,
+     "t": -1.41,
+     "sharpe_diff": -0.07,
+     "turnover_change": -0.0115,
+     "by_era_ann_ret_bp": {
+      "2013-2015": -4.41,
+      "2016-2019": -183.24,
+      "2020-2022": -64.77,
+      "2023-2026": 15.09
+     },
+     "halves_ann_ret_bp": [
+      -111.01,
+      -21.54
+     ]
+    },
+    "target_cells_changed": 1080,
+    "share_of_live_fund_days_changed": 0.02482
+   }
+  },
+  "descriptive": {
+   "cuts": {
+    "n": 38,
+    "n_fund_in_the_book": 27,
+    "held_long_at_K-1": 14,
+    "held_short_at_K-1": 13,
+    "flat_at_K-1": 11,
+    "mean_position_K-3_pct": -1.631,
+    "mean_position_K_pct": 1.348,
+    "mean_position_K+5_pct": 2.455,
+    "mean_target_K-3_pct": -1.93,
+    "mean_target_K_pct": 1.644,
+    "mean_target_K+5_pct": 2.344,
+    "target_change_K-3_to_K+5_pct": {
+     "n": 38,
+     "mean": 4.274,
+     "median": 0.0,
+     "share_positive": 0.211,
+     "t": 2.29
+    },
+    "position_change_K-3_to_K+5_pct": {
+     "n": 38,
+     "mean": 4.085,
+     "median": 0.0,
+     "share_positive": 0.263,
+     "t": 2.29
+    },
+    "bought_more_position_up_K-3_to_K+5": 10,
+    "sold_position_down_K-3_to_K+5": 1,
+    "target_up_K-3_to_K+5": 8,
+    "target_down_K-3_to_K+5": 3,
+    "long_at_K+5": 17,
+    "short_at_K+5": 10,
+    "discount_change_K-3_to_K_pp": {
+     "n": 38,
+     "mean": -2.313,
+     "median": -0.727,
+     "share_positive": 0.263,
+     "t": -3.16
+    },
+    "z_change_K-3_to_K": {
+     "n": 38,
+     "mean": -0.418,
+     "median": -0.263,
+     "share_positive": 0.263,
+     "t": -3.34
+    }
+   },
+   "unchanged_declarations_same_funds": {
+    "n": 1253,
+    "n_fund_in_the_book": 1055,
+    "held_long_at_K-1": 605,
+    "held_short_at_K-1": 450,
+    "flat_at_K-1": 198,
+    "mean_position_K-3_pct": 0.613,
+    "mean_position_K_pct": 0.468,
+    "mean_position_K+5_pct": 0.531,
+    "mean_target_K-3_pct": 0.236,
+    "mean_target_K_pct": 0.16,
+    "mean_target_K+5_pct": 0.132,
+    "target_change_K-3_to_K+5_pct": {
+     "n": 1253,
+     "mean": -0.104,
+     "median": 0.0,
+     "share_positive": 0.135,
+     "t": -0.6
+    },
+    "position_change_K-3_to_K+5_pct": {
+     "n": 1253,
+     "mean": -0.082,
+     "median": 0.0,
+     "share_positive": 0.121,
+     "t": -0.53
+    },
+    "bought_more_position_up_K-3_to_K+5": 151,
+    "sold_position_down_K-3_to_K+5": 158,
+    "target_up_K-3_to_K+5": 169,
+    "target_down_K-3_to_K+5": 173,
+    "long_at_K+5": 605,
+    "short_at_K+5": 450,
+    "discount_change_K-3_to_K_pp": {
+     "n": 1253,
+     "mean": 0.565,
+     "median": 0.394,
+     "share_positive": 0.68,
+     "t": 7.9
+    },
+    "z_change_K-3_to_K": {
+     "n": 1249,
+     "mean": 0.176,
+     "median": 0.142,
+     "share_positive": 0.677,
+     "t": 7.72
+    }
+   },
+   "h20": {
+    "book_pnl_in_cut_fund_bp_of_capital": {
+     "n": 38,
+     "mean": 10.93,
+     "median": 0.0,
+     "share_positive": 0.395,
+     "t": 0.71
+    },
+    "less_h_times_the_funds_mean_on_other_sessions_bp": {
+     "n": 38,
+     "mean": 6.473,
+     "median": -2.676,
+     "share_positive": 0.368,
+     "t": 0.42
+    },
+    "total_over_all_events_bp_of_capital": 415.3,
+    "mean_position_held_in_window_pct": 2.69,
+    "events_held_long_on_average": 18,
+    "events_held_short_on_average": 9,
+    "fund_price_return_less_universe_bp": {
+     "n": 38,
+     "mean": 19.612,
+     "median": -4.623,
+     "share_positive": 0.5,
+     "t": 0.33
+    },
+    "fund_nav_return_less_universe_bp": {
+     "n": 38,
+     "mean": 28.379,
+     "median": -1.945,
+     "share_positive": 0.474,
+     "t": 0.96
+    },
+    "fund_discount_change_less_universe_bp": {
+     "n": 38,
+     "mean": 9.85,
+     "median": 12.51,
+     "share_positive": 0.526,
+     "t": 0.21
+    },
+    "pnl_long_events_bp": {
+     "n": 18,
+     "mean": 8.469,
+     "median": 4.383,
+     "share_positive": 0.611,
+     "t": 0.58
+    },
+    "pnl_short_events_bp": {
+     "n": 9,
+     "mean": 29.211,
+     "median": -0.88,
+     "share_positive": 0.444,
+     "t": 0.52
+    }
+   },
+   "h60": {
+    "book_pnl_in_cut_fund_bp_of_capital": {
+     "n": 38,
+     "mean": 16.699,
+     "median": 0.0,
+     "share_positive": 0.421,
+     "t": 0.77
+    },
+    "less_h_times_the_funds_mean_on_other_sessions_bp": {
+     "n": 38,
+     "mean": 3.01,
+     "median": -12.304,
+     "share_positive": 0.342,
+     "t": 0.14
+    },
+    "total_over_all_events_bp_of_capital": 634.6,
+    "mean_position_held_in_window_pct": 3.957,
+    "events_held_long_on_average": 22,
+    "events_held_short_on_average": 5,
+    "fund_price_return_less_universe_bp": {
+     "n": 38,
+     "mean": -14.651,
+     "median": -91.162,
+     "share_positive": 0.421,
+     "t": -0.21
+    },
+    "fund_nav_return_less_universe_bp": {
+     "n": 38,
+     "mean": 40.53,
+     "median": -2.223,
+     "share_positive": 0.5,
+     "t": 0.92
+    },
+    "fund_discount_change_less_universe_bp": {
+     "n": 38,
+     "mean": -43.94,
+     "median": -42.973,
+     "share_positive": 0.421,
+     "t": -0.64
+    },
+    "pnl_long_events_bp": {
+     "n": 22,
+     "mean": 38.174,
+     "median": 14.58,
+     "share_positive": 0.636,
+     "t": 1.13
+    },
+    "pnl_short_events_bp": {
+     "n": 5,
+     "mean": -41.057,
+     "median": -8.967,
+     "share_positive": 0.4,
+     "t": -1.31
+    }
+   },
+   "announcement_window_price_less_universe_bp_D0-1_to_K+1": {
+    "n": 38,
+    "mean": -214.562,
+    "median": -81.988,
+    "share_positive": 0.342,
+    "t": -2.94
+   }
+  },
+  "secondary_ex_date_dating": {
+   "events": 38,
+   "median_sessions_K_to_ex_date": 6.0,
+   "NNL/20": {
+    "ann_ret_pct": 6.947,
+    "vol_pct": 6.706,
+    "sharpe": 1.036,
+    "t": 3.78,
+    "max_dd_pct": -15.27,
+    "turnover_per_year": 22.446,
+    "mean_gross": 1.3286,
+    "mean_abs_net": 0.079,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.691,
+     "late": 1.402
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.393,
+      "ann_ret_pct": 9.772
+     },
+     "2016-2019": {
+      "sharpe": 0.281,
+      "ann_ret_pct": 1.959
+     },
+     "2020-2022": {
+      "sharpe": 0.92,
+      "ann_ret_pct": 6.318
+     },
+     "2023-2026": {
+      "sharpe": 1.791,
+      "ann_ret_pct": 10.843
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -65.46,
+     "t": -2.13,
+     "sharpe_diff": -0.116,
+     "turnover_change": -0.002,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 0.5,
+      "2016-2019": -174.83,
+      "2020-2022": -57.6,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -104.88,
+      -26.01
+     ]
+    }
+   },
+   "NNL/60": {
+    "ann_ret_pct": 6.524,
+    "vol_pct": 6.726,
+    "sharpe": 0.97,
+    "t": 3.53,
+    "max_dd_pct": -18.08,
+    "turnover_per_year": 22.349,
+    "mean_gross": 1.3211,
+    "mean_abs_net": 0.0976,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.559,
+     "late": 1.41
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.401,
+      "ann_ret_pct": 9.829
+     },
+     "2016-2019": {
+      "sharpe": 0.061,
+      "ann_ret_pct": 0.43
+     },
+     "2020-2022": {
+      "sharpe": 0.936,
+      "ann_ret_pct": 6.43
+     },
+     "2023-2026": {
+      "sharpe": 1.791,
+      "ann_ret_pct": 10.843
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -107.81,
+     "t": -2.48,
+     "sharpe_diff": -0.182,
+     "turnover_change": -0.0063,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 6.15,
+      "2016-2019": -327.65,
+      "2020-2022": -46.46,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -194.57,
+      -20.98
+     ]
+    }
+   },
+   "FLAT/20": {
+    "ann_ret_pct": 7.287,
+    "vol_pct": 6.568,
+    "sharpe": 1.11,
+    "t": 4.04,
+    "max_dd_pct": -14.36,
+    "turnover_per_year": 22.606,
+    "mean_gross": 1.3141,
+    "mean_abs_net": 0.084,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.826,
+     "late": 1.4
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.404,
+      "ann_ret_pct": 9.785
+     },
+     "2016-2019": {
+      "sharpe": 0.486,
+      "ann_ret_pct": 3.202
+     },
+     "2020-2022": {
+      "sharpe": 0.906,
+      "ann_ret_pct": 6.173
+     },
+     "2023-2026": {
+      "sharpe": 1.793,
+      "ann_ret_pct": 10.832
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -31.47,
+     "t": -1.58,
+     "sharpe_diff": -0.042,
+     "turnover_change": 0.0051,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 1.8,
+      "2016-2019": -50.54,
+      "2020-2022": -72.17,
+      "2023-2026": -1.11
+     },
+     "halves_ann_ret_bp": [
+      -30.82,
+      -32.1
+     ]
+    }
+   },
+   "FLAT/60": {
+    "ann_ret_pct": 7.143,
+    "vol_pct": 6.579,
+    "sharpe": 1.086,
+    "t": 3.96,
+    "max_dd_pct": -14.36,
+    "turnover_per_year": 22.337,
+    "mean_gross": 1.2858,
+    "mean_abs_net": 0.1077,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.79,
+     "late": 1.388
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.41,
+      "ann_ret_pct": 9.877
+     },
+     "2016-2019": {
+      "sharpe": 0.414,
+      "ann_ret_pct": 2.723
+     },
+     "2020-2022": {
+      "sharpe": 0.885,
+      "ann_ret_pct": 6.06
+     },
+     "2023-2026": {
+      "sharpe": 1.797,
+      "ann_ret_pct": 10.859
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -45.89,
+     "t": -1.07,
+     "sharpe_diff": -0.066,
+     "turnover_change": -0.0068,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 10.94,
+      "2016-2019": -98.39,
+      "2020-2022": -83.44,
+      "2023-2026": 1.59
+     },
+     "halves_ann_ret_bp": [
+      -54.19,
+      -37.63
+     ]
+    }
+   }
+  },
+  "check_gross_ceiling": {
+   "cap": 1.8,
+   "UNCHANGED": {
+    "ann_ret_pct": 7.69,
+    "vol_pct": 6.45,
+    "sharpe": 1.192,
+    "t": 4.35,
+    "max_dd_pct": -14.47,
+    "turnover_per_year": 22.677,
+    "mean_gross": 1.2618,
+    "mean_abs_net": 0.0671,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.878,
+     "late": 1.532
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.394,
+      "ann_ret_pct": 9.779
+     },
+     "2016-2019": {
+      "sharpe": 0.575,
+      "ann_ret_pct": 3.797
+     },
+     "2020-2022": {
+      "sharpe": 1.084,
+      "ann_ret_pct": 7.101
+     },
+     "2023-2026": {
+      "sharpe": 1.885,
+      "ann_ret_pct": 10.887
+     }
+    }
+   },
+   "NNL/20": {
+    "ann_ret_pct": 7.113,
+    "vol_pct": 6.617,
+    "sharpe": 1.075,
+    "t": 3.92,
+    "max_dd_pct": -15.52,
+    "turnover_per_year": 22.557,
+    "mean_gross": 1.26,
+    "mean_abs_net": 0.0749,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.725,
+     "late": 1.471
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.483,
+      "ann_ret_pct": 10.729
+     },
+     "2016-2019": {
+      "sharpe": 0.265,
+      "ann_ret_pct": 1.844
+     },
+     "2020-2022": {
+      "sharpe": 0.962,
+      "ann_ret_pct": 6.342
+     },
+     "2023-2026": {
+      "sharpe": 1.885,
+      "ann_ret_pct": 10.887
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -57.77,
+     "t": -1.16,
+     "sharpe_diff": -0.117,
+     "turnover_change": -0.0053,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 95.02,
+      "2016-2019": -195.26,
+      "2020-2022": -75.87,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -81.24,
+      -34.26
+     ]
+    }
+   },
+   "NNL/60": {
+    "ann_ret_pct": 6.258,
+    "vol_pct": 6.63,
+    "sharpe": 0.944,
+    "t": 3.44,
+    "max_dd_pct": -19.14,
+    "turnover_per_year": 22.415,
+    "mean_gross": 1.2519,
+    "mean_abs_net": 0.0986,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.469,
+     "late": 1.501
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.187,
+      "ann_ret_pct": 8.756
+     },
+     "2016-2019": {
+      "sharpe": 0.027,
+      "ann_ret_pct": 0.189
+     },
+     "2020-2022": {
+      "sharpe": 1.002,
+      "ann_ret_pct": 6.421
+     },
+     "2023-2026": {
+      "sharpe": 1.885,
+      "ann_ret_pct": 10.887
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -143.23,
+     "t": -2.2,
+     "sharpe_diff": -0.248,
+     "turnover_change": -0.0116,
+     "by_era_ann_ret_bp": {
+      "2013-2015": -102.3,
+      "2016-2019": -360.73,
+      "2020-2022": -68.03,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -257.28,
+      -28.69
+     ]
+    }
+   },
+   "FLAT/20": {
+    "ann_ret_pct": 7.316,
+    "vol_pct": 6.38,
+    "sharpe": 1.147,
+    "t": 4.18,
+    "max_dd_pct": -14.47,
+    "turnover_per_year": 22.647,
+    "mean_gross": 1.2458,
+    "mean_abs_net": 0.0786,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.826,
+     "late": 1.489
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.484,
+      "ann_ret_pct": 10.318
+     },
+     "2016-2019": {
+      "sharpe": 0.424,
+      "ann_ret_pct": 2.74
+     },
+     "2020-2022": {
+      "sharpe": 0.977,
+      "ann_ret_pct": 6.357
+     },
+     "2023-2026": {
+      "sharpe": 1.896,
+      "ann_ret_pct": 10.918
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -37.43,
+     "t": -1.17,
+     "sharpe_diff": -0.045,
+     "turnover_change": -0.0013,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 53.92,
+      "2016-2019": -105.68,
+      "2020-2022": -74.37,
+      "2023-2026": 3.12
+     },
+     "halves_ann_ret_bp": [
+      -44.17,
+      -30.68
+     ]
+    }
+   },
+   "FLAT/60": {
+    "ann_ret_pct": 6.997,
+    "vol_pct": 6.235,
+    "sharpe": 1.122,
+    "t": 4.09,
+    "max_dd_pct": -14.32,
+    "turnover_per_year": 22.407,
+    "mean_gross": 1.2191,
+    "mean_abs_net": 0.1008,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.704,
+     "late": 1.599
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.393,
+      "ann_ret_pct": 9.735
+     },
+     "2016-2019": {
+      "sharpe": 0.275,
+      "ann_ret_pct": 1.772
+     },
+     "2020-2022": {
+      "sharpe": 1.125,
+      "ann_ret_pct": 6.573
+     },
+     "2023-2026": {
+      "sharpe": 1.919,
+      "ann_ret_pct": 11.038
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -69.35,
+     "t": -1.42,
+     "sharpe_diff": -0.07,
+     "turnover_change": -0.0119,
+     "by_era_ann_ret_bp": {
+      "2013-2015": -4.41,
+      "2016-2019": -202.49,
+      "2020-2022": -52.83,
+      "2023-2026": 15.09
+     },
+     "halves_ann_ret_bp": [
+      -124.41,
+      -13.94
+     ]
+    }
+   }
+  },
+  "check_total_returns": {
+   "UNCHANGED": {
+    "ann_ret_pct": 7.379,
+    "vol_pct": 6.404,
+    "sharpe": 1.152,
+    "t": 4.2,
+    "max_dd_pct": -13.03,
+    "turnover_per_year": 22.491,
+    "mean_gross": 1.3271,
+    "mean_abs_net": 0.0762,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.921,
+     "late": 1.387
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.196,
+      "ann_ret_pct": 8.184
+     },
+     "2016-2019": {
+      "sharpe": 0.767,
+      "ann_ret_pct": 4.916
+     },
+     "2020-2022": {
+      "sharpe": 0.952,
+      "ann_ret_pct": 6.334
+     },
+     "2023-2026": {
+      "sharpe": 1.752,
+      "ann_ret_pct": 10.282
+     }
+    }
+   },
+   "NNL/20": {
+    "ann_ret_pct": 6.693,
+    "vol_pct": 6.562,
+    "sharpe": 1.02,
+    "t": 3.72,
+    "max_dd_pct": -15.1,
+    "turnover_per_year": 22.371,
+    "mean_gross": 1.3254,
+    "mean_abs_net": 0.0836,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.743,
+     "late": 1.316
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.254,
+      "ann_ret_pct": 8.873
+     },
+     "2016-2019": {
+      "sharpe": 0.429,
+      "ann_ret_pct": 2.891
+     },
+     "2020-2022": {
+      "sharpe": 0.808,
+      "ann_ret_pct": 5.415
+     },
+     "2023-2026": {
+      "sharpe": 1.752,
+      "ann_ret_pct": 10.282
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -68.56,
+     "t": -1.39,
+     "sharpe_diff": -0.132,
+     "turnover_change": -0.0053,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 68.8,
+      "2016-2019": -202.54,
+      "2020-2022": -91.9,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -95.58,
+      -41.5
+     ]
+    }
+   },
+   "NNL/60": {
+    "ann_ret_pct": 5.457,
+    "vol_pct": 6.606,
+    "sharpe": 0.826,
+    "t": 3.01,
+    "max_dd_pct": -19.06,
+    "turnover_per_year": 22.239,
+    "mean_gross": 1.3195,
+    "mean_abs_net": 0.1062,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.409,
+     "late": 1.282
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 0.882,
+      "ann_ret_pct": 6.367
+     },
+     "2016-2019": {
+      "sharpe": 0.11,
+      "ann_ret_pct": 0.747
+     },
+     "2020-2022": {
+      "sharpe": 0.735,
+      "ann_ret_pct": 4.901
+     },
+     "2023-2026": {
+      "sharpe": 1.752,
+      "ann_ret_pct": 10.282
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -192.22,
+     "t": -3.03,
+     "sharpe_diff": -0.326,
+     "turnover_change": -0.0112,
+     "by_era_ann_ret_bp": {
+      "2013-2015": -181.74,
+      "2016-2019": -416.97,
+      "2020-2022": -143.24,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -319.63,
+      -64.69
+     ]
+    }
+   },
+   "FLAT/20": {
+    "ann_ret_pct": 6.958,
+    "vol_pct": 6.345,
+    "sharpe": 1.097,
+    "t": 4.0,
+    "max_dd_pct": -13.03,
+    "turnover_per_year": 22.46,
+    "mean_gross": 1.3111,
+    "mean_abs_net": 0.0871,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.863,
+     "late": 1.331
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.254,
+      "ann_ret_pct": 8.518
+     },
+     "2016-2019": {
+      "sharpe": 0.63,
+      "ann_ret_pct": 3.969
+     },
+     "2020-2022": {
+      "sharpe": 0.825,
+      "ann_ret_pct": 5.454
+     },
+     "2023-2026": {
+      "sharpe": 1.756,
+      "ann_ret_pct": 10.282
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -42.03,
+     "t": -1.35,
+     "sharpe_diff": -0.055,
+     "turnover_change": -0.0014,
+     "by_era_ann_ret_bp": {
+      "2013-2015": 33.33,
+      "2016-2019": -94.77,
+      "2020-2022": -87.99,
+      "2023-2026": 0.0
+     },
+     "halves_ann_ret_bp": [
+      -45.2,
+      -38.83
+     ]
+    }
+   },
+   "FLAT/60": {
+    "ann_ret_pct": 6.436,
+    "vol_pct": 6.23,
+    "sharpe": 1.033,
+    "t": 3.76,
+    "max_dd_pct": -13.2,
+    "turnover_per_year": 22.232,
+    "mean_gross": 1.2866,
+    "mean_abs_net": 0.1079,
+    "halves": {
+     "split": "2020-02-18",
+     "early": 0.714,
+     "late": 1.373
+    },
+    "eras": {
+     "2013-2015": {
+      "sharpe": 1.109,
+      "ann_ret_pct": 7.571
+     },
+     "2016-2019": {
+      "sharpe": 0.466,
+      "ann_ret_pct": 2.936
+     },
+     "2020-2022": {
+      "sharpe": 0.854,
+      "ann_ret_pct": 5.183
+     },
+     "2023-2026": {
+      "sharpe": 1.774,
+      "ann_ret_pct": 10.382
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -94.32,
+     "t": -2.04,
+     "sharpe_diff": -0.119,
+     "turnover_change": -0.0115,
+     "by_era_ann_ret_bp": {
+      "2013-2015": -61.31,
+      "2016-2019": -198.02,
+      "2020-2022": -115.09,
+      "2023-2026": 10.04
+     },
+     "halves_ann_ret_bp": [
+      -140.56,
+      -48.08
+     ]
+    }
+   }
+  },
+  "placebo": {
+   "n": 200,
+   "seed": 20261118,
+   "funds_with_too_few_unchanged_declarations": {},
+   "UNCH": {
+    "NNL/20": {
+     "ann_ret_bp": {
+      "real": -56.95,
+      "placebo_mean": -4.2344,
+      "placebo_median": -4.1715,
+      "placebo_p5": -30.587,
+      "placebo_p95": 21.7263,
+      "share_placebo_at_or_above_real": 0.985
+     },
+     "sharpe_diff": {
+      "real": -0.11,
+      "placebo_mean": -0.011,
+      "placebo_median": -0.0072,
+      "placebo_p5": -0.0503,
+      "placebo_p95": 0.0143,
+      "share_placebo_at_or_above_real": 0.995
+     }
+    },
+    "NNL/60": {
+     "ann_ret_bp": {
+      "real": -139.71,
+      "placebo_mean": -6.773,
+      "placebo_median": -14.6048,
+      "placebo_p5": -68.5172,
+      "placebo_p95": 87.0534,
+      "share_placebo_at_or_above_real": 1.0
+     },
+     "sharpe_diff": {
+      "real": -0.238,
+      "placebo_mean": -0.0435,
+      "placebo_median": -0.0361,
+      "placebo_p5": -0.1642,
+      "placebo_p95": 0.0567,
+      "share_placebo_at_or_above_real": 0.985
+     }
+    },
+    "FLAT/20": {
+     "ann_ret_bp": {
+      "real": -36.36,
+      "placebo_mean": -9.2084,
+      "placebo_median": -8.6682,
+      "placebo_p5": -54.7102,
+      "placebo_p95": 31.3224,
+      "share_placebo_at_or_above_real": 0.835
+     },
+     "sharpe_diff": {
+      "real": -0.044,
+      "placebo_mean": -0.0063,
+      "placebo_median": -0.0054,
+      "placebo_p5": -0.0791,
+      "placebo_p95": 0.0575,
+      "share_placebo_at_or_above_real": 0.835
+     }
+    },
+    "FLAT/60": {
+     "ann_ret_bp": {
+      "real": -66.27,
+      "placebo_mean": -32.6926,
+      "placebo_median": -30.8795,
+      "placebo_p5": -116.7073,
+      "placebo_p95": 37.9898,
+      "share_placebo_at_or_above_real": 0.76
+     },
+     "sharpe_diff": {
+      "real": -0.07,
+      "placebo_mean": -0.0326,
+      "placebo_median": -0.0292,
+      "placebo_p5": -0.1528,
+      "placebo_p95": 0.0977,
+      "share_placebo_at_or_above_real": 0.7
+     }
+    }
+   },
+   "RAND": {
+    "NNL/20": {
+     "ann_ret_bp": {
+      "real": -56.95,
+      "placebo_mean": -0.0226,
+      "placebo_median": -0.7886,
+      "placebo_p5": -26.0809,
+      "placebo_p95": 28.7312,
+      "share_placebo_at_or_above_real": 0.995
+     },
+     "sharpe_diff": {
+      "real": -0.11,
+      "placebo_mean": -0.0032,
+      "placebo_median": -0.0019,
+      "placebo_p5": -0.0458,
+      "placebo_p95": 0.0318,
+      "share_placebo_at_or_above_real": 0.995
+     }
+    },
+    "NNL/60": {
+     "ann_ret_bp": {
+      "real": -139.71,
+      "placebo_mean": -9.8339,
+      "placebo_median": -10.5627,
+      "placebo_p5": -65.2854,
+      "placebo_p95": 49.0779,
+      "share_placebo_at_or_above_real": 1.0
+     },
+     "sharpe_diff": {
+      "real": -0.238,
+      "placebo_mean": -0.0411,
+      "placebo_median": -0.0322,
+      "placebo_p5": -0.1707,
+      "placebo_p95": 0.0318,
+      "share_placebo_at_or_above_real": 0.99
+     }
+    },
+    "FLAT/20": {
+     "ann_ret_bp": {
+      "real": -36.36,
+      "placebo_mean": -7.1647,
+      "placebo_median": -4.8674,
+      "placebo_p5": -58.2417,
+      "placebo_p95": 38.3579,
+      "share_placebo_at_or_above_real": 0.83
+     },
+     "sharpe_diff": {
+      "real": -0.044,
+      "placebo_mean": -0.0022,
+      "placebo_median": 0.002,
+      "placebo_p5": -0.0824,
+      "placebo_p95": 0.0724,
+      "share_placebo_at_or_above_real": 0.825
+     }
+    },
+    "FLAT/60": {
+     "ann_ret_bp": {
+      "real": -66.27,
+      "placebo_mean": -19.6212,
+      "placebo_median": -18.1233,
+      "placebo_p5": -109.8415,
+      "placebo_p95": 57.397,
+      "share_placebo_at_or_above_real": 0.835
+     },
+     "sharpe_diff": {
+      "real": -0.07,
+      "placebo_mean": -0.0122,
+      "placebo_median": -0.0049,
+      "placebo_p5": -0.1638,
+      "placebo_p95": 0.1108,
+      "share_placebo_at_or_above_real": 0.795
+     }
+    }
+   }
+  },
+  "mapping": {
+   "unmapped": [],
+   "min_corr": 0.9955,
+   "crsp_last": "2025-12-31",
+   "below_the_bar_but_confirmed_by_the_desk_map": {},
+   "confirmed_against_the_desk_map": false,
+   "desk_map_disagrees_resolved_on_returns": {}
+  },
+  "desk_distribution_panel": {
+   "columns": [
+    "ticker",
+    "grp",
+    "ex_date",
+    "amount",
+    "stock_split"
+   ],
+   "last_ex_date": "2026-09-03",
+   "has_declaration_date": false,
+   "crsp_cuts_with_the_same_ex_date_in_the_desk_panel": 38,
+   "of_which_the_desk_panel_also_shows_a_fall_of_5pct": 38,
+   "desk_panel_falls_of_5pct_after_the_crsp_panel_ends": 2,
+   "note": "the last row counts raw 5% falls in the desk panel, with no stable-base rule, so it includes cuts back from specials"
+  }
+ },
+ "C4_Z": {
+  "panel_last": "2026-10-09",
+  "first_held": "2005-02-22",
+  "funds": 74,
+  "band_width": 0.048,
+  "events": {
+   "cuts": 235,
+   "funds_with_a_cut": 58,
+   "per_year": 10.87,
+   "by_year": {
+    "2005": 10,
+    "2006": 6,
+    "2007": 1,
+    "2008": 20,
+    "2009": 18,
+    "2010": 17,
+    "2011": 7,
+    "2012": 13,
+    "2013": 8,
+    "2014": 4,
+    "2015": 9,
+    "2016": 11,
+    "2017": 9,
+    "2018": 9,
+    "2019": 13,
+    "2020": 16,
+    "2021": 3,
+    "2022": 23,
+    "2023": 25,
+    "2024": 2,
+    "2025": 11
+   },
+   "by_fund": {
+    "ADX": 7,
+    "ASG": 8,
+    "BCX": 5,
+    "BDJ": 3,
+    "BGR": 5,
+    "BGY": 5,
+    "BMEZ": 2,
+    "BSTZ": 3,
+    "BTO": 1,
+    "BTX": 3,
+    "CHW": 4,
+    "CSQ": 3,
+    "DFP": 3,
+    "DPG": 1,
+    "EMO": 4,
+    "EOI": 3,
+    "ETB": 2,
+    "ETJ": 4,
+    "ETO": 3,
+    "ETV": 3,
+    "ETW": 5,
+    "ETY": 4,
+    "EVT": 2,
+    "EXG": 6,
+    "FFA": 3,
+    "FFC": 11,
+    "GCV": 2,
+    "GGN": 5,
+    "GLO": 9,
+    "GLV": 8,
+    "HGLB": 2,
+    "HPF": 2,
+    "HPS": 4,
+    "HQH": 8,
+    "HQL": 10,
+    "HTD": 1,
+    "IGA": 6,
+    "IGR": 1,
+    "JPC": 8,
+    "JRS": 6,
+    "KYN": 3,
+    "LDP": 3,
+    "NFJ": 3,
+    "NMAI": 2,
+    "NML": 2,
+    "NPFD": 4,
+    "NXG": 2,
+    "PDT": 3,
+    "PEO": 2,
+    "PFO": 8,
+    "PGZ": 1,
+    "QQQX": 2,
+    "RFI": 1,
+    "RQI": 1,
+    "SCD": 1,
+    "SPXX": 4,
+    "TY": 6,
+    "USA": 12
+   },
+   "median_change": -0.1509,
+   "last_cut_known": "2025-12-02",
+   "unchanged_declarations_control": 6874,
+   "raises_same_definition": 284
+  },
+  "variants": {
+   "UNCHANGED": {
+    "ann_ret_pct": 9.55,
+    "vol_pct": 7.127,
+    "sharpe": 1.34,
+    "t": 6.23,
+    "max_dd_pct": -10.47,
+    "turnover_per_year": 39.592,
+    "mean_gross": 1.7906,
+    "mean_abs_net": 0.1163,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.163,
+     "late": 1.493
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.409,
+      "ann_ret_pct": 9.366
+     },
+     "2010-2014": {
+      "sharpe": 0.971,
+      "ann_ret_pct": 6.052
+     },
+     "2015-2019": {
+      "sharpe": 1.276,
+      "ann_ret_pct": 9.096
+     },
+     "2020-2022": {
+      "sharpe": 1.62,
+      "ann_ret_pct": 15.071
+     },
+     "2023-2026": {
+      "sharpe": 1.554,
+      "ann_ret_pct": 10.628
+     }
+    }
+   },
+   "NNL/20": {
+    "ann_ret_pct": 9.526,
+    "vol_pct": 7.137,
+    "sharpe": 1.335,
+    "t": 6.2,
+    "max_dd_pct": -10.53,
+    "turnover_per_year": 39.27,
+    "mean_gross": 1.7847,
+    "mean_abs_net": 0.1187,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.206,
+     "late": 1.451
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.407,
+      "ann_ret_pct": 9.415
+     },
+     "2010-2014": {
+      "sharpe": 1.057,
+      "ann_ret_pct": 6.543
+     },
+     "2015-2019": {
+      "sharpe": 1.243,
+      "ann_ret_pct": 8.863
+     },
+     "2020-2022": {
+      "sharpe": 1.548,
+      "ann_ret_pct": 14.497
+     },
+     "2023-2026": {
+      "sharpe": 1.547,
+      "ann_ret_pct": 10.546
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -2.33,
+     "t": -0.14,
+     "sharpe_diff": -0.005,
+     "turnover_change": -0.0081,
+     "by_era_ann_ret_bp": {
+      "2005-2009": 4.93,
+      "2010-2014": 49.11,
+      "2015-2019": -23.31,
+      "2020-2022": -57.38,
+      "2023-2026": -8.24
+     },
+     "halves_ann_ret_bp": [
+      28.39,
+      -30.49
+     ]
+    },
+    "target_cells_changed": 1444,
+    "share_of_live_fund_days_changed": 0.00359
+   },
+   "NNL/60": {
+    "ann_ret_pct": 8.974,
+    "vol_pct": 7.26,
+    "sharpe": 1.236,
+    "t": 5.74,
+    "max_dd_pct": -10.32,
+    "turnover_per_year": 38.62,
+    "mean_gross": 1.7798,
+    "mean_abs_net": 0.136,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.038,
+     "late": 1.411
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.208,
+      "ann_ret_pct": 8.418
+     },
+     "2010-2014": {
+      "sharpe": 0.871,
+      "ann_ret_pct": 5.49
+     },
+     "2015-2019": {
+      "sharpe": 1.242,
+      "ann_ret_pct": 8.964
+     },
+     "2020-2022": {
+      "sharpe": 1.556,
+      "ann_ret_pct": 14.824
+     },
+     "2023-2026": {
+      "sharpe": 1.427,
+      "ann_ret_pct": 9.662
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -57.6,
+     "t": -1.53,
+     "sharpe_diff": -0.104,
+     "turnover_change": -0.0246,
+     "by_era_ann_ret_bp": {
+      "2005-2009": -94.72,
+      "2010-2014": -56.25,
+      "2015-2019": -13.22,
+      "2020-2022": -24.69,
+      "2023-2026": -96.62
+     },
+     "halves_ann_ret_bp": [
+      -62.04,
+      -49.88
+     ]
+    },
+    "target_cells_changed": 4416,
+    "share_of_live_fund_days_changed": 0.01096
+   },
+   "FLAT/20": {
+    "ann_ret_pct": 9.349,
+    "vol_pct": 7.071,
+    "sharpe": 1.322,
+    "t": 6.14,
+    "max_dd_pct": -11.25,
+    "turnover_per_year": 39.191,
+    "mean_gross": 1.7771,
+    "mean_abs_net": 0.1201,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.226,
+     "late": 1.41
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.446,
+      "ann_ret_pct": 9.626
+     },
+     "2010-2014": {
+      "sharpe": 1.064,
+      "ann_ret_pct": 6.536
+     },
+     "2015-2019": {
+      "sharpe": 1.231,
+      "ann_ret_pct": 8.751
+     },
+     "2020-2022": {
+      "sharpe": 1.439,
+      "ann_ret_pct": 13.199
+     },
+     "2023-2026": {
+      "sharpe": 1.544,
+      "ann_ret_pct": 10.448
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -20.1,
+     "t": -0.93,
+     "sharpe_diff": -0.018,
+     "turnover_change": -0.0101,
+     "by_era_ann_ret_bp": {
+      "2005-2009": 26.03,
+      "2010-2014": 48.35,
+      "2015-2019": -34.58,
+      "2020-2022": -187.19,
+      "2023-2026": -18.06
+     },
+     "halves_ann_ret_bp": [
+      36.32,
+      -74.16
+     ]
+    },
+    "target_cells_changed": 1164,
+    "share_of_live_fund_days_changed": 0.00289
+   },
+   "FLAT/60": {
+    "ann_ret_pct": 8.926,
+    "vol_pct": 7.126,
+    "sharpe": 1.253,
+    "t": 5.82,
+    "max_dd_pct": -9.88,
+    "turnover_per_year": 38.328,
+    "mean_gross": 1.7701,
+    "mean_abs_net": 0.1345,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.073,
+     "late": 1.411
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.263,
+      "ann_ret_pct": 8.509
+     },
+     "2010-2014": {
+      "sharpe": 0.925,
+      "ann_ret_pct": 5.776
+     },
+     "2015-2019": {
+      "sharpe": 1.227,
+      "ann_ret_pct": 8.797
+     },
+     "2020-2022": {
+      "sharpe": 1.459,
+      "ann_ret_pct": 13.459
+     },
+     "2023-2026": {
+      "sharpe": 1.517,
+      "ann_ret_pct": 10.202
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -62.37,
+     "t": -1.85,
+     "sharpe_diff": -0.087,
+     "turnover_change": -0.0319,
+     "by_era_ann_ret_bp": {
+      "2005-2009": -85.67,
+      "2010-2014": -27.6,
+      "2015-2019": -29.92,
+      "2020-2022": -161.16,
+      "2023-2026": -42.63
+     },
+     "halves_ann_ret_bp": [
+      -54.0,
+      -68.54
+     ]
+    },
+    "target_cells_changed": 3398,
+    "share_of_live_fund_days_changed": 0.00844
+   }
+  },
+  "descriptive": {
+   "cuts": {
+    "n": 235,
+    "n_fund_in_the_book": 120,
+    "held_long_at_K-1": 61,
+    "held_short_at_K-1": 59,
+    "flat_at_K-1": 115,
+    "mean_position_K-3_pct": 0.311,
+    "mean_position_K_pct": 0.794,
+    "mean_position_K+5_pct": 1.146,
+    "mean_target_K-3_pct": 0.227,
+    "mean_target_K_pct": 1.126,
+    "mean_target_K+5_pct": 1.271,
+    "target_change_K-3_to_K+5_pct": {
+     "n": 235,
+     "mean": 1.044,
+     "median": 0.0,
+     "share_positive": 0.196,
+     "t": 3.64
+    },
+    "position_change_K-3_to_K+5_pct": {
+     "n": 235,
+     "mean": 0.834,
+     "median": 0.0,
+     "share_positive": 0.128,
+     "t": 3.48
+    },
+    "bought_more_position_up_K-3_to_K+5": 30,
+    "sold_position_down_K-3_to_K+5": 12,
+    "target_up_K-3_to_K+5": 46,
+    "target_down_K-3_to_K+5": 13,
+    "long_at_K+5": 67,
+    "short_at_K+5": 53,
+    "discount_change_K-3_to_K_pp": {
+     "n": 204,
+     "mean": -0.83,
+     "median": -0.343,
+     "share_positive": 0.343,
+     "t": -3.85
+    },
+    "z_change_K-3_to_K": {
+     "n": 166,
+     "mean": -0.228,
+     "median": -0.146,
+     "share_positive": 0.331,
+     "t": -3.37
+    }
+   },
+   "unchanged_declarations_same_funds": {
+    "n": 5810,
+    "n_fund_in_the_book": 3016,
+    "held_long_at_K-1": 1465,
+    "held_short_at_K-1": 1545,
+    "flat_at_K-1": 2800,
+    "mean_position_K-3_pct": -0.175,
+    "mean_position_K_pct": -0.135,
+    "mean_position_K+5_pct": -0.212,
+    "mean_target_K-3_pct": -0.097,
+    "mean_target_K_pct": -0.076,
+    "mean_target_K+5_pct": -0.141,
+    "target_change_K-3_to_K+5_pct": {
+     "n": 5810,
+     "mean": -0.044,
+     "median": 0.0,
+     "share_positive": 0.121,
+     "t": -0.74
+    },
+    "position_change_K-3_to_K+5_pct": {
+     "n": 5810,
+     "mean": -0.038,
+     "median": 0.0,
+     "share_positive": 0.094,
+     "t": -0.84
+    },
+    "bought_more_position_up_K-3_to_K+5": 546,
+    "sold_position_down_K-3_to_K+5": 587,
+    "target_up_K-3_to_K+5": 704,
+    "target_down_K-3_to_K+5": 714,
+    "long_at_K+5": 1463,
+    "short_at_K+5": 1551,
+    "discount_change_K-3_to_K_pp": {
+     "n": 5474,
+     "mean": 0.1,
+     "median": 0.1,
+     "share_positive": 0.548,
+     "t": 3.12
+    },
+    "z_change_K-3_to_K": {
+     "n": 4450,
+     "mean": 0.051,
+     "median": 0.048,
+     "share_positive": 0.552,
+     "t": 3.39
+    }
+   },
+   "h20": {
+    "book_pnl_in_cut_fund_bp_of_capital": {
+     "n": 235,
+     "mean": 1.75,
+     "median": 0.0,
+     "share_positive": 0.289,
+     "t": 0.54
+    },
+    "less_h_times_the_funds_mean_on_other_sessions_bp": {
+     "n": 235,
+     "mean": 0.436,
+     "median": 0.0,
+     "share_positive": 0.306,
+     "t": 0.13
+    },
+    "total_over_all_events_bp_of_capital": 411.2,
+    "mean_position_held_in_window_pct": 1.155,
+    "events_held_long_on_average": 71,
+    "events_held_short_on_average": 51,
+    "fund_price_return_less_universe_bp": {
+     "n": 235,
+     "mean": -110.251,
+     "median": -137.84,
+     "share_positive": 0.357,
+     "t": -2.96
+    },
+    "fund_nav_return_less_universe_bp": {
+     "n": 235,
+     "mean": -29.413,
+     "median": -35.598,
+     "share_positive": 0.434,
+     "t": -0.86
+    },
+    "fund_discount_change_less_universe_bp": {
+     "n": 204,
+     "mean": -87.16,
+     "median": -76.387,
+     "share_positive": 0.392,
+     "t": -3.23
+    },
+    "pnl_long_events_bp": {
+     "n": 71,
+     "mean": -1.731,
+     "median": 5.034,
+     "share_positive": 0.634,
+     "t": -0.28
+    },
+    "pnl_short_events_bp": {
+     "n": 51,
+     "mean": 10.474,
+     "median": -0.801,
+     "share_positive": 0.451,
+     "t": 0.85
+    }
+   },
+   "h60": {
+    "book_pnl_in_cut_fund_bp_of_capital": {
+     "n": 235,
+     "mean": 2.0,
+     "median": 0.0,
+     "share_positive": 0.277,
+     "t": 0.53
+    },
+    "less_h_times_the_funds_mean_on_other_sessions_bp": {
+     "n": 235,
+     "mean": -2.287,
+     "median": 0.0,
+     "share_positive": 0.251,
+     "t": -0.61
+    },
+    "total_over_all_events_bp_of_capital": 470.1,
+    "mean_position_held_in_window_pct": 1.265,
+    "events_held_long_on_average": 72,
+    "events_held_short_on_average": 50,
+    "fund_price_return_less_universe_bp": {
+     "n": 235,
+     "mean": -204.357,
+     "median": -230.042,
+     "share_positive": 0.306,
+     "t": -3.57
+    },
+    "fund_nav_return_less_universe_bp": {
+     "n": 235,
+     "mean": -64.03,
+     "median": -144.562,
+     "share_positive": 0.396,
+     "t": -1.16
+    },
+    "fund_discount_change_less_universe_bp": {
+     "n": 204,
+     "mean": -150.105,
+     "median": -109.71,
+     "share_positive": 0.333,
+     "t": -4.64
+    },
+    "pnl_long_events_bp": {
+     "n": 72,
+     "mean": 1.524,
+     "median": 3.165,
+     "share_positive": 0.569,
+     "t": 0.16
+    },
+    "pnl_short_events_bp": {
+     "n": 50,
+     "mean": 7.208,
+     "median": -1.092,
+     "share_positive": 0.48,
+     "t": 0.54
+    }
+   },
+   "announcement_window_price_less_universe_bp_D0-1_to_K+1": {
+    "n": 235,
+    "mean": -82.949,
+    "median": -70.974,
+    "share_positive": 0.353,
+    "t": -3.89
+   }
+  },
+  "secondary_ex_date_dating": {
+   "events": 235,
+   "median_sessions_K_to_ex_date": 7.0,
+   "NNL/20": {
+    "ann_ret_pct": 9.333,
+    "vol_pct": 7.14,
+    "sharpe": 1.307,
+    "t": 6.07,
+    "max_dd_pct": -10.39,
+    "turnover_per_year": 39.348,
+    "mean_gross": 1.7843,
+    "mean_abs_net": 0.1192,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.151,
+     "late": 1.446
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.418,
+      "ann_ret_pct": 9.452
+     },
+     "2010-2014": {
+      "sharpe": 0.922,
+      "ann_ret_pct": 5.74
+     },
+     "2015-2019": {
+      "sharpe": 1.23,
+      "ann_ret_pct": 8.769
+     },
+     "2020-2022": {
+      "sharpe": 1.596,
+      "ann_ret_pct": 14.999
+     },
+     "2023-2026": {
+      "sharpe": 1.499,
+      "ann_ret_pct": 10.179
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -21.66,
+     "t": -1.67,
+     "sharpe_diff": -0.033,
+     "turnover_change": -0.0062,
+     "by_era_ann_ret_bp": {
+      "2005-2009": 8.62,
+      "2010-2014": -31.25,
+      "2015-2019": -32.73,
+      "2020-2022": -7.17,
+      "2023-2026": -44.98
+     },
+     "halves_ann_ret_bp": [
+      -7.11,
+      -33.66
+     ]
+    }
+   },
+   "NNL/60": {
+    "ann_ret_pct": 9.01,
+    "vol_pct": 7.257,
+    "sharpe": 1.242,
+    "t": 5.77,
+    "max_dd_pct": -11.27,
+    "turnover_per_year": 38.651,
+    "mean_gross": 1.7801,
+    "mean_abs_net": 0.1333,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.036,
+     "late": 1.423
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.195,
+      "ann_ret_pct": 8.273
+     },
+     "2010-2014": {
+      "sharpe": 0.887,
+      "ann_ret_pct": 5.632
+     },
+     "2015-2019": {
+      "sharpe": 1.262,
+      "ann_ret_pct": 9.083
+     },
+     "2020-2022": {
+      "sharpe": 1.547,
+      "ann_ret_pct": 14.729
+     },
+     "2023-2026": {
+      "sharpe": 1.441,
+      "ann_ret_pct": 9.789
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -53.93,
+     "t": -1.43,
+     "sharpe_diff": -0.098,
+     "turnover_change": -0.0238,
+     "by_era_ann_ret_bp": {
+      "2005-2009": -109.23,
+      "2010-2014": -41.98,
+      "2015-2019": -1.34,
+      "2020-2022": -34.15,
+      "2023-2026": -83.96
+     },
+     "halves_ann_ret_bp": [
+      -64.09,
+      -41.02
+     ]
+    }
+   },
+   "FLAT/20": {
+    "ann_ret_pct": 9.319,
+    "vol_pct": 7.081,
+    "sharpe": 1.316,
+    "t": 6.12,
+    "max_dd_pct": -9.77,
+    "turnover_per_year": 39.319,
+    "mean_gross": 1.7769,
+    "mean_abs_net": 0.1218,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.166,
+     "late": 1.45
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.405,
+      "ann_ret_pct": 9.293
+     },
+     "2010-2014": {
+      "sharpe": 0.975,
+      "ann_ret_pct": 6.089
+     },
+     "2015-2019": {
+      "sharpe": 1.213,
+      "ann_ret_pct": 8.651
+     },
+     "2020-2022": {
+      "sharpe": 1.649,
+      "ann_ret_pct": 15.042
+     },
+     "2023-2026": {
+      "sharpe": 1.47,
+      "ann_ret_pct": 9.966
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -23.01,
+     "t": -1.33,
+     "sharpe_diff": -0.024,
+     "turnover_change": -0.0069,
+     "by_era_ann_ret_bp": {
+      "2005-2009": -7.3,
+      "2010-2014": 3.64,
+      "2015-2019": -44.51,
+      "2020-2022": -2.9,
+      "2023-2026": -66.27
+     },
+     "halves_ann_ret_bp": [
+      0.68,
+      -44.35
+     ]
+    }
+   },
+   "FLAT/60": {
+    "ann_ret_pct": 9.112,
+    "vol_pct": 7.118,
+    "sharpe": 1.28,
+    "t": 5.95,
+    "max_dd_pct": -10.03,
+    "turnover_per_year": 38.357,
+    "mean_gross": 1.7713,
+    "mean_abs_net": 0.1337,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.036,
+     "late": 1.492
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.16,
+      "ann_ret_pct": 7.777
+     },
+     "2010-2014": {
+      "sharpe": 0.962,
+      "ann_ret_pct": 6.034
+     },
+     "2015-2019": {
+      "sharpe": 1.24,
+      "ann_ret_pct": 8.885
+     },
+     "2020-2022": {
+      "sharpe": 1.629,
+      "ann_ret_pct": 14.895
+     },
+     "2023-2026": {
+      "sharpe": 1.565,
+      "ann_ret_pct": 10.614
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -43.74,
+     "t": -1.4,
+     "sharpe_diff": -0.06,
+     "turnover_change": -0.0312,
+     "by_era_ann_ret_bp": {
+      "2005-2009": -158.9,
+      "2010-2014": -1.79,
+      "2015-2019": -21.11,
+      "2020-2022": -17.53,
+      "2023-2026": -1.47
+     },
+     "halves_ann_ret_bp": [
+      -78.43,
+      -7.38
+     ]
+    }
+   }
+  },
+  "check_gross_ceiling": {
+   "cap": 1.9,
+   "UNCHANGED": {
+    "ann_ret_pct": 9.461,
+    "vol_pct": 6.544,
+    "sharpe": 1.446,
+    "t": 6.72,
+    "max_dd_pct": -9.7,
+    "turnover_per_year": 39.897,
+    "mean_gross": 1.4067,
+    "mean_abs_net": 0.097,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.242,
+     "late": 1.636
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.41,
+      "ann_ret_pct": 9.37
+     },
+     "2010-2014": {
+      "sharpe": 1.119,
+      "ann_ret_pct": 6.825
+     },
+     "2015-2019": {
+      "sharpe": 1.25,
+      "ann_ret_pct": 7.917
+     },
+     "2020-2022": {
+      "sharpe": 1.941,
+      "ann_ret_pct": 15.473
+     },
+     "2023-2026": {
+      "sharpe": 1.731,
+      "ann_ret_pct": 10.334
+     }
+    }
+   },
+   "NNL/20": {
+    "ann_ret_pct": 9.472,
+    "vol_pct": 6.562,
+    "sharpe": 1.444,
+    "t": 6.71,
+    "max_dd_pct": -9.76,
+    "turnover_per_year": 39.578,
+    "mean_gross": 1.4038,
+    "mean_abs_net": 0.1002,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.286,
+     "late": 1.593
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.407,
+      "ann_ret_pct": 9.42
+     },
+     "2010-2014": {
+      "sharpe": 1.208,
+      "ann_ret_pct": 7.313
+     },
+     "2015-2019": {
+      "sharpe": 1.23,
+      "ann_ret_pct": 7.838
+     },
+     "2020-2022": {
+      "sharpe": 1.851,
+      "ann_ret_pct": 14.89
+     },
+     "2023-2026": {
+      "sharpe": 1.724,
+      "ann_ret_pct": 10.256
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": 1.13,
+     "t": 0.07,
+     "sharpe_diff": -0.002,
+     "turnover_change": -0.008,
+     "by_era_ann_ret_bp": {
+      "2005-2009": 4.93,
+      "2010-2014": 48.82,
+      "2015-2019": -7.9,
+      "2020-2022": -58.28,
+      "2023-2026": -7.75
+     },
+     "halves_ann_ret_bp": [
+      28.32,
+      -23.51
+     ]
+    }
+   },
+   "NNL/60": {
+    "ann_ret_pct": 8.924,
+    "vol_pct": 6.714,
+    "sharpe": 1.329,
+    "t": 6.18,
+    "max_dd_pct": -9.55,
+    "turnover_per_year": 38.876,
+    "mean_gross": 1.3978,
+    "mean_abs_net": 0.1169,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.112,
+     "late": 1.536
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.209,
+      "ann_ret_pct": 8.423
+     },
+     "2010-2014": {
+      "sharpe": 1.02,
+      "ann_ret_pct": 6.253
+     },
+     "2015-2019": {
+      "sharpe": 1.224,
+      "ann_ret_pct": 7.91
+     },
+     "2020-2022": {
+      "sharpe": 1.821,
+      "ann_ret_pct": 15.183
+     },
+     "2023-2026": {
+      "sharpe": 1.592,
+      "ann_ret_pct": 9.472
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -53.7,
+     "t": -1.44,
+     "sharpe_diff": -0.117,
+     "turnover_change": -0.0256,
+     "by_era_ann_ret_bp": {
+      "2005-2009": -94.72,
+      "2010-2014": -57.21,
+      "2015-2019": -0.66,
+      "2020-2022": -29.0,
+      "2023-2026": -86.19
+     },
+     "halves_ann_ret_bp": [
+      -63.86,
+      -40.44
+     ]
+    }
+   },
+   "FLAT/20": {
+    "ann_ret_pct": 9.29,
+    "vol_pct": 6.496,
+    "sharpe": 1.43,
+    "t": 6.65,
+    "max_dd_pct": -10.48,
+    "turnover_per_year": 39.497,
+    "mean_gross": 1.3968,
+    "mean_abs_net": 0.102,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.305,
+     "late": 1.549
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.446,
+      "ann_ret_pct": 9.631
+     },
+     "2010-2014": {
+      "sharpe": 1.215,
+      "ann_ret_pct": 7.305
+     },
+     "2015-2019": {
+      "sharpe": 1.22,
+      "ann_ret_pct": 7.751
+     },
+     "2020-2022": {
+      "sharpe": 1.732,
+      "ann_ret_pct": 13.511
+     },
+     "2023-2026": {
+      "sharpe": 1.715,
+      "ann_ret_pct": 10.161
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -17.11,
+     "t": -0.79,
+     "sharpe_diff": -0.016,
+     "turnover_change": -0.01,
+     "by_era_ann_ret_bp": {
+      "2005-2009": 26.03,
+      "2010-2014": 48.05,
+      "2015-2019": -16.57,
+      "2020-2022": -196.14,
+      "2023-2026": -17.3
+     },
+     "halves_ann_ret_bp": [
+      36.25,
+      -68.12
+     ]
+    }
+   },
+   "FLAT/60": {
+    "ann_ret_pct": 8.839,
+    "vol_pct": 6.555,
+    "sharpe": 1.348,
+    "t": 6.27,
+    "max_dd_pct": -9.08,
+    "turnover_per_year": 38.546,
+    "mean_gross": 1.3851,
+    "mean_abs_net": 0.114,
+    "halves": {
+     "split": "2015-12-11",
+     "early": 1.164,
+     "late": 1.524
+    },
+    "eras": {
+     "2005-2009": {
+      "sharpe": 1.263,
+      "ann_ret_pct": 8.514
+     },
+     "2010-2014": {
+      "sharpe": 1.078,
+      "ann_ret_pct": 6.543
+     },
+     "2015-2019": {
+      "sharpe": 1.249,
+      "ann_ret_pct": 8.025
+     },
+     "2020-2022": {
+      "sharpe": 1.674,
+      "ann_ret_pct": 13.202
+     },
+     "2023-2026": {
+      "sharpe": 1.676,
+      "ann_ret_pct": 9.906
+     }
+    },
+    "diff_vs_unchanged": {
+     "ann_ret_bp": -62.26,
+     "t": -1.81,
+     "sharpe_diff": -0.098,
+     "turnover_change": -0.0339,
+     "by_era_ann_ret_bp": {
+      "2005-2009": -85.67,
+      "2010-2014": -28.2,
+      "2015-2019": 10.84,
+      "2020-2022": -227.1,
+      "2023-2026": -42.72
+     },
+     "halves_ann_ret_bp": [
+      -46.05,
+      -75.56
+     ]
+    }
+   }
+  },
+  "placebo": {
+   "n": 200,
+   "seed": 20261118,
+   "funds_with_too_few_unchanged_declarations": {
+    "HQH": [
+     8,
+     7
+    ],
+    "HQL": [
+     10,
+     9
+    ]
+   },
+   "UNCH": {
+    "NNL/20": {
+     "ann_ret_bp": {
+      "real": -2.33,
+      "placebo_mean": 2.1754,
+      "placebo_median": 1.7545,
+      "placebo_p5": -11.7861,
+      "placebo_p95": 20.2285,
+      "share_placebo_at_or_above_real": 0.665
+     },
+     "sharpe_diff": {
+      "real": -0.005,
+      "placebo_mean": -0.0003,
+      "placebo_median": -0.0006,
+      "placebo_p5": -0.0181,
+      "placebo_p95": 0.0226,
+      "share_placebo_at_or_above_real": 0.625
+     }
+    },
+    "NNL/60": {
+     "ann_ret_bp": {
+      "real": -57.6,
+      "placebo_mean": -16.4515,
+      "placebo_median": -17.1085,
+      "placebo_p5": -52.0291,
+      "placebo_p95": 21.8363,
+      "share_placebo_at_or_above_real": 0.975
+     },
+     "sharpe_diff": {
+      "real": -0.104,
+      "placebo_mean": -0.0699,
+      "placebo_median": -0.0581,
+      "placebo_p5": -0.1876,
+      "placebo_p95": -0.0102,
+      "share_placebo_at_or_above_real": 0.825
+     }
+    },
+    "FLAT/20": {
+     "ann_ret_bp": {
+      "real": -20.1,
+      "placebo_mean": -14.3405,
+      "placebo_median": -14.6691,
+      "placebo_p5": -36.0025,
+      "placebo_p95": 7.4672,
+      "share_placebo_at_or_above_real": 0.665
+     },
+     "sharpe_diff": {
+      "real": -0.018,
+      "placebo_mean": -0.0181,
+      "placebo_median": -0.018,
+      "placebo_p5": -0.047,
+      "placebo_p95": 0.012,
+      "share_placebo_at_or_above_real": 0.495
+     }
+    },
+    "FLAT/60": {
+     "ann_ret_bp": {
+      "real": -62.37,
+      "placebo_mean": -44.7504,
+      "placebo_median": -43.8493,
+      "placebo_p5": -95.432,
+      "placebo_p95": 4.7179,
+      "share_placebo_at_or_above_real": 0.73
+     },
+     "sharpe_diff": {
+      "real": -0.087,
+      "placebo_mean": -0.0646,
+      "placebo_median": -0.0612,
+      "placebo_p5": -0.1461,
+      "placebo_p95": 0.0095,
+      "share_placebo_at_or_above_real": 0.71
+     }
+    }
+   },
+   "RAND": {
+    "NNL/20": {
+     "ann_ret_bp": {
+      "real": -2.33,
+      "placebo_mean": -3.7114,
+      "placebo_median": -4.4698,
+      "placebo_p5": -20.696,
+      "placebo_p95": 13.1367,
+      "share_placebo_at_or_above_real": 0.455
+     },
+     "sharpe_diff": {
+      "real": -0.005,
+      "placebo_mean": -0.0089,
+      "placebo_median": -0.0091,
+      "placebo_p5": -0.0326,
+      "placebo_p95": 0.0131,
+      "share_placebo_at_or_above_real": 0.42
+     }
+    },
+    "NNL/60": {
+     "ann_ret_bp": {
+      "real": -57.6,
+      "placebo_mean": -18.7802,
+      "placebo_median": -16.0465,
+      "placebo_p5": -57.3764,
+      "placebo_p95": 18.1701,
+      "share_placebo_at_or_above_real": 0.95
+     },
+     "sharpe_diff": {
+      "real": -0.104,
+      "placebo_mean": -0.0508,
+      "placebo_median": -0.0469,
+      "placebo_p5": -0.1113,
+      "placebo_p95": 0.0028,
+      "share_placebo_at_or_above_real": 0.935
+     }
+    },
+    "FLAT/20": {
+     "ann_ret_bp": {
+      "real": -20.1,
+      "placebo_mean": -13.0499,
+      "placebo_median": -11.9373,
+      "placebo_p5": -42.8239,
+      "placebo_p95": 11.9585,
+      "share_placebo_at_or_above_real": 0.725
+     },
+     "sharpe_diff": {
+      "real": -0.018,
+      "placebo_mean": -0.0142,
+      "placebo_median": -0.0139,
+      "placebo_p5": -0.0485,
+      "placebo_p95": 0.0149,
+      "share_placebo_at_or_above_real": 0.59
+     }
+    },
+    "FLAT/60": {
+     "ann_ret_bp": {
+      "real": -62.37,
+      "placebo_mean": -41.843,
+      "placebo_median": -37.873,
+      "placebo_p5": -101.1068,
+      "placebo_p95": 10.7105,
+      "share_placebo_at_or_above_real": 0.735
+     },
+     "sharpe_diff": {
+      "real": -0.087,
+      "placebo_mean": -0.05,
+      "placebo_median": -0.0462,
+      "placebo_p5": -0.1293,
+      "placebo_p95": 0.0174,
+      "share_placebo_at_or_above_real": 0.785
+     }
+    }
+   }
+  },
+  "mapping": {
+   "unmapped": [],
+   "min_corr": 0.948,
+   "crsp_last": "2025-12-31",
+   "below_the_bar_but_confirmed_by_the_desk_map": {
+    "ADX": 0.948,
+    "GAM": 0.949
+   },
+   "confirmed_against_the_desk_map": true,
+   "desk_map_disagrees_resolved_on_returns": {
+    "BTX": {
+     "used": 20674,
+     "desk_map": 76963,
+     "corr": 1.0,
+     "sessions": 232
+    }
+   }
+  },
+  "total_returns_error": "SplitBasisError: total_returns: 1 recorded split(s) applied to a close series already on the post-split basis, with no recorded ruling (c4_split_rulings_2026-10-20.json): (IGR, 2026-09-08, factor 1/3, raw ratio 1.000, booked ratio 0.333). On each ex-date the raw close made no split-sized step (within ln(1.15) of none), so the factor would book a step of about k that the series did not have (C4's f",
+  "universe_without_rows": []
+ },
+ "C4_BLEND_error": "AssertionError: a frame reaches 2026-10-09, after the fit end 2022-12-30; the 2023 holdout is not read here"
+}

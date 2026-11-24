@@ -25,10 +25,11 @@ these paths behind an `ask` rule for exactly this reason.
    `_min_trade_note` in `cef_discount.frozen.json`: that is the standard. They name
    the derivation, the measured plateau, the value that topped the sweep and was
    *not* chosen, and the consequence accepted knowingly.
-4. **Pre-register.** Anything that changes traded behaviour needs a note in
-   `results/cef/` before the session that trades it, and a trial on the CEF or
-   GAMMA counter. `results/cef/PREREG_BAND_2026-09-06.md` is the shape. Use
-   `/prereg`, then `/spec-change`.
+4. **Record it before it trades.** Anything that changes traded behaviour needs a
+   dated note under `results/` saying what changes, why, and how to revert,
+   before the session that trades it, and a line in `results/IDEA_LEDGER.md`.
+   Pre-registration and the trial counters were retired on 2026-11-09
+   (`docs/SYSTEM.md` §5). Use `/spec-change`; the release is the team lead's.
 5. **Bump `spec_id` and set `_supersedes`.** Never edit a spec in place without a
    new id. Since the 2026-09-28 clean slate there is no archive folder: the old
    version lives in git — **tag the commit that changes the spec**

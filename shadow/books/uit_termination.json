@@ -1,0 +1,15 @@
+{
+ "slug": "uit_termination",
+ "card": "results/ideas/2026-11-16_uit_cef_flows.md",
+ "signal": "shadow.signals.uit_termination:all_events",
+ "panels": {
+  "px": {"path": "uit_terminations_v1_px.parquet", "date_col": "date", "required_asof": true}
+ },
+ "refresh": [
+  ["python3", "-B", "-m", "shadow.fetch.uit_px"]
+ ],
+ "fill": "next_close",
+ "notional_usd": 1000000,
+ "started": "2026-11-18",
+ "enabled": true
+}

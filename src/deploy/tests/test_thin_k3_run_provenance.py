@@ -26,6 +26,11 @@ written before 2026-11-05) or records another count; and for a K-line threshold 
 no compose file (the registry already refuses that; the guard does not rely on it). A spec without
 the key has nothing to agree with: [].
 
+THE VALUES TOO (the owner's release-check of 78e3483, 2026-11-09). `compose_value_drift` holds the
+four K-line values and the m and floor the compose run measured them at against the spec, so a stop
+cannot be set at a level nobody measured. A line may be the compose value rounded, at 3 decimals or
+more.
+
 The AST test of compose.py fails on the commit before compose.py took --k3-run-sessions (01c7d79:
 no such argument, and `runs_above` called with the literals 3 and 2). The committed-spec test is
 a PIN today: no committed spec sets the key yet (te4 is dark), so it passes on the old code as
@@ -88,6 +93,65 @@ def k3_run_drift(spec: dict, compose_dir: Path) -> list:
                 or got != want:
             problems.append(f"{name}, cited by {notes}, records {RECORDED} {got!r}; the spec's "
                             f"risk.{RUN_KEY} is {want!r}")
+        if isinstance(rec, dict):
+            problems += compose_value_drift(spec, rec, name)
+    return problems
+
+
+# Where each of the spec's K-lines sits in compose_<stamp>.json (pre-registration §6.3).
+COMPOSE_LINES = {
+    "thin_k1_episode_drawdown": ("in_episode", "D_E", "252", "D_E"),
+    "thin_k2_max_name_frac": ("in_episode", "persistence", "max_w", "max"),
+    "thin_k3_net_run": ("in_episode", "persistence", "net", "p99"),
+    "thin_k3_net_once": ("in_episode", "persistence", "net", "max"),
+}
+MIN_DECIMALS = 3                       # a line written more coarsely is another number
+
+
+def _dig(rec, path):
+    for k in path:
+        if not isinstance(rec, dict) or k not in rec:
+            return None
+        rec = rec[k]
+    return rec
+
+
+def compose_value_drift(spec: dict, rec: dict, name: str) -> list:
+    """The owner's release-check of 78e3483 (2026-11-09): beyond the run length, the four K-lines
+    and the m and floor the compose run measured them at must be the spec's. So must the band,
+    the gross ceiling and min_names (the independent review of PR #69, 2026-11-10): compose.py
+    reads all five from the frozen spec and records them under `spec` (pre-registration §6.3),
+    and a stop measured on another band, ceiling or set of reduced sessions is a level nobody
+    measured for this book. compose records neither the universe nor the panel date, so those
+    cannot be checked here. A line may be the
+    compose value rounded, at MIN_DECIMALS or more, as the pre-registration quotes them (0.956);
+    any other difference is a stop set at a level nobody measured."""
+    problems, risk, frozen = [], spec.get("risk") or {}, spec.get("frozen") or {}
+    for key, path in COMPOSE_LINES.items():
+        if key not in risk:
+            continue
+        got, want = _dig(rec, path), risk[key]
+        where = "/".join(path)
+        if isinstance(got, bool) or not isinstance(got, (int, float)):
+            problems.append(f"{name} records no {where} ({got!r}): risk.{key} cannot be checked")
+            continue
+        text = repr(float(want))
+        places = len(text.split(".")[1]) if "." in text and "e" not in text else 0
+        if places < MIN_DECIMALS:
+            problems.append(f"risk.{key} is {want!r}, written to fewer than {MIN_DECIMALS} "
+                            f"decimals; {name} records {where} {got!r}")
+        elif round(got, places) != float(want):
+            problems.append(f"risk.{key} is {want!r}; {name} records {where} {got!r}, which "
+                            f"is {round(got, places)!r} at that precision")
+    for label, have, path in (("frozen.sizing_multiplier", frozen.get("sizing_multiplier"), ("spec", "m")),
+                              ("frozen.below_min_names_floor", frozen.get("below_min_names_floor"), ("spec", "floor")),
+                              ("frozen.band_width", frozen.get("band_width"), ("spec", "band")),
+                              ("frozen.max_gross_stress", frozen.get("max_gross_stress"), ("spec", "cap")),
+                              ("frozen.min_names", frozen.get("min_names"), ("spec", "min_names"))):
+        got = _dig(rec, path)
+        if got is None or have is None or got != have:
+            problems.append(f"{label} is {have!r}; {name} measured its lines at "
+                            f"{'/'.join(path)} = {got!r}")
     return problems
 
 
@@ -162,11 +226,79 @@ def _spec(*names, run=3, lines=LINES, run_note=NOTE_RUN):
         cite = " and ".join(n[k] if isinstance(n, dict) else n for n in names)
         risk[f"_{k}_note"] = f"derived by compose.py: {cite} §E"
     return {"risk": risk, "frozen": {"below_min_names": "trade_eligible",
-                                      "below_min_names_floor": 4, "max_gross_stress": 1.8}}
+                                      "below_min_names_floor": 4, "max_gross_stress": 1.8,
+                                      "sizing_multiplier": 1.3, "band_width": 0.048,
+                                      "min_names": 6}}
+
+
+# The record a compose run writes for LINES, at the spec's m, floor, band, ceiling and min_names.
+GOOD = {"spec": {"id": "test", "m": 1.3, "band": 0.048, "cap": 1.8, "min_names": 6, "floor": 4},
+        "in_episode": {"D_E": {"252": {"D_E": 0.10515826}},
+                       "persistence": {"max_w": {"max": 0.95570082},
+                                       "net": {"p99": 0.24831940, "max": 0.83333286}}}}
 
 
 def _compose(tmp_path, name, **rec):
-    (tmp_path / name).write_text(json.dumps({"spec": {"id": "test"}, **rec}))
+    (tmp_path / name).write_text(json.dumps({**GOOD, **rec}))
+
+
+def _bump(path, value):
+    """GOOD with one leaf replaced (a deep copy; `value` None deletes the leaf)."""
+    rec = copy.deepcopy(GOOD)
+    d = rec
+    for k in path[:-1]:
+        d = d[k]
+    if value is None:
+        del d[path[-1]]
+    else:
+        d[path[-1]] = value
+    return rec
+
+
+@pytest.mark.parametrize("key,path", list(COMPOSE_LINES.items()))
+def test_the_guard_fails_a_k_line_that_differs_from_the_compose_run(tmp_path, key, path):
+    """The owner's release-check of 78e3483: fails on the guard before it, which read only the
+    run length."""
+    (tmp_path / "compose_2026-12-01.json").write_text(json.dumps(
+        {**_bump(path, 0.5), "k3_run_sessions": 3}))
+    bad = k3_run_drift(_spec("compose_2026-12-01.json"), tmp_path)
+    assert len(bad) == 1 and f"risk.{key}" in bad[0] and "/".join(path) in bad[0]
+
+
+@pytest.mark.parametrize("key,path", list(COMPOSE_LINES.items()))
+def test_the_guard_fails_a_compose_run_that_records_no_k_line(tmp_path, key, path):
+    (tmp_path / "compose_2026-12-01.json").write_text(json.dumps(
+        {**_bump(path, None), "k3_run_sessions": 3}))
+    bad = k3_run_drift(_spec("compose_2026-12-01.json"), tmp_path)
+    assert len(bad) == 1 and f"risk.{key} cannot be checked" in bad[0]
+
+
+@pytest.mark.parametrize("path,label", [(("spec", "m"), "frozen.sizing_multiplier"),
+                                        (("spec", "floor"), "frozen.below_min_names_floor"),
+                                        (("spec", "band"), "frozen.band_width"),
+                                        (("spec", "cap"), "frozen.max_gross_stress"),
+                                        (("spec", "min_names"), "frozen.min_names")])
+def test_the_guard_fails_a_compose_run_at_another_m_or_floor(tmp_path, path, label):
+    """m and floor: the owner's release-check of 78e3483. band, cap and min_names: the
+    independent review of PR #69 (2026-11-10), which passed a spec with each moved; those three
+    cases fail on 0c5d747, whose guard compared only m and floor."""
+    (tmp_path / "compose_2026-12-01.json").write_text(json.dumps(
+        {**_bump(path, 2), "k3_run_sessions": 3}))
+    bad = k3_run_drift(_spec("compose_2026-12-01.json"), tmp_path)
+    assert len(bad) == 1 and label in bad[0]
+
+
+def test_the_guard_fails_a_line_written_too_coarsely(tmp_path):
+    _compose(tmp_path, "compose_2026-12-01.json", k3_run_sessions=3)
+    bad = k3_run_drift(_spec("compose_2026-12-01.json",
+                             lines={**LINES, "thin_k3_net_run": 0.25}), tmp_path)
+    assert len(bad) == 1 and "fewer than 3 decimals" in bad[0]
+
+
+def test_the_guard_accepts_a_line_at_full_precision(tmp_path):
+    _compose(tmp_path, "compose_2026-12-01.json", k3_run_sessions=3)
+    full = {**LINES, "thin_k3_net_run": GOOD["in_episode"]["persistence"]["net"]["p99"]}
+    assert k3_run_drift(_spec("compose_2026-12-01.json", lines=full), tmp_path) == []
 
 
 def test_the_guard_passes_a_spec_that_agrees(tmp_path):

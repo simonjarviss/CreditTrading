@@ -5,15 +5,27 @@ description: The ideas that have failed so far, how each failed, and the pattern
 
 # The graveyard
 
-**Check this before proposing anything.** The canonical list is the KILLED tables
-in `docs/RESEARCH_STATE.md`; this skill is the reading guide. Many of the deaths
-were the same mistake wearing different clothes.
+**Check this before proposing anything.** The record is
+**`results/IDEA_LEDGER.md`**: one line per idea tested, with its gross result and
+status. Ideas from before 2026-11-09 are in its backfill section, and the full
+evidence and reproducing command for each is in `docs/RESEARCH_STATE.md` (frozen
+as history). This skill is the reading guide. Many of the failures were the same
+mistake in different forms.
 
-**Nothing here is banned** (team lead, 2026-11-08, `docs/SYSTEM.md` §5). An idea can
-come back if you say what is different this time: the mechanism, the data, the
-expression, the design or the market. If it failed on a data error such as a stale
-price, deal with that error first. Read each entry for what the test actually
-showed and for the angle it did not try.
+**Nothing here is banned** (team lead, 2026-11-08 and 2026-11-09,
+`docs/SYSTEM.md` §5). An idea can come back with a new angle: new data, a new
+mechanism, a different horizon or a different instrument. If it failed on a data
+error such as a stale price, deal with that error first. Read each entry for
+what the test actually showed and for the angle it did not try.
+
+**Read the old verdicts with the 2026-11-09 rules in mind.** The table below
+keeps each idea's verdict as it was written, with its old code (D1 no gross
+effect, D2 costs, D4 factor exposure, D5 stopped trading, D6 conditional, D7 too
+little data). Research is now judged on gross signal, and factor exposure is
+reported and no longer ends an idea. So a D2 or D4 row with a positive gross
+effect is a candidate again: the ledger marks these `REVIVE?`. A D1 row found no
+gross effect and needs a new angle. The net figures and the bars quoted in the
+table are history, not a current test.
 
 ## Failed so far
 
@@ -50,10 +62,12 @@ showed and for the angle it did not try.
 
 ## Argued against so far
 
-These are reasons, not bans. Say what has changed.
+These are reasons, not bans, and each was argued for the CEF sleeve alone. Scope
+is now open; on a wide cross-section or another asset class the argument may not
+apply. Say what has changed.
 
 **Machine learning** — 17 names, one feature, IC 0.075; the bias–variance trade-off
-is emphatically against it. **Regime-switching** — the dispersion-quintile table
+is against it on that panel. **Regime-switching** — the dispersion-quintile table
 *is* the regime study, and vol targeting already exploits it continuously.
 **Jump-diffusion** — changes sizing, not signal. **Heston/SABR** — we trade no
 derivatives on these names. **Almgren-Chriss scheduling** — one auction at <1%
@@ -77,12 +91,12 @@ good. The *generation* side keeps returning to one well — price minus a stale 
 which is dry in ETFs because APs arbitraged it, and wet in CEFs precisely because no
 AP mechanism exists there. If your idea is that well again, say so.
 
-**2. Three lost to their own control group.** Always name the negative control
-before running the test, never after (H12).
+**2. Three lost to their own control group.** Name one control with the idea:
+a place where the mechanism cannot operate. It is a bug check.
 
-**One caveat worth acting on:** any **D2** verdict reached on full-sample costs must
-be re-opened. Modern-era cost is 1.73bp/trade against a full-sample 6.36bp, and
-charging 2007 illiquidity to a 2024 signal manufactures a fake obstacle.
+Both patterns are bugs to check for in a new test. Neither is a reason not to
+run one.
 
-Full detail: `docs/RESEARCH_STATE.md` — KILLED, "KILLED — CEF construction variants",
-WATCH and ACTIVE.
+Current record: `results/IDEA_LEDGER.md`. Full detail of the older rows:
+`docs/RESEARCH_STATE.md` — KILLED, "KILLED — CEF construction variants", WATCH
+and ACTIVE.

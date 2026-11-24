@@ -577,9 +577,13 @@ def print_live_pin():
 # laptop's dev panels (cef_prices to 2026-10-15, cef_nav to 2026-10-14; only rows through ASOF are
 # read). The live spec is cef_discount.v9.20261102: the pre-trial spec plus sizing_multiplier 1.30.
 # Until amendment 1 this was a v8 pin at x1.13 (PINNED_V8, in git at 8b14298).
+# RE-PINNED 2026-11-11, input only: a note-only edit (team lead 2026-11-11, no spec_id bump) made
+# `frozen._sizing_multiplier_note` also name scripts/cef/exposure_readout.py. The file's sha256 moved
+# from dd92e06d814a... and no value moved. PINNED_V9 below is unchanged and still matches. Without
+# the re-pin this test would skip, with a warning, instead of comparing.
 PINNED_INPUT_V9 = {
     "panel": PINNED_INPUT["panel"],
-    "spec": "dd92e06d814ae6b89462348696da3dd537fcdb114c54bba6f37cc133eb55d313",
+    "spec": "555286d0659cd69dd4a5e5c98e16e4f64e089db1ac0d2605baec20e5917bb777",
 }
 # Identical unseeded and under PYTHONHASHSEED 1 and 2.
 PINNED_V9 = {

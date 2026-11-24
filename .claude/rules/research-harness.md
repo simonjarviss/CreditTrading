@@ -4,117 +4,115 @@ paths:
   - "src/backtest/**"
 ---
 
-# The research harness — H1 to H15
+# The research harness
 
-These are the rules every piece of research inherits (the full text: `docs/BRIEF.md` §5). A result
-that breaks one of them is not comparable to any number in this repo.
+These are the rules every piece of research inherits. **Rewritten 2026-11-09**
+to the team lead's ruling of that date (`docs/SYSTEM.md` §5; `CLAUDE.md`, "Hard
+rules — research", is the authority). Research is judged on gross signal and
+paper trading is the filter. Retired for research: the cost grid and borrow
+haircuts (formerly H3, H4), turnover-matched net comparisons (H2), "no sweeping
+and picking" (H8), the untouched-names and time-holdout ceremony (H9, H13), the
+trial counters and their bars (H10), pre-registration (H11), and the
+factor-exposure kill. `docs/BRIEF.md` §5 still carries the older H1–H15 text;
+where it differs, `CLAUDE.md` wins.
 
-**Do not build another backtester.** The canonical one is `scripts/research/harness.py`
-(restructured with the team lead's ruling of 2026-10-27; `band_frontier.evaluate` delegates to it,
-byte-identical on the live book). Extend it visibly:
+**Do not build another backtester.** The canonical one is
+`scripts/research/harness.py` (`band_frontier.evaluate` delegates to it,
+byte-identical on the live book). Extend it visibly, with a test:
 
 ```python
-from scripts.cef.band_frontier import build_targets, band, calendar, evaluate
-from scripts.cef.spec import BAND_WIDTH     # never write the width as a literal
-from scripts.research import harness        # the one lag, report(), the family builders
-T, R = build_targets()          # frictionless daily targets as the sleeve builds them
-H_live = band(T, BAND_WIDTH)    # the live policy, read from the frozen spec
-H_old  = calendar(T, 2)         # the previous configuration
-res    = evaluate(H, R)         # applies H.shift(2) (harness.EXEC_LAG)
-rep    = harness.report(H, R)   # gross headline, 5/15/30bp grid, H5 eras, fit and holdout rows
-# other families: harness.cross_sectional_weights / event_weights; ML: scripts/research/ml.py;
-# store the trial's series: scripts/research/registry.py; compare variants: resampling.sharpe_diff
+from scripts.research import harness        # EXEC_LAG, evaluate, report, the family builders
+H   = harness.cross_sectional_weights(signal, eligible, ...)   # or event_weights(...)
+res = harness.evaluate(H, R)    # applies H.shift(harness.EXEC_LAG)
+rep = harness.report(H, R)      # full, early/late (its fit and holdout rows), eras
+# the CEF sleeve: scripts.cef.band_frontier build_targets / band / evaluate, parameters from scripts.cef.spec
+# ML: scripts/research/ml.py; standard errors: scripts/research/inference.py
 ```
 
-**H1. Execution convention is `shift(2)`.** Decide at *t*, MOC fill at *t+1*, earn
-the *t+2* return. `validate.py` once used `shift(1)` — entering at day *t*'s close
-on day *t*'s NAV, which publishes after that close. What the correction cost is
-measured in `pre-clean-slate:results/cef/EXECUTION_CONVENTION_2026-09-10.md`.
+`harness.report` still returns net-of-cost columns from before the ruling. Do
+not put them in a research table.
 
-**H2. Turnover-matched comparisons only.** Find the band width or cost coefficient
-that matches the reference's turn/yr within 5%, and compare there.
+## What stays
 
-**H3. Cost grid 5 / 15 / 30bp** on every table, plus the measured per-name per-era
-column where it exists. **The answer must not flip sign across the grid.**
+**H1. Execution convention is `shift(2)`** for anything traded at the close.
+Decide at *t*, MOC fill at *t+1*, earn the *t+2* return. `validate.py` once used
+`shift(1)` — entering at day *t*'s close on day *t*'s NAV, which publishes after
+that close (`pre-clean-slate:results/cef/EXECUTION_CONVENTION_2026-09-10.md`).
+A sleeve with a different fill (an open, an intraday window) states its
+convention in a comment and asserts it.
 
-**H4. Borrow is charged separately and labelled.** One day of measured fees applied
-to 21 years of history is a counterfactual, not a backtest. Say so at the top of the
-table. Borrow scales with *holdings*, not turnover — trading less does not reduce it.
+**H5. Eras: 2005–09, 2010–14, 2015–19, 2020–22, 2023–26**, where the sample
+allows. Pre-2013 is thin on the CEF panel.
 
-**H5. Eras: 2005–09, 2010–14, 2015–19, 2020–22, 2023–26.** Pre-2013 is thin (2411
-dates flat). Report era turnover sd/mean.
+**H6. IC** is Spearman between the signal at *t* and the forward return starting
+*t+2*, **non-overlapping**, standard errors **clustered by date**, never naive.
 
-**H6. IC** is Spearman between the signal at *t* and the forward 2-day return
-starting *t+2*, **non-overlapping**, expected negative, standard errors **clustered
-by date**, never naive.
+**H7. No lookahead, including in the data.** A signal uses only what was
+available at decision time: NAV publication lags, filing and acceptance dates
+and never period ends, index membership as of that day, macro data at its
+first-release vintage, regime labels fitted on past data only. State the
+alignment in a comment. Assert it at runtime. `src/backtest/guard.py` and
+`harness.truncation_check` exist for this.
 
-**H7. No lookahead.** Every estimated quantity uses data strictly before the date it
-is used on. State the alignment in a comment. Assert it at runtime.
-`src/backtest/guard.py` exists for this.
+**H12. One control.** If a mechanism says an effect lives in munis, test it in
+high yield too. If it is equally strong where the mechanism cannot operate, it
+is not what you think. This is a bug check, not a gate.
 
-**H8. No sweeping and picking.** Derive parameters, then check they land on a
-plateau. `z_window = 63` was chosen as the argmax of a swept column on 2005–2023
-with the holdout sealed; the holdout was opened hours later and it failed
-(gross 1.75, **net −0.298**). Reverted to 252. The band width was derived from the
-cube-root law `h* = (3cσ_w²/2κ_w)^(1/3)` and 6.4% — which topped the swept column —
-was deliberately not chosen.
-
-**H9. The 27 untouched names** are the comparison set. Any specification change is
-run on them once, on the combined spec, before promotion. **Trading any of them
-consumes the set.**
-
-**H10. Count trials.** Two counters, **CEF** and **GAMMA**, each with its own
-√(2 ln N) bar; read both from the table in `docs/RESEARCH_STATE.md` (orient TRIALS
-derives the bar). Say which one you increment. The combined book is judged on the
-joint record.
-
-**H11. Pre-register before the session that trades it.**
-`results/cef/PREREG_BAND_2026-09-06.md` is the shape. Every adoption names the live
-statistic and horizon that would reverse it. Use `/prereg`.
-
-**H12. Negative controls.** If a mechanism says an effect lives in munis, test it in
-HY too. If it is equally strong where the mechanism cannot operate, it is not what
-you think. The Treasury control killed `leadlag`; the CEF sector's own group returns
-were the sharp control that *confirmed* the discount alpha.
-
-**H13. Time holdout.** Every estimated quantity is fitted on data before
-**2023-01-01**; every table shows a fit row and a 2023–2026 holdout row. Rolling
-estimators are fine on the holdout; *choosing* anything with sight of 2023–26 is not.
-
-**H14. No decision rule may key on a number written in a document.** Every figure in
-the docs is a starting observation with a date and a method. The test: *could this
-rule still be executed correctly by someone who deleted every number from the
-document?* If not, it rests on a number instead of a method.
+**H14. No decision rule may key on a number written in a document.** Every
+figure in the docs is a starting observation with a date and a method. The test:
+*could this rule still be executed correctly by someone who deleted every number
+from the document?*
 
 **H15. Returns are total returns.** If the distribution panel cannot cover a
 name-date, the harness **raises**; it never falls back to price returns silently.
 
-## The failure taxonomy
+**No silent fallbacks.** Never `except: pass`, never `fillna()` an invented
+value, never a default for missing data. Raise, naming what was missing.
 
-Verdicts are D1–D7 (the legend in `docs/RESEARCH_STATE.md`). The common ones here:
+**No invented numbers.** Every figure is fetched or computed and labelled `[V]`,
+`[S]` or `[U]`, with the panel's last date.
 
-- **D1** — no gross edge before costs.
-- **D2** — gross edge positive, net ≤ 0. Any D2 reached on full-sample costs must be
-  re-opened: modern-era cost is 1.73bp/trade against a full-sample 6.36bp, and
-  charging 2007 illiquidity to a 2024 signal manufactures a fake obstacle.
-- **D4** — it is a risk premium in costume. Alpha *t* must clear 3.0 with factor
-  betas ≤ 0.10.
-- **D6** — real but conditional; needs a regime gate and sizing to fraction-of-time-on.
-- **D7** — infeasible on the available data.
+## What every result shows
 
-## What "finding alpha" means here
+1. **Gross headline**: annualised return, volatility, Sharpe, maximum drawdown,
+   hit rate, turnover a year. No cost, borrow or slippage adjustment.
+2. **One time split**: the same row for an early and a late period.
+3. **At least two market regimes**, the label built only from past data.
+4. **Exposures**: betas to equity, rates and credit, and the correlation with
+   the sleeves already held. Reported, never a veto.
+5. **Capacity**: position size against average daily volume at $1M, $5M and
+   $10M. Feasibility, not a cost.
+6. **The control's row**, one equity-curve chart, the reproducing command, and
+   each panel's last date.
 
-Three distinct jobs. Say which one you are doing:
+Parameters may be explored; show the neighbours of the value chosen.
 
-1. **Raise BR** without lowering IC — make seventeen names more than one bet.
-   Effective breadth is **1.17** today because 92.5% of variance is muni-vs-taxable.
-   This is the biggest hole in the strategy.
-2. **Raise TC** — trade less, trade cheaper, short what can be borrowed, size to the
-   right volatility, never send an order the strategy did not ask for, and measure
-   execution fast enough to act on it. TC is ~37% against a typical 0.3–0.8. This is
-   the highest value per hour.
-3. **Add a new IC source** only where a *mechanism* says one should exist and the
-   current signal is provably blind.
+## The record
 
-Cost converges ~60× faster than Sharpe: at ~15 fills/session, 60 sessions gives
-SE ≈ 0.84bp against a 32.6bp breakeven. Measure what converges fast.
+**One line in `results/IDEA_LEDGER.md` per idea tested, in the same commit**:
+date, idea, data, gross result, status. It is a record, not a gate. Log the
+result in `results/report/EVIDENCE_LOG.md` too.
+
+## Where output goes
+
+Research output goes under `results/`, and research data into a research data
+folder. **Never write under `data/`**: the live sleeve decides on it
+(`CLAUDE.md` landmine 9). Nothing under `quantt/` or `src/deploy/` imports a
+research data source.
+
+## Reading older results
+
+Verdicts written before 2026-11-09 use the codes D1–D7 (the legend is in
+`docs/RESEARCH_STATE.md`, frozen as history). D2 (stopped on costs) and D4
+(stopped on factor exposure) no longer end an idea: a row with a positive gross
+effect is a candidate again, and `results/IDEA_LEDGER.md` marks those `REVIVE?`.
+The two failures that remain bugs to check for are a **stale-price artifact** and
+a **control that scores as well as the treatment**.
+
+## What the work is for
+
+Find more, stronger and more independent sources of return, and get them to
+paper (`docs/MISSION.md`). Breadth is the main lever: a modest signal across
+many independent bets beats a good signal on a handful of correlated names. Say
+which of these a piece of work does: adds a sleeve, widens a universe, improves
+what is captured of a signal already held, or builds the path to paper.

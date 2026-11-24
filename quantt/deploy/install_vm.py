@@ -455,6 +455,182 @@ VM_BOOKS = {b.name: b for b in (CORE_VM, C4_VM)}
 EOD_FROM_ENV = "QUANTT_EOD_FROM"         # quantt/collect/collect.py EOD_FROM_ENV
 
 
+# -- the report-only units (team lead 2026-11-08: the nightly check is owned by a VM timer)
+#
+# `--reports` installs, beside the books' units, three report-only jobs per book:
+# scripts/ops/data_qa.py (21:45 cef, 21:50 c4, Mon-Fri, after the :40 collect and before the
+# 22:00 decide), scripts/ops/pnl_report.py (05:15 cef, 05:20 c4, the P&L report kind below)
+# and scripts/ops/risk_daily.py (05:45 cef, 05:50 c4), the last two on Tue-Sat mornings for
+# the session before (REPORT_SCHEDULE says why), all clear of the runner's slots (session
+# decide/send windows, collect :10/:40, verify 17:30).
+# WHY A SEPARATE MODE, NOT MORE JOBS IN THE BOOKS' UNIT LISTS. The core's and C4's
+# plans stay byte for byte what they were (tests/test_install_vm_books.py), and an
+# install that stops, restarts or re-renders a session unit never depends on a report
+# unit. The modes share the install lock, the tag and clean-clone checks, the drop-in
+# scan, the loaded-as-written check and the no-job-running check.
+# A report job: reads the panels and the runner's files; takes no panel lock; holds
+# no broker key (no Environment= key file, no Wants= on the book's key service;
+# risk_daily alone gets the SMTP env file, for the ACT push); ReadOnlyPaths= the clone,
+# so a bug cannot write into data/ or git; MemoryMax= measured peak with margin;
+# TimeoutStartSec= so it cannot run into the next slot. A failed report job is its own
+# `failed` unit and touches nothing else.
+# The P&L report kind (team lead, 2026-11-09; docs/RUNBOOK.md 8.12): the third
+# job per book, scripts/ops/pnl_report.py (05:15 cef, 05:20 c4). It reads the
+# account, so it needs a broker key, through a GET-only reader; the key comes from
+# the vault at run time into a tmpfs env file of ITS OWN, one per book, written by its
+# own secret service. The dataqa and risk units stay key-free (a test pins it), and the
+# SMTP alert env file stays separate. A failed key fetch fails its pnl unit, named in
+# that report, and nothing else.
+REPORT_PNL_MEMORY_MAX = "900M"           # a guess, not a measurement: read `systemctl show quantt-c4-pnl -p MemoryPeak` after a first run (RUNBOOK 8.12)
+REPORT_SECRET_UNIT = "quantt-reports-secret.service"
+REPORT_RUNTIME_DIR = "quantt-reports"
+REPORT_ENV_FILE = Path("/run") / REPORT_RUNTIME_DIR / "alert.env"
+REPORT_SECRET_MAP = (("alert-smtp-user", "ALERT_SMTP_USER"), ("alert-smtp-pass", "ALERT_SMTP_PASS"))
+REPORT_BOOKS = (BOOK, C4_BOOK)
+REPORT_KINDS = {"dataqa": "scripts.ops.data_qa", "risk": "scripts.ops.risk_daily",
+                "pnl": "scripts.ops.pnl_report"}
+# THE P&L AND RISK REPORTS RUN THE MORNING AFTER, NOT THE SAME EVENING (team lead,
+# 2026-11-19: "Move both to ~05:15-05:50 ET"). Until release-20261116-1 they ran at 20:30
+# (pnl) and 22:15 (risk), "after the 20:00 EOD stamp". The stamp is the time ON the point,
+# not when Alpaca publishes it: on the VM the collector's eod_equity step failed at 03:10 ET
+# and read the point at 03:40 ET on each of 2026-11-17, -18 and -19 (three nights measured;
+# Alpaca documents no publication time, docs/REFERENCES.md 12an). So on their first night
+# every pnl report was titled "READ AT THE CLOSE OF 2026-11-17, NOT 2026-11-18" and the risk
+# report's drawdown block, which judges the HALVE and KILL lines, read UNMEASURED on a day-old
+# figure. At 05:15 the point has existed for about ninety minutes on every night measured; if
+# it is ever later the report says so in its title exactly as before, and nothing guesses.
+# The reports choose their day by scripts/ops/data_qa.expected_day, which before 16:45 ET is
+# the previous session, so a morning run needs no change in them: Tuesday 05:15 reports
+# Monday, Saturday 05:15 reports Friday. Hence Tuesday to Saturday for these two kinds. Risk
+# stays after pnl (it reads pnl's JSON) and both end before the 06:00 morning session slot.
+# Data QA stays in the evening: it judges the panels the 22:00 decide is about to use.
+REPORT_SCHEDULE = {("dataqa", BOOK): (21, 45), ("dataqa", C4_BOOK): (21, 50),
+                   ("pnl", BOOK): (5, 15), ("pnl", C4_BOOK): (5, 20),
+                   ("risk", BOOK): (5, 45), ("risk", C4_BOOK): (5, 50)}
+# launchd weekday numbers (1 = Monday): the evening kind runs on session days, the two
+# morning kinds on the mornings after them.
+REPORT_WEEKDAYS = {"dataqa": (1, 2, 3, 4, 5), "pnl": (2, 3, 4, 5, 6), "risk": (2, 3, 4, 5, 6)}
+REPORT_MEMORY_MAX = "450M"               # data_qa c4 peak 220 MB (2x that); measured 2026-11-08 (RUNBOOK 8.11)
+REPORT_TIMEOUT_S = 480                   # ends before the next :00/:30 session slot
+REPORT_TEMPLATES = {"dataqa": "quantt-report-dataqa.service.tmpl",
+                    "risk": "quantt-report-risk.service.tmpl",
+                    "pnl": "quantt-report-pnl.service.tmpl",
+                    "timer": "quantt-report.timer.tmpl",
+                    # The morning kinds' days are written in their own template, not passed
+                    # as a ${DAYS} value: a day list has commas, and render() refuses any
+                    # value outside SAFE_VALUE_RE. That check guards every book unit too and
+                    # is not widened for a calendar line; the installer compares each rendered
+                    # timer's OnCalendar with oncalendar(job.schedule) either way.
+                    "timer_morning": "quantt-report-morning.timer.tmpl",
+                    "secret": "quantt-reports-secret.service.tmpl",
+                    "pnl_keys": "quantt-reports-pnl-keys.service.tmpl"}
+
+
+def _report_job(kind: str, book: str) -> VmJob:
+    """The report job's unit name and launchd-shaped job. Its days are REPORT_WEEKDAYS[kind],
+    so `oncalendar` renders `Mon,Tue,Wed,Thu,Fri *-*-* HH:MM:00` for data QA and
+    `Tue,Wed,Thu,Fri,Sat *-*-* HH:MM:00` for the two morning kinds."""
+    hour, minute = REPORT_SCHEDULE[(kind, book)]
+    sched = tuple({"Weekday": d, "Hour": hour, "Minute": minute} for d in REPORT_WEEKDAYS[kind])
+    args = ("-B", "-m", REPORT_KINDS[kind], "--book", book)
+    return VmJob(f"quantt-{book}-{kind}", ip.Job(f"com.quantt.alpaca.{book}.{kind}", "", args, sched, kind))
+
+
+REPORT_JOBS = tuple(_report_job(k, b) for k in REPORT_KINDS for b in REPORT_BOOKS)
+
+
+class ReportKeyVm(VmBook):
+    """A pnl job's broker keys: the book's own vault secrets, written by a secret service of
+    its own into a tmpfs env file of its own (module comment, the P&L report kind)."""
+    @property
+    def env_file(self) -> Path:
+        return Path("/run") / self.runtime_dir / "broker.env"
+
+
+def _pnl_key_vm(book: VmBook) -> ReportKeyVm:
+    """One book's pnl key service (no jobs): named for the book and kept apart from the
+    book's own key service, which the runner's units use."""
+    return ReportKeyVm(f"reports-{book.name}", (), f"quantt-reports-{book.name}-pnl-keys.service",
+                       f"quantt-reports-{book.name}-pnl", book.secret_map, (), "", (), None, (), False, False)
+
+
+REPORT_PNL_KEYS = {b.name: _pnl_key_vm(b) for b in (CORE_VM, C4_VM)}
+REPORT_PNL_KEY_UNITS = {book: vm.secret_unit for book, vm in REPORT_PNL_KEYS.items()}
+REPORT_UNIT_FILES = (REPORT_SECRET_UNIT,) + tuple(REPORT_PNL_KEY_UNITS[b] for b in REPORT_BOOKS) + \
+    tuple(f for vj in REPORT_JOBS for f in (vj.service, vj.timer))
+
+
+# The shadow-book runner's three unit files (shadow/deploy/install_shadow_vm.sh, RUNBOOK
+# 8.10): a separate unix user, its own clone following the branch `shadow`, simulated
+# books only, no order code. This installer never writes, starts or stops them; the tuple
+# exists only so `dormant_overrides` does not call them "no unit any book installs".
+#
+# WHY (2026-11-18, EVIDENCE_LOG E-2026-11-18-01): the shadow runner went on the VM on
+# 2026-11-10, after the last C4 install (2026-11-04). The next release's C4 install and
+# its `--reports` install each REFUSED on these three names, with C4's timers already
+# disabled for the core's install, so C4 could not trade until the files were moved out of
+# systemd's directory by hand and moved back afterwards. A refusal that can only be cleared
+# by moving another service's unit files is a worse hazard than the one the scan guards.
+# The names are pinned to the shell installer by a test
+# (test_shadow_unit_names_are_the_ones_the_shadow_installer_writes): rename one there and
+# the test fails here. A NEW installer that writes `quantt-` units (the event sleeves'
+# runner is the next) must add its names the same way, in the same PR.
+SHADOW_UNIT_FILES = ("quantt-shadow-secret.service", "quantt-shadow.service", "quantt-shadow.timer")
+
+# The event sleeves' runner (quantt/sleeves/, its notes quantt/sleeves/deploy/README.md) has its own installer too,
+# quantt/sleeves/deploy/install_events_vm.sh: one key service and a service and timer for
+# each of plan, send and verify. Registered here in the PR that brought that installer to
+# main, as the note above asks, so a C4 or `--reports` install does not refuse beside them.
+# THESE UNITS SEND ORDERS (the events paper account). Knowing their names changes nothing
+# about them: this installer never writes, starts, stops or arms them, and a drop-in or a
+# stray `quantt-events-*` file that is not one of these seven is still refused by name.
+# Pinned to the shell installer by test_events_unit_names_are_the_ones_the_events_installer_writes.
+EVENTS_UNIT_FILES = ("quantt-events-secret.service",) + tuple(
+    f"quantt-events-{job}.{kind}" for job in ("plan", "send", "verify") for kind in ("service", "timer"))
+
+# The public site's nightly build (dashboard/deploy/install_site_vm.sh, team lead 2026-11-23):
+# one service and its timer, as user quantt, with no network and the state read-only. It sends
+# nothing and holds no key. Registered here in the PR that brought its installer, as the note on
+# SHADOW_UNIT_FILES asks, so a C4 or `--reports` install does not refuse beside it. Pinned to the
+# shell installer by test_site_unit_names_are_the_ones_the_site_installer_writes.
+SITE_UNIT_FILES = ("quantt-site.service", "quantt-site.timer")
+
+
+class ReportVm(VmBook):
+    @property
+    def env_file(self) -> Path:          # alert.env: it holds SMTP settings, not Alpaca keys
+        return REPORT_ENV_FILE
+
+
+REPORT_VM = ReportVm(
+    "reports", REPORT_JOBS, REPORT_SECRET_UNIT, REPORT_RUNTIME_DIR, REPORT_SECRET_MAP,
+    # What the report units need at the tag: the installer's own files, the scripts,
+    # the two readers they import, and the templates. Refused at planning if absent.
+    ip.REQUIRED_AT_TAG + ("requirements.txt", "quantt/deploy/boot_secrets.py", "quantt/deploy/azure_keyvault.py",
+                          "ops/halt.py", "ops/schedule/nyse_calendar.py", "scripts/cef/data_guards.py",
+                          "quantt/session/drawdown.py", "scripts/ops/data_qa.py", "scripts/ops/risk_daily.py",
+                          "scripts/ops/report_notify.py", "scripts/ops/pnl_report.py", "scripts/ops/alpaca_read.py",
+                          "scripts/cef/live_attribution.py", "scripts/cef/exposure_readout.py", "scripts/cef/spec.py",
+                          "quantt/session/dist_score.py", "ops/specs/c4_families.frozen.json",
+                          "ops/specs/cef_discount.frozen.json", "results/cef/c4/c4_nav_symbols_2026-10-14.csv")
+    + tuple(f"{TEMPLATE_DIR}/{t}" for t in REPORT_TEMPLATES.values()),
+    "", (), None, (), False, False)
+
+
+def _refuse_if_report_jobs_busy(run_cmd: Callable, layout: "Layout") -> None:
+    """A book install, at PLANNING only: refuse while a report job is running or
+    queued, naming it (the existing no-job-running check covers them). It is never
+    re-asked after the timers stop, so a report firing mid-install cannot fail the
+    install or leave the books' timers stopped; a report job has no order path, so
+    the worst it can do is crash on a tree that moved under it, on its own."""
+    if not any(layout.unit_path(f).exists() for f in REPORT_UNIT_FILES):
+        return                           # none installed: nothing to ask systemd about
+    rows = job_states(run_cmd, REPORT_VM)
+    if rows:
+        raise InstallRefused(f"{'; '.join(_describe(r) for r in rows)}: a report job is running; "
+                             f"wait for it to finish (a minute or two) and re-run")
+
+
 @dataclass(frozen=True)
 class Layout:
     """Every path the VM prod uses. `home` and `units_dir` are parameters so
@@ -821,7 +997,14 @@ def dormant_overrides(run_cmd: Callable, layout: "Layout", units=ALL_UNIT_FILES,
         for unit in units:
             if (d / unit).exists() or (d / unit).is_symlink():
                 found.add(f"unit file {d / unit} (control/transient) for {unit}")
-    known = set(units)
+    # The report units are installed by `--reports`, so a C4 install does not name them
+    # in `units`, but they are ours: never "no unit any book installs" (and a report
+    # unit could not change what a C4 session does in any case).
+    # The shadow runner's units are installed by the repository's own
+    # shadow/deploy/install_shadow_vm.sh (RUNBOOK 8.10), which runs its own daemon-reload.
+    # They are ours too. See SHADOW_UNIT_FILES for what refusing them cost.
+    known = (set(units) | set(REPORT_UNIT_FILES) | set(SHADOW_UNIT_FILES) | set(EVENTS_UNIT_FILES)
+             | set(SITE_UNIT_FILES))
     for d in roots if unexpected_prefixes else ():
         for f in sorted(d.glob("*")) if d.is_dir() else ():
             if (f.name.startswith(unexpected_prefixes) and f.suffix in (".service", ".timer")
@@ -1451,6 +1634,7 @@ def build_plan(*, tag: str, vault: str, layout: Layout, python: Path, armed: boo
     # never safe.
     current = {u: check_not_overridden(run_cmd, layout, u) for u in vb.unit_files}
     _refuse_if_busy(run_cmd, vb)
+    _refuse_if_report_jobs_busy(run_cmd, layout)
     runtime = {vb.secret_unit: {"env": [f"PATH={env['PATH']}",
                                         f"PYTHONUNBUFFERED={env['PYTHONUNBUFFERED']}"],
                                 "exec": " ".join(secret_command(python, vault, vb))}}
@@ -1695,6 +1879,278 @@ def build_plan(*, tag: str, vault: str, layout: Layout, python: Path, armed: boo
     return Plan(notes, warnings, steps, rendered, run_state)
 
 
+def expected_report_service(vj: VmJob, *, python: Path, layout: Layout, env: dict) -> dict:
+    """The contract for a report service (module comment, report units). The dataqa
+    and risk jobs have no broker key file (no DRY_RUN either: a report has no order path
+    to dry-run), and take no panel lock; the pnl job's only credential is its own
+    per-book env file (the P&L report kind) and it takes no lock either."""
+    book, kind = vj.unit.split("-")[1], vj.unit.split("-")[2]
+    logs = layout.state_root / book / "logs"
+    if kind == "risk":
+        unit = [("Wants", REPORT_SECRET_UNIT), ("After", REPORT_SECRET_UNIT)]
+    elif kind == "pnl":
+        unit = [("Wants", REPORT_PNL_KEY_UNITS[book]), ("After", REPORT_PNL_KEY_UNITS[book])]
+    else:
+        unit = []
+    env_files = ([("EnvironmentFile", f"-{REPORT_ENV_FILE}")] if kind == "risk"
+                 else [("EnvironmentFile", f"-{REPORT_PNL_KEYS[book].env_file}")] if kind == "pnl" else [])
+    svc = [("Type", "oneshot"), ("User", SERVICE_USER), ("Group", SERVICE_USER),
+           ("WorkingDirectory", str(layout.prod_dir)),
+           ("Environment", f"PATH={env['PATH']}"), ("Environment", "PYTHONUNBUFFERED=1"),
+           ("Environment", f"QUANTT_STATE_DIR={layout.state_root / book}"),
+           *env_files,
+           ("ExecStart", " ".join([str(python), *vj.job.args])),
+           ("ReadOnlyPaths", str(layout.prod_dir)),
+           ("MemoryMax", REPORT_PNL_MEMORY_MAX if kind == "pnl" else REPORT_MEMORY_MAX), ("Nice", "10"),
+           ("TimeoutStartSec", str(REPORT_TIMEOUT_S)),
+           ("StandardOutput", f"append:{logs}/{kind}.out.log"),
+           ("StandardError", f"append:{logs}/{kind}.err.log")]
+    return {"Unit": unit, "Service": svc}
+
+
+def _report_template(unit_file: str) -> str:
+    if unit_file == REPORT_SECRET_UNIT:
+        return REPORT_TEMPLATES["secret"]
+    if unit_file in REPORT_PNL_KEY_UNITS.values():
+        return REPORT_TEMPLATES["pnl_keys"]
+    if unit_file.endswith(".timer"):
+        kind = unit_file.split("-")[2].split(".")[0]
+        return REPORT_TEMPLATES["timer" if REPORT_WEEKDAYS[kind] == REPORT_WEEKDAYS["dataqa"] else "timer_morning"]
+    return REPORT_TEMPLATES[unit_file.split("-")[2].split(".")[0]]
+
+
+def build_report_plan(*, tag: str, vault: str, layout: Layout, python: Path, enable: bool,
+                      origin_url: str, localtime: Path, run_cmd: Callable, as_user: list, euid: int,
+                      dont_write_bytecode: bool, user_ids: Callable,
+                      clock: Callable = lambda: dt.datetime.now(dt.timezone.utc)) -> Plan:
+    """`--reports`: install the report-only units (module comment, report units) and
+    touch NOTHING that belongs to a book: no session, verify or collect unit, timer
+    or key service is written, stopped, started or restarted. The checks are the
+    book install's: root, -B, zone, late window, vault name, clean clone at the tag,
+    templates checked key by key, systemd's own parser on every calendar line, the
+    drop-in scan, no job busy, and what systemd loaded read back."""
+    notes, warnings, steps = [], [], []
+    if euid != 0:
+        raise InstallRefused("must run as root (sudo): it writes /etc/systemd/system")
+    if not dont_write_bytecode:
+        raise InstallRefused("run python with -B: as root it would otherwise write root-owned "
+                             "__pycache__ into the quantt user's clone")
+    uid, gid = user_ids(SERVICE_USER)
+    zone = ip.system_timezone(localtime)
+    if zone != REQUIRED_TZ:
+        raise InstallRefused(f"system timezone is {zone}, not {REQUIRED_TZ}: the report timers are local "
+                             f"wall-clock times")
+    _refuse_if_late(clock, "refusing to install")
+    try:
+        akv.check_vault_name(vault)
+    except akv.SecretFetchError as e:
+        raise InstallRefused(str(e)) from None
+    if not python.is_absolute() or not python.is_file() or not os.access(python, os.X_OK):
+        raise InstallRefused(f"--python {python} is not an absolute path to an executable")
+    ip.validate_tag(tag)
+    prod = layout.prod_dir
+    if not (prod / ".git").is_dir():
+        raise InstallRefused(f"no prod clone at {prod}; run quantt/deploy/vm/bootstrap.sh first")
+    git = Git(prod, as_user, layout.home)
+    url = git("remote", "get-url", "origin").strip()
+    if url != origin_url:
+        raise InstallRefused(f"{prod} is a clone of {url!r}, not of {origin_url!r}")
+    dirty = git("status", "--porcelain").strip()
+    if dirty:
+        raise InstallRefused(f"prod clone {prod} has local modifications; refusing:\n{dirty}")
+    commit = remote_tag_commit(git, origin_url, tag)
+    git("fetch", "--quiet", "--tags", "origin")
+    local = git("rev-parse", "--verify", "--quiet", f"refs/tags/{tag}^{{commit}}", allow_fail=True)
+    if local is None or local.strip() != commit:
+        raise InstallRefused(f"tag {tag} is {commit} on origin but "
+                             f"{local.strip() if local else 'absent'} in {prod}")
+    head = git("rev-parse", "HEAD").strip()
+    if head != commit:                  # the report units never move the clone (a book install does)
+        raise InstallRefused(f"the prod clone is at {head}, not {tag} ({commit}): install the core at "
+                             f"{tag} first, then re-run --reports")
+    notes.append(f"release {tag} = commit {commit}; the report units run the clone as it stands")
+    missing = [p for p in REPORT_VM.required_at_tag
+               if git("cat-file", "-e", f"{commit}:{p}", allow_fail=True) is None]
+    if missing:
+        raise InstallRefused(f"tag {tag} lacks files the report units need: {', '.join(missing)}")
+    _refuse_if_venv_is_stale(git, commit, tag, layout)
+
+    env = ip.expected_env("1", layout, REPORT_ENV_FILE, python)     # PATH and the like; never a key file
+    expected, rendered = {}, {}
+    for vj in REPORT_JOBS:
+        book, kind = vj.unit.split("-")[1], vj.unit.split("-")[2]
+        logs = layout.state_root / book / "logs"
+        hour, minute = REPORT_SCHEDULE[(kind, book)]
+        values = {"TAG": tag, "PYTHON": python, "PROD_DIR": prod, "STATE_DIR": layout.state_root / book,
+                  "LOG_DIR": logs, "USER": SERVICE_USER, "PATH": env["PATH"], "BOOK": book, "KIND": kind,
+                  "MODULE": REPORT_KINDS[kind], "HOUR": f"{hour:02d}", "MINUTE": f"{minute:02d}",
+                  "SERVICE": vj.service, "MEMORY_MAX": REPORT_MEMORY_MAX, "TIMEOUT_S": REPORT_TIMEOUT_S,
+                  "ENV_FILE": REPORT_ENV_FILE, "SECRET_UNIT": REPORT_SECRET_UNIT}
+        if kind == "pnl":
+            values.update(ENV_FILE=REPORT_PNL_KEYS[book].env_file, SECRET_UNIT=REPORT_PNL_KEY_UNITS[book],
+                          MEMORY_MAX=REPORT_PNL_MEMORY_MAX)
+        expected[vj.service] = expected_report_service(vj, python=python, layout=layout, env=env)
+        expected[vj.timer] = expected_timer(vj)
+        for f in (vj.service, vj.timer):
+            tmpl = git("show", f"{commit}:{TEMPLATE_DIR}/{_report_template(f)}")
+            text = render(tmpl, values, f)
+            check_unit(text, f, expected[f])
+            rendered[f] = text
+    sec_values = {"TAG": tag, "PYTHON": python, "PROD_DIR": prod, "USER": SERVICE_USER, "PATH": env["PATH"],
+                  "VAULT": vault, "ENV_FILE": REPORT_ENV_FILE, "LOG_DIR": layout.state_root / BOOK / "logs",
+                  "RUNTIME_DIR": REPORT_RUNTIME_DIR}
+    sec = expected_secret_service(python=python, layout=replace(layout, book=BOOK), env=env, vault=vault,
+                                  book=REPORT_VM)
+    # its own log files, so a fetch failure here never reads as the core's Alpaca-key service
+    sec["Service"] = [(k, v.replace("/secret.out.log", "/reports-secret.out.log")
+                       .replace("/secret.err.log", "/reports-secret.err.log")) for k, v in sec["Service"]]
+    expected[REPORT_SECRET_UNIT] = sec
+    tmpl = git("show", f"{commit}:{TEMPLATE_DIR}/{REPORT_TEMPLATES['secret']}")
+    rendered[REPORT_SECRET_UNIT] = render(tmpl, sec_values, REPORT_SECRET_UNIT)
+    check_unit(rendered[REPORT_SECRET_UNIT], REPORT_SECRET_UNIT, expected[REPORT_SECRET_UNIT])
+    # The pnl jobs' broker keys, one service and one tmpfs env file per book (module comment).
+    for book, key_vm in REPORT_PNL_KEYS.items():
+        key_log = layout.state_root / book / "logs"
+        key_expected = expected_secret_service(python=python, layout=replace(layout, book=book), env=env, vault=vault,
+                                               book=key_vm)
+        key_expected["Service"] = [(k, v.replace("/secret.out.log", "/reports-pnl-keys.out.log")
+                                    .replace("/secret.err.log", "/reports-pnl-keys.err.log"))
+                                   for k, v in key_expected["Service"]]
+        # The pnl job's own promise (-B, a read-only clone) applied to its key service. In these
+        # two units only: the books' own secret services and `secret_command` are not changed.
+        svc = key_expected["Service"]
+        svc.insert(svc.index(("Environment", f"PYTHONUNBUFFERED={env['PYTHONUNBUFFERED']}")) + 1,
+                   ("Environment", "PYTHONDONTWRITEBYTECODE=1"))
+        svc.append(("ReadOnlyPaths", str(prod)))
+        unit = key_vm.secret_unit
+        expected[unit] = key_expected
+        key_values = {"TAG": tag, "PYTHON": python, "PROD_DIR": prod, "USER": SERVICE_USER, "PATH": env["PATH"],
+                      "VAULT": vault, "ENV_FILE": key_vm.env_file, "LOG_DIR": key_log, "BOOK": book,
+                      "RUNTIME_DIR": key_vm.runtime_dir, "KEY_ID_SECRET": key_vm.secret_map[0][0],
+                      "KEY_ID_VAR": key_vm.secret_map[0][1], "SECRET_SECRET": key_vm.secret_map[1][0],
+                      "SECRET_VAR": key_vm.secret_map[1][1]}
+        tmpl = git("show", f"{commit}:{TEMPLATE_DIR}/{REPORT_TEMPLATES['pnl_keys']}")
+        rendered[unit] = render(tmpl, key_values, unit)
+        check_unit(rendered[unit], unit, expected[unit])
+
+    normal = {}
+    for vj in REPORT_JOBS:
+        for expr in oncalendar(vj.job.schedule):
+            r = run_cmd(["systemd-analyze", "calendar", expr])
+            if r.returncode != 0:
+                raise InstallRefused(f"systemd-analyze rejects {vj.timer} OnCalendar={expr!r}: "
+                                     f"{(r.stderr or r.stdout).strip()}")
+            m = re.search(r"Normalized form:\s*(.+)", r.stdout or "")
+            if not m:
+                raise InstallRefused(f"systemd-analyze gave no normalized form for {expr!r}")
+            normal[expr] = m.group(1).strip()
+
+    every = tuple(dict.fromkeys(f for b in VM_BOOKS.values() for f in b.unit_files)) + REPORT_UNIT_FILES
+    _refuse_if_overridden_on_disk(run_cmd, layout, every, ("quantt-",))
+    for u in REPORT_UNIT_FILES:
+        check_not_overridden(run_cmd, layout, u)
+    for vb in (*VM_BOOKS.values(), REPORT_VM):
+        _refuse_if_busy(run_cmd, vb)
+
+    timers = REPORT_VM.timers
+    enabled = [t for t in timers if run_cmd(["systemctl", "is-enabled", "--quiet", t]).returncode == 0]
+    running = [t for t in timers if _one(systemd_show(run_cmd, t, ["ActiveState"]), "ActiveState", t) == "active"]
+
+    def active_now(t):
+        return _one(systemd_show(run_cmd, t, ["ActiveState"]), "ActiveState", t) == "active"
+
+    run_state = {"reports": True, "targets": list(timers) if enable else
+                 [t for t in timers if t in set(enabled) | set(running)]}
+    run_state["stopped_now"] = lambda: [t for t in run_state["targets"] if not active_now(t)]
+
+    def systemctl(*args):
+        r = run_cmd(["systemctl", *args])
+        if r.returncode != 0:
+            raise InstallRefused(f"systemctl {' '.join(args)} failed: {(r.stderr or r.stdout).strip()}")
+
+    if running:
+        steps.append(Step(f"systemctl stop {' '.join(running)} (report timers only; no session timer is touched)",
+                          lambda: systemctl("stop", *running)))
+    steps.append(Step("confirm no report job is running or queued",
+                      lambda: _refuse_if_busy(run_cmd, REPORT_VM)))
+
+    def make_dirs():
+        for b in REPORT_BOOKS:
+            for p in (layout.state_root, layout.state_root / b, layout.state_root / b / "logs",
+                      layout.state_root / b / "reports"):
+                _mkdir_owned(p, uid, gid)
+    steps.append(Step(f"mkdir {layout.state_root}/<book>/reports and logs for {list(REPORT_BOOKS)}, "
+                      f"mode 700, owner {SERVICE_USER}", make_dirs))
+
+    def still_clean():
+        dirty = git("status", "--porcelain").strip()
+        if dirty:
+            raise InstallRefused(f"prod clone {prod} is dirty:\n{dirty}")
+    steps.append(Step("verify prod clone is still clean", still_clean))
+
+    def last_look():
+        _refuse_if_busy(run_cmd, REPORT_VM)
+        _refuse_if_overridden_on_disk(run_cmd, layout, every, ("quantt-",))
+    steps.append(Step("confirm again that no report job is running and no drop-in is waiting on disk", last_look))
+    for unit_file in REPORT_UNIT_FILES:
+        dest = layout.unit_path(unit_file)
+
+        def write(dest=dest, text=rendered[unit_file]):
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            tmp = dest.with_name(dest.name + ".installing")
+            tmp.write_text(text)
+            os.chmod(tmp, 0o644)
+            os.replace(tmp, dest)
+        steps.append(Step(f"write {dest}", write))
+    steps.append(Step("systemctl daemon-reload", lambda: systemctl("daemon-reload")))
+
+    runtime = {REPORT_SECRET_UNIT: {"env": [f"PATH={env['PATH']}", f"PYTHONUNBUFFERED={env['PYTHONUNBUFFERED']}"],
+                                    "exec": " ".join(secret_command(python, vault, REPORT_VM))}}
+    for book, key_vm in REPORT_PNL_KEYS.items():
+        runtime[key_vm.secret_unit] = {"env": [f"PATH={env['PATH']}", f"PYTHONUNBUFFERED={env['PYTHONUNBUFFERED']}",
+                                               "PYTHONDONTWRITEBYTECODE=1"],
+                                       "exec": " ".join(secret_command(python, vault, key_vm))}
+    for vj in REPORT_JOBS:
+        book = vj.unit.split("-")[1]
+        runtime[vj.service] = {"env": [f"PATH={env['PATH']}", "PYTHONUNBUFFERED=1",
+                                       f"QUANTT_STATE_DIR={layout.state_root / book}"],
+                               "exec": " ".join([str(python), *vj.job.args])}
+        runtime[vj.timer] = {"calendar": [normal[e] for e in oncalendar(vj.job.schedule)]}
+
+    def confirm_loaded():
+        for unit_file in REPORT_UNIT_FILES:
+            verify_loaded(run_cmd, layout, unit_file, runtime[unit_file])
+    steps.append(Step("confirm from systemd that every report unit is loaded from the file written, "
+                      "with no drop-in and the expected environment, command and calendar", confirm_loaded))
+    if enable:
+        steps.append(Step(f"systemctl enable --now {' '.join(timers)}", lambda: systemctl("enable", "--now", *timers)))
+    else:
+        def start_enabled():
+            now_on = {t for t in timers if run_cmd(["systemctl", "is-enabled", "--quiet", t]).returncode == 0}
+            run_state["targets"] = [t for t in timers if t in now_on | set(running)]
+            if run_state["targets"]:
+                systemctl("start", *run_state["targets"])
+        steps.append(Step("systemctl start every report timer that is enabled or was running", start_enabled))
+
+    def read_back():
+        states = {t: _one(systemd_show(run_cmd, t, ["ActiveState"]), "ActiveState", t)
+                  for t in run_state["targets"]}
+        bad = [t for t, st in states.items() if st != "active"]
+        if bad:
+            raise InstallRefused(f"{', '.join(bad)} not active after the start (see `systemctl status {bad[0]}`)")
+        print(f"  report timers active (read back from systemd): {', '.join(states) or 'none enabled'}")
+    steps.append(Step("read back from systemd that every report timer that should run is active", read_back))
+    warnings.append(f"the ACT push needs the vault secrets {[s for s, _ in REPORT_SECRET_MAP]} (the team lead's "
+                    f"step): until they exist, {REPORT_SECRET_UNIT} fails on each try and a fired stop "
+                    f"exits non-zero with `ACT: notification NOT delivered` (docs/RUNBOOK.md 8.11)")
+    warnings.append(f"the pnl units read each book's own Alpaca key from the vault into their own tmpfs env file "
+                    f"{sorted(str(v.env_file) for v in REPORT_PNL_KEYS.values())} (the same secrets the books' key "
+                    f"services already use: {[s for k in REPORT_PNL_KEYS.values() for s, _ in k.secret_map]}); "
+                    f"the dataqa and risk units stay key-free (docs/RUNBOOK.md 8.12)")
+    notes.append(f"timers enabled now: {', '.join(enabled) or 'none'}; running now: {', '.join(running) or 'none'}")
+    return Plan(notes, warnings, steps, rendered, run_state)
+
+
 def loaded_dry_run(run_cmd: Callable, book: VmBook = CORE_VM) -> str:
     """`DRY_RUN=<x>` as systemd has it LOADED for the session unit, or
     `DRY_RUN UNKNOWN (<why>)`. It is read, never inferred from a file or flag."""
@@ -1718,6 +2174,17 @@ def _report_stopped_timers(plan: Plan) -> None:
     installer, which enforces the window guard. It names the late windows, and
     the DRY_RUN systemd has LOADED, because that is what a start would run.
     """
+    if plan.state.get("reports"):                # no session timer was touched by a --reports run
+        try:
+            stopped = plan.state["stopped_now"]()
+        except Exception as e:                   # reported, never swallowed, and the caller still fails
+            print(f"report timers: could not read their state back ({type(e).__name__}: {e}); "
+                  f"check `systemctl list-timers 'quantt-*'`")
+            return
+        if stopped:
+            print(f"report timers left STOPPED: {' '.join(stopped)}. No session timer was touched. "
+                  f"Re-run the installer with --reports to start them")
+        return
     try:
         stopped = plan.state["stopped_now"]()
     except Exception as e:                       # reported, and the caller still fails
@@ -1745,9 +2212,17 @@ def main(argv=None, *, layout: Layout | None = None, origin_url: str = ORIGIN_UR
          clock: Callable | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--tag", required=True, help="release tag, already pushed to origin")
+    # The vault help names every secret an install's key services read, from the same maps the
+    # services render. It once named only the core's two, though --book c4 reads C4's two and
+    # --reports reads both books' (its pnl key services) and the two SMTP secrets (its alert
+    # secret service) (second review of PR #82, 2026-11-11).
+    _names = lambda pairs: ", ".join(s for s, _ in pairs)
+    vault_help = "; ".join(f"--book {b}: {_names(vm.secret_map)}" for b, vm in VM_BOOKS.items())
+    vault_help += (f"; --reports: {_names(p for b in REPORT_BOOKS for p in REPORT_PNL_KEYS[b].secret_map)} "
+                   f"(the pnl key services) and {_names(REPORT_SECRET_MAP)} ({REPORT_SECRET_UNIT})")
     ap.add_argument("--vault", required=True,
-                    help="Azure Key Vault name holding alpaca-cef-key-id and "
-                         "alpaca-cef-secret-key (no default)")
+                    help=f"Azure Key Vault name (no default) holding the secrets the install's key services "
+                         f"read: {vault_help}")
     ap.add_argument("--seed-from", type=Path, default=None,
                     help="directory holding the laptop prod's data/cef files; needed "
                          "only while prod lacks them")
@@ -1760,12 +2235,29 @@ def main(argv=None, *, layout: Layout | None = None, origin_url: str = ORIGIN_UR
     ap.add_argument("--book", choices=sorted(VM_BOOKS), default=BOOK,
                     help=f"whose units to install (default {BOOK}, the core; {C4_BOOK} installs "
                          f"C4's own units beside the core's and touches none of them)")
+    # The help names every unit --reports writes. It once said "the report-only data-QA and
+    # risk units" after the pnl units and their key services were added, which read each
+    # book's Alpaca key from the vault (independent review of PR #82, 2026-11-11); the names
+    # come from the same constants the install renders, so they cannot drift from it. The
+    # kind list too: it was the literal "data-QA, risk and pnl" until the second review of
+    # PR #82 (2026-11-11), so a fourth kind in REPORT_KINDS would have been left out of it.
+    kinds = list(REPORT_KINDS)
+    ap.add_argument("--reports", action="store_true",
+                    help=(f"install the report-only units instead of a book's: the "
+                          f"{', '.join(kinds[:-1])} and {kinds[-1]} units of each book "
+                          f"({', '.join(REPORT_BOOKS)}; quantt-<book>-<kind>), the alert secret service "
+                          f"{REPORT_SECRET_UNIT}, and the two pnl key services "
+                          f"{' and '.join(REPORT_PNL_KEY_UNITS[b] for b in REPORT_BOOKS)}, which read each "
+                          f"book's Alpaca key from the vault into a tmpfs env file of its own; touches no "
+                          f"session unit (docs/RUNBOOK.md 8.11, 8.12)"))
     ap.add_argument("--eod-from", default=None, metavar="YYYY-MM-DD",
                     help=f"REQUIRED with --book {C4_BOOK}, no default: the date its paper "
                          f"account was first funded (the team lead's)")
     a = ap.parse_args(argv)
     if a.enable and not a.apply:
         ap.error("--enable needs --apply: enabled timers are what trade")
+    if a.reports and (a.book != BOOK or a.seed_from is not None or a.eod_from is not None or a.armed):
+        ap.error("--reports takes only --tag, --vault, --python, --apply and --enable")
 
     # The layout for the book being installed (its state dir); the core's is the
     # one it always was.
@@ -1787,18 +2279,28 @@ def main(argv=None, *, layout: Layout | None = None, origin_url: str = ORIGIN_UR
 def _main_locked(a, layout: Layout, *, origin_url, localtime, run_cmd, as_user, euid,
                  dont_write_bytecode, user_ids, now_utc, read_environ, clock) -> int:
     try:
-        plan = build_plan(
-            tag=a.tag, vault=a.vault, layout=layout, python=a.python or layout.venv_python,
-            armed=a.armed, enable=a.enable, seed_from=a.seed_from, origin_url=origin_url,
-            localtime=localtime, run_cmd=run_cmd,
-            as_user=as_user if as_user is not None else ["runuser", "-u", SERVICE_USER, "--"],
-            euid=os.geteuid() if euid is None else euid,
-            dont_write_bytecode=(sys.flags.dont_write_bytecode
-                                 if dont_write_bytecode is None else dont_write_bytecode),
-            user_ids=user_ids, now_utc=now_utc or dt.datetime.now(dt.timezone.utc),
-            read_environ=read_environ or _read_environ,
-            clock=clock or (lambda: dt.datetime.now(dt.timezone.utc)),
-            book=VM_BOOKS[a.book], eod_from=a.eod_from)
+        if a.reports:
+            plan = build_report_plan(
+                tag=a.tag, vault=a.vault, layout=layout, python=a.python or layout.venv_python,
+                enable=a.enable, origin_url=origin_url, localtime=localtime, run_cmd=run_cmd,
+                as_user=as_user if as_user is not None else ["runuser", "-u", SERVICE_USER, "--"],
+                euid=os.geteuid() if euid is None else euid,
+                dont_write_bytecode=(sys.flags.dont_write_bytecode
+                                     if dont_write_bytecode is None else dont_write_bytecode),
+                user_ids=user_ids, clock=clock or (lambda: dt.datetime.now(dt.timezone.utc)))
+        else:
+            plan = build_plan(
+                tag=a.tag, vault=a.vault, layout=layout, python=a.python or layout.venv_python,
+                armed=a.armed, enable=a.enable, seed_from=a.seed_from, origin_url=origin_url,
+                localtime=localtime, run_cmd=run_cmd,
+                as_user=as_user if as_user is not None else ["runuser", "-u", SERVICE_USER, "--"],
+                euid=os.geteuid() if euid is None else euid,
+                dont_write_bytecode=(sys.flags.dont_write_bytecode
+                                     if dont_write_bytecode is None else dont_write_bytecode),
+                user_ids=user_ids, now_utc=now_utc or dt.datetime.now(dt.timezone.utc),
+                read_environ=read_environ or _read_environ,
+                clock=clock or (lambda: dt.datetime.now(dt.timezone.utc)),
+                book=VM_BOOKS[a.book], eod_from=a.eod_from)
     except InstallRefused as e:
         print(f"REFUSED: {e}")
         return 2

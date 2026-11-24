@@ -1,0 +1,32 @@
+# quantt-${BOOK}-risk.service : the nightly risk report for account ${BOOK}, REPORT ONLY.
+# Scheduled after the 22:00 decide (timer alongside).
+#
+# RENDERED by quantt/deploy/install_vm.py --reports from release tag ${TAG}. Do not
+# hand-edit the installed copy.
+#
+# It reads the runner's records and writes only under ${STATE_DIR}/reports. It carries
+# no broker key file. Wants=/After= ${SECRET_UNIT} and the optional EnvironmentFile
+# give it only the SMTP settings for the ACT push; if the file is absent the job still runs and a
+# fired stop exits non-zero with `ACT: notification NOT delivered` (scripts/ops/report_notify.py).
+# A failure here marks this unit failed and touches nothing else.
+[Unit]
+Description=QUANTT ${BOOK} nightly risk report, report only (release ${TAG})
+Wants=${SECRET_UNIT}
+After=${SECRET_UNIT}
+
+[Service]
+Type=oneshot
+User=${USER}
+Group=${USER}
+WorkingDirectory=${PROD_DIR}
+Environment=PATH=${PATH}
+Environment=PYTHONUNBUFFERED=1
+Environment=QUANTT_STATE_DIR=${STATE_DIR}
+EnvironmentFile=-${ENV_FILE}
+ExecStart=${PYTHON} -B -m ${MODULE} --book ${BOOK}
+ReadOnlyPaths=${PROD_DIR}
+MemoryMax=${MEMORY_MAX}
+Nice=10
+TimeoutStartSec=${TIMEOUT_S}
+StandardOutput=append:${LOG_DIR}/${KIND}.out.log
+StandardError=append:${LOG_DIR}/${KIND}.err.log

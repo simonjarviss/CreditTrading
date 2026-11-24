@@ -1,5 +1,13 @@
 # RESEARCH STATE — the research ledger
 
+> **FROZEN AS HISTORY, 2026-11-09** (team lead, `docs/SYSTEM.md` §5, "Team lead, 2026-11-09";
+> `docs/MISSION.md`). Pre-registration, the trial counters and their deflated-Sharpe bars, the
+> holdout ceremony and the D-code gates no longer apply to research. **The counter table below
+> stays at its 2026-11-09 values and does not move again**; `python3 -m ops.orient` still prints
+> it, as history. New work is logged in `results/IDEA_LEDGER.md`, which also carries a one-line
+> backfill of every row here, re-read under the new rules. Nothing below is rewritten: it is
+> the evidence behind that backfill, and the ACTIVE rows still describe the sleeves on paper.
+
 > **Citations written `pre-clean-slate:<path>`** name files deleted in the
 > 2026-09-28 clean slate. Read one with `git show pre-clean-slate:<path>`;
 > `docs/HISTORY.md` explains. They are provenance, not current state.

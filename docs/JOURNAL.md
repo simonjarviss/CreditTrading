@@ -382,6 +382,27 @@ from a named source; [doc] copied from a named note.
 
 ## 2026-11-09 (Mon)
 
+**The mission** (`docs/SYSTEM.md` §5, 2026-11-09; `docs/MISSION.md`; `results/report/EVIDENCE_LOG.md` E-2026-11-09-01, -02).
+- **Rulings.** The team lead gave a standing brief, kept verbatim as `docs/MISSION.md`.
+  - Scope is open, and the CEF book is one sleeve.
+  - Paper trading is the test. Research is judged on gross signal, with no cost model.
+  - Pre-registration, the trial counters, the holdout ceremony, "no sweeping" and alpha-only are dropped.
+  - An agent may start a paper or shadow book itself, through a separate path whose design the team lead approves once. That design is not written yet, so nothing new is on paper.
+  - Prod releases are the team lead's alone again: the 2026-11-02 standing authority is withdrawn.
+- **Research.** No return computed. `results/IDEA_LEDGER.md` replaces the counters and carries a one-line backfill of everything in `docs/RESEARCH_STATE.md`, which is frozen as history. 13 old ideas had a measured positive gross effect and were stopped by a gate that no longer applies.
+- **Found.** `results/mission/PHASE0_2026-11-09.md`: why the book has too few bets (one signal, small universes, one horizon, gates that kept no inventory, a prod release for every sleeve); every laptop panel is stale, from about 17 sessions (the core) to seven months (futures); and the agent layer still describes the old gates. `CLAUDE.md` is rewritten and wins where they differ. The research loop now stops at its own gate until it is rebuilt.
+- **Rulings, later** (`results/report/EVIDENCE_LOG.md` E-2026-11-09-03). The shadow-book runner's design is approved once (`results/mission/SHADOW_RUNNER_DESIGN_2026-11-09.md`): shadow books first, on the VM as a separate user, marked on Alpaca's auction prints with a yfinance check, $1M a book. The analysts keep `docs/TEAM.md`'s process. The agent runs the free data fetchers.
+- **Built.** `shadow/`: the engine, the book file and the scoreboard, with tests (E-2026-11-09-04). No book runs yet: the fetchers, the first book and the VM install are next.
+- **The desk.** Rebuilt for the mission (E-2026-11-09-05; `.claude/README.md`): seats `market-historian-economist`, `signal-hunter`, `data-scout`, `portfolio-architect`, `execution-engineer` and `go-live-reviewer`; commands `/hunt`, `/idea`, `/explore`, `/paper`, `/scoreboard`, `/combine` and `/go-live`. `/prereg` and the event census are removed, and the research loop is a stub that stops.
+- **Found, later.** The R2 data API reads from the laptop: CRSP's daily file runs to 2025-12-31 [V: `results/mission/PHASE0_2026-11-09.md` §2].
+- **Prod.** No change. The VM is armed at `release-20261104-1` [V: `python3 -m ops.orient`].
+- **Live.** Core: verify PASS, 12 of 12 filled; official pending; snapshot equity $98,838.46 at the 2026-11-09 close [V: `python3 -m ops.orient`].
+
+**Nightly report-only checks built** (`results/report/EVIDENCE_LOG.md` E-2026-11-09-40; PR open, not merged, not installed).
+- **What.** `scripts/ops/data_qa.py` (Q1–Q8, per book) and `scripts/ops/risk_daily.py` (per account), wrapping the existing readers, on VM timers installed by a separate `install_vm --reports` (`docs/RUNBOOK.md` 8.11). Book installs and rendered units are byte-identical to before.
+- **Thresholds** are derived on the fit panels to the design's budget; the calibration note says what falls short: Q3 cannot catch one-row stale copies, Q6 13/22 on the core, Q4's split-basis names are not panel steps (`results/ops/DATA_QA_CALIBRATION_2026-11-08.md`).
+- **Push on ACT only** through the existing SMTP path; until the team lead adds the two vault secrets, a fired stop says `ACT: notification NOT delivered` and fails loudly.
+
 **The corporate-action gate: the CUSIP check** (branch `ca-isin-fix`, not released; `results/ops/CA_UNRESOLVED_ROWS_2026-11-08.md` §5; E-2026-11-09-30).
 - **Rulings** (`docs/SYSTEM.md` §5, 2026-11-09): "Build a check against our CUSIPs", and "Accept all three" on the rows.
 - **The check.** A CUSIP-format party, digit-led or letter-led, leaves the unresolved list only when a run-time table of every CUSIP seen for every fund in the book's universe, over a stated lookback (731 days), proves it names none of ours. Anything short of proof, a fund or read it cannot confirm included, stays unresolved and names why.
@@ -393,3 +414,83 @@ from a named source; [doc] copied from a named note.
 - **The change.** Both books' `corporate_actions.mode` is `halt`, with the pins moved in the same commit. The session-output pins were re-derived on 1aab61d. Against a clear feed only the gate's mode string differs, so halt and report trade the same.
 - **What the release leaves out.** It is cut from this branch, not from `main`, so te4's dark code is not in it. The nightly checks (PR #65) get their own review and release.
 - **The release-check said NO-GO on dd2c084, and the fixes are at 4a3cf51** (E-2026-11-09-32). Four defects in the CUSIP table, each reproduced and each with a test that fails on dd2c084. The first could have passed a row of ours as foreign: a renamed fund's old CUSIP was never held. Re-measured, the table is still PROVED with the same counts, so no fund of ours was affected. The check's fifth reason was the preview on the laptop's stale panels; it needs current panels from the VM, which did not answer ssh that afternoon.
+
+## 2026-11-10 (Tue)
+
+**The first shadow book** (`results/report/EVIDENCE_LOG.md` E-2026-11-10-01).
+- **Research.** Month-end Treasury demand, long IEF over the last three sessions of each month, re-run gross on the harness (`results/ideas/2026-11-10_month_end_treasury.md`): Sharpe 1.07 over 2002-09 to 2026-10-09, both halves and all five eras positive, and IEF on every other session earns 0.10 [V: `python3 results/ideas/month_end_treasury/explore.py`]. It is the old XASSET-X3 with its rule unchanged.
+- **Shadow.** `shadow/books/month_end_ief.json`, $1M, started 2026-11-10. Its first weighted decisions are 2026-11-23 to 11-25. Simulated: it sends no order.
+- **Prod.** PRs #71 and #72 merged by the team lead on 2026-11-09 and 11-10. No release.
+- **The VM.** The shadow runner is installed beside prod, at the team lead's request, as user `quantt-shadow` following the branch `shadow` (`docs/RUNBOOK.md` §8.10; E-2026-11-10-02). Its key service is active, its first run exited 0 on code `29a7006`, and its timer next fires at 18:50. Prod's units, clone and state were not touched. A first attempt at 10:12 failed at its first step and created nothing.
+
+**The first hunt** (`results/ideas/2026-11-10_hunt_all.md`; `results/report/EVIDENCE_LOG.md` E-2026-11-10-03, -04).
+- **Research.** 24 short idea cards across six mechanism types and five asset classes, ranked; each has a ledger line. Two were explored the same day, gross, on the harness:
+  - **Turn of the month in equities: set aside.** Sharpe 0.48 from 1993, and SPY on every other session also scores 0.48. It is market exposure held a fifth of the time [V: `python3 results/ideas/turn_of_month_eq/explore.py`].
+  - **Treasury auction cycle: explored, not promoted.** Sharpe 0.57, placebo 0.03, but 0.39 once the month-end sessions are removed and −0.02 since 2023 [V: `python3 results/ideas/ust_auction_cycle/explore.py`]. The long-bond short into the auction is the part to follow up.
+- **Found.** Yahoo serves today's unfinished bar dated as a close; the new research fetcher drops it. The repo's NYSE calendar is wrong before 1998 (`docs/REFERENCES.md` §12yf).
+
+**The first wide-universe test** (`results/report/EVIDENCE_LOG.md` E-2026-11-10-05, -06).
+- **Research.** Short-term reversal within industry on the 1,500 largest US stocks, from CRSP on R2 to 2025-12-31: gross Sharpe 0.96 (t 4.90), halves 1.26 and 0.67, a stale-signal control at 0.04, and 1.35 against 0.32 by market volatility [V: `results/ideas/2026-11-10_st_reversal_wide.md`]. It clears Explore. It turns over 160 times a year, and it cannot go on shadow until a live equity panel exists.
+- **Found.** The laptop's numexpr fault (`scripts/events/numexpr_fault.py`) corrupted the first run's weights, differently each time. `scripts/research/explore.py` now turns numexpr off for every Explore script, and `CLAUDE.md` landmine 11 records it. The CRSP daily file on R2 tags closed-end funds and dates each dividend, delisted funds included.
+
+**The ex-date cycle on every closed-end fund** (`results/report/EVIDENCE_LOG.md` E-2026-11-10-07).
+- **Research.** On 1,123 CEFs from CRSP (dead funds included, to 2025-12-31), a fund falls about 30bp relative to other funds over the three sessions after its ex-date, after rising about 22bp over the three before. The pre-specified book (short after, long the rest) has a gross Sharpe of 4.18, positive in every era [V: `results/ideas/2026-11-10_cef_exdate_drift.md`].
+- **Checked as an artifact.** Every eligible ex-date had volume, the ex-day drop is 1.08 times the distribution, and the effect is larger in the most liquid funds. It is not stale prices.
+- **Not shown by the gross figure.** Each event is worth 20 to 30bp, about a round trip through the spread; the shorts need borrow that paper does not charge; capacity is about $1–3M. It clears Explore, and the shadow book is the next build.
+- **Shadow.** Two more books from 2026-11-10, $1M each, on 91 funds: `cef_exdate_after` and `cef_exdate_before_after` (`results/report/EVIDENCE_LOG.md` E-2026-11-10-08). Their ex-dates are stored by the day first seen. Three shadow books now run on the VM.
+
+**A security fix to the broker client** (`results/report/EVIDENCE_LOG.md` E-2026-11-10-09).
+- **Found.** The Alpaca client's GET and order POST, and the probe's GET, followed HTTP redirects. `requests` keeps custom headers on a redirect to another host, so a 3xx would have sent both key headers wherever it pointed. Another session's review found the same fault in its report reader and passed it on at the team lead's request. There is no evidence a redirect was ever served.
+- **Fixed, not released.** Every session that carries the keys now refuses any redirect (`quantt.broker.alpaca.refuse_redirects`), and a 3xx raises naming its status; on the order POST it is the ambiguous case, never a resend. The tests run `requests`' own redirect code against a recording transport: 22 fail on the old code.
+- **Prod.** Unchanged until the team lead's next release.
+
+**Earnings drift on a wide universe, 2026-11-11** (`results/report/EVIDENCE_LOG.md` E-2026-11-11-01).
+- **Research.** Drift after quarterly earnings on the 1,500 largest US stocks, IBES surprises and CRSP on R2 to 2025-12-31: the pre-specified book has a gross Sharpe of 0.21 (t 1.09); a variant sorted on the announcement move, chosen after looking, 0.73 [V: `results/ideas/2026-11-11_pead_wide.md`]. Not promoted.
+- **Built.** `scripts/research/stage_ibes_surprises.py` stages the surprises outside the repository.
+
+**Event-driven and special situations added to the mission, 2026-11-11** (`results/report/EVIDENCE_LOG.md` E-2026-11-11-02).
+- **Ruled.** The team lead: the desk is event-driven and special situations as well as systematic, in any asset class, and hunts look for niche verticals there. `docs/SYSTEM.md` §5 records it; `docs/MISSION.md` §5 has the seed list; `/hunt` requires it.
+
+**The first event test under the 2026-11-11 instruction** (`results/report/EVIDENCE_LOG.md` E-2026-11-11-03).
+- **Research.** The closed-end fund ex-date trade, unchanged, on four other groups from CRSP to 2025-12-31. Partnership and trust units have it: gross Sharpe 3.03 (t 15.40), both halves, placebo −0.02. REITs weakly (0.91); ETFs and the 1,500 largest common stocks not at all [V: `results/ideas/2026-11-11_exdate_other_wrappers.md`].
+- **Shadow.** Two books from 2026-11-11, $1M each, on 48 live units: `units_exdate_after` and `units_exdate_before_after` (E-2026-11-11-04). The list is rebuilt from the public exchange directory (`docs/REFERENCES.md` §12sd); 14 of the 48 were not shortable at Alpaca that day. Five shadow books now exist.
+
+**Clustered insider buying, 2026-11-12** (`results/report/EVIDENCE_LOG.md` E-2026-11-12-01).
+- **Research.** The October census rule for insider-buying clusters, tested for returns on the 2,000 largest US stocks, 2006 to 2025: gross Sharpe 0.05 (t 0.21), and what there is tracks a buy-the-losers control [V: `results/ideas/2026-11-12_insider_clusters.md`]. Set aside in liquid stocks; three quarters of the clusters are in smaller companies and are untested.
+
+**Merger arbitrage in cash deals, 2026-11-12** (`results/report/EVIDENCE_LOG.md` E-2026-11-12-03).
+- **Research.** The first returns this desk has computed on merger deals, from SDC and CRSP on R2 to 2025-12-31. Agreed (friendly) one-step cash deals earn a raw Sharpe of 0.71 (t 3.63), 0.48 over bills, with a beta of 0.17 and a 23% drawdown in 2007–08; the friendly filter was chosen after the first run. The event-time spread of the October design note is absent (0.04). An independent review re-derived the premium and found no material defect [V: `results/ideas/2026-11-12_merger_arb.md`].
+- **Found.** The October EDGAR deal list only sees a deal at its proxy, so it cannot be used from the announcement date; and its 2010–22 part does not keep the first-proxy date. SDC's announcement date can be a session early (the target still rises 6.9% the session after). CRSP's new-format return carries the cash paid at closing on an extra row (`docs/REFERENCES.md` §12ma).
+- **Next for this idea.** Rebuild the EDGAR list with first-proxy and termination dates: without a break date a live book holds broken deals as ordinary stocks.
+
+**Spin-offs, 2026-11-12** (`results/report/EVIDENCE_LOG.md` E-2026-11-12-04).
+- **Research.** 387 new spin-offs from CRSP, 2000 to 2025. The new company falls in each of its sessions 2 to 6 (3.2% against IWM over sessions 2–5, t −4.6) and other new listings do not. The pre-specified book, long from session 21 to 252, is weak (0.49). A short over sessions 3–5, read from the profile and so not pre-specified, has a gross Sharpe of 0.96 (t 4.84) and is positive in every era [V: `results/ideas/2026-11-12_spinoffs.md`]. An independent review found no defect; without its ten best names the book scores 0.64.
+- **Open.** Whether a share can be borrowed on its second day of trading, and a live reader for upcoming spin-offs.
+
+**The spin-off shadow book and two shadow fixes, 2026-11-14** (`results/report/EVIDENCE_LOG.md` E-2026-11-14-01).
+- **Shadow.** `spinoff_first_week` starts 2026-11-16, $1M: short a new spin-off on the decisions of its first three regular-way sessions, long IWM against it. Its reader stores each Alpaca spin-off row with the day first seen, because when the feed publishes a row is not known. Six shadow books now exist.
+- **Fixed.** The nightly marks step asked for every symbol on every past session; it now asks for a symbol only on sessions a decision holds it, and re-asks for a missing print for three sessions only (`shadow/nightly.py`). Needed for any book whose names change.
+- **Found.** ET, SUN, SUNC and USAC print their official close on the Texas Stock Exchange, not the exchange Alpaca records, so the units books would have read UNMEASURED on every invested session. Mapped in `shadow/sources.py` (`docs/REFERENCES.md` §12so).
+- **Not confirmed.** The VM has not been reachable from the laptop since 2026-11-10, so none of this, and no shadow run since 18:50 that day, has been read there. A full nightly cycle was run on the laptop against the real sources instead.
+
+**Special dividends, the VM's shadow log, and the half-day stamp, 2026-11-15** (`results/report/EVIDENCE_LOG.md` E-2026-11-14-02, E-2026-11-15-01, E-2026-11-15-02).
+- **Research.** 3,601 special cash dividends on common stocks from CRSP, 2000 to 2025. Buying the session after the announcement is public and holding to the close before the ex-date, against IWM, gives a gross Sharpe of 1.10 (t 5.57), positive in every era, 0.98 without its ten best events, and 0.62 and 0.49 on names trading $5M and $20M a day. The short after the ex-date is 0.63 and weak in liquid names; the ex-date itself is no better than an ordinary dividend [V: `results/ideas/2026-11-15_special_dividends.md`].
+- **Shadow.** `specdiv_wait` is built with a first-seen reader of Alpaca's dividend feed and tested on the real feed. It is a local commit only: the team lead stopped pushes on 2026-11-15, so it is not on the VM.
+- **Read.** The VM's shadow log, for the first time since 2026-11-10: the books decided and were marked on 2026-11-12 and 11-13; every run ended non-zero because four units had no closing print (fixed 2026-11-14, on the `shadow` branch) and one run stopped when Alpaca's record for ET named the exchange `TXSE` (mapped 2026-11-15 after measuring 11 listings).
+- **Fixed, merged as #83.** Alpaca stamps a half day's end-of-day point at 17:00 New York; the client required 20:00 and would have stopped the official P&L record from 2026-11-27. Not released yet.
+
+**IPO lock-ups and reverse splits, 2026-11-15** (`results/report/EVIDENCE_LOG.md` E-2026-11-15-03, E-2026-11-15-04).
+- **Lock-ups.** The textbook three-session short around an IPO lock-up expiry is 0.56 gross over 2000 to 2025 and about zero since 2016; the fall now comes in the four sessions before the date, a window found after looking. Not promoted [V: `results/ideas/2026-11-15_ipo_lockups.md`].
+- **Reverse splits.** Shorting a common share for 20 sessions after its reverse split, against IWM, is 1.02 gross (t 5.18) and positive in every era. Alpaca marks 4 of the 32 names such a book would hold today as shortable, so it is set aside as a short and no shadow book was built [V: `results/ideas/2026-11-15_reverse_splits.md`].
+- **Local only.** Both are local commits; pushes are stopped (team lead, 2026-11-15).
+- **Follow-on offerings** (E-2026-11-15-05). Buying an issuer three sessions after a follow-on is priced and holding five sessions is 0.71 gross over 2000 to 2025 and about 0.15 since 2016; the short over the next forty sessions is 0.07. Not promoted [V: `results/ideas/2026-11-15_follow_ons.md`].
+- **Special dividends, corrected** (E-2026-11-15-06). Against 8-K filings, 2 of 34 sampled events were not public when the book filled. Entering one to three sessions later gives 0.89 to 0.98 instead of 1.10, and about zero in 2023–25 instead of 0.64. The trade is strong in 2008 to 2022 and unproven since; the shadow book is the test [V: `results/ideas/2026-11-15_special_dividends.md`].
+- **Dividend initiations** (E-2026-11-15-07). Holding a share for 60 sessions after its first dividend in two years is 0.31 gross, the same as holding it four months later (0.36). Set aside [V: `results/ideas/2026-11-15_div_initiations.md`].
+- **Convertible issues** (E-2026-11-15-08). Buying the issuer three sessions after a convertible prices and holding five is 0.67 gross (t 3.39), positive in every era and 0.68 on liquid names; the median event earns 0.26%. Kept as EXPLORE until a live list of pricings exists [V: `results/ideas/2026-11-15_convert_issuance.md`].
+
+**Small-capital ideas, 2026-11-15** (team lead: niche ideas in undersized markets that need little capital; E-2026-11-15-10, -11).
+- **Special dividends in small names.** On names trading $100k to $5M a day the corrected wait book is 1.23 gross, positive in every era and 1.54 in 2023–25; on names trading $5M or more it has earned nothing since 2023. A second shadow book, `specdiv_wait_small`, tests it forward. It is a $250k to $1M trade and the spread is unmeasured [V: `results/ideas/2026-11-15_special_dividends.md`].
+- **Reversal in smaller stocks.** 1.18 gross on stocks ranked 1,501 to 4,000 against 0.96 on the top 1,500, but since 2013 the long side earns nothing and the short side needs borrow. Not promoted [V: `results/ideas/2026-11-15_st_reversal_small.md`].
+- **Earnings drift in smaller stocks** (E-2026-11-15-15). On stocks ranked 1,501 to 4,000, buying the top tenth by analyst surprise for 40 sessions against IWM is 1.27 gross (t 6.42), positive in every era; the same rule on the 1,500 largest was 0.21. An independent review re-derived it and found no lookahead. It is about 1.1 with conservative release timing and 0.7 with the surprise a free feed supplies. Not on shadow: needs a small-stock panel and an earnings feed [V: `results/ideas/2026-11-15_pead_small.md`].
+- **Merger targets too small for funds** (E-2026-11-15-14). Wider spread per deal, more breaks, a worse book (0.32 over bills). Set aside.
+

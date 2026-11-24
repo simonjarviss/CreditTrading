@@ -267,8 +267,11 @@ EOD_MAX_ROWS = 2520
 PNL_TAIL_ROWS = 30
 PNL_FILES = {
     "eod_equity": ("eod_equity.csv", ("date", "equity", "change_usd"), EOD_MAX_ROWS),
+    # scores.csv is kept WHOLE too since 2026-11-18: `auction_hold_pnl_usd` feeds
+    # a cumulative figure (orient's "modelled at the close"), and a cumulative
+    # figure on a 30-row tail is a different number under the same name.
     "scores": ("scores.csv", ("date", "verdict", "alpaca_equity_change_usd",
-                              "auction_pnl_usd"), PNL_TAIL_ROWS),
+                              "auction_pnl_usd", "auction_hold_pnl_usd"), EOD_MAX_ROWS),
     "dist": ("distribution_scores.csv", ("date", "auction_pnl_with_distributions_usd"),
              PNL_TAIL_ROWS),
 }
@@ -632,18 +635,19 @@ def _launchd_scheduled(job: dict) -> dict:
 _REMOTE_TEMPLATE = r"""q() { k=$1; shift; o=$("$@" 2>&1); r=$?; printf '%s\t%s\t%s\n' "$k" "$r" "$(printf '%s' "$o" | tr '\t\n' '  ' | cut -c1-400)"; }
 qw() { k=$1; shift; o=$("$@" 2>&1); r=$?; printf '%s\t%s\t%s\n' "$k" "$r" "$(printf '%s' "$o" | tr '\t\n' '  ' | cut -c1-@WIDE@)"; }
 S=@STATE@
-q tag sudo -n -u @USER@ git -C @PROD@ describe --tags
-q load_state systemctl show -p LoadState --value @SESSION@
-q dry_run sh -c "systemctl show -p Environment --value @SESSION@ | tr ' ' '\n' | grep '^DRY_RUN=' || true"
-q timers systemctl is-active @TIMERS@
-q timers_enabled systemctl is-enabled @TIMERS@
-q auto_armed sudo -n sh -c "if [ -e $S/AUTO_ARMED ]; then echo present; elif [ -d $S ]; then echo absent; else echo no-state-dir; fi"
-q verify sudo -n sh -c "if [ -e $S/verify.log ]; then tail -n1 $S/verify.log; else echo NO-FILE; fi"
-q equity_header sudo -n sh -c "if [ -e $S/equity.csv ]; then head -n1 $S/equity.csv; else echo NO-FILE; fi"
-q equity_last sudo -n sh -c "if [ -e $S/equity.csv ]; then tail -n1 $S/equity.csv; else echo NO-FILE; fi"
-q newest_plan sudo -n python3 -I -c "@PLAN_PY@" "$S"
-qw pnl sudo -n -u @USER@ python3 -I -c "@PNL_PY@" "$S"
-printf 'END\t0\tquantt-prod-state\n'
+q @K@tag sudo -n -u @USER@ git -C @PROD@ describe --tags
+q @K@load_state systemctl show -p LoadState --value @SESSION@
+q @K@dry_run sh -c "systemctl show -p Environment --value @SESSION@ | tr ' ' '\n' | grep '^DRY_RUN=' || true"
+q @K@timers systemctl is-active @TIMERS@
+q @K@timers_enabled systemctl is-enabled @TIMERS@
+q @K@auto_armed sudo -n sh -c "if [ -e $S/AUTO_ARMED ]; then echo present; elif [ -d $S ]; then echo absent; else echo no-state-dir; fi"
+q @K@verify sudo -n sh -c "if [ -e $S/verify.log ]; then tail -n1 $S/verify.log; else echo NO-FILE; fi"
+q @K@equity_header sudo -n sh -c "if [ -e $S/equity.csv ]; then head -n1 $S/equity.csv; else echo NO-FILE; fi"
+q @K@equity_last sudo -n sh -c "if [ -e $S/equity.csv ]; then tail -n1 $S/equity.csv; else echo NO-FILE; fi"
+q @K@newest_plan sudo -n python3 -I -c "@PLAN_PY@" "$S"
+qw @K@plan_shape sudo -n python3 -I -c "@SHAPE_PY@" "$S"
+qw @K@pnl sudo -n -u @USER@ python3 -I -c "@PNL_PY@" "$S"
+printf '@K@END\t0\tquantt-prod-state\n'
 """
 # The newest day's plan.json, summarised ON the VM to one JSON line (the plan
 # holds the account's positions; only counts and verdicts leave the machine).
@@ -664,6 +668,56 @@ _PLAN_PY = ("import json,os,sys; s=sys.argv[1]; "
             "else 'ok' if f.get('ok') else 'warning', "
             "'shock_usd': (f or {}).get('shock_usd')}))")
 assert not set(_PLAN_PY) & set('$`"'), "the plan summary must survive double quotes"
+# The newest plan's SHAPE, again summarised ON the VM: how many names it covers,
+# how many are held long and short, their gross and net at the plan's own
+# closes, and how many names carry each kind of reason (the sleeve's reason
+# string cut at its z-score, its first `|` or its first digit, letters only: `cef band hold`,
+# `cef discount`).
+# WHY (team lead, 2026-11-18): C4 sent 0 to 3 orders a day on 74 names while the
+# core sent about 10 on 13, and the only way to see why was to copy the plan,
+# positions and all, off the VM by hand. Counts and totals answer it; no symbol,
+# quantity or per-name weight leaves the machine. A held name with no close in
+# the plan makes gross and net null, never a partial sum.
+# `gross_cap_bound` counts the names whose reason carries the sleeve's own mark
+# that the gross cap scaled the book that day (`gmax=1.8000*x0.97`): when it
+# does, the sleeve turns every band HOLD into a trade (cef_discount.py, "THE
+# BAND'S HOLDS BECOME TRADES WHEN THIS BINDS"), which is why a book at its cap
+# sends an order in every name every day.
+_SHAPE_PY = """import json, os, sys
+s = sys.argv[1]
+ds = sorted(d for d in os.listdir(s) if d[:2] == '20'
+            and os.path.isfile(os.path.join(s, d, 'plan.json')))
+if not ds:
+    print('NO-PLAN')
+else:
+    p = json.load(open(os.path.join(s, ds[-1], 'plan.json')))
+    t = p.get('targets') or {}
+    c = p.get('closes') or {}
+    why = {}
+    for v in t.values():
+        k = str(v.get('reason') or 'no reason').split(' z=')[0].split('|')[0].split(' gmax')[0]
+        k = k[:min([i for i, ch in enumerate(k) if ch.isdigit()] or [len(k)])]
+        k = ' '.join(''.join(ch if ch.isalpha() else ' ' for ch in k).split())[:48]
+        why[k] = why.get(k, 0) + 1
+    held = {k: v['current'] for k, v in t.items() if v.get('current')}
+    capped = sum(1 for v in t.values() if '*x' in str(v.get('reason') or '').split('gmax=')[-1].split(' ')[0])
+    scales = sorted(set(str(v.get('reason') or '').split('gmax=')[-1].split(' ')[0].split('*x')[1]
+                        for v in t.values() if '*x' in str(v.get('reason') or '').split('gmax=')[-1].split(' ')[0]))
+    moves = sum(1 for v in t.values() if v.get('target') != v.get('current'))
+    priced = all(isinstance(c.get(k), (int, float)) for k in held)
+    eq = p.get('equity')
+    print(json.dumps({'session_date': p.get('session_date'), 'names': len(t),
+                      'held': len(held), 'long': sum(1 for q in held.values() if q > 0),
+                      'short': sum(1 for q in held.values() if q < 0),
+                      'target_differs': moves,
+                      'gross_cap_bound': capped,
+                      'gross_cap_scale': scales,
+                      'gross_usd': round(sum(abs(q) * c[k] for k, q in held.items()), 2) if priced else None,
+                      'net_usd': round(sum(q * c[k] for k, q in held.items()), 2) if priced else None,
+                      'equity': eq if isinstance(eq, (int, float)) else None,
+                      'why': dict(sorted(why.items()))}, separators=(',', ':')))
+"""
+assert not set(_SHAPE_PY) & set('$`"\\'), "the plan shape must survive double quotes"
 # `pnl_tails` itself, then one call printing compact JSON. PNL_FILES goes in as
 # its repr (single-quoted strings, tuples, ints), so the VM selects exactly the
 # columns this module names and no others.
@@ -674,15 +728,175 @@ assert not set(_PNL_PY) & set('$`"\\'), "the P&L selector must survive double qu
 # The wide cut: a full EOD_MAX_ROWS series at well under 100 bytes a row, plus
 # two 30-row tails, with room. The reply is bounded by the row caps, not by this.
 PNL_REPLY_MAX_CHARS = 400_000
-REMOTE_SCRIPT = (_REMOTE_TEMPLATE
-                 .replace("@PNL_PY@", _PNL_PY)
-                 .replace("@WIDE@", str(PNL_REPLY_MAX_CHARS))
-                 .replace("@PLAN_PY@", _PLAN_PY)
-                 .replace("@STATE@", shlex.quote(str(_VM_LAYOUT.state_dir)))
-                 .replace("@PROD@", shlex.quote(str(_VM_LAYOUT.prod_dir)))
-                 .replace("@USER@", iv.SERVICE_USER)
-                 .replace("@SESSION@", _VM_SESSION.service)
-                 .replace("@TIMERS@", " ".join(VM_TIMERS)))
+
+
+def _vm_book(book: str):
+    """One VM book's (layout, session job, timers), from the installer's own
+    registry (`install_vm.VM_BOOKS`): the units and the state dir are whatever
+    `install_vm --book <book>` installs, never names written again here."""
+    vb = iv.VM_BOOKS[book]
+    return (iv.Layout(Path("/home") / iv.SERVICE_USER, book=book),
+            next(j for j in vb.jobs if j.job.log_stem == "session"),
+            tuple(j.timer for j in vb.jobs))
+
+
+def remote_script(book: str = iv.BOOK, prefix: str = "") -> str:
+    """The read-only script for one book. `prefix` goes in front of every
+    reading's key (and of END), so several books' scripts can be sent in ONE
+    ssh call and their replies told apart."""
+    lay, sess, timers = _vm_book(book)
+    return (_REMOTE_TEMPLATE
+            .replace("@PNL_PY@", _PNL_PY)
+            .replace("@WIDE@", str(PNL_REPLY_MAX_CHARS))
+            .replace("@PLAN_PY@", _PLAN_PY)
+            .replace("@SHAPE_PY@", _SHAPE_PY)
+            .replace("@K@", prefix)
+            .replace("@STATE@", shlex.quote(str(lay.state_dir)))
+            .replace("@PROD@", shlex.quote(str(lay.prod_dir)))
+            .replace("@USER@", iv.SERVICE_USER)
+            .replace("@SESSION@", sess.service)
+            .replace("@TIMERS@", " ".join(timers)))
+
+
+# The core's script, exactly as it was before the other books were added
+# (ops/tests/test_prod_state.py pins it), then one script per other VM book
+# with its keys prefixed `<book>.`. WHY one call (team lead, 2026-11-18: "make
+# the c4 reachable as easily as everything else"): until then C4's verdicts,
+# equity and plan could be read only by hand over ssh, so on a day the VM was
+# unreachable from a new network nobody could say whether C4 had traded since
+# the last copy pulled into the repo. The core's readings come first and END
+# before the others start: a reply cut inside another book's part leaves the
+# core measured and that book UNMEASURED.
+REMOTE_SCRIPT = remote_script()
+OTHER_VM_BOOKS = tuple(b for b in iv.VM_BOOKS if b != iv.BOOK)
+
+
+def vm_script(books: tuple = OTHER_VM_BOOKS) -> str:
+    return REMOTE_SCRIPT + "".join(remote_script(b, prefix=f"{b}.") for b in books)
+
+
+# ------------------------------------------------------- the shadow books --
+# The shadow books (team lead 2026-11-09, docs/SYSTEM.md section 5) are SIMULATED
+# books: no broker account, no orders, scored nightly on the VM by their own user
+# from a clone that follows a branch. These three names are
+# `shadow/deploy/install_shadow_vm.sh`'s (SVC_USER, STATE, the timer it writes);
+# ops/tests/test_prod_state.py reads that script and fails if they drift apart.
+SHADOW_USER = "quantt-shadow"
+SHADOW_STATE = f"/home/{SHADOW_USER}/shadow_state"
+SHADOW_TIMER = "quantt-shadow.timer"
+# Each book's scores.csv, SUMMARISED ON THE VM to counts and sums by its own
+# header (`shadow/engine.py` SCORE_FIELDS): sessions by status, the first and last
+# date, the summed price-only and total-return P&L over the SCORED rows, and the
+# last row's gross. WHY SUMMARISED THERE (team lead 2026-11-18, "add them like
+# C4"): aggregates may leave the VM, per-name weights may not (docs/SYSTEM.md
+# section 5, 2026-11-03), and a summary cannot carry a weight. A blank total on
+# a SCORED row is the engine's own stated gap (no dividend column); it is counted
+# in `total_gaps` and the total is then null, never the price line under another
+# name. A row that will not parse is an error naming the book and the line.
+_SHADOW_PY = """import csv, json, os, sys
+s = sys.argv[1]
+out = {}
+for slug in sorted(os.listdir(s)) if os.path.isdir(s) else []:
+    p = os.path.join(s, slug, 'scores.csv')
+    if not os.path.isfile(p):
+        continue
+    try:
+        st, price, total, gaps, first, last, gross = {}, 0.0, 0.0, 0, None, None, None
+        with open(p, newline='', encoding='utf-8') as fh:
+            rd = csv.DictReader(fh)
+            need = ('date', 'status', 'pnl_price_usd', 'pnl_total_usd', 'gross')
+            miss = [c for c in need if c not in (rd.fieldnames or [])]
+            if miss:
+                raise ValueError('scores.csv has no column ' + ', '.join(miss))
+            for i, r in enumerate(rd, start=2):
+                if None in r or None in r.values():
+                    raise ValueError('scores.csv line %d is not a whole row' % i)
+                st[r['status']] = st.get(r['status'], 0) + 1
+                first = first or r['date']
+                last, gross = r['date'], r['gross']
+                if r['status'] == 'SCORED':
+                    price += float(r['pnl_price_usd'])
+                    if r['pnl_total_usd'] == '':
+                        gaps += 1
+                    else:
+                        total += float(r['pnl_total_usd'])
+        out[slug] = {'status': dict(sorted(st.items())), 'first': first, 'last': last,
+                     'pnl_price_usd': round(price, 2),
+                     'pnl_total_usd': None if gaps else round(total, 2),
+                     'total_gaps': gaps, 'last_gross': gross}
+    except Exception as e:
+        out[slug] = {'error': type(e).__name__ + ': ' + str(e)[:160]}
+print(json.dumps({'state': os.path.isdir(s), 'books': out}, separators=(',', ':')))
+"""
+assert not set(_SHADOW_PY) & set('$`"\\'), "the shadow summary must survive double quotes"
+SHADOW_SCRIPT = (r"""q shadow.timer sh -c "systemctl is-active @T@; systemctl is-enabled @T@"
+qw shadow.books sudo -n -u @U@ python3 -I -c "@PY@" @S@
+printf 'shadow.END\t0\tquantt-prod-state\n'
+""".replace("@PY@", _SHADOW_PY).replace("@T@", SHADOW_TIMER)
+   .replace("@U@", SHADOW_USER).replace("@S@", shlex.quote(SHADOW_STATE)))
+
+
+def _shadow_from_readings(got: dict, alias: str) -> dict:
+    """The shadow books' reading. Never part of the prod verdict: nothing here
+    can send an order, so there is nothing to arm."""
+    where = f"{alias}:{SHADOW_STATE}"
+    out = {"where": where, "label": "SIMULATED"}
+    if "shadow.END" not in got:
+        return {**out, UNMEASURED: f"ssh {alias}: the reply has no shadow.END line, so the "
+                                   f"shadow reading was cut short or never ran"}
+    rc, v = got.get("shadow.timer", (None, None))
+    words = (v or "").split()
+    out["timer"] = (_val({"active": words[0], "enabled": words[1]}) if len(words) == 2 else
+                    _unm(f"`systemctl is-active/is-enabled {SHADOW_TIMER}` exited {rc}: {scrub(v or '')}"))
+    rc, v = got.get("shadow.books", (None, None))
+    if rc != 0 or not v:
+        out["books"] = _unm(f"`sudo -n -u {SHADOW_USER} python3` summary exited {rc}: {scrub(v or '')}")
+        return out
+    try:
+        raw = json.loads(v)
+    except json.JSONDecodeError:
+        out["books"] = _unm(f"the shadow summary ({len(v)} chars) is not JSON: {scrub(v)[:120]}")
+        return out
+    if not isinstance(raw, dict) or not isinstance(raw.get("books"), dict):
+        out["books"] = _unm("the shadow summary is not the expected object")
+    elif raw.get("state") is not True:
+        out["books"] = _absent(f"no {SHADOW_STATE} on the VM")
+    else:
+        out["books"] = _val({k: ({UNMEASURED: f"{where}/{k}/{scrub(str(b['error']))}"}
+                                 if isinstance(b, dict) and "error" in b else b)
+                             for k, b in raw["books"].items()})
+    return out
+
+
+def shadow_lines(sh: dict | None) -> list:
+    """(label, text) pairs for the renderer: one line per shadow book."""
+    if not isinstance(sh, dict):
+        return []
+    head = "VM shadow books  (SIMULATED)"
+    if UNMEASURED in sh:
+        return [(head, f"UNMEASURED — {sh[UNMEASURED]}")]
+    t = sh.get("timer") or {}
+    lines = [(head, (f"{SHADOW_TIMER} {t['value']['active']}/{t['value']['enabled']}" if "value" in t
+                     else f"timer {show(t)}") + "; no broker account, no orders; price-only "
+                     "P&L on each book's own notional, total return beside it")]
+    b = sh.get("books") or {}
+    if "value" not in b:
+        return lines + [("  books", show(b))]
+    if not b["value"]:
+        return lines + [("  books", "none has a scores.csv yet")]
+    for slug, r in b["value"].items():
+        if UNMEASURED in r:
+            lines.append((f"  {slug}", f"UNMEASURED — {r[UNMEASURED]}")); continue
+        st = r.get("status") or {}
+        tot = r.get("pnl_total_usd")
+        lines.append((f"  {slug}", f"{r.get('first')} to {r.get('last')}: "
+                      + ", ".join(f"{n} {k}" for k, n in st.items())
+                      + f"; price-only {'-' if r['pnl_price_usd'] < 0 else '+'}${abs(r['pnl_price_usd']):,.2f}"
+                      + (f", total return UNMEASURED on {r.get('total_gaps')} scored session(s)"
+                         if tot is None else
+                         f", total return {'-' if tot < 0 else '+'}${abs(tot):,.2f}")
+                      + f"; last gross {r.get('last_gross')}"))
+    return lines
 
 
 def ssh_alias_present(alias: str, config: Path) -> bool:
@@ -702,7 +916,8 @@ def vm_unmeasured(why: str, alias: str = VM_ALIAS) -> dict:
 
 
 def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
-       timeout: float = VM_TIMEOUT_S, run: Run | None = None) -> dict:
+       timeout: float = VM_TIMEOUT_S, run: Run | None = None,
+       books: tuple = OTHER_VM_BOOKS, shadow: bool = True) -> dict:
     """The VM prod (systemd), read over ONE ssh call with a hard time budget.
 
     Only when `~/.ssh/config` names the alias: without it there is no
@@ -732,7 +947,7 @@ def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
 
     cmd = ["ssh", "-o", "BatchMode=yes", "-o", f"ConnectTimeout={SSH_CONNECT_TIMEOUT_S}",
            alias, "sh -s"]
-    r, why = _call(run, cmd, timeout, input=REMOTE_SCRIPT)
+    r, why = _call(run, cmd, timeout, input=vm_script(books) + (SHADOW_SCRIPT if shadow else ""))
     if why:
         return vm_unmeasured(why, alias)
     if r.returncode == 255:
@@ -745,33 +960,49 @@ def vm(alias: str = VM_ALIAS, ssh_config: Path | None = None,
     if "END" not in got:
         return vm_unmeasured(f"ssh {alias} exited {r.returncode} and its reply was cut short "
                              f"(no END line; {len(got)} reading(s)): {scrub(r.stderr)}")
-    return _vm_from_readings(got, alias)
+    out = _vm_from_readings(got, alias)
+    # The other books installed on the same VM (their own units, state dir and
+    # Alpaca account). Each stands or falls on its own END line.
+    out["books"] = {}
+    for b in books:
+        pre = f"{b}."
+        if f"{pre}END" not in got:
+            out["books"][b] = {**vm_unmeasured(
+                f"ssh {alias}: the reply has no {pre}END line, so book {b}'s readings "
+                f"were cut short or never ran: {scrub(r.stderr)}", alias), "book": b}
+        else:
+            out["books"][b] = _vm_from_readings(
+                {k[len(pre):]: v for k, v in got.items() if k.startswith(pre)}, alias, b)
+    if shadow:
+        out["shadow"] = _shadow_from_readings(got, alias)
+    return out
 
 
-def _vm_from_readings(got: dict, alias: str) -> dict:
-    out = {"machine": "vm", "scheduler": "systemd", "alias": alias,
+def _vm_from_readings(got: dict, alias: str, book: str = iv.BOOK) -> dict:
+    lay, sess, timers = _vm_book(book)
+    out = {"machine": "vm", "scheduler": "systemd", "alias": alias, "book": book,
            "reproducer": f"ssh -o BatchMode=yes -o ConnectTimeout={SSH_CONNECT_TIMEOUT_S} "
                          f"{alias} 'sh -s' < ops.prod_state.REMOTE_SCRIPT",
-           "clone": str(_VM_LAYOUT.prod_dir), "state_dir": str(_VM_LAYOUT.state_dir)}
+           "clone": str(lay.prod_dir), "state_dir": str(lay.state_dir)}
 
     def reading(key: str):
         return got.get(key, (None, None))
 
     rc, v = reading("tag")
     out["tag"] = (_val(v) if rc == 0 and v else
-                  _unm(f"`sudo -u {iv.SERVICE_USER} git -C {_VM_LAYOUT.prod_dir} describe --tags`"
+                  _unm(f"`sudo -u {iv.SERVICE_USER} git -C {lay.prod_dir} describe --tags`"
                        f" exited {rc}: {scrub(v or '')}"))
 
     rc, v = reading("load_state")
     if rc != 0 or not v:
-        installed = _unm(f"`systemctl show -p LoadState {_VM_SESSION.service}` exited {rc}: {scrub(v or '')}")
+        installed = _unm(f"`systemctl show -p LoadState {sess.service}` exited {rc}: {scrub(v or '')}")
     else:
         installed = _val(v == "loaded", load_state=v)
     out["session_unit"] = installed
 
     rc, v = reading("dry_run")
     if rc != 0:
-        dry = _unm(f"`systemctl show -p Environment {_VM_SESSION.service}` exited {rc}: {scrub(v or '')}")
+        dry = _unm(f"`systemctl show -p Environment {sess.service}` exited {rc}: {scrub(v or '')}")
     else:
         vals = [t.split("=", 1)[1] for t in (v or "").split() if t.startswith("DRY_RUN=")]
         dry = (_val(None) if not vals else _val(vals[0]) if len(vals) == 1 else
@@ -783,31 +1014,31 @@ def _vm_from_readings(got: dict, alias: str) -> dict:
     for key, verb in (("timers", "is-active"), ("timers_enabled", "is-enabled")):
         rc, v = reading(key)
         words = (v or "").split()
-        out[key] = (_val(dict(zip(VM_TIMERS, words)))
-                    if rc is not None and len(words) == len(VM_TIMERS) else
-                    _unm(f"`systemctl {verb} {' '.join(VM_TIMERS)}` exited {rc}: {scrub(v or '')}"))
+        out[key] = (_val(dict(zip(timers, words)))
+                    if rc is not None and len(words) == len(timers) else
+                    _unm(f"`systemctl {verb} {' '.join(timers)}` exited {rc}: {scrub(v or '')}"))
 
     rc, v = reading("auto_armed")
     out["auto_armed"] = ({"present": _val(True), "absent": _val(False),
-                          "no-state-dir": _val(False, note=f"no {_VM_LAYOUT.state_dir}")}.get(v)
+                          "no-state-dir": _val(False, note=f"no {lay.state_dir}")}.get(v)
                          if rc == 0 and v in ("present", "absent", "no-state-dir") else
-                         _unm(f"`sudo -n test -e {_VM_LAYOUT.state_dir}/AUTO_ARMED` exited {rc}: {scrub(v or '')}"))
+                         _unm(f"`sudo -n test -e {lay.state_dir}/AUTO_ARMED` exited {rc}: {scrub(v or '')}"))
 
     rc, v = reading("verify")
     out["verify_last"] = (_absent("no verify.log yet") if rc == 0 and v == "NO-FILE" else
                           _val(verdict_line(v)) if rc == 0 and v else
                           _absent("verify.log is empty") if rc == 0 else
-                          _unm(f"`sudo -n tail -n1 {_VM_LAYOUT.state_dir}/verify.log` exited {rc}: {scrub(v or '')}"))
+                          _unm(f"`sudo -n tail -n1 {lay.state_dir}/verify.log` exited {rc}: {scrub(v or '')}"))
 
     rh, hv = reading("equity_header")
     rl, lv = reading("equity_last")
-    where = f"{alias}:{_VM_LAYOUT.state_dir}/equity.csv"
+    where = f"{alias}:{lay.state_dir}/equity.csv"
     if rh == 0 and hv == "NO-FILE":
         out["equity"] = _absent("no equity.csv yet")
     elif rh == 0 and rl == 0 and hv:
         out["equity"] = equity_row(hv, lv or "", where)
     else:
-        out["equity"] = _unm(f"`sudo -n head/tail {_VM_LAYOUT.state_dir}/equity.csv` exited "
+        out["equity"] = _unm(f"`sudo -n head/tail {lay.state_dir}/equity.csv` exited "
                              f"{rh}/{rl}: {scrub(hv or lv or '')}")
 
     rc, v = reading("newest_plan")
@@ -821,8 +1052,19 @@ def _vm_from_readings(got: dict, alias: str) -> dict:
     else:
         out["newest_plan"] = _unm(f"`sudo -n python3` plan summary exited {rc}: {scrub(v or '')}")
 
+    rc, v = reading("plan_shape")
+    if rc == 0 and v == "NO-PLAN":
+        out["plan_shape"] = _absent("no plan.json in any day directory yet")
+    elif rc == 0 and v:
+        try:
+            out["plan_shape"] = _val(json.loads(v))
+        except json.JSONDecodeError:
+            out["plan_shape"] = _unm(f"the plan shape is not JSON: {scrub(v)[:120]}")
+    else:
+        out["plan_shape"] = _unm(f"`sudo -n python3` plan shape exited {rc}: {scrub(v or '')}")
+
     rc, v = reading("pnl")
-    where = f"{alias}:{_VM_LAYOUT.state_dir}"
+    where = f"{alias}:{lay.state_dir}"
     why = None
     if rc is None:
         why = "no pnl line in the reply"
@@ -843,15 +1085,15 @@ def _vm_from_readings(got: dict, alias: str) -> dict:
         out["arming"], out["arming_why"] = UNMEASURED, show(installed)
     elif installed["value"] is not True:
         out["arming"], out["arming_why"] = (NOT_INSTALLED,
-                                            f"{_VM_SESSION.service} LoadState={installed['load_state']}")
+                                            f"{sess.service} LoadState={installed['load_state']}")
     else:
-        out["scheduled"] = _systemd_scheduled(out["timers"], out["timers_enabled"])
+        out["scheduled"] = _systemd_scheduled(out["timers"], out["timers_enabled"], sess.timer)
         out["arming"], out["arming_why"], out["cautions"] = _arming(
             dry, out["auto_armed"], out["scheduled"])
     np_ = out["newest_plan"].get("value") or {}
     if np_.get("preflight") == "warning" and not np_.get("sent"):
         out["cautions"] = list(out["cautions"]) + [
-            f"VM plan for {np_.get('session_date')}: PRE-FLIGHT WARNING -- a day as bad as the "
+            f"VM {book} plan for {np_.get('session_date')}: PRE-FLIGHT WARNING -- a day as bad as the "
             f"worst of the last year (${np_.get('shock_usd')}) would get its send refused or "
             f"scaled; the detail is in its plan.json and the session log"]
     return out
@@ -864,11 +1106,13 @@ _ENABLED_WORDS = frozenset({"enabled", "enabled-runtime", "alias", "indirect",
 _NOT_ENABLED_WORDS = frozenset({"disabled", "masked", "masked-runtime", "static"})
 
 
-def _systemd_scheduled(active: dict, enabled: dict) -> dict:
+def _systemd_scheduled(active: dict, enabled: dict, timer: str | None = None) -> dict:
     """Will systemd fire the session job? Its timer active: yes. Stopped but
     enabled: yes, at the next boot (RUNBOOK 8.5 step 2 only stops them).
-    Inactive and not enabled: no."""
-    t = _VM_SESSION.timer
+    Inactive and not enabled: no. `timer` is the book's own session timer (the
+    core's by default): read against the core's, another book's timers are a
+    dict that never holds the key, and it printed as UNMEASURED."""
+    t = timer or _VM_SESSION.timer
     a = (active.get("value") or {}).get(t)
     if a == "active":
         return _val(True, why=f"{t} active")
@@ -989,6 +1233,28 @@ def plan_text(r: dict | None) -> str:
             f"{'sent' if n.get('sent') else 'not sent yet'}; {pf_text}")
 
 
+def shape_text(r: dict | None) -> str:
+    """`13 names, 12 held (6 long, 6 short); gross $178,000.00 = 1.78x equity, net
+    -$1,200.00; 9 target(s) differ from holdings; reasons: cef band hold 4, cef discount 9`."""
+    if not isinstance(r, dict) or "value" not in r:
+        return show(r)
+    n = r["value"]
+    g, net, eq = n.get("gross_usd"), n.get("net_usd"), n.get("equity")
+    money = ("gross and net UNMEASURED (a held name has no close in the plan)"
+             if g is None or net is None else
+             f"gross ${g:,.2f}" + (f" = {g / eq:.2f}x the plan's equity" if eq else "")
+             + f", net {'-' if net < 0 else '+'}${abs(net):,.2f}")
+    why = ", ".join(f"{k} {c}" for k, c in (n.get("why") or {}).items()) or "none"
+    cap = n.get("gross_cap_bound")
+    sc = n.get("gross_cap_scale") or []
+    cap_text = ("" if cap is None else "; gross cap not binding" if not cap else
+                f"; GROSS CAP BINDING on {cap} name(s)"
+                + (f", book scaled x{' / x'.join(sc)}" if sc else "") + ", so no band hold survives")
+    return (f"{n.get('names')} name(s), {n.get('held')} held ({n.get('long')} long, "
+            f"{n.get('short')} short); {money}; {n.get('target_differs')} target(s) differ "
+            f"from holdings{cap_text}; reasons: {why}")
+
+
 def pnl_files_text(r: dict | None) -> str:
     """`eod_equity.csv none · scores.csv 16 row(s), to 2026-10-16 · ...`: which
     P&L files a machine holds. The figures are orient's PNL section, from the
@@ -1027,26 +1293,43 @@ def render_lines(d: dict, p: Callable[[str, str], None]) -> None:
     p("  equity.csv last row", equity_text(lap.get("equity")))
     p("  P&L files", pnl_files_text(lap.get("pnl")))
 
-    p(f"VM  (systemd, ssh {v.get('alias')})",
-      f"{WORDS.get(v['arming'], v['arming'])} — {v['arming_why']}")
-    if UNMEASURED not in v:
-        p("  clone", f"{v['clone']} at {show(v['tag'])}")
-        p("  DRY_RUN (systemd, loaded)", _dry_text(v.get("dry_run")))
-        ta, te = v.get("timers") or {}, v.get("timers_enabled") or {}
-        if "value" in ta and "value" in te:
-            p("  timers (active/enabled)", ", ".join(f"{_stem(k)} {a}/{te['value'].get(k)}"
-                                                     for k, a in ta["value"].items()))
-        else:
-            p("  timers", f"is-active {show(ta)}; is-enabled {show(te)}")
-        p("  AUTO_ARMED", _bool_text(v.get("auto_armed"), f"{v['state_dir']}/AUTO_ARMED"))
-        p("  last verdict", verify_text(v.get("verify_last")))
-        p("  equity.csv last row", equity_text(v.get("equity")))
-        p("  P&L files", pnl_files_text(v.get("pnl")))
-        p("  newest plan", plan_text(v.get("newest_plan")))
+    _render_vm_book(p, v, f"VM  (systemd, ssh {v.get('alias')})")
+    # The other books on the VM: each has its own units, gate files and Alpaca
+    # account, so each is armed or not on its own. They are not part of the
+    # one-prod verdict below, which is about two SCHEDULERS for the core account.
+    for name, b in (v.get("books") or {}).items():
+        _render_vm_book(p, b, f"VM book {name}", clone=False)
+        for c in b.get("cautions") or []:
+            p("  caution", c)
+    for label, text in shadow_lines(v.get("shadow")):
+        p(label, text)
     vd = d["verdict"]
     for c in vd.get("cautions") or []:
         p("  caution", c)
     p("!!" if vd.get("warning") else "=>", vd["line"])
+
+
+def _render_vm_book(p, v: dict, label: str, clone: bool = True) -> None:
+    """One book's VM lines. `clone` is off for the other books: the VM has ONE
+    prod clone at ONE tag for every book (install_vm), printed with the core."""
+    p(label, f"{WORDS.get(v['arming'], v['arming'])} — {v['arming_why']}")
+    if UNMEASURED in v:
+        return
+    if clone:
+        p("  clone", f"{v['clone']} at {show(v['tag'])}")
+    p("  DRY_RUN (systemd, loaded)", _dry_text(v.get("dry_run")))
+    ta, te = v.get("timers") or {}, v.get("timers_enabled") or {}
+    if "value" in ta and "value" in te:
+        p("  timers (active/enabled)", ", ".join(f"{_stem(k)} {a}/{te['value'].get(k)}"
+                                                 for k, a in ta["value"].items()))
+    else:
+        p("  timers", f"is-active {show(ta)}; is-enabled {show(te)}")
+    p("  AUTO_ARMED", _bool_text(v.get("auto_armed"), f"{v['state_dir']}/AUTO_ARMED"))
+    p("  last verdict", verify_text(v.get("verify_last")))
+    p("  equity.csv last row", equity_text(v.get("equity")))
+    p("  P&L files", pnl_files_text(v.get("pnl")))
+    p("  newest plan", plan_text(v.get("newest_plan")))
+    p("  plan shape", shape_text(v.get("plan_shape")))
 
 
 def _stem(unit: str) -> str:

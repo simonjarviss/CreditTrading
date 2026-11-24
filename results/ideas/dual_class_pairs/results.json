@@ -1,0 +1,1072 @@
+{
+ "panel_first_date": "1999-01-04",
+ "panel_last_date": "2025-12-31",
+ "first_scored": "2000-01-01",
+ "fixed": {
+  "window": 60,
+  "min_obs": 40,
+  "entry_z": 2.0,
+  "max_hold": 20,
+  "min_price": 2.0,
+  "min_adv": 100000.0,
+  "leg_weight": 0.05,
+  "max_pairs": 20,
+  "gate_corr": 0.9,
+  "gate_window": 250
+ },
+ "pairs_in_crsp": 245,
+ "issuers": 158,
+ "pairs_by_year": {
+  "2000": {
+   "passing_gate_and_floors_mean_per_day": 16.7,
+   "passing_on_any_day": 30,
+   "trades": 88
+  },
+  "2001": {
+   "passing_gate_and_floors_mean_per_day": 18.7,
+   "passing_on_any_day": 27,
+   "trades": 101
+  },
+  "2002": {
+   "passing_gate_and_floors_mean_per_day": 20.5,
+   "passing_on_any_day": 30,
+   "trades": 152
+  },
+  "2003": {
+   "passing_gate_and_floors_mean_per_day": 22.4,
+   "passing_on_any_day": 30,
+   "trades": 161
+  },
+  "2004": {
+   "passing_gate_and_floors_mean_per_day": 18.6,
+   "passing_on_any_day": 31,
+   "trades": 155
+  },
+  "2005": {
+   "passing_gate_and_floors_mean_per_day": 21.6,
+   "passing_on_any_day": 36,
+   "trades": 170
+  },
+  "2006": {
+   "passing_gate_and_floors_mean_per_day": 25.3,
+   "passing_on_any_day": 37,
+   "trades": 185
+  },
+  "2007": {
+   "passing_gate_and_floors_mean_per_day": 24.7,
+   "passing_on_any_day": 37,
+   "trades": 219
+  },
+  "2008": {
+   "passing_gate_and_floors_mean_per_day": 23.2,
+   "passing_on_any_day": 31,
+   "trades": 207
+  },
+  "2009": {
+   "passing_gate_and_floors_mean_per_day": 16.8,
+   "passing_on_any_day": 25,
+   "trades": 91
+  },
+  "2010": {
+   "passing_gate_and_floors_mean_per_day": 16.4,
+   "passing_on_any_day": 25,
+   "trades": 122
+  },
+  "2011": {
+   "passing_gate_and_floors_mean_per_day": 16.7,
+   "passing_on_any_day": 23,
+   "trades": 129
+  },
+  "2012": {
+   "passing_gate_and_floors_mean_per_day": 13.8,
+   "passing_on_any_day": 23,
+   "trades": 97
+  },
+  "2013": {
+   "passing_gate_and_floors_mean_per_day": 12.5,
+   "passing_on_any_day": 18,
+   "trades": 100
+  },
+  "2014": {
+   "passing_gate_and_floors_mean_per_day": 13.2,
+   "passing_on_any_day": 21,
+   "trades": 95
+  },
+  "2015": {
+   "passing_gate_and_floors_mean_per_day": 14.0,
+   "passing_on_any_day": 21,
+   "trades": 94
+  },
+  "2016": {
+   "passing_gate_and_floors_mean_per_day": 17.6,
+   "passing_on_any_day": 27,
+   "trades": 125
+  },
+  "2017": {
+   "passing_gate_and_floors_mean_per_day": 21.7,
+   "passing_on_any_day": 24,
+   "trades": 137
+  },
+  "2018": {
+   "passing_gate_and_floors_mean_per_day": 22.3,
+   "passing_on_any_day": 26,
+   "trades": 155
+  },
+  "2019": {
+   "passing_gate_and_floors_mean_per_day": 21.4,
+   "passing_on_any_day": 26,
+   "trades": 137
+  },
+  "2020": {
+   "passing_gate_and_floors_mean_per_day": 22.5,
+   "passing_on_any_day": 30,
+   "trades": 150
+  },
+  "2021": {
+   "passing_gate_and_floors_mean_per_day": 21.7,
+   "passing_on_any_day": 24,
+   "trades": 140
+  },
+  "2022": {
+   "passing_gate_and_floors_mean_per_day": 22.2,
+   "passing_on_any_day": 24,
+   "trades": 147
+  },
+  "2023": {
+   "passing_gate_and_floors_mean_per_day": 20.4,
+   "passing_on_any_day": 27,
+   "trades": 123
+  },
+  "2024": {
+   "passing_gate_and_floors_mean_per_day": 22.9,
+   "passing_on_any_day": 28,
+   "trades": 147
+  },
+  "2025": {
+   "passing_gate_and_floors_mean_per_day": 21.4,
+   "passing_on_any_day": 27,
+   "trades": 130
+  }
+ },
+ "REAL": {
+  "turnover_per_year": 27.43335233355114,
+  "mean_gross": 0.6302798593057043,
+  "mean_open_pairs": 6.303410307386451,
+  "share_days_invested": 0.996482642605903,
+  "held_leg_days": 83717,
+  "held_leg_days_without_return": 28,
+  "full": {
+   "first": "2000-01-03",
+   "last": "2025-12-31",
+   "n_days": 6539,
+   "n_active_days": 6515,
+   "ann_ret": 0.01955582501633555,
+   "ann_vol": 0.021961069558540314,
+   "sharpe": 0.8904768943154956,
+   "t": 4.53605230103496,
+   "mean_bp_per_active_day": 0.778883527523896,
+   "hit_rate_active_days": 0.5257099002302379,
+   "max_drawdown": -0.029474399999999984
+  },
+  "split_date": "2013-01-02",
+  "early_half": {
+   "first": "2000-01-03",
+   "last": "2013-01-02",
+   "n_days": 3270,
+   "n_active_days": 3251,
+   "ann_ret": 0.021314329541284406,
+   "ann_vol": 0.025327173040576315,
+   "sharpe": 0.8415597550953284,
+   "t": 3.0315069239605803,
+   "mean_bp_per_active_day": 0.8507499231005844,
+   "hit_rate_active_days": 0.5167640725930482,
+   "max_drawdown": -0.029474399999999984
+  },
+  "late_half": {
+   "first": "2013-01-02",
+   "last": "2025-12-31",
+   "n_days": 3270,
+   "n_active_days": 3265,
+   "ann_ret": 0.017731638465387826,
+   "ann_vol": 0.017976150093899614,
+   "sharpe": 0.986397998056616,
+   "t": 3.5532501914267045,
+   "mean_bp_per_active_day": 0.704713991368509,
+   "hit_rate_active_days": 0.5344563552833078,
+   "max_drawdown": -0.027635250000000014
+  },
+  "eras": {
+   "2002-2008": {
+    "first": "2002-01-02",
+    "last": "2008-12-31",
+    "n_days": 1763,
+    "n_active_days": 1760,
+    "ann_ret": 0.024630913102665904,
+    "ann_vol": 0.02637133264590385,
+    "sharpe": 0.9340033525568426,
+    "t": 2.4704400585931414,
+    "mean_bp_per_active_day": 0.9790832386363636,
+    "hit_rate_active_days": 0.5227272727272727,
+    "max_drawdown": -0.029474399999999984
+   },
+   "2009-2015": {
+    "first": "2009-01-02",
+    "last": "2015-12-31",
+    "n_days": 1762,
+    "n_active_days": 1758,
+    "ann_ret": 0.011120093530079455,
+    "ann_vol": 0.016493596582504738,
+    "sharpe": 0.674206712553821,
+    "t": 1.7827717918605595,
+    "mean_bp_per_active_day": 0.4422775881683731,
+    "hit_rate_active_days": 0.5176336746302617,
+    "max_drawdown": -0.022403850000000003
+   },
+   "2016-2019": {
+    "first": "2016-01-04",
+    "last": "2019-12-31",
+    "n_days": 1006,
+    "n_active_days": 1005,
+    "ann_ret": 0.019523086282306167,
+    "ann_vol": 0.012435426903468326,
+    "sharpe": 1.5699570616961325,
+    "t": 3.136797582551459,
+    "mean_bp_per_active_day": 0.7754965174129356,
+    "hit_rate_active_days": 0.5393034825870647,
+    "max_drawdown": -0.011796099999999999
+   },
+   "2020-2022": {
+    "first": "2020-01-02",
+    "last": "2022-12-30",
+    "n_days": 756,
+    "n_active_days": 753,
+    "ann_ret": 0.03239160606060607,
+    "ann_vol": 0.029108706885914985,
+    "sharpe": 1.11278066001206,
+    "t": 1.9273926408209165,
+    "mean_bp_per_active_day": 1.2905022334902818,
+    "hit_rate_active_days": 0.5405046480743692,
+    "max_drawdown": -0.027635249999999993
+   },
+   "2023-2025": {
+    "first": "2023-01-03",
+    "last": "2025-12-31",
+    "n_days": 752,
+    "n_active_days": 752,
+    "ann_ret": 0.009811278191489364,
+    "ann_vol": 0.014612084289793825,
+    "sharpe": 0.6714496027334237,
+    "t": 1.1599040667367473,
+    "mean_bp_per_active_day": 0.38933643617021285,
+    "hit_rate_active_days": 0.5305851063829787,
+    "max_drawdown": -0.02187795
+   }
+  },
+  "controls": {},
+  "trade_stats": {
+   "trades": 3557,
+   "pairs_traded": 97,
+   "median_sessions_held": 11.0,
+   "bh_close_mean_bp": 28.53840316387956,
+   "bh_close_median_bp": 20.416106162753913,
+   "bh_close_hit": 0.6035985380938994,
+   "bh_close_t": 6.97748181984759,
+   "long_leg_close_mean_bp": 73.82934602985327,
+   "short_leg_close_mean_bp": 45.29094286597372,
+   "bh_mid_mean_bp": 28.261668160446657,
+   "bh_mid_median_bp": 17.721524923858254,
+   "bh_mid_hit": 0.6199044138318808,
+   "bh_mid_t": 6.85362100645788,
+   "long_leg_mid_mean_bp": 74.72753842210754,
+   "short_leg_mid_mean_bp": 46.46587026166089,
+   "median_abs_dev_bp": 158.80603078540196,
+   "median_two_leg_spread_bp": 28.858964536611985,
+   "median_spread_long_bp": 10.649627263045566,
+   "median_spread_short_bp": 11.774363396655087,
+   "median_adv_thinner_leg_usd": 2968449.1666666665,
+   "median_adv_long_usd": 11647303.047619049,
+   "median_adv_short_usd": 9628236.223809524,
+   "median_price_long": 33.96,
+   "median_price_short": 34.6,
+   "share_short_leg_is_thinner": 0.5215068878268203
+  }
+ },
+ "rows": {
+  "REAL": {
+   "sharpe": 0.8904768943154956,
+   "t": 4.53605230103496,
+   "ann_ret": 0.01955582501633555,
+   "ann_vol": 0.021961069558540314,
+   "max_drawdown": -0.029474399999999984,
+   "halves": [
+    0.8415597550953284,
+    0.986397998056616
+   ],
+   "eras": {
+    "2002-2008": 0.9340033525568426,
+    "2009-2015": 0.674206712553821,
+    "2016-2019": 1.5699570616961325,
+    "2020-2022": 1.11278066001206,
+    "2023-2025": 0.6714496027334237
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.024630913102665904,
+    "2009-2015": 0.011120093530079455,
+    "2016-2019": 0.019523086282306167,
+    "2020-2022": 0.03239160606060607,
+    "2023-2025": 0.009811278191489364
+   },
+   "turnover_per_year": 27.43335233355114,
+   "mean_gross": 0.6302798593057043,
+   "mean_open_pairs": 6.303410307386451,
+   "share_days_invested": 0.996482642605903,
+   "held_leg_days": 83717,
+   "held_leg_days_without_return": 28
+  },
+  "control: positions 21 sessions late": {
+   "sharpe": 0.12081430905328726,
+   "t": 0.6154230705787962,
+   "ann_ret": 0.0025107615982427104,
+   "ann_vol": 0.02078198863956831,
+   "max_drawdown": -0.09232775000000003,
+   "halves": [
+    0.19758721530844764,
+    0.007559647057422146
+   ],
+   "eras": {
+    "2002-2008": 0.026443730857013008,
+    "2009-2015": 0.2808923660305374,
+    "2016-2019": -0.011937392978272569,
+    "2020-2022": 0.8054567950362038,
+    "2023-2025": -0.8754210517268546
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.0006983458876914304,
+    "2009-2015": 0.0050888482406356425,
+    "2016-2019": -0.0001396145129224656,
+    "2020-2022": 0.017815126046176057,
+    "2023-2025": -0.012598408244680849
+   },
+   "turnover_per_year": 27.3716915291468,
+   "mean_gross": 0.6297751949839425,
+   "mean_open_pairs": 6.303410307386451,
+   "share_days_invested": 0.996482642605903,
+   "held_leg_days": 83373,
+   "held_leg_days_without_return": 232
+  },
+  "control: pseudo-pairs (matched other company)": {
+   "sharpe": 0.007397608401628783,
+   "t": 0.03768310983313952,
+   "ann_ret": 0.0010982922218306667,
+   "ann_vol": 0.14846585034007045,
+   "max_drawdown": -0.974927515006987,
+   "halves": [
+    -0.35770472261909064,
+    0.3373393990713061
+   ],
+   "eras": {
+    "2002-2008": -0.6565182482815689,
+    "2009-2015": 0.22118545198470554,
+    "2016-2019": 1.0810951851556283,
+    "2020-2022": 0.24609223580614695,
+    "2023-2025": -0.2507313586175292
+   },
+   "eras_ann_ret": {
+    "2002-2008": -0.08522132476587684,
+    "2009-2015": 0.021328202383654914,
+    "2016-2019": 0.15586451282114994,
+    "2020-2022": 0.05160057443944574,
+    "2023-2025": -0.040071105978012715
+   },
+   "turnover_per_year": 44.590958164950294,
+   "mean_gross": 1.3509736022994714,
+   "mean_open_pairs": 14.4457868175562,
+   "share_days_invested": 1.0,
+   "held_leg_days": 165351,
+   "held_leg_days_without_return": 109,
+   "trade_stats": {
+    "trades": 5611,
+    "pairs_traded": 929,
+    "median_sessions_held": 20.0,
+    "bh_close_mean_bp": 10.77276823276029,
+    "bh_close_median_bp": 120.0671458686664,
+    "bh_close_hit": 0.5439315630012476,
+    "bh_close_t": 0.5234923869093683,
+    "long_leg_close_mean_bp": 69.39509571084628,
+    "short_leg_close_mean_bp": 58.62232747808599,
+    "bh_mid_mean_bp": 11.116657324725514,
+    "bh_mid_median_bp": 119.74124084458859,
+    "bh_mid_hit": 0.5437533416503297,
+    "bh_mid_t": 0.542521029485959,
+    "long_leg_mid_mean_bp": 69.00368768934024,
+    "short_leg_mid_mean_bp": 57.88703036461473,
+    "median_abs_dev_bp": 1331.2525661845752,
+    "median_two_leg_spread_bp": 27.440278500258238,
+    "median_spread_long_bp": 11.32020957155717,
+    "median_spread_short_bp": 11.21704991587255,
+    "median_adv_thinner_leg_usd": 3273010.0,
+    "median_adv_long_usd": 9421830.290476192,
+    "median_adv_short_usd": 11108565.68095238,
+    "median_price_long": 26.1,
+    "median_price_short": 30.34,
+    "share_short_leg_is_thinner": 0.47620744965246836
+   }
+  },
+  "real pairs WITHOUT the gate (tracking stocks in)": {
+   "sharpe": 0.7563892285424435,
+   "t": 3.8530153028231187,
+   "ann_ret": 0.06549141135597186,
+   "ann_vol": 0.08658427286461144,
+   "max_drawdown": -0.21187787012987003,
+   "halves": [
+    0.613331496978957,
+    0.8852249129722708
+   ],
+   "eras": {
+    "2002-2008": 0.7220953499494457,
+    "2009-2015": 0.6785693331529711,
+    "2016-2019": 1.707901961397769,
+    "2020-2022": 0.9437632683213496,
+    "2023-2025": 0.17987401621618881
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.040729717210565834,
+    "2009-2015": 0.022964958796821793,
+    "2016-2019": 0.12685483935069428,
+    "2020-2022": 0.140656307475289,
+    "2023-2025": 0.012974080831778088
+   },
+   "turnover_per_year": 41.43384923827566,
+   "mean_gross": 1.010371668406944,
+   "mean_open_pairs": 10.500535250038233,
+   "share_days_invested": 1.0,
+   "held_leg_days": 125087,
+   "held_leg_days_without_return": 70,
+   "trade_stats": {
+    "trades": 5341,
+    "pairs_traded": 185,
+    "median_sessions_held": 16.0,
+    "bh_close_mean_bp": 70.39473062639003,
+    "bh_close_median_bp": 30.74398069765172,
+    "bh_close_hit": 0.6058790488672533,
+    "bh_close_t": 7.431939855705256,
+    "long_leg_close_mean_bp": 74.28550456828269,
+    "short_leg_close_mean_bp": 3.890773941892665,
+    "bh_mid_mean_bp": 68.89494180397399,
+    "bh_mid_median_bp": 26.443706152106117,
+    "bh_mid_hit": 0.6186107470511141,
+    "bh_mid_t": 7.262656898270326,
+    "long_leg_mid_mean_bp": 74.00786682398291,
+    "short_leg_mid_mean_bp": 5.112925020008891,
+    "median_abs_dev_bp": 253.26934936788172,
+    "median_two_leg_spread_bp": 30.944177439540404,
+    "median_spread_long_bp": 11.753183153769868,
+    "median_spread_short_bp": 12.92198352447188,
+    "median_adv_thinner_leg_usd": 2649708.4285714286,
+    "median_adv_long_usd": 9789152.59047619,
+    "median_adv_short_usd": 7856493.152380954,
+    "median_price_long": 31.64,
+    "median_price_short": 32.98,
+    "share_short_leg_is_thinner": 0.5233102415278038
+   }
+  },
+  "check: positions one session late (skip day)": {
+   "sharpe": 0.6300933316840214,
+   "t": 3.2096692517205874,
+   "ann_ret": 0.013359804660150985,
+   "ann_vol": 0.021202898028526748,
+   "max_drawdown": -0.03901934999999998,
+   "halves": [
+    0.5465220812717712,
+    0.7767052527415295
+   ],
+   "eras": {
+    "2002-2008": 0.3296927983114263,
+    "2009-2015": 0.8027366688358326,
+    "2016-2019": 1.2621883912247698,
+    "2020-2022": 0.7226493022803284,
+    "2023-2025": 0.4852661123207004
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.008715190584231427,
+    "2009-2015": 0.012886060045402952,
+    "2016-2019": 0.015789052485089463,
+    "2020-2022": 0.018709524963924962,
+    "2023-2025": 0.007234661968085114
+   },
+   "turnover_per_year": 27.437206133826407,
+   "mean_gross": 0.630249273589234,
+   "mean_open_pairs": 6.303410307386451,
+   "share_days_invested": 0.996482642605903,
+   "held_leg_days": 83701,
+   "held_leg_days_without_return": 39
+  },
+  "check: same positions, scored on mid quotes": {
+   "sharpe": 0.9761719412069093,
+   "t": 4.972579309338641,
+   "ann_ret": 0.01924851495715587,
+   "ann_vol": 0.019718365325433956,
+   "max_drawdown": -0.03187993999042327,
+   "halves": [
+    0.9756594142498279,
+    1.0223436349650237
+   ],
+   "eras": {
+    "2002-2008": 0.9430199095309287,
+    "2009-2015": 0.8080567480983978,
+    "2016-2019": 1.5841839876797006,
+    "2020-2022": 1.0977587024832458,
+    "2023-2025": 0.7858316789202675
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.021681458105461054,
+    "2009-2015": 0.01169684160885444,
+    "2016-2019": 0.01790379084679946,
+    "2020-2022": 0.027384322153241072,
+    "2023-2025": 0.010062654895865145
+   },
+   "turnover_per_year": 27.43335233355114,
+   "mean_gross": 0.6302798593057043,
+   "mean_open_pairs": 6.303410307386451,
+   "share_days_invested": 0.996482642605903,
+   "held_leg_days": 83717,
+   "held_leg_days_without_return": 28
+  },
+  "check: MID quotes for signal and returns": {
+   "sharpe": 0.9239871578161699,
+   "t": 4.706752190982544,
+   "ann_ret": 0.019618535590280307,
+   "ann_vol": 0.021232476473643236,
+   "max_drawdown": -0.05110774383946087,
+   "halves": [
+    0.8209164360647334,
+    1.0809025612726313
+   ],
+   "eras": {
+    "2002-2008": 0.6803169543449344,
+    "2009-2015": 0.7108055147968104,
+    "2016-2019": 1.2473800720528199,
+    "2020-2022": 1.5790214584222404,
+    "2023-2025": 0.6370208391904463
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.015930660634229998,
+    "2009-2015": 0.010657624487727047,
+    "2016-2019": 0.016800581397920893,
+    "2020-2022": 0.04733402599109065,
+    "2023-2025": 0.008486792161813379
+   },
+   "turnover_per_year": 25.100468517565933,
+   "mean_gross": 0.6451445175103228,
+   "mean_open_pairs": 6.453280318091451,
+   "share_days_invested": 0.9966355711882551,
+   "held_leg_days": 85715,
+   "held_leg_days_without_return": 42,
+   "trade_stats": {
+    "trades": 3253,
+    "pairs_traded": 97,
+    "median_sessions_held": 16.0,
+    "bh_close_mean_bp": 31.0369527119375,
+    "bh_close_median_bp": 24.030489253139553,
+    "bh_close_hit": 0.6142022748232401,
+    "bh_close_t": 6.345047941069507,
+    "long_leg_close_mean_bp": 74.13901063777772,
+    "short_leg_close_mean_bp": 43.1020579258402,
+    "bh_mid_mean_bp": 31.69744597977249,
+    "bh_mid_median_bp": 23.26623915064996,
+    "bh_mid_hit": 0.6228097141100523,
+    "bh_mid_t": 6.482340502566006,
+    "long_leg_mid_mean_bp": 74.4979765740942,
+    "short_leg_mid_mean_bp": 42.8005305943217,
+    "median_abs_dev_bp": 157.13846065264937,
+    "median_two_leg_spread_bp": 28.606553017750382,
+    "median_spread_long_bp": 10.686615014695766,
+    "median_spread_short_bp": 11.811023622046294,
+    "median_adv_thinner_leg_usd": 3178997.4714285713,
+    "median_adv_long_usd": 11044629.98095238,
+    "median_adv_short_usd": 9288457.552380953,
+    "median_price_long": 32.75,
+    "median_price_short": 33.15,
+    "share_short_leg_is_thinner": 0.5259760221334153
+   }
+  },
+  "check: MID quotes, one session late": {
+   "sharpe": 0.7270049154311083,
+   "t": 3.703332832728864,
+   "ann_ret": 0.014739561441656798,
+   "ann_vol": 0.020274362839646485,
+   "max_drawdown": -0.044464248543188534,
+   "halves": [
+    0.5224703446100897,
+    1.029834556125743
+   ],
+   "eras": {
+    "2002-2008": 0.3877432502697857,
+    "2009-2015": 0.5937081589345395,
+    "2016-2019": 0.9940508333028749,
+    "2020-2022": 1.569369345383556,
+    "2023-2025": 0.36318858808390553
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.0091961802594147,
+    "2009-2015": 0.00896725572067066,
+    "2016-2019": 0.013771555985242209,
+    "2020-2022": 0.04143814699201754,
+    "2023-2025": 0.004838341638794779
+   },
+   "turnover_per_year": 25.108176118116475,
+   "mean_gross": 0.645175103226793,
+   "mean_open_pairs": 6.453280318091451,
+   "share_days_invested": 0.9966355711882551,
+   "held_leg_days": 85701,
+   "held_leg_days_without_return": 62
+  },
+  "control: pseudo-pairs on MID quotes": {
+   "sharpe": 0.05672412374253401,
+   "t": 0.2889503295021495,
+   "ann_ret": 0.00842359589254108,
+   "ann_vol": 0.14850111974889324,
+   "max_drawdown": -0.8206141333732012,
+   "halves": [
+    -0.23164950739789197,
+    0.31384642221538683
+   ],
+   "eras": {
+    "2002-2008": -0.5920875949391521,
+    "2009-2015": 0.2697395081234945,
+    "2016-2019": 1.0689784203062451,
+    "2020-2022": 0.26286216806405216,
+    "2023-2025": -0.2745609597115454
+   },
+   "eras_ann_ret": {
+    "2002-2008": -0.07645165529601937,
+    "2009-2015": 0.02580551633396492,
+    "2016-2019": 0.15675125880978452,
+    "2020-2022": 0.05504728283182394,
+    "2023-2025": -0.04399376433531023
+   },
+   "turnover_per_year": 44.6779242884949,
+   "mean_gross": 1.3563732641078399,
+   "mean_open_pairs": 14.49441810674415,
+   "share_days_invested": 0.9996941428352959,
+   "held_leg_days": 165889,
+   "held_leg_days_without_return": 109
+  },
+  "close: SHORT leg is the liquid class (>= $1M)": {
+   "sharpe": 0.49443629895044133,
+   "t": 2.5186379634177682,
+   "ann_ret": 0.007646205658357549,
+   "ann_vol": 0.015464490925501301,
+   "max_drawdown": -0.035013000000000016,
+   "halves": [
+    0.41654293107184,
+    0.6325589615522874
+   ],
+   "eras": {
+    "2002-2008": 0.4415045497588564,
+    "2009-2015": 0.4174441829688526,
+    "2016-2019": 1.2541675557348082,
+    "2020-2022": 0.5267388844059375,
+    "2023-2025": 0.5192185313226062
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.009303910039705047,
+    "2009-2015": 0.004088907377979568,
+    "2016-2019": 0.009430148111332009,
+    "2020-2022": 0.011456800000000007,
+    "2023-2025": 0.004155587234042552
+   },
+   "turnover_per_year": 12.440067288576236,
+   "mean_gross": 0.29311821379415814,
+   "mean_open_pairs": 2.9311821379415814,
+   "share_days_invested": 0.9233827802416271,
+   "held_leg_days": 38318,
+   "held_leg_days_without_return": 2,
+   "trade_stats": {
+    "trades": 1616,
+    "pairs_traded": 79,
+    "median_sessions_held": 12.5,
+    "bh_close_mean_bp": 24.819044335589762,
+    "bh_close_median_bp": 21.056654635586703,
+    "bh_close_hit": 0.6101485148514851,
+    "bh_close_t": 4.51092395702468,
+    "long_leg_close_mean_bp": 66.80981011182296,
+    "short_leg_close_mean_bp": 41.99076577623321,
+    "bh_mid_mean_bp": 27.373012172558155,
+    "bh_mid_median_bp": 21.369353109514932,
+    "bh_mid_hit": 0.6404702970297029,
+    "bh_mid_t": 4.801708706452985,
+    "long_leg_mid_mean_bp": 69.25082553131047,
+    "short_leg_mid_mean_bp": 41.87781335875232,
+    "median_abs_dev_bp": 153.60079183745222,
+    "median_two_leg_spread_bp": 26.786305120813793,
+    "median_spread_long_bp": 18.688096335722303,
+    "median_spread_short_bp": 6.751200060441311,
+    "median_adv_thinner_leg_usd": 3592521.7857142854,
+    "median_adv_long_usd": 3592521.7857142854,
+    "median_adv_short_usd": 32385307.16190476,
+    "median_price_long": 33.585,
+    "median_price_short": 35.25,
+    "share_short_leg_is_thinner": 0.0
+   }
+  },
+  "close: short leg is the thin class (the rest)": {
+   "sharpe": 0.6874253924827347,
+   "t": 3.5017163873276123,
+   "ann_ret": 0.011920946903196207,
+   "ann_vol": 0.01734144102553735,
+   "max_drawdown": -0.022604949999999846,
+   "halves": [
+    0.6830314311206536,
+    0.7161283913022862
+   ],
+   "eras": {
+    "2002-2008": 0.771696867800691,
+    "2009-2015": 0.5073389412238658,
+    "2016-2019": 1.0194238316712958,
+    "2020-2022": 0.9668240132371813,
+    "2023-2025": 0.46192082496984105
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.015327003062960863,
+    "2009-2015": 0.0070311861520998865,
+    "2016-2019": 0.010092938170974154,
+    "2020-2022": 0.021032783333333332,
+    "2023-2025": 0.005655690957446811
+   },
+   "turnover_per_year": 14.97586786970485,
+   "mean_gross": 0.3372228169444869,
+   "mean_open_pairs": 3.372228169444869,
+   "share_days_invested": 0.9645205688943264,
+   "held_leg_days": 45406,
+   "held_leg_days_without_return": 26,
+   "trade_stats": {
+    "trades": 1941,
+    "pairs_traded": 94,
+    "median_sessions_held": 11.0,
+    "bh_close_mean_bp": 31.634994542816354,
+    "bh_close_median_bp": 20.348815759323458,
+    "bh_close_hit": 0.598145285935085,
+    "bh_close_t": 5.332009828123338,
+    "long_leg_close_mean_bp": 79.67353461488007,
+    "short_leg_close_mean_bp": 48.03854007206372,
+    "bh_mid_mean_bp": 29.001528065870566,
+    "bh_mid_median_bp": 15.176080658271252,
+    "bh_mid_hit": 0.6027820710973725,
+    "bh_mid_t": 4.930852487998567,
+    "long_leg_mid_mean_bp": 79.28723344092676,
+    "short_leg_mid_mean_bp": 50.28570537505619,
+    "median_abs_dev_bp": 163.33714776368134,
+    "median_two_leg_spread_bp": 30.820943082186464,
+    "median_spread_long_bp": 6.86106346483731,
+    "median_spread_short_bp": 21.802325581396175,
+    "median_adv_thinner_leg_usd": 2514842.904761905,
+    "median_adv_long_usd": 28757314.080952384,
+    "median_adv_short_usd": 2514842.904761905,
+    "median_price_long": 34.345,
+    "median_price_short": 33.65,
+    "share_short_leg_is_thinner": 0.9556929417825863
+   }
+  },
+  "MID: SHORT leg is the liquid class (>= $1M)": {
+   "sharpe": 0.43288173788408957,
+   "t": 2.205081586888928,
+   "ann_ret": 0.006513856134497071,
+   "ann_vol": 0.015047657511117392,
+   "max_drawdown": -0.047891287944713465,
+   "halves": [
+    0.33771103447692585,
+    0.5889522279590279
+   ],
+   "eras": {
+    "2002-2008": 0.16248721202783137,
+    "2009-2015": 0.5624201943327539,
+    "2016-2019": 1.3452967614006524,
+    "2020-2022": 0.5135701778938042,
+    "2023-2025": 0.2768973967658705
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.003095397624212603,
+    "2009-2015": 0.00512611603617659,
+    "2016-2019": 0.009339457469922836,
+    "2020-2022": 0.01132170357729137,
+    "2023-2025": 0.002007017093746937
+   },
+   "turnover_per_year": 11.256950604067901,
+   "mean_gross": 0.295580363970026,
+   "mean_open_pairs": 2.95580363970026,
+   "share_days_invested": 0.9284294234592445,
+   "held_leg_days": 38644,
+   "held_leg_days_without_return": 6,
+   "trade_stats": {
+    "trades": 1462,
+    "pairs_traded": 81,
+    "median_sessions_held": 16.0,
+    "bh_close_mean_bp": 25.32513729007493,
+    "bh_close_median_bp": 25.800692595064344,
+    "bh_close_hit": 0.6299589603283173,
+    "bh_close_t": 4.131857945136194,
+    "long_leg_close_mean_bp": 72.48951859907345,
+    "short_leg_close_mean_bp": 47.16438130899852,
+    "bh_mid_mean_bp": 25.804951669153567,
+    "bh_mid_median_bp": 25.60335406077696,
+    "bh_mid_hit": 0.6347469220246238,
+    "bh_mid_t": 3.873688593926453,
+    "long_leg_mid_mean_bp": 74.43451246733929,
+    "short_leg_mid_mean_bp": 48.62956079818571,
+    "median_abs_dev_bp": 153.76286437651,
+    "median_two_leg_spread_bp": 25.97032726570057,
+    "median_spread_long_bp": 17.191024435222182,
+    "median_spread_short_bp": 6.768192609706131,
+    "median_adv_thinner_leg_usd": 4191780.052380952,
+    "median_adv_long_usd": 4191780.052380952,
+    "median_adv_short_usd": 32165665.073809527,
+    "median_price_long": 32.315,
+    "median_price_short": 34.33,
+    "share_short_leg_is_thinner": 0.0
+   }
+  },
+  "MID: short leg is the thin class (the rest)": {
+   "sharpe": 0.8233740804251743,
+   "t": 4.19423335514632,
+   "ann_ret": 0.01317751956078078,
+   "ann_vol": 0.016004292428025143,
+   "max_drawdown": -0.022710424598402557,
+   "halves": [
+    0.7812270862448029,
+    0.8851771516004696
+   ],
+   "eras": {
+    "2002-2008": 0.7626815321868213,
+    "2009-2015": 0.4457305181592341,
+    "2016-2019": 0.652144412276727,
+    "2020-2022": 1.6260150023779878,
+    "2023-2025": 0.586718906777061
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.012835263010017394,
+    "2009-2015": 0.005531508451550459,
+    "2016-2019": 0.007461123927998058,
+    "2020-2022": 0.036642350782289945,
+    "2023-2025": 0.006479775068066443
+   },
+   "turnover_per_year": 13.83128918794923,
+   "mean_gross": 0.34974766783911915,
+   "mean_open_pairs": 3.4974766783911915,
+   "share_days_invested": 0.9663557118825509,
+   "held_leg_days": 47089,
+   "held_leg_days_without_return": 36,
+   "trade_stats": {
+    "trades": 1791,
+    "pairs_traded": 94,
+    "median_sessions_held": 15.0,
+    "bh_close_mean_bp": 35.69952900828763,
+    "bh_close_median_bp": 23.103779603416143,
+    "bh_close_hit": 0.6013400335008375,
+    "bh_close_t": 4.8627324867887385,
+    "long_leg_close_mean_bp": 75.48549715960107,
+    "short_leg_close_mean_bp": 39.78596815131343,
+    "bh_mid_mean_bp": 36.507511128920925,
+    "bh_mid_median_bp": 22.31734040744726,
+    "bh_mid_hit": 0.6130653266331658,
+    "bh_mid_t": 5.19929595613408,
+    "long_leg_mid_mean_bp": 74.54978256185281,
+    "short_leg_mid_mean_bp": 38.04227143293188,
+    "median_abs_dev_bp": 161.4912600008639,
+    "median_two_leg_spread_bp": 31.449450282678104,
+    "median_spread_long_bp": 7.145409074669372,
+    "median_spread_short_bp": 22.075055187637968,
+    "median_adv_thinner_leg_usd": 2497524.8095238097,
+    "median_adv_long_usd": 24660417.73809524,
+    "median_adv_short_usd": 2497524.8095238097,
+    "median_price_long": 33.12,
+    "median_price_short": 32.3,
+    "share_short_leg_is_thinner": 0.9553322166387493
+   }
+  },
+  "REAL less pseudo-pairs": {
+   "sharpe": 0.12409282350063261,
+   "t": 0.6321236869539003,
+   "ann_ret": 0.018457532794504898,
+   "ann_vol": 0.14873972784099643,
+   "max_drawdown": -0.9558372073875255,
+   "halves": [
+    0.5031779790212789,
+    -0.22449712203565264
+   ],
+   "eras": {
+    "2002-2008": 0.8275556137986612,
+    "2009-2015": -0.10509987537847562,
+    "2016-2019": -0.9429473481257853,
+    "2020-2022": -0.09289620716627829,
+    "2023-2025": 0.3130986764294848
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.10985223786854273,
+    "2009-2015": -0.01020810885357549,
+    "2016-2019": -0.13634142653884374,
+    "2020-2022": -0.019208968378839657,
+    "2023-2025": 0.04988238416950206
+   }
+  },
+  "MID less pseudo-pairs on MID": {
+   "sharpe": 0.07540688870675914,
+   "t": 0.3841195579758569,
+   "ann_ret": 0.011194939697739222,
+   "ann_vol": 0.14846043763022618,
+   "max_drawdown": -1.0055452035347516,
+   "halves": [
+    0.3696434748748867,
+    -0.1899597060395959
+   ],
+   "eras": {
+    "2002-2008": 0.7094011574119468,
+    "2009-2015": -0.157626763641309,
+    "2016-2019": -0.9554132981370747,
+    "2020-2022": -0.03724084710443886,
+    "2023-2025": 0.32809065114531716
+   },
+   "eras_ann_ret": {
+    "2002-2008": 0.09238231593024936,
+    "2009-2015": -0.015147891846237858,
+    "2016-2019": -0.1399506774118636,
+    "2020-2022": -0.007713256840733277,
+    "2023-2025": 0.052480556497123576
+   }
+  }
+ },
+ "share_of_sessions_with_a_closing_quote_all_securities": 0.9814150810633473,
+ "note_quote_share_on_held_days": 0.49505172137659526,
+ "trades_by_year": {
+  "2000": {
+   "trades": 88.0,
+   "bh_close_bp": 79.71282299775343,
+   "bh_mid_bp": 111.21471572178164
+  },
+  "2001": {
+   "trades": 101.0,
+   "bh_close_bp": 52.30376854362918,
+   "bh_mid_bp": 81.10448548012656
+  },
+  "2002": {
+   "trades": 152.0,
+   "bh_close_bp": 39.33154695249136,
+   "bh_mid_bp": 35.89564145929546
+  },
+  "2003": {
+   "trades": 161.0,
+   "bh_close_bp": 22.20547397728988,
+   "bh_mid_bp": 19.943398104936183
+  },
+  "2004": {
+   "trades": 155.0,
+   "bh_close_bp": 24.271736252885063,
+   "bh_mid_bp": 18.372262118483704
+  },
+  "2005": {
+   "trades": 170.0,
+   "bh_close_bp": 33.429798938907844,
+   "bh_mid_bp": 30.134734882480874
+  },
+  "2006": {
+   "trades": 185.0,
+   "bh_close_bp": 11.480701679440557,
+   "bh_mid_bp": 10.983087370715673
+  },
+  "2007": {
+   "trades": 219.0,
+   "bh_close_bp": 12.350554005809592,
+   "bh_mid_bp": 19.40141724599147
+  },
+  "2008": {
+   "trades": 207.0,
+   "bh_close_bp": 65.86142790354347,
+   "bh_mid_bp": 56.91650220134938
+  },
+  "2009": {
+   "trades": 91.0,
+   "bh_close_bp": 91.58292660842055,
+   "bh_mid_bp": 97.30555305436248
+  },
+  "2010": {
+   "trades": 122.0,
+   "bh_close_bp": 1.361770977139404,
+   "bh_mid_bp": 2.6037616417214973
+  },
+  "2011": {
+   "trades": 129.0,
+   "bh_close_bp": 12.109796443909627,
+   "bh_mid_bp": 15.005506023460775
+  },
+  "2012": {
+   "trades": 97.0,
+   "bh_close_bp": -26.485498178889273,
+   "bh_mid_bp": -26.19031822213259
+  },
+  "2013": {
+   "trades": 100.0,
+   "bh_close_bp": 40.248114791711515,
+   "bh_mid_bp": 39.704025579728196
+  },
+  "2014": {
+   "trades": 95.0,
+   "bh_close_bp": 2.787399325947515,
+   "bh_mid_bp": -1.1481752695374068
+  },
+  "2015": {
+   "trades": 94.0,
+   "bh_close_bp": 18.051635875524674,
+   "bh_mid_bp": 11.15068940024067
+  },
+  "2016": {
+   "trades": 125.0,
+   "bh_close_bp": 18.25851136356171,
+   "bh_mid_bp": 15.793978495701612
+  },
+  "2017": {
+   "trades": 137.0,
+   "bh_close_bp": 18.530760621700214,
+   "bh_mid_bp": 16.5905510464457
+  },
+  "2018": {
+   "trades": 155.0,
+   "bh_close_bp": 47.767868488934745,
+   "bh_mid_bp": 45.44272375600502
+  },
+  "2019": {
+   "trades": 137.0,
+   "bh_close_bp": 26.028075496357122,
+   "bh_mid_bp": 23.065847007602155
+  },
+  "2020": {
+   "trades": 150.0,
+   "bh_close_bp": 89.54602523251637,
+   "bh_mid_bp": 68.87652583218475
+  },
+  "2021": {
+   "trades": 140.0,
+   "bh_close_bp": 27.80457361392032,
+   "bh_mid_bp": 25.68439744936703
+  },
+  "2022": {
+   "trades": 147.0,
+   "bh_close_bp": -1.9008138486373187,
+   "bh_mid_bp": 2.848662455845512
+  },
+  "2023": {
+   "trades": 123.0,
+   "bh_close_bp": 24.438099112468244,
+   "bh_mid_bp": 24.638656804072635
+  },
+  "2024": {
+   "trades": 147.0,
+   "bh_close_bp": -10.09775486169397,
+   "bh_mid_bp": -9.322962249639174
+  },
+  "2025": {
+   "trades": 130.0,
+   "bh_close_bp": 30.121208890035188,
+   "bh_mid_bp": 30.108079594343078
+  }
+ }
+}

@@ -46,16 +46,19 @@ class FakeSession:
     def __init__(self, get_handler=None, post_handler=None):
         self.headers = {}
         self.gets, self.posts = [], []
+        self.redirect_flags = []      # every call's allow_redirects, as passed
         self._g, self._p = get_handler, post_handler
 
-    def get(self, url, params=None, timeout=None):
+    def get(self, url, params=None, timeout=None, allow_redirects=None):
+        self.redirect_flags.append(allow_redirects)
         self.gets.append((url, dict(params or {})))
         r = self._g(url, params or {})
         if isinstance(r, Exception):
             raise r
         return r
 
-    def post(self, url, json=None, timeout=None):
+    def post(self, url, json=None, timeout=None, allow_redirects=None):
+        self.redirect_flags.append(allow_redirects)
         self.posts.append((url, json))
         r = self._p(url, json)
         if isinstance(r, Exception):
@@ -586,6 +589,105 @@ def test_auction_missing_symbols_raise_by_name_and_no_bar_close_is_used(env_file
     assert all("bars" not in u for u, _ in s.gets)
 
 
+# ---- two prices from the primary (team lead's ruling, 2026-11-22; SCD on 2026-11-20)
+
+SCD_PRINTS = [pr("P", 14.348, t="2026-09-29T20:00:00.25131479Z"), pr("T", 14.18, t="2026-09-29T20:00:00.5Z"),
+              pr("N", 14.348, t="2026-09-29T20:00:02.365804871Z"), pr("N", 14.28, t="2026-09-29T20:10:00.003842801Z")]
+
+
+def bars_body(sym, c, t="2026-09-29T04:00:00Z"):
+    return FakeResp(200, {"bars": {sym: [{"t": t, "c": c}]}, "next_page_token": None})
+
+
+def test_two_primary_prints_take_the_later_one_when_the_daily_bar_agrees(env_file, sleeps):
+    c, s = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS)]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28)}))
+    out = c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})["SCD"]
+    assert out["price"] == 14.28 and out["exchange"] == "N" and out["t"] == "2026-09-29T20:10:00.003842801Z"
+    assert out["superseded"] == [{"price": 14.348, "t": "2026-09-29T20:00:02.365804871Z"}]
+    url, params = s.gets[-1]
+    assert url == al.DATA_BASE + "/v2/stocks/bars"
+    # the auction query's own timestamps: a bare date would be refused on the evening itself
+    assert (params["start"], params["end"]) == ("2026-09-29T04:00:00Z", "2026-09-29T20:30:00Z")
+    assert params["symbols"] == "SCD" and params["adjustment"] == "raw" and params["feed"] == "sip"
+
+
+def test_the_later_print_is_the_later_by_time_not_by_its_place_in_the_list(env_file, sleeps):
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS[::-1])]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28)}))
+    assert c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})["SCD"]["price"] == 14.28
+
+
+@pytest.mark.parametrize("bars, why", [
+    (bars_body("SCD", 14.348), "daily bar closes at 14.348"),             # the bar sides with the EARLIER print
+    (bars_body("SCD", 14.30), "daily bar closes at 14.3"),                # the bar is neither
+    (FakeResp(200, {"bars": {}, "next_page_token": None}), "0 daily bar"),
+    (FakeResp(200, {"bars": None, "next_page_token": None}), "0 daily bar"),
+])
+def test_two_primary_prints_the_bar_does_not_confirm_still_raise(env_file, sleeps, bars, why):
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS)]}),
+                                           "/v2/stocks/bars": bars}))
+    with pytest.raises(al.AmbiguousAuctionPrint, match=why):
+        c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
+
+
+def test_two_primary_prints_at_one_instant_raise_without_reading_a_bar(env_file, sleeps):
+    same = [pr("N", 14.348, t="2026-09-29T20:10:00Z"), pr("N", 14.28, t="2026-09-29T20:10:00Z")]
+    c, s = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(same)]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28)}))
+    with pytest.raises(al.AmbiguousAuctionPrint, match="share the timestamp"):
+        c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
+    assert all("bars" not in u for u, _ in s.gets)
+
+
+def test_a_bar_for_another_day_never_confirms_a_print(env_file, sleeps):
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS)]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28, t="2026-09-28T04:00:00Z")}))
+    with pytest.raises(al.UnexpectedResponse, match="bar dated 2026-09-28"):
+        c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
+
+
+def test_a_confirmed_pair_beside_a_missing_symbol_names_only_the_missing_one(env_file, sleeps):
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS)]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28)}))
+    with pytest.raises(al.MissingAuctionPrint) as e:
+        c.closing_auction_prints(["SCD", "NVG"], D, exchange_codes={"SCD": "N", "NVG": "N"})
+    assert e.value.symbols == ["NVG"]
+
+
+def test_two_prices_a_few_nanoseconds_apart_are_a_tie(env_file, sleeps):
+    """parse_ts keeps microseconds; below that the order is not known, so nothing is chosen."""
+    near = [pr("N", 14.348, t="2026-09-29T20:10:00.000000100Z"), pr("N", 14.28, t="2026-09-29T20:10:00.000000900Z")]
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(near)]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28)}))
+    with pytest.raises(al.AmbiguousAuctionPrint, match="share the timestamp"):
+        c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
+
+
+def test_a_refused_bar_read_returns_no_price(env_file, sleeps):
+    c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(SCD_PRINTS)]}),
+                                           "/v2/stocks/bars": FakeResp(403, text="subscription does not permit")}))
+    with pytest.raises(al.AlpacaError):
+        c.closing_auction_prints(["SCD"], D, exchange_codes={"SCD": "N"})
+
+
+def test_the_confirming_bar_is_dated_in_new_york_in_winter(env_file, sleeps):
+    w = dt.date(2026, 11, 20)                              # the real case; midnight New York is 05:00Z
+    prints = [pr("N", 14.348, t="2026-11-20T21:00:02.365804871Z"), pr("N", 14.28, t="2026-11-20T21:10:00.003842801Z")]
+    c, s = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"SCD": [day(prints, d="2026-11-20")]}),
+                                           "/v2/stocks/bars": bars_body("SCD", 14.28, t="2026-11-20T05:00:00Z")}))
+    assert c.closing_auction_prints(["SCD"], w, exchange_codes={"SCD": "N"})["SCD"]["price"] == 14.28
+    assert (s.gets[-1][1]["start"], s.gets[-1][1]["end"]) == ("2026-11-20T05:00:00Z", "2026-11-20T21:30:00Z")
+
+
+def test_one_price_printed_twice_reads_no_bar_and_names_nothing_superseded(env_file, sleeps):
+    twice = [pr("N", 18.50, t="2026-09-29T20:00:00Z"), pr("N", 18.50, t="2026-09-29T20:10:00Z")]
+    c, s = client(env_file, sleeps, route({"/v2/stocks/auctions": auction_body({"PDI": [day(twice)]})}))
+    out = c.closing_auction_prints(["PDI"], D, exchange_codes={"PDI": "N"})["PDI"]
+    assert out["price"] == 18.50 and "superseded" not in out
+    assert all("bars" not in u for u, _ in s.gets)
+
+
 def test_auction_only_the_primary_exchange_counts(env_file, sleeps):
     body = auction_body({"PDI": [day([pr("N", 18.50), pr("P", 18.49)])]})
     c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": body}))
@@ -613,6 +715,8 @@ def test_auction_requires_a_primary_code_for_every_symbol(env_file, sleeps):
 
 
 def test_auction_two_primary_prices_are_ambiguous(env_file, sleeps):
+    # pr() gives both prints one timestamp, so this is the tie: no later print, nothing chosen.
+    # Distinct times are the "two prices from the primary" tests above.
     body = auction_body({"PDI": [day([pr("N", 18.50), pr("N", 18.52)])]})
     c, _ = client(env_file, sleeps, route({"/v2/stocks/auctions": body}))
     with pytest.raises(al.AmbiguousAuctionPrint, match="PDI"):
@@ -1543,16 +1647,100 @@ def ny20(d):
     return int(dt.datetime.combine(d, dt.time(20), tzinfo=al.NY).timestamp())
 
 
+def ny_at(d, hour):
+    """`hour`:00 New York on session date `d`, as epoch seconds."""
+    return int(dt.datetime.combine(d, dt.time(hour), tzinfo=al.NY).timestamp())
+
+
+HALF_2025 = (dt.date(2025, 11, 28), dt.date(2025, 12, 24))      # 13:00 closes, EST
+HALF_2025_EDT = dt.date(2025, 7, 3)                             # 13:00 close, EDT
+
+
+def test_eod_a_half_day_is_stamped_1700_new_york_and_is_accepted(env_file, sleeps):
+    """The points read on 2026-11-14 (cef paper, period=3A): a 13:00 close is
+    stamped 17:00 New York, its close + 4 hours, on EST (2025-11-28T22:00Z,
+    2025-12-24T22:00Z) and on EDT (2025-07-03T21:00Z); full days either side
+    stay at 20:00. FAILS on 8eb9ce1, which raised "not 20:00:00 local" for the
+    first half day in any response."""
+    full = [dt.date(2025, 7, 2), dt.date(2025, 11, 26), dt.date(2025, 12, 1), dt.date(2025, 12, 26)]
+    half = [HALF_2025_EDT, *HALF_2025]
+    sessions = sorted(full + half)
+    stamps = [ny_at(d, 17 if d in half else 20) for d in sessions]
+    assert at_utc(2025, 11, 28, 22) in stamps and at_utc(2025, 7, 3, 21) in stamps
+    c, _ = eod_client(env_file, sleeps, history(stamps, [1.0 + i for i in range(len(sessions))]),
+                      early=set(half))
+    out = c.eod_equity_history(dt.date(2025, 7, 1), dt.date(2025, 12, 31))
+    assert [p.date for p in out] == sessions
+    assert {p.date: p.stamp.astimezone(al.NY).hour for p in out if p.date in half} == \
+        {d: 17 for d in half}
+
+
+def test_eod_a_half_day_point_outside_the_window_no_longer_stops_the_read(env_file, sleeps):
+    """Every point is checked before the window is applied, so one half day
+    anywhere in the months asked for used to refuse the whole read: the
+    collector's window starts at funding and only grows. FAILS on 8eb9ce1."""
+    sessions = [dt.date(2025, 11, 28), dt.date(2025, 12, 1), dt.date(2025, 12, 2)]
+    stamps = [ny_at(sessions[0], 17), ny20(sessions[1]), ny20(sessions[2])]
+    c, _ = eod_client(env_file, sleeps, history(stamps, [1.0, 2.0, 3.0]), early={sessions[0]})
+    out = c.eod_equity_history(dt.date(2025, 12, 1), dt.date(2025, 12, 2))
+    assert [(p.date, p.equity) for p in out] == [(sessions[1], 2.0), (sessions[2], 3.0)]
+
+
+def test_eod_a_1700_stamp_on_a_full_day_raises(env_file, sleeps):
+    """17:00 is right only after a 13:00 close. On a full day it could be an
+    intraday reading."""
+    d = dt.date(2025, 12, 1)
+    c, _ = eod_client(env_file, sleeps, history([ny_at(d, 17)], [1.0]), early=set(HALF_2025))
+    with pytest.raises(al.UnexpectedResponse, match="not 20:00:00 local.*16:00 close"):
+        c.eod_equity_history(d, d)
+
+
+def test_eod_a_2000_stamp_on_a_half_day_raises(env_file, sleeps):
+    """Alpaca stamps a half day at 17:00. A 20:00 stamp there is a convention
+    not seen, so it is refused, naming the time expected."""
+    d = dt.date(2025, 11, 28)
+    c, _ = eod_client(env_file, sleeps, history([ny20(d)], [1.0]), early=set(HALF_2025))
+    with pytest.raises(al.UnexpectedResponse, match="not 17:00:00 local.*13:00 close"):
+        c.eod_equity_history(d, d)
+
+
+def test_eod_a_calendar_date_listed_twice_raises(env_file, sleeps):
+    """Review 2026-11-14: with one date served as 16:00 then 13:00, the later
+    row used to decide, and a 17:00 stamp on a full day was accepted."""
+    d = dt.date(2025, 12, 1)
+    cal = lambda params: FakeResp(200, [{"date": d.isoformat(), "open": "09:30", "close": x}
+                                        for x in ("16:00", "13:00")])
+    c, _ = client(env_file, sleeps, route({
+        "/v2/account/portfolio/history": FakeResp(200, history([ny_at(d, 17)], [1.0])),
+        "/v2/calendar": cal}))
+    with pytest.raises(al.UnexpectedResponse, match="2025-12-01 twice"):
+        c.eod_equity_history(d, d)
+
+
+@pytest.mark.parametrize("close", ["20:00", "23:30", "13:75"])
+def test_eod_a_calendar_close_with_no_time_four_hours_later_raises(env_file, sleeps, close):
+    """A close whose + 4 hours is not a time on the same date has never been
+    served. It raises UnexpectedResponse, not a bare ValueError from dt.time."""
+    d = dt.date(2025, 12, 1)
+    cal = lambda params: FakeResp(200, [{"date": d.isoformat(), "open": "09:30", "close": close}])
+    c, _ = client(env_file, sleeps, route({
+        "/v2/account/portfolio/history": FakeResp(200, history([ny20(d)], [1.0])),
+        "/v2/calendar": cal}))
+    with pytest.raises(al.UnexpectedResponse, match=f"{close} close"):
+        c.eod_equity_history(d, d)
+
+
 def test_eod_stamps_map_to_the_new_york_session_either_side_of_the_dst_change(env_file, sleeps):
     """20:00 New York on each session: 00:00Z on EDT, 01:00Z on EST (after
     2026-11-01). The session date is the New York date, and an early close is
-    honoured. (Corrected 2026-11-02: this test had EST sessions at 00:00Z,
+    stamped 17:00 (corrected 2026-11-14: this test had the half day at 20:00,
+    which Alpaca does not serve). (Corrected 2026-11-02: this test had EST sessions at 00:00Z,
     19:00 EST, which Alpaca does not serve.) FAILS on 3478159, which refused
     every 01:00Z point."""
     sessions = [dt.date(2026, 10, 29), dt.date(2026, 10, 30),     # EDT
                 dt.date(2026, 11, 2), dt.date(2026, 11, 3),        # EST, after 2026-11-01
                 dt.date(2026, 11, 25), dt.date(2026, 11, 27)]      # 11-27 closes at 13:00
-    stamps = [ny20(d) for d in sessions]
+    stamps = [ny20(d) for d in sessions[:-1]] + [ny_at(sessions[-1], 17)]   # half day: 17:00
     eq = [100000.0 + i for i in range(len(sessions))]
     c, _ = eod_client(env_file, sleeps, history(stamps, eq), early={dt.date(2026, 11, 27)})
     out = c.eod_equity_history(dt.date(2026, 10, 29), dt.date(2026, 11, 27))
@@ -1694,3 +1882,103 @@ def test_eod_a_stamp_outside_the_clock_raises_unexpected_response(env_file, slee
     c, _ = eod_client(env_file, sleeps, history([utc0(2026, 10, 16), stamp], [100000.0, 100001.0]))
     with pytest.raises(al.UnexpectedResponse, match=str(stamp)):
         c.eod_equity_history(dt.date(2026, 10, 1), dt.date(2026, 11, 3))
+
+
+# ------------------------------------------------ pacing the trading host (2026-11-23)
+# The events book's first armed send read 219 assets and POSTed 219 orders with nothing pacing
+# them, and Alpaca answered HTTP 429 to 173 of the orders. Every request to the trading host now
+# takes a token from a bucket (TRADING_BURST, refilled at TRADING_MAX_PER_MIN a minute).
+
+CLOCK_OK = {"timestamp": "2026-09-29T15:45:00-04:00", "is_open": True,
+            "next_open": "2026-09-30T09:30:00-04:00", "next_close": "2026-09-29T16:00:00-04:00"}
+
+
+class VirtualTime:
+    """A clock that only moves when the client sleeps, so pacing is measured, not timed."""
+
+    def __init__(self):
+        self.t = 0.0
+        self.sleeps = []
+
+    def sleep(self, s):
+        self.sleeps.append(s)
+        self.t += s
+
+    def monotonic(self):
+        return self.t
+
+
+def paced_client(env_file, vt, get=None, post=None):
+    s = FakeSession(get or route({"/v2/clock": FakeResp(200, CLOCK_OK)}), post)
+    return al.AlpacaClient("cef", env_file, session=s, sleep=vt.sleep,
+                           monotonic=vt.monotonic), s
+
+
+def test_a_burst_goes_unpaced_and_the_rest_wait_their_turn(env_file):
+    """Failed before 2026-11-23 (no pacing, and no `monotonic` to inject)."""
+    vt = VirtualTime()
+    c, s = paced_client(env_file, vt)
+    for _ in range(al.TRADING_BURST):
+        c.clock()
+    assert vt.sleeps == []                      # the core's few dozen requests never wait
+    for _ in range(20):
+        c.clock()
+    step = 60.0 / al.TRADING_MAX_PER_MIN
+    assert vt.sleeps == pytest.approx([step] * 20)
+
+
+def test_no_minute_holds_more_than_alpacas_limit(env_file):
+    """219 asset reads, then 219 orders each with its clock read: the 2026-11-23 shape."""
+    vt = VirtualTime()
+    stamps = []
+
+    def get(url, params):
+        stamps.append(vt.t)
+        if url.endswith("/v2/clock"):
+            return FakeResp(200, CLOCK_OK)
+        sym = url.rsplit("/", 1)[-1]
+        return FakeResp(200, {"symbol": sym, "tradable": True, "shortable": True,
+                              "easy_to_borrow": True, "marginable": True, "status": "active",
+                              "class": "us_equity", "fractionable": True})
+
+    def post(url, js):
+        stamps.append(vt.t)
+        return FakeResp(200, {**js, "id": "o-" + js["client_order_id"], "status": "accepted",
+                              "filled_qty": "0", "submitted_at": "2026-09-29T19:45:00Z"})
+    c, s = paced_client(env_file, vt, get=get, post=post)
+    for i in range(219):
+        c._get(c._base, f"/v2/assets/S{i}")
+    for i in range(219):
+        c.clock()
+        try:
+            c.submit_order(f"S{i}", 1, "buy", f"cid-{i}", time_in_force="day")
+        except al.AlpacaError:
+            pass                                  # the echo check is not what this test is about
+    assert len(stamps) == 219 * 3
+    worst = max(sum(1 for t in stamps if a <= t < a + 60.0) for a in stamps)
+    assert worst <= al.TRADING_BURST + al.TRADING_MAX_PER_MIN < 200, worst
+
+
+def test_the_data_host_is_not_paced(env_file):
+    vt = VirtualTime()
+    c, s = paced_client(env_file, vt, get=lambda url, params: FakeResp(200, {}))
+    for _ in range(al.TRADING_BURST + 30):
+        c._get(c._data, "/v2/stocks/bars")
+    assert vt.sleeps == []
+
+
+def test_an_order_is_paced_like_a_read(env_file):
+    vt = VirtualTime()
+    c, s = paced_client(env_file, vt, post=lambda url, js: FakeResp(422, {"message": "x"}))
+    for _ in range(al.TRADING_BURST):
+        c.clock()
+    with pytest.raises(al.OrderRejected):
+        c.submit_order("PDI", 1, "buy", "cid-1", time_in_force="day")
+    assert vt.sleeps == pytest.approx([60.0 / al.TRADING_MAX_PER_MIN])
+
+
+def test_the_send_budget_covers_the_pacing():
+    """Gate 4 allows SEND_ALLOWANCE_PER_ORDER_S per order; each order is a clock read and a
+    POST, so the pacing alone must fit inside that allowance once the burst is spent."""
+    from quantt.session import gate as gt
+    assert gt.SEND_ALLOWANCE_PER_ORDER_S >= 2 * 60.0 / al.TRADING_MAX_PER_MIN
