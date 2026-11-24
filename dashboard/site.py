@@ -31,7 +31,7 @@ import sys
 from html import escape
 from pathlib import Path
 
-from dashboard import build as perf, charts, metrics as M, snapshot as S
+from dashboard import build as perf, charts, layout as L, metrics as M, snapshot as S
 from dashboard.layout import (BOOK_COLOURS, BOOK_TEXT, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
                               photo_style, tone, usd, when)
 
@@ -55,6 +55,15 @@ STAGES = (
 )
 
 
+def books_trading(snap: dict) -> tuple:
+    """(books that have sent an order, books whose start could not be read). WHY (release-check
+    review, 2026-11-24): counting any book with a session counted the event book's dry runs as trading
+    and dropped an unreadable book without a word. A book trades from its first STARTED record."""
+    started = sum(1 for b in snap["books"] if "value" in b.get("start", {}))
+    unread = sum(1 for b in snap["books"] if S.UNMEASURED in b.get("start", {}))
+    return started, unread
+
+
 def date_range(first: str, last: str) -> str:
     """"29 Sep to 20 Nov 2026"; both years when they differ."""
     a, b = fmt_short(first), fmt_short(last)
@@ -75,8 +84,8 @@ def overview(snap: dict) -> str:
     withheld because a book's record could not be read shows no portfolio figure at all."""
     pf = perf.portfolio(snap)
     figs = []
-    n_books = sum(1 for b in snap["books"] if "value" in b["session"] or "value" in b["official"])
-    figs.append(perf.fig(str(n_books), "Books trading"))
+    n_books, n_unread = books_trading(snap)
+    figs.append(perf.fig(str(n_books), "Books trading" + (f" ({n_unread} not read tonight)" if n_unread else "")))
     ev = next((b for b in snap["books"] if b["name"] == "events"), None)
     if ev is not None and "value" in ev["sleeves"]:
         n_strat = len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
@@ -224,7 +233,7 @@ def research(snap: dict, ledger: tuple) -> str:
     label-and-content grid (team lead, 2026-11-24: "re organize the library / research")."""
     n_ledger, first = ledger
     since = dt.date.fromisoformat(first).strftime("%B %Y")
-    n_books = sum(1 for b in snap["books"] if "value" in b["session"] or "value" in b["official"])
+    n_books, n_unread = books_trading(snap)
     head = page_head("Research", "Research",
                      "How we find, test and promote trading strategies, and the infrastructure that runs them.")
     pipeline = _sec("", "Pipeline", "From idea to live capital",
@@ -244,7 +253,7 @@ def research(snap: dict, ledger: tuple) -> str:
               f'<a class="btn ghost" href="{REPO_URL}" rel="noopener">Source code on GitHub</a></div></div>'
               '<div class="sec-body"><div class="figures">'
               + perf.fig(str(n_ledger), f"Ideas recorded since {since}")
-              + perf.fig(str(n_books), "Books trading on paper")
+              + perf.fig(str(n_books), "Books trading on paper" + (f" ({n_unread} not read tonight)" if n_unread else ""))
               + perf.fig(str(len(STAGES)), "Stages from idea to live")
               + "</div></div></div></section>")
     day = _sec("", "Infrastructure", "The trading day",
@@ -382,13 +391,18 @@ def publish(snap: dict, out_root: Path, now: dt.datetime | None = None, *, stati
     problems = S.validate(snap) + S.find_private(snap)
     if problems:
         raise SystemExit("snapshot refused, no page written:\n  " + "\n  ".join(problems))
-    built = pages(snap, content=content, repo=repo)
     now = now or dt.datetime.now(dt.timezone.utc)
     builds = out_root / "builds"
     builds.mkdir(parents=True, exist_ok=True)
     target = builds / now.strftime("%Y%m%dT%H%M%S%fZ")
     tmp = builds / (".tmp-" + target.name)
-    shutil.copytree(static, tmp / "static")
+    shutil.copytree(static, tmp / "static")                # copied first: the pages hash this copy
+    try:
+        with L.assets_from(tmp / "static"):
+            built = pages(snap, content=content, repo=repo)
+    except BaseException:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
     for rel, html in built.items():
         p = tmp / rel
         p.parent.mkdir(parents=True, exist_ok=True)

@@ -6,6 +6,7 @@ draws chart tooltips. The Content-Security-Policy the web server sends
 """
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
 import hashlib
 from html import escape
@@ -84,6 +85,21 @@ def tone(v) -> str:
 STATIC = Path(__file__).resolve().parent / "public" / "static"
 
 
+_ASSETS = [STATIC]          # where asset_version reads site.css and site.js; site.publish points it at its build
+
+
+@contextlib.contextmanager
+def assets_from(static: Path):
+    """Hash the stylesheet and script in `static` while the pages are rendered: site.publish passes its
+    build's own copy, so the `?v=` on a page always names the files that build serves (release-check
+    review, 2026-11-24: a release checked out during a build could pair the old hash with new CSS)."""
+    _ASSETS.append(static)
+    try:
+        yield
+    finally:
+        _ASSETS.pop()
+
+
 def asset_version() -> str:
     """The first 12 hex digits of the SHA-256 of site.css and site.js, put on their URLs.
 
@@ -93,7 +109,7 @@ def asset_version() -> str:
     entry (the Worker keys /static/ on `v`), so a page always gets the styles it was built with."""
     h = hashlib.sha256()
     for name in ("site.css", "site.js"):
-        h.update((STATIC / name).read_bytes())
+        h.update((_ASSETS[-1] / name).read_bytes())
     return h.hexdigest()[:12]
 
 

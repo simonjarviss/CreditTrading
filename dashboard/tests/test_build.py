@@ -143,7 +143,7 @@ def test_cli_builds_the_fixture(tmp_path):
 
 # ------------------------------------------------------------ read-only ----
 STDLIB = {"__future__", "argparse", "csv", "datetime", "json", "math", "os", "re", "shutil", "sys", "html",
-          "pathlib", "tempfile", "zoneinfo", "hashlib", "dashboard"}
+          "pathlib", "tempfile", "zoneinfo", "hashlib", "contextlib", "dashboard"}
 CODE = ["build.py", "snapshot.py", "export.py", "metrics.py", "charts.py", "layout.py", "site.py"]
 
 

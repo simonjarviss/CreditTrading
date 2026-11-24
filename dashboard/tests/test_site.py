@@ -212,3 +212,23 @@ def test_every_page_photo_not_taken_by_quantt_is_credited(snap, tmp_path, conten
         assert photo in L.PHOTO_CREDITS, photo
         who, lic, url = L.PHOTO_CREDITS[photo]
         assert f"{who}</a>, {lic}" in h and url in h, page_name
+
+
+def test_the_pages_hash_the_stylesheet_the_build_serves(snap, tmp_path, content):
+    """Release-check review, 2026-11-24: the hash came from the source while the build copied the files
+    after rendering, so a release checked out mid-build could pair the old hash with the new CSS."""
+    import hashlib
+    target = build(snap, tmp_path / "site", content)
+    h = hashlib.sha256((target / "static" / "site.css").read_bytes() + (target / "static" / "site.js").read_bytes())
+    assert f'site.css?v={h.hexdigest()[:12]}"' in (target / "index.html").read_text()
+
+
+def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content):
+    """Release-check review, 2026-11-24: a dry-run book counted as trading; an unreadable one vanished."""
+    assert SITE.books_trading(snap) == (3, 0)
+    ev = next(b for b in snap["books"] if b["name"] == "events")
+    ev["start"] = {"absent": "no session has sent an order yet"}
+    assert SITE.books_trading(snap) == (2, 0)
+    ev["start"] = {"UNMEASURED": "STARTED unreadable"}
+    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    assert ">2<" in h and "Books trading (1 not read tonight)" in h
