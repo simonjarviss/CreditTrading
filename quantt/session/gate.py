@@ -499,7 +499,7 @@ def gate_data_by_sleeve(asof, refresh_exit, close_dates, nav_dates, universes: d
     return out, {}
 
 
-# --------------------------------------------- gate 5's missing-NAV hold (dark)
+# ------------------------------- gate 5's missing-NAV hold (on since 2026-10-29)
 
 # The book json's `data.missing_nav` (run.missing_nav_for). ABSENT is gate 5 as
 # it always was: one name without an as-of NAV refuses the whole day.
