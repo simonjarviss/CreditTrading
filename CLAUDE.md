@@ -1,10 +1,13 @@
-# QUANTT — Credit Trading
+# QUANTT
 
-A systematic **credit closed-end-fund discount-reversion** book, moving from IBKR
-to **Alpaca paper** (team lead, 2026-09-28): one paper account per book, prod on a
-cloud VM, MOC orders on a schedule. Team lead: Simon Jarvis. On paper now, with
-**real capital planned** (team lead, 2026-10-09, `docs/SYSTEM.md` §5); judged on
-absolute return under a vol cap.
+A small systematic trading desk. **Scope is open** (team lead, 2026-11-09,
+`docs/SYSTEM.md` §5): any asset class and any style, with many independent sleeves
+built toward one combined book. **The mission, and the pipeline every idea follows
+(idea, explore, paper, go-live proposal, live), is `docs/MISSION.md`. Read it at the
+start of every session.** What trades today is two paper sleeves, the core credit
+closed-end-fund discount book and C4 (five more CEF families), on Alpaca paper, with
+MOC orders on a schedule from a cloud VM. Team lead: Simon Jarvis. Real capital is
+planned (`docs/SYSTEM.md` §5).
 
 **The book trades on Alpaca paper**, run by `quantt/` from a prod clone of this
 repository held at a release tag (IBKR was retired on 2026-09-28). Prod is moving
@@ -22,14 +25,15 @@ python3 -m ops.orient      # ~3s: where you are, which machine is prod and armed
 
 Then **`docs/SYSTEM.md`** — what we trade, how it runs, what we know, what has
 been decided. **`docs/INDEX.md`** says which file owns every other question.
-Read `docs/BRIEF.md` before any research.
+Read `docs/MISSION.md` and `results/IDEA_LEDGER.md` before any research; `docs/BRIEF.md`
+is the theory and market structure of the CEF sleeves.
 
 | you want | ask |
 |---|---|
 | any number about the accounts, the spec or the counters | `python3 -m ops.orient` (a section that cannot measure says `UNMEASURED`, never a guess) |
 | which machine is prod, at which tag, armed or not | `python3 -m ops.orient` PROD (alone: `python3 -m ops.prod_state`) |
 | what the system is, how it runs, the standing decisions | `docs/SYSTEM.md` |
-| trial counters, D1–D7, what is dead | `docs/RESEARCH_STATE.md` |
+| what has been tested, and what it showed | `results/IDEA_LEDGER.md`; before 2026-11-09, `docs/RESEARCH_STATE.md` (history: its counters are frozen) |
 | whether a document still says true things | `python3 -m ops.doc_audit` |
 | who keeps which lane, and how work reaches `main` and prod | `docs/TEAM.md` (setting up: `docs/ONBOARDING.md`) |
 
@@ -64,8 +68,9 @@ analyst's session:
   is `simon`), create no other branch on GitHub, and deliver through a pull
   request.
   The team lead is the only reviewer and the only person who merges.
-- **Move no trial counter, and open no holdout, except in the commit that records
-  the team lead's approval.** Compute no return on a trial before that approval.
+- **Start no paper or shadow book.** Promoting an idea to paper is for the team
+  lead's sessions (`docs/SYSTEM.md` §5, 2026-11-09, which leaves the analysts'
+  process as `docs/TEAM.md` has it).
 - **Write `docs/SYSTEM.md` §5 only to record a ruling the team lead has made.**
   Propose one in the pull request instead.
 
@@ -82,31 +87,20 @@ that cannot be undone.
    an explicit go before transmitting.** (Until 2026-09-28 the rule was "the human
    runs it with `!`"; the team lead asked agents to run the migration commands
    themselves, and this is that instruction made durable.)
-   **One recorded exception (team lead, 2026-10-27), paper only.** The
-   autonomous research loop may transmit to the **agent-lab** paper account
-   without a per-session go. Since 2026-10-28 that is the spare connector account
-   C4 trades in, not a new one. It does so only through the `quantt` runner for
-   that account, never by an ad-hoc API call. The loop may also promote a lab
-   sleeve into the main paper book once the criteria fixed in its
-   pre-registration are met; installing on the VM follows the standing authority
-   below. Rules 2–5 bind every one of those transmissions. It never applies to a
-   live-money account. `docs/SYSTEM.md` §5, 2026-10-27 (the autonomous loop).
-   **Standing authority (team lead, 2026-11-02): agents run releases and arming.**
-   Agents may merge, tag and install a release on the VM, and arm or disarm a
-   book's scheduled runner, without asking, when every gate passes:
-   - a release-check GO on the exact commit;
-   - CI passed on the PR's exact head commit. Main's ruleset admits a merge only
-     through the team lead's admin bypass, so an agent uses `--admin` only then,
-     with `--match-head-commit`;
-   - a history replay with no run refused now;
-   - outside the send windows;
-   - an `ops.prod_state` read-back afterwards.
-   Each act goes into `docs/JOURNAL.md` the same day; that is the only notice.
-   Before arming a book, confirm that no other runner is armed on its account (rule 2).
-   The armed runner then sends each decided plan on its schedule. The per-session go
-   above still binds any order an agent would send by hand. `DRY_RUN=1` set by the
-   team lead always wins (rule 4). Credentials are never read or moved (rule 5).
-   Approving a trial stays the team lead's. `docs/SYSTEM.md` §5, 2026-11-02.
+   **Paper and shadow books (team lead, 2026-11-09).** An agent may start and run a
+   new paper or shadow book on its own, **only through the paper/shadow runner whose
+   design the team lead has approved once**, never by an ad-hoc API call, and never
+   on an account another runner is armed on (rule 2). Until that approval is
+   recorded in `docs/SYSTEM.md` §5, no agent starts a paper book. Rules 2–5 bind
+   every transmission. **It never applies to a real-money account**: there, every
+   order needs the team lead's go on the full list, in the session.
+   **Who runs a prod release (team lead, 2026-11-23, `docs/SYSTEM.md` §5).** An
+   agent in the team lead's session runs the release check, then merges to
+   `main`, tags and installs on the VM. **Arming or disarming a book happens only
+   on the team lead's go in the session**, after the order list is shown. The
+   2026-11-02 standing authority (agents arming on their own) and the 2026-10-27
+   research-loop exception stay withdrawn (`docs/SYSTEM.md` §5 keeps both as
+   history).
 2. **The trade phase is not idempotent, and the broker does not dedupe.** Open
    positions exclude unfilled MOC orders, so a second armed run's orders fill in
    the same auction and the book doubles. At Alpaca, `client_order_id` is unique
@@ -181,44 +175,56 @@ recall of any specific figure is wrong until you have fetched it.**
 
 ## Hard rules — research
 
-- **Execution convention is `shift(2)`**: decide at *t*, MOC fill at *t+1*, earn
-  the *t+2* return. Canonical implementation: `scripts/research/harness.py`
-  (`EXEC_LAG`, `evaluate`, `report`, and the target builders for every family).
-  `band_frontier.evaluate()` delegates to it, byte-identical on the live book.
-  The team lead ruled on 2026-10-27 that it may be restructured as necessary.
-  **Do not build another backtester**: extend this one, visibly. ML goes through
-  `scripts/research/ml.py`, whose labels and purged splits come from the harness.
-  `/harness`.
-- **Turnover-matched comparisons only** (within 5% turn/yr). **Every table shows
-  gross P&L as the headline** — the paper account is scored on gross P&L with no
-  borrow or execution cost (team lead, D19/D20, 2026-09-15) — **and the cost grid
-  5 / 15 / 30bp beside it as the real-money view, labelled, never mixed into one
-  column** (team lead, 2026-09-28). Say whether the answer flips sign across the
-  grid. Borrow is charged separately and labelled.
-- **No sweeping and picking.** Derive a parameter, then check it lands on a
-  plateau. The argmax of a swept `z_window` column failed out of sample within
-  hours.
-- **Count trials.** Two counters, CEF and GAMMA, each with its own deflated-Sharpe
-  bar √(2 ln N). Read them from the counter table in `docs/RESEARCH_STATE.md`
-  (orient TRIALS derives the bar), and update that table **in the same commit as
-  the trial**. Every trial stores its daily P&L series with
-  `scripts/research/registry.py`. The paper's bar needs those series
-  (`docs/SYSTEM.md` §5, 2026-10-27). **The research loop approves its own trials,
-  with no cap** (team lead, 2026-10-27). That is why every trial is counted and
-  stored: each one raises the bar for the next.
-- **Holdouts are sealed and opened once**: the untouched CEFs outside the
-  deployed universe (trading any of them consumes the set), and a **2023-01-01
-  time holdout**.
-- **Pre-register before the session that trades it** (`/prereg`).
+**Rewritten 2026-11-09** (team lead, `docs/SYSTEM.md` §5; `docs/MISSION.md` §1–§2).
+Pre-registration, the trial counters and deflated-Sharpe bars, the holdout ceremony,
+"no sweeping and picking", the cost grid and the alpha-only gate are **dropped**.
+Paper trading is the filter. What follows is what stays: safety, and not fooling
+yourself with bad code.
+
+- **The job is to find edges and get them to paper**, not to explain why they will
+  not work. Start from who loses money to you and why they keep doing it: every idea
+  begins as an idea card (`docs/MISSION.md` §4.1). Breadth is the main lever.
+- **No lookahead, including in the data.** A signal uses only what was available at
+  decision time: NAV publication lags, filing and acceptance dates and never period
+  ends, index membership as of that day, macro data at its first-release vintage.
+- **Execution convention is `shift(2)`** for anything traded at the close: decide at
+  *t*, MOC fill at *t+1*, earn the *t+2* return. Canonical implementation:
+  `scripts/research/harness.py` (`EXEC_LAG`, `evaluate`, `report`, and the target
+  builders). **Do not build another backtester**: extend this one, visibly. ML goes
+  through `scripts/research/ml.py`. A sleeve with a different fill (an open, an
+  intraday window) states its convention and asserts it. `/harness`.
+- **Judge on gross signal. Do not model costs in research.** No cost grid, borrow
+  haircut or slippage assumption, and no idea rejected on a guessed cost. Costs are
+  measured from paper fills and appear only in a go-live proposal. Capacity is a
+  feasibility check and is always shown: position size against average daily volume
+  at $1M, $5M and $10M.
+- **Split time at least once before paper**: early against late, and at least two
+  market regimes. It takes five minutes and catches most bugs and flukes. Report by
+  era where the sample allows (landmine 8).
+- **Keep the idea ledger.** Every idea tested gets one line in
+  `results/IDEA_LEDGER.md` in the same commit: date, idea, data, gross result,
+  status. It is a record, not a gate. Read it, and `/graveyard`, before starting:
+  a dead idea may be revived with a new angle (new data, mechanism, horizon or
+  instrument). The most common past failure is a stale-price artifact; the second,
+  a control group scoring as well as the treatment. Both are bugs to check for.
+- **Report exposures, do not gate on them.** Show each result's factor exposures
+  (equity, rates, credit) and its correlation with the sleeves already held. Risk
+  premia may be sized sleeves; exposure is managed at book level.
+- **Promote to paper yourself** once an idea clears the Explore bar
+  (`docs/MISSION.md` §7), through the approved paper/shadow runner (order-path
+  rule 1). Real money is the team's decision on a go-live proposal with a
+  strategy-specific bar.
 - **Modelled sessions are not evidence.** Only broker-confirmed fills count
-  toward any live statistic. On Alpaca paper, record both the fill Alpaca reports
-  (the official record) and the P&L at the official closing-auction print, labelled
-  separately (team lead, 2026-09-28) — paper does not simulate the auction.
+  toward any live statistic; a shadow book's simulated fills are labelled as
+  simulated. On Alpaca paper, record both the fill Alpaca reports (the official
+  record) and the P&L at the official closing-auction print, labelled separately:
+  paper does not simulate the auction.
 - **No decision rule may key on a number written in a document** (H14). Re-measure
   at run time and say what you do under either outcome.
-- **Check the graveyard before proposing anything** (`/graveyard`). The most
-  common cause of death is a stale-price artifact; the second, a control group
-  scoring as well as the treatment.
+- **Log it for the report.** Every result, ruling, release, incident or live-P&L
+  day gets an entry in `results/report/EVIDENCE_LOG.md`, in the same commit, with
+  provenance (`results/report/README.md`; `.claude/rules/report.md`). Live data:
+  daily aggregates in the repo; rows only in the gitignored `results/report/_cache_live/`.
 
 ## Commands
 
@@ -229,7 +235,6 @@ python3 -m ops.doc_audit               # do the documents still say true things?
 python3 -m quantt.broker.alpaca_probe --check-keys   # which Alpaca keys are SET (no network)
 python3 -m quantt.broker.alpaca_probe  # read-only snapshot of each paper account
 python3 scripts/cef/band_frontier.py   # the trading-policy frontier
-python3 -m scripts.research.inference bars 52 --years 13 --sr 0.67   # power and both DSR bars for a counter's N
 python3 scripts/cef/plan_diagnostics.py  # IC, kappa, PCA, ADV, vol scalar
 python3 .claude/hooks/book_state.py -p # what the banner and status line read
 ```
@@ -262,7 +267,10 @@ the Alpaca prod. `ibkr-final` tags the last IBKR-era commit.
 
 1. **Alpaca paper does not simulate the closing auction.** Staff say paper fills
    MOC at the current quote [V: forum staff post, 2026-09-28]. Paper also charges
-   no borrow, no dividends and no regulatory fees [V: docs]. **Paper processes no
+   no borrow and no dividends [V: docs]. **It does charge regulatory fees (SEC and
+   CAT)**, although Alpaca's paper page says they are not simulated [V: the cef
+   account's own FEE activities, `results/cef/LIVE_ATTRIBUTION_2026-11-02.md`;
+   corrected 2026-11-08, team lead]. **Paper processes no
    corporate actions at all: no splits and no mergers** [V: Alpaca staff forum
    replies, 2024-06-10 and 2026-07-15]. A held fund that splits keeps its old share
    count on paper, and a merger never converts. The runner has no handling for
@@ -289,6 +297,13 @@ the Alpaca prod. `ibkr-final` tags the last IBKR-era commit.
     tag `pre-clean-slate` — the latter hangs forever on Python 3.12+. orient
     HYGIENE counts unguarded imports by AST.
 
+11. **numexpr returns wrong numbers on this laptop** for broadcast arithmetic
+    (`df.sub(series, axis=0)`, `df.div(row_sums, axis=0)`) on a frame above one
+    million cells, differently on each run (`scripts/events/numexpr_fault.py`).
+    Any wide-universe research script must run with
+    `pd.set_option("compute.use_numexpr", False)`; importing
+    `scripts/research/explore.py` sets it. The CEF panels are too small to hit it.
+
 ## Tests
 
 **Never quote a test count; run `python3 -m pytest`.** A green suite says little
@@ -302,20 +317,26 @@ every network connection during tests (`ops/netguard.py`).
 
 `.claude/README.md` is the map. `.claude/hooks/` is **advisory** — the
 SessionStart banner, a post-edit check and the status line; nothing blocks.
+Rebuilt on 2026-11-09 for the mission (`docs/MISSION.md` §9); where a skill,
+agent or workflow disagrees with this file, this file wins.
 
-Skills: `/morning-brief`, `/next-task`, `/graveyard`, `/harness`, `/repro`,
-`/prereg`, `/spec-change`. (The IBKR-run skills were deleted 2026-09-28; they are
-at tag `pre-clean-slate` under `pre-clean-slate:_archive/claude_layer/`.)
+Skills, by pipeline stage: `/hunt`, `/idea`, `/explore`, `/paper`,
+`/scoreboard`, `/combine`, `/go-live`; and `/harness`, `/graveyard`, `/repro`,
+`/next-task`, `/morning-brief`, `/spec-change`. `/paper` and `/scoreboard`
+describe a paper/shadow runner that is **not built or approved yet**: `/paper`
+refuses to start a book until `docs/SYSTEM.md` §5 records the design's approval.
+The pre-registration skill was removed on 2026-11-09; the IBKR-run skills were
+deleted on 2026-09-28 (tag `pre-clean-slate`, under
+`pre-clean-slate:_archive/claude_layer/`).
 
-Subagents, in research-line order (`.claude/README.md` has the line; rebuilt
-2026-10-27, `results/research/DESK_METHOD_2026-10-27.md`): `quant-researcher`,
-`data-engineer`, `data-analyst`, `statistician`, `ml-engineer`,
-`backtest-engineer`, `beta-detector`, `quant-reviewer`, `portfolio-manager`,
-`quant-trader`, and `market-structure-analyst` for the domain. The event desk's
-seats (2026-10-19): `event-scout`, `filings-analyst`, `deal-analyst`,
-`credit-situations-analyst`, `data-librarian`, `event-econometrician`; the saved
-workflow `ss-census` chains them from screen to a zero-trial gate verdict.
+Subagents. The mission's six seats: `market-historian-economist`,
+`signal-hunter`, `data-scout`, `portfolio-architect`, `execution-engineer`,
+`go-live-reviewer` (go-live stage only; it does not veto ideas earlier).
+Helpers at any stage: `quant-reviewer` (code), `beta-detector` (exposures and
+artifacts, reported, never a veto), `statistician`, `ml-engineer`,
+`data-analyst`. Domain seats: `market-structure-analyst`, `filings-analyst`,
+`deal-analyst`, `credit-situations-analyst`. The saved workflow `research-idea`
+chains them through one Explore run.
 
-**Options are closed, except through one pre-registered standalone short-premium
-test (team lead, 2026-10-09), and that is recorded rather than remembered**:
+**Scope is open, options and futures included** (team lead, 2026-11-09):
 `docs/SYSTEM.md` §5.

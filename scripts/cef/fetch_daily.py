@@ -154,6 +154,14 @@ symbols, lock and CEFConnect use come from its config (`resolve_data_book`,
     FAIL, and the next slot re-runs the refresh; the collector reads an exit 6
     whose output names INCOMPLETE_TAG as an unfinished step, not a done one. The
     core runs no spike guard, so its exits are what they always were.
+    THE PRICE BASIS (2026-11-04; team lead 2026-11-03, "Hold C4 one day, fix IGR"):
+    before anything is merged, each split ruled in data_books.C4_FETCH_SPLIT_RULINGS
+    has its pre-ex fetched rows that Yahoo split-adjusted put back on the NAV's
+    (unadjusted) basis, judged row by row against the NAV on every fetch; a split
+    Yahoo declares with no ruling, a row the NAV cannot place, or a fetched close or
+    NAV that steps against the stored value by a split-like ratio refuses the run,
+    exit 7 (`BASIS-STEP`), and NOTHING is written (data_guards.py, THE LIVE FETCH'S
+    PRICE BASIS). The core carries no rulings: none of this runs for it.
 """
 from __future__ import annotations
 
@@ -214,6 +222,14 @@ EXIT_SPIKE = 6
 # tell "spike, pair complete" (its step done) from "spike, pair incomplete" (not
 # done, retried), since exit 6 now outranks exit 4 (THE SPIKE GUARD, above).
 INCOMPLETE_TAG = "INCOMPLETE for"
+# C4 only (DATA BOOKS, THE PRICE BASIS): a fetched close or NAV that could not be put on
+# the stored panel's share basis. NOTHING is written: an unruled split Yahoo declares in
+# the fetched window, a ruled split's row the NAV cannot place, or a split-like step
+# between a fetched value and the stored one (data_guards.py, THE LIVE FETCH'S PRICE
+# BASIS). Gate 5 refuses any exit but 0 (and 4 under the missing-NAV hold); the
+# collector fails the step.
+EXIT_BASIS = 7
+BASIS_TAG = "BASIS-STEP"
 
 
 class DataBook:
@@ -228,13 +244,16 @@ class DataBook:
     without registering it in sys.modules, and `dataclass` looks the module up
     there."""
     __slots__ = ("name", "px_path", "nav_path", "lock_path", "fallback_log", "tickers",
-                 "families", "nav_symbols", "cefconnect", "spike_guard")
+                 "families", "nav_symbols", "cefconnect", "spike_guard", "split_rulings")
 
     def __init__(self, name, px_path, nav_path, lock_path, fallback_log, tickers, families,
-                 nav_symbols, *, cefconnect: bool, spike_guard: bool):
+                 nav_symbols, *, cefconnect: bool, spike_guard: bool, split_rulings=None):
         self.name, self.px_path, self.nav_path, self.lock_path = name, px_path, nav_path, lock_path
         self.fallback_log, self.tickers, self.families = fallback_log, tickers, families
         self.nav_symbols, self.cefconnect, self.spike_guard = nav_symbols, cefconnect, spike_guard
+        # THE PRICE BASIS (C4): the live fetch's split rulings file, or None (the core:
+        # no conversion, no step guard, its fetch exactly as it was).
+        self.split_rulings = split_rulings
 
     def nav_symbol(self, tk: str) -> str:
         return f"X{tk}X" if self.nav_symbols is None else self.nav_symbols[tk]
@@ -254,7 +273,8 @@ def resolve_data_book(name: str | None = None) -> DataBook:
     fam = data_books.c4_universe()
     cfg = DataBook(data_books.C4, d / "cef_prices.parquet", d / "cef_nav.parquet", d / ".fetch.lock",
                    None, tuple(sorted(fam)), dict(fam), data_books.c4_nav_symbols(universe=fam),
-                   cefconnect=False, spike_guard=True)
+                   cefconnect=False, spike_guard=True,
+                   split_rulings=data_books.C4_FETCH_SPLIT_RULINGS)
     shared = [p for p in (cfg.px_path, cfg.nav_path, cfg.lock_path)
               if os.path.realpath(p) in {os.path.realpath(q) for q in
                                          (PX_PATH, NAV_PATH, LOCK_PATH, FALLBACK_LOG)}]
@@ -277,6 +297,50 @@ def _check_book_panel(P: pd.DataFrame, N: pd.DataFrame, cfg: DataBook) -> None:
              if list(g) != [cfg.families[t]]}
     if wrong:
         raise DataBookError(f"{cfg.px_path} gives {wrong} a grp other than the frozen family")
+
+
+def _price_basis(P, N, newp: list, newn: list, declared: list, cfg: DataBook):
+    """THE PRICE BASIS (C4; data_guards.py, THE LIVE FETCH'S PRICE BASIS): (the fetched
+    price frames, each ruled split's adjusted pre-ex rows put on the NAV's basis, and
+    None) or (them unchanged, the refusal's text). Refused: a split Yahoo declares in the
+    fetch that no ruling names; a ruled split whose rows cannot be judged; a fetched
+    close or NAV whose ratio to the stored value of the same date is split-like. Every
+    converted run is printed. Each fetched frame keeps its own rows and columns."""
+    from scripts.cef.data_guards import (PriceBasisError, _factor_label, basis_steps,
+                                         describe_basis_steps, load_fetch_split_rulings,
+                                         to_nav_basis, unruled_declared_splits)
+    rulings = load_fetch_split_rulings(cfg.split_rulings)
+    unruled = unruled_declared_splits(declared, rulings)
+    if unruled:
+        return newp, ("unruled split(s) Yahoo declares in the fetched window, so its earlier closes "
+                      "may be split-adjusted against an unadjusted NAV: "
+                      + "; ".join(f"({t}, {d.date()}, factor {_factor_label(v)})" for t, d, v in unruled)
+                      + f". Rule each in {Path(cfg.split_rulings).name} (to_nav_basis or book_as_is)")
+    if not newp:
+        return newp, None
+    F = pd.concat(newp, ignore_index=True)
+    FN = pd.concat(newn, ignore_index=True) if newn else pd.DataFrame(columns=["date", "nav", "ticker"])
+    judge = pd.concat([N[["date", "nav", "ticker"]], FN[["date", "nav", "ticker"]]], ignore_index=True)
+    try:
+        G, log = to_nav_basis(F, judge, rulings, context=f"fetch_daily --data-book {cfg.name}")
+    except PriceBasisError as e:
+        return newp, str(e)
+    hits = basis_steps(G, P, FN, N)
+    if hits:
+        return newp, ("a fetched value steps against the stored one by a split-like ratio, which is a "
+                      "change of share basis, not a revision: " + describe_basis_steps(hits)
+                      + ". Rule the split (to_nav_basis), or repair the stored rows "
+                        "(scripts/cef/data_books.py repair-basis), before this panel is written")
+    for e in log:
+        if e["treatment"] == "to_nav_basis" and e["converted"]:
+            print(f"  BASIS    {e['ticker']:<6} {e['first'].date()}..{e['last'].date()}: {e['converted']} "
+                  f"fetched pre-split row(s) on the vendor's split-adjusted basis put on the NAV's "
+                  f"(x{e['factor']:.6g}; split {e['ex_date'].date()}, {Path(cfg.split_rulings).name})")
+        elif e["treatment"] == "book_as_is":
+            print(f"  BASIS    {e['ticker']:<6} split {e['ex_date'].date()}: {e['as_served']} pre-ex row(s) "
+                  f"kept as served (book_as_is, {Path(cfg.split_rulings).name})")
+    # Back into one frame per fund, as merge_price_bars takes them.
+    return [g.reset_index(drop=True) for _, g in G.groupby("ticker", sort=False)], None
 
 
 def _spike_check(P: pd.DataFrame, N: pd.DataFrame, fetched: list, cfg: DataBook):
@@ -608,6 +672,8 @@ def _refresh_locked(period, require_asof, nav_fallback, book, cfg: DataBook | No
     newp, newn, stale = [], [], []
     # Funds the stale check could not date (FOLLOW-UPS (3)): never "fresh".
     unchecked = []
+    # THE PRICE BASIS (C4): every split Yahoo declares in a fetched price history.
+    declared = []
     for tk in tickers:
         try:
             px = yf.Ticker(tk).history(period=period, auto_adjust=False)
@@ -617,6 +683,10 @@ def _refresh_locked(period, require_asof, nav_fallback, book, cfg: DataBook | No
             unchecked.append((tk, f"fetch error: {type(e).__name__}"))
             continue
         if len(px):
+            if cfg.split_rulings is not None and "Stock Splits" in px.columns:
+                ev = px[px["Stock Splits"].fillna(0) != 0]
+                declared += [(tk, pd.Timestamp(d).tz_localize(None).normalize(), float(v))
+                             for d, v in zip(ev.index, ev["Stock Splits"])]
             p = px.reset_index()[["Date", "Open", "High", "Low", "Close", "Volume"]]
             p.columns = ["date", "open", "high", "low", "close", "volume"]
             p["date"] = pd.to_datetime(p["date"]).dt.tz_localize(None).dt.normalize()
@@ -640,6 +710,16 @@ def _refresh_locked(period, require_asof, nav_fallback, book, cfg: DataBook | No
                 stale.append((tk, last, age))
         else:
             unchecked.append((tk, "no NAV rows fetched"))
+
+    # THE PRICE BASIS (C4 only; data_guards.py, THE LIVE FETCH'S PRICE BASIS): before
+    # anything is merged, the ruled splits' adjusted pre-ex closes go back on the NAV's
+    # basis, and a fetched value that still steps against the stored one refuses the
+    # write. The core's `split_rulings` is None: this block does not run for it.
+    if cfg.split_rulings is not None:
+        newp, refused = _price_basis(P, N, newp, newn, declared, cfg)
+        if refused is not None:
+            print(f"  {BASIS_TAG} (data book {cfg.name}; NOTHING written): {refused}")
+            return EXIT_BASIS
 
     # A fetched row with no close, or no NAV, is never merged; each refusal or
     # repair is printed (module docstring, EMPTY ROWS and EMPTY NAV ROWS).

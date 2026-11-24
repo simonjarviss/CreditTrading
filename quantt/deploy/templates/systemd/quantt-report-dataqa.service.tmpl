@@ -1,0 +1,29 @@
+# quantt-${BOOK}-dataqa.service : the nightly data QA for book ${BOOK}, REPORT ONLY.
+# Scheduled after the day's collect and before the 22:00 decide (timer alongside).
+#
+# RENDERED by quantt/deploy/install_vm.py --reports from release tag ${TAG}. Do not
+# hand-edit the installed copy.
+#
+# It reads the panels and the runner's records and writes only under
+# ${STATE_DIR}/reports. It carries no key file, no DRY_RUN, and no lock: the script holds no
+# order code at all (scripts/ops/tests/test_report_no_order_path.py).
+# ReadOnlyPaths= holds it to the promise that it cannot write the clone or data/.
+# A failure here marks this unit failed and touches nothing else.
+[Unit]
+Description=QUANTT ${BOOK} nightly data QA, report only (release ${TAG})
+
+[Service]
+Type=oneshot
+User=${USER}
+Group=${USER}
+WorkingDirectory=${PROD_DIR}
+Environment=PATH=${PATH}
+Environment=PYTHONUNBUFFERED=1
+Environment=QUANTT_STATE_DIR=${STATE_DIR}
+ExecStart=${PYTHON} -B -m ${MODULE} --book ${BOOK}
+ReadOnlyPaths=${PROD_DIR}
+MemoryMax=${MEMORY_MAX}
+Nice=10
+TimeoutStartSec=${TIMEOUT_S}
+StandardOutput=append:${LOG_DIR}/${KIND}.out.log
+StandardError=append:${LOG_DIR}/${KIND}.err.log

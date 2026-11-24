@@ -4,7 +4,9 @@
 > C4 (CEF trial 52) was fast-tracked on 2026-10-28/29 with every gate kept (docs/SYSTEM.md §5,
 > 2026-10-29). **Updated 2026-11-02:** the integration (`c4-integrate`) is merged onto main's
 > release-20261102-1 on branch **`c4-rel`**. That branch carries C4's whole path, dark: spec
-> **`c4_families.v4.20261102`** (CEF trial 53 amendment 1's `sizing_multiplier` **1.26**; the core's halve/kill
+> **`c4_families.v5.20261103`** (since 2026-11-03: v4.20261102 plus CEF trial 54's `level_signal`, PASSED,
+> which adds ` level z_share=0.5000 s_z=... s_L=...` to every weight reason; CEF trial 53 amendment 1's
+> `sizing_multiplier` **1.26**; the core's halve/kill
 > levels, report only; the corporate-action gate in `report`, as the core, by the team lead's
 > 2026-11-02 ruling), the data path, the per-sleeve runner, `BOOKS["c4"]`, its book json and its
 > installer units. The core is proved byte-identical to 862b1d0 (below). Release is the team
@@ -126,8 +128,21 @@ python3 scripts/cef/c4_paper_benchmark.py recap \
   --probe results/ops/alpaca_probe/<date>_c4.json --mark-sensitivity <the lab book's>
 ```
 
-Exit 0: the rule still gives 1.90. Exit 1: a new spec id (`/spec-change`) and a release before C4
-arms. True on its date only: run it again on the day of the arming go (step 6).
+It prints the rule's cap, the spec's `max_gross_stress` and `same_as_spec`, and one verdict:
+- **exit 0, `SAME`**: the rule gives the spec's cap;
+- **exit 2, `OVERRIDE ON RECORD`**: the rule gives less, and a team-lead override on record names
+  this exact w5 and both caps (`results/cef/c4/c4_cap_override_*.json`, matched on content; an
+  edited file is refused). It prints the ruling's citation. For `c4_families.v5.20261103` the rule
+  gives 1.80 and the team lead kept 1.90 (`docs/SYSTEM.md` §5, "Team lead, 2026-11-03 — C4 v5's
+  gross cap");
+- **exit 1, `STOP`**: any other mismatch. A new spec id (`/spec-change`) and a release, or a new
+  ruling with its own record, before C4 trades on that cap.
+
+The w5 is the LIVE spec book's, taken from the committed benchmark output: the blend's on v5, the
+z book's only when the spec carries no `level_signal`. `recap` refuses an output made on another
+spec file, naming both sha256s. Until 2026-11-03 it read the z book's w5 whatever the spec was
+(the release-check of e41f10b). True on its date only: run it again on the day of the arming go
+(step 6).
 
 **4. Install C4 UNARMED (DRY_RUN=1). TEAM LEAD RUNS** (on the VM, a weekday outside 15:30-16:00
 ET, which the installer refuses):
@@ -185,6 +200,12 @@ Expected on each day:
   exit 6 outranks the INCOMPLETE exit 4 since the release-check of 8b14298 (before it, a late NAV
   turned the 6 into a 4, which the missing-NAV hold accepts at the final check, and C4 decided on
   the unruled bar). The collector then records the spike flag and leaves `prices_nav` unfinished.
+- **The price basis (2026-11-04).** The first nightly fetch of 2026-11-03 wrote IGR's
+  2026-05-04..09-04 closes split-adjusted (x3) against its unadjusted NAV. Since then the fetch
+  puts ruled splits' pre-ex rows on the NAV's basis and refuses (exit 7, `BASIS-STEP`, nothing
+  written) any split-like step against the stored rows; `data_books.py repair-basis --book c4`
+  repairs the window that fetch wrote, run once on the VM before the next collect (TEAM LEAD RUNS). A new split in any C4 fund
+  refuses until ruled in `results/cef/c4/c4_fetch_split_rulings_2026-11-03.json`.
 - **After the first fetch, compare the replaced rows with the seed.** The fetch replaces every
   seeded row in its six-month window with Yahoo's. Look hardest at IGR (1:3 reverse split,
   2026-09-08) and the split-ruled BTO, TYG, NXG and EMO. The spike guard catches a spike that
@@ -282,7 +303,8 @@ Expected on each day:
   wrapper denies `python3 -m quantt.session` and holds no key file
   (`.claude/loop/run_research_loop.sh`). When a lab runner is built for this account, this gate
   becomes the place where the two are reconciled (docs/SYSTEM.md §5, 2026-10-28).
-- Re-run step 3 that day: it must give 1.90, or the new spec is released first.
+- Re-run step 3 that day: it must say `SAME` (exit 0), or `OVERRIDE ON RECORD` (exit 2) citing the
+  ruling it matched. `STOP` (exit 1) means the new spec is released, or a new ruling recorded, first.
 - The corporate-action mode is decided: `report` (team lead 2026-11-02, above). Arming does not
   change it; `halt` comes back with the core's, through a release.
 - The halve/kill levels are the core's, report only, until a C4 derivation exists (ruled

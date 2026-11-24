@@ -4,7 +4,7 @@ export const meta = {
   whenToUse: 'Before tagging a release for the prod clone. Pass args {tree, commit}: the checkout to test and the commit it must be at (a string is read as notes, and the checkout is then the working directory). Read-only: it never tags, installs, arms or sends anything; the team lead approves the tag.',
   phases: [
     { title: 'Checks', detail: 'pytest, doc_audit, orient, runner preview' },
-    { title: 'Review', detail: 'quant-reviewer + quant-trader on the diff' },
+    { title: 'Review', detail: 'quant-reviewer + execution-engineer on the diff' },
     { title: 'Decision', detail: 'go / no-go with reasons' },
   ],
 }
@@ -94,7 +94,7 @@ const [qr, ex] = await parallel([
   () => agent(`${scope}\nLens: lookahead, alignment, silent fallbacks, unit/sign errors, idempotency, credential leakage.`,
     { label: 'quant-reviewer', phase: 'Review', agentType: 'quant-reviewer' }),
   () => agent(`${scope}\nLens: order-path correctness — cls cutoff, Alpaca rules (wash trade, flips, shortability, client_order_id), gates, ambiguous submits, retries.`,
-    { label: 'quant-trader', phase: 'Review', agentType: 'quant-trader' }),
+    { label: 'execution-engineer', phase: 'Review', agentType: 'execution-engineer' }),
 ])
 const covered = r => typeof r === 'string' && r.includes(`Reviewed ${range}`)
 
@@ -103,6 +103,6 @@ return await agent(`Give the team lead a GO or NO-GO for tagging ${sha} as the n
 Checks (run in ${checks.tree} at ${sha}; ${checks.log.split('\n').filter(Boolean).length} commit(s) since ${tag}): ${JSON.stringify(checks.checks)}
 Untracked files there: ${checks.untracked || 'none'}
 quant-reviewer (covered ${range}: ${covered(qr)}): ${qr}
-quant-trader (covered ${range}: ${covered(ex)}): ${ex}
+execution-engineer (covered ${range}: ${covered(ex)}): ${ex}
 Finish with the exact commands the team lead would approve but do NOT run them: git tag -a <tag> ${sha}, git push origin <tag>, then the install for whichever machine python3 -m ops.prod_state says is prod (the VM: install_vm through the qi helper, docs/RUNBOOK.md §8.3 and §8.6; the laptop: install_prod). Write the vault name as <vault-name>: this repository is public.`,
   { label: 'decision', phase: 'Decision' })

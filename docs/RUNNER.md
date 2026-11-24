@@ -46,7 +46,11 @@ every 30 min  python3 -m quantt.session run --book cef --scheduled
                         is the only mode built: record only). The drawdown from the
                         high-water mark of <state>/eod_equity.csv against the frozen
                         spec's risk.halve_drawdown / risk.kill_drawdown, recorded in
-                        plan.json and the log. "As built (2026-10-19)" below.
+                        plan.json and the log. "As built (2026-10-19)" below. Under
+                        CEF trial 55's key (dark) K0 makes its own reading of the same
+                        check through the session before the as-of (the team lead's
+                        ruling of 2026-11-03): only OK lets a reduced book be built.
+                        "As built (2026-11-03)".
           3. decide     sleeve.target_positions(asof=<prev trading day>, MarketState(
                           holdings=<Alpaca positions>, extras={"sleeve_nav": <equity>,
                           "opening_session": <bool>}))
@@ -78,7 +82,7 @@ every 30 min  python3 -m quantt.session run --book cef --scheduled
 | `quantt/session/gate.py` | Pure checks → a list of refusals. | Transmits. |
 | `quantt/session/run.py` (+ `__main__.py`) | Orchestration of the session above; the only caller of `submit_order`. | Transmits when any gate refuses. |
 | `quantt/session/nav_gate.py` | The stale-NAV gate (step 1b): finds each NAV(D) equal to the previous NAV or to CEFConnect's NAV(D-1), reads CEFConnect, replaces stale copies in the NAV panel through the logged fallback, defers or holds the unverified, records every check. | Transmits. Decides a target. |
-| `quantt/session/drawdown.py` | The drawdown check (step 2b): reads `<state>/eod_equity.csv` by header, the frozen spec's two drawdown lines (units-checked), and records the status and what an acting mode would do. | Transmits. Changes an order. Falls back to `equity.csv`. |
+| `quantt/session/drawdown.py` | The drawdown check (step 2b): reads `<state>/eod_equity.csv` by header, the frozen spec's two drawdown lines (units-checked), and records the status and what an acting mode would do. Also CEF trial 55's K0-K3 report lines (`thin_stop_record`). Under that trial's key run.py's K0 makes its own reading of the check, through the session before the as-of (`read_through`; the team lead's ruling of 2026-11-03), and it only restricts. | Transmits. Changes an order. Falls back to `equity.csv`. |
 | `quantt/session/combine.py` | The multi-sleeve combiner (2026-10-28, **dark**): reads the book json's `sleeves[]`; for a book whose enabled sleeves all carry `risk_budget`, builds each from its own spec on its own sleeve_nav, nets the whole-share targets per symbol into one `decide`, and records the per-sleeve attribution. Absent a budget, `None`: the single-spec session, byte-identical to de6e9c5 (proved by test). | Transmits. Splits a held position between sleeves. |
 | `quantt/session/corp_actions.py` | The corporate-action gate (step 3b): dates each held name's shares from the account's closed orders, draws each name's window, keeps the actions that block, and writes the record and the refusal's sentence. Pure apart from the read it is handed. | Transmits. Changes an order. Reads an absent or failed feed as clear. |
 | `quantt/session/verify.py` | Post-close reconcile + dual scoring + the one-line verdict. Read-only against the broker. | Transmits. |
@@ -95,7 +99,7 @@ every 30 min  python3 -m quantt.session run --book cef --scheduled
 5. **Data** — the refresh exited 0 for the required as-of date. That checks each NAV's *date*, not its value; the stale-NAV gate (step 1b, "As built (2026-10-13)") checks the value when the book turns it on.
    - **Corporate actions** (step 3b, when the book json sets `corporate_actions.mode`; team lead 2026-10-28). Under `halt`, refuse when Alpaca lists a non-dividend corporate action (split, stock dividend, spin-off, merger, redemption, name change, worthless removal, reorganization, partial call) naming a held or targeted name, in any role, inside the window that role and match call for: the long window for an acquiree, a split, a name change and the rest, and the short window `(as-of, session]`, one session, for a merger acquirer and a reorganization's allocated leg (both on the market date only) and for any other match through the process date alone (team lead and re-review, 2026-10-29). Also refuse when that list cannot be read. The refusal is a gate-5 `data` refusal naming each event or the error. It runs at decide and again at the late-market send. Under `report` the same is recorded and the session sends. "As built (2026-10-28)" below.
 6. **No set already headed for this auction** — refuse if `<state>/<date>/STARTED` exists, or Alpaca shows any order today whose `client_order_id` starts with `cef-<YYYYMMDD>-`, or any open order in the account, of any type or time in force (`gate.gate_no_set_in_auction`; *corrected 2026-11-02: this line said any open `cls` order, which the code has never been*). The two Alpaca lists are read after every other broker read, just before the gate's clock read, on both paths that transmit; a failed read refuses ("As built (2026-10-29): gate 6 reads its lists last").
-7. **Shortability** — an order that opens or increases a short needs `/v2/assets/<sym>` `shortable: true` today; else that symbol sends nothing and is logged (prereg v7 §6). Never substitute a name.
+7. **Shortability** — an order that opens or increases a short needs `/v2/assets/<sym>` `shortable: true` today; else that symbol sends nothing and is logged (prereg v7 §6). Never substitute a name. Under CEF trial 55's key (dark), a reduced decision that loses a short here is re-decided flat ("As built (2026-11-03)").
 8. **Exposure** — projected gross ≤ spec `risk.max_gross_exposure_usd`; ≤ `max_gross_stress` × the **lower** of the equity the plan was sized on and live equity, unless the plan does not add to the gross held now (2026-10-09; the lower of the two from 2026-10-11); and, on the live account, opening notional ≤ Alpaca `buying_power` and the overnight Reg T / maintenance limits on the book after the plan (2026-10-07). *Corrected 2026-10-09: this line read "≤ `max_gross_stress` × equity, and projected initial margin ≤ Alpaca buying power", the rule that refused 2026-10-09 ("As built (2026-10-09)" below).*
 9. **Sanity** — every qty a positive integer, every symbol in the frozen universe, no symbol with two opposite-side orders.
 
@@ -123,6 +127,16 @@ settled these points. Alpaca facts, each with its source and status:
 - **A rejected order skips its symbol and the rest are sent** (team lead,
   2026-09-28); the day is FAIL naming it. Anything with an unknown outcome
   (ambiguous submit, unexpected error, clock) still stops the batch.
+- **Alpaca's rate limit** (2026-11-23, after the events book's first armed send had
+  173 of 219 orders answered HTTP 429). The client paces every request to the trading
+  host: a burst of `TRADING_BURST`, then `TRADING_MAX_PER_MIN` a minute, under Alpaca's
+  200 [S] (`quantt/broker/alpaca.py`). A 429 to an order is not a rejection at first:
+  `_submit_one` waits `POST_429_WAITS_S`, reads the order by its `client_order_id`, and
+  resends only if Alpaca has none, up to four POSTs. A found order counts as sent. A
+  failed read is a rejection (never a resend) and the rest of the batch goes on. After
+  the fourth 429 the id is still read: found counts as sent, not found is a rejection.
+  The send window is checked again before every resend; a batch stopped there after a
+  429 records that order as `rejected` (the events VERIFY needs a terminal event).
 - **Gate 7** checks `shortable` only; hard-to-borrow is a preview warning (team
   lead, 2026-09-28).
 - **Gate 4** re-reads the Alpaca clock at the gate and again before every POST; the
@@ -204,6 +218,309 @@ gets one recorded exception, **paper only**: `ops/books/cef_discount_book.json`
 - **Scoring is unchanged:** verify marks every fill against the official closing
   print (`fill_vs_auction_bp`), beside the shadow benchmark. Revisit after a week.
 - **Revert:** delete the `execution` block; the runner sends `cls` exactly as before.
+
+## As built (2026-11-09): the daily P&L report, beside the runner and outside its order path
+
+**The job.** `scripts/ops/pnl_report.py` (timers `quantt-{cef,c4}-pnl`, 20:30 and 20:35 ET;
+`docs/RUNBOOK.md` 8.12), report-only, one per book: the attribution
+(`scripts/cef/live_attribution.py`) and the factor readout (`scripts/cef/exposure_readout.py`)
+of the session just closed and cumulative from the first trade, written to
+`<state>/reports/pnl/<date>.{md,json}`, which `scripts/ops/risk_daily.py` reads into its
+attribution and factor blocks. The runner does not read these, and they cannot reach it:
+the job holds no order code, no broker client and no panel lock, and it reads the account
+through `scripts/ops/alpaca_read.py`, a GET-only reader with no method that can change
+anything (`scripts/ops/tests/test_report_no_order_path.py` walks every import from the job and
+fails on any path to order code). A review-line breach appears in the report and goes no
+further: no ACT, no push (team lead, 2026-11-09).
+
+**The reader is a copy on purpose.** It re-implements the reads the job needs from
+`quantt/broker/alpaca.py` (EOD history mapped to sessions, FILL and FEE activities, calendar,
+SIP daily bars, distributions, the strict corporate-action read) instead of importing
+them, because that module holds `submit_order`; `scripts/ops/tests/test_alpaca_read.py` keeps
+the copy honest by running both on the same fixture responses and requiring equal output,
+read by read, and equal raises on the malformed shapes. Its keys are `ALPACA_<BOOK>_KEY_ID` /
+`_SECRET_KEY` from the process environment only, which systemd loads from a tmpfs file of
+its own per book (RUNBOOK 8.12), never `QUANTT_ENV_FILE`.
+
+## As built (2026-11-03): CEF trial 55 ("te4"), the thin-session rule, PAPER ONLY, dark
+
+**The rule.** `frozen.below_min_names = "trade_eligible"` with `frozen.below_min_names_floor`
+(core spec; `results/cef/PREREG_THIN_TRADE_ELIGIBLE_2026-11-03.md`, approved by the team lead on
+2026-11-03 as CEF trial 55, paper only). On a session with fewer than `min_names` eligible funds
+but at least the floor, and no NAV hold, the core sleeve builds its book on the eligible funds
+with its own construction (the same z-neutralisation, vol scalar, band, gross ceiling and
+`sizing_multiplier`) instead of closing it. Below the floor it goes flat, as under the default.
+**The key is not set at this commit.** The activation commit sets it, with the K1-K3
+thresholds, K3's run length (`risk.thin_k3_run_sessions`, required with the key) and their
+notes, once the conditions in the pre-registration's "Approval" section are met. **Absent, or `"flatten"` written out, is today's book, byte for byte**: the sleeve on
+every real-panel decision date against main's code
+(`results/cef/te4_impl/sleeve_noop_diff_output_2026-11-03-main0b1a2ef.txt`), and the whole
+session against 0b1a2ef (`quantt/session/tests/test_trade_eligible_noop.py`).
+
+**Paper only, in two layers** (pre-registration §1.2):
+1. **The sleeve** refuses to decide under the key unless it was built with `account="paper"`
+   and given `extras["thin_rule"]`. Construction checks only the declaration's value, so
+   `spec_panel` and `ops/common.py::deployed_tickers` still work with the key set.
+   **`combine.load_sleeves` refuses a budgeted sleeve whose spec sets ANY te4 key** (the rule,
+   its floor, a `risk.thin_*` key), naming it, before the sleeve is built, as it refuses
+   `level_signal` (the runner owner's review 2026-11-04, item 1): the rule and its stops were
+   measured on the core's own account, and netted with another sleeve it is a book nobody
+   scored. Were such a sleeve built by hand, the combiner's target callable passes no
+   declaration, so it would still refuse at its decide rather than decide by default.
+2. **The runner** (`run.thin_rule_for`, at session start, the decide and the send alike)
+   declares paper only when the broker client's `trading_endpoint`
+   (`AlpacaClient.trading_endpoint`, read-only) is exactly `alpaca.PAPER_BASE`. Otherwise it
+   raises `SessionError`, naming the key and the endpoint, before any sleeve is built. It also
+   raises on a combined book whose spec sets the key, and on a book json without
+   `risk.drawdown`, since K0 would then have no input (the runner owner's answer 4). Today the
+   client can reach nothing but paper, so this check exists for the day a live-money client is
+   written. **The rule never applies to a live-money account** (`docs/SYSTEM.md` §5,
+   2026-11-03).
+
+**The extras contract.** Only when the key is set, the runner passes `account="paper"` to
+`build_sleeve` and `extras["thin_rule"] = {"stop": None | {"by": "K0" | "gate7", "why": str}}`
+to `target_positions` (`_thin_target_kw`). With the key absent both calls are the calls made
+before it existed. Under the key every target carries `meta["cef_thin"]` = {eligible, n,
+min_names, floor, holds, reduced, stopped_by}. The runner reads it as a structured field, never
+a reason string (`_thin_record`). It refuses a mixed answer, a floor or `min_names` that is not
+the spec's, a build under a stop, and a stop it did not pass.
+
+**K0: the first acting reader of the drawdown status, and it only restricts** (§1.3 item 5,
+§6.3; the owner's term 3). K0's drawdown record is read before the sleeve runs. Only an exact
+`OK` lets a reduced book be built. HALVE, KILL or UNMEASURED (no `eod_equity.csv`, a newest row
+older than the read-through date, bad levels, a check that raised), or any other status,
+becomes the stop `{"by": "K0"}`. A reading that raises anywhere, its read-through date
+included (nyse_calendar and Alpaca's calendar disagreeing on the session before the as-of), is
+recorded as UNMEASURED with the exception's type, and the session flattens: K0 fails closed.
+`test_k0_fails_closed_when_its_reading_raises` and the gross pin's "raises" case cover that
+branch (review finding after f3ad29f: before them, a fail-open branch passed every test).
+
+**K0 reads through the session before the as-of** (team lead's ruling, 2026-11-03, recorded in
+the pre-registration's "Approval" section and in E-2026-11-03-42). At prod's 22:00 decide the
+EOD row for the as-of D is never there yet: 4 of 4 core decides that carry the drawdown field
+read UNMEASURED because `eod_equity.csv`'s newest row was D−1 (E-2026-11-03-41, the owner's
+finding, from prod's plan.json records [S]). K0 as first built read step 2b's record, so it
+would have flattened every reduced session and the trial would never trade.
+
+K0 now makes its own reading (`run._thin_k0_drawdown`), always from the FRESHEST row it has
+(the team lead's second ruling, 2026-11-04):
+- **The as-of's own row first.** It runs `drawdown.check(..., read_through=D)`, labelled 0
+  sessions stale.
+  - If D's row is there, it decides, whatever it reads. That includes a bad row, which reads
+    UNMEASURED: K0 never falls back past a row it has.
+  - This is what happens at the morning backstop. Before this ruling, K0 read D−1's row there,
+    and a reduced book went out on a stale OK while D's row read KILL.
+- **Only if D's row has not landed** (the 22:00 decide, every time), it runs
+  `drawdown.check(..., read_through=<the session before the as-of>)`. The date comes from
+  `asof_for` (nyse_calendar and Alpaca's calendar, which must agree; never a weekday guess).
+  - That is the same check through the newest row on or before D−1, with the high-water mark
+    over those rows.
+  - The newest such row must be D−1. An older one, or a missing or bad file, reads UNMEASURED
+    and the session flattens.
+
+The record carries `read_through` and the reading's `stale` = {`row_date`, `sessions`}: 1 at the
+evening decide, 0 when D's own row was read. It is stored whole in `thin_session.k0.drawdown`.
+
+The cost, accepted by the ruling: at the evening decide, a loss on D is seen only at the next
+decide, so one more reduced build can go out after a session that crossed HALVE. **Step 2b's own record (HALVE/KILL's report) is
+unchanged** (`read_through` None is today's check, byte for byte) and K0 does not read it. The sleeve then takes today's flatten, with the reason in every target. A missing
+record raises. K0 has one action, today's rule: it never sizes up and never unlocks a send. The
+gross pin in `quantt/session/tests/test_trade_eligible_runner.py` proves it. The projected
+gross after the plan under any status is at most the gross under OK, and equals the key-absent
+session's. On a full session the plan is the key-absent one under every status: K0 touches
+only a session the reduced build would run on.
+
+**The gate-7 flatten** (§1.3 item 6, §7.5, §10 Q7). Gate 7 (decide's "not shortable today") may
+drop an order that opens or increases a short on a reduced decision (`Decision.dropped_shorts`).
+If it does, the sleeve is asked again with `{"by": "gate7"}`, the stale-NAV gate's panel check
+runs again (the sleeve read the panel again), and the flat targets are decided (`_thin_gate7`).
+This runs before the buying-power scaling. A flat book opens no short, so it cannot loop. On a
+full session today's skip-and-continue is unchanged. The buying-power rebuild of the Decision
+now carries `dropped_shorts` across.
+
+**A short skipped at the late-market SEND: accepted and labelled** (team lead, 2026-11-03).
+`_send_planned` is unchanged, on reduced and full sessions alike: a short whose name stopped
+being shortable after the decide is skipped and the rest go. The next decide's
+`thin_stops.send_skip` reads that session's plan.json (`thin_session.reduced`) and send.json
+(`skipped`, the run record's `skipped_at_send`), and records whether the reduced session lost a
+short at send. The send skips only short-opening orders, so any entry is a lost short. K3
+watches the one-sided book that results. **Only a send that went is labelled** (review fix after
+7fcc2b7): `_send_planned` builds its skipped list before its gates, so a refused or dry send
+writes the list and sends nothing. Whether a send went is read from the session's own records
+(`drawdown._send_state`; the runner owner's review of PR #55, 2026-11-04, items 5 and 10). te4
+is PAPER ONLY and paper runs `late_market`, so the late-market rule is the one that runs:
+- **What the send writes.** `_send_planned` writes `<D>/STARTED` before its first POST and
+  never on a refusal. Its send.json carries `exit`, `plan_sha`, `skipped`, and `final` /
+  `not_final`: `_poll_final` fills them only with orders Alpaca accepted and the confirm read
+  found (`final` with each one's fills once it is final, `not_final` the rest at the deadline).
+  A refused, dry or empty send writes them empty.
+- **Sent:** STARTED exists AND send.json's `exit` is SENT (the rule-2 marker plus the send
+  record), with at least one of the plan's orders in `final` / `not_final`, and **at least one
+  fill** (the runner owner's round-2 answer (b), 2026-11-05). Partially filled is sent: what
+  filled is the account's. An order in `not_final` was still working 30 s before the close and
+  may yet fill, so a send with one stays sent, as the first review defined it.
+- **Sent, nothing filled** (round-2 answer (b); `drawdown.NOTHING_FILLED`): a SENT where every
+  order in `final` ended with 0 shares filled, canceled, expired or rejected, and `not_final` is
+  empty. Never a FAIL: a FAIL's `final` leaves out any order whose outcome is unknown, so its
+  zeros cannot say the book did not change, and it stays "sent in part". The book did not change, so it is
+  **not a reduced decision**: it opens no episode, K1 does not compound its earning day, and it
+  is not a reduced close for K2 or K3 (N/A, "changed nothing", naming it). A 0-share final
+  under any other state (`replaced`, `done_for_day`, a `filled` with 0), or a `final` entry
+  without a whole-number `filled`, is UNMEASURED, named.
+- **Sent in part:** STARTED and `exit` FAIL, with `final` / `not_final` recording what went (a
+  rejection skips its symbol and the rest go). It is classified from `final`: a reduced
+  decision, named in the episode's `sent_in_part`. K2 and K3 then see the book it left.
+- **Not sent:** DRY, REFUSED or NOTHING_TO_SEND with no STARTED and nothing recorded as gone;
+  or no send.json and no STARTED (no send ran in the window).
+- **Not sent, proved** (the runner owner's round-2 answer (a), 2026-11-05;
+  `drawdown._zero_submissions`): a FAIL with STARTED and nothing in `final` / `not_final`
+  whose records prove positively that no POST was made. `<D>/orders.jsonl` exists and holds
+  ZERO `submit` events (`_transmit` appends one, fsynced, before each POST), only the
+  `cutoff` / `clock_error` event `_transmit` writes when it stops at the clock read before a
+  POST, naming one of the plan's orders; and `<D>/reconcile.json`, if verify has written it,
+  was written with STARTED and names no order of the session's prefix
+  (`<cid_prefix>-<YYYYMMDD>-`, decide's scheme; verify lists every order Alpaca holds with it).
+  Every string in reconcile.json is searched except verify's own refusal of that log line
+  ("orders.jsonl line n: event 'cutoff' for <cid>, which has no submit line"), which verify
+  writes on exactly this case and which names an order without being one. Labelled
+  `not sent: 0 submissions proved by <records>`, listing them. The reader (`_thin_read_day`)
+  passes the two files as bytes; only this case parses them.
+- **UNMEASURED, named:** a FAIL with nothing in `final` / `not_final` and no such proof (an
+  accepted POST the confirm read did not find is in neither, so orders may have gone):
+  orders.jsonl missing, unreadable, empty or holding a `submit` (an all-rejected set has one
+  per order), a reconcile.json that cannot be read or names one of the session's orders; SENT or FAIL without
+  STARTED; a STARTED beside a refused, dry, empty or missing send record (a later manual run's
+  REFUSED over the send's, for one); another plan_sha; `final` / `not_final` missing or naming
+  an order the plan does not hold; an `exit` no send writes.
+- **cls** writes no send.json. A set went exactly when `<D>/STARTED` exists, including one
+  whose orders then failed (its run record says what went). te4 does not trade under cls.
+- `quantt/session/tests/test_thin_send_state.py` has the real send write each of these records
+  and reads them back through the runner's own reader; for the proved case the real verify
+  writes the reconcile.json.
+
+**The records** appear in plan.json and the run record only when the key is set:
+- `thin_session`: `rule`, `floor`, `min_names`, `decided` (did the sleeve run), `eligible` (a
+  count), `eligible_names`, `holds`, `reduced` (the trial's unit of evidence, §4.2),
+  `stopped_by` (K0, gate7 or null, set only where a stop removed a build that would have run),
+  `k0` {`status`, `asof`, `read_through`, `stale`, `stop`, `drawdown` (K0's whole record)},
+  and `gate7` {`dropped`} when it fired.
+- `thin_stops`: the K0-K3 report lines (`drawdown.thin_stop_record`), **report only**. An error
+  inside them is recorded as UNMEASURED, and the session goes on. **They read `eod_equity.csv`
+  through K0's read-through date too**, labelled (`thin_stops.read_through` = {`date`,
+  `sessions_stale`, `label`}): read through the as-of, every one of them would read UNMEASURED
+  at the 22:00 decide (the quant review). They are report only, so they take the same reading
+  and say so. **Exactly K0's date** (the runner owner's review 2026-11-04, item 6, on the
+  freshest-row ruling): the as-of's own row at the morning backstop (0 sessions stale), D−1's
+  at 22:00. `drawdown.thin_stop_record` refuses a K0 record whose read-through date is not the
+  lines', so two dates are never mixed silently. **The label says what the data showed** (the
+  as-of's own row there at this decide, or not there yet), never which slot ran: the function is
+  not told the slot, and the row can be missing at a morning decide or there at 22:00. Until the
+  review of 4e1ab0b it named "the morning backstop" or "the 22:00 decide" from the staleness
+  alone, and so named the wrong slot whenever the two disagreed; the numbers were right.
+
+| line | what it reads | its threshold |
+|---|---|---|
+| episode | reduced decisions (`thin_session.reduced` on a plan with no refusals, **whose targets were sent** and filled at least one share (round-2 answer (b)), by the rule in the send-skip paragraph above; §4.2) fewer than 63 sessions apart, walked back through earlier plan.json, send.json and STARTED files. A decided reduced plan whose send did not go is not a reduced decision: it opens no episode, earns K1 nothing and is not a reduced close for K2 or K3 (corrected after the reviews of 7fcc2b7, whose first build counted it). A record that cannot be read, a send whose outcome cannot be established, or a send.json or STARTED with no plan.json makes the whole episode UNMEASURED. A session with **no record at all** (no plan.json, send.json or STARTED: the runner did not run, or its decide failed before writing a plan) is a **named gap** (`episode.gaps`; the runner owner's review 2026-11-04, item 5): it makes UNMEASURED only the stops whose read window holds it, never the whole walk for 63 sessions. Those windows: the episode state (K0's KILLED), the 62 sessions before this decide, and a known reduced decision there still reads OPEN; K1, the decisions whose earning day is on or before the read-through date; K2 and the send skip, the as-of session; K3, the as-of session and the closes its run reads back until it breaks. A plan decided with the key absent ends the walk | — |
+| K0 | K0's drawdown status at this decide, read through the freshest row (the as-of's own when there, else the session before it): KILLED if HALVE or KILL while an episode is open | `risk.halve_drawdown` / `kill_drawdown`, through the status |
+| K1 | the maximum drawdown of the episode's earning days, compounded: a decision for session s earns eod_equity(e) / eod_equity(s) − 1 on the next session e, counted once e's row is on or before the read-through date (at 22:00 the as-of's own earning day is listed as `earned_not_yet_read` and counted at the next decide; at the morning backstop it is counted) | `risk.thin_k1_episode_drawdown` |
+| K2 | the largest \|position × as-of close\| / eod_equity of the read-through date, at the close after a reduced decision. Always recorded as `equity_date`: the as-of's own row when it exists (the morning backstop), else D−1's, which then carries an `equity_note` (off by one session's return) | `risk.thin_k2_max_name_frac` |
+| K3 | \|long − short\| / eod_equity of the read-through date, at that close: above the run line on `risk.thin_k3_run_sessions` reduced closes in sequence (§6.3's 3; within the open episode only, as §6.3's heading says and the runner's owner confirmed on 2026-11-04, recorded in the pre-registration's Approval section), or above the once line. The earlier closes are read back from earlier plans: the decide for session X records the close of the session before X, so the close before the as-of is in the as-of session's own plan (corrected after the reviews of 7fcc2b7, which found the first build counting one close too far back). An earlier K3 that is unmeasured, or that names another close, makes the run UNMEASURED, as does a named gap among the closes it reads back, or a run still open where the walk stopped at a record it could not read | `risk.thin_k3_net_run`, `risk.thin_k3_net_once`, `risk.thin_k3_run_sessions` |
+| send_skip | the label above | — |
+
+A line whose threshold is absent reads UNMEASURED, never a default.
+
+**The threshold keys** (`src/deploy/registry.py` `cef_thin_stop_levels`, in the spec's `risk`
+block) are set in the activation commit. Each is re-measured on its read date by
+`results/cef/prereg_thin_te4/compose.py --stamp <date> --k3-run-sessions <n>` (H14; `<n>` the
+spec's `risk.thin_k3_run_sessions`, below), and each needs a sibling
+`_<key>_note` that names the `compose_<stamp>.json` that derived it; the registry refuses a key
+without one. The registry also refuses:
+- any of them, or any of their `_<key>_note`s, under another rule (the notes since the review
+  of 4e1ab0b: a note left behind by a revert loaded cleanly until then);
+- a non-number, NaN or a value at or below 0;
+- K1 at or above 1 (a fraction, never a percent);
+- K2 or K3 (either K3 line) at or above `frozen.max_gross_stress`, at construction
+  (`validate_spec`, which `build_sleeve` runs before it builds), with a message naming the key,
+  its value and the cap (confirmed for the runner owner's review 2026-11-04, item 4);
+- the run line not below the once line;
+- a near-miss spelling in `risk`, and any of them written in `frozen`.
+
+**K3's run length, `risk.thin_k3_run_sessions`** (the runner owner's review 2026-11-04, item 9).
+How many reduced closes in sequence above the run line trip K3: §6.3's 3. It was a constant in
+`drawdown.py` (`THIN_K3_RUN`) until that review; the spec is the only authority on a stop's rule,
+so `drawdown.thin_stop_record` now reads it from the thresholds the runner passes, and holds no
+constant. Unlike the four lines it is **required** whenever `below_min_names` is
+`"trade_eligible"`, with no default: a spec without it refuses at load, as one without a floor
+does. The registry refuses it under any other rule, a non-int (a bool, `3.0`, a string), a value
+below 2 (one close is the once line's business), a missing or empty `_thin_k3_run_sessions_note`
+(the count is pre-registered, not derived by compose.py, so the note need not name a
+`compose_<stamp>.json`), a near-miss spelling and the key written in `frozen`. Tests that set the
+rule set it (`test_trade_eligible_runner.te4`).
+
+**The run length and the compose run must agree** (the runner owner's round-2 answer (c),
+2026-11-05). `compose.py` counted §E's fit runs with a literal 3 (and 2 for context) while the
+spec carries the count, so the two could drift apart unseen. It now takes K3's run length as the
+**required** argument `--k3-run-sessions` (no default; at least 2, the registry's rule), counts
+§E's runs with it (runs of n above the fit p99, and of n − 1 for context) and records it in
+`compose_<stamp>.json` as `k3_run_sessions`. The drafting day's files (2026-11-03) predate it and
+record none. `src/deploy/tests/test_thin_k3_run_provenance.py` fails any committed spec under
+`ops/specs/` that sets `risk.thin_k3_run_sessions` when a `compose_<stamp>.json` named in its te4
+notes (the four lines' and the run length's own) is missing, unreadable, records no run length or
+records another one, or when a K-line's note names no compose file.
+
+**Why that guard is a test, not a registry check.** The owner asked that "the registry refuses a
+spec whose risk.thin_k3_run_sessions differs from the run length recorded in the compose file its
+threshold notes cite". The owner also ruled (answer 3, 2026-11-03) that the live path never reads
+`results/`, and `src/deploy/registry.py` validates on the live path: the sleeve's constructor and
+`run.py` call it on every session. So the guard reads `results/` in a test instead. CI runs it on
+every push (`.github/workflows/checks.yml`), and prod installs only a release-checked tag
+(`/release-check` runs the suite), so a spec and a compose file that disagree cannot reach a
+release together. What it does not catch: a prod clone edited by hand, which no release check
+sees. **The owner can overrule this** and move the check into the registry.
+
+The live path never reads `results/`.
+
+**Unchanged.** The missing-NAV and stale-NAV holds: with any hold present the reduced build never
+runs, and today's `min_names` path decides, tag included, so the missing-NAV refusal still keys
+on it (§7.7). `_send_planned`, the first-session gate, the arming refusals.
+
+**Revert.** Set `below_min_names` back to `"flatten"`, or delete it, through `/spec-change`.
+Delete the floor and the five `risk.thin_*` keys (the four lines and `thin_k3_run_sessions`) and
+their notes with it, because the registry refuses them under any other rule: the keys, and since
+the review of 4e1ab0b their notes too (`_below_min_names_floor_note` in `frozen`, each
+`_thin_*_note` in `risk`), each named. **One note it cannot refuse:** `_below_min_names_note`,
+because C4's `"hold"` spec carries it legitimately; delete it with `below_min_names`, and only
+the diff below guards it. The no-op pins prove the reverted session is today's.
+
+**Activation checklist, for the record (not done now).**
+1. **The revert spec** (the runner owner's review 2026-11-04, item 2). The
+revert spec built in the activation release deletes `below_min_names`, its floor and the five
+`risk.thin_*` keys with their notes. With them absent, the revert spec must be **byte-identical
+to the pre-te4 spec**, the spec file as it stood before the activation commit. Diff the two files
+before tagging; any other difference is a second change riding on a revert. The registry's
+refusals catch a te4 key or te4 note left behind, not `_below_min_names_note` and not any other
+edit: the diff is the guard of record.
+2. **K3's run length and its compose run** (the runner owner's round-2 answer (c), 2026-11-05).
+Set `risk.thin_k3_run_sessions` to the `k3_run_sessions` recorded in the `compose_<stamp>.json`
+the thresholds are taken from: **3 at the 2026-11-05 run** (`compose_2026-11-05.json`, run with
+`--k3-run-sessions 3`; every figure the drafting day's). A read-date re-run (H14) records its
+own; run it with the run length the spec will carry. **Cite that compose file in every threshold
+note** (`_thin_k1_episode_drawdown_note`, `_thin_k2_max_name_frac_note`, `_thin_k3_net_run_note`,
+`_thin_k3_net_once_note`). `src/deploy/tests/test_thin_k3_run_provenance.py` fails the activation
+commit if a cited file is missing or records no run length or another one (the files of
+2026-11-03 record none, so a spec citing them fails).
+3. **Three fixes from the owner's release-check of 78e3483 (2026-11-09), done before the key is set.**
+   - `thin_rule_for` refuses, at session start, any execution mode but `late_market`: under `cls`
+     an episode could open on STARTED alone, with no fill known.
+   - `_send_state`: a reduced plan the buying-power fit scaled to nothing (`bp_scale` orders_in >
+     0, orders_out 0) is not sent. An empty plan with no such record still means the account
+     already held its targets.
+   - The drift guard (`test_thin_k3_run_provenance.py`) also compares the four K-line values and
+     the compose run's m and floor with the spec. A spec value may be the compose value rounded,
+     at 3 decimals or more; any other difference fails the activation commit.
+4. **A known limit to revisit at activation** (the owner, 2026-11-08). A set rejected in full at
+the POST (a 4xx on every order) has a `submit` line per order, so it reads UNMEASURED even though
+each `rejected` event shows the order does not exist. It is rare and fails closed.
 
 ## As built (2026-10-29): gate 6 reads its lists last
 
@@ -720,7 +1037,12 @@ it sends already carries the record.
   date; drawdown = 1 − newest ÷ HWM. Rows after the as-of are never read
   (asserted). The newest row must be the as-of date. If it is not, the status is
   UNMEASURED, and the figures are recorded under their own date. Whether the EOD
-  row exists by the 22:00 ET evening decide is [U]; report mode measures it.
+  row exists by the 22:00 ET evening decide was [U] when this was built; report
+  mode measured it, and it does not: prod's 4 of 4 decides with the field read
+  UNMEASURED because the newest row was D−1 (E-2026-11-03-41 [S]). This record is
+  unchanged by that finding (what HALVE/KILL reads is the owning session's to
+  rule); CEF trial 55's K0 alone reads the check through D−1 (`read_through`,
+  "As built (2026-11-03)").
 - **Lines.** `risk.halve_drawdown` and `risk.kill_drawdown`, read from the spec
   that `run.load_spec` loaded, never a literal. Each must be a fraction in (0, 1),
   with halve below kill. A percent written where a fraction belongs is refused,

@@ -1,0 +1,3 @@
+date,auction_pnl_usd,distribution_pnl_usd,auction_pnl_with_distributions_usd,unmeasured,source,label,written_at_utc
+2026-11-03,0.00,0.00,0.00,,no positions held into D: nothing is entitled,"distribution-adjusted: auction-marked P&L plus distributions on shares held at the start of the ex-date (credited long, charged short); gross of borrow and fees; Alpaca paper credits none",2026-11-05T22:30:12.829153+00:00
+2026-11-04,-8.60,0.00,-8.60,,no positions held into D: nothing is entitled,"distribution-adjusted: auction-marked P&L plus distributions on shares held at the start of the ex-date (credited long, charged short); gross of borrow and fees; Alpaca paper credits none",2026-11-06T22:30:08.663418+00:00

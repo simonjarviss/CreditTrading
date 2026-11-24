@@ -60,12 +60,12 @@ right, and the extraction checkable.
 - Never read, print or copy the user-agent value. It comes from the env file,
   which agents never open (`CLAUDE.md` order-path rule 5).
 
-## Zero trials
+## Counts and extraction, not returns
 
-You count filings and extract fields. You compute no return, CAR or drift on
-any event: that is a trial. Counts may run to the last closed quarter. Market
-data used beside a count (ADV, listing status) stays before 2023-01-01, the
-sealed time holdout.
+You count filings and extract fields. The return test on an event set belongs
+to `signal-hunter`, on the harness, with its ledger line. Counts may run to the
+last closed quarter. State the last date of any market data used beside a count
+(ADV, listing status).
 
 ## What to hand back
 

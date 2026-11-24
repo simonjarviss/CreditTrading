@@ -38,8 +38,12 @@ RUNNER.md "The session, in order"; the reasons for the order are the incidents:
                portfolio history, the official daily P&L) is compared with the
                frozen spec's risk.halve_drawdown / risk.kill_drawdown and
                recorded in plan.json and the log, with what an `on` mode would
-               do. Nothing that trades reads it (`drawdown.py`; team lead
-               2026-10-19).
+               do. Report mode acts on nothing (`drawdown.py`; team lead
+               2026-10-19). ONE READER RESTRICTS ON IT: under the core spec's
+               `below_min_names = "trade_eligible"` (CEF trial 55, paper only),
+               K0 builds a reduced book only when the status is exactly OK, and
+               otherwise takes today's flatten (CEF TRIAL 55 block below). With
+               that key absent nothing reads it.
   3. decide    the sleeve on the as-of date with the broker's holdings and
                `extras={"sleeve_nav": equity, "opening_session": bool}`, then
                `decide.decide` -> whole-share orders and `plan_sha`.
@@ -64,13 +68,14 @@ RUNNER.md "The session, in order"; the reasons for the order are the incidents:
                (CLAUDE.md order-path rule 2).
   6. transmit  in `decide.transmit_sequence` order (running net kept near
                zero); the Alpaca clock re-read before every POST and the batch
-               stopped at the cutoff. One POST per order, each attempt and response appended to
-               orders.jsonl as it happens. ANY failure stops the batch: an
-               `AmbiguousSubmit` is resolved by looking the id up, never by
-               resending (a resend of an accepted order doubles it in the same
-               auction), and a rejection or a bad echo stops the rest too,
-               because the list that was approved is no longer the list that
-               is going.
+               stopped at the cutoff. Each attempt and response is appended to
+               orders.jsonl as it happens. An `AmbiguousSubmit` stops the batch
+               and is resolved by looking the id up, never by resending (a
+               resend of an accepted order doubles it). A 4xx rejection skips
+               that symbol and the rest go (team lead, 2026-09-28; `_transmit`).
+               Since 2026-11-23 one id can be POSTed up to four times: a 429 is
+               waited out and the id read, and it is resent only when Alpaca
+               has no such order (`_submit_one`, POST_429_WAITS_S).
   7. confirm   every sent id is re-read from Alpaca by client_order_id; one
                missing or different is FAIL.
 
@@ -921,7 +926,8 @@ def stale_nav_panel(panels: BookPanels, mode: str) -> Path:
 
 
 def sleeve_targets(spec: dict, capital: float, asof: dt.date, holdings: dict,
-                   equity: float, opening: bool, nav_hold: dict | None = None) -> list:
+                   equity: float, opening: bool, nav_hold: dict | None = None, *,
+                   account: str | None = None, thin_rule: dict | None = None) -> list:
     """The strategy's targets, built exactly as RUNNER.md step 3 says: the
     registry's sleeve from the frozen spec at the spec's capital, asked on the
     as-of date with the broker's holdings and the two extras. `nav_hold`
@@ -930,18 +936,28 @@ def sleeve_targets(spec: dict, capital: float, asof: dt.date, holdings: dict,
     unchanged. MarketState's prices are the sleeve's OWN price file
     (`spec_panel`; for the core spec `cefmod.PX_PATH`, as before row 6A); the
     sleeve reads its panel itself and its own guard refuses an absent one named
-    by panel_source (cef_discount._read_panel)."""
+    by panel_source (cef_discount._read_panel).
+
+    `account` and `thin_rule` (CEF trial 55, te4; PAPER ONLY): the sleeve's paper
+    declaration and the `extras["thin_rule"]` it requires under `below_min_names
+    = "trade_eligible"` (cef_discount `_thin_rule`). The runner passes them only
+    when the spec sets that key (`_thin_target_kw`); otherwise both are None and
+    the sleeve is built and asked exactly as before, so the key-absent session is
+    byte-identical (tests/test_trade_eligible_noop.py)."""
     import pandas as pd
     from src.deploy.registry import build_sleeve
     from src.deploy.sleeve import MarketState
     px_path = spec_panel(spec).prices
-    sl = build_sleeve(spec, capital)
+    sl = build_sleeve(spec, capital) if account is None else build_sleeve(spec, capital,
+                                                                           account=account)
     ts = pd.Timestamp(asof)
     prices = pd.read_parquet(px_path)              # MarketState requires it; this sleeve reads its own panel
     prices = prices[pd.to_datetime(prices["date"]) <= ts]
     extras = {"sleeve_nav": equity, "opening_session": opening}
     if nav_hold is not None:
         extras["nav_hold"] = nav_hold
+    if thin_rule is not None:
+        extras["thin_rule"] = thin_rule
     ms = MarketState(asof=ts, prices=prices, holdings=dict(holdings), extras=extras)
     return sl.target_positions(ts, ms)
 
@@ -1510,6 +1526,388 @@ def _drawdown(deps, state: Path, spec: dict, asof: dt.date) -> tuple[dict, list]
                      f"no order changed."]
 
 
+# ---------------------------------------------------------------------------
+# CEF TRIAL 55, "te4": below_min_names = "trade_eligible", PAPER ONLY
+# ---------------------------------------------------------------------------
+#
+# results/cef/PREREG_THIN_TRADE_ELIGIBLE_2026-11-03.md, approved by the team
+# lead 2026-11-03 for paper only. On a session with fewer than `min_names`
+# eligible funds but at least the floor, and no NAV hold, the core sleeve
+# builds its book on the eligible funds instead of closing it (the sleeve's
+# module docstring). The runner's part, every piece of it in the functions
+# below, each with one call line in `run_session`:
+#
+#   * THE PAPER DECLARATION (§1.2, §10 Q14). The sleeve refuses to decide under
+#     the key unless it was built with account="paper" and given
+#     extras["thin_rule"]. The runner declares paper only when its broker
+#     client's trading endpoint is exactly alpaca.PAPER_BASE (`thin_rule_for`).
+#     Today the client cannot be anything else (AlpacaClient refuses another
+#     endpoint), so the check exists for the day a live client is written.
+#   * K0 (§1.3 item 5, §6.3; the owner's term 3). A reduced book is built only
+#     when K0's drawdown record reads exactly OK. HALVE, KILL, UNMEASURED, a
+#     stale series, a missing status: the stop goes to the sleeve and the
+#     session takes today's flatten path. This is the FIRST ACTING READER of
+#     quantt/session/drawdown.py's status, and it can only restrict: its one
+#     action is today's rule, so no status can size up or unlock a send
+#     (tests/test_trade_eligible_runner.py, the gross pin). K0'S RECORD IS ITS
+#     OWN, READ THROUGH THE PREVIOUS SESSION (team lead's ruling 2026-11-03,
+#     E-2026-11-03-42; `_thin_k0_drawdown`): at the 22:00 decide the as-of's
+#     own EOD row never exists (E-2026-11-03-41: prod's 4 of 4 decides with the
+#     field read UNMEASURED for it), so K0 as first built would have flattened
+#     every reduced session. It reads the as-of's own row when it is there
+#     (the morning backstop; ruling 2026-11-04: the freshest row, which can only
+#     be stricter), else `drawdown.check(..., read_through=<the NYSE session
+#     before the as-of>)`, labelled one session stale; an older row, a missing
+#     or bad file reads UNMEASURED and the session flattens.
+#     Step 2b's own record (HALVE/KILL's report) is unchanged and not read.
+#   * THE GATE-7 FLATTEN (§7.5, §10 Q7). A reduced decision that loses a
+#     short-opening order to gate 7 (decide's "not shortable today") is
+#     re-decided flat: a 4-5 name book without its short leg is not the book the
+#     trial scored (`_thin_gate7`).
+#   * THE RECORD (§4.2; the owner's answer 6). plan.json and the run record gain
+#     `thin_session` (and `thin_stops`, the K0-K3 report lines) ONLY when the key
+#     is set; every key-absent field is byte-identical
+#     (tests/test_trade_eligible_noop.py, against 0b1a2ef).
+#   * NOT HERE, BY RULING: a short skipped at the late-market SEND (`_send_planned`
+#     is unchanged; team lead, 2026-11-03, "accept it and label it"). The next
+#     decide's `thin_stops.send_skip` reads that session's send.json and records it.
+#
+# With the key ABSENT `thin_rule_for` returns None and nothing below runs.
+
+def _sets_trade_eligible(spec: dict) -> bool:
+    """True when `spec` is a cef_discount spec whose `below_min_names` is
+    "trade_eligible" (the registry's parse; a malformed value raises there)."""
+    from src.deploy.registry import CEF_DISCOUNT_ALLOC_TYPE, cef_below_min_names
+    if (spec.get("allocation") or {}).get("type") != CEF_DISCOUNT_ALLOC_TYPE:
+        return False
+    return cef_below_min_names(spec.get("frozen") or {}) == "trade_eligible"
+
+
+def thin_rule_for(spec: dict, deps) -> dict | None:
+    """The te4 declaration for this session, or None when no spec of the book sets
+    `below_min_names = "trade_eligible"` (today's behaviour: nothing reads the
+    client's endpoint, the drawdown mode or the sleeves for this).
+
+    With the key set it REFUSES, at session start, with a SessionError naming the
+    key, before any sleeve is built:
+      * a combined book (`deps.sleeves`) whose book spec sets it. The rule and its
+        stops were measured on the core's own account; netted with another sleeve
+        it is a book nobody scored. A combined SLEEVE whose own spec sets any te4
+        key is refused earlier, by `combine.load_sleeves` (the runner owner's review
+        2026-11-04, item 1); were one built by hand, the combiner passes no paper
+        declaration (`_sleeve_target_fn`), so the sleeve's own refusal would stand;
+      * the book json without `risk.drawdown` (`deps.drawdown` None; the owner's
+        answer 4). K0 reads the drawdown record, and a stop whose input is never
+        measured must not fail open: loud and closed;
+      * an execution mode other than late_market (the owner's release-check of 78e3483,
+        2026-11-09). K1-K3 count a reduced decision only if it filled, read from send.json,
+        and a cls set writes none: under cls an episode could open on STARTED alone;
+      * a broker client whose `trading_endpoint` is not exactly
+        `alpaca.PAPER_BASE` (§1.2), or that does not say what its endpoint is.
+    Returns {"rule", "account": "paper", "floor", "min_names", "endpoint"}."""
+    from quantt.broker.alpaca import PAPER_BASE
+    from src.deploy.registry import cef_below_min_names_floor
+    key = "frozen.below_min_names = 'trade_eligible' (CEF trial 55, PAPER ONLY)"
+    on = _sets_trade_eligible(spec)
+    if not on:
+        return None
+    if deps.sleeves is not None:
+        raise SessionError(
+            f"{key} is set on a combined book: the rule is built and measured for the core's "
+            f"own account only. Delete the key or the risk_budgets")
+    if deps.drawdown is None:
+        raise SessionError(
+            f"{key} is set but the book json has no risk.drawdown: K0 builds a reduced book "
+            f"only on a drawdown record that reads OK, and without the check there is no "
+            f"record. Set risk.drawdown to 'report' or delete the key")
+    mode = deps.execution.get("mode")
+    if mode != "late_market":
+        raise SessionError(
+            f"{key} is set and the book's execution mode is {mode!r}, not 'late_market'. "
+            f"Paper runs late_market, and the stop lines read what a set filled from its "
+            f"send.json, which a cls set never writes: an episode could open with no fill "
+            f"known. Nothing decided")
+    endpoint = getattr(deps.client, "trading_endpoint", None)
+    if endpoint is None:
+        raise SessionError(
+            f"{key} is set and the broker client {type(deps.client).__name__} does not say "
+            f"what its trading endpoint is (no `trading_endpoint`); the runner declares the "
+            f"account paper only on the paper endpoint {PAPER_BASE}")
+    if endpoint != PAPER_BASE:
+        raise SessionError(
+            f"{key} is set and the broker client's trading endpoint is {endpoint!r}, not the "
+            f"paper endpoint {PAPER_BASE!r}. The rule is PAPER ONLY and never applies to a "
+            f"live-money account; nothing decided")
+    frozen = spec["frozen"]
+    return {"rule": "trade_eligible", "account": "paper",
+            "floor": cef_below_min_names_floor(frozen), "min_names": min_names_of(spec),
+            "endpoint": endpoint}
+
+
+def _thin_k0_drawdown(deps, state: Path, spec: dict, asof: dt.date, cal: list) -> dict:
+    """K0's own drawdown record: the FRESHEST EOD row the decide has, never an older one
+    (team lead's rulings 2026-11-03, E-2026-11-03-42, and 2026-11-04).
+
+    1. Read through the as-of itself (`drawdown.check(..., read_through=asof)`: today's check,
+       labelled 0 sessions stale). If the as-of's row is there, whatever it reads decides,
+       a bad row included (UNMEASURED: K0 flattens; it never falls back past a row it has).
+    2. Only if the as-of's row has NOT landed yet (the newest row is older than the as-of),
+       read through the NYSE session before the as-of, labelled one session stale. Why: at
+       the 22:00 decide the as-of's row never exists (E-2026-11-03-41), so step 1 alone would
+       flatten every reduced session (the 2026-11-03 ruling). A newest row older than that,
+       or none, reads UNMEASURED and the session flattens.
+    Why the as-of's row first (ruling 2026-11-04): at the morning backstop the as-of's row
+    exists; reading D-1 there let a reduced book through on a stale OK while the fresh row
+    read KILL (the verification of f3ad29f). A fresher row can only make K0 stricter.
+
+    The read-through dates come from `asof_for(asof, cal)` (nyse_calendar AND Alpaca's
+    calendar, never a weekday guess; it raises if they differ). An error anywhere is
+    recorded as UNMEASURED with its type and K0 stops the reduced build: an input K0 cannot
+    read fails closed. HALVE/KILL's own record (step 2b) is not this, and unchanged."""
+    try:
+        prev = asof_for(asof, cal)
+        fresh = ddm.check(state, spec, asof, deps.drawdown, read_through=asof)
+        r = fresh.get("reading")
+        if fresh["status"] == ddm.UNMEASURED and r is not None and r["last_date"] < asof:
+            return ddm.check(state, spec, asof, deps.drawdown, read_through=prev)
+        return fresh
+    except Exception as e:  # recorded in thin_session.k0, and K0 stops on it: fails closed
+        return ddm.unmeasured_record(deps.drawdown, asof, f"{type(e).__name__}: {e}")
+
+
+def _thin_k0_stop(dd: dict | None) -> dict | None:
+    """K0 (pre-registration §6.3): None when K0's drawdown record (`_thin_k0_drawdown`, read
+    through the previous session) reads exactly "OK", else the stop the sleeve takes
+    ({"by": "K0", "why"}).
+
+    Anything but an exact OK stops the reduced build: HALVE, KILL, UNMEASURED
+    (a missing eod_equity.csv, a newest row older than the read-through date, bad
+    levels, a check that raised), and any other or missing status. A missing RECORD
+    raises: `thin_rule_for` refused a book without the check, so a missing record here
+    is a runner bug, never "no stop"."""
+    if not isinstance(dd, dict):
+        raise SessionError(f"K0 (CEF trial 55): no drawdown record to read ({dd!r}); "
+                           f"not deciding a reduced book without it")
+    status = dd.get("status")
+    if type(status) is str and status == ddm.OK:
+        return None
+    why = (f"the account's drawdown record reads {status!r} (as-of {dd.get('asof')}"
+           + (f", read through {dd['read_through']}" if dd.get("read_through") else "")
+           + (f": {dd['why']}" if dd.get("why") else "") + "); K0 builds a reduced book only "
+           "on OK, and its one action is today's flatten")
+    return {"by": "K0", "why": why}
+
+
+def _thin_k0(thin: dict, dd: dict | None) -> dict:
+    """The session's `thin_session` record as K0 leaves it, before the sleeve
+    runs: the rule, the floor, K0's reading (`k0`: its status, the as-of, the
+    read-through date and the reading's staleness, the stop, and the whole record
+    as `drawdown`) and the stop it passes. The sleeve's own answer is added by
+    `_thin_record`; a session refused before the sleeve ran keeps `decided` False
+    and the eligible fields None (not measured)."""
+    stop = _thin_k0_stop(dd)
+    return {"rule": thin["rule"], "floor": thin["floor"], "min_names": thin["min_names"],
+            "decided": False, "eligible": None, "eligible_names": None, "holds": None,
+            "reduced": False, "stopped_by": None,
+            "k0": {"status": dd.get("status"), "asof": dd.get("asof"),
+                   "read_through": dd.get("read_through"),
+                   "stale": (dd.get("reading") or {}).get("stale"), "stop": stop,
+                   "drawdown": dd}}
+
+
+def _thin_target_kw(thin: dict | None, record: dict, stop: dict | None = None) -> dict:
+    """The sleeve-call keywords for te4: {} when the key is absent, so the call is
+    the one before the key existed. Set: the paper declaration and
+    extras["thin_rule"] with K0's stop, or `stop` when given (gate 7's)."""
+    if thin is None:
+        return {}
+    use = stop if stop is not None else record["thin_session"]["k0"]["stop"]
+    return {"account": thin["account"], "thin_rule": {"stop": None if use is None else dict(use)}}
+
+
+def _thin_record(targets, thin: dict, stop: dict | None) -> dict:
+    """The sleeve's te4 record, read from its targets' `meta["cef_thin"]` (a
+    structured field, never a reason string; §4.2), checked:
+      * every target carries it and every copy is identical, or this raises: a
+        mixed answer is a sleeve bug, as for `_short_of_min_names`;
+      * its floor and min_names are the spec's (`thin`);
+      * a reduced build with a stop passed, or a `stopped_by` that is not the
+        stop passed, raises: the sleeve ignored or invented a stop.
+    Returns the fields `thin_session` takes."""
+    from src.deploy.sleeves.cef_discount import THIN_META
+    infos = [t.meta.get(THIN_META) for t in targets]
+    if not infos or any(not isinstance(i, dict) for i in infos):
+        raise SessionError(f"CEF trial 55: the sleeve returned {len(infos)} targets and not "
+                           f"every one carries meta[{THIN_META!r}]; not deciding on it")
+    if any(i != infos[0] for i in infos):
+        raise SessionError(f"CEF trial 55: the sleeve's meta[{THIN_META!r}] differs between "
+                           f"targets; not deciding on a mixed answer")
+    i = infos[0]
+    if (i["floor"], i["min_names"]) != (thin["floor"], thin["min_names"]):
+        raise SessionError(f"CEF trial 55: the sleeve read floor {i['floor']} / min_names "
+                           f"{i['min_names']}, the spec says {thin['floor']} / "
+                           f"{thin['min_names']}")
+    if stop is not None and i["reduced"]:
+        raise SessionError(f"CEF trial 55: {stop['by']} stopped the reduced build and the "
+                           f"sleeve built it anyway")
+    if i["stopped_by"] is not None and (stop is None or i["stopped_by"] != stop["by"]):
+        raise SessionError(f"CEF trial 55: the sleeve says {i['stopped_by']} stopped the build "
+                           f"and the runner passed {stop!r}")
+    return {"decided": True, "eligible": i["n"], "eligible_names": list(i["eligible"]),
+            "holds": i["holds"], "reduced": i["reduced"], "stopped_by": i["stopped_by"]}
+
+
+def _thin_after_targets(thin: dict | None, record: dict, targets) -> None:
+    """Records the sleeve's te4 answer on `record["thin_session"]`; nothing when
+    the key is absent."""
+    if thin is None:
+        return
+    ts = record["thin_session"]
+    ts.update(_thin_record(targets, thin, ts["k0"]["stop"]))
+
+
+def _thin_gate7(thin: dict | None, record: dict, decision, *, retarget, recheck, redecide):
+    """THE GATE-7 FLATTEN (pre-registration §1.3 item 6, §7.5; §10 Q7, approved). Returns the
+    decision to plan: `decision` itself, unless the key is set, the sleeve built the reduced
+    book (`thin_session.reduced`) and gate 7 dropped a short-opening order
+    (`Decision.dropped_shorts`, decide's "not shortable today").
+
+    Then the reduced targets are not sent. The sleeve is asked again with the stop
+    {"by": "gate7"} (`retarget`), so it takes today's flatten path with the reason in every
+    target; the stale-NAV gate's panel check is asked again (`recheck`), because the sleeve
+    read the panel again; and the flat targets are decided (`redecide`). Why: on 4-5 names a
+    dropped short can be the whole short side (10.3% of fit reduced decisions have one fund
+    there), and the book left is net long by up to the long side, a book the trial never
+    scored. It costs one round trip each time it fires.
+
+    No loop: an all-FLAT book opens no short, so the re-decision can drop none; if it did,
+    that is a bug and this raises. `thin_session` records `stopped_by` "gate7", `reduced`
+    False and `gate7` {"dropped": [...]}. Runs BEFORE the buying-power scaling, which only
+    shrinks opening orders. A short skipped later, at the late-market SEND, is not this
+    (team lead 2026-11-03: accepted and labelled; `thin_stops.send_skip`)."""
+    if thin is None:
+        return decision
+    ts = record["thin_session"]
+    if ts["reduced"] is not True or not decision.dropped_shorts:
+        return decision
+    dropped = list(decision.dropped_shorts)
+    stop = {"by": "gate7",
+            "why": (f"gate 7 dropped the short-opening order(s) of {dropped} (not shortable "
+                    f"today); a reduced book without its short leg is not the book the trial "
+                    f"scored")}
+    targets = retarget(stop)
+    recheck()
+    info = _thin_record(targets, thin, stop)
+    if info["reduced"] or info["stopped_by"] != "gate7":
+        raise SessionError(f"CEF trial 55: gate 7's stop did not flatten the reduced build "
+                           f"({info}); not deciding")
+    redone = redecide(targets)
+    if redone.dropped_shorts:
+        raise SessionError(f"CEF trial 55: the flattened decision still drops shorts "
+                           f"{list(redone.dropped_shorts)}; an all-FLAT book opens none")
+    ts.update(info)
+    ts["gate7"] = {"dropped": dropped}
+    return redone
+
+
+def _thin_recheck(deps, gate_res) -> None:
+    """The stale-NAV gate's panel check after a second sleeve read (`_thin_gate7`): the same
+    check, and the same refusal, as after the first."""
+    if gate_res is not None:
+        changed = deps.nav_gate.still_holds(gate_res)
+        if changed:
+            raise SessionError(f"the NAV panel changed between the stale-NAV gate and the "
+                               f"sleeve's second read (gate 7's flatten): {changed}; not "
+                               f"deciding on it")
+
+
+def _thin_read_day(state: Path, d: dt.date, cid_prefix: str) -> dict:
+    """{"plan", "send", "started", "orders_log", "reconcile", "order_prefix"}: the session d's
+    plan.json and send.json under `state`, each a dict, or None where the file is not there,
+    and whether <d>/STARTED exists (written before the first order of a set and never
+    otherwise: with send.json's `exit` and `final` / `not_final`, what `drawdown._send_state`
+    reads to say whether a decision's targets were sent; quantt/session/tests/
+    test_thin_send_state.py reads what the real send writes). Creates nothing (never
+    `records.day_dir`). A file that is there and cannot be read or parsed raises, and
+    `drawdown.thin_stop_record` records the episode UNMEASURED, naming the session.
+
+    `orders_log` and `reconcile` are <d>/orders.jsonl (`_transmit`'s event log) and
+    <d>/reconcile.json (verify's), as BYTES or None where absent, and `order_prefix` the
+    session's client_order_id prefix, `<cid_prefix>-<YYYYMMDD>-` (decide.client_order_id's
+    scheme; the prefix gate 6 matches on). Only a late-market FAIL whose send.json records no
+    order reads them (`drawdown._zero_submissions`: "not sent" only on proof that no POST was
+    made, the runner owner's round-2 answer (a), 2026-11-05), and it parses them itself: read
+    as bytes here, a damaged log cannot make the whole walk UNMEASURED on a session whose
+    send.json already says what went."""
+    day = state / d.isoformat()
+    out = {}
+    for name in ("plan", "send"):
+        f = day / f"{name}.json"
+        out[name] = json.loads(f.read_text()) if os.path.lexists(f) else None
+    out["started"] = os.path.lexists(day / "STARTED")
+    for key, name in (("orders_log", "orders.jsonl"), ("reconcile", "reconcile.json")):
+        f = day / name
+        out[key] = f.read_bytes() if os.path.lexists(f) else None
+    out["order_prefix"] = f"{cid_prefix}-{d:%Y%m%d}-"
+    return out
+
+
+def _thin_stops(thin: dict | None, spec: dict, state: Path, asof: dt.date,
+                session_date: dt.date, positions: dict, record: dict, out, *,
+                cid_prefix: str) -> None:
+    """THE K0-K3 REPORT LINES (pre-registration §6.3: required in the activation release, in
+    report mode, tested; drawdown.py `thin_stop_record`). Nothing when the key is absent;
+    with it, `record["thin_stops"]` (plan.json's too) and the log lines. REPORT ONLY:
+    nothing in this session reads them, and the team lead acts on a stop that reads true
+    through the revert spec. K0's ACTION is `_thin_k0_stop`, not this.
+
+    Its inputs, all read now: K0's own drawdown record (`thin_session.k0.drawdown`, read
+    through the session before the as-of); the official eod_equity series through the same
+    date (team lead's ruling 2026-11-03, applied to these report lines as to K0: at the 22:00
+    decide the as-of's own row never exists, so read through the as-of they would all read
+    UNMEASURED; a series that cannot be read is passed as its reason, never a fallback, and
+    a K0 record with no read-through date makes the whole record UNMEASURED, naming why);
+    the earlier sessions' plan.json
+    and send.json (`_thin_read_day`; with orders.jsonl and reconcile.json, under the book's own
+    order-id prefix `cid_prefix`, for a FAIL that records no order), which carry the episode,
+    K3's earlier closes and the
+    previous session's send-time skip (team lead 2026-11-03: a short skipped at the SEND is
+    accepted and labelled here, `_send_planned` unchanged); the broker's positions now; the
+    closes DATED the as-of only (a staler close is not a close of the session K2 and K3
+    judge); and the spec's `risk.thin_*` lines (registry `cef_thin_stop_levels`; absent: the
+    line reads UNMEASURED). Report mode: an unexpected error is recorded as UNMEASURED with
+    its type, as `_drawdown` records its own."""
+    if thin is None:
+        return
+    from ops.schedule.nyse_calendar import previous_trading_day
+    from src.deploy.registry import cef_thin_stop_levels
+    try:
+        k0 = record["thin_session"]["k0"]
+        through = k0["read_through"]
+        if through is None:
+            raise ddm.Unmeasured(f"K0's drawdown record names no read-through date: "
+                                 f"{k0['drawdown'].get('why')}")
+        try:
+            series = ddm.read_series(state / ddm.OFFICIAL_FILE, through)
+        except ddm.Unmeasured as e:
+            series = str(e)
+        closes = {s: c["close"] for s, c in record["closes"].items()
+                  if c["date"] == asof and c["close"] is not None}
+        res = ddm.thin_stop_record(
+            asof=asof, session_date=session_date, drawdown=k0["drawdown"],
+            current=record["thin_session"], previous_session=previous_trading_day,
+            read_day=lambda d: _thin_read_day(state, d, cid_prefix), series=series,
+            positions=positions,
+            closes=closes, thresholds=cef_thin_stop_levels(spec), read_through=through)
+        lines = ddm.thin_stop_lines(res)
+    except Exception as e:  # report only: recorded in plan.json and printed, never swallowed
+        res = ddm.thin_unmeasured_record(asof, f"{type(e).__name__}: {e}")
+        lines = ddm.thin_stop_lines(res)
+    record["thin_stops"] = res
+    for line in lines:
+        print(line, file=out)
+
+
 def _nav_gate(deps, asof: dt.date, universe, refresh_exit, final: bool, record_csv):
     """Step 1b, the stale-NAV gate (quantt/session/nav_gate.py). Returns
     (record dict, GateResult or None).
@@ -1739,6 +2137,7 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
             raise SessionError(f"data.missing_nav={deps.missing_nav!r} needs "
                                f"data.missing_nav_max_sessions, a positive int; got "
                                f"{deps.missing_nav_max_sessions!r}")
+        thin = thin_rule_for(spec, deps)     # CEF trial 55 (te4): None unless the spec sets it
         record["spec_id"] = p["spec_id"]
         c = deps.client
         clock = c.clock()
@@ -1934,11 +2333,17 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
 
         # 2b. the drawdown check (quantt/session/drawdown.py). Off unless the
         # book json sets risk.drawdown; in `report` mode it is recorded and
-        # printed, and nothing below reads it.
+        # printed, and nothing below reads it. Under CEF trial 55's key K0 makes
+        # its OWN reading of the same check, through the previous session's EOD
+        # row (`_thin_k0_drawdown`; team lead's ruling 2026-11-03), and can only
+        # stop a reduced build (`_thin_k0`).
         if deps.drawdown is not None:
             record["drawdown"], dd_lines = _drawdown(deps, state, spec, asof)
             for line in dd_lines:
                 print(line, file=out)
+        if thin is not None:                 # CEF trial 55 (te4): K0 reads through D-1
+            record["thin_session"] = _thin_k0(
+                thin, _thin_k0_drawdown(deps, state, spec, asof, cal))
 
         # 3. decide -- only on data that passed gate 5
         if data_refusals:
@@ -1969,9 +2374,10 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                     time_in_force="day" if late else dec.TIME_IN_FORCE)
             elif hold:
                 targets = deps.targets(asof, pos, equity, opening,
-                                       nav_hold={"asof": asof, "names": hold})
+                                       nav_hold={"asof": asof, "names": hold},
+                                       **_thin_target_kw(thin, record))
             else:
-                targets = deps.targets(asof, pos, equity, opening)
+                targets = deps.targets(asof, pos, equity, opening, **_thin_target_kw(thin, record))
             if gate_res is not None:
                 # The sleeve has read the panel; was it the panel the gate
                 # certified? (PanelGate.still_holds: a fetch between the two.)
@@ -1979,6 +2385,7 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                 if changed:
                     raise SessionError(f"the NAV panel changed between the stale-NAV gate and "
                                        f"the sleeve's read: {changed}; not deciding on it")
+            _thin_after_targets(thin, record, None if deps.sleeves is not None else targets)
             if missing_held:
                 # THE HOLD SHORT OF min_names (release-check of 6d42f4f; the
                 # execution-trader's case, reproduced). With the missing-NAV holds
@@ -2006,11 +2413,19 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                 decision = dec.Decision(orders=(), targets={}, notes={"*": [
                     "not decided: the data gate refused"]}, plan_sha=dec.plan_sha(()))
             elif deps.sleeves is None:
-                decision = dec.decide(targets, pos, equity, closes, shortable,
+                def decide_single(tg):
+                    return dec.decide(tg, pos, equity, closes, shortable,
                                       session_date=session_date, universe=p["universe"],
                                       cid_prefix=book.cid_prefix,
                                       min_trade_usd=p["min_trade_usd"],
                                       time_in_force="day" if late else dec.TIME_IN_FORCE)
+                decision = decide_single(targets)
+                # CEF trial 55 (te4): a reduced decision that loses a short flattens.
+                decision = _thin_gate7(
+                    thin, record, decision, redecide=decide_single,
+                    retarget=lambda stop: deps.targets(asof, pos, equity, opening,
+                                                       **_thin_target_kw(thin, record, stop)),
+                    recheck=lambda: _thin_recheck(deps, gate_res))
         if decision.orders and deps.execution.get("bp_shortfall") == "scale":
             scaled, factor, binding = fit_to_buying_power(
                 decision.orders, pos, closes, equity, acct["buying_power"], _gross_now(acct),
@@ -2025,10 +2440,14 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
                                         notes={**decision.notes, "*": list(decision.notes.get("*", []))
                                                + [f"opening orders scaled x{factor:.4f} to fit "
                                                   f"{binding}"]},
-                                        plan_sha=dec.plan_sha(scaled))
+                                        plan_sha=dec.plan_sha(scaled),
+                                        # kept: decide.py, "rebuilt ... must carry it across"
+                                        dropped_shorts=decision.dropped_shorts)
         record["decision"] = decision.to_dict()
         borrow_warnings = hard_to_borrow_short_opens(decision.orders, pos, assets)
         record["borrow_warnings"] = borrow_warnings
+        _thin_stops(thin, spec, state, asof, session_date, pos, record, out,  # CEF trial 55: K0-K3
+                    cid_prefix=book.cid_prefix)
 
         # 3b. the corporate-action gate (quantt/session/corp_actions.py). Off
         # unless the book json sets corporate_actions.mode. It runs before the
@@ -2135,6 +2554,10 @@ def run_session(book: Book, spec: dict, deps: Deps, *, preview: bool = False,
             plan["combine"] = record["combine"]
         if "missing_nav" in record:          # only when the book sets data.missing_nav
             plan["missing_nav"] = record["missing_nav"]
+        if "thin_session" in record:         # only when the spec sets below_min_names "trade_eligible"
+            plan["thin_session"] = record["thin_session"]
+        if "thin_stops" in record:           # the same: the K0-K3 report lines
+            plan["thin_stops"] = record["thin_stops"]
         shown = refusals
         if late:
             # DECIDE phase: dry-run, arming and the clock belong to the SEND phase.
@@ -3017,13 +3440,128 @@ def _poll_final(c, sent, log: Path, record: dict, deps: Deps, out, until: dt.dat
           + (f"; not final by {until:%H:%M:%S}: {sorted(pending)}" if pending else ""), file=out)
 
 
+# A 429 TO AN ORDER IS WAITED OUT, THEN LOOKED UP, NEVER RESENT BLIND (2026-11-23).
+# The events book's first armed send had 173 of 219 orders answered HTTP 429 "rate limit
+# exceeded", and each was booked as a rejection, so a partial, unhedged book was left
+# (`docs/SYSTEM.md` §5, 2026-11-23; EVIDENCE_LOG E-2026-11-23-03). The client now paces the
+# trading host (alpaca.TRADING_MAX_PER_MIN), so a 429 should be rare; when one still comes,
+# `_submit_one` waits POST_429_WAITS_S[i], reads the id, and resends only on "not found".
+# A 429 is answered before the order service, so "not found" is the expected answer; the
+# read is what makes a resend safe if it is not, because a filled day order is no longer
+# active and Alpaca would accept the same client_order_id twice [V: Alpaca Learn, 2026-09-28].
+# Whether the by-id read can lag an order created a moment earlier is not documented [U]; the
+# wait before it is the margin. After the last wait the order is a rejection, as before.
+# The waits come out of the send window: `in_window` is checked again before every resend.
+#
+# EVERY ORDER THAT MET A 429 ENDS WITH A TERMINAL EVENT (release check of 81e1071, 2026-11-23).
+# The events VERIFY books the ledger only if each recorded order Alpaca does not hold has
+# `rejected`, `ambiguous` or `error` among its events (quantt/sleeves/run.py NOT_AT_BROKER_OK);
+# otherwise nothing is booked and the next PLAN refuses. So a batch that stops on the clock or the
+# window after a 429 first writes `rejected` for that order (it was last read as not at Alpaca),
+# and a read that fails after a 429 is a rejection (no resend) and the batch goes on, as a 429
+# did before 2026-11-23.
+POST_429_WAITS_S = (5.0, 15.0, 30.0)
+
+
+def _submit_one(c, o, log: Path, deps: Deps, out, *,
+                in_window: Callable[[dt.datetime], bool], window_text: str):
+    """Send one order to a known outcome: ("accepted", order dict), ("rejected", error),
+    ("stop", reason) when its state is unknown or the window has closed, or ("stop_rejected",
+    reason) when the batch stops while this order, after a 429, is known not to be at Alpaca
+    (`_transmit` counts it as rejected, then stops)."""
+    from quantt.broker.alpaca import AmbiguousSubmit, OrderRejected
+    now = deps.utcnow
+    cid = o.client_order_id
+    last_429 = None
+
+    def stop(reason):
+        if last_429 is None:
+            return "stop", reason
+        rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                               "error": f"HTTP 429, read as not at Alpaca, not resent: {reason}"})
+        return "stop_rejected", reason
+
+    for attempt in range(len(POST_429_WAITS_S) + 1):
+        try:
+            ts = c.clock()["timestamp"]
+        except Exception as e:
+            rec.append_jsonl(log, {"event": "clock_error", "at": now(), "client_order_id": cid,
+                                   "error": f"{type(e).__name__}: {e}"})
+            return stop(f"clock read failed before {cid}; batch stopped")
+        if not in_window(ts):
+            rec.append_jsonl(log, {"event": "cutoff", "at": now(), "clock": ts,
+                                   "client_order_id": cid, "window": window_text})
+            return stop(f"Alpaca clock {ts.astimezone(gt.ET):%Y-%m-%d %H:%M:%S} ET is outside "
+                        f"the send window -- {window_text} -- before {cid}; batch stopped")
+        rec.append_jsonl(log, {"event": "submit", "at": now(), **o.wire()})
+        try:
+            return "accepted", c.submit_order(o.symbol, o.qty, o.side, cid,
+                                              time_in_force=o.time_in_force)
+        except AmbiguousSubmit as e:
+            rec.append_jsonl(log, {"event": "ambiguous", "at": now(), "client_order_id": cid,
+                                   "error": str(e)})
+            try:
+                found = c.order_by_client_id(cid)
+                rec.append_jsonl(log, {"event": "lookup", "at": now(), "client_order_id": cid,
+                                       "found": found is not None,
+                                       "order": _order_summary(found) if found else None})
+            except Exception as le:
+                rec.append_jsonl(log, {"event": "lookup_error", "at": now(), "client_order_id": cid,
+                                       "error": f"{type(le).__name__}: {le}"})
+            return "stop", f"AmbiguousSubmit on {cid}; batch stopped"
+        except OrderRejected as e:
+            if e.status != 429:
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": str(e)})
+                return "rejected", e
+            # Every 429, the last one included, is waited out and the id read: a 429 can come
+            # back for an order Alpaca made (release check of 93021c8: the last attempt booked
+            # `rejected` unread, so a made order was never confirmed or polled). After the last
+            # one, "not found" is a rejection and nothing is resent.
+            last_429 = e
+            final = attempt == len(POST_429_WAITS_S)
+            wait = POST_429_WAITS_S[min(attempt, len(POST_429_WAITS_S) - 1)]
+            rec.append_jsonl(log, {"event": "rate_limited", "at": now(), "client_order_id": cid,
+                                   "attempt": attempt + 1, "wait_s": wait, "error": str(e)})
+            print(f"  RATE-LIMITED {cid} (HTTP 429): waiting {wait:.0f}s, then reading the id "
+                  + ("(the last attempt: it is not resent)" if final else "before any resend"),
+                  file=out)
+            deps.sleep(wait)
+            try:
+                found = c.order_by_client_id(cid)
+            except Exception as le:
+                rec.append_jsonl(log, {"event": "lookup_error", "at": now(), "client_order_id": cid,
+                                       "error": f"{type(le).__name__}: {le}"})
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": f"HTTP 429, and the read that says whether it exists "
+                                                f"failed ({type(le).__name__}); not resent"})
+                return "rejected", e
+            rec.append_jsonl(log, {"event": "lookup", "at": now(), "client_order_id": cid,
+                                   "found": found is not None,
+                                   "order": _order_summary(found) if found else None})
+            if found is not None:
+                return "accepted", found
+            if final:
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": f"HTTP 429 on all {attempt + 1} attempts, read as not "
+                                                f"at Alpaca; not resent: {e}"})
+                return "rejected", e
+        except Exception as e:
+            rec.append_jsonl(log, {"event": "error", "at": now(), "client_order_id": cid,
+                                   "error": f"{type(e).__name__}: {e}"})
+            return "stop", f"{type(e).__name__} on {cid}; batch stopped"
+    raise AssertionError("unreachable: the last attempt returns")
+
+
 def _transmit(c, orders, log: Path, record: dict, deps: Deps, out, *,
               in_window: Callable[[dt.datetime], bool], window_text: str,
               poll_until: dt.datetime | None = None) -> int:
     """POST each order in list order.
 
     A REJECTED order (Alpaca answered 4xx: it definitely does not exist) skips
-    that symbol and the rest are still sent -- team lead, 2026-09-28: better
+    that symbol and the rest are still sent. A 429 is first waited out and the id
+    read before any resend (`_submit_one`, 2026-11-23); only after the last wait is
+    it a rejection -- team lead, 2026-09-28: better
     fill coverage, accepting that the book can be net long or short that day.
     The day is still FAIL, loudly, naming every rejection. If EVERY order is
     rejected (e.g. paper refuses `cls` outright) nothing was sent, and the
@@ -3039,7 +3577,6 @@ def _transmit(c, orders, log: Path, record: dict, deps: Deps, out, *,
     retry or a slow response can carry a batch across either line. A clock read that fails also stops the batch -- an unmeasured
     time is not "before the cutoff".
     """
-    from quantt.broker.alpaca import AmbiguousSubmit, OrderRejected
     now = deps.utcnow
     sent, failed, rejected = [], None, []
     for o in orders:
@@ -3048,53 +3585,21 @@ def _transmit(c, orders, log: Path, record: dict, deps: Deps, out, *,
             rec.append_jsonl(log, {"event": "skipped_after_rejection", "at": now(),
                                    "client_order_id": o.client_order_id})
             continue
-        try:
-            ts = c.clock()["timestamp"]
-        except Exception as e:
-            rec.append_jsonl(log, {"event": "clock_error", "at": now(),
-                                   "client_order_id": o.client_order_id,
-                                   "error": f"{type(e).__name__}: {e}"})
-            failed = f"clock read failed before {o.client_order_id}; batch stopped"
+        kind, val = _submit_one(c, o, log, deps, out, in_window=in_window,
+                                window_text=window_text)
+        if kind == "stop":
+            failed = val
             break
-        t_et = ts.astimezone(gt.ET)
-        if not in_window(ts):
-            rec.append_jsonl(log, {"event": "cutoff", "at": now(), "clock": ts,
-                                   "client_order_id": o.client_order_id,
-                                   "window": window_text})
-            failed = (f"Alpaca clock {t_et:%Y-%m-%d %H:%M:%S} ET is outside the send window "
-                      f"-- {window_text} -- before {o.client_order_id}; batch stopped")
-            break
-        rec.append_jsonl(log, {"event": "submit", "at": now(), **o.wire()})
-        try:
-            resp = c.submit_order(o.symbol, o.qty, o.side, o.client_order_id,
-                                  time_in_force=o.time_in_force)
-        except AmbiguousSubmit as e:
-            rec.append_jsonl(log, {"event": "ambiguous", "at": now(),
-                                   "client_order_id": o.client_order_id, "error": str(e)})
-            try:
-                found = c.order_by_client_id(o.client_order_id)
-                rec.append_jsonl(log, {"event": "lookup", "at": now(),
-                                       "client_order_id": o.client_order_id,
-                                       "found": found is not None,
-                                       "order": _order_summary(found) if found else None})
-            except Exception as le:
-                rec.append_jsonl(log, {"event": "lookup_error", "at": now(),
-                                       "client_order_id": o.client_order_id,
-                                       "error": f"{type(le).__name__}: {le}"})
-            failed = f"AmbiguousSubmit on {o.client_order_id}; batch stopped"
-            break
-        except OrderRejected as e:
-            rec.append_jsonl(log, {"event": "rejected", "at": now(),
-                                   "client_order_id": o.client_order_id, "error": str(e)})
+        if kind == "stop_rejected":
             rejected.append((o.client_order_id, o.symbol))
-            print(f"  REJECTED {o.client_order_id}: {e}", file=out)
-            continue
-        except Exception as e:
-            rec.append_jsonl(log, {"event": "error", "at": now(),
-                                   "client_order_id": o.client_order_id,
-                                   "error": f"{type(e).__name__}: {e}"})
-            failed = f"{type(e).__name__} on {o.client_order_id}; batch stopped"
+            print(f"  REJECTED {o.client_order_id}: HTTP 429, not resent; {val}", file=out)
+            failed = val
             break
+        if kind == "rejected":
+            rejected.append((o.client_order_id, o.symbol))
+            print(f"  REJECTED {o.client_order_id}: {val}", file=out)
+            continue
+        resp = val
         rec.append_jsonl(log, {"event": "accepted", "at": now(),
                                "client_order_id": o.client_order_id,
                                "order": _order_summary(resp)})

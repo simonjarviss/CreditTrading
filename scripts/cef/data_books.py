@@ -102,6 +102,13 @@ C4_DIR = REPO / "data" / "cef_c4"
 C4_UNIVERSE = REPO / "results" / "cef" / "c4" / "c4_universe_frozen_2026-10-14.csv"
 C4_NAV_MAP = REPO / "results" / "cef" / "c4" / "c4_nav_symbols_2026-10-14.csv"
 C4_N = 74                                 # the team lead's frozen read of 2026-10-14
+# THE PRICE BASIS (2026-11-04): the live fetch's split rulings (data_guards.py, THE LIVE
+# FETCH'S PRICE BASIS), read by fetch_daily --data-book c4 and `repair-basis`.
+C4_FETCH_SPLIT_RULINGS = REPO / "results" / "cef" / "c4" / "c4_fetch_split_rulings_2026-11-03.json"
+# How far back a nightly fetch can have written (its period, 6mo, plus slack): the rows
+# `repair-basis` judges, so a fund's discount years ago never decides tonight's basis.
+REPAIR_WINDOW_DAYS = 220
+REPAIR_LOG = "basis_repair_log.csv"
 FAMILIES_DIR = REPO / "data" / "cef_families"
 NAV_MAP_COLUMNS = ("ticker", "nav_symbol", "source", "nav_ticker_cefconnect",
                    "families_nav_symbol", "families_nav_status")
@@ -322,6 +329,65 @@ def seed_c4(src: Path, out: Path, *, rulings: Path | None = None,
     return man
 
 
+# --------------------------------------------------------------------------- REPAIR (THE PRICE BASIS)
+
+def repair_basis(panel_dir: Path | None = None, rulings: Path | None = None, *,
+                 lock_wait_s: float = 600.0) -> dict:
+    """Put the STORED C4 price rows a past fetch wrote on the vendor's split-adjusted basis
+    back on the NAV's basis, under the C4 fetch lock, and log every row changed.
+
+    WHY (2026-11-04). The fetch of 2026-11-03 wrote IGR's 2026-05-04..09-04 closes at x3.0
+    (data_guards.py, THE LIVE FETCH'S PRICE BASIS). The fixed fetch puts tonight's fetched
+    rows on the NAV's basis and refuses a step against the stored rows, so the stored
+    window has to be repaired first, once, or the fixed fetch refuses every night. The
+    repair is the fetch's own judgement (`to_nav_basis`, the same rulings file), on the
+    stored rows of the last REPAIR_WINDOW_DAYS, judged against the stored NAVs. A row the
+    NAV cannot place raises and nothing is written. Idempotent: a second run changes
+    nothing and says so. Writes `<panel_dir>/basis_repair_log.csv` (appended) and the price
+    panel atomically; the NAV panel is never touched."""
+    import datetime as dt
+    import pandas as pd
+    from ops.common import atomic_write
+    from scripts.cef import fetch_daily as fd
+    from scripts.cef.data_guards import load_fetch_split_rulings, to_nav_basis
+    d = Path(C4_DIR if panel_dir is None else panel_dir)
+    rp = Path(C4_FETCH_SPLIT_RULINGS if rulings is None else rulings)
+    R = load_fetch_split_rulings(rp)
+    px_path, nav_path = d / "cef_prices.parquet", d / "cef_nav.parquet"
+    with fd.panel_lock(d / ".fetch.lock", lock_wait_s, 1.0):
+        P, N = pd.read_parquet(px_path), pd.read_parquet(nav_path)
+        lo = pd.Timestamp(P["date"].max()) - pd.Timedelta(days=REPAIR_WINDOW_DAYS)
+        win = P[pd.to_datetime(P["date"]) >= lo]
+        fixed, log = to_nav_basis(win, N, R, context=f"repair-basis {d}")
+        changed = fixed.index[(fixed["close"] != win["close"]) & win["close"].notna()]
+        rows = []
+        if len(changed):
+            stamp = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+            for i in changed:
+                rows.append({"repaired_utc": stamp, "ticker": P.at[i, "ticker"],
+                             "date": str(pd.Timestamp(P.at[i, "date"]).date()),
+                             "close_before": float(P.at[i, "close"]), "close_after": float(fixed.at[i, "close"]),
+                             "volume_before": int(P.at[i, "volume"]), "volume_after": int(fixed.at[i, "volume"]),
+                             "rulings": rp.name, "rulings_sha256": _sha256(rp)})
+            for c in ("open", "high", "low", "close", "volume"):
+                P.loc[changed, c] = fixed.loc[changed, c]
+            P["volume"] = P["volume"].astype("int64")
+            atomic_write(P, px_path)
+            lp = d / REPAIR_LOG
+            new = not lp.exists()
+            with open(lp, "a", newline="") as fh:
+                w = csv.DictWriter(fh, fieldnames=list(rows[0]))
+                if new:
+                    w.writeheader()
+                w.writerows(rows)
+    return {"panel": str(px_path), "rulings": str(rp), "window_from": str(lo.date()),
+            "repaired": len(rows),
+            "by_ticker": {e["ticker"]: {"converted": e.get("converted", 0), "raw": e.get("raw"),
+                                        "first": None if not e.get("first") else str(e["first"].date()),
+                                        "last": None if not e.get("last") else str(e["last"].date())}
+                          for e in log}}
+
+
 # --------------------------------------------------------------------------- CLI
 
 def main(argv=None) -> int:
@@ -336,7 +402,14 @@ def main(argv=None) -> int:
     s.add_argument("--from", dest="src", type=Path, required=True)
     s.add_argument("--out", type=Path, required=True)
     s.add_argument("--bar-rulings", type=Path, default=None)
+    r = sub.add_parser("repair-basis", help="put stored C4 closes a past fetch wrote split-adjusted "
+                                            "back on the NAV's basis (THE PRICE BASIS; the team lead runs it)")
+    r.add_argument("--book", choices=[C4], required=True)
     a = ap.parse_args(argv)
+    if a.cmd == "repair-basis":
+        out = repair_basis()
+        print(json.dumps(out, indent=1, sort_keys=True))
+        return 0
     if a.cmd == "nav-map":
         text = _map_text(build_c4_nav_map(a.families / "universe.csv", a.families / "yf_fetch_log.csv"))
         if a.write:

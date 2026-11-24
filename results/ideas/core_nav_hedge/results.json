@@ -1,0 +1,407 @@
+{
+ "panel_last": "2026-10-14",
+ "first": "2005-01-03",
+ "names": [
+  "AWF",
+  "BIT",
+  "DSL",
+  "HYT",
+  "JFR",
+  "MHD",
+  "MQY",
+  "PCN",
+  "PDI",
+  "PDO",
+  "PFN",
+  "PHK",
+  "PTY"
+ ],
+ "held_name_days": 35776,
+ "held_name_days_without_nav_return": 32,
+ "corr_nav_disc": -0.218,
+ "var_share_nav_part": 0.15,
+ "var_share_disc_part": 1.021,
+ "hedge_gross_mean": {
+  "MUB": 0.064,
+  "HYG": 0.114,
+  "BKLN": 0.069
+ },
+ "book_gross_mean": 0.811,
+ "hedge_turnover_per_year": 5.6,
+ "book_turnover_per_year": 13.8,
+ "full": {
+  "book (unhedged)": {
+   "ann_ret_pct": 4.64,
+   "vol_pct": 5.16,
+   "sharpe": 0.9,
+   "t": 4.2,
+   "max_dd_pct": -14.4
+  },
+  "NAV part": {
+   "ann_ret_pct": -0.17,
+   "vol_pct": 2.0,
+   "sharpe": -0.09,
+   "t": -0.4,
+   "max_dd_pct": -10.9
+  },
+  "discount part": {
+   "ann_ret_pct": 4.81,
+   "vol_pct": 5.21,
+   "sharpe": 0.92,
+   "t": 4.31,
+   "max_dd_pct": -11.6
+  },
+  "hedged ALL": {
+   "ann_ret_pct": 4.33,
+   "vol_pct": 5.17,
+   "sharpe": 0.84,
+   "t": 3.9,
+   "max_dd_pct": -14.6
+  },
+  "hedged MUNI": {
+   "ann_ret_pct": 4.39,
+   "vol_pct": 5.17,
+   "sharpe": 0.85,
+   "t": 3.95,
+   "max_dd_pct": -14.4
+  },
+  "hedged ALL, no MUB short": {
+   "ann_ret_pct": 4.39,
+   "vol_pct": 5.17,
+   "sharpe": 0.85,
+   "t": 3.95,
+   "max_dd_pct": -14.6
+  }
+ },
+ "eras": {
+  "2005-2012": {
+   "book (unhedged)": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "NAV part": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "discount part": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "hedged ALL": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "hedged MUNI": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "hedged ALL, no MUB short": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   }
+  },
+  "2013-2015": {
+   "book (unhedged)": {
+    "ann_ret_pct": 8.22,
+    "vol_pct": 6.44,
+    "sharpe": 1.28,
+    "t": 2.21,
+    "max_dd_pct": -5.0
+   },
+   "NAV part": {
+    "ann_ret_pct": 0.72,
+    "vol_pct": 2.63,
+    "sharpe": 0.27,
+    "t": 0.47,
+    "max_dd_pct": -5.5
+   },
+   "discount part": {
+    "ann_ret_pct": 7.5,
+    "vol_pct": 6.55,
+    "sharpe": 1.15,
+    "t": 1.98,
+    "max_dd_pct": -5.7
+   },
+   "hedged ALL": {
+    "ann_ret_pct": 8.43,
+    "vol_pct": 6.44,
+    "sharpe": 1.31,
+    "t": 2.27,
+    "max_dd_pct": -5.1
+   },
+   "hedged MUNI": {
+    "ann_ret_pct": 8.22,
+    "vol_pct": 6.44,
+    "sharpe": 1.28,
+    "t": 2.21,
+    "max_dd_pct": -5.0
+   },
+   "hedged ALL, no MUB short": {
+    "ann_ret_pct": 8.43,
+    "vol_pct": 6.44,
+    "sharpe": 1.31,
+    "t": 2.27,
+    "max_dd_pct": -5.1
+   }
+  },
+  "2016-2019": {
+   "book (unhedged)": {
+    "ann_ret_pct": 3.71,
+    "vol_pct": 6.62,
+    "sharpe": 0.56,
+    "t": 1.12,
+    "max_dd_pct": -14.4
+   },
+   "NAV part": {
+    "ann_ret_pct": -1.3,
+    "vol_pct": 2.35,
+    "sharpe": -0.55,
+    "t": -1.11,
+    "max_dd_pct": -6.6
+   },
+   "discount part": {
+    "ann_ret_pct": 5.01,
+    "vol_pct": 6.63,
+    "sharpe": 0.76,
+    "t": 1.51,
+    "max_dd_pct": -11.6
+   },
+   "hedged ALL": {
+    "ann_ret_pct": 3.04,
+    "vol_pct": 6.71,
+    "sharpe": 0.45,
+    "t": 0.9,
+    "max_dd_pct": -14.6
+   },
+   "hedged MUNI": {
+    "ann_ret_pct": 3.71,
+    "vol_pct": 6.62,
+    "sharpe": 0.56,
+    "t": 1.12,
+    "max_dd_pct": -14.4
+   },
+   "hedged ALL, no MUB short": {
+    "ann_ret_pct": 3.04,
+    "vol_pct": 6.71,
+    "sharpe": 0.45,
+    "t": 0.9,
+    "max_dd_pct": -14.6
+   }
+  },
+  "2020-2022": {
+   "book (unhedged)": {
+    "ann_ret_pct": 6.89,
+    "vol_pct": 6.85,
+    "sharpe": 1.01,
+    "t": 1.74,
+    "max_dd_pct": -5.0
+   },
+   "NAV part": {
+    "ann_ret_pct": -0.23,
+    "vol_pct": 2.31,
+    "sharpe": -0.1,
+    "t": -0.17,
+    "max_dd_pct": -7.1
+   },
+   "discount part": {
+    "ann_ret_pct": 7.13,
+    "vol_pct": 7.15,
+    "sharpe": 1.0,
+    "t": 1.73,
+    "max_dd_pct": -5.7
+   },
+   "hedged ALL": {
+    "ann_ret_pct": 6.31,
+    "vol_pct": 7.01,
+    "sharpe": 0.9,
+    "t": 1.56,
+    "max_dd_pct": -5.9
+   },
+   "hedged MUNI": {
+    "ann_ret_pct": 7.0,
+    "vol_pct": 6.88,
+    "sharpe": 1.02,
+    "t": 1.76,
+    "max_dd_pct": -5.0
+   },
+   "hedged ALL, no MUB short": {
+    "ann_ret_pct": 6.24,
+    "vol_pct": 6.98,
+    "sharpe": 0.89,
+    "t": 1.55,
+    "max_dd_pct": -5.9
+   }
+  },
+  "2023-2026": {
+   "book (unhedged)": {
+    "ann_ret_pct": 10.84,
+    "vol_pct": 6.06,
+    "sharpe": 1.79,
+    "t": 3.47,
+    "max_dd_pct": -4.7
+   },
+   "NAV part": {
+    "ann_ret_pct": 0.01,
+    "vol_pct": 2.73,
+    "sharpe": 0.0,
+    "t": 0.01,
+    "max_dd_pct": -6.1
+   },
+   "discount part": {
+    "ann_ret_pct": 10.84,
+    "vol_pct": 5.94,
+    "sharpe": 1.82,
+    "t": 3.54,
+    "max_dd_pct": -4.5
+   },
+   "hedged ALL": {
+    "ann_ret_pct": 10.02,
+    "vol_pct": 5.88,
+    "sharpe": 1.7,
+    "t": 3.31,
+    "max_dd_pct": -4.7
+   },
+   "hedged MUNI": {
+    "ann_ret_pct": 9.28,
+    "vol_pct": 6.1,
+    "sharpe": 1.52,
+    "t": 2.95,
+    "max_dd_pct": -5.6
+   },
+   "hedged ALL, no MUB short": {
+    "ann_ret_pct": 10.43,
+    "vol_pct": 5.89,
+    "sharpe": 1.77,
+    "t": 3.43,
+    "max_dd_pct": -4.7
+   }
+  }
+ },
+ "from_2009": {
+  "book (unhedged)": {
+   "ann_ret_pct": 5.69,
+   "vol_pct": 5.71,
+   "sharpe": 1.0,
+   "t": 4.2,
+   "max_dd_pct": -14.4
+  },
+  "NAV part": {
+   "ann_ret_pct": -0.21,
+   "vol_pct": 2.21,
+   "sharpe": -0.09,
+   "t": -0.4,
+   "max_dd_pct": -10.9
+  },
+  "discount part": {
+   "ann_ret_pct": 5.9,
+   "vol_pct": 5.77,
+   "sharpe": 1.02,
+   "t": 4.31,
+   "max_dd_pct": -11.6
+  },
+  "hedged ALL": {
+   "ann_ret_pct": 5.3,
+   "vol_pct": 5.73,
+   "sharpe": 0.93,
+   "t": 3.9,
+   "max_dd_pct": -14.6
+  },
+  "hedged MUNI": {
+   "ann_ret_pct": 5.38,
+   "vol_pct": 5.73,
+   "sharpe": 0.94,
+   "t": 3.96,
+   "max_dd_pct": -14.4
+  },
+  "hedged ALL, no MUB short": {
+   "ann_ret_pct": 5.37,
+   "vol_pct": 5.72,
+   "sharpe": 0.94,
+   "t": 3.96,
+   "max_dd_pct": -14.6
+  }
+ },
+ "r2_book_on_hedge_pnl_from_2009": 0.009,
+ "r2_nav_part_on_hedge_pnl_from_2009": 0.095,
+ "windows_34_sessions_pct_at_multiplier": {
+  "multiplier": 1.3,
+  "book (unhedged)": {
+   "mean": 1.31,
+   "sd": 2.73,
+   "min": -7.75,
+   "p1": -4.52,
+   "p5": -2.51,
+   "p95": 6.87,
+   "max": 10.51,
+   "share_below": {
+    "-3.16": 0.029,
+    "3.69": 0.825,
+    "-0.1": 0.302
+   }
+  },
+  "NAV part": {
+   "mean": -0.03,
+   "sd": 1.06,
+   "min": -3.52,
+   "p1": -2.57,
+   "p5": -1.8,
+   "p95": 1.78,
+   "max": 3.7,
+   "share_below": {
+    "-3.16": 0.004,
+    "3.69": 1.0,
+    "-0.1": 0.454
+   }
+  },
+  "discount part": {
+   "mean": 1.34,
+   "sd": 2.72,
+   "min": -7.71,
+   "p1": -4.64,
+   "p5": -2.6,
+   "p95": 6.73,
+   "max": 9.91,
+   "share_below": {
+    "-3.16": 0.033,
+    "3.69": 0.823,
+    "-0.1": 0.287
+   }
+  }
+ },
+ "abs_net_weight_by_group_from_2020": {
+  "hy": {
+   "mean": 0.177,
+   "p95": 0.446
+  },
+  "loan": {
+   "mean": 0.154,
+   "p95": 0.479
+  },
+  "multi": {
+   "mean": 0.321,
+   "p95": 0.734
+  },
+  "muni": {
+   "mean": 0.106,
+   "p95": 0.462
+  }
+ }
+}

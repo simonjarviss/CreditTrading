@@ -252,7 +252,17 @@ def _get(session, path: str, *, allow_404: bool = False):
     url = PAPER_BASE + path
     if not url.startswith(PAPER_BASE + "/"):
         raise ValueError(f"refusing non-paper URL {url!r}")
-    r = session.get(url, timeout=20)
+    # allow_redirects=False: the session carries the key headers, and `requests` would send
+    # them to whatever host a 3xx named (quantt.broker.alpaca.refuse_redirects says why).
+    try:
+        r = session.get(url, timeout=20, allow_redirects=False)
+    except Exception as e:
+        # `max_redirects = 0` (see `_session`) makes requests raise TooManyRedirects on a 3xx
+        # before it contacts the other host. Matched by name: requests is imported lazily here.
+        if type(e).__name__ != "TooManyRedirects":
+            raise
+        st = getattr(getattr(e, "response", None), "status_code", None)
+        raise RuntimeError(f"GET {path} -> HTTP {st}: a redirect, NOT followed") from None
     if r.status_code == 404 and allow_404:
         return None
     if r.status_code != 200:
@@ -374,6 +384,7 @@ def _session(key_id: str, secret: str):
     # Header names from Alpaca's Trading API authentication docs. A wrong name
     # fails loudly with 401/403 on the first GET; nothing is sent otherwise.
     s.headers.update({"APCA-API-KEY-ID": key_id, "APCA-API-SECRET-KEY": secret})
+    s.max_redirects = 0   # = quantt.broker.alpaca.refuse_redirects (not imported: that module imports this one)
     return s
 
 

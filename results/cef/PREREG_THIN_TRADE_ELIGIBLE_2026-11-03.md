@@ -85,6 +85,62 @@ these terms. They bind the implementation and the activation.
   session that loses a short at send time, while keeping full sessions byte-identical. The team lead chose
   to leave the send path as it is.
 
+**A second ruling after approval (team lead, 2026-11-03, after prod's Q6 count): K0 reads the previous session's EOD row.**
+- **The measurement (Q6).** The owning session counted prod's core `plan.json` records: 26 decides, with
+  run folders 2026-09-29..11-04.
+  - The drawdown field exists in 4 decides (as-of 10-28, 10-29, 10-30, 11-02). All 4 read UNMEASURED for
+    the same reason: "eod_equity.csv's newest row on or before the as-of is D−1, not the as-of D".
+  - At the 22:00 ET decide, the EOD row for D is not there yet.
+  - [S: the owning session's count, 2026-11-03. The run records are prod's and are not in this repository.]
+- **Consequence: K0 as written made te4 inert.** Every reduced session would flatten. §6.3 had said the
+  remedy would be the drawdown record's timing, never a looser K0. This ruling changes K0's reading time,
+  and its cost is stated below.
+- **Ruled: K0 reads D−1's row, labelled one session stale.** At the evening decide for as-of D:
+  - K0 reads the account's drawdown status through the newest EOD row on or before D−1, with the
+    high-water mark over the rows on or before that date.
+  - If that row is older than D−1, missing or bad, K0 reads UNMEASURED and the session flattens.
+  - The record carries the row's date and its staleness in sessions (1).
+  - K0 stays restrict-only: it can flatten a session, never size up or unlock a send. The test that no
+    drawdown status can increase gross is unchanged.
+- **The cost, accepted.** A loss on day D is seen only at the next evening's decide, so one more reduced
+  build can go out after a session that crossed HALVE.
+  - §6.3's bootstrap modelled K0 acting from the second session after the crossing. Under D−1 it acts
+    from the third.
+  - So §6.3's K0 figures are slightly optimistic [U: not re-measured].
+  - The kill on HALVE or KILL during an open episode reads the same D−1 status.
+- **Options not chosen.**
+  - Re-checking K0 before the 15:52 send. It is fresher, but it changes the send path, which the team
+    lead kept unchanged.
+  - Leaving K0 as written. te4 would never trade.
+- **Scope.** This ruling covers K0 only. HALVE/KILL's own report, and any future `on` mode, belong to the
+  owning session, which records the same finding for them.
+- **Q10, the hold count.** The `missing_nav` field exists in 3 decides, none with a hold [S: the owning
+  session's count, 2026-11-03]. With n = 3 the hold frequency stays UNMEASURED until there is a run of
+  history. It is re-read at activation, which already waits for the core's 60-session review.
+
+**A third ruling after approval (team lead, 2026-11-04): K0 reads the freshest EOD row it has.**
+- **The case.** The verification of the te4 implementation (f3ad29f) found a gap at the morning
+  backstop, when the as-of's own EOD row exists. K0 still read D−1's row there, as the second
+  ruling's literal text says. In a test, that let a reduced book through on a stale OK while D's
+  row read KILL.
+- **Ruled: the freshest row.**
+  - K0 reads the as-of's own row when it is there (labelled 0 sessions stale), whatever it reads; a
+    bad row reads UNMEASURED.
+  - Only when D's row has not landed does it read D−1's (labelled one session stale).
+  - Anything older, or a missing or bad file, reads UNMEASURED and the session flattens.
+- **Why it is safe.** A fresher row can only make K0 stricter. At the 22:00 decide nothing changes,
+  because D's row is never there.
+- **The other option, not chosen.** Always D−1, as first built.
+
+**A note on K3's run (the runner's owner, 2026-11-04).** The owner confirmed on 2026-11-04 that K3's run
+of 3 (§6.3) counts reduced closes within the open episode only, as §6.3's heading "K1–K3 inside an
+episode" says; the rule is §6.3's and this note's, and the code (`quantt/session/drawdown.py`, which reads
+the count from the spec's `risk.thin_k3_run_sessions`) implements it and does not define it.
+
+**Two rulings by the team lead, 2026-11-08.**
+- **The code ships dark.** The implementation (PR #55) merges with the key absent, so the book keeps today's flatten rule. Activation stays a separate commit and a separate decision.
+- **The in-place edit is accepted.** This note's §6.3 and §11 compose commands gained `--k3-run-sessions` after approval, with a dated note and no figure changed. The team lead accepted that as it stands, rather than moving it to an addendum.
+
 **What this commit does not do.** It sets no spec key, changes no live-path code and activates nothing.
 The key stays absent until the activation commit, which needs all of:
 - the implementation merged;
@@ -645,8 +701,11 @@ alpha.** That is said here, before any session trades it.
 - So one drawdown was split into two populations, each below its own line.
 
 Thresholds below are **drafting-day values only**. K1–K3 are recomputed on the read date by
-`python3 results/cef/prereg_thin_te4/compose.py --stamp <read date>` (§E). The script reads m, the band, the
-ceiling and `min_names` from the frozen spec at run time, and the floor from the spec once the key exists.
+`python3 results/cef/prereg_thin_te4/compose.py --stamp <read date> --k3-run-sessions <n>` (§E). The script
+reads m, the band, the ceiling and `min_names` from the frozen spec at run time, and the floor from the spec
+once the key exists. (Corrected 2026-11-05, the runner owner's round-2 answer (c): `--k3-run-sessions`, the
+spec's `risk.thin_k3_run_sessions`, is now required and recorded in `compose_<stamp>.json`; the command read
+`--stamp <read date>` alone until then.)
 K0 needs no re-measure: `drawdown.py` reads the spec's `risk.halve_drawdown` at every decide.
 
 | stop | statistic (live, broker-confirmed) | threshold: rule (drafting-day value) | fit check |
@@ -1198,8 +1257,12 @@ approval date, and `<file>` with the approved note's name):
 ```bash
 # §A-§G2; a few minutes; fit rows only. Writes compose_<stamp>.json and compose_output_<stamp>.txt beside
 # itself; --stamp defaults to today and never overwrites another date's files without --overwrite.
-python3 results/cef/prereg_thin_te4/compose.py --stamp 2026-11-03 --overwrite   # the drafting day (then git diff)
-python3 results/cef/prereg_thin_te4/compose.py --stamp <read date>              # a read-date re-measure (§6.3)
+# Corrected 2026-11-05 (the runner owner's round-2 answer (c)): --k3-run-sessions, K3's run length (the spec's
+# risk.thin_k3_run_sessions), is now REQUIRED; the drafting day counted with a literal 3, so its reproduction
+# passes 3. The commands read without it until then. compose_2026-11-05.* is the drafting-day run re-made with
+# the argument: every figure the same as compose_2026-11-03.json's, plus the recorded k3_run_sessions 3.
+python3 results/cef/prereg_thin_te4/compose.py --stamp 2026-11-03 --k3-run-sessions 3 --overwrite   # the drafting day (then git diff)
+python3 results/cef/prereg_thin_te4/compose.py --stamp <read date> --k3-run-sessions <n>           # a read-date re-measure (§6.3)
 # the two reviews' measurements, §R1-§R10; about 10 s; needs compose_<stamp>.json for §R9
 python3 results/cef/prereg_thin_te4/review_checks.py --stamp 2026-11-03 --overwrite
 # the screen this note rests on

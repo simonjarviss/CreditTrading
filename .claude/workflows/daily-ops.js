@@ -23,4 +23,4 @@ Report each item verbatim-summarised with its date. Anything missing is stated a
   { label: 'read', phase: 'Read' })
 phase('Brief')
 return await agent(`From this read-out, write a short brief for the team lead: did the last session trade and verify PASS, positions vs plan, the two P&Ls (Alpaca fill vs auction print, gross, labelled), data freshness, and a list of anything that needs a decision. Label every figure with its source. Read-out: ${read}`,
-  { label: 'brief', phase: 'Brief', agentType: 'portfolio-manager' })
+  { label: 'brief', phase: 'Brief', agentType: 'portfolio-architect' })

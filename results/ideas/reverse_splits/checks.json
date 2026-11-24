@@ -1,0 +1,86 @@
+{
+ "note": "not pre-specified; written after the first run",
+ "panel_last_date": "2025-12-31",
+ "regression": {
+  "alpha_per_year": 0.2507905271455147,
+  "alpha_t": 5.1724170080568905,
+  "beta_IWM": -0.03068438368127847,
+  "beta_SPY": 0.033571163209114366
+ },
+ "per_event_pct": {
+  "n": 1257,
+  "mean": 9.11242898358787,
+  "median": 7.785471767186078,
+  "share_positive": 0.639618138424821,
+  "p5": -65.18705761932901,
+  "p95": 86.29507544113216,
+  "worst": -714.3433281490212,
+  "best": 412.27576117172873,
+  "t_by_month": 5.127894485485019
+ },
+ "without_ten_best_events": {
+  "first": "2000-06-01",
+  "last": "2025-12-31",
+  "n_days": 6435,
+  "n_active_days": 5255,
+  "ann_ret": 0.19238776209370506,
+  "ann_vol": 0.2405022776954199,
+  "sharpe": 0.7999415387547861,
+  "t": 4.042334556995955,
+  "mean_bp_per_active_day": 9.348732492659991,
+  "hit_rate_active_days": 0.5836346336822075,
+  "max_drawdown": -0.6406963942267426
+ },
+ "without_ten_worst_events": {
+  "first": "2000-06-01",
+  "last": "2025-12-31",
+  "n_days": 6435,
+  "n_active_days": 5255,
+  "ann_ret": 0.31101479919074515,
+  "ann_vol": 0.21853937254627576,
+  "sharpe": 1.423152247428036,
+  "t": 7.19159742423163,
+  "mean_bp_per_active_day": 15.113197051881393,
+  "hit_rate_active_days": 0.5897240723120837,
+  "max_drawdown": -0.4890153618235751
+ },
+ "first_five_sessions": {
+  "first": "2000-06-01",
+  "last": "2025-12-31",
+  "n_days": 6435,
+  "n_active_days": 2949,
+  "ann_ret": 0.20800893787735897,
+  "ann_vol": 0.22020569906601883,
+  "sharpe": 0.9446119639937058,
+  "t": 4.773395804582762,
+  "mean_bp_per_active_day": 18.011721961719672,
+  "hit_rate_active_days": 0.6181756527636487,
+  "max_drawdown": -0.6224747071034848
+ },
+ "other_fifteen": {
+  "first": "2000-06-01",
+  "last": "2025-12-31",
+  "n_days": 6435,
+  "n_active_days": 4808,
+  "ann_ret": 0.1323581011905006,
+  "ann_vol": 0.23050814918155985,
+  "sharpe": 0.5742013966120073,
+  "t": 2.9016047245317145,
+  "mean_bp_per_active_day": 7.0296561052418545,
+  "hit_rate_active_days": 0.5730033277870217,
+  "max_drawdown": -0.6649623195750738
+ },
+ "less_mean_of_moved_controls": {
+  "first": "2000-06-01",
+  "last": "2025-12-31",
+  "n_days": 6435,
+  "n_active_days": 6311,
+  "ann_ret": 0.13738633551791912,
+  "ann_vol": 0.27394013709164494,
+  "sharpe": 0.5015195545147786,
+  "t": 2.5343224823404964,
+  "mean_bp_per_active_day": 5.558957709629002,
+  "hit_rate_active_days": 0.5268578672159722,
+  "max_drawdown": -0.8029353788898508
+ }
+}

@@ -49,6 +49,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from ops import prod_state as ps  # noqa: E402  (stdlib-only; see its docstring)
+from ops import checkout  # noqa: E402  (stdlib-only: git through subprocess)
 
 PROBE_DIR = REPO / "results" / "ops" / "alpaca_probe"
 BOOKS = ("cef", "b6")          # quantt.broker.alpaca_probe.BOOK_SPECS; not imported,
@@ -133,7 +134,9 @@ def collect(vm: str = "live") -> dict:
         "probes": probes(),
         "git": {"branch": _git("rev-parse", "--abbrev-ref", "HEAD"),
                 "dirty": len([l for l in _git("status", "--porcelain").splitlines()
-                              if l.strip()])},
+                              if l.strip()]),
+                # docs/STANDARD.md A1.1; shared with orient TREES (ops/checkout.py).
+                "against_main": checkout.against_main(REPO)},
     }
 
 

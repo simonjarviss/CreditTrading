@@ -515,5 +515,13 @@ def test_the_live_spec_validates_and_none_of_its_keys_is_a_near_miss():
     others = ["group_cap", "max_gross_stress", "band_width", "warmup_days", "min_names",
               *registry.CEF_C4_NOTES]
     assert [k for k in [*live["frozen"], *others] if registry.cef_c4_near_miss(k)] == []
-    noted = _with(_live_like(), **{n: "a note" for n in registry.CEF_C4_NOTES})
+    # C4's four notes validate beside the live-like spec. The fifth, the te4 floor's
+    # `_below_min_names_floor_note`, is no near-miss either (asserted above), but since the
+    # review of 4e1ab0b it is refused beside a rule that does not read the floor, as the floor
+    # is (src/deploy/tests/test_below_min_names_floor.py), so it is left out here.
+    floor_note = f"_{registry.CEF_FLOOR_KEY}_note"
+    noted = _with(_live_like(), **{n: "a note" for n in registry.CEF_C4_NOTES
+                                   if n != floor_note})
     registry.validate_spec(noted)
+    with pytest.raises(ValueError, match=floor_note):
+        registry.validate_spec(_with(_live_like(), **{floor_note: "a note"}))

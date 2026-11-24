@@ -57,6 +57,9 @@ answering different questions.
 
 ## 1. What we trade
 
+> **2026-11-09 (team lead, §5): this section describes the core CEF sleeve.** Scope is now open and the
+> CEF book is one sleeve among those the desk is building toward one combined book (`docs/MISSION.md`).
+
 A **systematic credit closed-end-fund discount-reversion book** that places its
 own MOC orders on a schedule. It ran on an IBKR paper account until 2026-09-28
 and has traded on Alpaca paper since 2026-09-29 (§4). Capital and
@@ -111,8 +114,9 @@ and `EXEC_LAG` in `scripts/cef/validate.py` is asserted at runtime. Why MOC and
 not a market order: `CLAUDE.md`, order-path rule 3.
 
 **Universe and holdouts.** The deployed names are the spec's `universe`;
-`data/cef/cef_universe.csv` holds the wider set. Two holdouts are sealed and
-opened once: **the untouched CEFs** outside the deployed universe (trading any of
+`data/cef/cef_universe.csv` holds the wider set. Two holdouts are sealed until
+a pre-registered test opens them (research agents may re-open one, each look counted
+and labelled: §5, 2026-11-08): **the untouched CEFs** outside the deployed universe (trading any of
 them consumes the set), and **a 2023-01-01 time holdout** on every fit.
 
 ---
@@ -573,7 +577,7 @@ team lead's, sent to the analysts directly, and never tracked.
 | Whether any of the team lead's work moves to an analyst | **None.** The EVENTS rows (the special-situations slate and reserves, the ETF hedge overlay for event longs), the S3 forced-deletion row on WATCH and GAMMA stay with the team lead. The analysts bring new signals only |
 | The MACRO lane's scope | **All of fixed income**, widened from "macro and thematic events": macro events (central-bank decisions, economic releases, Treasury auctions), credit events, and fixed-income instruments (rate and credit ETFs, preferreds, baby bonds), each tied to how it helps the book. Still all on MACRO, and still excluding the rows above |
 | The third lane's scope | **The dashboard and the research data platform**: the fetchers and data builds the other lanes build on, and the event store once the EVENTS work on `simon` (was `pm/work`) is merged into `main`. CI (`.github/`, `pytest.ini`, `conftest.py`) stays with the team lead |
-| The dashboard's data | **A nightly read-only snapshot of the book, held in the repository** under `dashboard/snapshots/`. The exporter that writes it runs on the VM, so the dashboard lane writes its spec and its tests and the team lead installs it. How a snapshot travels from the VM to the repository is **open**, for the team lead when the exporter is ready. The repository is public: a committed snapshot is published (`dashboard/README.md` says what it may never carry) |
+| The dashboard's data | *(Superseded 2026-11-23, "the public site", below: snapshots stay on the VM.)* **A nightly read-only snapshot of the book, held in the repository** under dashboard/snapshots/. The exporter that writes it runs on the VM, so the dashboard lane writes its spec and its tests and the team lead installs it. How a snapshot travels from the VM to the repository is **open**, for the team lead when the exporter is ready. The repository is public: a committed snapshot is published (`dashboard/README.md` says what it may never carry) |
 | The analysts' tools | **Claude Code, for all three**, with the repository's skills and agents |
 | The branches | **Named for the people, not the lanes**: `simon` (was `pm/work`), `ryan` (was `macro/work`), `james` (was `equities/work`), `lucy` (was `dashboard/work`), renamed on GitHub with their history. Still five on GitHub with `main`. This supersedes 2026-10-22's "names in the repository: none" for the branch names and the lane map in `docs/TEAM.md`; the repository is public, so those first names are public. Nothing else names a person |
 
@@ -612,8 +616,8 @@ rebuild (`results/research/DESK_METHOD_2026-10-27.md` §7).
 | question | decision |
 |---|---|
 | Which deflated-Sharpe bar gates | **The paper's bar** (Gumbel expected maximum, effective N, measured cross-trial V[SR_n]), **once trials store their daily P&L series**. Until then both bars are shown, labelled, and the desk's √(2 ln N) on the raw counter gates |
-| The power gate | **In the `research-idea` workflow only**, not a `CLAUDE.md` rule. The workflow stops when any P(pass) is below 0.5, unless overridden |
-| Admission by marginal contribution | **Allowed, paper only.** A sleeve that fails the standalone deflated Sharpe may join the paper book, labelled, if it adds to the book (SR > ρ·SR_book across ρ's range) and the combined net is positive across the 5/15/30bp grid. Real capital keeps the standalone gate (`results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md` §2.1) |
+| The power gate | **In the `research-idea` workflow only**, not a `CLAUDE.md` rule. The workflow stops when any P(pass) is below 0.5, unless overridden. *(Changed 2026-11-08, above: it stops below 0.10 and warns below 0.50.)* |
+| Admission by marginal contribution | **Allowed, paper only.** A sleeve that fails the standalone deflated Sharpe may join the paper book, labelled, if it adds to the book (SR > ρ·SR_book across ρ's range) and the combined net is positive across the 5/15/30bp grid. Real capital keeps the standalone gate (`results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md` §2.1). *(Paper entry became the team lead's decision on a scorecard, 2026-11-08, above. Real capital is unchanged.)* |
 | Evidence outcome | **Every verdict records PRESENT / ABSENT / INCONCLUSIVE beside its D-code**, and C5, E1 and X1 are relabelled (`docs/RESEARCH_STATE.md`, 2026-10-27 note) |
 | The audit's zero-trial re-opens | **All queued, in this order:** (1) NAV tenders and E1 judged by their contribution to the book, on fit-period series only; (2) C5 as an execution choice, with the opening-auction cost re-measured on 2023–26 quotes; (3) X3 hedged against TERM, power check first because its holdout is spent; (4) A1 as a conditioner, G2's two named inputs, MA-HZ on the 2001 census. Each spends no trial; any test that follows is pre-registered |
 | Trial P&L series | **Backfill what is reproducible.** Re-run each past trial whose script still reproduces, store its daily series, and list those that cannot be rebuilt. The desk's bar keeps gating until it is done |
@@ -676,6 +680,97 @@ Answered interactively. Day by day, what was found, shipped and earned is in
 | C4's HALVE/KILL drawdown levels | **The core's levels**, in report mode, until a C4-specific derivation exists |
 | PCEF holdings | **Invesco gave written consent** (team lead, 2026-10-30). The team lead saves a copy outside the public repo; its date and scope are cited in `docs/REFERENCES.md` before any automated download |
 
+### Team lead, 2026-11-08 — research is not pass or fail
+
+Answered interactively on 2026-11-08, after the team lead said of the desk's research: "not a no go no only rules, we need
+to be dynamic - this is too binary". It covers the research agents and the research loop.
+
+| question | decision |
+|---|---|
+| The power check in `research-idea` | **Stop only at very low odds: any P(pass) below 0.10.** From 0.10 to 0.50 the test runs, with a warning at the top of the pre-registration. The team lead can still override with `override_power`. 0.10 is the figure offered in the question |
+| How long to keep working on an idea after a test falls short | **The agent judges, with reasons.** There is no fixed number of rounds. The reasons come from economics, market history and how markets have reacted historically, whether an angle is missing, and which tweaks remain. An idea is set aside only with those reasons and what would reopen it |
+| How re-tests count | **Every re-test is a counted trial**, pre-registered and stored like any other |
+| The holdouts | **Re-opens are allowed, any number, each look counted and labelled.** This supersedes "opened once" for research agents. After the first look the data is no longer clean, so paper trading on data that arrives afterwards is the clean check before real money |
+| What decides entry to the paper account | **A scorecard with a recommendation, and the team lead decides.** Pass marks, including the deflated-Sharpe bar and the marginal route of 2026-10-27, are shown as guides. Real capital keeps its standalone gate |
+| The 2026-10-27 audit's kills | **Re-review the practical blocks and the tests too weak to tell**, best first on market reasoning, skipping any already re-opened. The audit note gives counts only (26 and 20), so the loop finds them in the ledger |
+| The graveyard | **Nothing is banned.** An idea can return if the agent says what is different. One that failed on a data error must deal with that error first |
+| The loop's order | **Follow-ups first**, then the existing queues and new ideas |
+| The analysts | **Not changed.** Their process, the guides and their end-of-November pitches stay as they are |
+| The live book | **Not changed.** The order path, `DRY_RUN`, HALVE/KILL and the 60-session review stay as written |
+| Not discussed, so still standing | No lookahead, no invented numbers, one harness, turnover-matched tables, and no picking the best of a swept column |
+
+### Team lead, 2026-11-08 — the nightly check, single-name size, and the two gates
+
+Answered interactively on 2026-11-08, after the evening check of 2026-11-05 ran three days late (`results/report/EVIDENCE_LOG.md` E-2026-11-08-03).
+
+| question | decision |
+|---|---|
+| Who owns the nightly check | **A VM timer, with a push notification only when a stop fires** ("VM timer, push on stops"). The report-only data-QA and risk scripts of draft PR #46 run on the VM; everything but a fired stop stays in the journal. This narrows 2026-11-02's "journal only" for that one case, and brings forward PR #46's proposal to wait two weeks before a timer. Push needs a credential the team lead adds to the vault |
+| C4's single-name size (the HQH short, about 20% of NAV) | **"Measure it, change nothing."** Per-name concentration joins the daily risk report and the equity-risk readout. No cap: one would be a new trial |
+| The corporate-action gate | **"Start the fix."** Fix the bond-ISIN misread, bring the three unresolved rows to the team lead to re-rule, then return both books to `halt` through a release |
+| HALVE/KILL's read at the 22:00 decide (UNMEASURED every session: `EVIDENCE_LOG` E-2026-11-03-41) | **"Fix the read, stay report-only."** The freshest-row rule ruled for te4's K0: the as-of's own EOD row if it exists, else D−1 labelled stale. Nothing acts on it. Turning HALVE/KILL on is a later ruling |
+
+### Team lead, 2026-11-08 — the nightly check as built (PR #65)
+
+| question | decision |
+|---|---|
+| Where does the nightly check live? (it lived only in an open session, ran three days late on 2026-11-05, and the 11-06 plans sent unread: E-2026-11-08-03) | **A VM timer**: `scripts/ops/data_qa.py` before the decide and `scripts/ops/risk_daily.py` after it, per book, report-only (`docs/RUNBOOK.md` 8.11) |
+| What pushes? | **ACT only**: a pre-registered stop that has fired. Everything else stays in the journal. With no channel the report records `ACT: notification NOT delivered` and exits non-zero |
+| Per-name concentration | **"Measure it, change nothing."** Largest name, top-3 and per-name share of NAV in the risk report; it never raises severity |
+| The drawdown read at 22:15, when that day's EOD row is not written | **The freshest row**: the as-of's own row if it exists, else D−1, labelled stale. Until PR #55 merges (`drawdown.read_through`) the report reads `drawdown.check` as it stands and marks the line for follow-up |
+
+### Team lead, 2026-11-05 — the band at the measured cost, and post-then-cross
+
+Ruled on 2026-11-05 and relayed by the coordinating session, on `results/cef/BAND_COST_REDERIVATION_2026-11-05.md`
+(PR #61, drafted as a pre-registration) and `results/cef/EXEC_COST_STUDY_2026-11-05.md` (PR #58, merged as 1f44bbf).
+
+| question | decision |
+|---|---|
+| Re-derive the no-trade band from the measured execution cost? (that morning's ruling: "pre-register a re-derivation of the rebalancing band using the measured execution cost") | **"Accept: keep 4.8%, close."** Both books keep `band_width` 0.048. CLOSED at zero trials; CEF stays 55 (`docs/RESEARCH_STATE.md`, CLOSED, BAND-COST). The cube-root law at the measured paper cost gives the core 4.55% and C4 4.07%. Neither beats live beyond its own error: the core's 0.045 − 0.048 has NW t 1.34 against 2.837. Two follow-ups, both measurements: **C4's band is re-measured on its own fill cost after 21 sessions, no earlier than 2026-12-03**; and **the band is re-derived on a measured live auction impact before any real capital**, as part of the real-money cost re-run (2026-10-09) |
+| Post-then-cross on paper? (the execution study's candidate 1: a passive limit at the touch at 15:52, the remainder crossed at 15:58) | **"Not now."** Not built. **Re-test after 60+ sessions of fills**: its −2.2bp against actual (95% CI −4.5 to +0.2) rests on 21 days [S: the study] |
+
+### Team lead, 2026-11-05 — the analysts' roles reopened, and the end-of-November pitch
+
+Answered interactively on 2026-11-05, while the analyst guide was being rewritten. It supersedes the 2026-11-03 rows below on what
+the analysts work on and who does the signal work. `docs/TEAM.md` §1 holds who keeps which paths.
+
+| question | decision |
+|---|---|
+| What the analysts work on | **Recommended starting points, and the work is open-ended.** `ryan` starts on FICC risk, `james` on equity risk, and `lucy` on cross-asset signals and the dashboard. These are not limits. Supersedes 2026-11-03's report-only risk lanes |
+| Who may propose a signal | **Any analyst.** The team lead approves every test, and a trial still needs that approval before any return is computed (`docs/TEAM.md` §4). Supersedes 2026-11-03's "the team lead, on every counter". The PM still keeps every counter's rows |
+| What each analyst delivers | **One pitch to the execs at the end of November:** an addition to the strategy, a signal, or anything else that helps overall. Each analyst pitches separately, as a short talk with slides. The date and length are still to be set |
+
+### Team lead, 2026-11-03 — the analyst lanes redrawn as risk
+
+*(Superseded 2026-11-05, above, on what the analysts work on and who does the signal work.)*
+
+Answered interactively on 2026-11-03, after C4's arming was set. `docs/TEAM.md` §1 holds who keeps which paths.
+
+| question | decision |
+|---|---|
+| What the analysts work on | **"Ryan work on the credit / fixed income risk, James equity risk, Lucy stays same and everything else to me, so the analysts dont have much work to do."** The fixed-income lane becomes **credit and fixed-income risk**, the equities lane becomes **equity risk**, and both are report-only: a weekly readout of the deployed book, with no signal, no trial and no live-path change. The dashboard-and-data lane is unchanged. This supersedes 2026-10-26's "the analysts bring new signals only" |
+| Who does the signal work | **The team lead, on every counter.** MACRO (0) and XASSET (4) stay open, with their rows, and are kept by the PM. The E1-band WATCH row (non-industrialised fixed-income wrappers) is the PM's |
+| What a risk finding feeds | **The PM's judgment.** A readout that suggests a hedge, an overlay or a signal goes to the PM, who decides whether it becomes a pre-registration. Nothing in a readout acts on the book (CLAUDE.md: any monitor is read-only) |
+
+### Team lead, 2026-11-03 — C4 v5's gross cap (after the release-check of e41f10b)
+
+| question | decision |
+|---|---|
+| The frozen margin rule (`_max_gross_stress_note`, ruling 3: "C4 arms only on the re-derived value") gives the v5 blend **1.80**, not 1.90 (blend w5 0.0536 against the z book's 0.0261; a 2020-03 week ≈ −10.2% of NLV held at 1.90, against −4.6% for the z book) | **"Keep 1.90, install tonight."** It is **an override of the rule's 1.80**, made with these figures in front of the team lead, and recorded with them. release-20261103-5 (e41f10b) was tagged unchanged and installed at 18:02 ET. Revert: a `/spec-change` to 1.80 with fidelity, H11 and the stops re-run |
+| The arming gate read 1.90 because `recap` reads the z book's w5 | **To be fixed** (not ruled): `recap` must read the live spec book's w5 |
+
+### Team lead, 2026-11-03 — the research loop becomes research-only
+
+Answered interactively on 2026-11-03, before C4's arming, when C4 and the loop would have shared the spare account
+(two runners on one account can double a book: `CLAUDE.md` rule 2).
+
+| question | decision |
+|---|---|
+| May the autonomous research loop still trade? | **No: "have the loop only get us to what we should trade and deploy, and then we figure it out from there."** The 2026-10-27 exception in `CLAUDE.md` rule 1 is suspended: the loop transmits nothing, promotes no lab sleeve into the book and installs nothing. Its output is a recommendation; what trades or deploys is the team lead's call. C4 is the only runner on the spare account. Revert: delete the SUSPENDED paragraph in `CLAUDE.md` rule 1 and this row |
+| Unchanged | The loop's trials are still counted and stored (2026-10-27). Its wrapper already denies `python3 -m quantt.session` and holds no key file (`.claude/loop/run_research_loop.sh`) |
+| Install C4's v5 (the trial-54 blend) tonight, as a second release? | **"install tonight"**, through every gate of the standing authority (release-check GO, CI on the exact head, the replay, outside the send windows, the read-back), finished before 21:50 ET |
+| The three analyst briefs | **"not yet"** |
+
 ### Team lead, 2026-11-03 — Gate 0 and CEF trial 54 (C4's family level)
 
 Answered interactively on 2026-11-03, on `results/cef/PREREG_C4_LEVEL_2026-11-02.md` (its §0.A records it).
@@ -691,6 +786,23 @@ Answered interactively on 2026-11-03, on `results/cef/PREREG_C4_LEVEL_2026-11-02
 | C4's first armed session: dry sessions (checklist step 5) | **"i want no dry sessions"**: C4 arms at its first install (2026-11-03). Its first armed decide is read before its first send, and C4 is disarmed before 15:45 ET if that plan is wrong |
 | Where the pre-arming reads run (checklist steps 3 and 6), with C4's keys absent from the laptop | **"they are on the vm"**: the read-only probe and the cap re-check run on the VM, authenticated by the key file its C4 secret service wrote. No key is printed, copied or moved (`vmrelease.sh c4-probe`, git-excluded) |
 | CEF trial 54's outcome (the holdout, opened once, 2026-11-03) | **PASS on the pre-registered remainder, with the holdout decisive** (`results/cef/prereg_c4_level/TRIAL54_RESULT_2026-11-03.md`): level-only gross SR 1.636; blend 14.56%/yr against z-only 10.32% [S]. Evidence INCONCLUSIVE at N = 54, K3 overridden as above. Per "deploy as fast as possible", `level_signal` is activated in C4's spec (v5) through `/spec-change` and a release-check, paper only |
+
+### Team lead, 2026-11-03 — CEF trial 55 ("te4"): trade the eligible names on a thin session, paper only
+
+Answered interactively on 2026-11-03, on `results/cef/PREREG_THIN_TRADE_ELIGIBLE_2026-11-03.md` (its "Approval" section records the ruling, the answers to §10 Q1–Q17 and the runner owner's terms; the counter moved CEF 54 → 55 in `docs/RESEARCH_STATE.md`). The runner's part is `docs/RUNNER.md`, "As built (2026-11-03)".
+
+| question | decision |
+|---|---|
+| On a session with 4–5 eligible names, build the core's book on them (`below_min_names = "trade_eligible"`, floor 4) instead of closing it? | **Approved for paper only, as CEF trial 55, with K0 and the recommended answer to every open question.** Before ruling, the team lead was shown that the rule is not shown to be alpha, that it is negative on real money, and that it is worth about zero going forward while no session is thin. The drafting session recommended keeping flatten |
+| Where it may run | **`below_min_names = "trade_eligible"` is PAPER ONLY. It never applies to a live-money account,** as the `late_market` exception never does (2026-10-09). Delete the key, with its floor and its K1–K3 lines, before any live-money arming of the core. Enforced in code twice: the sleeve refuses to decide under the key without a paper declaration, and the runner declares paper only when its broker client's trading endpoint is the paper endpoint |
+| A short skipped at the late-market send on a reduced session (the name stopped being shortable after the decide) | **Accept it and label it.** The send's skip-and-send stays as it is on reduced and full sessions alike. The record marks the reduced session that lost a short at send (`thin_stops.send_skip`), and K3 watches for a book that stays one-sided. Not chosen: refusing the whole send on such a session (the runner owner's preference) |
+| When it trades | **Only from its activation commit**, which needs: the implementation merged; the core's 60-session review graded; the Q6/Q10 counts; the K0–K3 report lines and the pre-built revert spec in the activation release; and the trial-53 note. Until then the key is absent and the book is today's, byte for byte |
+
+### Team lead, 2026-11-03 — the research evidence pack's live data
+
+| question | decision |
+|---|---|
+| What of the paper accounts' live record may the public repository carry (PR #45, `results/report/`)? | **"Aggregates in repo, rows private."** Daily, account-level aggregates only: equity (the EOD record and the snapshot, labelled), P&L, attribution totals, fill-cost summaries in bp with counts, order counts, gate and verify outcomes (precedent: `results/cef/fill_drift_2026-11-02/`). Per-name quantities, per-name or per-fill prices, positions and order-level rows go to the gitignored `results/report/_cache_live/`; `scripts/report/snapshot_live.py` refuses to write a row file where git can see it. The branch's history was rewritten so the row files never appear in it. Backing up the cache to R2 is the team lead's step |
 
 ### Team lead, 2026-11-02 — autonomy
 
@@ -723,18 +835,171 @@ Answered interactively on the draft `results/cef/PREREG_VOLTARGET_2026-10-30.md`
 | The core's 2023+ "sealed" (2026-10-09's row above) | **Corrected:** for the core book it has been seen. 2024–26 was opened on 2026-07-31, and the v7 pre-registration computed 2013-06-14 → 2026-09-21. The 2026-10-09 rule still holds for any book whose 2023+ has not been computed. Dated notes are in `docs/RESEARCH_STATE.md` and the framework's §9 |
 | Amendment 1 (team lead, **2026-11-02**, about 22:00 ET) | **Core ×1.30 (spec `cef_discount.v9.20261102`), C4 ×1.26 (`c4_families.v4.20261102`, before C4 arms), and the core's stops recalibrated on the live thin-day rule: R1 10.14%, R2 −3.06%, R3 12.07%.** The multipliers above were derived on the harness's thin-day HOLD book, but the live core FLATTENS. On the sessions it trades, the same rule gives ×1.30, which restores the risk this trial approved (zero-edge P(HALVE) / P(KILL) 16.7% / 1.7% while trading). The literal calendar-vol figure, ×1.96, is inflated by the flat sessions and was **not chosen**. It is **an amendment, not a new trial: CEF stays 53** (`results/cef/PREREG_VOLTARGET_2026-10-30.md` §0.B; `results/cef/prereg_voltarget/FLATTEN_REMEASURE_2026-11-02.md`) |
 
+### Team lead, 2026-11-09 — the mission: open scope, paper as the test, the old research gates dropped
+
+Given as a written brief, kept verbatim as `docs/MISSION.md`, and three questions answered interactively the same day
+(the last three rows). **Where an earlier row in this section disagrees, this one wins**; the rows it supersedes are named
+and are not rewritten. How it changes the agents' rules is `CLAUDE.md`, "Hard rules — research".
+
+| question | decision |
+|---|---|
+| Scope | **Open.** CEFs and nearby markets, fixed income, equities, ETFs, futures, volatility, multi-asset; systematic, fundamental, mid-frequency, event-driven and tools that assist discretion. The CEF discount book is one sleeve, not the identity of the fund. Supersedes §1's framing of the book and 2026-10-09's "instruments in bounds" (options no longer need the pre-registered short-premium route) |
+| What tests an idea | **Paper trading.** Research finds and shapes signals. An idea proves itself on paper (Alpaca, IBKR paper, or a simulated shadow book on live data) before capital |
+| Costs in research | **Not modelled.** Ideas are judged on gross signal. No cost grid, borrow haircut or slippage assumption goes into a research result, and no idea is rejected on a guessed cost. Real costs are measured from paper fills and examined only in a go-live proposal. Supersedes 2026-09-28's "cost grid beside it" and the turnover-matched net comparison |
+| The research gates | **Dropped: pre-registration, the trial counters and the deflated-Sharpe bar, the holdout ceremony, and "no sweeping and picking".** Supersedes 2026-09-08's two counters and time holdout, 2026-10-09's counter per source, 2026-10-27's bars and power gate, and 2026-11-08's "every re-test is a counted trial". The counter table in `docs/RESEARCH_STATE.md` is frozen at its 2026-11-09 values, as history. What stays is the hygiene in the next row |
+| What stays | **No lookahead** (decision-time data only: NAV publication lags, filing dates and not period ends, index membership as of the day); **no invented numbers**, every figure labelled `[V]`, `[S]` or `[U]` with the panel's last date; **no silent fallbacks**; **an idea ledger**, `results/IDEA_LEDGER.md`, one line per idea tested, a record and not a gate; and **one time split** before paper: early against late, and at least two market regimes |
+| Who promotes an idea to paper | **The agent, without asking**, through a paper and shadow path that is separate from the prod release path. The team lead approves that path's design once; until that approval no agent starts a new paper book. Supersedes 2026-11-08's "the team lead decides on a scorecard" for paper. **Real money always needs the team's explicit approval** |
+| The core and C4 books | **May be changed**: reworked, retired, or folded into a combined portfolio, on paper first. A change to what prod runs still reaches the VM as a release (below) |
+| Data | **Free and public only.** No paid subscription. The repository's panels, the R2 WRDS mirror for research, and free public sources |
+| Go-live bars | **Set per strategy.** Each go-live proposal states its own bar, reasoned from how often the strategy trades and how many bets it takes, and the team signs off. Supersedes the single standalone deflated-Sharpe gate for real capital (2026-10-27) |
+| The portfolio | **Toward one combined alpha model**: each sleeve gives a forecast, the forecasts are combined with shrinkage toward equal risk, and the whole book is sized to a risk target that the paper record supports. More risk is acceptable where the evidence supports it |
+| Who installs a prod release (asked 2026-11-09) | **The team lead only.** The 2026-11-02 standing authority ("agents merge, tag, install and arm when every gate passes") is **withdrawn**. Agents prepare a release and run the release check; the team lead merges, tags, installs and arms |
+| Alpha only (asked 2026-11-09) | **Dropped.** Risk premia (carry, trend, short volatility) may be sized sleeves. Factor exposures are reported beside every result and managed at book level; exposure no longer ends an idea. Supersedes 2026-10-09's "deliberate beta: no" and the D4 gate as a kill |
+| `CLAUDE.md`'s research rules (asked 2026-11-09) | **Rewritten to the brief's §2.** The `/prereg` skill and the counters are retired for research; `docs/RESEARCH_STATE.md` stays as history |
+| Not changed | The order-path rules (`CLAUDE.md`): no order on a real-money account without the team lead's go on the full list, `DRY_RUN=1` wins, credentials are never read. The live books' own stops and gates as they run today. `/spec-change` for any frozen-spec key. The analysts' lanes and process (`docs/TEAM.md`): **confirmed by the team lead the same day ("Keep TEAM.md process")**. The analysts still bring each test to the team lead and pitch at the end of November; only the team lead's sessions use the mission's rules |
+| The paper/shadow runner's first form (asked 2026-11-09) | **Shadow books first**: simulated books on live data, with no account and no keys. Paper accounts are added for the ideas that look best. This sets the direction of the design; the design itself still needs the one-time approval above |
+| The shadow-book runner's design (asked 2026-11-09) | **Approved, as the one-time approval**: `results/mission/SHADOW_RUNNER_DESIGN_2026-11-09.md`, built as the package `shadow/`. From this ruling an agent may add, change and retire **shadow** books without asking. A shadow book is simulated: it has no account and can send no order. Starting a book on a **paper account** is not covered by this approval and is a later one; real money is the team's decision, as always |
+| Where the shadow runner runs (asked 2026-11-09) | **On the VM, as a separate unix user with its own clone**, which follows a branch named `shadow` so that a new book needs no release. The team lead installs it once. That user must not be able to read prod's key files or state |
+| The prices that mark a shadow book (asked 2026-11-09) | **Alpaca's closing-auction prints, with yfinance closes as the cross-check.** The Alpaca key the shadow user holds should belong to an otherwise empty paper account, which the team lead creates and keys *(superseded later the same day, next row)* |
+| Which key the shadow runner reads data with (asked 2026-11-09, later) | **The core (`cef`) account's key: "use the accounts we already have access to".** No new account. On the VM the shadow user stays separate and gets **its own key file holding a copy of that one key**, and still cannot read prod's state or the other account's key. That key can trade the core's paper account, so the read-only wrapper (`shadow/sources.py`) and the test that fails if `shadow/` names an order method are what stand between shadow code and an order. The research data is the R2 mirror (`src/data/r2.py`) |
+| The size a shadow book is simulated at (asked 2026-11-09) | **$1M per book.** Capacity is shown at $1M, $5M and $10M |
+| Refreshing research data (asked 2026-11-09) | **The agent runs the free-source fetchers** from the laptop into a research data folder, never into the live `data/` panels (`CLAUDE.md` landmine 9). The team lead runs only the R2 pulls that need the token |
+
+### Team lead, 2026-11-11 — event-driven and special situations are part of the mission
+
+| question | ruling |
+|---|---|
+| What the desk is | **An event-driven and special-situations desk as well as a systematic one, in any asset class.** Every idea hunt also looks for niche verticals along those lines. The seed list is `docs/MISSION.md` §5 (the block dated 2026-11-11). Nothing else in the 2026-11-09 ruling changes: shadow books first, no paper account for a new sleeve without the team lead, releases by the team lead only |
+
+### Team lead, 2026-11-16 and 2026-11-18 — the event sleeves' account, how sleeves are sized, and how a book is promoted
+
+Answered through question prompts. The 2026-11-16 rows were in `ops/sleeves/events_sleeves.json` and
+`results/report/EVIDENCE_LOG.md` (E-2026-11-16-02, -03) only; they are recorded here on 2026-11-18. The 2026-11-18 rows
+followed a measured comparison of sizing schemes (`EVIDENCE_LOG` E-2026-11-18-04).
+
+| question | ruling |
+|---|---|
+| Where promoted event sleeves trade (2026-11-16) | **One new Alpaca paper account, $1,000,000, named `events`**, gross up to 1.5x equity. Seven shadow books are its first sleeves. The small-name special-dividend book is capped at $25,000 by what its names can absorb |
+| How the sleeves in that account are sized (2026-11-18) | **Equal risk per family, not $100,000 a book.** Variants of one idea are one family and split its share. Supersedes 2026-11-16's "$100,000 each". At $100,000 a book the two units ex-date books carried 68% of the account's backtest risk [V, gross, 2000-06-01 to 2025-12-23]. Each sleeve's full size is a key in the book file (`full_capital_usd`, with its `family`), and the derivation is in its `_note_sleeves` |
+| A combined risk budget across all accounts (2026-11-18) | **Not yet.** Each account keeps its own limits. Asked as "8% combined vol with HALVE at 12% and KILL at 18%"; to be asked again after the events account has traded |
+| What promotes a shadow book to a paper sleeve (2026-11-18) | **Ten clean on-time shadow sessions**: no UNMEASURED and no LATE day. It tests the feed and the plumbing, not the return: no statistic exists that early |
+| How a new sleeve scales (2026-11-18) | **A ladder, counted in sessions on which the sleeve held a position.** Under 20: a quarter of its full size. 20 to 59: half, if fills track the shadow book. From 60: full if live P&L is above -1 sigma x sqrt(T), half between -1 and -2 sigma, stopped below -2 sigma. Sixty sessions cannot confirm a Sharpe; the ladder only catches failures. Supersedes 2026-10-29's "a full equal-risk share from day one" for sleeves in the events account |
+| What a clean session is (2026-11-18, second prompt) | **"Any on-time day, ten in a row."** A session is clean when it was measured and the decision that fills on it was written on time; a flat day with an on-time decision counts. The latest ten must all be clean. Counted by `quantt/sleeves/promote.py` (read-only) |
+| What "fills track the shadow book" means (2026-11-18, second prompt) | **"Paper within 2x modelled gap."** Pass if the sleeve's paper P&L is behind the shadow book's on the same sessions by no more than twice the fill cost the model assumes on the dollars traded. The cost is an optional per-sleeve key, `modelled_fill_cost_bp`, which the team lead sets; it is absent for every sleeve, so the test reads UNMEASURED |
+| The sigma of the 60-session test (2026-11-18, second prompt) | **"Each sleeve's backtest vol"**, scaled to the capital the sleeve traded at. In the book file as `backtest_vol_annual` (gross backtest, 2000-06-01 to 2025-12-23, the allocation run of E-2026-11-18-04). The events runner does not yet record the capital a sleeve traded at each session, so this test and the one above read UNMEASURED until `sleeve_scores.csv` carries it (`quantt/sleeves/deploy/README.md`, open items) |
+| Recording the capital a sleeve traded at (2026-11-19) | **"Yes, add it now."** The events runner writes the capital PLAN sized each sleeve from into `plan.json` and the `capital_usd` column of `sleeve_scores.csv`. Both ladder tests read it; it changes nothing about what is planned or sent |
+| The modelled fill cost per side (2026-11-19) | **"Card figures where measured, 15bp elsewhere."** `specdiv_wait_small` 13.5bp and `specdiv_wait` 7bp (measured closing half-spreads on their card); 15bp, an assumption, for the two CEF ex-date books, the two units books and `pead_small_long`, until paper fills replace it. In the book file as `modelled_fill_cost_bp` |
+| Trades netted inside the account (2026-11-19) | **"No, only real fills."** A cross between two sleeves pays no spread and earns no fill-cost allowance; only market fills count as dollars traded |
+| What is built first (2026-11-18) | **The runner's PR to main, then a read-only combined daily report** across the accounts (P&L and risk share by family, factor exposure, trailing correlations once 20 sessions exist) |
+| Not asked, and open | A demotion rule on drawdown (the ladder's -2 sigma stop is the only one); whether the two shadow books outside the seven (`month_end_ief`, `spinoff_first_week`) become sleeves; a replacement second NAV source for the core (E-2026-11-18-03) |
+
+### Team lead, 2026-11-19 — deploy the event sleeves now; the core's cap and the risk target are measured before anything changes
+
+Answered through question prompts on 2026-11-19 (`EVIDENCE_LOG` E-2026-11-19-04). The reader work those prompts
+followed is E-2026-11-18-25 to -28.
+
+| question | ruling |
+|---|---|
+| The ten-clean-session rule for the seven event sleeves (2026-11-18) | **Waived: "waive it, i think deploying is better and we can adjust as eneded".** All seven are armed at their quarter size as soon as the account exists and the release is installed, whatever their session count (at the 2026-11-18 close: 6 and 6 for the two CEF ex-date books, 5 and 5 for the units books, 1 each for the other three [V, `ops.prod_state`]). The ladder itself was not asked about and stands. The rule stays for any book promoted later; `quantt/sleeves/promote.py` still counts it and now reports a waiver nobody coded: read its ten-session line for these seven as information |
+| Where the event sleeves trade, asked again | **"Try a third paper account"**: the 2026-11-16 ruling stands. The team lead opens it in the dashboard and puts its keys in the vault. Asked because the team lead proposed folding C4 into the core's runner to free C4's account; the combiner refuses a sleeve that sets `sizing_multiplier` (both specs do) or `level_signal` (C4's does), and one $100,000 account cannot carry both books at their sizes (1.80x and about 1.23x gross) |
+| The core's gross cap, which scales the book every day since the x1.30 sizing (x0.8207 on the 2026-11-19 plan) and so turns every band hold into a trade | **"Backtest the options first"**: today's order, the band applied after the cap, a higher cap, and smaller multipliers, on the canonical harness. Nothing live changes until the team lead has seen it |
+| Raising an account's risk target "if it gives more return" | **"Measure first, then decide"**, in the same run |
+| Who carries the open pull requests (#87 the reader, #88 the installer and QA fixes, #89 the events runner) | **One session, this one.** They are one integration branch, `events-runner-main` |
+| The investor view of the paper books (2026-11-18) | **The net modelled view is the headline**: closing-auction fills, plus the distributions paper never paid, less a fetched borrow cost; the official record and the gross modelled figure beside it, each labelled |
+| The core's gross cap, after the measurement (E-2026-11-19-08) | **"Leave it as it is."** Gross, 2013-06-25 to 2026-10-14, the deployed order earns 6.85% a year against 6.32% for the band applied after the cap and 6.91% / 6.99% for caps of 2.00 / 2.20; the band-after-cap variant wins only from about 15bp a trade. No change to the core's spec, cap or multiplier |
+| A full session on which every eligible z is equal, so the weights are 0/0 (2020-03-18 and 2025-04-07, every z at the -4 clip) | **"Hold, but say so."** Every name keeps its shares as a qty target whose reason says why; an unheld name stays unopened; no error. Until then the book also held, but silently, through a vol that read 0 and a scalar that fell back to 1.0, and a flat book on its opening session was handed NaN weights. A trailing vol that is zero or not a number on any OTHER day now stops the decide, naming it (asked first as "Stop and name it") |
+| An eighth event sleeve (asked in both sessions) | **"Yes, at a quarter size" / "Yes, add it."** `uit_termination`, a fifth family (`unit_trust_terminations`): full size $139,000 at the families' risk unit, $34,750 at a quarter, long only, the ten-session wait waived. Its volatility figure is 225 sessions of 2026, not a long backtest (the book file's `_note_uit_termination`). `uit_termination_big_sale` stays a shadow book |
+| The events runner's first sessions | **"One dry session first."** It is installed with orders switched off, plans and verifies one full day against the new account, and is armed by the team lead after that plan has been read |
+| When the release is tagged and installed | **"This afternoon, before 15:25 ET"** (2026-11-19) for the core, C4 and the report jobs. The events installer refuses a listed book with no shadow decisions directory, and `uit_termination`'s first decision is the 18:50 run that evening, so the events book is installed after it |
+| The events account's size, once it read $100,000 and not $1,000,000 (2026-11-20) | **"Keep $100,000 for now."** The eight sleeves at their quarter sizes ($170,500) fit: the first plan is 1.37x gross against the 1.5x limit. Dollar P&L is the same at either size. Before any sleeve moves to half size the account must be larger or the sizes rethought; asked again then. The 2026-11-16 row's "$1,000,000" stands as the intent and is not the account's balance |
+| Arming the events book (2026-11-20) | **"Show me Monday's list, I say go."** After a clean dry session, this session shows the first armed day's order list, and on the team lead's go switches the send unit to DRY_RUN=0 and approves that one plan by its sha; AUTO_ARMED only after that day's VERIFY passes |
+| Email alerts from the risk report (2026-11-20) | **"Skip alerts for now."** The vault keeps no `alert-smtp-user` / `alert-smtp-pass`; `quantt-reports-secret.service` stays failed, by choice |
+| Two official closing prices from the primary exchange for one fund-day (2026-11-22; SCD on 2026-11-20: 14.348 at 16:00:02 ET and 14.28 at 16:10:00 ET, both NYSE condition M) | **"$14.28, the later print"** for that fund-day, and as the standing rule **"Take the later print if the daily bar agrees."** `AlpacaClient.closing_auction_prints` returns the latest print only when its price equals the close of that day's raw SIP daily bar, and names the earlier price under `superseded`; the collector flags it in the day's report. Any other case still stops and names the prints. The bar never supplies the price |
+| Who runs the steps, from 2026-11-19 afternoon (**superseded 2026-11-23**: "Agents release; arming is yours", below) | **This session runs them** ("Can you runt htose i dont want too"; "Do the next steps in full now"; "i dont know how to do any of it, can you do it"): merges, tags, VM installs. An order still needs the list shown and the team lead's go (CLAUDE.md order-path rule 1); credentials stay the team lead's |
+| Who runs the release steps (merge, tag, VM installs, arming) (**superseded 2026-11-23**: "Agents release; arming is yours", below) | **"You prepare, I run them"**: this session checks and writes the wrappers; the team lead runs each with `!` |
+| Not asked, and open | Whether the ladder's later stages change with the waiver; the cap and target the measurement will point to; whether Alpaca allows a third paper account at all (`docs/REFERENCES.md` 12pa: not stated) |
+
+### Team lead, 2026-11-22 — the standard: a clean platform first, then real money
+
+Answered through question prompts on 2026-11-22, after the team lead said the infrastructure and the strategy "are
+very disorganized and not done at the proper standard we need it to be done, we cant deploy capital on this
+infrastructure". The result is `docs/STANDARD.md`, with its sources in `docs/REFERENCES.md` §12st (`EVIDENCE_LOG`
+E-2026-11-22-04).
+
+| question | ruling |
+|---|---|
+| Whether new research pauses while the platform is brought to standard | **"Keep research as it is."** The standard gates changes to the platform and real money, not ideas (`docs/STANDARD.md` §0.2) |
+| What the first standard covers | **"Everything on the desk"**: every book, sleeve, shadow book, collector and report job |
+| What comes first | **"Draft the standard with you"**: `docs/STANDARD.md`, then an audit against it (§0.4) |
+| The main dev folder: branch `research-alpha-leakage`, 841 commits behind `origin/main`, 148 uncommitted files and an untracked `CLAUDE.md` from before 2026-11-09 | **"Save changes, then switch to main"**, and **"After the release finishes"**: not while another session is installing release-20261122-2 from that folder |
+| Alerting for real money | **"Dashboard and logs are enough."** Recorded as a departure from the sources (`docs/STANDARD.md` C.2) |
+| HALVE and KILL on a real-money book | **"Act automatically"**: HALVE halves the next plan's gross; KILL sends nothing new until a person re-arms. Paper stays in report mode (2026-10-19) |
+| A combined risk budget | **"Required before real capital."** For real money only; it narrows 2026-11-18's "Not yet", and the paper accounts keep their own limits |
+| A review of the order path by someone outside the desk | **"Agent review is enough"** |
+| The real-money broker | **"Keep waiting, write it broker-neutral."** The 2026-10-28 ruling stands; every runner sends through one broker interface (`docs/STANDARD.md` A2.6) |
+| CI on the live path | **"Types, coverage floor, import boundary"** (A2.1 to A2.3) |
+| Recovery from a VM failure on a trading day | **"Rehearsed procedure"**: written, rehearsed on paper each quarter and timed; a rebuild of the VM from scratch tested once (A9) |
+| A person acknowledging the last verdict before a real-money book sends | Not ruled: "we arnt deploying capital anytime soon, we need to clean our infrastructure up". Asked again at the first go-live proposal (A5.3) |
+| Three proposals in the draft (asked after it was written) | **"Keep all three"**: the stop-everything command rehearsed on paper every month (A4.2); a branch with no open pull request, not a lane branch and no commit in 14 days is tagged `archive/<branch>` and deleted (A1.2); at go-live, the variants of the idea tried are counted from `results/IDEA_LEDGER.md` and the Sharpe deflated for them (B7). B7 applies at the go-live proposal only; research keeps the 2026-11-09 rules |
+| The next steps | **"Run it now"** for the audit against `docs/STANDARD.md` (§0.4); **"Push and open the PR"** for this standard; **"Yes, switch it now"** for the dev folder, once the team lead confirmed release-20261122-2 was finished |
+| Not asked, and open | Approval of `docs/STANDARD.md` as written, at the pull request's review. An independent risk function (C.2) |
+
+### Team lead, 2026-11-23 — after the first standard audit
+
+Answered through question prompts on 2026-11-23, after the first audit against `docs/STANDARD.md`
+(`results/ops/STANDARD_AUDIT_2026-11-22.md`; `EVIDENCE_LOG` E-2026-11-22-05 and E-2026-11-23-01).
+
+| question | ruling |
+|---|---|
+| The `shadow` branch: the events runner trades decision files from the VM's shadow clone, which runs the head of `shadow`. It had no ruleset, six accounts could push to it, and the VM identity can read every vault secret (audit §2) | **"Protect it now."** A ruleset like main's, "shadow: only the team lead updates it" (update, deletion and non-fast-forward blocked; the team lead's account bypasses), active from 2026-11-23 11:48 ET. The rest of work order 7.1 (the events decision code under the release tag, a narrower vault reach) is not ruled; the audit keeps it open |
+| Whether arming the events book waits for its missing state pages, P&L of record, HALVE/KILL and corporate-action gate (work orders 7.2 to 7.5) | **"Arm Monday, build them next."** The 2026-11-20 ruling stands. Those four come first in the build |
+| Who runs a release. **Supersedes** the two 2026-11-19 rows "Who runs the steps" ("This session runs them") and "Who runs the release steps" ("You prepare, I run them"), and the 2026-11-02 standing authority still written in `docs/RUNBOOK.md` §8.6 | **"Agents release; arming is yours."** An agent in the team lead's session runs merges, tags and VM installs, after the release check. Arming or disarming a book, and any order, happens only on the team lead's go in the session, after the order list is shown (`CLAUDE.md` order-path rule 1). An analyst's session does none of these (`docs/TEAM.md`) |
+| The events book's first armed day (asked under the 2026-11-20 ruling, "Show me Monday's list, I say go") | **"Go"** for the plan of 2026-11-23, `plan_sha` dff7c378…12ad, 219 orders: `DRY_RUN=0` in `quantt-events-send.service` only, and that plan approved by its sha at 14:11 ET. `AUTO_ARMED` only after that day's VERIFY passes, on the team lead's word |
+| The branch and worktree clean-up (`docs/STANDARD.md` A1.2), on the list of 116 worktrees, 147 local and 88 GitHub branches, each fully merged into `main` | **"Go, keep the caches."** Applied that afternoon: each item tagged `archive/<name>` on the laptop (never pushed), ignored files moved out of the repository before a worktree was removed (E-2026-11-23-04) |
+| `AUTO_ARMED` for the events book (**superseded the same evening** by "AUTO_ARMED now", below) | **"Yes, if VERIFY passes."** Not created: that session's send failed (next row) |
+| The events book's first send went out partly: Alpaca answered HTTP 429 to 173 of 219 orders (E-2026-11-23-03) | **"Disarm until the fix ships"** (send unit `DRY_RUN=1` again, 16:57 ET); **"Hold them"** for the 46 filled positions; **"Build it now and release"** for the fix: the client paces the trading host and a 429 is waited out and looked up before any resend. Re-arming is the team lead's go |
+| When the events book is armed again (asked after "Disarm until the fix ships", 2026-11-23 evening; the team lead: "lets get the evnt book armed as soon as possible") | **"AUTO_ARMED now."** **Supersedes** the same day's "Yes, if VERIFY passes" (row above). Done at 21:42 ET once `release-20261123-2` was installed and that evening's VERIFY had booked the ledger to 2026-11-23: `DRY_RUN=0` in `quantt-events-send.service` and `AUTO_ARMED` created, so every decided plan is sent from 2026-11-24 without a per-day go (E-2026-11-23-05) |
+
+### Team lead, 2026-11-23: the public site
+
+Answered through question prompts and messages on 2026-11-23, when the team lead asked for
+Lucy's dashboard (PR #62) to be set up properly and hosted on the VM, "showing analytics for all
+our active books", and then for an investor site around it.
+
+| question | ruling |
+|---|---|
+| Who can see the dashboard | **"Website all can see."** A public website, served from the VM. Asked with the alternative of a private page behind an ssh tunnel, and told the VM holds the three accounts' keys |
+| Its address, and who serves it | **`event-driven.quantt.ca`**, a subdomain of the club's domain, served by the Cloudflare Worker `quantt-event-driven`, which "deploys [our] repository": "front end stuff / all needs to be run on main" (Workers Builds, `npx wrangler deploy` with Root directory `dashboard`, `dashboard/wrangler.jsonc`). The live pages come from the VM through the Worker (variable `ORIGIN`, set in the Cloudflare dashboard). The VM's host names are an installer argument and are never written in this repository (`CLAUDE.md`, "Where it runs") |
+| What the site holds | **"Team overview, a slideshow ... everything someone who would want to give us capital would see"; "our library (all literary sources, the actual PDFs / links)"; "anything any R&D website would have"; "connected to our live P&L and live updates, very professional and presentable to VC / investors."** quantt.ca is "just inspiration": nothing is added to the club's site |
+| The team section | **Full names, bios and LinkedIn.** Names, titles and links as published on quantt.ca; the bios are drafted from each person's role on the desk and await each person's approval |
+| The slideshow | **"The most in-depth version we have, with the same tweaks that were applied to make Event Driven Trading (like the name change)."** The 63-slide in-depth deck with Ethan's edits applied; the three blank analyst slides and "Questions?" are left off the site |
+| The contact address on the site | **`simon.jarvis@queensu.ca`** |
+| Lucy's PR #62 | **"Build on it, new PR."** Her commits are kept as they are in the new branch; #62 is closed pointing at it |
+| Where snapshots live. **Supersedes** 2026-10-26 "The dashboard's data" (a nightly snapshot committed to dashboard/snapshots/, now removed) | **"VM only."** The site is built and served on the VM; nothing about positions or P&L is committed |
+| The slideshow, revised the same day. **Supersedes** "The slideshow" above | **"Take out the slideshow and make the team the first thing."** The strategy page, the slides and the deck PDF are removed; the team is the first item in the menu and the first section of the overview |
+| The design, revised the same day | **"use the same pictures on the quant site"; "include the quant logo too"; "a higher resolution image in the back"; "more minimalist and professional"; "well organized".** quantt.ca's own photographs at 2400 px and its logo, serif headlines, a label-and-content grid. On the team page, "the 2nd photo (the one in the middle) ... should be taken out", and the footer is reorganised |
+| What the site shows of each book's holdings, revised the same day | **"Aggregates only."** P&L, equity, returns, Sharpe and drawdown, and for each session counts and dollar exposure: positions long and short, gross and net exposure, orders filled. No symbol, share count, order line or note text from the trading system is published (`dashboard/snapshot.py` 0.3). Asked after the release check found the event book's rejected order ids on the performance page |
+| The team, revised the same day. **Supersedes** "The team section" above | **"Use the same headshots on quantt.ca for our team"; "delete the teams bios, just name and linkedin".** Each member is shown with quantt.ca's own headshot, name and LinkedIn link |
+| The team and library pages' photographs, and a GitHub link | **"Proper Toronto landscaping / views that fit the darker vibe"; "put github link in top right corner".** Night photographs of Toronto from Wikimedia Commons, credited on the page (one is CC BY-SA 2.0, which requires it); the repository's GitHub link at the right of the header |
+| The performance page, 2026-11-24 | **"The performance needs to be displayed better ... detailed that matters."** A summary strip; growth and drawdown in percent and each session's P&L; one table comparing the books and the combined account (return, volatility, Sharpe, Sortino, drawdowns, best and worst session, share of sessions with a gain); monthly returns; the correlation of the two books; the latest session of every book, in aggregates |
+| The team and library photographs, revised 2026-11-24. **Supersedes** the night photographs above | **"A darker type image of Toronto's skyline / financial district but it's day-ish."** The skyline under heavy cloud from the Toronto Islands (team) and the Toronto-Dominion Centre's dark towers in daylight (library), from Wikimedia Commons, credited on the page |
+| The research and library pages, 2026-11-24 | **"Re organize the library / research, it's ugly."** Research in the site's label-and-content grid (pipeline, standards, the ledger as figures, the trading day, safeguards); the library with a topic list and counts, a search box and one compact row per source |
+| The performance page's portfolio, 2026-11-24. **Supersedes** "The performance page, 2026-11-24" above | **"Overall portfolio (shown as one line), can split into 3 lines (our sleeves) and analyze below (all things institutional investors would look at)"; the event book "should be included automatically"; "auto updated with live P&L".** One composite line, each book from its first traded session (asset-weighted daily returns), with a switch to show the books; returns, risk (volatility, downside deviation, drawdowns and their length, one-day 95% VaR and expected shortfall), Sharpe, Sortino and Calmar, the distribution of daily returns, correlation, contribution and monthly returns. The event book joins on its after-close readings until its end-of-day history is collected. The page rebuilds every 30 minutes from the records |
+| Installing it | **"Yes, when the check passes."** An agent in the team lead's session runs the release check, merges, tags and installs only the site's own units, Caddy and the network rule for ports 80 and 443. No trading unit, `DRY_RUN` or `AUTO_ARMED` is touched |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
 |---|---|
 | Hard rules: order path, code, data, research | `CLAUDE.md` |
-| Trial counters and the killed list | `docs/RESEARCH_STATE.md` (counter table and KILLED table are canonical) |
+| Ideas tested, and what each showed | `results/IDEA_LEDGER.md` (a record, not a gate; from 2026-11-09). `docs/RESEARCH_STATE.md` is the history before it: its counters are frozen |
 | Harness rules H1–H15 (`shift(2)`, turnover matching, cost grid, eras, IC, holdouts, H14) | `docs/BRIEF.md` §5, and `/harness` |
-| Pre-registration | `/prereg`; shape: `results/cef/PREREG_BAND_2026-09-06.md` |
+| The mission and the pipeline (idea, explore, paper, go-live proposal, live) | `docs/MISSION.md`; §5, 2026-11-09. Pre-registration is retired for research |
 | Changing a frozen spec key | `/spec-change` |
-| Dead mechanisms — check before proposing anything | `/graveyard`, and the KILLED table |
+| Ideas that have failed so far — check before proposing anything; nothing is banned (2026-11-08) | `/graveyard`, and the KILLED table |
 | External claims | `docs/REFERENCES.md` |
 | Work orders and the plan | `docs/ROADMAP.md`. The old work orders were deleted 2026-09-28 (tag `pre-clean-slate`). |
+| What "done properly" means for the platform and for real money; the audit against it | `docs/STANDARD.md` |
 | Which document owns which question | `docs/INDEX.md`, checked by `python3 -m ops.doc_audit` |
 | Who keeps which lane; how work reaches `main` and prod; the shared-ledger rules | `docs/TEAM.md` |
 
@@ -764,3 +1029,12 @@ Answered interactively on the draft `results/cef/PREREG_VOLTARGET_2026-10-30.md`
 | 2026-10-28 | §5's research-method table records the team lead's ruling that a counter with one stored trial gates on the desk's bar until a second is stored. | research loop, for the team lead |
 | 2026-11-01 | §5 records the vol-target raise (CEF trial 53: ×1.13 / ×1.27, `sizing_multiplier`), the framework gate waived for paper, the raise's stops, and the correction that the core's 2023+ has been seen. | CEF trial 53, for the team lead |
 | 2026-11-02 | §5's trial-53 table records amendment 1: core ×1.30 (spec v9), C4 ×1.26 (spec v4), the core's stops recalibrated on the live thin-day rule; CEF stays 53. | CEF trial 53 amendment 1, for the team lead |
+| 2026-11-03 | §5 records the evidence pack's live-data ruling: aggregates in the repository, rows in a gitignored cache. | research evidence pack, for the team lead |
+| 2026-11-05 | §5 records the analysts' roles reopened as starting points, any analyst may propose a signal, and the end-of-November pitch. | analyst guide, for the team lead |
+| 2026-11-08 | §5 records that research is not pass or fail; §1's holdout sentence and the 2026-10-27 power and admission rows point at it. | research method, for the team lead |
+| 2026-11-09 | §5 records the mission (`docs/MISSION.md`): open scope, paper as the test, no costs in research, the research gates dropped, self-promotion to paper through a separate path, releases by the team lead only, alpha-only dropped. §1 and §6 point at it. | the mission, for the team lead |
+| 2026-11-22 | §5 records the standard's rulings (`docs/STANDARD.md`); §6 points at it. | the standard, for the team lead |
+| 2026-11-23 | §5 records the rulings after the first audit: the `shadow` ruleset, events arming kept for Monday, who runs a release (superseding the two 2026-11-19 rows), and the events book's first go. | the standard's audit, for the team lead |
+| 2026-11-23 | §5 records the public site's rulings: public, on the VM at `event-driven.quantt.ca`, its content, snapshots kept on the VM (superseding 2026-10-26's repository route). | the public site, for the team lead |
+| 2026-11-23 | §5 records the clean-up's go, AUTO_ARMED on a passing VERIFY, and the rulings after the events book's partial first send (disarm, hold, fix and release). | the 429 incident, for the team lead |
+| 2026-11-23 | §5 records "AUTO_ARMED now" for the events book, superseding "Yes, if VERIFY passes". | release-20261123-2, for the team lead |

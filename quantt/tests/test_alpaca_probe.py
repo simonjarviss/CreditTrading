@@ -37,7 +37,8 @@ class FakeSession:
         self.urls = []
         self.headers = {"APCA-API-KEY-ID": KEY_ID, "APCA-API-SECRET-KEY": SECRET}
 
-    def get(self, url, timeout):
+    def get(self, url, timeout, allow_redirects=None):
+        self.redirect_flags = getattr(self, "redirect_flags", []) + [allow_redirects]
         self.urls.append(url)
         path = url[len(ap.PAPER_BASE):]
         status, payload = self.table.get(path, (404, {"message": "not found"}))

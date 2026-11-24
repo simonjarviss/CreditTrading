@@ -310,7 +310,7 @@ def load_sleeves(book_path: Path, book_spec_path: Path, repo: Path,
         raise CombineError(f"{book_path}: enabled sleeves {unbudgeted} carry no risk_budget while "
                            f"{budgeted} do; a combined book sizes every enabled sleeve by its "
                            f"budget and assumes none")
-    from src.deploy.registry import build_sleeve
+    from src.deploy.registry import CEF_FLOOR_KEY, CEF_THIN_KEYS, build_sleeve
     # ONE SIZING AUTHORITY PER BOOK (CEF trial 53). A spec's `sizing_multiplier`
     # sizes a single-sleeve account (src/deploy/sleeves/cef_discount.py); a
     # combined book sizes each sleeve by its budget (THE RISK BUDGET). Both at
@@ -340,6 +340,38 @@ def load_sleeves(book_path: Path, book_spec_path: Path, repo: Path,
                 f"{where}: {sp} sets frozen.sizing_multiplier, which sizes a single-sleeve "
                 f"account; a combined book sizes every sleeve by its risk_budget, and the two "
                 f"would compound. Delete the multiplier or re-express it as the budget")
+        # CEF TRIAL 54 (PREREG_C4_LEVEL_2026-11-02.md §1.3 test 7): `level_signal` blends C4's z and
+        # family-level books at equal ex-ante risk under the account's own 1.90 cap. That construction was
+        # measured as ONE account's book only: the blend's cap-binding share and turnover (§3.3), the
+        # fidelity probe and the kill rule's reference are all single-sleeve objects. Netted with another
+        # sleeve under a shared budget and the book-level cap, it is a book nobody measured, so a budgeted
+        # sleeve whose spec carries the key (null included) is refused here, as the multiplier is.
+        if "level_signal" in (spec.get("frozen") or {}):
+            raise CombineError(
+                f"{where}: {sp} sets frozen.level_signal (CEF trial 54), a blend measured only as a "
+                f"single-sleeve account's book; a combined book would net it with other sleeves under a "
+                f"shared budget and cap that were never measured with it. Trade it as its own book")
+        # CEF TRIAL 55 ("te4", PREREG_THIN_TRADE_ELIGIBLE_2026-11-03.md; the runner owner's review of
+        # 2026-11-04, item 1): `below_min_names = "trade_eligible"` builds a 4-5 name book on a thin
+        # session, PAPER ONLY, and its stops (K0 on the account's drawdown, K1-K3 on the account's
+        # equity and positions) were measured on the core's own account. Netted with another sleeve
+        # under a shared budget and the book-level cap it is a book nobody scored, and its stops would
+        # read an account that is not its own. So a budgeted sleeve whose spec carries ANY te4 key is
+        # refused here, as level_signal is: the rule itself, its floor, or a K-line threshold or K3's
+        # run length in `risk` (each present only beside the rule, so present at all is the tell).
+        # Until 2026-11-04 the combiner built such a sleeve and it refused at its first decide (the
+        # combiner passes no paper declaration); now it never loads.
+        fr, rk = spec.get("frozen") or {}, spec.get("risk") or {}
+        te4 = ([f"frozen.below_min_names={fr['below_min_names']!r}"]
+               if fr.get("below_min_names") == "trade_eligible" else []) + \
+            ([f"frozen.{CEF_FLOOR_KEY}"] if CEF_FLOOR_KEY in fr else []) + \
+            [f"risk.{k}" for k in CEF_THIN_KEYS if isinstance(rk, dict) and k in rk]
+        if te4:
+            raise CombineError(
+                f"{where}: {sp} sets {te4} (CEF trial 55, te4: the thin-session rule, PAPER ONLY), "
+                f"built and measured for the core's own account; a combined book would net it with "
+                f"other sleeves, and its stops would read an account that is not its own. Trade it "
+                f"as its own book, or delete the keys")
         # The built sleeve's own instruments, as deployed_tickers reads them:
         # "the exact list the runner will trade". The registry validates the spec.
         universe = tuple(sorted(build_sleeve(spec, float(spec["capital_usd"])).instruments()))

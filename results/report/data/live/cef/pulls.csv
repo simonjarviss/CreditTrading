@@ -1,0 +1,5 @@
+pull,last_session,files
+24d55dcbfe1b,2026-11-02,distribution_scores.csv equity.csv logs/verify.err.log logs/verify.out.log scores.csv tca.csv
+ae2279000743,2026-11-06,distribution_scores.csv eod_equity.csv equity.csv logs/verify.err.log logs/verify.out.log scores.csv tca.csv
+b5e46b822424,2026-11-03,distribution_scores.csv eod_equity.csv equity.csv logs/verify.err.log logs/verify.out.log scores.csv tca.csv
+c3fef52e05e2,2026-11-04,distribution_scores.csv eod_equity.csv equity.csv logs/verify.err.log logs/verify.out.log scores.csv tca.csv

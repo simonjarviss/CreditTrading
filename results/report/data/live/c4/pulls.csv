@@ -1,0 +1,3 @@
+pull,last_session,files
+56ee16669d9a,2026-11-06,distribution_scores.csv eod_equity.csv equity.csv logs/verify.err.log logs/verify.out.log scores.csv tca.csv
+98c1901d5803,2026-11-04,eod_equity.csv equity.csv logs/verify.err.log logs/verify.out.log scores.csv tca.csv

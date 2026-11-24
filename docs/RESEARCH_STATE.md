@@ -1,5 +1,13 @@
 # RESEARCH STATE — the research ledger
 
+> **FROZEN AS HISTORY, 2026-11-09** (team lead, `docs/SYSTEM.md` §5, "Team lead, 2026-11-09";
+> `docs/MISSION.md`). Pre-registration, the trial counters and their deflated-Sharpe bars, the
+> holdout ceremony and the D-code gates no longer apply to research. **The counter table below
+> stays at its 2026-11-09 values and does not move again**; `python3 -m ops.orient` still prints
+> it, as history. New work is logged in `results/IDEA_LEDGER.md`, which also carries a one-line
+> backfill of every row here, re-read under the new rules. Nothing below is rewritten: it is
+> the evidence behind that backfill, and the ACTIVE rows still describe the sleeves on paper.
+
 > **Citations written `pre-clean-slate:<path>`** name files deleted in the
 > 2026-09-28 clean slate. Read one with `git show pre-clean-slate:<path>`;
 > `docs/HISTORY.md` explains. They are provenance, not current state.
@@ -126,6 +134,11 @@ counter (156) covers all ETF-price/PD work done to date.
 > - **2026-10-28, after the team lead's R2 run:** the live CRSP pull matches the provisional staging exactly. O4 passes
 >   on all 24 fills. Stage 0 is re-run CLEAR with the input hashes recorded: 649 events. `open` waits only on French's
 >   202610 vintage and the GO row.
+>
+> **2026-11-08: a verdict is a reading of one test, not the end of an idea** (team lead, `docs/SYSTEM.md` §5,
+> 2026-11-08). For research agents and the loop, nothing in the KILLED tables is banned. An idea can return if the agent
+> says what is different, and one that failed on a data error must deal with that error first. Every re-test and every
+> holdout look is a counted trial. Where the note below says "never re-test", read it as history.
 >
 > **2026-10-27: evidence outcomes beside D-codes** (team lead, `docs/SYSTEM.md` §5,
 > 2026-10-27; `results/research/DESK_METHOD_2026-10-27.md`). From today every
@@ -364,7 +377,8 @@ counter (156) covers all ETF-price/PD work done to date.
 
 > Moved verbatim on 2026-09-13 from §2.2 of `RESEARCH_AND_METHODOLOGY.md`
 > (git tag `pre-clean-slate`: `pre-clean-slate:_archive/docs/RESEARCH_AND_METHODOLOGY.md`, dated 2026-07-31).
-> Every verdict in the tables below uses these codes.
+> Every verdict in the tables below uses these codes. D1's last column was amended on 2026-11-08 (`docs/SYSTEM.md` §5):
+> a code names the gate that fired, and does not end the idea.
 
 "It didn't work" is not a diagnosis and cannot be acted on. We classify every
 failure into one of seven types, because the correct response is different for
@@ -372,7 +386,7 @@ each, and the wrong response wastes weeks.
 
 | code | what happened | what it means | what to do |
 |---|---|---|---|
-| **D1** | No edge even *before* trading costs | The effect does not exist | Kill it. No amount of tuning creates something from nothing |
+| **D1** | No edge even *before* trading costs | The effect does not appear | Check the data and the reasoning, and look for a missing angle. Set it aside, with reasons, if none remains |
 | **D2** | Edge exists but costs eat it | A trading problem, not an idea problem | Trade less often, in bigger, better-chosen bets |
 | **D3** | Great in old data, bad in new | Either overfitted, or the world changed | Check if the *mechanism* still holds. If yes, it's a regime shift. If no, we fooled ourselves |
 | **D4** | Good numbers, but it's just market exposure | A risk premium wearing a costume | Demote it. It is not skill and must never be counted as skill |
@@ -416,7 +430,7 @@ Heston/SABR (we trade no derivatives); Almgren-Chriss scheduling (one auction at
 
 ---
 
-## KILLED — never re-test without new data
+## KILLED so far — may return if the agent says what is different (team lead, 2026-11-08)
 | id | hypothesis | cause of death | evidence | date |
 |---|---|---|---|---|
 | credit_rv | cross-sectional price-residual RV on credit ETFs | **D1** gross edge NEGATIVE before costs (−0.19%/yr) | sealed holdout net SR −1.44, t −2.29 | 2026-07-30 |
@@ -493,3 +507,4 @@ Heston/SABR (we trade no derivatives); Almgren-Chriss scheduling (one auction at
 | SCR-C4-EXDATE | Is C4's ex-date P&L concentration (fit 33.1%; holdout 82.1% committed, 52.6% corrected) a real effect of C4's signal, or an artifact? (team lead, 2026-10-26: gates moving C4 toward paper) | **Mixed.** The screen ruled out data causes: misdated NAV, disputed amounts and stale prints carry 12.6% of window P&L. **The independent review found the drift generic:** a z-blind short into ex-dates earns it, and once that profile is removed C4's own window excess is t 1.69 against the 2.0 bar. Eaton Vance covered-call funds carry 59.5% of the C4-specific excess. **Paper overstates C4:** price-only Sharpe 1.360 vs total return 1.217 on the fit. A second method finds the drift itself (post-hoc): CAR(+1..+3) −34.3bp (t −14.9) on C4's families over 2005–22, −20.5bp (t −6.8) on the credit 17. *Corrected 2026-10-27: this row first gave −30.1bp (t −5.6), the 1982–2022 figure; and W4 (2026-10-11 §1) recorded the pattern first, untested.* Its pre-registration is a draft. No trial spent | `results/cef/screens_2026-10-26/README.md`; `r3_c4_exdate/`, `r3_review/`, `r6_exdrift/` | 2026-10-26 |
 | SCR-IDX-REBAL | Do fund-of-CEF index reconstitutions (YYY, PCEF, XMPT) force flow ≥ 1 day of ADV that a `shift(2)` book could trade? (team lead, 2026-10-26) | **ARTIFACT, pooled** (2026-10-27, after the team lead's R2 pull of CRSP MF holdings; *first recorded 2026-10-26 as infeasible on free data*). 137 events ≥ 1 ADV, sized without lookahead, pass the gate. Pressure is +50bp (t 2.23) and reversal −73bp (t −3.58), but **the placebo one month earlier scores +113bp (t 2.87)**, from YYY. PCEF alone: +184bp (t 5.5), then −120bp (t −5.6); placebo +8bp. That is a post-hoc subgroup, and a trial needs PCEF's announcement dates. The non-changer control was degenerate (a design error, recorded). The screen applied 8 more `drop_split` cells itself, which is not a team-lead ruling. No trial spent | `results/cef/screens_2026-10-26/r4_index_rebal/NOTE.md` | 2026-10-27 |
 | SCR-BDC-DISC | Does the discount z-score work on BDCs? (team lead, 2026-10-26; preferred ETFs excluded as `single-fund-PD`, preferred CEFs already in C4) | **Nothing in the tradable set** (2026-10-27, after the team lead's R2 pull of Compustat `fundq`; *first recorded 2026-10-26 as infeasible locally*). ceqq/cshoq matches point-in-time XBRL NAV on 167 of 175 checks. All 54 BDCs: IC +0.0258 (t 5.14). It is not stale prices (traded-only +0.0271), and another fund's NAV scores +0.0093. **The independent review found:** at ADV ≥ $3m, 2012–17 is null and the 2018–22 NAV term is t 0.48 next to 5-day reversal. The tradable signal is short-term reversal; the NAV information sits below $3m ADV. The settling test, if ever wanted: 2023+ with XBRL NAV, ADV ≥ $3m, NAV term t ≥ 2.81. No trial spent | `results/cef/screens_2026-10-26/r5_bdc/NOTE.md`; `r5_review/` | 2026-10-27 |
+| BAND-COST | Should the no-trade band width be re-derived from the measured paper execution cost (7.14bp; `results/cef/EXEC_COST_STUDY_2026-11-05.md`, PR #58, merged as 1f44bbf) by the cube-root law, with σ_w and κ_w re-measured on the fit? (team lead, 2026-11-05) | **Keep 4.8% on both books; zero trials, CEF stays 55** (team lead, 2026-11-05: "Accept: keep 4.8%, close"). Derived h\*: core **4.55%** (σ_w 0.0613/day, φ_w 0.958; the cost's 95% interval 3.0–14.2bp gives 3.4–5.7%); C4 **4.07%** at 12.43bp (7.14bp × quoted-spread ratio 1.741; C4's own fills are one session). Both pass the paired plateau test (grid argmax vs h\*, HAC p 0.20 / 0.14). Neither beats live: the core's 0.045 − 0.048 nets +0.04pp/yr, NW t 1.34 against the bar 2.837 at N = 56, and could not be seen live; C4's derived width is worse than live at its scaled cost (−0.058 Sharpe, HAC p 0.038 total return, unadjusted). Narrower bands trade more and cost more: no saving. The 2026-09-06 σ_w (0.04083) is not reproduced (0.0605 on the 17-name fit). Follow-ups, both measurements: C4's band re-measured on its own fill cost after 21 sessions (no earlier than 2026-12-03); the band re-derived on a measured live auction impact before any real capital. Fit only; no 2023+ figure computed | `results/cef/BAND_COST_REDERIVATION_2026-11-05.md`; `python3 -B results/cef/band_cost_2026-11-05/band_cost.py` (second method `crosscheck.py`) | 2026-11-05 |

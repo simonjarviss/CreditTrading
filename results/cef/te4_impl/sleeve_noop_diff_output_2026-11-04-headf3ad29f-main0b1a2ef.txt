@@ -1,0 +1,27 @@
+te4 sleeve no-op proof, 2026-11-04-headf3ad29f-main0b1a2ef (python3 results/cef/te4_impl/sleeve_noop_diff.py)
+base: a worktree at 0b1a2ef2b308101b3512aec24dc49a22de98c888
+new:  this checkout at f3ad29f44e80a1745b536413db76af2d0fb3f894 (clean)
+  code under test, git blob ids: src/deploy/sleeves/cef_discount.py  base f42c0b54e03d  new 0b0f58d7e69a
+  code under test, git blob ids: src/deploy/registry.py  base 19be8073c179  new b8532f39c418
+  code under test, git blob ids: src/deploy/sleeve.py  base 2c5e7bba6430  new 2c5e7bba6430
+spec cef_discount.v9.20261102 (identical file in both trees); panel data/cef/, prices to 2026-10-15, NAV to 2026-10-14
+decision dates: 7018 (1998-11-18 .. 2026-10-14, --dates all); books flat and held; 14036 (date, book) target lists per variant
+new:te4 floor: the pre-registration's approved 4 (not yet a spec key)
+
+  base:absent   sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1102s
+  base:flatten  sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1094s
+  base:hold     sha256 846cbc37ccea61ebefc9562563c3b39f73c92dfaff274ab83ad37710fe5b69fb   raises   542   1100s
+  new:absent    sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1094s
+  new:flatten   sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1103s
+  new:hold      sha256 846cbc37ccea61ebefc9562563c3b39f73c92dfaff274ab83ad37710fe5b69fb   raises   542   1099s
+  new:te4       sha256 0b782940707b81e3f2df0d189c8d2e23b08693d4fb663e36bcb0ba994d9af2f5   raises     0   1113s
+
+base:flatten  vs base:absent: 14036 of 14036 (date, book) pickles byte-identical
+new:absent    vs base:absent: 14036 of 14036 (date, book) pickles byte-identical
+new:flatten   vs base:absent: 14036 of 14036 (date, book) pickles byte-identical
+new:hold      vs base:hold: 14036 of 14036 (date, book) pickles byte-identical
+new:te4       vs base:absent on (date, book) with >= min_names eligible: 3716 of 3716 byte-identical with meta['cef_thin'] removed
+              thin (date, book): 10320; reduced build ran on 3416; below the floor (FLAT) 6904; with holds 0
+              sensitivity: the reduced build's targets differ from base:absent's FLAT on 3416 of 3416 (the comparison can see a change)
+
+VERDICT: NO-OP PROVED (every comparison byte-identical)

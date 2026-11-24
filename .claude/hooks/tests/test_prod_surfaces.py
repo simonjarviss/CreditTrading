@@ -51,7 +51,7 @@ def book_state(monkeypatch, tmp_path):
     return bs
 
 
-def _wire(monkeypatch, bs, laptop, vm):
+def _wire(monkeypatch, bs, laptop, vm, behind=0):
     calls = {}
 
     def fake_vm(**kw):
@@ -59,11 +59,15 @@ def _wire(monkeypatch, bs, laptop, vm):
         return vm
     monkeypatch.setattr(bs.ps, "laptop", lambda **kw: laptop)
     monkeypatch.setattr(bs.ps, "vm", fake_vm)
+    # The real checkout's distance from origin/main is not this test's input (release check of
+    # 93021c8: a branch behind main printed its stale-checkout WARNING above the one under test).
+    monkeypatch.setattr(bs.checkout, "against_main",
+                        lambda repo: {"behind": behind, "ahead": 0, "last_fetch": None})
     return calls
 
 
-def _banner(monkeypatch, capsys, bs, laptop, vm):
-    calls = _wire(monkeypatch, bs, laptop, vm)
+def _banner(monkeypatch, capsys, bs, laptop, vm, behind=0):
+    calls = _wire(monkeypatch, bs, laptop, vm, behind)
     mod = _load("session_context")
     monkeypatch.setattr(mod, "collect", bs.collect)
     assert mod.main() == 0
@@ -92,6 +96,12 @@ class TestBanner:
         out, _ = _banner(monkeypatch, capsys, book_state, _m("ARMED"), _m("ARMED"))
         first_state_line = out.splitlines()[1]
         assert first_state_line.strip().startswith("WARNING: TWO ARMED SCHEDULERS")
+
+    def test_two_armed_outranks_a_stale_checkout(self, monkeypatch, capsys, book_state):
+        out, _ = _banner(monkeypatch, capsys, book_state, _m("ARMED"), _m("ARMED"), behind=5)
+        lines = out.splitlines()
+        assert lines[1].strip().startswith("WARNING: TWO ARMED SCHEDULERS")
+        assert any("5 commit(s) behind origin/main" in l for l in lines[2:])
 
     def test_vm_budget_is_short(self, monkeypatch, capsys, book_state):
         """A session start waits on the VM for at most ~3 s."""

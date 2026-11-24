@@ -1,0 +1,18 @@
+{
+ "slug": "cef_exdate_before_after",
+ "card": "results/ideas/2026-11-10_cef_exdate_drift.md",
+ "signal": "shadow.signals.cef_exdate:before_after",
+ "panels": {
+  "px": {"path": "cef_v1_px.parquet", "date_col": "date", "required_asof": true},
+  "exdates": {"path": "cef_v1_exdates.parquet", "date_col": "first_seen", "required_asof": false},
+  "exdates_seen": {"path": "cef_v1_exdates_seen.parquet", "date_col": "date", "required_asof": true}
+ },
+ "refresh": [
+  ["python3", "-B", "-m", "shadow.fetch.yf_px", "cef_v1"],
+  ["python3", "-B", "-m", "shadow.fetch.exdates", "cef_v1"]
+ ],
+ "fill": "next_close",
+ "notional_usd": 1000000,
+ "started": "2026-11-10",
+ "enabled": true
+}

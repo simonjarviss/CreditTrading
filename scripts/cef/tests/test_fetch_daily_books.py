@@ -474,8 +474,23 @@ def spike_frames():
     return f
 
 
-def test_c4_writes_a_spike_and_revert_bar_and_exits_6_naming_it(c4):
+def spike_panels():
+    """c4_panels with IGR stored at the levels spike_frames serves on the stored dates
+    (close 4.70-4.72, NAV 5.0). Until the price-basis guard (2026-11-04) the fixture stored
+    IGR at 10 / 11 against a fetch at 4.7 / 5.0, a x0.47 step in both series that nothing
+    read; that guard now refuses such a write (test_c4_price_basis.py), so the spike tests
+    store what the fetch serves."""
     P, N = c4_panels()
+    lv = {"2026-09-24": 4.72, "2026-09-25": 4.70, "2026-09-28": 4.71}
+    for d, c in lv.items():
+        m = (P["ticker"] == "IGR") & (P["date"] == pd.Timestamp(d))
+        P.loc[m, ["open", "high", "low", "close"]] = c
+        N.loc[(N["ticker"] == "IGR") & (N["date"] == pd.Timestamp(d)), "nav"] = 5.0
+    return P, N
+
+
+def test_c4_writes_a_spike_and_revert_bar_and_exits_6_naming_it(c4):
+    P, N = spike_panels()
     rc, out, *_ = c4([], P, N, spike_frames())
     assert rc == fd.EXIT_SPIKE == 6, out
     (ln,) = [x for x in out.splitlines() if x.strip().startswith("SPIKE-REVERT")]
@@ -492,7 +507,7 @@ def test_on_c4_an_unruled_spike_outranks_an_incomplete_pair(c4):
     4-over-6 order (this test asserted rc == 4 until then) let the session decide and send
     on the unruled bar whenever a NAV was late. The INCOMPLETE line keeps the prefix the
     collector reads (fd.INCOMPLETE_TAG). Fails on 8b14298."""
-    P, N = c4_panels()
+    P, N = spike_panels()
     f = spike_frames()
     del f["XEVTX"]
     rc, out, *_ = c4(ASOF, P, N, f)

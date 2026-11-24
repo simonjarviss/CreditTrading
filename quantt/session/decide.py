@@ -78,6 +78,15 @@ note says why; no other name is substituted. A symbol that needs the check and
 is missing from the map raises: an unmeasured borrow is not a shortable one.
 Covering a short or selling a long never needs it.
 
+Each symbol so skipped is also listed in `Decision.dropped_shorts`, in universe
+order (added 2026-11-03 for CEF trial 55, te4: results/cef/
+PREREG_THIN_TRADE_ELIGIBLE_2026-11-03.md §1.3 item 6, §7.5, §10 Q7). On a
+reduced session of 4-5 names a skipped short can be the whole short side, and
+the ruling is that such a decision flattens instead of trading a one-sided book
+the harness never scored; the runner needs that fact as a field, not as the
+note's prose. It is not in `to_dict` and not in `plan_sha`, so plan.json's
+decision record and what is hashed are byte-identical to before.
+
 TRANSMIT ORDER (review 2026-09-28)
 ----------------------------------
 The runner stops the batch at the first rejection or ambiguous submit, and a
@@ -178,6 +187,12 @@ class Decision:
     targets: dict            # symbol -> {"current", "target", "kind", "reason"}
     notes: dict              # symbol -> list of strings (no trade, deferred, not shortable ...)
     plan_sha: str
+    # Symbols whose short-opening (or short-increasing) order gate 7 skipped as not
+    # shortable today, in universe order (SHORTABILITY above; CEF trial 55). LAST and
+    # defaulted, so every keyword construction elsewhere still builds, and read by
+    # neither `to_dict` nor `plan_sha`. A Decision rebuilt from another's fields must
+    # carry it across explicitly, or it reads ().
+    dropped_shorts: tuple = ()
 
     def to_dict(self) -> dict:
         return {"plan_sha": self.plan_sha,
@@ -310,7 +325,7 @@ def decide(targets, positions: dict, equity: float, closes: dict, shortable: dic
             raise DecisionError(f"{sym}: no usable close ({c!r}) for the as-of date")
         return float(c)
 
-    orders, tgt_out, notes = [], {}, {}
+    orders, tgt_out, notes, dropped = [], {}, {}, []
     for sym in universe:
         t = by_sym[sym]
         cur = positions.get(sym, 0)
@@ -352,6 +367,7 @@ def decide(targets, positions: dict, equity: float, closes: dict, shortable: dic
             if s is not True:
                 sym_notes.append(f"not shortable today: no order sent for {sym} "
                                  f"(wanted {cur:+d} -> {tgt:+d}); no name substituted")
+                dropped.append(sym)
                 continue
         for leg, qty, a, b, what in legs:
             orders.append(Order(symbol=sym, side=side, qty=int(qty), leg=leg,
@@ -360,4 +376,5 @@ def decide(targets, positions: dict, equity: float, closes: dict, shortable: dic
                                 reason=f"{what}; {t.reason}", time_in_force=time_in_force))
     orders = transmit_sequence(orders)
     return Decision(orders=orders, targets=tgt_out,
-                    notes={k: v for k, v in notes.items() if v}, plan_sha=plan_sha(orders))
+                    notes={k: v for k, v in notes.items() if v}, plan_sha=plan_sha(orders),
+                    dropped_shorts=tuple(dropped))

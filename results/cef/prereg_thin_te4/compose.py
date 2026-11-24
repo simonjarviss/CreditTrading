@@ -1,11 +1,23 @@
 """The thin-session rule `trade_eligible` (floor 4) composed with CEF trial 53, on the fit (2026-11-03).
 
-    python3 results/cef/prereg_thin_te4/compose.py [--stamp YYYY-MM-DD] [--overwrite]
+    python3 results/cef/prereg_thin_te4/compose.py --k3-run-sessions N [--stamp YYYY-MM-DD] [--overwrite]
         -> compose_<stamp>.json, compose_output_<stamp>.txt (this folder); a few minutes.
         --stamp defaults to today's date, so a read-date re-measure writes its own dated files and never
         overwrites the drafting-day record (compose_2026-11-03.*). Writing to a stamp whose files exist
-        raises unless --overwrite is given (reproduce the drafting day with --stamp 2026-11-03 --overwrite,
-        then `git diff` the two files).
+        raises unless --overwrite is given (reproduce the drafting day with --stamp 2026-11-03
+        --k3-run-sessions 3 --overwrite, then `git diff` the two files).
+        --k3-run-sessions is REQUIRED and has no default: K3's run length, the spec's
+        `risk.thin_k3_run_sessions` (§6.3's 3). The drafting-day files were written before it existed
+        and do not record it; a run with it records it.
+
+REVISED 2026-11-05 (the runner owner's round-2 answer (c)): K3's run length was a literal 3 here (and 2
+for the context line) while the spec carries it as `risk.thin_k3_run_sessions` (registry, required under
+the rule since the owner's review of 2026-11-04, item 9). A literal here and a key there can drift apart
+with nothing to say so. It is now the required argument --k3-run-sessions, used wherever §E counts K3
+runs (runs of n above the fit p99, and runs of n - 1 as context), and written into compose_<stamp>.json
+as `k3_run_sessions`. src/deploy/tests/test_thin_k3_run_provenance.py fails any committed spec whose
+`risk.thin_k3_run_sessions` differs from the `k3_run_sessions` recorded in a compose_<stamp>.json its
+threshold notes cite (a test, not a registry check: the live path never reads results/).
 
 REVISED 2026-11-03, after the quant and PM reviews of the draft (both findings are in the draft's §12):
   * STAMP was the literal "2026-11-03", so every read-date run overwrote the drafting-day outputs with new
@@ -254,8 +266,18 @@ def main() -> int:
     ap.add_argument("--stamp", default=dt.date.today().isoformat(),
                     help="date in the output file names (default: today)")
     ap.add_argument("--overwrite", action="store_true", help="allow replacing this stamp's existing files")
+    # REQUIRED, no default (the runner owner's round-2 answer (c), 2026-11-05): the spec's
+    # `risk.thin_k3_run_sessions` is the only authority on K3's run length, so this file takes it as given
+    # and records it, and never holds a literal of its own (module docstring, REVISED 2026-11-05).
+    ap.add_argument("--k3-run-sessions", type=int, required=True, metavar="N",
+                    help="K3's run length: the spec's risk.thin_k3_run_sessions (an int of at least 2)")
     args = ap.parse_args()
     STAMP = args.stamp
+    K3N = args.k3_run_sessions
+    if K3N < 2:
+        # The registry's own rule for the key (`cef_thin_stop_levels`): one close is the once line's.
+        raise SystemExit(f"--k3-run-sessions {K3N} must be at least 2: one close above the line is the once "
+                         f"rule's (thin_k3_net_once)")
     outs = (HERE / f"compose_{STAMP}.json", HERE / f"compose_output_{STAMP}.txt")
     if any(f.exists() for f in outs) and not args.overwrite:
         raise SystemExit(f"{[f.name for f in outs if f.exists()]} exist: a dated record is not overwritten "
@@ -270,7 +292,11 @@ def main() -> int:
         raise AssertionError(f"FLOOR {FLOOR} must satisfy 2 <= FLOOR < min_names {S.MIN_NAMES}")
     p(f"spec {S.SPEC_ID}: sizing_multiplier {M}, band {BAND}, max_gross_stress {CAP}, min_names {S.MIN_NAMES}, "
       f"min_abs_weight {S.MIN_ABS_WEIGHT}; FLOOR {FLOOR} ({FLOOR_SOURCE}); stamp {STAMP}")
+    p(f"K3 run length {K3N} (--k3-run-sessions: the spec's risk.thin_k3_run_sessions; §E counts runs of {K3N} "
+      f"and, for context, {K3N - 1})")
     OUT["spec"] = dict(id=S.SPEC_ID, m=M, band=BAND, cap=CAP, min_names=int(S.MIN_NAMES), floor=FLOOR)
+    # The run length this file counted K3's runs with (§E), as given: the drift test reads it here.
+    OUT["k3_run_sessions"] = K3N
 
     # ---------------------------------------------------------------- the books, fit only
     T6, R = bf.build_targets()
@@ -491,8 +517,10 @@ def main() -> int:
       f"{vol_split['full'] * 100:.2f}% [n {vol_split['n_full']}] (the scalar targets vol_target_annual "
       f"{vol_split['target']})")
     conc["vol_split_unit"] = vol_split
-    # how often the draft's persistence rule (3 consecutive reduced decisions above the fit p99) fires on the
-    # fit itself, per statistic: the false-alarm count of the rule on the book it was calibrated on
+    # how often the draft's persistence rule (K3N consecutive reduced decisions above the fit p99; §6.3's 3)
+    # fires on the fit itself, per statistic: the false-alarm count of the rule on the book it was calibrated
+    # on, with runs of K3N - 1 beside it for context. K3N is --k3-run-sessions, never a literal (REVISED
+    # 2026-11-05); the keys carry the run length, so at 3 they are the drafting day's.
     def runs_above(stat: pd.Series, thr: float, k: int) -> int:
         a = (stat.loc[rd] > thr).to_numpy()
         n, c = 0, 0
@@ -500,12 +528,12 @@ def main() -> int:
             c = c + 1 if v else 0
             n += int(c == k)
         return n
+    run_keys = {k: f"runs_of_{k}_above_p99" for k in (K3N, K3N - 1)}
     persist = {lab: {"p99": float(st.loc[rd].quantile(0.99)), "max": float(st.loc[rd].max()),
-                     "runs_of_3_above_p99": runs_above(st, float(st.loc[rd].quantile(0.99)), 3),
-                     "runs_of_2_above_p99": runs_above(st, float(st.loc[rd].quantile(0.99)), 2)}
+                     **{key: runs_above(st, float(st.loc[rd].quantile(0.99)), k) for k, key in run_keys.items()}}
                for lab, st in (("max_w", mx), ("net", net))}
     p("  persistence on the fit (reduced decisions in sequence): " + "; ".join(
-        f"{k}: runs of 2 above p99 {v['runs_of_2_above_p99']}, runs of 3 {v['runs_of_3_above_p99']}"
+        f"{k}: runs of {K3N - 1} above p99 {v[run_keys[K3N - 1]]}, runs of {K3N} {v[run_keys[K3N]]}"
         for k, v in persist.items()))
     OUT["in_episode"] = dict(first_reduced=str(first.date()), D_E={str(L): de[L] for L in LS}, concentration=conc,
                              persistence=persist)

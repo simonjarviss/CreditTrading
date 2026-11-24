@@ -410,7 +410,9 @@ def _fetch_verdict(c4_fetch, spike: bool):
     """(exit, output) of the real fetch_daily --data-book c4 --require-asof D on its fixture,
     EVT's NAV for D absent, and IGR's spike in the window when `spike`."""
     from scripts.cef.tests import test_fetch_daily_books as tf
-    P, N = tf.c4_panels()
+    # The stored panel at the levels the fetch serves (tf.spike_panels; the price-basis
+    # guard of 2026-11-04 refuses a fixture stored at other levels than it fetches).
+    P, N = tf.spike_panels() if spike else tf.c4_panels()
     f = tf.spike_frames() if spike else tf.c4_frames()
     del f["XEVTX"]
     rc, out, *_ = c4_fetch(tf.ASOF, P, N, f)

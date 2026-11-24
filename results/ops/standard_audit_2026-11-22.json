@@ -1,0 +1,1033 @@
+{
+ "workflow_run": "wf_039a7231-1cb",
+ "note": "Verbatim return value of the audit workflow (5 auditors, each re-measured by a verifier), read-only, 2026-11-22. results/ops/STANDARD_AUDIT_2026-11-22.md is the reading of it.",
+ "agents": 10,
+ "tool_calls": 732,
+ "areas": [
+  {
+   "area": "repo-releases",
+   "audit": {
+    "area": "A1 (one tree, one plan, one place for each rule) and A8 (releases and change), measured read-only in .claude/worktrees/live-standard at 877320c and the shared laptop repository, 2026-11-22",
+    "checks": [
+     {
+      "id": "A1.1",
+      "verdict": "PARTIAL",
+      "evidence": "Measurer absent. ops/orient.py:132-153 trees() records only path, branch, sha, uncommitted count, the ibkr-final tag and legacy_prod_present. There is no count of commits behind origin/main, and the renderer at orient.py:1007-1015 prints none. .claude/hooks/book_state.py:134-135 collects only {branch, dirty}, and .claude/hooks/session_context.py:136-138 prints only \"git {branch}, {dirty} file(s) uncommitted.\" Behaviour, measured: the main dev folder is at 07532f2 [main] (`git worktree list`), and `git rev-list --count HEAD..origin/main` = 0, against origin/main as last fetched (07532f2, 2026-11-22 13:28 -0500). The other worktrees, bucketed by `git rev-list --count <HEAD>..origin/main`: 118 of 144 are more than 300 commits behind, 17 are 51-300, 6 are 1-50 and 3 are at 0. A session opened in any of them gets no warning.",
+      "gap": "Nothing at session start, in orient TREES or in the banner, names a checkout that is behind origin/main. 141 of 144 worktrees are behind, 118 of them by more than 300 commits. Only the main folder was fixed by hand.",
+      "work_order": "Add a `behind_origin_main` reading to `.claude/hooks/book_state.py` collect() and `ops/orient.py` trees(). It is `git rev-list --count HEAD..origin/main`, with the age of the last fetch taken from .git/FETCH_HEAD's mtime, and UNMEASURED when origin/main is absent. Print it in the SessionStart banner and the TREES section, with tests in .claude/hooks/tests and ops/tests that fail against the current output.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A1.2",
+      "verdict": "GAP",
+      "evidence": "No script exists. A search for worktree/for-each-ref/archive logic in ops, quantt, scripts, .claude and shadow found only unrelated hits, and doc_audit.py's 'archive/' hits are about the _archive/ folder. Measured on the shared laptop repo: 202 local branches (`git branch | wc -l`), of which 157 have no commit in the last 14 days (`git for-each-ref` committerdate) and 181 are already merged into origin/main (`git branch --merged origin/main`). There are 0 `archive/*` tags (`git tag -l 'archive/*'`). There are 144 worktrees (`git worktree list`); 114 have a HEAD commit older than 14 days and 11 are detached. Open pull requests could not be measured offline (GitHub).",
+      "gap": "No read-only listing of each branch and worktree with its reason exists. About 157 branches and 114 worktrees have no recent commit, and none has been tagged archive/ or removed.",
+      "work_order": "Write `ops/branches.py`, read-only. It lists every local branch and worktree with its reason: a lane branch from docs/TEAM.md §3, a commit within 14 days, an open PR from `gh pr list --state open --json headRefName` (UNMEASURED offline), or 'none'. Add a test. The team lead then runs the archive-tag-and-delete pass on the 'none' rows.",
+      "size": "S",
+      "risk": "low"
+     },
+     {
+      "id": "A1.3",
+      "verdict": "GAP",
+      "evidence": "docs/SYSTEM.md:268-274 opens §5 with \"A later entry on the same question supersedes an earlier one only where it says so\". There is no rules-in-force table. §5 holds 42 '### Team lead, ...' sections between lines 276 and 946 (awk count, 679 lines). §6 (lines 947-961) maps subjects to owning documents, not to the ruling in force. ops/doc_audit.py has no 'in force' check (grep finds no hit). This already causes a contradiction: CLAUDE.md:323-325 still says the shadow runner is \"not built or approved yet\", while SYSTEM.md:861 records it \"Approved, as the one-time approval\" (2026-11-09).",
+      "gap": "The rule in force on a subject has to be rebuilt from 42 dated sections. There is no table and no doc_audit check.",
+      "work_order": "Add a 'Rules in force' table at the head of docs/SYSTEM.md §5, one row per subject pointing at the heading of the ruling that holds. Add an ops/doc_audit.py check, with a test, that every row's pointer matches an existing '### Team lead, ...' heading.",
+      "size": "M",
+      "risk": "medium"
+     },
+     {
+      "id": "A1.4",
+      "verdict": "PARTIAL",
+      "evidence": "Path rules do exist: .claude/rules/ holds documents.md, frozen-specs.md, report.md and research-harness.md (the last scoped to paths scripts/** and src/backtest/**). But CLAUDE.md (340 lines, identical to origin/main) holds facts that change, and some have already changed. Line 7: \"What trades today is two paper sleeves, the core ... and C4\", while SYSTEM.md:882 records the events account (2026-11-16). Line 251: \"It is moving from the team lead's laptop ... to an Azure VM\". Lines 323-325: the shadow runner is \"not built or approved yet\", contradicted by SYSTEM.md:861. CLAUDE.md also carries research-path material that research-harness.md restates: 'Hard rules — research' (lines 174-226; shift(2) is H1 at research-harness.md:37), and landmines 6-8 and 11. The named measurer, the Part D quarterly review (STANDARD.md:226), has never run; STANDARD.md's Changes table has one row, dated 2026-11-22.",
+      "gap": "CLAUDE.md carries rotting state that is now false, and research-only rules that belong in .claude/rules/. No quarterly review exists to catch either.",
+      "work_order": "In CLAUDE.md, replace lines 7-9, 251-253 and 323-325 with pointers to `ops.orient` and SYSTEM.md §5. Move the research-only rules and landmines 6-8 and 11 into .claude/rules/research-harness.md. Record that change as the first Part D review in a dated results/ops/ note.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A1.5",
+      "verdict": "PARTIAL",
+      "evidence": "Core and C4 match: docs/RUNNER.md:93-104 lists the nine gates, and quantt/session/gate.py:40-46 GATES with evaluate() at :950-979 implements them in that order. Gates 1-4 match the text: DRY_RUN exactly '0' at :160-168, arming at :171-185, halt at :188, the 19:15-01:00 and 15:45 windows at :206-230. Drift: (a) RUNNER.md gate 6 names the prefix `cef-<YYYYMMDD>-`, while the code uses a per-book cid_prefix (gate.py:691, run.py:1085, C4's own prefix). (b) RUNNER.md gate 9 omits the code's stray-position, account-blocked, duplicate-id and id-format refusals (gate.py:917-948). (c) The module table row for quantt/deploy/ (RUNNER.md:91) still says \"launchd plist templates + an install script for the laptop prod clone\", but the VM installers are install_vm.py, systemd templates and bootstrap.sh. (d) The events runner, quantt/sleeves/run.py (the second caller of submit_order through run._transmit), is not in RUNNER.md at all; grep for quantt/sleeves gives 0 hits. Its controls are written only in its module docstring (run.py:1-77) and quantt/sleeves/deploy/README.md. At SEND it runs gates 1, 2, 3 (via gate_late_clock and the send budget), 6, 7, 8 and 9, but not gate 5 (run.py:594-611). It adds positions-moved and paper-endpoint refusals (run.py:612-618). The shadow runner sends nothing: shadow/tests/test_boundary.py, per install_shadow_vm.sh:30-32.",
+      "gap": "The core's written controls mostly match the code, with small drift in gates 6 and 9 and in the module table. The events runner's controls are missing from RUNNER.md, including which gates it skips.",
+      "work_order": "Add an events-runner section to docs/RUNNER.md: which gates run at PLAN and SEND, that gate 5 is replaced by the decision-file checks in inputs.py, and the extra refusals. Correct gate 6's per-book prefix, gate 9's full list and the quantt/deploy row. Add a test that every name in gate.GATES appears in RUNNER.md's gate list.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A8.1",
+      "verdict": "PARTIAL",
+      "evidence": "Behaviour, for the books that send: core, C4 and the report units run from ONE prod clone at ONE tag (quantt/deploy/install_vm.py:368-376; `--book c4` refuses unless the clone is already at the tag). The events units use the same clone, PROD=${RUN_HOME}/prod/quantt-alpaca (quantt/sleeves/deploy/install_events_vm.sh:22-25, 64). All 27 release-* tags are ancestors of origin/main (`git merge-base --is-ancestor`, none failed). Exceptions: the shadow runner follows branch `shadow`, re-checked out to its head every night (shadow/deploy/nightly.sh:18-21). origin/shadow is 4 commits ahead of main and 87 behind. The events book trades decision files that clone writes (quantt/sleeves/inputs.py:9-11: \"from a clone that follows an unreleased branch\"). No §0.5 waiver for A8.1 exists in SYSTEM.md §5. Measurer: ops/prod_state.py reads `git describe --tags` once for the prod clone (:448-451, :991-993) and renders it with the core only (:1313-1319). It does not read each unit's WorkingDirectory, does not check that the tag is on main (install_vm.py:859-868 checks only that the tag is on origin), never reads the events units (no 'event' in prod_state.py), and does not record the shadow clone's commit.",
+      "gap": "Signal code for the events book runs from an unreleased, self-updating branch. ops.prod_state measures the tag once, not per unit, and ignores the events units and the shadow clone's commit.",
+      "work_order": "Extend ops/prod_state.py's remote script to read, for every quantt-* unit including quantt-events-*, its WorkingDirectory and that clone's `git describe --exact-match --match 'release-*'`, and the shadow clone's commit. Raise a WARNING when a unit is off the one tag. Then either move the events sleeves' decision code under the release tag or record a dated §0.5 waiver naming A8.1 for the shadow clone.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A8.2",
+      "verdict": "PARTIAL",
+      "evidence": "PRs: all 79 first-parent commits on origin/main since 2026-10-26 are 'Merge pull request' merges (`git log --first-parent`). Who reviewed each PR lives on GitHub and cannot be measured from the repo. The check lives at .claude/workflows/release-check.js; the pointer's .claude/skills/release-check does not exist. It pins one SHA (:76-80) and runs two reviewers. But it previews only `quantt.session run --book cef` (:70): C4 and the events runner are never previewed. Its review scope is quantt/, src/deploy/, ops/specs/ and ops/books/ (:92), not ops/sleeves/events_sleeves.json or shadow/. It returns text and writes no verdict file. Logging is by hand and incomplete: EVIDENCE_LOG.md:2620 and :2656 say \"verdict word not recorded\". E-2026-11-22-01 (EVIDENCE_LOG.md:5413) says release-20261122-1 was tested on e9be427 and tagged 70e1228 (\"identical in content\"), so not the exact tagged commit. E-2026-11-22-01 and -03 record \"full suite and doc audit passed; a second reader\", not a release-check GO. docs/RUNBOOK.md §8.6's update steps (lines ~951-1041) cover only the core's timers and `qi`. C4 (§8.9), the reports (§8.11-8.12) and events (quantt/sleeves/deploy/README.md) are elsewhere. Shadow-branch code reaches the VM with no release check (nightly.sh).",
+      "gap": "There is no durable release-check verdict per tagged commit. The check covers only the core's preview and excludes the events book file. Recent releases were checked on a content-identical commit, not the tagged one. §8.6 covers only the core.",
+      "work_order": "Make .claude/workflows/release-check.js preview every book (cef, c4, and `quantt.sleeves plan --preview` for events), add ops/sleeves/ to the review scope, and write {sha, range, verdict, reviewers} to results/ops/release_checks/<sha>.json. Have quantt/deploy/install_vm.py refuse a tag whose peeled commit has no GO record. Extend RUNBOOK §8.6's update steps to C4, the report units and the events units.",
+      "size": "M",
+      "risk": "medium"
+     },
+     {
+      "id": "A8.3",
+      "verdict": "GAP",
+      "evidence": "There is no single rollback command. RUNBOOK.md:1041 says \"Rolling back is the same procedure with the previous tag\" (laptop: :127). That procedure is the four-step §8.6 update: stop timers, dry run, optional manual checkout and venv rebuild, then `qi --apply --enable [--armed]`. It covers the core only and adds extra manual pre-steps for older tags at :1274 (§8.11) and :1445 (§8.12). C4, the report units and the events installer are separate commands. The old-code-against-today's-state check exists only for the core: ops.replay_exposure on quantt_state/cef (RUNBOOK §8.6 step 2), nothing for C4 or events. The rehearsal log does not exist: grep 'rehears' in docs and results finds only research rehearsals, and no rollback appears in EVIDENCE_LOG.md or ROADMAP.md.",
+      "gap": "There is no one-command rollback across core, C4, reports and events. It has never been rehearsed, and no rehearsal log exists.",
+      "work_order": "Add `quantt/deploy/rollback.py --to <tag>`. It runs ops.replay_exposure for each book's state with the older code, then reinstalls core, C4, the report units and the events units at that tag while keeping each book's arming, and refuses inside the send windows. Document it as the single command in RUNBOOK §8.6, then rehearse it on paper with A9 and log the timing under results/ops/rehearsals/.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A8.4",
+      "verdict": "PARTIAL",
+      "evidence": "Every one of the 27 release-* tags (release-20260928-1 to release-20261122-2) appears in results/report/EVIDENCE_LOG.md, 2 to 8 times each (grep per tag). Installs and arming states are written by hand into release entries, e.g. E-2026-11-22-01 at :5414 and E-2026-11-22-03 at :5441: 'core and C4 DRY_RUN=0 with AUTO_ARMED present; every events unit DRY_RUN=1'. No installer (install_vm.py, install_events_vm.sh, install_shadow_vm.sh) writes an install or arming record, so the log cannot be reconciled against anything. The shadow clone changes code every night it can fetch (nightly.sh:18-21). origin/shadow has 99 first-parent commits since 2026-11-10, most absent from EVIDENCE_LOG (e.g. d7ae72d, b99c863 and 6aebfc4 have 0 hits), and the VM's shadow code version is logged only incidentally (EVIDENCE_LOG.md:5443).",
+      "gap": "Release logging is complete but relies on hand entries. Install and arming events have no machine record to check against, and the shadow clone's code changes on the VM are not logged as changes.",
+      "work_order": "Have install_vm.py, install_events_vm.sh and install_shadow_vm.sh, and the AUTO_ARMED create and remove steps, append a line (UTC time, tag or commit, book, armed state) to a VM-side install log that ops.prod_state reads. Add a doc_audit check that every release-* tag and every logged install has an EVIDENCE_LOG entry.",
+      "size": "S",
+      "risk": "low"
+     },
+     {
+      "id": "A8.5",
+      "verdict": "PARTIAL",
+      "evidence": "The WARNING exists for the core account only. ops/prod_state.py:1136-1158 verdict() compares the core's arming on the laptop (launchd, install_prod.JOBS = the three com.quantt.alpaca.cef.* jobs, install_prod.py:173-200) with the VM, and raises \"WARNING: TWO ARMED SCHEDULERS ON ONE ALPACA ACCOUNT\". It is tested at ops/tests/test_prod_state.py:490-501, and `python3 -m pytest ops/tests/test_prod_state.py -q` passed. C4 is read only on the VM, and :1297-1299 states other books \"are not part of the one-prod verdict\". A laptop C4 scheduler is never read. The events account is not read at all (grep 'event' in prod_state.py: no hit), and ops/daily_page.py's docstring covers \"two armed paper accounts (core cef, c4)\". The runtime backstop exists for all three sending runners: gate 6 (gate.py:691-740) refuses on any open order or this book's id prefix at Alpaca (core and C4 via run.py, events at sleeves/run.py:600). Whether two schedulers are armed today is VM and laptop launchd state, not measurable here.",
+      "gap": "The two-armed-schedulers WARNING covers only the core account. C4's laptop side and the whole events account are unmeasured by orient PROD.",
+      "work_order": "Rework ops/prod_state.verdict() to group arming by Alpaca account (cef, c4, events) across every scheduler that can hold that account's key: laptop launchd plists for any book, and VM core, C4 and quantt-events-* units read through a Python registry shared with install_events_vm.sh. Raise the WARNING per account, with a test per account.",
+      "size": "M",
+      "risk": "high"
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "The events book trades targets computed by unreleased, self-updating shadow-branch code, run by a process that holds a key able to trade the core's paper account",
+      "evidence": "quantt/sleeves/inputs.py:9-11: decision files are \"written by another process, by another user, from a clone that follows an unreleased branch\". shadow/deploy/nightly.sh:18-21 runs `git fetch origin shadow; git checkout --detach FETCH_HEAD` every night. docs/SYSTEM.md:864 and shadow/deploy/install_shadow_vm.sh:30-32: that user holds a copy of the core (cef) account's key, and only shadow/tests/test_boundary.py stands between its code and an order. The events units are DRY_RUN=1 today (EVIDENCE_LOG.md:5441), so this is latent. Arming them would put code that never passed a release, release-check or tag on the decision path of a paper account. That contradicts CLAUDE.md, 'Where it runs': \"Prod is a clone of this repository at a release tag, and nothing else\".",
+      "risk": "high"
+     },
+     {
+      "title": "The events paper account is invisible to every state surface: orient PROD, the SessionStart banner, the status line and ops.daily_page",
+      "evidence": "ops/prod_state.py builds VM_BOOKS from install_vm.VM_BOOKS = {cef, c4} (install_vm.py:454) and has no 'event' string anywhere. ops/daily_page.py's docstring reads 'two armed paper accounts (core cef, c4)'. Once the events book is armed, its verdicts, arming, tag and equity appear on no page the desk reads. This also bears on A5.2.",
+      "risk": "high"
+     },
+     {
+      "title": "CLAUDE.md states facts that §5 has since reversed, and says it wins any conflict with a skill",
+      "evidence": "CLAUDE.md:323-325: the shadow runner is \"not built or approved yet\" and `/paper` refuses until approval is recorded. SYSTEM.md:861 records the approval (2026-11-09), and the /paper skill's own description says shadow books are approved. CLAUDE.md:7 lists only the core and C4 as trading, but SYSTEM.md:882 records the events account (2026-11-16). CLAUDE.md:251 says prod 'is moving' to the VM. CLAUDE.md:319-320 adds \"where a skill, agent or workflow disagrees with this file, this file wins\", so these stale lines formally override current skills in every session.",
+      "risk": "medium"
+     },
+     {
+      "title": "EVIDENCE_LOG contradicts itself on whether release-20261103-4 (8ce0395) had a release-check",
+      "evidence": "results/report/EVIDENCE_LOG.md:2742: \"release-check verdict for 8ce0395: none recorded [U]\". Line 3440: \"tag release-20261103-4 = 8ce0395 (release-check GO 12:21 ET) [V]\". Neither cites a stored verdict, because release-check.js writes none.",
+      "risk": "low"
+     }
+    ]
+   },
+   "verify": {
+    "checks": [
+     {
+      "id": "A1.1",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Measurer absent on main and on the audited tree (877320c). ops/orient.py:132-153 trees() returns only path, branch, sha, uncommitted, ibkr_final and legacy_prod_present. .claude/hooks/book_state.py:134-136 returns git = {branch, dirty}. .claude/hooks/session_context.py:136-138 prints only \"git {branch}, {dirty} file(s) uncommitted.\" A grep for behind, rev-list, origin/main and FETCH_HEAD in all three files finds nothing relevant. The behaviour, measured on the shared laptop repo: the main folder is on main at 07532f2 (`git worktree list`, first row), and `git rev-list --count HEAD..origin/main` = 0. origin/main is 07532f2 (2026-11-22 13:28 -0500), and .git/FETCH_HEAD's mtime is Nov 22 14:09. There are 144 worktrees, bucketed by `git rev-list --count <HEAD>..origin/main`: 0 behind: 3, 1-50: 6, 51-300: 17, more than 300: 118, matching the first reader. Missed by the first reader: the measurer is already built on an unmerged branch. origin/ops-hygiene at c444792 (2026-11-22 14:17, `git branch -r --contains c444792` = origin/ops-hygiene, not on main) adds ops/checkout.py. Its against_main() runs `rev-list --left-right --count HEAD...origin/main`, dates the last fetch from FETCH_HEAD and returns {\"UNMEASURED\": ...} when there is no origin/main. The commit wires it into ops/orient.py and session_context.py (+16 lines) and adds ops/tests/test_checkout.py.",
+      "note": "I agree with PARTIAL under this task's definitions (STANDARD §0.3 would count a missing measurer as a gap). The main folder meets the first half by a hand fix; the naming half does not exist on main. Change the work order: instead of building the measurer, review, test and merge origin/ops-hygiene c444792 (ops/checkout.py plus the orient and banner wiring), and check that its banner WARNING fires in a worktree more than 0 behind. Size S. Risk if open: medium. A session opened in any of the 141 stale worktrees loads superseded rules and gets no warning."
+     },
+     {
+      "id": "A1.2",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "On main and on 877320c, a grep for for-each-ref, worktree list, worktree prune and archive/ in ops, quantt, scripts, shadow, src and .claude finds only unrelated hits. The only match is scripts/report/build_pack.py:167, which lists release tags, and doc_audit.py's hits are about _archive/. Measured on the laptop repo: 202 local branches (`git branch | wc -l`). 157 have their last commit more than 14 days ago (for-each-ref committerdate against date -v-14d). 181 are merged into origin/main (`git branch --merged origin/main`). There are 0 archive/* tags (`git tag -l 'archive/*'`). Of 144 worktrees, 114 have a HEAD commit older than 14 days and 11 are detached. Missed by the first reader: origin/ops-hygiene c444792 (unmerged) adds ops/branch_inventory.py (239 lines) and ops/tests/test_branch_inventory.py. It is read-only: open PRs come from `gh pr list --state open`, RECENT_DAYS = 14, and an unreadable source shows UNMEASURED. But its reasons go beyond A1.2's three: its commit message lists 'lane, open PR, a commit within 14 days, uncommitted work, main folder, newest release tree'.",
+      "note": "I agree with GAP on main. Corrected work order: merge origin/ops-hygiene's ops/branch_inventory.py after either narrowing its reasons to A1.2's three or recording the extra reasons ('uncommitted work', 'main folder', 'newest release tree') as a dated change to STANDARD.md A1.2. The team lead then runs the archive-tag-and-delete pass on the 'none' rows. Size S. Risk if open: low to medium. 141 stale worktrees let a session start on old rules, and the inventory cannot be used until its reasons match the standard."
+     },
+     {
+      "id": "A1.3",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "docs/SYSTEM.md:268-274 opens §5 with 'A later entry on the same question supersedes an earlier one only where it says so'. There is no rules-in-force table. §5 holds 42 '### Team lead' sections between lines 276 and 922, counted with awk over lines 268-946. §6 (947-961) maps subjects to owning documents, not to the ruling in force. grep -i 'in force' in ops/doc_audit.py and docs/INDEX.md finds nothing. A stronger case than the first reader's: one subject, 'who runs releases and arming', has four conflicting answers. (1) SYSTEM.md:856 (2026-11-09): 'The team lead only. The 2026-11-02 standing authority ... is withdrawn'. (2) SYSTEM.md:918 (2026-11-19): 'This session runs them ... merges, tags, VM installs'. (3) The next row, SYSTEM.md:919: 'Who runs the release steps (merge, tag, VM installs, arming) | \"You prepare, I run them\" ... the team lead runs each with `!`'. Rows 918 and 919 sit in the same ruling and neither says which holds. (4) CLAUDE.md:97-99: 'Prod releases are the team lead's alone (2026-11-09)'. In addition, docs/RUNBOOK.md:968 still says 'Since 2026-11-02 an agent may run every step below itself, arming included (... standing authority ...)'.",
+      "note": "Work order as the first reader wrote it: add a 'Rules in force' table at the head of SYSTEM.md §5 and a doc_audit check, with a test, that each row points at an existing '### Team lead' heading. The first row should settle 'who runs releases and arming', which needs a team-lead ruling between SYSTEM.md:918 and :919. Size M. Risk if open: medium to high. An agent reading RUNBOOK §8.6 or SYSTEM.md:918 can conclude it may arm a book; CLAUDE.md and SYSTEM.md:919 say it may not."
+     },
+     {
+      "id": "A1.4",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Four path rules exist, each with paths: front matter. .claude/rules/documents.md covers docs/**, results/** and README.md. frozen-specs.md covers ops/specs/**, ops/books/*.json and config/*.yaml. report.md covers results/**, docs/SYSTEM.md and others. research-harness.md covers scripts/** and src/backtest/**. CLAUDE.md is 340 lines, and `git diff --stat origin/main -- CLAUDE.md` is empty. CLAUDE.md holds facts that change, and three are now false. (1) :7-9 'What trades today is two paper sleeves ... core ... and C4', but SYSTEM.md:874-882 records the events account. (2) :251-252 'It is moving from the team lead's laptop ... to an Azure VM'. (3) :323-325 the paper/shadow runner is 'not built or approved yet', but SYSTEM.md:861 says 'Approved, as the one-time approval'. One more changed rule the first reader missed: CLAUDE.md:97-99 'Prod releases are the team lead's alone (2026-11-09)', against SYSTEM.md:918 (2026-11-19). Correction to the first reader's work order: landmines 6 and 7 are not research-only. quantt/session/decide.py:37 and quantt/session/run.py:422 cite 'CLAUDE.md landmine 6' for px.ffill().iloc[-1], and PositionTarget (landmine 7) is used in src/deploy/sleeve.py, src/deploy/sleeves/cef_discount.py, quantt/session/run.py, quantt/session/combine.py and quantt/sleeves/run.py. The named measurer, the Part D quarterly review, has never run: STANDARD.md's Changes table has one row, dated 2026-11-22.",
+      "note": "Corrected work order: in CLAUDE.md, replace lines 7-9, 251-253, 323-325 and the release sentence at 97-99 with pointers to `ops.orient` and the §5 rules-in-force table. Move landmines 8 and 11 and the research-only rules into .claude/rules/research-harness.md. Move landmines 6 and 7 into a new path rule scoped to src/deploy/** and quantt/**, because they bind the live path. Record this as the first Part D review in a dated results/ops note. Size S. Risk if open: medium. CLAUDE.md:319-320 says it wins over any skill, so its stale lines override current ones in every session."
+     },
+     {
+      "id": "A1.5",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "docs/RUNNER.md:93-104 lists nine gates. quantt/session/gate.py evaluate() at :962-979 runs them in that order, with the docstring 'All nine gates, in RUNNER.md order'. The first reader's drift points are confirmed. (a) RUNNER.md gate 6 names the prefix `cef-<YYYYMMDD>-`, but gate.py:726 builds f\"{cid_prefix}-{session_date:%Y%m%d}-\" per book. (b) RUNNER.md gate 9 omits the code's stray-position, account-flags, duplicate-id and id-format refusals (gate.py:919-958). (c) The module-table row for quantt/deploy/ says 'launchd plist templates + an install script for the laptop prod clone', but quantt/deploy also holds install_vm.py, vm/bootstrap.sh, templates/systemd/ (22 unit templates), boot_secrets.py and azure_keyvault.py. (d) `grep -c quantt/sleeves docs/RUNNER.md` = 0. The events SEND (quantt/sleeves/run.py:594-611) runs dry_run, arming, halt, gate_late_clock, gate_late_send_budget, no_set_in_auction (with cfg.book as the prefix), shortability, exposure (max_gross_usd = math.inf) and sanity, but no gate_data. It adds 'positions moved' and paper-endpoint refusals (:612-618). Its controls are written only in its docstring (:1-77). Missed by the first reader: gate.py:40-46 GATES has ten names, including 'first_session', while RUNNER.md's gate list has nine. first_session is described elsewhere (RUNNER.md:726-737), so the proposed test 'every name in gate.GATES appears in the gate list' would fail unless it accounts for that gate.",
+      "note": "I agree with PARTIAL. Work order: add an events-runner section to docs/RUNNER.md. It should list the gates run at PLAN and at SEND, say that gate 5 is replaced by the decision-file checks in quantt/sleeves/inputs.py, record the infinite dollar ceiling, and list the extra refusals. Correct gate 6's per-book prefix, gate 9's full list and the quantt/deploy row. Add a test that every name in gate.GATES, first_session included, is named in RUNNER.md. Size S. Risk if open: medium. The events book's controls exist only in a docstring, so the audit has no written description to compare its code with."
+     },
+     {
+      "id": "A8.1",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Core, C4 and the report units: all 13 unit templates in quantt/deploy/templates/systemd have WorkingDirectory=${PROD_DIR}. install_vm.py:368-376 keeps ONE clone at ONE tag, and `--book c4` refuses unless the clone is already at the tag. The events units use WorkingDirectory=${PROD} = /home/quantt/prod/quantt-alpaca (install_events_vm.sh:64, 294, 330). That installer refuses a HEAD that is not at a release-* tag (:164-173). All 27 release-* tags are ancestors of origin/main (`git merge-base --is-ancestor`: none failed). The shadow unit runs from its own clone: WorkingDirectory=${CLONE} = ~quantt-shadow/quantt-shadow (install_shadow_vm.sh:48, 154, 175). nightly.sh:18-21 runs `git fetch origin ${SHADOW_BRANCH}; git checkout --detach FETCH_HEAD`. origin/main...origin/shadow = 87 and 4 (left-right count). Missed by the first reader: (1) install_vm.py checks only that the tag is on origin (remote_tag_commit, :859-868). A grep for is-ancestor, merge-base, origin/main and release-* in install_vm.py finds nothing, so it would install any tag. (2) The shadow clone runs its own copy of order-capable code: `git diff --stat origin/main origin/shadow -- quantt/broker/ quantt/deploy/` shows quantt/broker/alpaca.py differing by 96 lines and install_vm.py by 86. Its secret unit runs quantt.deploy.boot_secrets from that self-updating clone (install_shadow_vm.sh:154-156). The events book's weights come from decision files that clone writes (quantt/sleeves/inputs.py:9-11). The measurer falls short: ops/prod_state.py reads one `git describe --tags` for the prod clone (:451, and the remote template at :638). It has no 'events' or 'sleeves' string. Its shadow reading (:832-836) reads the timer and the books, not the clone's commit. No §0.5 waiver names A8.1.",
+      "note": "I agree with PARTIAL. Work order: extend ops/prod_state.py's remote script to read each quantt-* unit's WorkingDirectory, quantt-events-* included, run `git describe --exact-match --match 'release-*'` on that clone, and read the shadow clone's commit, with a WARNING for a unit off the tag. Make install_vm.py refuse a tag that is not release-* or not an ancestor of origin/main. For the shadow clone, either record a dated §0.5 waiver naming A8.1 or move the events decision code under the release tag. Size M. Risk if open: high. An armed events book would trade weights from unreleased code, and that clone loads its own copy of the Alpaca client with a live paper key."
+     },
+     {
+      "id": "A8.2",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "PRs: all 79 first-parent commits on origin/main since 2026-10-26 are 'Merge pull request' merges by 'Simon|GitHub'. The 508 non-merge commits in that span are all authored by simonjarviss. .github/CODEOWNERS is '* @simonjarviss', and RUNBOOK.md:968 says every merge uses 'the team lead's `--admin` bypass, which main's ruleset requires for every merge'. So a GitHub review by someone other than the PR's author is structurally absent. Review is by agent second readers (SYSTEM.md 2026-11-22: 'Agent review is enough'), recorded by hand. CI exists: .github/workflows/checks.yml runs pytest and doc_audit --check on pull requests and pushes to main only (:11-15). release-check is .claude/workflows/release-check.js (.claude/skills/release-check does not exist). It previews only `quantt.session run --book cef` (:70). Its reviewers focus on quantt/, src/deploy/, ops/specs/ and ops/books/ (:92). It returns text and writes no file (no write call; install_vm.py never reads a verdict). Stronger evidence than the first reader had: three of the last four releases had no /release-check. EVIDENCE_LOG E-2026-11-19-10 (release-20261119-1) says 'no multi-agent release check was run'. E-2026-11-22-01 and -03 record only suite, doc audit and a second reader. release-20261116-1 did have one (E-2026-11-15-56, :4732, 'GO to tag'). The tested commit e9be427 and the tagged 70e1228 have identical trees (`git diff --stat` empty). RUNBOOK §8.6's update steps (:966-1041) cover only the cef timers. Its preamble at :968 still grants the withdrawn 2026-11-02 standing authority, 'arming included'.",
+      "note": "I agree with PARTIAL. Work order: make release-check.js preview cef, c4 and the events PLAN, add ops/sleeves/ and shadow/ to its focus, and write {sha, tree, range, verdict, reviewers} to results/ops/release_checks/<sha>.json. Have install_vm.py and install_events_vm.sh refuse a tag whose commit or identical tree has no GO record. Rewrite RUNBOOK §8.6 to cover C4, the reports and the events units, and remove the withdrawn standing-authority line at :968. Size M. Risk if open: medium. Three of the last four releases reached the VM without the check the standard names."
+     },
+     {
+      "id": "A8.3",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "No single rollback command. docs/RUNBOOK.md:1041 says '**Rolling back** is the same procedure with the previous tag' (and :127 for the laptop). That is the four-step §8.6 procedure for the cef timers and `qi`. Older tags need extra pre-steps (:1274 for §8.11, :1445 for §8.12). C4 (§8.9), the reports and the events installer (quantt/sleeves/deploy/install_events_vm.sh) are separate commands. A grep for rollback and previous tag in install_vm.py, install_events_vm.sh and shadow/deploy finds nothing. The 'older code against today's state' check: ops/replay_exposure.py:1-30 replays gate 8 (exposure) only, from the core runner's record format (runs/*-run.json, plan.json). RUNBOOK §8.6 step 2 runs it on quantt_state/cef only. Nothing covers the events runner's records or gates 1-7 and 9. Rehearsal log: a grep for 'rehears' in docs and results/ops finds only SYSTEM.md:941 (the 2026-11-22 ruling that one be done) and STANDARD.md:147. There is no rollback entry in EVIDENCE_LOG.",
+      "note": "I agree with GAP. Work order: add `quantt/deploy/rollback.py --to <tag>`. It should (1) replay each book's state copy through the older tag's gates (extend ops/replay_exposure to all gates and to the events runner's plan and send records), (2) reinstall core, C4, the reports and the events units at that tag while keeping each book's arming, and (3) refuse inside the send windows. Document it as the one command in RUNBOOK §8.6, then rehearse it on paper with A9 and log the timing under results/ops/rehearsals/. Size M. Risk if open: high. In an incident the rollback is five separate hand procedures, never rehearsed (the [KNIGHT] ¶27 failure mode)."
+     },
+     {
+      "id": "A8.4",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "All 27 release-* tags appear in results/report/EVIDENCE_LOG.md (grep per tag, minimum 2 hits, for release-20260928-1). Installs and arming are written by hand. For example, E-2026-11-22-01 (:5414) and E-2026-11-22-03 (:5441) say 'core and C4 DRY_RUN=0 with AUTO_ARMED present; every events unit DRY_RUN=1'. No installer writes an install or arming record: a grep for install.log, INSTALL_LOG and install_log in quantt/deploy, quantt/sleeves/deploy, shadow/deploy and ops/prod_state.py finds nothing. The shadow clone changes code on the VM nightly (nightly.sh:18-21), and origin/shadow has 99 first-parent commits since 2026-11-10. d7ae72d, b99c863 and 6aebfc4, all on origin/shadow, each have 0 hits in main's log. Missed by the first reader: the log of record is split across branches. Comparing '### E-' ids, origin/shadow's EVIDENCE_LOG has two entries main's does not, E-2026-11-20-20 and E-2026-11-22-20. One of them is b99c863 itself, an EVIDENCE_LOG commit made on the shadow branch.",
+      "note": "I agree with PARTIAL. Every release is logged; installs and armings cannot be reconciled against any machine record, and shadow code changes on the VM are not logged. Work order: have install_vm.py, install_events_vm.sh, install_shadow_vm.sh, nightly.sh (each new commit it checks out) and the AUTO_ARMED create and remove steps append a line (UTC, tag or commit, unit or book, DRY_RUN, AUTO_ARMED) to a VM-side install log that ops.prod_state reads. Add a doc_audit check that every release tag and every logged install has an EVIDENCE_LOG entry on main, and merge the shadow-only entries to main. Size S. Risk if open: low to medium."
+     },
+     {
+      "id": "A8.5",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "ops/prod_state.py:1136-1158 verdict() compares the core's arming on two machines. On the laptop it reads ip.JOBS = the three com.quantt.alpaca.cef.* jobs (install_prod.py:173-200; prod_state.py:551). On the VM it reads the core's units. It raises 'WARNING: TWO ARMED SCHEDULERS ON ONE ALPACA ACCOUNT'. `python3 -m pytest ops/tests/test_prod_state.py -q` passed (all dots, 100%). C4 is read on the VM only, and :1297-1299 says other books 'are not part of the one-prod verdict'. 'events' does not appear in prod_state.py, and ops/daily_page.py:7 says 'two armed paper accounts (core `cef`, `c4`)'. The runtime backstop exists for all three sending paths: gate 6 (gate.py:691-740) is called by quantt/session/run.py for core and C4, and by quantt/sleeves/run.py:600 for events. Measured locally, read-only: `launchctl list | grep quantt` printed nothing. `launchctl print-disabled gui/$(id -u)` lists all 15 com.quantt.* jobs as disabled. ~/Library/LaunchAgents holds no c4 or events plist, so no second C4 or events scheduler exists on the laptop today. IBKR-era plists (com.quantt.cef.daily, com.quantt.verify.cef, com.quantt.ibgateway) are still on disk and disabled, and prod_state does not read them. The VM side cannot be measured from here.",
+      "note": "I agree with PARTIAL. The WARNING covers the cef account only; C4's laptop side and the whole events account are outside it. Work order: rework ops/prod_state.verdict() to group arming by Alpaca account (cef, c4, events). It should read every scheduler that can hold that account's key: laptop plists for any book, and the VM's core, C4 and quantt-events-* units, from a Python registry shared with install_events_vm.sh. Raise the WARNING per account, with one test per account. Size M. Risk if open: high once the events book is armed. Nothing on any state page would show a doubled events scheduler, and gate 6 is then the only guard."
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "CONFIRMED and wider than reported: the events book trades weights computed by unreleased, self-updating shadow-branch code, and that clone loads its own copy of the Alpaca client with a live paper key",
+      "confirmed": true,
+      "note": "Confirmed: quantt/sleeves/inputs.py:9-11, shadow/deploy/nightly.sh:18-21, SYSTEM.md:864 and EVIDENCE_LOG:5441 (events units DRY_RUN=1, so latent). Wider than the first reader said: (1) origin/shadow's quantt/broker/alpaca.py, the client that holds submit_order, differs from main's by 96 lines (`git diff --stat origin/main origin/shadow -- quantt/broker/`). The shadow package imports it (shadow/sources.py:63, 72, 93, 114). (2) The shadow secret unit runs quantt.deploy.boot_secrets from the self-updating clone (install_shadow_vm.sh:154-156). (3) install_shadow_vm.sh:29-31 itself says 'code on the followed branch could fetch whatever that identity may read' from the vault, so the exposure is not limited to the core key. (4) The only guard, shadow/tests/test_boundary.py (it passes here, 2 tests), only forbids the names submit_order, replace_order and cancel_order and three module imports in shadow/. CI (.github/workflows/checks.yml:11-15) runs only for main, and nightly.sh runs no test, so nothing runs the guard against the code the VM executes. Risk: high."
+     },
+     {
+      "title": "CONFIRMED: the events paper account is invisible to orient PROD, the SessionStart banner, the status line and ops.daily_page",
+      "confirmed": true,
+      "note": "`grep -n -i 'events|sleeves'` in ops/prod_state.py and .claude/hooks/*.py finds nothing. prod_state builds its books from install_vm.VM_BOOKS = {cef, c4} (install_vm.py:454; prod_state.py:771). ops/daily_page.py:7 says 'two armed paper accounts (core `cef`, `c4`)'. Risk: high once the team lead arms it (SYSTEM.md 2026-11-20: 'Show me Monday's list, I say go')."
+     },
+     {
+      "title": "CONFIRMED: CLAUDE.md states facts that §5 has since reversed, and says it wins any conflict with a skill",
+      "confirmed": true,
+      "note": "CLAUDE.md:7-9 (core and C4 only), :251-252 ('is moving' to the VM), :323-325 (shadow runner 'not built or approved yet', against SYSTEM.md:861 'Approved'), and :319-320 ('this file wins'). CLAUDE.md is identical to origin/main. Risk: medium."
+     },
+     {
+      "title": "CONFIRMED, weaker than worded: EVIDENCE_LOG on whether release-20261103-4 (8ce0395) had a release-check",
+      "confirmed": true,
+      "note": "Both lines exist: :2742 'release-check verdict for 8ce0395: none recorded [U]' (E-2026-11-03-14, whose status still reads 'current (newest release tag)') and :3440 'release-check GO 12:21 ET [V]' (E-2026-11-03-38). This is an unresolved [U] that a later entry answers without citing any stored verdict, rather than a direct contradiction. The real defect is the one under A8.2: release-check.js stores no verdict. Risk: low."
+     },
+     {
+      "title": "NEW: four documents give conflicting rules on who may merge, tag, install and arm, and the RUNBOOK still grants agents the withdrawn authority to arm",
+      "confirmed": true,
+      "note": "docs/RUNBOOK.md:968 (§8.6, the procedure A8.2 names): 'Since 2026-11-02 an agent may run every step below itself, arming included (team lead; CLAUDE.md rule 1, standing authority ...)'. SYSTEM.md:856 withdrew that authority on 2026-11-09, and CLAUDE.md:97-99 says releases are the team lead's alone. The same 2026-11-19 ruling then has two rows that contradict each other. SYSTEM.md:918: 'This session runs them ... merges, tags, VM installs'. SYSTEM.md:919: 'Who runs the release steps (merge, tag, VM installs, arming) | \"You prepare, I run them\" ... the team lead runs each with `!`'. docs/JOURNAL.md:235 still states the old authority without a correction beside it. Fix: a team-lead ruling on this one subject, recorded as the first row of the A1.3 rules-in-force table, then correct RUNBOOK.md:968 and CLAUDE.md:97-99 to point at it. Risk: high, because a session following RUNBOOK §8.6 could arm a book."
+     },
+     {
+      "title": "NEW: the measurers for A1.1 and A1.2 are already built on a pushed, unmerged branch, so this audit's work orders for them duplicate existing work",
+      "confirmed": true,
+      "note": "origin/ops-hygiene at c444792 (2026-11-22 14:17 -0500) adds ops/checkout.py, ops/branch_inventory.py and their tests, and wires the behind-origin/main reading into ops/orient.py and .claude/hooks/session_context.py (7 files, +604/-3). The ROADMAP work orders should read 'review and merge ops-hygiene', after its extra branch reasons ('uncommitted work', 'main folder', 'newest release tree') are reconciled with STANDARD.md A1.2's three."
+     }
+    ]
+   }
+  },
+  {
+   "area": "live-code",
+   "audit": {
+    "area": "A2. The live path and its code (worktree live-standard at 877320c)",
+    "checks": [
+     {
+      "id": "A2.1",
+      "verdict": "GAP",
+      "evidence": "No import-graph test exists. .github/workflows/checks.yml has only Install, `python -m pytest`, `python -m ops.doc_audit --check`, and no test under quantt/ops/shadow/src tests checks live code against an allowlist (searched for allowlist and import-graph tests). I built an AST graph (module-level and function-level imports, plus subprocess script paths) from quantt.session, quantt.collect, quantt.sleeves, shadow, quantt.deploy.boot_secrets and the report modules. Imports of research code from live code: (1) allowlisted files: quantt/collect/collect.py:1311 `from scripts.cef.spec import frozen`; quantt/session/nav_gate.py:149,157,420,473 `from scripts.cef(.fetch_daily) import ...`; quantt/broker/alpaca_probe.py:234-235 `sys.path.insert(0, .../scripts/cef); import spec` (a sys.path trick that a module-name check would miss); subprocesses quantt/session/run.py:645 and quantt/collect/collect.py:435 (`scripts/cef/fetch_daily.py`) and collect.py:972 (`scripts/fetch_cef_distributions.py`). (2) Files NOT on the allowlist: quantt/collect/collect.py:1318 `from scripts.cef import data_books` (the C4 path); scripts/cef/fetch_daily.py:189-190 imports scripts.cef.data_books at module level, so every nav_gate or refresh call loads it; data_books.py:207 lazily imports scripts.data.fetch_cef_families_yf (and from there scripts/data/cef_families_common.py); data_books.py:264,352 and fetch_daily.py:309,358 import scripts.cef.data_guards; scripts/fetch_cef_distributions.py:355,364 import data_books. Static only, inside scan functions: data_guards.py:851,918,944 -> scripts/cef/band_frontier.py, which at line 48 imports scripts.research.harness (the backtester). quantt/deploy/install_vm.py:444-445 already requires data_books.py and data_guards.py at the tag. (3) The scheduled report units run research-folder code end to end: install_vm.py:490-491 `REPORT_KINDS = {\"dataqa\": \"scripts.ops.data_qa\", \"risk\": \"scripts.ops.risk_daily\", \"pnl\": \"scripts.ops.pnl_report\"}`, and those reach scripts/ops/alpaca_read.py, report_notify.py, scripts/cef/live_attribution.py, exposure_readout.py, data_guards.py and spec.py. None of these is in docs/TEAM.md §2 (lines 53-61).",
+      "gap": "There is no CI measurer. Live code already imports at least scripts/cef/data_books.py, data_guards.py and scripts/data/fetch_cef_families_yf.py beyond the three allowlisted files, and the report jobs on the VM live wholly under scripts/.",
+      "work_order": "Add ops/tests/test_live_imports.py: an AST walk from the live entry points (quantt.session, quantt.collect, quantt.sleeves, shadow, the report modules) that follows function-level imports, sys.path inserts and `scripts/...py` subprocess paths, and fails on any scripts/ module missing from an allowlist file seeded with the three TEAM.md §2 files. Move scripts/cef/data_books.py, scripts/cef/data_guards.py and the scheduled report modules (scripts/ops/{data_qa,risk_daily,pnl_report,alpaca_read,report_notify}.py, scripts/cef/{live_attribution,exposure_readout}.py) under quantt/ so the test passes.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A2.2",
+      "verdict": "GAP",
+      "evidence": "No type-check step in .github/workflows/checks.yml (steps: Install, Tests, Document audit), and no mypy.ini, setup.cfg or pyproject.toml. mypy 1.14.1 is installed locally. I ran `mypy --strict --explicit-package-bases --cache-dir <scratchpad>` on the 74 live-path source files (src/deploy, quantt, ops/schedule, shadow, ops/netguard.py, ops/halt.py and the three TEAM.md §2 scripts files; tests excluded): `Found 2036 errors in 73 files (checked 74 source files)`. 1694 of those errors are in the 74 listed files; the rest are in modules mypy followed (scripts/cef/band_frontier, data_books, data_guards, src/backtest). By code: type-arg 669, no-untyped-def 527, no-untyped-call 435, no-any-return 79, call-overload 68, import-untyped 50. Only 227 of the 1694 are not annotation-only. Default (non-strict) mypy on the same files: `Found 311 errors in 57 files`, 284 in the listed files, 50 of them import-untyped (no pandas or requests stubs in requirements.txt). I sampled two substantive findings (quantt/session/drawdown.py:750 `int < None`, quantt/session/decide.py:378 list vs tuple). The first is a narrowing false positive (an `all(isinstance...)` guard on line 747), so the count sizes the annotation work, not the number of bugs.",
+      "gap": "There is no CI type-check step, and strict mypy reports 1694 errors on the live path.",
+      "work_order": "Add a mypy step to .github/workflows/checks.yml driven by a new mypy.ini that sets `strict = True` per module, starting with the small order-path modules (quantt/session/gate.py, decide.py, records.py, quantt/broker/alpaca.py), plus a listed ratchet of not-yet-strict modules that may only shrink. Add pandas-stubs and types-requests to requirements.txt.",
+      "size": "L",
+      "risk": "medium"
+     },
+     {
+      "id": "A2.3",
+      "verdict": "GAP",
+      "evidence": "No coverage step in .github/workflows/checks.yml, and no floor in any CI config (no .coveragerc, setup.cfg or pyproject.toml). Coverage is not installed locally: `python3 -m coverage` -> `No module named coverage`; `import pytest_cov` -> ModuleNotFoundError. requirements.txt pins only pytest==8.3.4. So the coverage figure cannot be measured here. As a proxy, a grep of the collected test directories (pytest.ini testpaths) finds no test that imports these live-path modules: shadow/__main__.py, src/deploy/sleeves/static_weights.py, shadow/fetch/common.py, shadow/fetch/yf_px.py, quantt/collect/__main__.py, quantt/sleeves/__main__.py.",
+      "gap": "There is no coverage measurement and no floor, and the tool is not installed.",
+      "work_order": "Add pytest-cov to requirements.txt and a CI step `python -m pytest --cov=quantt --cov=src/deploy --cov=shadow --cov=ops/schedule --cov-fail-under=<today's measured figure>`, with the floor kept in checks.yml or .coveragerc, plus a doc_audit or ops test that fails if the floor value goes down.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A2.4",
+      "verdict": "PARTIAL",
+      "evidence": "The PR template has the question but only as self-attestation: .github/pull_request_template.md \"Does it touch the live path? (`docs/TEAM.md` §2) ... A test fails against the old behaviour and passes now: ______\". It says nothing about code that moves being re-tested where it lands. /release-check (.claude/workflows/release-check.js) does not check either. Its items 1-5 (lines 64-69) are git state, pytest, doc_audit, orient and a DRY_RUN preview, and nothing runs a changed test against the previous tag's code. Its reviewers see only `quantt/, src/deploy/, ops/specs/, ops/books/` (line 92), which leaves out shadow/, the report jobs under scripts/ops and scripts/cef/fetch_daily.py. The template keys on TEAM.md §2, whose list omits ops/halt.py, shadow/, scripts/cef/data_books.py, data_guards.py and the report modules (see A2.1). The template also still asks about trials, pre-registration and \"the 5 / 15 / 30bp grid\", which the 2026-11-09 ruling dropped (CLAUDE.md, Hard rules: research).",
+      "gap": "Fail-against-old is ticked by the author but never checked by a measurer, the moved-code clause appears nowhere, and the release review covers only part of the live path.",
+      "work_order": "Extend .claude/workflows/release-check.js with a step that, for each live-path file changed in <last tag>..<sha>, finds the tests changed in that range, runs them against the last tag's version of the file in a scratch worktree, and requires them to fail there. Widen its review scope (line 92) to the full live-path list. Update .github/pull_request_template.md: add 'moved code re-tested where it lands' and remove the trial and cost-grid items.",
+      "size": "M",
+      "risk": "medium"
+     },
+     {
+      "id": "A2.5",
+      "verdict": "PARTIAL",
+      "evidence": "An AST count over 86 live-path files (the 47 in TEAM.md §2 plus shadow/, ops/halt.py, ops/common.py, the report modules, data_books and data_guards; tests excluded) finds 0 bare `except:`. `flake8 --select=E722` on the same paths exits 0 (flake8 7.1.1 is installed locally). `except ...: pass` appears twice: ops/halt.py:96-97 `except Exception:\\n        pass` in `_load_env_file`; ops/halt.py is on the live path (quantt/session/run.py:1152 and quantt/sleeves/run.py:140 import read_halt from it) but is missing from TEAM.md §2. The other is shadow/universes/build_uit_terminations_v1.py:276 `except ValueError: pass`, a try-the-next-date-format loop that returns None on failure and is not run nightly. Invented defaults: src/deploy/sleeves/cef_discount.py:1733-1735 `dd = float(getattr(ledger_view, \"drawdown\", 0.0) or 0.0)` / `except Exception: return RiskVerdict(OK, [\"ledger drawdown unreadable; no action\"])`, and the same at src/deploy/sleeves/static_weights.py:84-86. Both are dead code: no `risk_check(` call exists outside tests, as quantt/session/drawdown.py:11 says. 65 `except Exception` handlers exist in this scope; most raise or record UNMEASURED. ops/halt.py:404,414 return {} or None on a corrupt heartbeat file; its docstring argues this is the safe direction. No lint step in .github/workflows/checks.yml and no lint config in the repo.",
+      "gap": "The main rule mostly holds today, but no CI lint rule enforces it. One `except Exception: pass` sits on the live path (ops/halt.py:97), and dead sleeve code reads a missing drawdown as 0.0 and returns OK.",
+      "work_order": "Add flake8 to requirements.txt and a CI step `flake8 --select=E722` over the live path. Add ops/tests/test_no_silent_except.py, an AST test that fails on any `except ...: pass` on the live path unless it is on a named allowlist. Then make ops/halt.py:_load_env_file raise or report a corrupt or unreadable file by name, and delete the never-called risk_check fallbacks in cef_discount.py and static_weights.py.",
+      "size": "S",
+      "risk": "low"
+     },
+     {
+      "id": "A2.6",
+      "verdict": "PARTIAL",
+      "evidence": "What exists: one order-sending client, quantt/broker/alpaca.py:642 `def submit_order` (POST at :685), with exactly one caller, quantt/session/run.py:3491 inside `_transmit`. The events runner sends through that same `_transmit` (quantt/sleeves/run.py:98-101 import, :666 call). Tests pin this: quantt/session/tests/test_run.py:463 `test_run_py_is_the_only_caller_of_submit_order`; quantt/sleeves/tests/test_run.py:747 (no submit/replace/cancel in quantt/sleeves); scripts/ops/tests/test_report_no_order_path.py; shadow/tests/test_boundary.py. All four pass: I ran them with `-p no:cacheprovider`, and no files changed. What is missing: (a) No broker interface. quantt/broker/ holds only alpaca.py and alpaca_probe.py, with no Protocol or ABC, and the runners build `AlpacaClient.from_environment` directly (run.py:2039-2056, 3053-3054; sleeves/run.py:1066-1069; collect.py:1309-1319). (b) A second Alpaca client sits outside quantt/broker: scripts/ops/alpaca_read.py (urllib, PAPER_BASE and DATA_BASE at :99-100), placed there on purpose by a 2026-11-09 ruling (its docstring). (c) No real-money adapter (expected until B1). (d) The named measurer, a test that only quantt/broker imports an HTTP or broker client, does not exist. Written today it would flag quantt/session/nav_gate.py:133 (requests to CEFConnect), quantt/deploy/azure_keyvault.py:99-105, ops/halt.py:315 (smtplib), scripts/ops/alpaca_read.py:80-88 and yfinance in 10 files. (e) The shadow runner's clone follows branch `shadow`, whose own copy of quantt/broker/alpaca.py differs from main's (`git diff origin/main origin/shadow -- quantt/broker/alpaca.py`). It runs with the core account's key (shadow/deploy/install_shadow_vm.sh:156), which the shadow/sources.py docstring says 'CAN trade the core's paper account'.",
+      "gap": "Only one code path sends today, but there is no interface for a second adapter to implement, there are two separate Alpaca client implementations (three counting the shadow branch's copy), and the named CI test is absent.",
+      "work_order": "Define a BrokerClient Protocol in a new quantt/broker/interface.py listing the methods the runners call. Type quantt/session/run.py, quantt/sleeves/run.py and quantt/collect/collect.py against it and have AlpacaClient implement it. Move scripts/ops/alpaca_read.py into quantt/broker/ as a GET-only implementation of the read half. Add ops/tests/test_broker_boundary.py, which fails if any module outside quantt/broker/ names a broker host or imports an HTTP client, except a named allowlist of non-broker fetchers (CEFConnect, Azure vault, yfinance, EDGAR, SMTP).",
+      "size": "M",
+      "risk": "medium"
+     },
+     {
+      "id": "A2.7",
+      "verdict": "PARTIAL",
+      "evidence": "No generated list of switches exists: nothing in ops/, scripts/ops/ or .claude/hooks/ builds one (the only 'switch' hit in docs is STANDARD.md:82 itself). The core and C4 book files do document each switch inline, with owner and date: ops/books/cef_discount_book.json has execution.mode=late_market (_note, 2026-09-29), data.stale_nav=report (_stale_nav_note, 2026-10-13: 'report mode first, `on` after a measured week'), data.missing_nav=hold, risk.drawdown=report, corporate_actions.mode=report and execution.bp_shortfall=scale. events_sleeves.json (8x enabled and promotion_waived=true), the spec booleans (c4_families.frozen.json frozen.nav_repeat_mask and zero_volume_mask) and the 11 shadow/books/*.json `enabled` keys have no state-and-owner record. Stale states: corporate_actions._mode_report_note says 'REPORT, not halt, for this release only ... RESTORE: set mode back to \"halt\" in the next release', added in c5e1424 on 2026-11-02, yet `git show release-20261122-2:ops/books/cef_discount_book.json` still reads mode=report (later rulings at docs/SYSTEM.md:710 and :817 keep it, but the file's own note is stale). Config that nothing reads: the book `limits` block (max_gross_exposure_usd, book_drawdown_suspend_pct, per_sleeve_capital_band, book_worst_month_usd) has no reader in quantt/src/shadow/ops/scripts/ops (grep for `limits`, `book_worst_month_usd`, `per_sleeve_capital_band`; only a test pins one). The runner takes max_gross from the spec (quantt/session/run.py:311). Unused code: sleeve risk_check is never called (quantt/session/drawdown.py:11). No quarterly review has happened yet.",
+      "gap": "There is no generated inventory of switches with state, owner and reader. Several switches have stayed in report mode past their own stated end, and book-file limits that look enforced are read by nothing.",
+      "work_order": "Write ops/switches.py, a read-only script that walks ops/books, ops/specs, ops/sleeves and shadow/books. For every behaviour key (booleans, *.mode, data.*, risk.drawdown, execution.*, enabled, promotion_waived) it prints the value at HEAD and at the newest release-* tag, the code that reads it (by AST), and the ruling or owner from its `_note` or docs/SYSTEM.md §5. It flags keys no code reads. Call it from ops.doc_audit --check so CI fails on an unread or unowned key.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A2.8",
+      "verdict": "PARTIAL",
+      "evidence": "Two runners can send. The core runner quantt/session/run.py serves both cef and c4 (BOOKS at :272-285; units `quantt.session run --book cef|c4 --scheduled`). The events runner quantt/sleeves/run.py serves the events account (install_events_vm.sh:301). The shadow runner sends nothing (shadow/tests/test_boundary.py). Both senders import the same module, quantt/session/gate.py (run.py:222 `from quantt.session import gate as gt`; sleeves/run.py:96). They use it differently. The core calls the composite `gt.evaluate(facts)` (run.py:2521), 'All nine gates, in RUNNER.md order' (gate.py:961-962), and also applies gates from two other modules, nav_gate.py (stale NAV) and corp_actions.py. The events runner chooses gates one by one (sleeves/run.py:591-608: dry_run, arming, halt, late_clock, late_send_budget, no_set_in_auction, shortability, exposure, sanity). It has no gate 5 data gate, no stale-NAV gate and no corporate-action gate: no corp_action reference anywhere in quantt/sleeves/*.py. It also adds two refusals inline (sleeves/run.py:614-619: 'positions moved since the plan', 'the client's trading endpoint is ... not the paper endpoint'). A new gate added to gate.evaluate would therefore not reach the events book.",
+      "gap": "There is one gate module, but the events runner does not use its composite. It skips three gates the core applies and keeps two refusals outside the module, so a fix or a new gate does not land for every book.",
+      "work_order": "Add a shared late-window composite to quantt/session/gate.py (e.g. evaluate_late(GateFacts)) used by both the core's late_market path and quantt/sleeves/run.py. Move the two inline refusals (sleeves/run.py:614-619) into gate.py. Record in a test which of gate 5, stale-NAV and corporate-action gates apply to the events book and why.",
+      "size": "M",
+      "risk": "medium"
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "docs/TEAM.md §2's live-path list does not match the code that runs on the VM",
+      "evidence": "docs/TEAM.md:53-61 lists src/deploy, quantt, ops/specs and ops/books, ops/schedule, ops/netguard.py, config/costs.yaml and three scripts files. It omits: ops/halt.py (the halt reader the session and the events runner check before sending: quantt/session/run.py:1152, quantt/sleeves/run.py:140); ops/common.py (scripts/cef/fetch_daily.py:186); scripts/cef/data_books.py and data_guards.py (fetch_daily.py:189, install_vm.py:444-445); shadow/ (scheduled nightly, install_shadow_vm.sh:181-201); and the report jobs, which are VM timers (install_vm.py:490-491, 603-606). The PR template's live-path question, the standard's A2.1 allowlist and A8.2's review all key on this list, and release-check's review scope (release-check.js:92) is narrower still.",
+      "risk": "high"
+     },
+     {
+      "title": "The shadow runner on the VM runs branch `shadow`, which differs from main, with a key that can trade the core account, and CI never checks that branch",
+      "evidence": "shadow/deploy/nightly.sh:19-20 checks out FETCH_HEAD of SHADOW_BRANCH on every run. install_shadow_vm.sh:60 sets `BRANCH=\"shadow\"`, and :156 fetches alpaca-cef-key-id/secret. The shadow/sources.py docstring says 'That key CAN trade the core's paper account, so this facade and the boundary test are the whole defence'. checks.yml triggers only on pull_request and push to main. Local ref origin/shadow (a8e944e, 2026-11-22) is 4 commits ahead of origin/main and 87 behind, and `git diff --stat origin/main origin/shadow -- quantt/ shadow/ src/ ops/` shows 29 files differing, among them quantt/broker/alpaca.py and src/deploy/sleeves/cef_discount.py. So the facade and boundary test that protect the core account are the shadow branch's own copies, not main's. docs/TEAM.md §3 says GitHub holds five branches (main, ryan, james, lucy, simon). The VM's actual checkout cannot be measured from the repo (ops.prod_state).",
+      "risk": "medium"
+     },
+     {
+      "title": "The book-file `limits` block is read by no code",
+      "evidence": "ops/books/cef_discount_book.json `limits` holds max_gross_exposure_usd 260000, book_drawdown_suspend_pct 99.0, per_sleeve_capital_band and book_worst_month_usd 30000. A grep for `limits`, `book_worst_month_usd` and `per_sleeve_capital_band` across quantt, src, shadow, ops/*.py and scripts/ops finds no reader outside tests (quantt/session/tests/test_c4_book.py:105 pins one value). The runner takes its gross cap from the spec (quantt/session/run.py:311 `need(\"risk\", \"max_gross_exposure_usd\")`). The _suspend_note cites src/deploy/risk.py:152, a file that no longer exists. Someone editing a book-file limit would believe it binds when it does not.",
+      "risk": "medium"
+     },
+     {
+      "title": "The core book's corporate-action gate is in report mode and its note says that was for one release only",
+      "evidence": "ops/books/cef_discount_book.json corporate_actions._mode_report_note: 'REPORT, not halt, for this release only ... RESTORE: set mode back to \"halt\" in the next release' (added c5e1424, 2026-11-02). At tag release-20261122-2 the mode still reads `report` (git show). docs/SYSTEM.md:710 and :817 record later rulings that keep report until the ISIN fix and a re-ruling of the three unresolved rows land, so the state is ruled but the file's note is stale. The events runner has no corporate-action gate at all (no reference in quantt/sleeves/*.py), although it holds spin-off and special-dividend names on a paper account that processes no corporate actions (CLAUDE.md landmine 1).",
+      "risk": "medium"
+     }
+    ]
+   },
+   "verify": {
+    "checks": [
+     {
+      "id": "A2.1",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "No import-graph test exists. .github/workflows/checks.yml runs only Install, `python -m pytest` and `python -m ops.doc_audit --check`. No test anywhere checks live code against an allowlist of scripts/ files. The nearest ones are order-path closure tests: quantt/session/tests/test_run.py:463, scripts/ops/tests/test_report_no_order_path.py and shadow/tests/test_boundary.py.\n\nI built my own AST graph from quantt.session.__main__, quantt.collect.__main__, quantt.sleeves.__main__ and quantt.deploy.boot_secrets, following function-level imports as well. It reaches 58 repo modules. Research code imported from live code:\n- The allowlisted three: quantt/collect/collect.py:1311 imports scripts.cef.spec; quantt/session/nav_gate.py:149,157,420,473 import scripts.cef.fetch_daily; run.py:645 and collect.py:435 run scripts/cef/fetch_daily.py as a subprocess; collect.py:972 runs scripts/fetch_cef_distributions.py.\n- Not allowlisted: collect.py:1318 imports scripts.cef.data_books; fetch_daily.py:189-190 imports data_books at module level; data_books.py:207 imports scripts.data.fetch_cef_families_yf, which at :79 imports cef_families_common; data_books.py:264,352 and fetch_daily.py:309,358 import data_guards. data_guards.py:851,918,944 import band_frontier, and band_frontier.py:48 imports scripts.research.harness; those three are inside scan functions only.\n- The first reader missed one: ops/common.py:21-23 does `sys.path.insert(...)` and then `from src.backtest import engine` at module level. That loads the research backtester (src/backtest engine, guard, tearsheet, walkforward). ops/common.py is itself imported at module level by scripts/cef/fetch_daily.py:186, which every refresh subprocess runs, and by scripts/fetch_cef_distributions.py:77. collect.py:617 and nav_gate.py:472 import it at call time. So every nightly refresh loads src/backtest.\n- From the report jobs (install_vm.py:490-491), a second graph reaches scripts/ops/{data_qa,risk_daily,pnl_report,alpaca_read,report_notify}.py and scripts/cef/{live_attribution,exposure_readout,data_guards,spec,band_frontier}.py, and from band_frontier scripts/research/harness.py.\n- Contradiction: quantt/session/run.py:290 says scripts/ is 'never on the live path (CLAUDE.md layout)'.",
+      "note": "I agree with GAP and the first reader's list. I add the ops/common.py -> src/backtest edge, which it missed. Work order: add ops/tests/test_live_imports.py, an AST closure from the runner, collector, shadow and report entry points that follows function-level imports, sys.path inserts and 'scripts/...py' subprocess strings. It fails on any scripts/ or src/backtest module not on an allowlist seeded with the three TEAM.md §2 files. Then move atomic_write and deployed_tickers out of ops/common.py into a quantt/ module, and move data_books, data_guards and the report modules under quantt/. Size M. Risk high: research edits change what the book trades on through files that neither TEAM.md §2 nor release-check covers."
+     },
+     {
+      "id": "A2.2",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "checks.yml has no type-check step. There is no mypy.ini, setup.cfg, pyproject.toml or tox.ini (ls: all absent). mypy 1.14.1 is installed. I ran `mypy --strict --explicit-package-bases --cache-dir <scratchpad>` twice:\n- On the 47 non-test files of TEAM.md §2 (src/deploy, quantt, ops/schedule, ops/netguard.py and the three scripts files): `Found 1820 errors in 49 files (checked 47 source files)`, 1474 of them in the 47 files.\n- On the first reader's wider 74-file set (adds shadow/ and ops/halt.py): `Found 2036 errors in 73 files (checked 74 source files)`, 1694 of them in the listed files. This matches the first reader.\n\nThe 1694 by code: type-arg 636, no-untyped-def 421, no-untyped-call 265, no-any-return 77, call-overload 63, import-untyped 35. About 240 are not annotation-only. Default (non-strict) mypy: `Found 311 errors in 57 files`, 50 of them import-untyped. I reproduced both of the first reader's samples (drawdown.py:750 is a false positive behind the guard at :747; decide.py:377-378 is list vs tuple). The order path has substantive hits: run.py:2307-2323 `\"object\" has no attribute \"account\"/\"positions\"/\"orders\"/\"asset\"`. The broker client is typed as `object`, which corroborates A2.6.",
+      "note": "Agree. Work order as the first reader wrote it: a mypy step in checks.yml with a per-module strict list, starting with gate.py, decide.py, records.py and broker/alpaca.py, and a ratchet list that may only shrink; add pandas-stubs and types-requests. Size L. Risk medium: today the type errors on the order path (an untyped client, Optional misuse in run.py) surface only at run time."
+     },
+     {
+      "id": "A2.3",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "checks.yml has no coverage step and no coverage config exists. `python3 -m coverage` reports 'No module named coverage', and `import pytest_cov` raises ModuleNotFoundError. requirements.txt pins only pytest==8.3.4 for tests. The coverage figure cannot be measured here.\n\nCorrection to the first reader's proxy: three of its six 'untested' modules are loaded by the collected tests through other imports. shadow/fetch/common.py is imported by shadow/fetch/exdates.py and earnings.py (shadow/tests/test_cef_exdate.py:13, test_pead.py:9). shadow/fetch/yf_px.py is imported by earnings.py:57. static_weights.py is imported by src/deploy/sleeves/__init__.py:7 whenever cef_discount loads. Only shadow/__main__.py, quantt/collect/__main__.py and quantt/sleeves/__main__.py have no test import at all.",
+      "note": "Agree with GAP. The proxy evidence is overstated, as above. Work order: add pytest-cov to requirements.txt and a CI step `pytest --cov=quantt --cov=src/deploy --cov=shadow --cov=ops/schedule --cov-fail-under=<first measured figure>`. Keep the floor in a tracked config, with a test that fails if it falls. Size S. Risk medium."
+     },
+     {
+      "id": "A2.4",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "The template asks the question only as self-attestation. .github/pull_request_template.md says: 'Does it touch the live path? (`docs/TEAM.md` §2) ... A test fails against the old behaviour and passes now: ______'. Nothing in it covers moved code being re-tested where it lands.\n\n.claude/workflows/release-check.js has five check items (pytest, doc_audit, orient and a DRY_RUN preview, at lines ~64-69). None runs a changed test against the last tag's code. The preview is `--book cef` only, so C4 and events get none. The reviewer scope (line ~92) is 'quantt/, src/deploy/, ops/specs/, ops/books/', which leaves out shadow/, scripts/ops and the scripts/cef files the runner loads.\n\nThe events runner (quantt/sleeves/deploy/install_events_vm.sh) and the shadow runner never pass through release-check. The shadow runner follows a branch head nightly: shadow/deploy/nightly.sh:19-20.\n\nThe template still asks 'Does it spend a trial?' and for 'the 5 / 15 / 30bp grid', both dropped on 2026-11-09 (CLAUDE.md, Hard rules: research). The 'fails against the old' lines I found are docstrings in tests (e.g. quantt/session/tests/test_gate.py), not a measurer.",
+      "note": "Agree. Work order: extend release-check.js with a step that, for each live-path file changed in <last tag>..<sha>, runs the tests changed in that range against the tag's version in a scratch worktree and requires them to fail. Widen review scope to the full live-path list and add c4 and events previews. Fix the PR template (add 'moved code re-tested where it lands'; remove the trial and cost-grid items). Size M. Risk medium."
+     },
+     {
+      "id": "A2.5",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "My AST count covered 91 files: the TEAM.md §2 files plus shadow/, ops/halt.py, ops/common.py, data_books, data_guards, fetch_cef_families_yf, cef_families_common, the seven report modules and src/backtest (tests excluded).\n- 0 bare `except:`. `flake8 --select=E722` on the same files exits 0 (flake8 7.1.1 is installed).\n- 2 `except ...: pass`: ops/halt.py:96-97 (`except Exception: pass` in _load_env_file) and shadow/universes/build_uit_terminations_v1.py:276 (`except ValueError`, a date-format loop).\n- 65 `except Exception` handlers.\n- ops/halt.py:404 and :414 return {} or None on a corrupt heartbeat file; the docstring at :395-399 argues this is safe.\n- I confirmed the dead fallbacks at src/deploy/sleeves/cef_discount.py:1733-1735 and static_weights.py:84-86 (`getattr(ledger_view, \"drawdown\", 0.0) or 0.0`; `except Exception: return RiskVerdict(OK, ...)`). No `risk_check(` call exists outside tests.\n- The first reader missed one invented default on a TEAM.md §2 file: scripts/fetch_cef_distributions.py:176-180. It sets an absent 'Dividends' or 'Stock Splits' column to 0.0, and `pd.to_numeric(acts[\"amount\"], errors=\"coerce\").fillna(0.0)` turns an unparsable distribution amount into 0, which `acts[\"amount\"] > 0` at :182 then drops without a word.\n- ops/common.py:304 holds `vol.bfill().fillna(IMPACT_VOL_FALLBACK_BP)`, an invented default plus a backward fill, in a live-path module. I found no live caller of impact_vol_bp.\n- No lint step in checks.yml and no lint config.",
+      "note": "Agree with PARTIAL, plus the fetch_cef_distributions.py:179-180 coerce-to-zero finding. Work order: add flake8 (E722) to CI and an AST test (ops/tests/test_no_silent_except.py) that fails on `except ...: pass` and on `errors='coerce'` followed by fillna on the live path, with a named allowlist. Make _load_env_file raise naming the file, make fetch_cef_distributions raise on an unparsable amount, and delete the dead risk_check fallbacks and ops/common's unused simulator helpers. Size S. Risk low to medium: the distribution coerce could drop a real distribution from the panel that dist_score reads."
+     },
+     {
+      "id": "A2.6",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "What exists:\n- One order-sending method: quantt/broker/alpaca.py:642 `def submit_order` (POST at :685).\n- A grep for submit, cancel and replace methods and for POST, DELETE and PATCH across quantt, src, shadow, ops, scripts/ops and scripts/cef finds exactly one call site, run.py:3491, inside `_transmit` (run.py:3442).\n- The core reaches _transmit at run.py:2640 and :2872; the events runner imports it (sleeves/run.py:98-101) and calls it at :666.\n- I ran `pytest -p no:cacheprovider` on test_run.py::test_run_py_is_the_only_caller_of_submit_order, quantt/sleeves/tests/test_run.py::test_the_paper_endpoint_constant_is_the_clients_and_the_package_never_imports_shadow (line 748, asserts at 759-760), scripts/ops/tests/test_report_no_order_path.py and shadow/tests/test_boundary.py: all 34 pass. The tree was unchanged afterwards.\n\nWhat is missing:\n- No Protocol or ABC in quantt/broker (grep empty). The runners build AlpacaClient.from_environment directly: run.py:2039/2056 and 3053-3054, sleeves/run.py:1066-1069, collect.py:1309-1319. mypy types the client as `object` (A2.2).\n- A second Alpaca client exists outside quantt/broker: scripts/ops/alpaca_read.py, placed there on purpose by the 2026-11-09 ruling in its docstring. scripts/cef/live_attribution.py also names data.alpaca.markets. sleeves/run.py:110 keeps its own copy of PAPER_BASE, which a test pins.\n- The named measurer (only quantt/broker imports an HTTP or broker client) does not exist. Files outside quantt/broker that import an HTTP or mail client include nav_gate.py, azure_keyvault.py, ops/halt.py (smtplib), alpaca_read.py, shadow/sources.py and the yfinance fetchers.\n- The shadow branch's quantt/broker/alpaca.py differs from main's (`git diff origin/main origin/shadow`: 96 lines; it lacks main's EOD_STAMP_AFTER_CLOSE_H half-day rule).",
+      "note": "Agree. Work order as the first reader wrote it: a BrokerClient Protocol in quantt/broker/interface.py that the runners are typed against; alpaca_read moved into quantt/broker as a GET-only implementation; ops/tests/test_broker_boundary.py failing on HTTP clients or broker hosts outside quantt/broker except a named allowlist. Size M. Risk medium: a second adapter (B1) has no contract to implement, and three copies of the client already differ."
+     },
+     {
+      "id": "A2.7",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "No generated list of switches exists. Nothing under ops/, scripts/ops or .claude/hooks builds one; the only 'switch' hits are prose. Several switches carry dated owner notes inline:\n- cef_discount_book.json: execution.mode=late_market, data.stale_nav=report, missing_nav=hold, risk.drawdown=report, corporate_actions.mode=report, bp_shortfall=scale.\n- Correction to the first reader: events_sleeves.json's promotion_waived=true on all 8 sleeves DOES have an owner-and-date record. `_note_promotion_waived` reads 'Team lead, 2026-11-19, by question prompt: the ten-clean-session promotion rule ... is WAIVED for these seven sleeves', and `_note_uit_termination` extends it to the eighth ('The ten-session wait is waived as for the seven').\n- The per-sleeve `enabled` keys and the 11 shadow/books/*.json `enabled: true` keys have no per-key owner note.\n- Stale state: corporate_actions._mode_report_note says 'REPORT, not halt, for this release only ... RESTORE: set mode back to \"halt\" in the next release' (c5e1424, 2026-11-02). `git show release-20261122-2:ops/books/cef_discount_book.json` still reads mode=report. Later rulings keep it: docs/SYSTEM.md ~:707 '\"Start the fix.\" ... then return both books to `halt` through a release', and ~:817.\n- Unread config: a grep across quantt, src, shadow, ops and scripts finds no reader of book_worst_month_usd, per_sleeve_capital_band, book_drawdown_suspend_pct or the book file's limits.max_gross_exposure_usd outside quantt/session/tests/test_c4_book.py:103-106. The runner takes max_gross from the spec (run.py:311 `need(\"risk\", \"max_gross_exposure_usd\")`). limits._suspend_note cites src/deploy/risk.py:152, a file that does not exist (ls: No such file).",
+      "note": "Agree with PARTIAL, with the correction that promotion_waived is owner-dated. Work order: ops/switches.py, a read-only script that walks ops/books, ops/specs, ops/sleeves and shadow/books. For each behaviour key it prints the value at HEAD and at the newest release tag, its readers (found by AST), and its owner and date from its _note or SYSTEM.md §5. It flags keys that nothing reads. Wire it into `ops.doc_audit --check`. Size S. Risk medium: a limit that looks enforced and is not, and report modes that outlive their stated end."
+     },
+     {
+      "id": "A2.8",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Both runners that can send import one module, quantt/session/gate.py (run.py:222; sleeves/run.py:96). The first reader's account of how they use it is wrong in one important way.\n- Both core books send in late_market mode: cef_discount_book.json and c4_families_book.json both have execution.mode=late_market.\n- The core's late-market SEND phase does NOT call gt.evaluate. run.py:2793-2809 lists by hand gate_dry_run, gate_arming, gate_halt, gate_late_clock, budget_short, gate_no_set_in_auction, gate_shortability, gate_exposure and gate_sanity, then adds an inline `gt.Refusal(\"sanity\", f\"positions moved since the plan was decided: ...\")` at run.py:2812-2813.\n- That is the same hand-built list, and the same inline refusal, as the events runner: sleeves/run.py:595-611 and :614-615.\n- gt.evaluate (gate.py:961-979, 'All nine gates, in RUNNER.md order') is called only at the core's DECIDE (run.py:2521) and in a cls session.\n- Real differences between the two send copies: the core re-reads corporate actions and applies the first-session gate (run.py:2768-2779, 2814-2817). The events copy adds a state halt and a paper-endpoint refusal (sleeves/run.py:597, 616-619). quantt/sleeves/*.py has no corporate-action gate (grep: only a comment at ledger.py:18).\n- So a gate added to gt.evaluate would reach no book's actual send, not only miss the events book.",
+      "note": "Agree with PARTIAL, and the evidence is corrected: the duplication is between two hand-written send-time lists (run.py:2793 and sleeves/run.py:595), not between evaluate and the events runner. Work order: add gate.evaluate_send(SendFacts) in quantt/session/gate.py, called by both run.py's late-market send and sleeves/run.py's send. Move the 'positions moved', paper-endpoint, corporate-action and first-session refusals into it behind per-book flags. Add a test asserting both send paths call it and that the events book's exemptions (data gate, corporate actions) are stated. Size M. Risk medium: a gate fix has to be made twice and could reach one copy only."
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "docs/TEAM.md §2's live-path list does not match the code that runs on the VM",
+      "confirmed": true,
+      "note": "Confirmed, and wider than the first reader said. ops/halt.py is imported by both runners (run.py ~1152; sleeves/run.py:140). ops/common.py is imported at fetch_daily.py:186. data_books and data_guards are loaded by fetch_daily.py:189 and :309 and required at install_vm.py:444-445. Shadow is scheduled by install_shadow_vm.sh:181, and the report jobs are defined at install_vm.py:490-491 and :603-606. The list also omits src/backtest/* (via ops/common.py:23) and scripts/data/fetch_cef_families_yf.py and cef_families_common.py (via data_books.py:207, the C4 path). release-check.js's review scope (~line 92) is narrower still. run.py:290 states that scripts/ is never on the live path, which its own refresh contradicts."
+     },
+     {
+      "title": "The shadow runner on the VM runs branch `shadow`, which differs from main, with a key that can trade the core account, and CI never checks that branch",
+      "confirmed": true,
+      "note": "Confirmed. install_shadow_vm.sh:60 sets BRANCH=\"shadow\" and :156 fetches the alpaca-cef keys. nightly.sh:19-20 checks out FETCH_HEAD of that branch every run, so a push to `shadow` reaches the VM with no tag. The shadow/sources.py:11 docstring says the key 'CAN trade the core's paper account'. checks.yml triggers only on PRs to main and pushes to main. `git rev-list --left-right --count origin/main...origin/shadow` gives 87 4 (shadow is 87 behind, 4 ahead), and 29 files differ under quantt/, shadow/, src/ and ops/. One refinement: shadow/sources.py and shadow/tests/test_boundary.py are identical on both branches today (an empty diff). The divergence that matters is quantt/broker/alpaca.py, which the facade imports, and src/deploy/sleeves/cef_discount.py. The VM's actual checkout cannot be measured from the repo."
+     },
+     {
+      "title": "The book-file `limits` block is read by no code",
+      "confirmed": true,
+      "note": "Confirmed. No reader outside quantt/session/tests/test_c4_book.py:103-106. The runner's gross cap comes from the spec (run.py:311, gate.py:126). The _suspend_note cites src/deploy/risk.py:152, which does not exist."
+     },
+     {
+      "title": "The core book's corporate-action gate is in report mode and its note says that was for one release only",
+      "confirmed": true,
+      "note": "The stale note is confirmed: mode=report at release-20261122-2, and the note dated 2026-11-02 says 'for this release only'. The state is still ruled by SYSTEM.md (~:707 and ~:817). The events runner has no corporate-action gate (confirmed). One correction: the events account holds no spin-off sleeve. Its eight sleeves are specdiv x2, cef_exdate x2, units_exdate x2, pead_small_long and uit_termination; spinoff_first_week is shadow-only. It does hold special-dividend and ex-date names on a paper account that processes no corporate actions."
+     },
+     {
+      "title": "ops/common.py, on the live path, is an older paper-simulator module that pulls in the research backtester and carries dead code with invented defaults",
+      "confirmed": true,
+      "note": "New. The live path uses only atomic_write and deployed_tickers (collect.py:677, nav_gate.py:476, fetch_daily.py:186 and 619). Importing the module still runs `sys.path.insert` and `from src.backtest import engine` (ops/common.py:21-23), so every refresh loads src/backtest and yaml. The rest of the module is unused simulator code: SPEC_PATH points at ops/spec/frozen_spec.json, which does not exist (ls: No such file); fetch_yfinance fills missing volume and dividends with 0.0 (:240-262); and impact_vol_bp does `bfill().fillna(IMPACT_VOL_FALLBACK_BP)` (:304), both a lookahead and an invented default. A failed src/backtest import (a research edit) would break fetch_daily at import, and with it the refresh."
+     },
+     {
+      "title": "The dashboard exporter named in the standard's scope does not exist",
+      "confirmed": true,
+      "note": "New. dashboard/ holds only README.md and an empty snapshots/ folder. No .py, .sh or template in the repo writes dashboard/snapshots. The README (§1) says the exporter 'runs on the VM' and that how snapshots reach the repo 'is not decided yet'. The A2 checks have nothing to apply to for it, and A5.2's measurer (`dashboard/`) does not exist."
+     }
+    ]
+   }
+  },
+  {
+   "area": "controls-stopping",
+   "audit": {
+    "area": "A3 Pre-trade controls and A4 Stopping (worktree live-standard at 877320c). Runners that can send, found from the code: quantt/session/run.py serves the cef and c4 books (BOOKS, run.py:272-286), each on its own Alpaca paper account. quantt/sleeves/run.py serves the events account (ops/sleeves/events_sleeves.json, book \"events\", 8 enabled sleeves) and sends through the core's _transmit. Only three paths call submit_order (run.py:2640, run.py:2872, sleeves/run.py:666). shadow/, quantt/collect, scripts/ops reports and the b6 benchmark send nothing.",
+    "checks": [
+     {
+      "id": "A3.1",
+      "verdict": "GAP",
+      "evidence": "No per-order limit on shares, notional or ADV share exists in any runner. Gate 9 checks only form: gate.py:919-958 gate_sanity covers 'qty is not a positive int', the universe, opposite sides, the cid and account flags. Gate 8 covers the whole book: gate.py:872-916 gate_exposure checks gross <= max_gross_exposure_usd, the stress cap, buying power and Reg T. I grepped live code (quantt, shadow, ops, src/deploy) for max_order|max_shares|max_notional|order_notional|adv_share|max_adv|participation and found only the events max_orders count. The events limits are per position or a minimum, not per order: max_name_usd (net.py:224 'net position ${usd} is above max_name_usd', refused at PLAN) and min_order_usd. The specs' frozen.min_adv_usd is a universe filter inside the sleeve, not an order limit. No gate test covers any of the three limits.",
+      "gap": "No per-order maximum shares, maximum notional or maximum ADV share, and no tests for them, in the cef, c4 or events send paths.",
+      "work_order": "Add required per-order keys (max_order_shares, max_order_usd, max_order_adv_share) to ops/books/cef_discount_book.json, ops/books/c4_families_book.json and ops/sleeves/events_sleeves.json. A missing key raises. Add a gate_order_limits function in quantt/session/gate.py, called from evaluate, run._send_planned and sleeves/run._send, that refuses and names the limit. ADV is read from data dated before the as-of. Write one test per limit plus a missing-key test.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A3.2",
+      "verdict": "GAP",
+      "evidence": "Every order is type=market. alpaca.py submit_order says 'Always `type=market`', and its payload has no limit price. All three books send late_market `day` orders inside the window before the close, which are not closing-auction orders: cef and c4 window [8,2], events window [20,2] (events_sleeves.json execution). At send the only prices are the plan's as-of closes (run.py `closes = {k: float(v) for k, v in plan[\"closes\"]...}`, sleeves/run.py:584). They value exposure and are never compared with a live quote. Grep for 'collar' or limit_price in live code: no match.",
+      "gap": "No price collar or reference-price check on the non-auction late_market orders, and no test of one.",
+      "work_order": "Add a collar gate in quantt/session/gate.py. For every non-cls order it reads a live reference price at send (Alpaca latest trade or quote, through a new GET in quantt/broker/alpaca.py) and refuses when the price is outside a required book-file band around the as-of close. A later step could send marketable limit orders capped at the collar. Write tests per side and a missing-key test.",
+      "size": "M",
+      "risk": "medium"
+     },
+     {
+      "id": "A3.3",
+      "verdict": "PARTIAL",
+      "evidence": "Events: max_orders is a required key (sleeves/config.py:48, 63, 180; the file sets 300). sleeves/run.py:446-448 raises Refused 'the plan holds N orders, above max_orders'. Test sleeves/tests/test_run.py:302 test_more_orders_than_max_orders_refuses_the_plan, which I ran: it passes. Core cef and c4 have no order-count key or gate. Two things bound the count only indirectly: gate 9 allows one order per symbol of the frozen universe, and gate_late_send_budget (gate.py:357-392) fits n_orders x 3 s + 42 s into the window. In no runner does a breach leave the book stopped until a person re-arms it. The events refusal applies to one plan only, and the next scheduled PLAN tries again.",
+      "gap": "The cef and c4 books have no maximum order count. No runner turns a breach into a sticky stop that only a person clears.",
+      "work_order": "Add a required max_orders key to both ops/books/*.json and a count gate in quantt/session/gate.py used by all three send paths. On a breach, write a durable scoped halt (ops.halt.write_halt(book=...) or <state>/HALT) that only a person clears. Write tests for the refusal, the missing key and the sticky halt.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A3.4",
+      "verdict": "PASS",
+      "evidence": "gate.py:691-740 gate_no_set_in_auction refuses when STARTED exists, when an Alpaca order carries the <prefix>-<YYYYMMDD>- id, when any order is open, or when the lists could not be read. All three transmit paths apply it and then create STARTED exclusively before the first order. Core cls path: run.py:2521 gt.evaluate, then create_exclusive at 2630. Core late path: run.py:2801, create_exclusive at 2866. Events: sleeves/run.py:600, create_exclusive at 661. verify.py also FAILs a day with no STARTED when Alpaca holds orders for it. Tests: quantt/session/tests/test_gate.py and test_gate6_fresh.py, which I ran with `python3 -m pytest ... -q`: all passed. shadow/ has no submit_order caller.",
+      "gap": "",
+      "work_order": "-",
+      "size": "-",
+      "risk": "-"
+     },
+     {
+      "id": "A3.5",
+      "verdict": "PARTIAL",
+      "evidence": "There is one adapter, quantt/broker/alpaca.py. The constructor refuses any trading endpoint other than exactly PAPER_BASE (alpaca.py:377-379), and submit_order checks again ('refusing to submit to non-paper endpoint', line 664). The events SEND refuses a client whose trading_endpoint is not paper (sleeves/run.py:614-617). Tests: test_alpaca_client.py:121 test_a_live_or_any_non_paper_trading_endpoint_is_refused, :483 the tampered-base test, :163 test_a_missing_key_names_the_variable_and_no_other_books_key_is_used, and sleeves test_run.py:455 test_a_client_that_is_not_the_paper_endpoint_refuses plus test_a_core_book_name_is_refused. I ran them: they pass. Nothing ties a book to its own account, though. No account id is pinned or compared at run time: account_number appears only in alpaca_probe.py:177's scrub list. Keys are chosen only by env-var name (ALPACA_<BOOK>_*).",
+      "gap": "The endpoint side is tested. The account side is not: if one book's keys sit under another book's variable names, nothing catches it except indirectly (gate 9's non-universe holdings, gate 6's open-order check). Whether the vault and config/.env keys map to the right accounts cannot be measured from the repository; an account-id read per book on the VM would measure it.",
+      "work_order": "Record a hash of each book's Alpaca account id in its tracked book file (ops/books/*.json, ops/sleeves/events_sleeves.json). Each runner refuses before any order when account()'s id hashes differently. Write one test per book.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A3.6",
+      "verdict": "PARTIAL",
+      "evidence": "Before sending, both runners reload the saved plan and refuse unless its orders hash to plan_sha (run.py:2672-2675 load_decided_plan). Events also checks record_sha (sleeves/run.py:338-349). Tests: session test_run.py:826 test_late_send_refuses_a_tampered_plan and sleeves test_run.py:471 test_a_hand_edited_plan_is_never_sent, both passing. In the core, the list then changes after the hash check: shortability skips and fit_to_buying_power (run.py:2727-2757). No explicit check confirms that what is sent is a subset of the plan. After sending, core _transmit compares each sent order with the broker's (run.py:3530), and core VERIFY compares the broker's orders with orders.jsonl, which records what was submitted, not the plan (verify.py:619 'at Alpaca but not in orders.jsonl', :650 'differs from the record'). The events VERIFY does compare the log with the plan (sleeves/run.py:905-909 'not an order of the plan') and the broker with the log (:919).",
+      "gap": "Events: complete. cef and c4: no pre-send subset check after the fit or skips, and VERIFY never compares the broker's orders or the log with plan.json.",
+      "work_order": "In quantt/session/run.py (_send_planned and the cls path), refuse before STARTED unless every order to transmit matches a plan order by client_order_id, symbol and side, with qty no larger than planned. In verify.verify_day, compare orders.jsonl and Alpaca's D-prefixed orders with STARTED's plan orders and FAIL on any order not in the plan or larger than planned. Write tests that fail against today's code.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A4.1",
+      "verdict": "GAP",
+      "evidence": "No cancel or flatten path exists anywhere. alpaca.py:42-44 says 'Cancel or replace. There is no DELETE or PATCH in this module'. Grep for cancel_all, kill switch or stop-all in quantt, shadow, ops, scripts/ops and docs: no tool. ops/halt.py has no CLI. The RUNBOOK stop is a per-book python -c write_halt one-liner run in the prod clone on the VM through sudo (RUNBOOK.md:181-187, 924-928), and the RUNBOOK says 'None of them cancels an order already at Alpaca' (178-179, 921-922). It also says 'Cancelling an order already sent is an order-path action: the TL only' (200). The events book has its own <state>/HALT (sleeves/deploy/README.md:103). A global ops/HALT.md in the prod clone does stop the next send of cef, c4 and events (halt.py:183-195 reads the global file first), but only from the VM, and it does not cancel or flatten.",
+      "gap": "No single command cancels every open order across accounts, halts every runner, optionally flattens, runs from both the VM and the laptop, and has tests.",
+      "work_order": "Add a cancel method to the broker adapter. Build an ops stop-all command that, for every account (cef, c4, events), writes the global halt, cancels all open orders, reads back that none remain, and closes positions only with --flatten. Make it runnable from the VM and, broker-side, from the laptop. Write mocked tests and document it in RUNBOOK §4 and §8.6.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A4.2",
+      "verdict": "GAP",
+      "evidence": "`grep -ril rehears` over docs, results/ops and ops finds only docs/STANDARD.md, the ruling in docs/SYSTEM.md:943 ('the stop-everything command rehearsed on paper every month') and an unrelated mention in results/ops/C4_DRY_RUN_CHECKLIST_2026-10-29.md:115. There is no rehearsal log, and no command exists to rehearse (A4.1).",
+      "gap": "There is no monthly stop rehearsal and no timed log of one.",
+      "work_order": "Once A4.1 exists, start a log in results/ops (date, accounts, open orders before and after, seconds taken). Rehearse on paper monthly and after every order-path change. Have ops.doc_audit or orient flag a newest entry older than 31 days.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A4.3",
+      "verdict": "PARTIAL",
+      "evidence": "cef and c4 both set risk.drawdown 'report' in ops/books/*.json. The levels are spec risk.halve_drawdown 0.12 and kill_drawdown 0.18. run.py:1509 _drawdown runs at every decide, and an acting mode raises (run.drawdown_for). scripts/ops/risk_daily.py:151-178 drawdown_block reports ACT each night, but only for --book cef or c4 (data_qa.py:141-146 BOOKS). quantt/session/tests/test_drawdown.py passes. The decide-time reading is UNMEASURED by construction: RUNNER.md says prod's '4 of 4 decides ... read UNMEASURED because the newest row was D−1', so the working report is risk_daily's read of the D−1 row, labelled stale. The events account has no HALVE or KILL anywhere: no levels in events_sleeves.json, and a grep for drawdown, halve or kill in quantt/sleeves is empty.",
+      "gap": "The events account's HALVE and KILL are neither defined nor reported.",
+      "work_order": "Add HALVE and KILL levels for the events account (required keys in ops/sleeves/events_sleeves.json). Report them nightly by extending scripts/ops/data_qa.BOOKS and risk_daily.py to --book events, reading its EOD equity series, or by adding a report-mode drawdown step to quantt/sleeves/run.py PLAN. Include tests.",
+      "size": "S",
+      "risk": "medium"
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "The events runner passes an infinite dollar gross ceiling to gate 8, against the standard's rule that a missing limit refuses",
+      "evidence": "quantt/sleeves/run.py:605-607 (and 453 at PLAN): '# there is no separate dollar ceiling in the book file, so `max_gross_usd` is infinite' -> gt.gate_exposure(..., math.inf, cfg.max_gross_x_equity, ...). Only the equity multiple (1.5x, applied only when a set adds gross), Reg T and buying power bind. docs/STANDARD.md A3: 'A missing limit refuses the order'.",
+      "risk": "medium"
+     },
+     {
+      "title": "ops/halt.py points the operator at ops/preflight.py, which does not exist",
+      "evidence": "ops/halt.py:21 says HALT.md is 'read by `ops/preflight.py` as a HARD GATE', and the text it writes into the halt file says the same (lines 142, 151, also 344). `git ls-files ops | grep -i preflight` returns nothing. The runners actually read halts directly (run.py halts_for, sleeves/run.py _repo_halts). A document contradicting the code (A1.5).",
+      "risk": "low"
+     },
+     {
+      "title": "A silent fallback in the halt module",
+      "evidence": "ops/halt.py:97-98 `except Exception: pass` in _load_env_file, which reads config/.env for alert settings. The file write itself is unguarded, so the stop still works, but the alert channels lose their configuration without a word (CLAUDE.md no silent fallbacks; A2.5).",
+      "risk": "low"
+     }
+    ]
+   },
+   "verify": {
+    "checks": [
+     {
+      "id": "A3.1",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "No runner has a per-order maximum on shares, notional or ADV share. quantt/session/gate.py:919-958 gate_sanity checks form only ('qty ... is not a positive int', universe, side, duplicate or malformed cid, opposite sides, account flags). gate.py:872-916 gate_exposure checks the whole book: projected gross > max_gross_exposure_usd, stress_breach, buying power, Reg T and maintenance. quantt/session/decide.py has no size cap; it raises only on malformed targets. A grep of quantt, src/deploy, ops and shadow (tests excluded) for max_order|max_shares|max_notional|order_notional|participation|adv_ finds no order limit. The events keys are a position cap and a minimum. quantt/sleeves/config.py:44 says 'max_name_usd  the largest net position in one symbol'; net.py:224-225 raises 'net position ${usd} is above max_name_usd', at PLAN only. config.py:41 min_order_usd is a floor. src/deploy/sleeves/cef_discount.py:666-667,1176 min_adv_usd is a universe filter. The core book files' limits blocks hold max_gross_exposure_usd, book_drawdown_suspend_pct and per_sleeve_capital_band, and c4's _limits_note says they are 'READ BY NO CODE on the Alpaca path'. No gate test covers any per-order limit.",
+      "note": "Agree. Events max_name_usd ($50,000) limits an order only indirectly, to at most |before| + |after| in one name. The core has no per-name cap at all, only gross caps. Work order: add required per-order keys (max_order_shares, max_order_usd, max_order_adv_share) to ops/books/cef_discount_book.json, ops/books/c4_families_book.json and ops/sleeves/events_sleeves.json, with a missing key raising. Add gate_order_limits to quantt/session/gate.py and call it from evaluate, run._send_planned and sleeves/run._send. ADV is read with the panel's shift(1) alignment, strictly before the as-of. Write one test per limit, a missing-key test, and a test that fails against today's code. Size M. Risk if open: high for real money (a sizing bug or a bad close sends an oversized order that only the book-level gross and buying-power checks can catch); medium on paper."
+     },
+     {
+      "id": "A3.2",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "quantt/broker/alpaca.py:644-683 submit_order says 'Always `type=market`'. Its payload is {symbol, qty, side, 'type': 'market', time_in_force, client_order_id}, with no limit_price. Every book sends non-auction orders: cef and c4 execution {mode: late_market, window_minutes_before_close: [8, 2]}, events [20, 2] (events_sleeves.json execution). At send the only prices are the plan's as-of closes: run.py _send_planned 'closes = {k: float(v) for k, v in plan[\"closes\"].items()}' and sleeves/run.py:583-584. They value exposure and buying power and are never compared with a live price. A grep of quantt, src/deploy, shadow and ops for collar|limit_price|latest_trade|latest_quote|/quotes/latest|/trades/latest|reference price finds nothing on the order path. The adapter has no quote or trade GET.",
+      "note": "Agree. The cls path (run.py:2630-2648) would be exempt as a closing-auction order, but neither book uses it, and the events runner has no cls mode (config.py raises unless mode is late_market). Work order: add a latest-trade/quote GET to quantt/broker/alpaca.py. Add a gate_price_collar in quantt/session/gate.py that, for every non-cls order, reads that reference at send and refuses when it is outside a required book-file band around the plan's close. Call it from run._send_planned and sleeves/run._send. Later, send marketable limit orders capped at the collar. Write tests per side, for a missing key and for an unreadable quote (refuse). Size M. Risk if open: medium on paper, high at real money (a market order minutes before the close into a halted or gapped name fills at any price)."
+     },
+     {
+      "id": "A3.3",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Events: max_orders is required (quantt/sleeves/config.py:48, 62-63 REQUIRED, 180 _int). sleeves/run.py:446-448 raises 'the plan holds {n} orders, above max_orders {cfg.max_orders}; nothing is planned'. Test quantt/sleeves/tests/test_run.py:302 test_more_orders_than_max_orders_refuses_the_plan; I ran it and it passed. Core cef and c4: no order-count key in ops/books/*.json and no count gate in gate.py. Only indirect bounds: gate 9 refuses duplicate cids and opposite sides, so at most one leg-1 order per universe symbol, and gate.py:362-392 gate_late_send_budget refuses a set the window cannot finish. Not sticky anywhere: a refused events PLAN writes no plan.json, and _unbooked_sessions (sleeves/run.py:245-252) counts only days that have a plan.json, so the next day's PLAN runs again with AUTO_ARMED still in place. The core's refusal is per session in the same way.",
+      "note": "Agree. Work order: add a required max_orders key to both ops/books/*.json and a gate_order_count in quantt/session/gate.py called by all three send paths. The events check moves from PLAN-only to the shared gate. On a breach, write a durable halt (ops.halt.write_halt(book=...) or <state>/HALT) that only a person clears. Write tests for the refusal, the missing key, and the halt persisting into the next session. Size S. Risk if open: medium (a runaway decide on cef or c4 is bounded only by the universe size and the time budget, and no breach stops the book)."
+     },
+     {
+      "id": "A3.4",
+      "agree": true,
+      "verdict": "PASS",
+      "evidence": "quantt/session/gate.py:691-740 gate_no_set_in_auction refuses on STARTED, on any Alpaca order with the '<prefix>-<YYYYMMDD>-' id (status=all), on any open order, and on an unread list ('a list that cannot be read is not an empty one'). It is applied on all three transmit paths, each followed by an exclusive STARTED before _transmit: core cls path run.py:2521 gt.evaluate, then create_exclusive at 2630 and _transmit at 2640; core late send run.py:2801, then 2866 and 2872; events sleeves/run.py:600-601, then 661 and 666. Only _transmit (run.py:3491) calls submit_order, and the adapter has the only POST (alpaca.py:685). Tests exist: test_gate.py:345 test_started_refuses, :349 test_alpaca_order_with_todays_prefix_refuses_even_if_filled, test_gate6_fresh.py:206, session test_run.py:261 test_second_run_same_day_refuses_and_keeps_the_sent_plan, sleeves test_run.py:385 test_a_second_send_refuses_on_started_and_sends_nothing_more and :1172 test_started_is_created_exclusively_and_a_lost_race_sends_nothing. I ran test_gate.py and test_gate6_fresh.py with pytest -q; they passed. verify.py:615-616 also fails a day with no STARTED when Alpaca holds orders for it.",
+      "note": "Agree: PASS. shadow/ holds no order-capable call (shadow/sources.py wraps the client as a read-only facade)."
+     },
+     {
+      "id": "A3.5",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Endpoint side: alpaca.py:377-379 constructor 'refusing trading endpoint ... talks only to the paper endpoint' (exact equality); submit_order re-checks at line 664; sleeves/run.py:612-615 refuses a client whose trading_endpoint != PAPER_BASE. Tests: test_alpaca_client.py:121, :163 (missing key, no other book's key substituted), :483 (base tampered after construction); sleeves test_run.py:455 and :259 test_a_core_book_name_is_refused (config.py refuses book 'cef', 'c4' or 'b6'). I ran them and they passed. Account side: account() returns 'id' (alpaca.py:507-509), but no caller compares it with anything. A grep for account_number|account_id finds only the probe's scrub list (alpaca_probe.py:177). Keys are chosen only by variable name (alpaca.py:2100-2117 _load_keys via env_names). The state dir name and the cid prefix are tied to the book (run.py BOOKS:272-286, rec.require_book_state_dir).",
+      "note": "Agree. One more point: ops/books/c4_families_book.json _book_id_note says 'Since 2026-10-28 the agent lab shares that account', which contradicts 'a book reaches only its own account' if the lab ever trades there. Whether each key in the vault or env file belongs to the intended account is NOT_MEASURABLE from the repository: a per-book account-id read on the VM would measure it. Work order: record a hash of each book's Alpaca account id in its tracked book file. In run.py (decide and send) and sleeves/run.py (plan and send), refuse before any order when account()['id'] hashes differently. Write one test per book, plus a swapped-keys test. Size S. Risk if open: medium (keys filed under the wrong book trade one book's plan in another's account, and only gate 9's stray-holding check or gate 6's open-order check might notice)."
+     },
+     {
+      "id": "A3.6",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Before send, the plan is reloaded and refused unless its orders hash to plan_sha (run.py:2658-2684 load_decided_plan, 'refusing a plan that is not what was decided'); events also checks record_sha (sleeves/run.py:338-349). Tests: session test_run.py:826 test_late_send_refuses_a_tampered_plan and sleeves test_run.py:471 test_a_hand_edited_plan_is_never_sent; both passed. Core: after the hash check the list changes (shortability skips at run.py:2727-2738, fit_to_buying_power at 2750-2761). The fit keeps ids and only lowers qty (dataclasses.replace, 'min(o.qty, ...)'), but nothing compares the final list with the plan before STARTED. After send, _transmit confirms each sent order against the broker (run.py:3530-3538). Core VERIFY compares the broker only with orders.jsonl (verify.py:619 'at Alpaca but not in orders.jsonl', :650 'differs from the record') and reads STARTED only for existence (verify.py:532). Events VERIFY compares the log with the plan (sleeves/run.py:904-908 'which is not an order of the plan') and the broker with the log (:911-918).",
+      "note": "Agree: events is effectively complete, and cef and c4 lack both comparisons. A small events gap: VERIFY compares the broker's symbol and side with the log, and filled_qty with the recorded qty (sleeves/run.py ~929-938), but never the broker's ordered qty directly. Work order: in quantt/session/run.py, before create_exclusive in _send_planned and in the cls path, refuse unless every order to transmit matches a plan order by client_order_id, symbol and side with qty <= planned. In quantt/session/verify.py verify_day, load STARTED's plan and FAIL on any orders.jsonl or Alpaca order for D that is not in it or is larger than planned. Write tests that fail on today's code. Size S. Risk if open: medium (a fit or skip bug can send a list that differs from the approved plan, and nothing after the fact says so)."
+     },
+     {
+      "id": "A4.1",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "No cancel or flatten path exists. alpaca.py:42-44 'Cancel or replace. There is no DELETE or PATCH in this module'. A grep of live code for .delete(|.patch(|cancel_order|cancel_all finds nothing; the only write is the POST at alpaca.py:685. ops/halt.py has no __main__ or CLI. The RUNBOOK stop is a python -c write_halt one-liner in the prod clone (RUNBOOK.md:181-191; VM :924-928 through sudo -u quantt), and the RUNBOOK says 'None of them cancels an order already at Alpaca' (178-179, 921-922) and 'Cancelling an order already sent is an order-path action: the TL only' (200). The RUNBOOK's §8.6 halting examples name only the cef book: book='cef', /quantt_state/cef/AUTO_ARMED, and 'disable --now quantt-cef-session.timer quantt-cef-verify.timer quantt-cef-collect.timer'. C4's quantt-c4-* units and the events quantt-events-plan/send/verify timers are not named. The events stop is a separate <state>/HALT in quantt/sleeves/deploy/README.md:102-106. A global ops/HALT.md does block the next send of all three (halt.py read_halt checks the global file first; run.py halts_for, sleeves/run.py _repo_halts), but it cancels and flattens nothing.",
+      "note": "Agree: GAP. The named measurer (the command's tests) does not exist. Work order: add cancel_all_orders and close_position methods to quantt/broker/alpaca.py, the only DELETE in the adapter, refusing a non-paper endpoint. Build an ops stop-all command that, for every account (cef, c4, events), writes the global halt, cancels every open order, reads back that none remain, and closes positions only with --flatten. It must run from the VM and, broker-side only, from the laptop. Write mocked tests, and document it in RUNBOOK §4 and §8.6 for every book. Size M. Risk if open: high (a wrong set already at Alpaca cannot be stopped from the desk's own tooling inside the 6 to 18 minute late window)."
+     },
+     {
+      "id": "A4.2",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "`grep -rli rehears docs results/ops ops` returns docs/STANDARD.md, docs/SYSTEM.md (941: VM recovery rehearsal; 943: 'the stop-everything command rehearsed on paper every month'), docs/RESEARCH_STATE.md, results/ops/C4_DRY_RUN_CHECKLIST_2026-10-29.md, ops/netguard.py and ops/tests/test_repair_empty_closes.py. None is a stop rehearsal log. There is no command to rehearse (A4.1).",
+      "note": "Agree. Work order: after A4.1, add a results/ops/STOP_REHEARSALS.md log (date, accounts, open orders before and after, positions flattened or not, seconds taken). Rehearse on paper monthly and after every order-path change. Have ops.doc_audit flag a newest entry older than 31 days or older than the last order-path commit. Size S, after A4.1. Risk if open: medium (a stop never run is not known to work)."
+     },
+     {
+      "id": "A4.3",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "cef and c4 set risk.drawdown 'report' (ops/books/*.json). run.py:1354-1376 drawdown_for refuses any mode other than report ('an acting mode is not built'). Levels come from the specs: halve_drawdown 0.12, kill_drawdown 0.18 in both cef_discount.frozen.json and c4_families.frozen.json, read by python. scripts/ops/risk_daily.py:149-174 drawdown_block reports ACT on the newest row (labelled stale when it is D-1), but only for --book cef or c4 (data_qa.py:141-146 BOOKS). quantt/session/tests/test_drawdown.py passed. The named measurer exists (RUNNER.md:1001 'As built (2026-10-19)'), and RUNNER.md:1030-1032 records that decide-time readings are UNMEASURED ('4 of 4 decides ... read UNMEASURED because the newest row was D-1'). Events has nothing: no drawdown, halve or kill in quantt/sleeves/*.py or events_sleeves.json. Worse, it has no official equity series to measure from: quantt/collect/collect.py:242-249 BOOKS is cef and c4 only, scripts/ops/pnl_report.py:177 and ops/daily_page.py:47 are BOOKS = ('cef', 'c4'), and events scores against the 'equity - last_equity' snapshot (sleeves/run.py:769).",
+      "note": "Agree: PARTIAL (cef and c4 report; events neither defines nor reports). The work order is bigger than the first reader's: the events account needs its EOD history collected first. Work order: add an 'events' entry to quantt/collect/collect.py BOOKS with the eod_equity step (with an eod_from date). Add required halve/kill levels to ops/sleeves/events_sleeves.json, extend scripts/ops/data_qa.BOOKS and risk_daily.py to --book events, and add events to ops/daily_page.BOOKS. Include tests, including a missing-level refusal. Size M. Risk if open: medium on paper (the $1M events account can fall through any loss level unreported), and a blocker for real money (B4)."
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "The events runner passes an infinite dollar gross ceiling to gate 8",
+      "confirmed": true,
+      "note": "Confirmed at quantt/sleeves/run.py:452-453 (PLAN) and 604-607 (SEND): gt.gate_exposure(..., math.inf, cfg.max_gross_x_equity, ...), with the comment 'there is no separate dollar ceiling in the book file, so `max_gross_usd` is infinite'. Calling this a 'missing limit' overstates it: the book's gross limit is the required key max_gross_x_equity (1.5), applied through stress_breach. It is documented in the module docstring ('THE GROSS LIMIT AT SEND'). What is real is that stress_breach binds only when a set adds gross, so the only hard ceilings on live numbers are Reg T and buying power, whereas the core also has a hard dollar cap (spec max_gross_exposure_usd). Risk low to medium."
+     },
+     {
+      "title": "ops/halt.py tells the operator that ops/preflight.py enforces the halt; the file does not exist",
+      "confirmed": true,
+      "note": "Confirmed: `git ls-files | grep -i preflight` returns nothing. ops/halt.py:21 says HALT.md is 'read by `ops/preflight.py` as a HARD GATE', and the text written into every halt file says the same (halt.py:142, 151); so do 63, 200, 219 and 344. The real readers are run.py halts_for (1148-1160) and sleeves/run.py _repo_halts (138-142). This contradicts A1.5: a written description of a control that does not match the code, printed into the very file an operator reads during an incident. Risk low."
+     },
+     {
+      "title": "Silent fallback in ops/halt.py _load_env_file",
+      "confirmed": true,
+      "note": "Confirmed at ops/halt.py:89-99: any error reading the fixed path REPO_ROOT/config/.env is swallowed ('except Exception: pass'), and the alert settings then fall to defaults with no message. The halt file write itself is unguarded (write_halt), so the stop still works. Beat and heartbeat reads (halt.py:353, 404, 414) also return {} or None on any exception, with a written reason. Breaks CLAUDE.md's no-silent-fallbacks rule (A2.5). Risk low."
+     },
+     {
+      "title": "RUNBOOK says agents may arm a book under the 2026-11-02 standing authority, which was withdrawn",
+      "confirmed": true,
+      "note": "docs/RUNBOOK.md:968: 'Since 2026-11-02 an agent may run every step below itself, arming included (team lead; CLAUDE.md rule 1, standing authority...)'. CLAUDE.md says the 2026-11-02 standing authority is withdrawn and that the team lead 'installs on the VM, and arms or disarms'. docs/SYSTEM.md:856 records the withdrawal (2026-11-09). The later ruling, SYSTEM.md:918 (2026-11-19), gives this session merges, tags and VM installs only. A document on the order path grants agents arming authority that the rules in force do not (A1.3, A1.5). Risk medium."
+     },
+     {
+      "title": "The events account has no P&L of record and is missing from every desk-level report",
+      "confirmed": true,
+      "note": "The 2026-10-19 ruling makes Alpaca's EOD portfolio history the official daily P&L (RUNNER.md:1084-1086). The collector writes it only for cef and c4 (quantt/collect/collect.py:242-249). The events VERIFY scores against the 'equity - last_equity' snapshot (quantt/sleeves/run.py:769), which RUNNER.md calls a labelled snapshot, never official. ops/daily_page.py:1 claims 'One page a morning for every paper account', but its BOOKS is ('cef', 'c4') (line 47), and pnl_report.py:177 and data_qa.py:141-146 likewise leave out events. A doc/code contradiction, and a records gap (A6) for the $1M account. Risk medium."
+     }
+    ]
+   }
+  },
+  {
+   "area": "monitoring-recon-recovery",
+   "audit": {
+    "area": "A5 monitoring, A6 reconciliation and records, A9 recovery (worktree live-standard @ 877320c). Runner map, from the code: core `cef` = quantt/session (ops/books/cef_discount_book.json); C4 = quantt/session --book c4 (ops/books/c4_families_book.json); the events account = quantt/sleeves (ops/sleeves/events_sleeves.json, book \"events\", installed DRY_RUN=1, and its deploy README says \"Never run against a broker yet\"); the shadow runner = shadow/ (11 simulated books, no order path). b6 has no runner, only probe reads. Scheduled units: quantt-{cef,c4}-{session,collect,verify}, quantt-{cef,c4}-{dataqa,pnl,risk}, quantt-events-{plan,send,verify}, quantt-shadow, plus 6 boot-time key services. There is no dashboard-exporter unit and no backup unit.",
+    "checks": [
+     {
+      "id": "A5.1",
+      "verdict": "PARTIAL",
+      "evidence": "I went through every scheduled unit. (1) quantt-{cef,c4}-verify (17:30 Mon-Fri) write one line per run to verify.log, `D PASS|FAIL <book> ...`. A day the book should have traded and did not is a FAIL with a `MISSED:` prefix (quantt/session/verify.py:256-261). A crash also becomes a FAIL line (verify.py:851-856), and the line is written last (verify.py:800-801). (2) quantt-{cef,c4}-session (every :00/:30, plus 15:52/15:55 and 12:52/12:55) writes no PASS/FAIL. Each run writes `<D>/runs/<stamp>-<mode>.json` with an exit name (run.py:3565-3572). The unit template says \"The day's verdict is verify.log, not this unit's state\" (quantt-cef-session.service.tmpl). (3) quantt-{cef,c4}-collect (:10/:40) writes a data.log line `D DATA COMPLETE|INCOMPLETE` plus status.json (collect.py:1217-1232). It has no MISSED. (4) quantt-{cef,c4}-dataqa, -pnl and -risk write reports/<kind>/<asof>.{md,json} with per-check OK/FLAG/UNMEASURED, or a severity of INFO/WATCH/ACT. None of them writes a job verdict (data_qa.py:16-26, risk_daily.py:42-52). (5) quantt-events-verify writes <D>/verify.json {ok, reason}, with MISSED for a missed send (quantt/sleeves/run.py:984-990), and prints `D PASS|FAIL events` to logs/verify.out.log. With no plan.json it only prints `REFUSED verify` and writes no verify.json (run.py:852). Events plan and send write only plan.json and send.json. (6) quantt-shadow (18:50 and 20:50 Mon-Fri, 07:20 Tue-Sat) exits 0 or 3 and writes nightly.out.log and SCOREBOARD.md. It has no verdict file (shadow/nightly.py:17-20). (7) The six key services keep only their systemd state. Nothing writes MISSED for a job that did not run: if a verify timer never fires, verify.log has no line for that day. The rule that this counts as a FAIL is a reading rule for a person (docs/RUNBOOK.md:222-223), not code.",
+      "gap": "Only the core, C4 and events verify jobs write a PASS/FAIL per day. The collectors, the six report jobs, events plan/send, the shadow nightly and the key services have no PASS/FAIL/MISSED verdict. No job anywhere gets a MISSED when it fails to run, including verify itself.",
+      "work_order": "Add ops/verdicts.py, a writer of `<date> <job> PASS|FAIL <reason>` lines under `<state>/verdicts/<job>.log`. Call it from every unit, either from its main or through ExecStopPost= in quantt/deploy/templates/systemd, install_events_vm.sh and install_shadow_vm.sh. Add a nightly checker unit that compares each timer's expected firings (from install_vm.py _book_job and REPORT_SCHEDULE, and from the two shell installers) with those logs and writes MISSED for every gap.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A5.2",
+      "verdict": "GAP",
+      "evidence": "`git ls-files | grep -i dashboard` returns only dashboard/README.md and dashboard/snapshots/.gitkeep. The README says \"How a snapshot gets from the VM into this folder is not decided yet\" and that the exporter is still to be built (dashboard/README.md §1). Two command-line tools come close but are not the measurer: ops/prod_state.py reads only the last verify.log line and the timer state for cef and c4 (prod_state.py:644, 1213-1219, which shows an age), plus the shadow timer. ops/daily_page.py reads only cef and c4 eod_equity.csv, the newest risk report and the shadow SCOREBOARD (daily_page.py:44-63). Neither covers the events account, the collectors, data QA, the pnl jobs or the shadow job's outcome.",
+      "gap": "There is no dashboard and no exporter. No single page shows the last verdict and its age for every account and every job. The events account is not shown by any monitor.",
+      "work_order": "Build the VM exporter specified in dashboard/README.md §1-3. It reads every account's verify.log or verify.json and every job's verdict log from A5.1, and writes a sanitised snapshot with the verdict and its age per account and per job (events included). Add the dashboard page under dashboard/ that renders it, flagging anything older than its schedule. Get the team lead's ruling on how the snapshot travels.",
+      "size": "L",
+      "risk": "high"
+     },
+     {
+      "id": "A6.1",
+      "verdict": "PARTIAL",
+      "evidence": "Events: met. PLAN refuses unless the ledger equals the broker's positions share for share (quantt/sleeves/run.py:413; ledger.py:64-73), and refuses while an earlier session is unbooked (run.py:409-412). VERIFY checks that every position change is the plan's positions plus the day's fills (run.py:964-970) and re-checks the ledger against the broker (run.py:1017). Any problem is a FAIL that books nothing, so the book stops until the ledger is repaired (run.py:1007-1008). Core and C4: verify reconciles orders and fills against orders.jsonl and flags foreign orders (verify.py:595-675). It reads positions after the close only to derive what was held into the close, `q0 = positions_after - net fills` (verify.py:677-683), and never compares them with the plan's targets. No gate reads the last verdict: in run.py and gate.py, verify.log appears only in a comment, and done_reason reads only STARTED, DONE and DRY_DONE (run.py:381-396). Decide uses the broker's holdings as current (run.py:47-49), so the next session sends after a FAIL day. Verify for day D also refuses to run on any other date (verify.py:73-80, 504-515), so a missed verify can never be done later. The tests pass (`python3 -m pytest quantt/session/tests/test_verify.py quantt/session/tests/test_gate6_fresh.py quantt/sleeves/tests/test_run.py -q`: all dots, no failures).",
+      "gap": "For the two armed books (core and C4), verify does not compare broker positions with the intended positions, and a FAIL or a missing verify line does not stop the book's next send.",
+      "work_order": "In quantt/session/verify.py, compare the broker's positions after the close with plan.json's target shares, adjusted for the orders actually filled, and FAIL on any difference. Add a gate in quantt/session/gate.py, run from quantt/session/run.py at both decide and send, that refuses while the previous session's verify.log line is FAIL or absent until a person writes an acknowledgement, as quantt/sleeves' `_unbooked_sessions` already does. Let verify run late for a named past date.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A6.2",
+      "verdict": "PARTIAL",
+      "evidence": "Core and C4: the collector step `step_eod_equity` keeps Alpaca's end-of-day history in <state>/eod_equity.csv (quantt/collect/collect.py:20, 211, 856-923). Verify prints it as `official ... (Alpaca EOD history, gross)` and never substitutes the snapshot (verify.py:82-102). scripts/ops/pnl_report.py reads `reader.eod_equity_history` (pnl_report.py:466) but has `BOOKS = (\"cef\", \"c4\")` (pnl_report.py:177), and install_vm.py has `REPORT_BOOKS = (BOOK, C4_BOOK)` (install_vm.py:489). Events: nothing in quantt/sleeves or shadow reads eod_equity or portfolio history (grep finds no hits). Events VERIFY records only `equity - last_equity`, labelled \"snapshot at verify\" (quantt/sleeves/run.py:1028, 1050), and the collector's BOOKS are cef and c4 only (collect.py:242-246).",
+      "gap": "The events account has no P&L of record (no Alpaca EOD history series) and is not covered by the P&L report. Today it is DRY_RUN=1, so this bites from the day it is armed.",
+      "work_order": "Add an `events` book to quantt/collect/collect.py (the eod_equity and account_snapshot steps only) with its own collect unit in install_events_vm.sh. Add `events` to scripts/ops/pnl_report.py BOOKS and install_vm.py REPORT_BOOKS, and to ops/daily_page.py BOOKS, so its P&L of record is Alpaca's EOD history like the other two.",
+      "size": "M",
+      "risk": "medium"
+     },
+     {
+      "id": "A6.3",
+      "verdict": "GAP",
+      "evidence": "No tracked file backs up VM state: `git ls-files | xargs grep -i 'backup|rsync|azcopy|off the VM'` finds only ops/repair_empty_closes.py's local panel backup and a manual R2 note. The only off-VM copy is the team lead's untracked `vmpnl.sh`, run by hand, which copies P&L records (equity.csv, scores.csv, distribution_scores.csv, tca.csv, verify logs, eod_equity.csv) for cef and c4 to the scratchpad (scripts/report/snapshot_live.py:4-8; results/report/README.md:40-52). Its R2 sync is also manual: \"Backing up the private cache is the team lead's step\" (results/report/README.md:55-61). plan.json, orders.jsonl, send.json, reconcile.json, the runs/ records, the events ledger.json and verify.json, and shadow_state are not copied off the VM. No backup job exists, so there is no backup verdict.",
+      "gap": "No daily, automatic, complete copy of plans, orders, fills and verdicts leaves the VM, and the named measurer (the backup's own verdict) does not exist.",
+      "work_order": "Add a quantt-backup.service/.timer to quantt/deploy/templates/systemd, installed by install_vm.py and run after the 17:35 verify and again after the morning reports. It copies every state directory (cef, c4, events, shadow_state) with a sha256 manifest to off-VM storage through a write-only identity, then writes its own PASS/FAIL line (A5.1). Write the restore steps into docs/RUNBOOK.md.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A9.1",
+      "verdict": "GAP",
+      "evidence": "docs/RUNBOOK.md has no section on a VM failure. Its headings (lines 1-1451) run 0-8.12. The halting steps say \"None of them cancels an order already at Alpaca\" (RUNBOOK.md:178-179, 921-922) and \"Cancelling an order already sent is an order-path action: the TL only\" (RUNBOOK.md:200), with no procedure given. Grepping docs/, quantt/, ops/ and shadow/ for 'VM is down|VM failure|second machine|cancel all|flatten|rebuild the VM' finds only STANDARD.md and SYSTEM.md:941, the ruling that asks for this procedure. The broker client cannot cancel at all: \"There is no DELETE or PATCH in this module\" (quantt/broker/alpaca.py:42). No procedure names the broker's own manual cancel or close route (the Alpaca web dashboard) for each account.",
+      "gap": "There is no written procedure for a VM failure on a trading day: no way to cancel or flatten, no steps for running the session from a second machine without two armed schedulers, and no manual broker route for when no machine can reach the broker.",
+      "work_order": "Add a docs/RUNBOOK.md section, \"VM failure on a trading day\", for each account (cef, c4, events). It covers: how to see open orders and cancel or flatten them from the laptop, through a team-lead-only cancel-all/flatten command added under quantt/broker/ and shared with A4.1; how to run a session from the laptop only after prod_state shows the VM disarmed; and the Alpaca web dashboard steps for cancelling and closing by hand.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A9.2",
+      "verdict": "GAP",
+      "evidence": "No rehearsal log exists. `git ls-files | grep -iE 'rehears|drill|recovery|restore|disaster'` returns only research files (results/events/exdrift/exdrift_rehearsal_*) and scripts/events/ssx/ssx_risk_b2_disasters.py. EVIDENCE_LOG.md and SYSTEM.md mention rehearsal only in the 2026-11-22 ruling that asks for one (SYSTEM.md:941, 943). The procedure to be rehearsed does not exist either (A9.1).",
+      "gap": "No quarterly, timed, logged rehearsal of VM-failure recovery has happened, and there is no rehearsal log to record one.",
+      "work_order": "Once A9.1 exists, create results/ops/REHEARSAL_LOG.md (date, scenario, account, steps, start and end times, outcome) and run the VM-failure procedure on a paper account each quarter, timed. Have ops/orient or the A5.2 dashboard show the age of the last entry.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A9.3",
+      "verdict": "GAP",
+      "evidence": "Some tooling exists: quantt/deploy/vm/bootstrap.sh makes the user, Python and clone from a tag (bootstrap.sh:1-35). install_vm.py installs the core, C4 and report units, and quantt/sleeves/deploy/install_events_vm.sh and shadow/deploy/install_shadow_vm.sh install the rest. But a rebuild needs data that is in neither the repository nor the vault. The price and NAV panels are \"copied once from the laptop prod panels (`--seed-from`)\" (RUNBOOK.md:475, 631-632, 1138; install_prod.py:111-123, SEED_FILES). VM-only state (eod_equity.csv history, the events ledger.json, shadow_state decisions and marks) has no off-VM copy (A6.3). The VM was first built at release-20261008-1 (EVIDENCE_LOG E-2026-10-08-01), before the reports, events and shadow installers existed. There is no rehearsal log of a rebuild (see A9.2).",
+      "gap": "The VM cannot be rebuilt from the repository and the vault alone, because it needs laptop seed panels and VM-only state. No rebuild has been tested since the installers changed, and no log records one.",
+      "work_order": "Store the seed panels and the daily state backup (A6.3) where a rebuild can fetch them. Write one rebuild procedure in docs/RUNBOOK.md §8: bootstrap.sh, install_vm.py for the core, c4 and --reports, install_events_vm.sh, install_shadow_vm.sh, then restore state. Rehearse it on a scratch VM, log the time in the rehearsal log, and repeat after any installer change.",
+      "size": "L",
+      "risk": "medium"
+     },
+     {
+      "id": "A9.4",
+      "verdict": "PARTIAL",
+      "evidence": "Core and C4: if the broker API fails at send time, the first read (`c.clock()` at run.py:2139) or any read in `_send_planned` raises. It is caught at run.py:2646-2651 and the run exits 20 FAIL: no STARTED, nothing sent, a record under runs/. send.json is not written, so verify reports \"plan decided with N order(s) but no send ran in the late window ... (machine asleep or offline?)\" (verify.py:357-359). That is a FAIL but is not labelled MISSED, although RUNBOOK.md:225 says a missed day begins `MISSED:`. A failed order-list read at the gate refuses, and that is tested (quantt/session/tests/test_gate6_fresh.py:185-203). An error mid-batch stops the batch (run.py:3514-3519). Events: `_guard` turns the error into FAIL (quantt/sleeves/run.py:356-369), and VERIFY writes `MISSED: the plan held N order(s) and no send ran in the window` (run.py:984), tested by test_a_missed_send_is_a_fail_that_still_books (quantt/sleeves/tests/test_run.py:589-593). No test in either runner makes the fake client raise on clock or account at the send and then checks for zero submits, no STARTED and a MISSED verdict.",
+      "gap": "Core and C4 do refuse, but record the outage as an unlabelled FAIL rather than MISSED, and the cause is not in send.json. Neither runner has a test of the API being down at send time.",
+      "work_order": "In quantt/session/verify.py late_no_trade_reason, prefix the no-send case with `MISSED:`. In quantt/session/run.py, write send.json with exit FAIL and the broker error when a send-phase broker read raises. Add tests in quantt/session/tests/test_run.py and quantt/sleeves/tests/test_run.py where the fake client raises AlpacaHTTPError on clock() or account() inside the send window, asserting zero submits, no STARTED, and a verify verdict containing MISSED. Check each test fails against the current code before keeping it.",
+      "size": "S",
+      "risk": "medium"
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "Code that has never been released decides what the events account trades, and that code can reach the vault",
+      "evidence": "shadow/deploy/install_shadow_vm.sh:14-17: the shadow clone \"FOLLOWS A BRANCH (default `shadow`)... this one is not [at a release tag], by design\". Lines 26-33: \"code on the followed branch could fetch whatever that identity may read\", and the copy of the core key it holds \"can trade the core's paper account\". shadow/deploy/nightly.sh:19-21 moves the clone to the branch head on every run. install_events_vm.sh:75 and its job units set `QUANTT_SLEEVES_DECISIONS_DIR=${SHADOW_STATE}`, and events PLAN sizes its orders from those decision files (quantt/sleeves/run.py:418, 199-207). So a push to `shadow`, with no release-check, changes what an order-sending account trades. That contradicts STANDARD A8.1 (\"every unit on the VM runs from that one tag\").",
+      "risk": "medium"
+     },
+     {
+      "title": "docs/RUNBOOK.md still gives agents the withdrawn standing authority to install and arm",
+      "evidence": "docs/RUNBOOK.md:968: \"Since 2026-11-02 an agent may run every step below itself, arming included (team lead; CLAUDE.md rule 1, standing authority...)\". CLAUDE.md order-path rule 1 says \"The 2026-11-02 standing authority and the 2026-10-27 research-loop exception are withdrawn\" and that prod releases, tags, installs and arming are the team lead's alone (2026-11-09). An agent following the runbook would act against the rule now in force.",
+      "risk": "medium"
+     },
+     {
+      "title": "For core and C4, a verify missed on its own day can never be run later",
+      "evidence": "quantt/session/verify.py:73-80 and `_session_window` (504-515) FAIL any run whose Alpaca-clock ET date is not D. `--date` exists (verify.py:823-824) but can only produce \"not verifiable now\" for a past day. If the 17:30 unit misses (VM reboot, broker outage), that session is never reconciled or scored by the tool. The events VERIFY books a missed earlier session with `--date` (quantt/sleeves/run.py:825-848).",
+      "risk": "medium"
+     },
+     {
+      "title": "docs/ROADMAP.md phase 4 contradicts itself",
+      "evidence": "docs/ROADMAP.md:56-57 says \"4.1–4.7 done\", while the table below it lists 4.1 to 4.7, including 4.7 \"Post-close verification\", as `open` (ROADMAP.md:60-67).",
+      "risk": "low"
+     }
+    ]
+   },
+   "verify": {
+    "checks": [
+     {
+      "id": "A5.1",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "I counted 16 timers. Core and C4 each have session, verify and collect (install_vm.py:310-314, 429). There are 6 report jobs, `quantt-{cef,c4}-{dataqa,pnl,risk}` (install_vm.py:489-539). Events has plan, send and verify (install_events_vm.sh:21-23, 353-392), and shadow has one (install_shadow_vm.sh:199-201). There are 7 boot-time key services, not 6: quantt-secret, quantt-c4-secret, quantt-reports-secret, quantt-reports-{cef,c4}-pnl-keys (install_vm.py:553), quantt-events-secret and quantt-shadow-secret.\n\nWhich jobs write a verdict:\n- **Core and C4 verify** write a verdict. Each run appends `D PASS|FAIL <book>` to verify.log as the last step (verify.py:800-801). A crash becomes a FAIL line (verify.py:~851-856). A session that should have traded and did not is `MISSED:` (verify.py:256-261).\n- **Events verify** writes verify.json and prints `D PASS|FAIL events`. With no plan.json it raises Refused (sleeves/run.py:852-854). `_guard` then prints only `REFUSED verify` (run.py:356-361) and writes no verify.json. So a day when PLAN refused (for example, the ledger disagreeing with the broker) leaves no verdict for that day.\n- **Collect** appends `D DATA COMPLETE|INCOMPLETE` to data.log only on runs that work. Idle runs write nothing (collect.py:1244-1246, 1271-1274).\n- **Report jobs** write report files with OK/FLAG/UNMEASURED or INFO/WATCH/ACT, not a job verdict.\n- **Shadow** has only an exit code of 0 or 3, plus the scoreboard (shadow/nightly.py:17-20).\n- **Events plan/send** write only plan.json and send.json.\n\nNo code writes MISSED for a job that never fired. `RUNBOOK.md:222-223` (\"No line for a trading day counts as a FAIL\") is a rule for a person reading. `ops/prod_state.py:1213-1219` shows the last verify line's age, for cef and c4 only.",
+      "note": "I agree, with two corrections: there are 7 key services, not 6, and events verify also leaves no verdict on a day PLAN refused. There is a new noise source too: `quantt-reports-secret.service` is permanently failed by choice (SYSTEM.md:916), so `systemctl --failed` is never clean.\n\nWork order: add one verdict writer (`<state>/verdicts/<job>.log`, `D job PASS|FAIL reason`). Call it from every unit's main or through ExecStopPost= in the systemd templates and both shell installers. Make events verify write a FAIL verify.json when plan.json is missing on a trading day. Add a nightly checker that compares each timer's expected firings (install_vm REPORT_SCHEDULE/_book_job and the shell installers' OnCalendar lines) with those logs and writes MISSED for each gap.\n\nSize M. Risk high: with no alerts, a job that never ran is invisible."
+     },
+     {
+      "id": "A5.2",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "`git ls-files | grep -i dashboard` returns only dashboard/README.md and dashboard/snapshots/.gitkeep. The README says \"How a snapshot gets from the VM into this folder is not decided yet\" and that the dashboard is to be built against a fixture (README §1, §3). No exporter or unit exists.\n\nThe nearest tools cover only part of the desk:\n- `ops/prod_state.py` covers VM_BOOKS = cef and c4 (install_vm.py:454; prod_state.py:771) plus the shadow books. It shows verify age (prod_state.py:1213-1219) and nothing for events.\n- `ops/daily_page.py:51` has `BOOKS = (\"cef\", \"c4\")`.",
+      "note": "I agree. No monitor reads the events account at all, and SYSTEM.md:915 says its first armed day is meant to be shown on Monday 2026-11-23.\n\nWork order: build the VM exporter specified in dashboard/README.md. It reads every account's verdict (verify.log, events verify.json) and every job's A5.1 verdict log, and writes a sanitised snapshot with the verdict and its age per account and per job. Then add the page under dashboard/. The interim minimum is to add events to prod_state and daily_page.\n\nSize L. Risk high."
+     },
+     {
+      "id": "A6.1",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "**Events.**\n- PLAN refuses while an earlier session is unbooked (sleeves/run.py:409-412) and checks the ledger against the broker (run.py:413).\n- VERIFY checks every position against the plan's positions plus the day's fills (run.py:963-970) and checks the new ledger against the broker (~run.py:1017).\n- A break leaves the ledger unbooked, and PLAN stops until the ledger is repaired.\n- A partial fill or a MISSED send is a FAIL that still books, so the next plan proceeds (run.py:1027-1048; test_a_missed_send_is_a_fail_that_still_books).\n\n**Core and C4 (quantt/session).**\n- Verify reconciles orders, fills and foreign orders (verify.py:603-675). It only derives q0 from positions_after (verify.py:677-683) and never compares positions with the plan's targets.\n- The first auditor missed one check that does exist: at SEND, positions must equal the plan's `current` or the send refuses as sanity (run.py:2721-2723, 2812-2813). So drift between decide and send is caught. Drift after the send, or between verify and the next decide, is not, because decide takes broker holdings as current (run.py docstring step 3).\n- No gate reads verify.log: in gate.py and run.py it appears only in comments, and done_reason reads only STARTED, DONE and DRY_DONE (run.py:381-396). So a FAIL day does not stop the next send.\n\nTests: test_verify, test_gate6_fresh and sleeves test_run all pass (run with -p no:cacheprovider).",
+      "note": "I agree. Add the send-time position check above to the evidence. It narrows the gap but does not close it: there is no post-close comparison with the targets, and a FAIL never stops the core or C4.\n\nWork order:\n- In quantt/session/verify.py, compare positions_after with plan.json targets, adjusted for skipped and unfilled orders recorded in send.json, and FAIL on any difference.\n- Add a gate in quantt/session/gate.py, called from run.py at decide and send, that refuses while the previous session's verify.log line is FAIL or absent, until a person writes an acknowledgement (as sleeves `_unbooked_sessions` does).\n- Allow verify to run late for a past date.\n\nSize M. Risk high."
+     },
+     {
+      "id": "A6.2",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "**Core and C4: met.**\n- `step_eod_equity` rewrites `<state>/eod_equity.csv` from Alpaca's EOD history from eod_from on every read (collect.py:856-923; whole-file rebuild at 873-876).\n- Verify labels it `official ... (Alpaca EOD history, gross)` and never substitutes the snapshot (verify.py:82-102).\n- The P&L report reads `reader.eod_equity_history` (pnl_report.py:466).\n\n**Events: not met.**\n- `pnl_report.py:177` has `BOOKS = (\"cef\", \"c4\")`, and install_vm.py:489 has `REPORT_BOOKS = (BOOK, C4_BOOK)`.\n- The collector's BOOKS are cef and c4 only (collect.py:242-250).\n- `grep eod_equity|portfolio_history` finds nothing in quantt/sleeves or shadow.\n- Events VERIFY records only `equity - last_equity`, labelled \"snapshot at verify\" (sleeves/run.py:~1046-1047).",
+      "note": "I agree. This is more urgent than \"bites from the day it is armed\" suggests: arming is planned on Monday's list (SYSTEM.md:915).\n\nWork order: add an `events` entry to quantt/collect/collect.py BOOKS, running only the account_snapshot and eod_equity steps with its own eod_from, with a collect unit in install_events_vm.sh. Add events to pnl_report BOOKS, install_vm REPORT_BOOKS (with its pnl key service) and daily_page BOOKS.\n\nSize M. Risk medium."
+     },
+     {
+      "id": "A6.3",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "`git ls-files` (excluding results/ and data/) piped to `grep -ilE 'backup|rsync|azcopy|off the VM|off-VM'` finds only docs, prod_state.py:678 (\"off the VM by hand\"), and repair_empty_closes' local panel backup. No unit template, installer or script copies VM state off the machine.\n\nThe only off-VM copy is the team lead's untracked, manual `vmpnl.sh`. It pulls P&L files for cef and c4 to the scratchpad (scripts/report/snapshot_live.py:4-8). Its R2 sync is \"the team lead's step\" (results/report/README.md:56-61; RUNBOOK.md:919). There is no backup job, so there is no backup verdict.",
+      "note": "I agree. One refinement on what is actually lost if the VM dies:\n- Orders and fills can be re-read from Alpaca, and eod_equity.csv is rebuilt from Alpaca's history on every collect run.\n- Some records exist nowhere else: plans, runs records, STARTED/send.json, verify.log and reconcile.json, scores.csv, equity.csv snapshots, tca.csv, shadow.csv, the events ledger.json and sleeve_scores.csv, and the whole of shadow_state.\n- Whether Azure takes disk snapshots or backups of the VM cannot be measured from the repo. `az backup protection check-vm` or `az snapshot list` would show it, but it would not meet the check without a verdict anyway.\n\nWork order: add quantt-backup.service/.timer to quantt/deploy/templates/systemd, installed by install_vm.py after 17:35 and after the morning reports. It copies cef, c4, events and shadow_state with a sha256 manifest to off-VM storage through a write-only identity, and writes its own A5.1 verdict. Write the restore steps into RUNBOOK §8.\n\nSize M. Risk high."
+     },
+     {
+      "id": "A9.1",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "There is no VM-failure section in RUNBOOK.md (headings 0-8.12, lines 1-1461).\n- RUNBOOK §4 and §8.6 say \"None of them cancels an order already at Alpaca\" (RUNBOOK.md:178-179, 921-922). §4 says \"Cancelling an order already sent is an order-path action: the TL only\" (RUNBOOK.md:200) and gives no steps.\n- The broker client has no DELETE or PATCH (quantt/broker/alpaca.py:42). `grep -rn 'DELETE|cancel_order|cancel_all|close_all_positions'` over quantt, ops, scripts/ops and src finds nothing.\n- Nothing names Alpaca's web dashboard as the manual route.\n\nCorrection to the first auditor: a route to a second machine IS written. RUNBOOK.md:863-868, \"Rolling back to the laptop\", says \"First halt the VM (8.6) and disarm it; never have two armed schedulers\", then re-enable launchd and run install_prod. But it covers the core only (install_prod has no --book; its JOBS are cef only, install_prod.py:173-205). It needs the VM reachable to halt it, it is written as the reverse of a cut-over rather than for a failure on a trading day, and the laptop's panels and state are weeks old.",
+      "note": "I agree with GAP, because no part of the check is complete for any book. The first auditor's statement that there are \"no steps for running the session from a second machine\" is wrong, though: RUNBOOK.md:863-868 exists for cef and should be the base of the fix.\n\nWork order: add a RUNBOOK section, \"VM failure on a trading day\", for each of cef, c4 and events. It covers:\n- how to stop the VM from the Azure side, so it cannot come back armed;\n- how to list and cancel open orders and flatten, from a team-lead-only command under quantt/broker/;\n- the laptop route for each book, including C4 and events installers or wrappers on the laptop;\n- the Alpaca web dashboard steps for cancelling and closing by hand.\n\nSize M. Risk high."
+     },
+     {
+      "id": "A9.2",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "`git ls-files | grep -iE 'rehears|drill|recovery|restore|disaster'` returns only research files (results/events/exdrift/exdrift_rehearsal_*) and scripts/events/ssx/ssx_risk_b2_disasters.py. results/ops/ holds no rehearsal log. SYSTEM.md mentions the rehearsal only in the 2026-11-22 ruling that asks for one (\"Rehearsed procedure\", in the table after line 925).",
+      "note": "I agree.\n\nWork order: once A9.1 is written, create results/ops/REHEARSAL_LOG.md (date, scenario, account, steps, start and end times, outcome). Run the procedure on a paper account each quarter, timed. Have prod_state or the A5.2 page show the age of the last entry.\n\nSize S, after A9.1. Risk medium."
+     },
+     {
+      "id": "A9.3",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "The tooling exists:\n- quantt/deploy/vm/bootstrap.sh;\n- install_vm.py for core, c4 and --reports;\n- install_events_vm.sh and install_shadow_vm.sh.\n\nBut a rebuild cannot come from the repository and the vault alone:\n- The core's panels come from `--seed-from` (install_prod.py:111 SEED_FILES; install_vm.py:1470-1476, 1732-1733 refuse without it).\n- C4 needs a seed manifest built on the laptop (install_vm.py:356, 1409-1430).\n- install_events_vm.sh refuses unless shadow_state already holds each sleeve's decisions (install_events_vm.sh:155, 216-218), so the events book cannot be rebuilt until the shadow runner has run.\n- The events ledger.json and shadow_state history have no off-VM copy (A6.3).\n\nThere is no rehearsal log of a rebuild.",
+      "note": "I agree, with one correction: eod_equity.csv is not VM-only state. The collector rebuilds it in full from Alpaca's history on every read (collect.py:873-876). What cannot be rebuilt are the panels' VM-appended history, the run and verdict records, the events ledger and shadow_state.\n\nWork order: store the seed panels and the daily state backup (A6.3) where a rebuild can fetch them with the VM identity. Write one ordered rebuild procedure in RUNBOOK §8: bootstrap.sh; install_vm core, c4 and --reports; install_shadow_vm.sh; restore shadow_state; install_events_vm.sh; restore state. Rehearse it on a scratch VM, log it, and repeat after any installer change.\n\nSize L. Risk medium."
+     },
+     {
+      "id": "A9.4",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "**Core and C4** (both books are execution.mode late_market, checked in both book jsons).\n- If a broker read raises in the send phase (`c.clock()` at run.py:2141, or `c.account()`, `c.positions()` or `c.asset()` in `_send_planned` at run.py:2710-2716), the exception is caught at run.py:2646-2651. The run exits 20 FAIL, writes only a runs/ record (`_finish`, run.py:3565-3571), writes no send.json and no STARTED, and sends nothing.\n- Verify then reports \"plan decided with N order(s) but no send ran in the late window ... (machine asleep or offline?)\" (verify.py:357-359). That is a FAIL with no `MISSED:` prefix, and it names the wrong cause. test_verify.py:700 pins that wording (`\"no send ran\" in prob`), against RUNBOOK.md:225.\n- A failed order-list read at the gate does refuse, and is tested (test_gate6_fresh.py:185-203). Verify reads that refusal as MISSED, because no_set_in_auction is not a deliberate gate (verify.py:367-368; test_verify.py:706, 726).\n\n**Events.**\n- An orders-endpoint outage at send refuses with zero submits and no STARTED, and is tested: test_a_set_that_may_already_be_out_refuses[unread], sleeves/tests/test_run.py:393-411, which the first auditor missed.\n- Any other error is FAIL through `_guard` (run.py:356-367) with no send.json, which verify records as `MISSED: ... no send ran` (run.py:~984, tested at test_run.py:589-593).\n\nNeither runner has a test where clock(), account() or positions() raises inside the send window.",
+      "note": "I agree with PARTIAL. Events behaves correctly and is partly tested; for core and C4, an API outage on any read other than the order list is an unlabelled FAIL that names the wrong cause.\n\nWork order:\n- In quantt/session/run.py, write send.json with exit FAIL and the broker error when a send-phase read raises.\n- In verify.py `late_no_trade_reason`, label the no-send case `MISSED:` and name the recorded error.\n- Update test_verify.py:700.\n- Add tests in quantt/session/tests/test_run.py and quantt/sleeves/tests/test_run.py where the fake client raises AlpacaHTTPError on clock() or account() in the window, asserting zero submits, no STARTED and a MISSED verdict. Check each fails against the current code first.\n\nSize S. Risk medium."
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "Unreleased code on the `shadow` branch decides what the events account trades, and it can fetch vault secrets",
+      "confirmed": true,
+      "note": "Confirmed.\n- shadow/deploy/nightly.sh:19-20 moves the clone to the head of the followed branch on every run.\n- install_events_vm.sh:75 and 298 point the events units at `QUANTT_SLEEVES_DECISIONS_DIR=${SHADOW_STATE}`.\n- quantt/sleeves/inputs.py:9-11 says the decision files are written \"from a clone that follows an unreleased branch\".\n- inputs.py checks only format: the slug, the on-time rule, a symbol regex and |weight| <= 2.0 (inputs.py:41-44).\n- install_shadow_vm.sh:26-31 says branch code \"could fetch whatever that identity may read\", and RUNBOOK §8.1 gives the VM identity read access to the vault.\n\nSo a push to `shadow`, with no release check, changes an order-sending account's targets. This breaks STANDARD A8.1. Whether the `shadow` branch is protected on GitHub cannot be measured from the repo.\n\nRisk medium to high, because events arming is planned for Monday (SYSTEM.md:915)."
+     },
+     {
+      "title": "RUNBOOK.md:968 still grants agents the withdrawn standing authority to install and arm",
+      "confirmed": true,
+      "note": "Confirmed. RUNBOOK.md:968 says \"Since 2026-11-02 an agent may run every step below itself, arming included (... standing authority ...)\".\n\nSYSTEM.md:856 withdraws that authority, and CLAUDE.md order-path rule 1 agrees. Two adjacent §5 rows also disagree with each other:\n- SYSTEM.md:918: \"This session runs them\" (merges, tags, VM installs; 2026-11-19).\n- SYSTEM.md:919: \"You prepare, I run them\" (merge, tag, VM installs, arming, each run by the team lead with `!`).\n\nNo current ruling lets an agent arm. The runbook and §5 need one consistent statement.\n\nRisk medium."
+     },
+     {
+      "title": "Core and C4 verify cannot be run late, so a missed 17:30 verify is never reconciled",
+      "confirmed": true,
+      "note": "Confirmed. The verify.py docstring (73-80) and `_session_window` (verify.py:504-509) FAIL any run whose Alpaca-clock ET date is not D. `--date` exists (verify.py:~823) but for a past day can only produce \"verify for D must run on D\".\n\nThe events verify can book a missed day with `--date` (sleeves/run.py:825-848, `late = F < today`).\n\nRisk medium: one VM reboot or broker outage at 17:30 leaves that session unreconciled and unscored for good."
+     },
+     {
+      "title": "docs/ROADMAP.md phase 4 contradicts itself",
+      "confirmed": true,
+      "note": "Confirmed. ROADMAP.md:55-56 says \"4.1–4.7 done\", while the table at lines 60-66 marks 4.1 to 4.7, including 4.7 post-close verification, as `open`.\n\nRisk low."
+     },
+     {
+      "title": "The events deploy README still says the book has never run against a broker",
+      "confirmed": true,
+      "note": "Found by me.\n- quantt/sleeves/deploy/README.md:3 says \"Paper only. Never run against a broker yet\", and its Known gaps (README:200) says \"Never run against a broker\".\n- EVIDENCE_LOG E-2026-11-20-10 records the runner installed on the VM with orders off, planning against the events account (212 orders).\n- E-2026-11-20-12 records an incident in its first evening check against that account.\n- SYSTEM.md:915 plans arming on Monday's list.\n\nThe README understates what the book is doing.\n\nRisk low to medium."
+     },
+     {
+      "title": "A key service that stays failed on purpose means systemd's failed list is never clean",
+      "confirmed": true,
+      "note": "Found by me. SYSTEM.md:916 (2026-11-20, \"Skip alerts for now\") leaves `quantt-reports-secret.service` failed by choice. Collect and report units rely on systemd's failed state as their only signal (quantt-cef-collect.service.tmpl: exit 5 \"shows as failed ... on purpose\"). A unit that is always failed trains the reader to ignore `systemctl --failed`, and there is no other alarm (A5).\n\nRisk low to medium until the A5.1 verdict logs exist."
+     }
+    ]
+   }
+  },
+  {
+   "area": "data-access",
+   "audit": {
+    "area": "A7 Data and A10 Access and secrets (docs/STANDARD.md, worktree live-standard at 877320c)",
+    "checks": [
+     {
+      "id": "A7.1",
+      "verdict": "PARTIAL",
+      "evidence": "Gate 5 exists and names what it refuses. quantt/session/gate.py:395-429 `gate_data` refuses when the refresh exit is not 0, or when a close or NAV is not dated the as-of date (\"{label} not dated {asof} for {stale}\"). The core and C4 share it through `evaluate` (gate.py:961-979). The NAV VALUE check does not refuse. ops/books/cef_discount_book.json:33 sets \"stale_nav\": \"report\". nav_gate.py:313-323 `action_for` returns only \"would replace/keep/defer/hold\" in report mode, and docs/RUNNER.md:1207-1208 says report mode \"changes nothing\". The gate's referee, CEFConnect, has refused the VM since 2026-10-21 (docs/DATA.md:200-219), and data QA Q9 only flags it. C4 has no stale_nav key; its spec's M1 nav_repeat_mask drops a repeated NAV and does not refuse. Implausible values: C4's refresh refuses an unruled split-like spike (exit 6) and a basis step (exit 7). For the core, scripts/cef/fetch_daily.py:155-156 says \"The core runs no spike guard\" and :164 says \"none of this runs for it\". The core's only plausibility test is finite and positive (`has_close` :469, `has_nav` :531). The events runner (quantt/sleeves) checks that each close is dated D and finite > 0 (prices.py:94-95). It checks each decision file's as-of date, the 09:30 on-time rule and |w| <= 2.0 (inputs.py:41,44). It has no jump check on the closes it sizes from; the shadow engine's SPLIT_GUARD (shadow/engine.py:68) applies to marks, not decisions. No generated list of live inputs and their checks exists. Tests run: test_nav_gate, test_missing_nav_hold, test_corp_actions and test_ca_malformed_and_acks all passed, 3 skipped.",
+      "gap": "The core NAV's value is never refused when stale: report mode, and the referee is down. The core price panel has no implausibility guard. The events runner's closes have no jump guard. Computed values (z, vol scalar, ADV) have no plausibility check beyond gates 8 and 9. The \"list of inputs without a check\" that the standard names as measurer does not exist.",
+      "work_order": "Set the core's `data.stale_nav` to `on` with a working referee, or refuse a NAV(D) equal to NAV(D-1) that nothing has verified. Run C4's `data_guards.guard_closes` spike guard on the core refresh in scripts/cef/fetch_daily.py. Add a split-like jump refusal to quantt/sleeves/prices.py. Add a tested, generated inventory of every live input and the check that refuses it (e.g. ops/data_inputs.py).",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A7.2",
+      "verdict": "GAP",
+      "evidence": "No disagreement refuses anywhere. quantt/collect/collect.py:50-56: \"The two cross-checks ... write FLAGS ... It never blocks trading\"; the tolerance is TOLERANCE_USD = 0.005 (:180); `step_close_crosscheck` :690-691 says \"Report only\". docs/DATA.md:21 says of live prices: \"Only one source.\" The core's only second NAV source, CEFConnect, has refused the VM since 2026-10-21. The collector records \"second source unavailable\" and still completes the day (collect.py:70-76; DATA.md:200-219). C4 has no second NAV source by ruling (DATA.md:25; scripts/ops/data_qa.py:709-711, NOT_RUN). In the events runner, quantt/sleeves/run.py:71-73 says the official close and the daily-bar close are the same for most listings \"but that is not checked here\". docs/SYSTEM.md:664: \"The team lead chases the Nuveen and Nasdaq Fund Network replies. No code.\" There are no tests of a data gate that refuses on disagreement.",
+      "gap": "No book or runner refuses on a price or NAV disagreement. No live second NAV source works for the core or C4. The events runner has a single price source. The named measurer (the data gate's tests) does not exist.",
+      "work_order": "Build a decide-time cross-source gate, called from quantt/session/run.py and quantt/sleeves/run.py, with tests. It compares each deployed name's panel close with Alpaca's official close or daily bar, and each NAV with a second NAV source the team lead has chosen. Past a tolerance it refuses and names both values.",
+      "size": "L",
+      "risk": "high"
+     },
+     {
+      "id": "A7.3",
+      "verdict": "GAP",
+      "evidence": "The gate is built and tested: quantt/session/corp_actions.py, tests test_corp_actions.py, test_ca_malformed_and_acks.py and test_c4_ca_unresolved.py (passed). But neither book runs it in halt mode: ops/books/cef_discount_book.json:44 and ops/books/c4_families_book.json:38 both set \"mode\": \"report\". docs/RUNNER.md:100: \"Under `report` the same is recorded and the session sends.\" docs/SYSTEM.md:674 (2026-11-02) says \"It switches to `halt` in the next release\", which has not happened. :710 and :817 put the return to halt after the ISIN fix and a re-ruling of three unresolved rows. The events runner has no corporate-action gate: grepping quantt/sleeves/*.py for corp/split/merger finds only comments, and its send gates (run.py:595-618) omit it. It trades spin-offs, special dividends and units on paper, which processes no corporate actions (CLAUDE.md landmine 1), and it sizes from raw closes (prices.py, adjustment=raw). docs/SYSTEM.md §5 records no §0.5 waiver naming A7.3.",
+      "gap": "An unhandled corporate action refuses in no runner today. The core and C4 only record it; the events runner has no gate at all.",
+      "work_order": "Land the bond-ISIN fix and the team lead's re-ruling of the three unresolved rows. Set `corporate_actions.mode` to `halt` in both ops/books files through a release. Call `quantt.session.corp_actions.check` from quantt/sleeves/run.py PLAN and SEND, with tests.",
+      "size": "M",
+      "risk": "high"
+     },
+     {
+      "id": "A7.4",
+      "verdict": "PARTIAL",
+      "evidence": "The only import-boundary test is src/data/tests/test_r2.py:253-268 `test_live_path_never_imports_r2` (passed). There is no A2.1 import-graph test with an allowlist: git grep finds none, and .github/workflows/checks.yml runs only pytest and doc_audit. The live path runs research-folder scripts as subprocesses: quantt/session/run.py:616/645 (fetch_daily.py) and collect.py:435 and :972. The events runner reads only shadow decision FILES, never fills or scores. install_events_vm.sh:213-250 sets an r-- ACL on decisions/ only, and refuses if user quantt can list the shadow state. But those decisions come from a clone that follows the `shadow` branch, not a release: install_shadow_vm.sh:14-16; nightly.sh:19-21 runs `git checkout --detach FETCH_HEAD`; quantt/sleeves/inputs.py:8-9 says \"a clone that follows an unreleased branch\". The live panels were seeded from laptop data once, with hash checks: C4 from the research panel data/cef_families (install_vm.py:1470-1475, manifest plus ruling sha256), and the core \"copied once from the laptop prod panels\" (RUNBOOK.md:475). The laptop launchd session template still exists (quantt/deploy/templates/com.quantt.alpaca.cef.session.plist.tmpl). Whether the laptop is armed needs orient PROD, which was not run.",
+      "gap": "The named measurer (A2.1's import-graph test) does not exist. The events book's orders come from code at an unreleased branch, outside the live/research boundary. A laptop prod clone deciding on the laptop's data/ can still be installed.",
+      "work_order": "Add the A2.1 import-graph test to CI: quantt/ and src/deploy/ may import from scripts/ only the three files allowlisted in docs/TEAM.md §2, nothing from shadow/ or results/, and no test fixture. Also get the team lead to rule in docs/SYSTEM.md §5 whether the events runner may trade decisions produced by unreleased shadow-branch code.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A7.5",
+      "verdict": "GAP",
+      "evidence": "results/ops/CEFCONNECT_TERMS_OPTIONS_2026-10-19.md:26-46: CEFConnect's terms are unchanged and carry Morningstar's \"may not be copied or distributed\" notice. Yahoo's terms forbid collection \"using any automated means\" and commercial reuse. Nasdaq Fund Network forbids use \"for any trading, advisory or marketing purposes\". \"No free replacement is clean.\" results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md:30-40: the binding licence is upstream, with NFN. docs/SYSTEM.md:480 says \"The live path is unchanged until the team lead chooses\", and :664 \"chases the Nuveen and Nasdaq Fund Network replies. No code\". These sources are still live: yfinance price and NAV for the core and C4 (DATA.md:21-22, 25); CEFConnect via `--nav-fallback cefconnect` (run.py:616), the stale-NAV gate and the collector; Yahoo through shadow/fetch/earnings.py:15-16, yf_px.py:26 and uit_px.py, whose output feeds the events runner's decisions; and Alpaca market data and corporate actions.",
+      "gap": "No source has a team-lead ruling that its terms allow the use. The desk's own reading says the two main live sources (Yahoo and CEFConnect) forbid it.",
+      "work_order": "Add a per-source table to docs/DATA.md covering yfinance/Yahoo, the Yahoo earnings calendar, CEFConnect, and Alpaca market data and corporate actions, with each source's terms quoted. Record a dated team-lead ruling per source in docs/SYSTEM.md §5. License or replace any forbidden source before a go-live proposal.",
+      "size": "M",
+      "risk": "medium"
+     },
+     {
+      "id": "A10.1",
+      "verdict": "PARTIAL",
+      "evidence": "Keys stay out of tracked files and logs. .gitignore:1-4 ignores config/.env, config/.env.* and .env. My scan of HEAD: `git grep -lE \"\\b(PK|AK)[A-Z0-9]{18}\\b\"` exits 1 (no hits), and the PEM and Azure connection-string patterns also find nothing. A history scan (`git log --all -G`) found 4 commits with Alpaca-shaped strings, all test fixtures: one next to \"fakeSecretValue...\" in scripts/events/tests/test_fetch_exdrift_corp_actions.py:12, and a dashboard privacy-test fixture on origin/lucy. No public IPv4 address is in tracked text files. Logs: quantt/broker/alpaca.py:430 `_scrub`; test_keys_never_reach_repr_or_any_error_message, the collector's credential-drop test and test_boot_secrets.py all pass (57 passed). Measurer: there is no secret scan in CI. .github/workflows/checks.yml runs only `python -m pytest` and `python -m ops.doc_audit --check`, and git grep for gitleaks, trufflehog, detect-secrets or \"secret scan\" finds only STANDARD.md:166. On \"only named people and the prod VM can send\": shadow/sources.py:11 says \"That key CAN trade the core's paper account\". install_shadow_vm.sh:27-33 says \"the VM's identity is reachable by every local user ... code on the followed branch could fetch whatever that identity may read. The defence is who can push to the branch.\" docs/TEAM.md:149-157 lists rulesets only for `main` and the release, spec and provenance tags. On chat: docs/ROADMAP.md:24 says \"Regenerate the key pasted into the 2026-09-28 chat\".",
+      "gap": "The named measurer (a secret scan in CI) does not exist. Code pushed to the `shadow` branch runs on the VM holding a trading-capable key and with reach to every vault secret. Who can push there is not limited to named people by any documented ruleset.",
+      "work_order": "Add a full-history secret-scan step (e.g. gitleaks) to .github/workflows/checks.yml. Also protect the `shadow` branch with a ruleset limited to the team lead, or take the trading-capable key and the vault reach away from the quantt-shadow user.",
+      "size": "S",
+      "risk": "high"
+     },
+     {
+      "id": "A10.2",
+      "verdict": "NOT_MEASURABLE",
+      "evidence": "The \"team lead's checklist\" the standard names does not exist in the repository. git grep for 2FA, two-factor or MFA in docs/ finds only IBKR references and docs/JOURNAL.md:225 (\"The Azure CLI's MFA had expired and was renewed by the team lead\"). Whether 2FA is enforced on the GitHub org, the Azure tenant and each Alpaca login is set outside the repository.",
+      "gap": "The named measurer is missing, so §0.3 would count this as a gap. The settings themselves cannot be read from the repo. They would be measured by: `gh api orgs/quanttqueensu --jq .two_factor_requirement_enabled` run by an org owner; the MFA or Conditional Access status in Azure Entra ID of every principal with a role on the subscription or the vault; and each Alpaca login's 2FA setting in its dashboard.",
+      "work_order": "Create a dated checklist at results/ops/ACCESS_CHECKLIST_<date>.md recording the team lead's reading of 2FA for the GitHub org and each member, the Azure tenant, and each Alpaca login. Turn on GitHub's organisation-level 2FA requirement.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A10.3",
+      "verdict": "GAP",
+      "evidence": "docs/RUNBOOK.md:1047-1057 says how to rotate (\"the TL adds a new version of both secrets in the portal ... re-run the installer\"), but no rotation interval is ruled anywhere. git grep for rotat in docs/ROADMAP.md and docs/SYSTEM.md finds none. docs/ROADMAP.md:24 asks to \"Regenerate the key pasted into the 2026-09-28 chat\"; its status reads \"`cef` done 2026-09-28; `b6` later\" and does not say the regeneration happened. results/report/EVIDENCE_LOG.md has no key-rotation entry; git grep for rotated or key regeneration finds none. A key's age is not measurable from the repo; it would need the vault secret versions' created dates.",
+      "gap": "There is no schedule, no rotation log, and no record that the key exposed in the 2026-09-28 chat was regenerated.",
+      "work_order": "Get a rotation interval ruled in docs/SYSTEM.md §5. Keep a rotation log (date, account, reason, who) in results/ops/ and the EVIDENCE_LOG. Record whether the 2026-09-28 chat-exposed key was regenerated, and regenerate it if not.",
+      "size": "S",
+      "risk": "medium"
+     },
+     {
+      "id": "A10.4",
+      "verdict": "PARTIAL",
+      "evidence": "The list exists only in pieces. docs/TEAM.md:137-170 (§6) covers GitHub collaborators, rulesets and org owners. docs/RUNBOOK.md:471-472 covers the admin login `azureuser` and the service user `quantt`; :1155-1163 covers `quantt-shadow`; :517-522 covers the vault roles (VM identity: Secrets User; TL: Secrets Officer). No single list exists. None of these names broker logins or Azure subscription roles. None says that every VM-local user, quantt-shadow included, can use the managed identity (install_shadow_vm.sh:27-33), or who can push to the `shadow` branch. No sudo for jobs: bootstrap.sh:175-177 and install_shadow_vm.sh:99 create users with /usr/sbin/nologin; bootstrap.sh and install_vm.py contain no sudoers, usermod or group grant; every systemd template runs as User=${USER} (e.g. quantt-cef-session.service.tmpl:22). No test or installer check asserts the service users lack sudo, and VM state was not measured. Agents never read a key: .claude/settings.json denies Read(./config/.env) and Read(**/.env) but no Bash read of those files. 12 of the 15 .claude/agents briefs mention keys or credentials; credit-situations-analyst.md, deal-analyst.md and filings-analyst.md do not. Who may install and arm is inconsistent. docs/RUNBOOK.md:968 says \"Since 2026-11-02 an agent may run every step below itself, arming included\". docs/SYSTEM.md:856 withdraws that authority (2026-11-09). docs/SYSTEM.md:918-919 holds two adjacent 2026-11-19 rows: \"This session runs them\" and \"You prepare, I run them\".",
+      "gap": "There is no complete access list covering GitHub admins and `shadow` pushers, VM users and sudoers, vault reach and broker logins. The no-sudo rule is not measured. The agents' key ban is not enforced for Bash, and 3 briefs do not state it. The documents disagree on who may install and arm.",
+      "work_order": "Write one access table (e.g. docs/ACCESS.md, with a doc_audit row) listing GitHub owners, admins, collaborators and who can push to `shadow`; VM unix users and sudoers; every principal or local user that can read the vault; and the Alpaca and Azure logins. Add an installer check that quantt and quantt-shadow are in no sudo or admin group. Add Bash deny rules for config/.env and key files to .claude/settings.json and the key ban to the three briefs. Fix RUNBOOK.md:968 to match SYSTEM.md §5.",
+      "size": "M",
+      "risk": "medium"
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "The events book sends orders decided by unreleased code on the `shadow` branch, and that code can read every vault secret",
+      "evidence": "quantt/sleeves/inputs.py:8-9: decision files are written \"from a clone that follows an unreleased branch\". shadow/deploy/nightly.sh:19-21 checks out FETCH_HEAD of SHADOW_BRANCH on every run. install_shadow_vm.sh:27-33 says the VM's managed identity \"is reachable by every local user ... code on the followed branch could fetch whatever that identity may read.\" origin/shadow holds 4 commits not on origin/main, including d7ae72d \"shadow: bring main's two-auction-print rule into this branch's Alpaca client\". The shadow runner was approved as a branch follower when it sent nothing (docs/SYSTEM.md:862). The events runner that trades its decisions came later (2026-11-18 to 11-20 rows). So a push to `shadow` changes what the events account trades without /release-check or a release tag (A8.1, A8.2). TEAM.md:149-157 lists no ruleset on that branch.",
+      "risk": "high"
+     },
+     {
+      "title": "Events ledger docstring says the invariant catches a corporate action that paper did not process; it cannot",
+      "evidence": "quantt/sleeves/ledger.py:16-19 says a mismatch between ledger and broker shares means something like \"a corporate action paper did not process\". If paper does not process the action, the broker's share count does not change, so the ledger still matches and nothing refuses. Meanwhile prices.py reads raw post-event closes. That docstring is the only corporate-action defence the events runner states (see A7.3).",
+      "risk": "medium"
+     },
+     {
+      "title": "Audit process note (not a desk finding)",
+      "evidence": "One command I ran included `git ls-remote --heads origin`, which may have reached GitHub read-only before the pipe failed; that was outside this task's no-network rule. Nothing was written and no state changed. Every other read used local refs only, so the origin/shadow divergence counts are as of the last fetch.",
+      "risk": "low"
+     }
+    ]
+   },
+   "verify": {
+    "checks": [
+     {
+      "id": "A7.1",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Gate 5 refuses on dates only: quantt/session/gate.py:395-437 `gate_data` (\"{label} not dated {asof} for {stale}\"), run for core and C4 through `evaluate` (gate.py:961-979). Stale NAV VALUE: ops/books/cef_discount_book.json:33 \"stale_nav\": \"report\", and nav_gate.py:313-323 `action_for` returns \"would ...\" in report mode. The same is \"report\" at tag release-20261122-2 (git show). Its referee CEFConnect has been blocked from the VM since 2026-10-21 (docs/DATA.md:200-216). C4 has no stale_nav by design (c4_families_book.json:31) and relies on the M1 mask, which drops rows and does not refuse. Implausible prices: C4 only. scripts/cef/fetch_daily.py:269 builds the core's DataBook with `spike_guard=False`, and :155-156 says \"The core runs no spike guard\". The core's only value tests are finite (has_close :469-479) and finite and positive (has_nav :531-543). Events runner: quantt/sleeves/prices.py:94-95 checks only finite > 0 and the bar date (:90). inputs.py:41-44,71-86 checks the decision file's date, the 09:30 cutoff and |w| <= 2.0. shadow/engine.py:68,297-305 SPLIT_GUARD only marks a score UNMEASURED; it never reaches a decision or an order. Computed values: src/deploy/sleeves/cef_discount.py:402-459 raises on non-finite discounts and non-positive vols, which is a finiteness check, not a range check. No generated inventory of live inputs exists (none found by git grep).",
+      "note": "I agree. One small correction: the sleeve does refuse some computed values (level_signal's finiteness raises), but nothing tests their range. Work order (M): turn the core's stale-NAV gate to `on` with a working referee, or refuse an unverified repeat NAV; run `data_guards.guard_closes` on the core refresh; add a split-like jump refusal to quantt/sleeves/prices.py or net.py for held names; and add a tested inventory (e.g. ops/data_inputs.py) listing each live input and its refusing check. Risk if open: high. The core has traded on single-source, value-unchecked NAVs for weeks, and the events book sizes from raw closes with no jump check."
+     },
+     {
+      "id": "A7.2",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "quantt/collect/collect.py:50-56: the cross-checks \"write FLAGS ... It never blocks trading\". TOLERANCE_USD = 0.005 at :180. `step_close_crosscheck` (:690) is \"Report only\". The collector records CEFConnect's absence as \"second source unavailable\" and still completes the day (collect.py:70-76; DATA.md:200-216). The disagreement checks in gate.py (:458-491, :558, :620) compare the fetcher's exit with the panel, not two price sources. C4 has no second NAV source by ruling (DATA.md:25). Events: quantt/sleeves/run.py:71-73 says the official close and the bar close are \"not checked here\". A standing team-lead ruling forbids the behaviour: docs/SYSTEM.md:371 (2026-09-29), \"Two data sources disagree | Report only ... It never blocks\". SYSTEM.md:664 and :894 leave a replacement second NAV source open. No test of a refusing data gate exists.",
+      "note": "I agree. Addition: SYSTEM.md:371 is a live ruling that contradicts A7.2, so closing the gap starts with a team-lead ruling that supersedes it. Without one, any refusing gate built would break a standing ruling. Work order (L): get that ruling and a chosen second NAV source; then build a decide-time cross-source gate called from quantt/session/run.py and quantt/sleeves/run.py, with tests, that refuses past the tolerance and names both values. Risk if open: high."
+     },
+     {
+      "id": "A7.3",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "The gate is built and its tests pass: quantt/session/corp_actions.py; I ran test_corp_actions.py and test_c4_ca_unresolved.py, all passed. Both books set report mode: cef_discount_book.json:44 and c4_families_book.json:38 \"mode\": \"report\", and both are still \"report\" at tag release-20261122-2 (git show). The promised return to halt has not happened: SYSTEM.md:674 (\"switches to halt in the next release\"), :710 and :817. The ISIN fix branch origin/ca-isin-fix is 12 commits ahead of origin/main, its last commit is 2026-11-09, and it is unmerged. Events runner: git grep for corp_actions or corporate.action in quantt/sleeves finds only a docstring (ledger.py:18), and the SEND gate list (run.py:595-618) has no corporate-action gate. Prices are raw (prices.py:131 adjustment=raw). No §0.5 waiver names A7.3 (SYSTEM.md has no A7.x row).",
+      "note": "I agree. Correction: the events book does not trade spin-offs. ops/sleeves/events_sleeves.json enables special_dividends, cef_exdate, units_exdate, earnings_drift and unit_trust_terminations; spinoff_first_week is a shadow book only. Its small caps, units and CEFs can still split or merge on paper. Work order (M): merge the ISIN fix, get the three unresolved rows re-ruled, and set `corporate_actions.mode` to halt in both book files through a release. Call `quantt.session.corp_actions.check` from quantt/sleeves/run.py PLAN and SEND, with tests. Risk if open: high. A reverse split on a held events name would size the plan on raw post-split closes against unadjusted paper share counts."
+     },
+     {
+      "id": "A7.4",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "Boundary tests exist, more than the first reader found. src/data/tests/test_r2.py:253-268 covers no src.data or scripts.data import. shadow/tests/test_boundary.py `test_the_live_path_never_imports_shadow_or_research` covers quantt/ and src/deploy/ never importing shadow, despite \"research\" in its name. quantt/sleeves/tests/test_pure.py:264 and test_run.py:748 cover the same for the sleeves package. All passed. There is no allowlist test for scripts/ imports (A2.1), and .github/workflows/checks.yml runs only pytest and doc_audit. The three-file allowlist in docs/TEAM.md §2 is already exceeded by live code: fetch_daily.py:189 imports scripts.cef.data_books, :309 and :358 import scripts.cef.data_guards, and collect.py:1318 imports data_books. install_vm.py:444-445 requires both at the tag for C4. Events orders come from decisions written by a clone that follows the branch: inputs.py:9-10, shadow/deploy/nightly.sh:19-21 (`git checkout --detach FETCH_HEAD`), install_shadow_vm.sh:14-16. origin/shadow is 4 commits ahead of origin/main at the last fetch. The runner reads only decision files, never simulated fills (install_events_vm.sh:213-250 ACL checks). promote.py reads shadow scores.csv but sends nothing.",
+      "note": "I agree with PARTIAL; the first reader's \"only import-boundary test\" is wrong (see evidence). Addition: an A2.1 test seeded with TEAM.md's three files would fail on its first run, because data_books.py and data_guards.py are on the live path. The allowlist must start at five, or the two modules must move into quantt/. Work order (S): add the A2.1 import-graph test to CI with an allowlist of spec.py, fetch_daily.py, fetch_cef_distributions.py, data_books.py and data_guards.py. Update TEAM.md §2. Get a SYSTEM.md §5 ruling on whether events orders may rest on decisions from unreleased shadow-branch code. Risk if open: medium."
+     },
+     {
+      "id": "A7.5",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "results/ops/CEFCONNECT_TERMS_OPTIONS_2026-10-19.md:24-46 says CEFConnect and Morningstar \"may not be copied or distributed\". It says Yahoo forbids \"any automated means\" and \"any commercial purpose\", that NFN forbids \"any trading, advisory or marketing purposes\", and that \"No free replacement is clean\". results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md:30-40 says the binding licence is NFN's and that the same personal-use definitions govern the Alpaca data the book already takes (its item 4, §3.3). SYSTEM.md:480 and :664 record no ruling, only \"chases the Nuveen and Nasdaq Fund Network replies. No code\". Live sources without a ruling: yfinance price and NAV for the core and C4 (DATA.md:21-22, 25); CEFConnect (run.py:614 CORE_REFRESH_FLAGS); Alpaca bars and corporate actions; and for the events book's decisions, Yahoo's earnings calendar (shadow/fetch/earnings.py:13-16, 59, behind enabled sleeve pead_small_long) and yf_px.py:25-27. docs/DATA.md §2 does not list the events book's or the shadow fetchers' sources at all (git grep finds no shadow, earnings or sleeves entry).",
+      "note": "I agree. Addition: DATA.md, the file that says \"which source feeds what\", omits every source behind the events account, so the per-source table must be built from scratch for that book. Work order (M): add a per-source table to DATA.md covering yfinance prices and NAVs, the Yahoo earnings calendar, CEFConnect, and Alpaca market data and corporate actions, each with its terms quoted; record a dated team-lead ruling per source in SYSTEM.md §5; license or replace any forbidden source before a go-live proposal. Risk if open: medium for paper, high for real money."
+     },
+     {
+      "id": "A10.1",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "HEAD is clean. `git grep -I -c -E \"\\b(PK|AK)[A-Z0-9]{18}\\b\" HEAD` exits 1, and the PEM and Azure connection-string patterns also exit 1. The only dotted quads in tracked text are 127.0.0.1, 169.254.169.254, 10.1.2.3 and the documentation ranges 203.0.113.x and 192.0.2.10. `git log --all -G '(PK|AK)[A-Z0-9]{18}'` finds 5 commits (2edf7db, ab41fa8, 47bcba6, d88e0aa, bf79f79): a privacy-test pattern (\"PKAB...\", \"Alpaca key\") and FAKE or fakeSecretValue fixtures. .gitignore:1-4 covers config/.env. Logs: alpaca.py:430-436 `_scrub`; test_keys_never_reach_repr_or_any_error_message and test_boot_secrets.py pass. There is no secret scan in CI: checks.yml runs only pytest and doc_audit, and git grep for gitleaks, trufflehog or detect-secrets finds only STANDARD.md:166. Who can send: the VM identity holds Key Vault Secrets User scoped to the whole vault (RUNBOOK.md:513-514, `--scope <vault resource id>`). Every local user can use that identity (install_shadow_vm.sh:27-33; RUNBOOK.md:1201-1204, \"Control who can push to that branch\"). quantt-shadow runs the `shadow` branch head nightly, and TEAM.md:149-157 lists rulesets only on main and tags. ROADMAP.md:24 records a key pasted into the 2026-09-28 chat.",
+      "note": "I agree. Addition: because the vault role is vault-wide, code pushed to `shadow` by any repository collaborator with Write could read the trading keys of all three paper accounts (cef, c4, events), not only the core key the shadow unit fetches. Work order (S): add a full-history secret-scan step (e.g. gitleaks) to .github/workflows/checks.yml; put a ruleset on `shadow` limited to the team lead, or give the shadow runner its own identity or a vault that holds no trading key. Risk if open: high."
+     },
+     {
+      "id": "A10.2",
+      "agree": true,
+      "verdict": "NOT_MEASURABLE",
+      "evidence": "No checklist exists in the repository. git grep for 2fa, two-factor, mfa or authenticator in docs, results/ops and ops finds only IBKR material (REFERENCES.md:1265, IBKR_SECOND_BROKER_2026-10-19.md) and an SMTP note at ops/halt.py:301. The 2FA settings live in GitHub, Azure Entra ID and the Alpaca dashboards.",
+      "note": "I agree under this task's definitions: the settings are outside the repository. But under STANDARD.md §0.3 a missing measurer counts as a gap, so the audit note should list A10.2 as a gap until the checklist exists. What would measure it: `gh api orgs/quanttqueensu --jq .two_factor_requirement_enabled` run by an org owner; the Entra ID MFA registration and Conditional Access report for every principal with a role on the subscription or the vault; and each Alpaca login's 2FA setting. Work order (S): a dated results/ops/ACCESS_CHECKLIST_<date>.md recording those readings, and the org-level 2FA requirement turned on. Risk if open: medium."
+     },
+     {
+      "id": "A10.3",
+      "agree": true,
+      "verdict": "GAP",
+      "evidence": "No interval is ruled: git grep for rotat in SYSTEM.md, ROADMAP.md and EVIDENCE_LOG finds nothing; RUNBOOK.md:711 and :1048 are the only hits. RUNBOOK.md:1048-1058 gives steps that restart only quantt-secret.service (the core). It does not cover the C4, events and reports secret units, or quantt-shadow-secret.service, which holds a copy of the core key (RUNBOOK.md:1162). ROADMAP.md:24 says \"Regenerate the key pasted into the 2026-09-28 chat\", with status \"`cef` done 2026-09-28; `b6` later\". That status does not say whether the regeneration happened. No rotation log exists.",
+      "note": "I agree. Addition: the written procedure is incomplete. Rotating the core key without restarting quantt-shadow-secret would leave the shadow runner on a revoked key, and no steps exist for the c4 or events keys. Work order (S): get a rotation interval ruled in SYSTEM.md §5; extend RUNBOOK's rotation steps to every secret unit (core, c4, events, reports, shadow); keep a rotation log in results/ops with an EVIDENCE_LOG entry; record whether the 2026-09-28 chat key was regenerated, and regenerate it if not. Risk if open: medium."
+     },
+     {
+      "id": "A10.4",
+      "agree": true,
+      "verdict": "PARTIAL",
+      "evidence": "The access list exists only in pieces: TEAM.md:137-165 covers GitHub; RUNBOOK.md:471-473 covers azureuser and quantt, :1158-1163 covers quantt-shadow, and :513-516 covers the vault roles. .github/CODEOWNERS is `* @simonjarviss`. No docs/ACCESS.md exists. Nothing lists broker logins, subscription roles or who can push `shadow`. Users: bootstrap.sh:177 and install_shadow_vm.sh:99 use /usr/sbin/nologin. There is no sudoers, usermod or gpasswd in the installers. Every unit sets User=${USER}: the systemd templates, install_events_vm.sh:292,326 and install_shadow_vm.sh:150,173. No test asserts the absence of sudo. RUNBOOK.md (the \"known gap, accepted\" paragraph after the 8.0 table) says the user quantt can make root run code at the next install. .claude/settings.json denies Read(./config/.env) and Read(**/.env) but has no Bash deny. Three of the 15 briefs (credit-situations-analyst, deal-analyst, filings-analyst) never mention keys. Who may install and arm is contradictory: RUNBOOK.md:968 \"an agent may run every step below itself, arming included\"; SYSTEM.md:856 withdraws that; SYSTEM.md:918 \"This session runs them\" against :919 \"You prepare, I run them\".",
+      "note": "I agree. Addition: the jobs run without sudo, but the accepted installer gap gives quantt a route to root at install time. The access list should state this. Work order (M): one access table (docs/ACCESS.md with a doc_audit row) covering GitHub owners, admins and collaborators, who can push `shadow`, VM unix users and any sudo route, every principal that can read the vault, and Alpaca and Azure logins; an installer check that quantt and quantt-shadow are in no sudo or admin group; Bash deny rules for config/.env and key files; the key ban added to the three briefs; RUNBOOK.md:968 and SYSTEM.md:918-919 reconciled to one ruling. Risk if open: medium."
+     }
+    ],
+    "other_findings": [
+     {
+      "title": "The events book trades decisions made by unreleased `shadow`-branch code, which can read every vault secret",
+      "confirmed": true,
+      "note": "Confirmed and wider than reported. inputs.py:9-10 and nightly.sh:19-21 (checkout of the branch head each run); origin/shadow is 4 commits ahead of origin/main (a8e944e, d7ae72d, b99c863, 6aebfc4) at the last fetch. The VM identity is Secrets User at vault scope (RUNBOOK.md:513-514), so the branch's code can read the c4 and events keys as well as the core's. TEAM.md:149-157 puts no ruleset on `shadow`. This contradicts TEAM.md §2 (\"Nothing merged into main reaches the VM until the team lead tags it\") and TEAM.md §6 (\"Prod is out of reach either way: the VM runs only a release tag\"). Risk: high."
+     },
+     {
+      "title": "Events ledger docstring claims the invariant catches a corporate action that paper did not process; it cannot",
+      "confirmed": true,
+      "note": "Confirmed. ledger.py:16-19 lists \"a corporate action paper did not process\" among the mismatches that refuse. If paper does not process it, the broker's count is unchanged and still matches the ledger. Meanwhile prices.py:26-27,131 reads raw post-event closes, so net.py would size a held name after a reverse split on the wrong exposure and nothing would refuse. Risk: medium to high."
+     },
+     {
+      "title": "Audit process note (first reader may have run git ls-remote)",
+      "confirmed": false,
+      "note": "This is about the first reader's own conduct, not the desk, and nothing in the repository can confirm it. Leave it out of the audit's findings. The audit note may record it as a process deviation."
+     },
+     {
+      "title": "TEAM.md §2's live-path list is out of date",
+      "confirmed": true,
+      "note": "New. TEAM.md §2 names three research-folder files the runner calls. The live path also imports scripts/cef/data_books.py (fetch_daily.py:189, collect.py:1318) and scripts/cef/data_guards.py (fetch_daily.py:309, :358), and these decide C4's price basis and its exit 6 and 7 refusals (install_vm.py:444-445 requires both at the tag). The list also omits ops/sleeves/events_sleeves.json and the shadow decision files that set the events book's orders. A change to any of them can change what trades without being named as live-path, and an A2.1 test built from this list would fail on its first run. Risk: medium."
+     }
+    ]
+   }
+  }
+ ]
+}

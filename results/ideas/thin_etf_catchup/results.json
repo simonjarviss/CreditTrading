@@ -1,0 +1,4090 @@
+{
+ "panel_last_date": "2025-12-31",
+ "panel_first_date": "2000-01-03",
+ "funds_in_panel": 6933,
+ "funds_dead_before_last_month": 2099,
+ "fixed": {
+  "factors": [
+   "SPY",
+   "IWM",
+   "QQQ",
+   "EFA",
+   "EEM",
+   "TLT",
+   "HYG",
+   "GLD"
+  ],
+  "window": 250,
+  "step": 21,
+  "min_obs": 120,
+  "min_price": 5.0,
+  "min_names": 20,
+  "min_names_class": 10,
+  "buckets_usd": {
+   "THIN": [
+    25000.0,
+    1000000.0
+   ],
+   "THIN-A": [
+    25000.0,
+    250000.0
+   ],
+   "THIN-B": [
+    250000.0,
+    1000000.0
+   ],
+   "MID": [
+    1000000.0,
+    10000000.0
+   ],
+   "LARGE": [
+    10000000.0,
+    100000000.0
+   ],
+   "LIQUID": [
+    100000000.0,
+    Infinity
+   ]
+  },
+  "max_spread_for_a_quote": 0.1
+ },
+ "thin_eligible_fund_days_by_class": {
+  "US equity": 1617899,
+  "international": 990178,
+  "bond": 408999,
+  "commodity": 57609,
+  "low fit": 127660,
+  "geared or inverse": 0
+ },
+ "all_fund_days_by_class": {
+  "US equity": 3798444,
+  "international": 2158170,
+  "bond": 1137348,
+  "commodity": 184169,
+  "low fit": 259106,
+  "geared or inverse": 798413
+ },
+ "thin_share_traded_on_t": 0.9709837634608388,
+ "thin_share_with_valid_quote": 0.9983137357155459,
+ "hold_per_event": {
+  "trade prices": {
+   "long": {
+    "events": 635873,
+    "mean_bp": -0.21460289985706674,
+    "median_bp": 1.3787007667381141,
+    "share_positive": 0.50515433113216,
+    "daily_mean_bp": 2.536708362080591,
+    "t_non_overlapping_days": 0.9497740289989957,
+    "median_spread_bp": 28.129395218002216,
+    "by_era_daily_mean_bp": {
+     "2002-2008": 6.714674945754971,
+     "2009-2015": 0.6478519595871096,
+     "2016-2019": 0.29726613656650364,
+     "2020-2022": 0.6500122553868452,
+     "2023-2025": -0.44169898034042715
+    }
+   },
+   "short": {
+    "events": 635873,
+    "mean_bp": -1.9594985008850838,
+    "median_bp": -0.19765100470218663,
+    "share_positive": 0.4991688591904358,
+    "daily_mean_bp": -0.5361147363222646,
+    "t_non_overlapping_days": -0.11355786984121528,
+    "median_spread_bp": 27.925160569673007,
+    "by_era_daily_mean_bp": {
+     "2002-2008": 2.629961255009403,
+     "2009-2015": 0.9283579256518881,
+     "2016-2019": 1.3265624915257144,
+     "2020-2022": -3.4233330101767767,
+     "2023-2025": -4.520972909525261
+    }
+   },
+   "long less short": {
+    "daily_mean_bp": 3.0728230984028553,
+    "t_non_overlapping_days": 0.9211070425988311,
+    "by_era_daily_mean_bp": {
+     "2002-2008": 4.084713690745567,
+     "2009-2015": -0.2805059660647785,
+     "2016-2019": -1.0292963549592105,
+     "2020-2022": 4.073345265563623,
+     "2023-2025": 4.079273929184835
+    }
+   }
+  },
+  "closing mids": {
+   "long": {
+    "events": 632628,
+    "mean_bp": -0.3281190002989095,
+    "median_bp": 1.2907060421689982,
+    "share_positive": 0.5049823909153562,
+    "daily_mean_bp": 1.608529407888563,
+    "t_non_overlapping_days": 0.91148723310801,
+    "median_spread_bp": 27.730201451757882,
+    "by_era_daily_mean_bp": {
+     "2002-2008": 4.311577794402205,
+     "2009-2015": 0.09202114324905195,
+     "2016-2019": 0.5055378141478742,
+     "2020-2022": 1.0011829806292092,
+     "2023-2025": -0.5857837489660523
+    }
+   },
+   "short": {
+    "events": 632628,
+    "mean_bp": -2.2506759741487787,
+    "median_bp": -0.3110390481216767,
+    "share_positive": 0.4986927546678301,
+    "daily_mean_bp": -0.569601701561256,
+    "t_non_overlapping_days": 0.06664768764959396,
+    "median_spread_bp": 27.48196496049409,
+    "by_era_daily_mean_bp": {
+     "2002-2008": 2.9070668065101564,
+     "2009-2015": 0.23652083480584157,
+     "2016-2019": 0.913219870514547,
+     "2020-2022": -3.6851171927496877,
+     "2023-2025": -4.634577371040048
+    }
+   },
+   "long less short": {
+    "daily_mean_bp": 2.178131109449819,
+    "t_non_overlapping_days": 0.7211542418166833,
+    "by_era_daily_mean_bp": {
+     "2002-2008": 1.4045109878920499,
+     "2009-2015": -0.14449969155679024,
+     "2016-2019": -0.40768205636667215,
+     "2020-2022": 4.686300173378898,
+     "2023-2025": 4.048793622073997
+    }
+   }
+  }
+ },
+ "books": {
+  "MAIN THIN S5 h5": {
+   "funds_per_day_mean": 203.01575178997612,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 105.28081518796688,
+   "turnover_per_year_etf_legs": 78.15683572338547,
+   "median_adv_usd_selected": 216753.1880952381,
+   "median_price_selected": 28.615,
+   "median_spread_selected": 0.002802428771602161,
+   "mean_spread_selected": 0.004589883844315192,
+   "share_selected_with_quote": 0.9976691949709786,
+   "share_selected_traded_on_t": 0.9742498554023108,
+   "held_fund_days": 2267105,
+   "held_fund_days_without_crsp_return": 4645,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6283,
+    "ann_ret": 0.005774942572896961,
+    "ann_vol": 0.03147420553274995,
+    "sharpe": 0.18348175832072847,
+    "t": 0.9161701817025815,
+    "mean_bp_per_active_day": 0.22916438781337148,
+    "hit_rate_active_days": 0.49450899251949704,
+    "max_drawdown": -0.1566383290611064
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.008545144939580957,
+    "ann_vol": 0.03816630656503556,
+    "sharpe": 0.22389237284514268,
+    "t": 0.7905732566742603,
+    "mean_bp_per_active_day": 0.3390930531579745,
+    "hit_rate_active_days": 0.4894971355824316,
+    "max_drawdown": -0.07533561437309262
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.0030659463541520176,
+    "ann_vol": 0.022903523774077672,
+    "sharpe": 0.13386352180541197,
+    "t": 0.4726776488129321,
+    "mean_bp_per_active_day": 0.1216645378631753,
+    "hit_rate_active_days": 0.4996817313812858,
+    "max_drawdown": -0.11476207250293803
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.010665866768577328,
+     "ann_vol": 0.037559498816513714,
+     "sharpe": 0.2839725530066947,
+     "t": 0.7511077648364306,
+     "mean_bp_per_active_day": 0.42324868129275106,
+     "hit_rate_active_days": 0.4832671582529779,
+     "max_drawdown": -0.04387442049554046
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.005777937644573613,
+     "ann_vol": 0.027493826860042404,
+     "sharpe": -0.21015399834974816,
+     "t": -0.5556999258958479,
+     "mean_bp_per_active_day": -0.22928323986403226,
+     "hit_rate_active_days": 0.4801362088535755,
+     "max_drawdown": -0.10659444525167783
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.002165993523550857,
+     "ann_vol": 0.015344704658509782,
+     "sharpe": -0.14115576492048365,
+     "t": -0.2820313198167424,
+     "mean_bp_per_active_day": -0.08595212395043084,
+     "hit_rate_active_days": 0.5069582504970179,
+     "max_drawdown": -0.041131316435001654
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.008076064593083918,
+     "ann_vol": 0.034690235883998465,
+     "sharpe": 0.2328051218818364,
+     "t": 0.40323029936160565,
+     "mean_bp_per_active_day": 0.32047875369380624,
+     "hit_rate_active_days": 0.5,
+     "max_drawdown": -0.07739084845668276
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.010415498121270014,
+     "ann_vol": 0.018015674847521965,
+     "sharpe": 0.5781353298959353,
+     "t": 0.9987071517215835,
+     "mean_bp_per_active_day": 0.4133134175107148,
+     "hit_rate_active_days": 0.5186170212765957,
+     "max_drawdown": -0.029616854443042746
+    }
+   },
+   "controls": {}
+  },
+  "MAIN long leg, hedged": {
+   "funds_per_day_mean": 101.50787589498806,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 53.85231725987008,
+   "turnover_per_year_etf_legs": 38.96744377096804,
+   "median_adv_usd_selected": 217532.84285714285,
+   "median_price_selected": 28.1,
+   "median_spread_selected": 0.0028129395218002215,
+   "mean_spread_selected": 0.004584747626319946,
+   "share_selected_with_quote": 0.9978196706150849,
+   "share_selected_traded_on_t": 0.97499909871359,
+   "held_fund_days": 1369694,
+   "held_fund_days_without_crsp_return": 2886,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6283,
+    "ann_ret": 0.006782434832395213,
+    "ann_vol": 0.03285085921151397,
+    "sharpe": 0.2064614136490538,
+    "t": 1.030913332140529,
+    "mean_bp_per_active_day": 0.26914423938076243,
+    "hit_rate_active_days": 0.5156772242559287,
+    "max_drawdown": -0.12497266200603831
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.014548412041271228,
+    "ann_vol": 0.04233142616496785,
+    "sharpe": 0.34367875971329864,
+    "t": 1.213543958034869,
+    "mean_bp_per_active_day": 0.5773179381456837,
+    "hit_rate_active_days": 0.5152768936982813,
+    "max_drawdown": -0.07932959612839943
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": -0.000868606556129546,
+    "ann_vol": 0.01913377247938821,
+    "sharpe": -0.0453965132628837,
+    "t": -0.16029697160214287,
+    "mean_bp_per_active_day": -0.034468514132124844,
+    "hit_rate_active_days": 0.5162316995544239,
+    "max_drawdown": -0.09905232631820597
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.0184036657746029,
+     "ann_vol": 0.04422342275407115,
+     "sharpe": 0.41615199883886606,
+     "t": 1.1007225676233032,
+     "mean_bp_per_active_day": 0.730304197404877,
+     "hit_rate_active_days": 0.5292115711854793,
+     "max_drawdown": -0.07615772467846711
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.0038054110493902778,
+     "ann_vol": 0.02619059701160503,
+     "sharpe": 0.14529684251581224,
+     "t": 0.3842013249948442,
+     "mean_bp_per_active_day": 0.1510083749758047,
+     "hit_rate_active_days": 0.5045402951191827,
+     "max_drawdown": -0.0666672040208939
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.0001938857902701473,
+     "ann_vol": 0.01543227789623624,
+     "sharpe": 0.012563653374686436,
+     "t": 0.02510236648838915,
+     "mean_bp_per_active_day": 0.007693880566275687,
+     "hit_rate_active_days": 0.5298210735586482,
+     "max_drawdown": -0.025168108095618615
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.00012314462155510117,
+     "ann_vol": 0.02622337397228949,
+     "sharpe": -0.0046959869346038146,
+     "t": -0.008133687962413432,
+     "mean_bp_per_active_day": -0.004886691331551634,
+     "hit_rate_active_days": 0.5052910052910053,
+     "max_drawdown": -0.07855168855562965
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.001405827101681395,
+     "ann_vol": 0.013823569170515942,
+     "sharpe": -0.10169783826016944,
+     "t": -0.17567921061551126,
+     "mean_bp_per_active_day": -0.055786789749261705,
+     "hit_rate_active_days": 0.5066489361702128,
+     "max_drawdown": -0.02921987878356017
+    }
+   },
+   "controls": {}
+  },
+  "MAIN short leg, hedged": {
+   "funds_per_day_mean": 101.50787589498806,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 53.83438708431295,
+   "turnover_per_year_etf_legs": 39.189391952417466,
+   "median_adv_usd_selected": 216044.32857142854,
+   "median_price_selected": 29.12,
+   "median_spread_selected": 0.0027925160569673008,
+   "mean_spread_selected": 0.004595021611906846,
+   "share_selected_with_quote": 0.9975187193268723,
+   "share_selected_traded_on_t": 0.9735006120910314,
+   "held_fund_days": 1386873,
+   "held_fund_days_without_crsp_return": 2621,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6283,
+    "ann_ret": -0.0010074922594986743,
+    "ann_vol": 0.03137692404893656,
+    "sharpe": -0.032109337993977805,
+    "t": -0.16032993303274254,
+    "mean_bp_per_active_day": -0.039979851567407715,
+    "hit_rate_active_days": 0.49673722743912146,
+    "max_drawdown": -0.1948560044551756
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": -0.006003267101690399,
+    "ann_vol": 0.0412759500449339,
+    "sharpe": -0.14544225136320574,
+    "t": -0.513562623224217,
+    "mean_bp_per_active_day": -0.2382248849877142,
+    "hit_rate_active_days": 0.49204328453214513,
+    "max_drawdown": -0.18294511475281738
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.003934552910280855,
+    "ann_vol": 0.016283693014553603,
+    "sharpe": 0.24162534302042762,
+    "t": 0.8531891100141107,
+    "mean_bp_per_active_day": 0.15613305199527203,
+    "hit_rate_active_days": 0.5012730744748568,
+    "max_drawdown": -0.0354406687650335
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": -0.007737799006026129,
+     "ann_vol": 0.040996811433921296,
+     "sharpe": -0.18874148343214261,
+     "t": -0.4992214643690818,
+     "mean_bp_per_active_day": -0.307055516112148,
+     "hit_rate_active_days": 0.49404424276800907,
+     "max_drawdown": -0.136288934277204
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.00958334869396376,
+     "ann_vol": 0.029856999953022684,
+     "sharpe": -0.32097493750351014,
+     "t": -0.8487383080300969,
+     "mean_bp_per_active_day": -0.3802916148398317,
+     "hit_rate_active_days": 0.4869466515323496,
+     "max_drawdown": -0.13795687983200383
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0023598793138202684,
+     "ann_vol": 0.01385811928247564,
+     "sharpe": -0.1702885698786319,
+     "t": -0.3402390978479036,
+     "mean_bp_per_active_day": -0.09364600451667732,
+     "hit_rate_active_days": 0.4731610337972167,
+     "max_drawdown": -0.034418959831543985
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.008199209214634219,
+     "ann_vol": 0.02150828385700776,
+     "sharpe": 0.3812116889076103,
+     "t": 0.6602780136271221,
+     "mean_bp_per_active_day": 0.3253654450251674,
+     "hit_rate_active_days": 0.5,
+     "max_drawdown": -0.03544066876503348
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.011821325222952577,
+     "ann_vol": 0.013069068156466235,
+     "sharpe": 0.9045270161135164,
+     "t": 1.5625365778641442,
+     "mean_bp_per_active_day": 0.4691002072600229,
+     "hit_rate_active_days": 0.5412234042553191,
+     "max_drawdown": -0.014450332972227515
+    }
+   },
+   "controls": {}
+  },
+  "THIN S1 h1": {
+   "funds_per_day_mean": 203.70170138336778,
+   "days_invested": 6289,
+   "turnover_per_year_all_legs": 540.5175322998961,
+   "turnover_per_year_etf_legs": 404.00168387944774,
+   "median_adv_usd_selected": 212125.8023809524,
+   "median_price_selected": 28.62,
+   "median_spread_selected": 0.0028975009054689714,
+   "mean_spread_selected": 0.004738571497139983,
+   "share_selected_with_quote": 0.9976254410341274,
+   "share_selected_traded_on_t": 0.973850188903113,
+   "held_fund_days": 1279680,
+   "held_fund_days_without_crsp_return": 1107,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-02",
+    "last": "2025-12-31",
+    "n_days": 6287,
+    "n_active_days": 6287,
+    "ann_ret": 0.013576099245603452,
+    "ann_vol": 0.03822501890943817,
+    "sharpe": 0.3551626561066623,
+    "t": 1.773980146075051,
+    "mean_bp_per_active_day": 0.538734097047756,
+    "hit_rate_active_days": 0.5053284555431844,
+    "max_drawdown": -0.1915522168130828
+   },
+   "split_date": "2013-07-03",
+   "early_half": {
+    "first": "2001-01-02",
+    "last": "2013-07-03",
+    "n_days": 3144,
+    "n_active_days": 3144,
+    "ann_ret": 0.029347197981987583,
+    "ann_vol": 0.04807408006494659,
+    "sharpe": 0.610457817234161,
+    "t": 2.1562378128300628,
+    "mean_bp_per_active_day": 1.1645713484915707,
+    "hit_rate_active_days": 0.5089058524173028,
+    "max_drawdown": -0.1915522168130828
+   },
+   "late_half": {
+    "first": "2013-07-03",
+    "last": "2025-12-31",
+    "n_days": 3144,
+    "n_active_days": 3144,
+    "ann_ret": -0.0021205988758222403,
+    "ann_vol": 0.024683814286290823,
+    "sharpe": -0.08591050196808532,
+    "t": -0.3034500789949602,
+    "mean_bp_per_active_day": -0.08415074904056509,
+    "hit_rate_active_days": 0.5019083969465649,
+    "max_drawdown": -0.11341160665291711
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.02293164747885991,
+     "ann_vol": 0.046957244066417,
+     "sharpe": 0.48835164700945954,
+     "t": 1.2916907291065458,
+     "mean_bp_per_active_day": 0.9099860110658694,
+     "hit_rate_active_days": 0.5121951219512195,
+     "max_drawdown": -0.19155221681308277
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.003955914500366944,
+     "ann_vol": 0.0314807924629158,
+     "sharpe": 0.1256612108804754,
+     "t": 0.3322797858837236,
+     "mean_bp_per_active_day": 0.15698073414154537,
+     "hit_rate_active_days": 0.5005675368898979,
+     "max_drawdown": -0.10956174451904949
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.004265670987183336,
+     "ann_vol": 0.017809808540892053,
+     "sharpe": 0.2395124561496088,
+     "t": 0.4785494532120337,
+     "mean_bp_per_active_day": 0.16927265822156096,
+     "hit_rate_active_days": 0.4970178926441352,
+     "max_drawdown": -0.023080337390188353
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.023817196391747935,
+     "ann_vol": 0.03647759293587882,
+     "sharpe": -0.6529267551621175,
+     "t": -1.130902313561872,
+     "mean_bp_per_active_day": -0.9451268409423783,
+     "hit_rate_active_days": 0.49603174603174605,
+     "max_drawdown": -0.08511576781084955
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.006250261048581258,
+     "ann_vol": 0.01996243845354452,
+     "sharpe": -0.3131010804680259,
+     "t": -0.5408704019722477,
+     "mean_bp_per_active_day": -0.24802623208655789,
+     "hit_rate_active_days": 0.5013297872340425,
+     "max_drawdown": -0.0430107185705839
+    }
+   },
+   "controls": {}
+  },
+  "THIN S1 h5": {
+   "funds_per_day_mean": 203.70170138336778,
+   "days_invested": 6289,
+   "turnover_per_year_all_legs": 103.10165522991636,
+   "turnover_per_year_etf_legs": 76.99201762056762,
+   "median_adv_usd_selected": 212125.8023809524,
+   "median_price_selected": 28.62,
+   "median_spread_selected": 0.0028975009054689714,
+   "mean_spread_selected": 0.004738571497139983,
+   "share_selected_with_quote": 0.9976254410341274,
+   "share_selected_traded_on_t": 0.973850188903113,
+   "held_fund_days": 2411613,
+   "held_fund_days_without_crsp_return": 4707,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-02",
+    "last": "2025-12-31",
+    "n_days": 6287,
+    "n_active_days": 6287,
+    "ann_ret": 0.009577488910916084,
+    "ann_vol": 0.0161484562152601,
+    "sharpe": 0.5930900628052278,
+    "t": 2.9623891424409887,
+    "mean_bp_per_active_day": 0.38005908376651126,
+    "hit_rate_active_days": 0.5101002067758867,
+    "max_drawdown": -0.051435909934671814
+   },
+   "split_date": "2013-07-03",
+   "early_half": {
+    "first": "2001-01-02",
+    "last": "2013-07-03",
+    "n_days": 3144,
+    "n_active_days": 3144,
+    "ann_ret": 0.014798979678920757,
+    "ann_vol": 0.01899772370133735,
+    "sharpe": 0.778986993998601,
+    "t": 2.7515106936837084,
+    "mean_bp_per_active_day": 0.5872610983698713,
+    "hit_rate_active_days": 0.522264631043257,
+    "max_drawdown": -0.03002191042563676
+   },
+   "late_half": {
+    "first": "2013-07-03",
+    "last": "2025-12-31",
+    "n_days": 3144,
+    "n_active_days": 3144,
+    "ann_ret": 0.004372377715390987,
+    "ann_vol": 0.012665675945150402,
+    "sharpe": 0.34521471529240727,
+    "t": 1.2193553782821454,
+    "mean_bp_per_active_day": 0.17350705219805504,
+    "hit_rate_active_days": 0.49809160305343514,
+    "max_drawdown": -0.0514359099346717
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.019707838170778008,
+     "ann_vol": 0.018229099486801594,
+     "sharpe": 1.081119678185259,
+     "t": 2.8595629274892183,
+     "mean_bp_per_active_day": 0.7820570702689685,
+     "hit_rate_active_days": 0.5292115711854793,
+     "max_drawdown": -0.022751756397789424
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.0036348082311197668,
+     "ann_vol": 0.013063103047912751,
+     "sharpe": 0.2782499853050263,
+     "t": 0.7357628093146827,
+     "mean_bp_per_active_day": 0.14423842186983202,
+     "hit_rate_active_days": 0.5119182746878547,
+     "max_drawdown": -0.030021910425636837
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.000641951483314284,
+     "ann_vol": 0.008053071079818777,
+     "sharpe": 0.07971511451364593,
+     "t": 0.1592719855847974,
+     "mean_bp_per_active_day": 0.025474265210884285,
+     "hit_rate_active_days": 0.4731610337972167,
+     "max_drawdown": -0.017880922067012875
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.006505427818459652,
+     "ann_vol": 0.020003821558898745,
+     "sharpe": 0.32520925060770195,
+     "t": 0.5632789451439395,
+     "mean_bp_per_active_day": 0.25815189755792267,
+     "hit_rate_active_days": 0.5092592592592593,
+     "max_drawdown": -0.04326934069454234
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.004503124986225171,
+     "ann_vol": 0.009455584380671862,
+     "sharpe": 0.47623973357268096,
+     "t": 0.8226863214511222,
+     "mean_bp_per_active_day": 0.17869543596131632,
+     "hit_rate_active_days": 0.5066489361702128,
+     "max_drawdown": -0.011780573776542076
+    }
+   },
+   "controls": {}
+  },
+  "THIN S1 h20": {
+   "funds_per_day_mean": 203.70170138336778,
+   "days_invested": 6289,
+   "turnover_per_year_all_legs": 26.3918601679347,
+   "turnover_per_year_etf_legs": 19.892485841936978,
+   "median_adv_usd_selected": 212125.8023809524,
+   "median_price_selected": 28.62,
+   "median_spread_selected": 0.0028975009054689714,
+   "mean_spread_selected": 0.004738571497139983,
+   "share_selected_with_quote": 0.9976254410341274,
+   "share_selected_traded_on_t": 0.973850188903113,
+   "held_fund_days": 3296896,
+   "held_fund_days_without_crsp_return": 20768,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-02",
+    "last": "2025-12-31",
+    "n_days": 6287,
+    "n_active_days": 6287,
+    "ann_ret": 0.00048894049680266,
+    "ann_vol": 0.008340803211725405,
+    "sharpe": 0.058620313222989495,
+    "t": 0.29279900357275607,
+    "mean_bp_per_active_day": 0.01940240066677222,
+    "hit_rate_active_days": 0.4879910927310323,
+    "max_drawdown": -0.062427409296161994
+   },
+   "split_date": "2013-07-03",
+   "early_half": {
+    "first": "2001-01-02",
+    "last": "2013-07-03",
+    "n_days": 3144,
+    "n_active_days": 3144,
+    "ann_ret": 0.002360114113359349,
+    "ann_vol": 0.009808729106120488,
+    "sharpe": 0.24061365012993136,
+    "t": 0.849887143789676,
+    "mean_bp_per_active_day": 0.09365532195870432,
+    "hit_rate_active_days": 0.49204834605597964,
+    "max_drawdown": -0.033915658357945896
+   },
+   "late_half": {
+    "first": "2013-07-03",
+    "last": "2025-12-31",
+    "n_days": 3144,
+    "n_active_days": 3144,
+    "ann_ret": -0.0013855382424552414,
+    "ann_vol": 0.006549741985967591,
+    "sharpe": -0.21154088900351645,
+    "t": -0.7471973508271168,
+    "mean_bp_per_active_day": -0.0549816762879064,
+    "hit_rate_active_days": 0.48377862595419846,
+    "max_drawdown": -0.03336676090375093
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.004519420350705052,
+     "ann_vol": 0.009570029154700248,
+     "sharpe": 0.4722472917948608,
+     "t": 1.2490946890269823,
+     "mean_bp_per_active_day": 0.17934207740893066,
+     "hit_rate_active_days": 0.497447532614861,
+     "max_drawdown": -0.015668121288417054
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.004273063772244726,
+     "ann_vol": 0.006400103999140412,
+     "sharpe": -0.6676553651032289,
+     "t": -1.765448384638237,
+     "mean_bp_per_active_day": -0.16956602270812407,
+     "hit_rate_active_days": 0.47956867196367764,
+     "max_drawdown": -0.04505565468954659
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0008328556304728347,
+     "ann_vol": 0.003798627716240693,
+     "sharpe": -0.21925171211488695,
+     "t": -0.4380681849917756,
+     "mean_bp_per_active_day": -0.03304982660606487,
+     "hit_rate_active_days": 0.4850894632206759,
+     "max_drawdown": -0.011853823774222862
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.0005932035891741695,
+     "ann_vol": 0.010718018491341122,
+     "sharpe": -0.05534638605572542,
+     "t": -0.09586275266383806,
+     "mean_bp_per_active_day": -0.023539824967228947,
+     "hit_rate_active_days": 0.47619047619047616,
+     "max_drawdown": -0.023387069515408837
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.0023922396874500166,
+     "ann_vol": 0.004691796219057056,
+     "sharpe": -0.5098771506173391,
+     "t": -0.8807937008669218,
+     "mean_bp_per_active_day": -0.0949301463273816,
+     "hit_rate_active_days": 0.48404255319148937,
+     "max_drawdown": -0.01312038531107119
+    }
+   },
+   "controls": {}
+  },
+  "THIN S5 h1": {
+   "funds_per_day_mean": 203.01575178997612,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 277.29422582958864,
+   "turnover_per_year_etf_legs": 205.01149396660534,
+   "median_adv_usd_selected": 216753.1880952381,
+   "median_price_selected": 28.615,
+   "median_spread_selected": 0.002802428771602161,
+   "mean_spread_selected": 0.004589883844315192,
+   "share_selected_with_quote": 0.9976691949709786,
+   "share_selected_traded_on_t": 0.9742498554023108,
+   "held_fund_days": 1274554,
+   "held_fund_days_without_crsp_return": 1109,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6283,
+    "ann_ret": 0.023215568693155914,
+    "ann_vol": 0.04072371109929292,
+    "sharpe": 0.5700749776107464,
+    "t": 2.8465265462998803,
+    "mean_bp_per_active_day": 0.9212527259188854,
+    "hit_rate_active_days": 0.5091516791341716,
+    "max_drawdown": -0.12612114744701047
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.0370128778183817,
+    "ann_vol": 0.049717144550029346,
+    "sharpe": 0.7444690992085518,
+    "t": 2.6287512735493634,
+    "mean_bp_per_active_day": 1.4687649927929247,
+    "hit_rate_active_days": 0.5165499681731381,
+    "max_drawdown": -0.09282146026353888
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.00948909773110034,
+    "ann_vol": 0.02904489343533722,
+    "sharpe": 0.32670451183530635,
+    "t": 1.1536071846022957,
+    "mean_bp_per_active_day": 0.3765514972658865,
+    "hit_rate_active_days": 0.5019096117122852,
+    "max_drawdown": -0.1261211474470103
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.03556814205612286,
+     "ann_vol": 0.048312000832349926,
+     "sharpe": 0.7362175327730637,
+     "t": 1.9472963130402636,
+     "mean_bp_per_active_day": 1.4114342085763039,
+     "hit_rate_active_days": 0.5167328417470222,
+     "max_drawdown": -0.0928214602635389
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.005940813777113974,
+     "ann_vol": 0.03320344132128907,
+     "sharpe": 0.1789216280212768,
+     "t": 0.4731136985893428,
+     "mean_bp_per_active_day": 0.23574657845690375,
+     "hit_rate_active_days": 0.4982973893303065,
+     "max_drawdown": -0.09036854506565288
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0008192752116662326,
+     "ann_vol": 0.019821647129642347,
+     "sharpe": -0.04133234772609007,
+     "t": -0.08258264610645116,
+     "mean_bp_per_active_day": -0.03251092109786637,
+     "hit_rate_active_days": 0.5,
+     "max_drawdown": -0.05350956763511741
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.013400129072071684,
+     "ann_vol": 0.04374468000576984,
+     "sharpe": 0.3063259136952021,
+     "t": 0.530572046195049,
+     "mean_bp_per_active_day": 0.5317511536536382,
+     "hit_rate_active_days": 0.49074074074074076,
+     "max_drawdown": -0.08665302453990464
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.019657886186656075,
+     "ann_vol": 0.02344471604528923,
+     "sharpe": 0.8384783227351544,
+     "t": 1.4484399312352148,
+     "mean_bp_per_active_day": 0.7800748486768284,
+     "hit_rate_active_days": 0.526595744680851,
+     "max_drawdown": -0.022192638685138082
+    }
+   },
+   "controls": {}
+  },
+  "THIN S5 h20": {
+   "funds_per_day_mean": 203.01575178997612,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 26.23136429466429,
+   "turnover_per_year_etf_legs": 19.64474358609557,
+   "median_adv_usd_selected": 216753.1880952381,
+   "median_price_selected": 28.615,
+   "median_spread_selected": 0.002802428771602161,
+   "mean_spread_selected": 0.004589883844315192,
+   "share_selected_with_quote": 0.9976691949709786,
+   "share_selected_traded_on_t": 0.9742498554023108,
+   "held_fund_days": 3109166,
+   "held_fund_days_without_crsp_return": 20132,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6283,
+    "ann_ret": -0.0017868810617120276,
+    "ann_vol": 0.01769587210741794,
+    "sharpe": -0.100977281643157,
+    "t": -0.5042047521101857,
+    "mean_bp_per_active_day": -0.07090797863936617,
+    "hit_rate_active_days": 0.4871876492121598,
+    "max_drawdown": -0.1310134618095108
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": -0.001523853354793581,
+    "ann_vol": 0.02141046972435312,
+    "sharpe": -0.07117327991455927,
+    "t": -0.2513158039964136,
+    "mean_bp_per_active_day": -0.0604703712219675,
+    "hit_rate_active_days": 0.47994907702100575,
+    "max_drawdown": -0.08972440760698225
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": -0.0020399583409319495,
+    "ann_vol": 0.012956861946039497,
+    "sharpe": -0.157442315078112,
+    "t": -0.5559353460232817,
+    "mean_bp_per_active_day": -0.0809507278147599,
+    "hit_rate_active_days": 0.4945894334818587,
+    "max_drawdown": -0.05178185195170273
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.0012478841549792142,
+     "ann_vol": 0.022054780070031327,
+     "sharpe": 0.05658111987590732,
+     "t": 0.14965713422639468,
+     "mean_bp_per_active_day": 0.049519212499175166,
+     "hit_rate_active_days": 0.48723766307430516,
+     "max_drawdown": -0.04153354088710467
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.010311564777607515,
+     "ann_vol": 0.014448725671251817,
+     "sharpe": -0.7136660361767487,
+     "t": -1.8871121488623255,
+     "mean_bp_per_active_day": -0.4091890784764887,
+     "hit_rate_active_days": 0.46935300794551643,
+     "max_drawdown": -0.09972205448531388
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.0018996370104683601,
+     "ann_vol": 0.00865539138422303,
+     "sharpe": 0.2194744207559466,
+     "t": 0.4385131601722652,
+     "mean_bp_per_active_day": 0.07538242105033176,
+     "hit_rate_active_days": 0.5188866799204771,
+     "max_drawdown": -0.01601324567945213
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -8.351391471748063e-05,
+     "ann_vol": 0.019537688310689288,
+     "sharpe": -0.004274503379797969,
+     "t": -0.007403657030934968,
+     "mean_bp_per_active_day": -0.0033140442348206602,
+     "hit_rate_active_days": 0.47883597883597884,
+     "max_drawdown": -0.03988861812474469
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.006021731953827433,
+     "ann_vol": 0.010019512928156034,
+     "sharpe": -0.6010004674883591,
+     "t": -1.0382058214236447,
+     "mean_bp_per_active_day": -0.2389576172153743,
+     "hit_rate_active_days": 0.48404255319148937,
+     "max_drawdown": -0.026105094934567426
+    }
+   },
+   "controls": {}
+  },
+  "THIN-A S5 h5": {
+   "funds_per_day_mean": 133.7614006514658,
+   "days_invested": 4912,
+   "turnover_per_year_all_legs": 86.7162586412835,
+   "turnover_per_year_etf_legs": 63.10710472827911,
+   "median_adv_usd_selected": 98755.01428571428,
+   "median_price_selected": 27.245,
+   "median_spread_selected": 0.0033167495854063787,
+   "mean_spread_selected": 0.005488447392264804,
+   "share_selected_with_quote": 0.9971401871434746,
+   "share_selected_traded_on_t": 0.9576750741207484,
+   "held_fund_days": 1213170,
+   "held_fund_days_without_crsp_return": 3471,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-05-14",
+    "last": "2025-12-31",
+    "n_days": 6196,
+    "n_active_days": 5004,
+    "ann_ret": 0.00045275082625009745,
+    "ann_vol": 0.03000535494639272,
+    "sharpe": 0.015089000848647777,
+    "t": 0.07481969218120152,
+    "mean_bp_per_active_day": 0.022246045381517022,
+    "hit_rate_active_days": 0.5033972821742606,
+    "max_drawdown": -0.15949852129921152
+   },
+   "split_date": "2013-09-09",
+   "early_half": {
+    "first": "2001-05-14",
+    "last": "2013-09-09",
+    "n_days": 3099,
+    "n_active_days": 1907,
+    "ann_ret": -0.0025037387621013527,
+    "ann_vol": 0.035242519532680955,
+    "sharpe": -0.07104312618113456,
+    "t": -0.24913375945102811,
+    "mean_bp_per_active_day": -0.16145792077126228,
+    "hit_rate_active_days": 0.5034084950183534,
+    "max_drawdown": -0.11392995458322004
+   },
+   "late_half": {
+    "first": "2013-09-09",
+    "last": "2025-12-31",
+    "n_days": 3098,
+    "n_active_days": 3098,
+    "ann_ret": 0.0033877815390723843,
+    "ann_vol": 0.023631216751530484,
+    "sharpe": 0.14336043609997245,
+    "t": 0.5026547023606255,
+    "mean_bp_per_active_day": 0.13443577536001525,
+    "hit_rate_active_days": 0.5032278889606198,
+    "max_drawdown": -0.10370480820079755
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 656,
+     "ann_ret": -0.00042599530386844064,
+     "ann_vol": 0.02746491089222951,
+     "sharpe": -0.015510529254582983,
+     "t": -0.04102536965805016,
+     "mean_bp_per_active_day": -0.04543104679152559,
+     "hit_rate_active_days": 0.5076219512195121,
+     "max_drawdown": -0.05639114891987075
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.00689528390597342,
+     "ann_vol": 0.03793486770744994,
+     "sharpe": -0.18176638862033703,
+     "t": -0.48063595972404793,
+     "mean_bp_per_active_day": -0.27362237722116745,
+     "hit_rate_active_days": 0.49035187287173665,
+     "max_drawdown": -0.12232293441667462
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.00016012620946098628,
+     "ann_vol": 0.016395293110389734,
+     "sharpe": -0.009766596326326971,
+     "t": -0.01951380486360589,
+     "mean_bp_per_active_day": -0.006354214661150249,
+     "hit_rate_active_days": 0.5168986083499006,
+     "max_drawdown": -0.029862927709617564
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.008480210301675086,
+     "ann_vol": 0.034190307726731796,
+     "sharpe": 0.2480296571020567,
+     "t": 0.42959996788464905,
+     "mean_bp_per_active_day": 0.3365162818125034,
+     "hit_rate_active_days": 0.5,
+     "max_drawdown": -0.07553367458462355
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.00854606470639684,
+     "ann_vol": 0.018597738532377138,
+     "sharpe": 0.45952171504717326,
+     "t": 0.7938065699454603,
+     "mean_bp_per_active_day": 0.33912955184114446,
+     "hit_rate_active_days": 0.5132978723404256,
+     "max_drawdown": -0.029936179515362194
+    }
+   },
+   "controls": {}
+  },
+  "THIN-B S5 h5": {
+   "funds_per_day_mean": 99.86271604938271,
+   "days_invested": 6075,
+   "turnover_per_year_all_legs": 106.1144809159519,
+   "turnover_per_year_etf_legs": 77.05342286508856,
+   "median_adv_usd_selected": 495695.0238095238,
+   "median_price_selected": 30.808549999999997,
+   "median_spread_selected": 0.0022790167670519385,
+   "mean_spread_selected": 0.0034636153613299527,
+   "share_selected_with_quote": 0.9991478012613201,
+   "share_selected_traded_on_t": 0.9958362591607244,
+   "held_fund_days": 1116360,
+   "held_fund_days_without_crsp_return": 1197,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-02-12",
+    "last": "2025-12-31",
+    "n_days": 6259,
+    "n_active_days": 6173,
+    "ann_ret": 0.006317375572532111,
+    "ann_vol": 0.030020517514399537,
+    "sharpe": 0.21043526546475894,
+    "t": 1.0487469903729416,
+    "mean_bp_per_active_day": 0.25418202225049746,
+    "hit_rate_active_days": 0.49619309897942654,
+    "max_drawdown": -0.1600035194543244
+   },
+   "split_date": "2013-07-24",
+   "early_half": {
+    "first": "2001-02-12",
+    "last": "2013-07-24",
+    "n_days": 3130,
+    "n_active_days": 3044,
+    "ann_ret": 0.010722619819404837,
+    "ann_vol": 0.03488238361775687,
+    "sharpe": 0.3073935524849423,
+    "t": 1.0833446736075862,
+    "mean_bp_per_active_day": 0.43752216218656975,
+    "hit_rate_active_days": 0.4931011826544021,
+    "max_drawdown": -0.055060002757426535
+   },
+   "late_half": {
+    "first": "2013-07-24",
+    "last": "2025-12-31",
+    "n_days": 3130,
+    "n_active_days": 3130,
+    "ann_ret": 0.0020104057949371875,
+    "ann_vol": 0.02420023934175,
+    "sharpe": 0.08307379801276826,
+    "t": 0.29277633140302606,
+    "mean_bp_per_active_day": 0.07977800773560267,
+    "hit_rate_active_days": 0.49936102236421726,
+    "max_drawdown": -0.1272045430718134
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1705,
+     "ann_ret": 0.010781035167645637,
+     "ann_vol": 0.036280373107635426,
+     "sharpe": 0.2971588835556022,
+     "t": 0.7859856259540533,
+     "mean_bp_per_active_day": 0.44237222456266023,
+     "hit_rate_active_days": 0.493841642228739,
+     "max_drawdown": -0.05055061989246485
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.0036553448567313994,
+     "ann_vol": 0.022878314735480746,
+     "sharpe": -0.15977334427795603,
+     "t": -0.4224808296420327,
+     "mean_bp_per_active_day": -0.14505336733061108,
+     "hit_rate_active_days": 0.4750283768444949,
+     "max_drawdown": -0.09865153699194068
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.004676701363591328,
+     "ann_vol": 0.016749930854004474,
+     "sharpe": -0.2792072041582936,
+     "t": -0.557860150702773,
+     "mean_bp_per_active_day": -0.18558338744410033,
+     "hit_rate_active_days": 0.5049701789264414,
+     "max_drawdown": -0.05448029999780156
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.007945738629987712,
+     "ann_vol": 0.036465978627809356,
+     "sharpe": 0.21789456718236005,
+     "t": 0.37740446105307773,
+     "mean_bp_per_active_day": 0.31530708849157585,
+     "hit_rate_active_days": 0.5052910052910053,
+     "max_drawdown": -0.07941321438995001
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.011659276430444102,
+     "ann_vol": 0.018770644978104753,
+     "sharpe": 0.6211441558904452,
+     "t": 1.0730032894711963,
+     "mean_bp_per_active_day": 0.46266969962079774,
+     "hit_rate_active_days": 0.5172872340425532,
+     "max_drawdown": -0.030562840419943664
+    }
+   },
+   "controls": {}
+  },
+  "MID S5 h5": {
+   "funds_per_day_mean": 140.3338106603023,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 105.77164205137329,
+   "turnover_per_year_etf_legs": 75.46984733121508,
+   "median_adv_usd_selected": 2783007.8785714284,
+   "median_price_selected": 38.15,
+   "median_spread_selected": 0.001224509018979981,
+   "mean_spread_selected": 0.0019263127372030275,
+   "share_selected_with_quote": 0.99889682289529,
+   "share_selected_traded_on_t": 0.9996099764398558,
+   "held_fund_days": 1519799,
+   "held_fund_days_without_crsp_return": 464,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6283,
+    "ann_ret": 0.01481021248603337,
+    "ann_vol": 0.03122262475184741,
+    "sharpe": 0.47434232719839053,
+    "t": 2.3685095459949013,
+    "mean_bp_per_active_day": 0.5877068446838639,
+    "hit_rate_active_days": 0.5053318478433869,
+    "max_drawdown": -0.12418203750956572
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.02593648999866675,
+    "ann_vol": 0.03657737629727475,
+    "sharpe": 0.7090855775951099,
+    "t": 2.503810590849597,
+    "mean_bp_per_active_day": 1.0292257935978868,
+    "hit_rate_active_days": 0.5101845957988542,
+    "max_drawdown": -0.062189488049148145
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.0037741617007553546,
+    "ann_vol": 0.02471693352679237,
+    "sharpe": 0.15269538580359426,
+    "t": 0.5391737418289596,
+    "mean_bp_per_active_day": 0.14976832145854582,
+    "hit_rate_active_days": 0.5006365372374284,
+    "max_drawdown": -0.09881940421022639
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.026590449140851357,
+     "ann_vol": 0.03900664552269013,
+     "sharpe": 0.6816902295631581,
+     "t": 1.8030715265145567,
+     "mean_bp_per_active_day": 1.0551765532083872,
+     "hit_rate_active_days": 0.5116279069767442,
+     "max_drawdown": -0.06218948804914813
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.006633880945074498,
+     "ann_vol": 0.02270391284973929,
+     "sharpe": 0.2921910856943179,
+     "t": 0.7726265783320244,
+     "mean_bp_per_active_day": 0.2632492438521626,
+     "hit_rate_active_days": 0.49035187287173665,
+     "max_drawdown": -0.08722668466198519
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.0012451898111473405,
+     "ann_vol": 0.017656646382872725,
+     "sharpe": 0.07052244147309863,
+     "t": 0.14090488799066211,
+     "mean_bp_per_active_day": 0.049412294093148436,
+     "hit_rate_active_days": 0.49502982107355864,
+     "max_drawdown": -0.02918124028461146
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.0044745341632452616,
+     "ann_vol": 0.0377375328914083,
+     "sharpe": 0.11856986454628513,
+     "t": 0.20536902964072554,
+     "mean_bp_per_active_day": 0.17756087949385957,
+     "hit_rate_active_days": 0.5132275132275133,
+     "max_drawdown": -0.07683215047184419
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.015436471008302963,
+     "ann_vol": 0.018214491609265315,
+     "sharpe": 0.8474829459665384,
+     "t": 1.4639950809634976,
+     "mean_bp_per_active_day": 0.6125583733453557,
+     "hit_rate_active_days": 0.5252659574468085,
+     "max_drawdown": -0.03128871584612823
+    }
+   },
+   "controls": {}
+  },
+  "LARGE S5 h5": {
+   "funds_per_day_mean": 72.01457827143354,
+   "days_invested": 5762,
+   "turnover_per_year_all_legs": 106.17098130659382,
+   "turnover_per_year_etf_legs": 71.6053599309564,
+   "median_adv_usd_selected": 23233245.852380954,
+   "median_price_selected": 47.3035,
+   "median_spread_selected": 0.0005132152938156536,
+   "mean_spread_selected": 0.0008042121925293771,
+   "share_selected_with_quote": 0.9996264592189865,
+   "share_selected_traded_on_t": 0.9999951801189547,
+   "held_fund_days": 678530,
+   "held_fund_days_without_crsp_return": 71,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2002-07-24",
+    "last": "2025-12-31",
+    "n_days": 5899,
+    "n_active_days": 5810,
+    "ann_ret": 0.005623510501949653,
+    "ann_vol": 0.03390745389293327,
+    "sharpe": 0.16584879890146106,
+    "t": 0.8024191012691007,
+    "mean_bp_per_active_day": 0.22657356262465506,
+    "hit_rate_active_days": 0.5113597246127367,
+    "max_drawdown": -0.14559526657848304
+   },
+   "split_date": "2014-04-10",
+   "early_half": {
+    "first": "2002-07-24",
+    "last": "2014-04-10",
+    "n_days": 2950,
+    "n_active_days": 2861,
+    "ann_ret": 0.002186313387765233,
+    "ann_vol": 0.038271173804649936,
+    "sharpe": 0.057126896575604824,
+    "t": 0.19545706325745407,
+    "mean_bp_per_active_day": 0.0894573505476974,
+    "hit_rate_active_days": 0.506815798671793,
+    "max_drawdown": -0.14559526657848304
+   },
+   "late_half": {
+    "first": "2014-04-10",
+    "last": "2025-12-31",
+    "n_days": 2950,
+    "n_active_days": 2950,
+    "ann_ret": 0.008924948776626956,
+    "ann_vol": 0.02889418239790299,
+    "sharpe": 0.3088839356560125,
+    "t": 1.0568322553777623,
+    "mean_bp_per_active_day": 0.35416463399313314,
+    "hit_rate_active_days": 0.515593220338983,
+    "max_drawdown": -0.07425793471898606
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-07-24",
+     "last": "2008-12-31",
+     "n_days": 1623,
+     "n_active_days": 1534,
+     "ann_ret": -0.009814980194790338,
+     "ann_vol": 0.043000090136377234,
+     "sharpe": -0.2282548749005309,
+     "t": -0.579267350917546,
+     "mean_bp_per_active_day": -0.4120804840582954,
+     "hit_rate_active_days": 0.49869621903520206,
+     "max_drawdown": -0.14559526657848304
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.01096210482224446,
+     "ann_vol": 0.030918961740492936,
+     "sharpe": 0.3545431089908809,
+     "t": 0.9375009799491266,
+     "mean_bp_per_active_day": 0.4350041596128754,
+     "hit_rate_active_days": 0.5090805902383655,
+     "max_drawdown": -0.1273494292336827
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.007541946382816952,
+     "ann_vol": 0.017060238036720993,
+     "sharpe": 0.44207744150951644,
+     "t": 0.883277309717904,
+     "mean_bp_per_active_day": 0.2992835866197203,
+     "hit_rate_active_days": 0.5139165009940357,
+     "max_drawdown": -0.022159381017933605
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.007435830546736637,
+     "ann_vol": 0.043175563870762705,
+     "sharpe": 0.17222312530750702,
+     "t": 0.2982992032709035,
+     "mean_bp_per_active_day": 0.29507264074351736,
+     "hit_rate_active_days": 0.5158730158730159,
+     "max_drawdown": -0.06380268664062051
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.02204639182965988,
+     "ann_vol": 0.02296173006232505,
+     "sharpe": 0.9601363560071187,
+     "t": 1.658599631931872,
+     "mean_bp_per_active_day": 0.8748568186372968,
+     "hit_rate_active_days": 0.5345744680851063,
+     "max_drawdown": -0.03423269475595668
+    }
+   },
+   "controls": {}
+  },
+  "LIQUID S5 h5": {
+   "funds_per_day_mean": 31.572519083969464,
+   "days_invested": 4716,
+   "turnover_per_year_all_legs": 123.57047379206364,
+   "turnover_per_year_etf_legs": 71.45898631479423,
+   "median_adv_usd_selected": 251705546.72142857,
+   "median_price_selected": 56.93,
+   "median_spread_selected": 0.00026413100898058946,
+   "mean_spread_selected": 0.00041743061483135347,
+   "share_selected_with_quote": 0.9991604878572964,
+   "share_selected_traded_on_t": 1.0,
+   "held_fund_days": 230105,
+   "held_fund_days_without_crsp_return": 17,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2007-03-16",
+    "last": "2025-12-31",
+    "n_days": 4730,
+    "n_active_days": 4719,
+    "ann_ret": 0.004807305074643322,
+    "ann_vol": 0.05037568994773477,
+    "sharpe": 0.09542906667146288,
+    "t": 0.41343855708533317,
+    "mean_bp_per_active_day": 0.1912107505546888,
+    "hit_rate_active_days": 0.5013774104683195,
+    "max_drawdown": -0.16239932307332444
+   },
+   "split_date": "2016-08-05",
+   "early_half": {
+    "first": "2007-03-16",
+    "last": "2016-08-05",
+    "n_days": 2366,
+    "n_active_days": 2355,
+    "ann_ret": 0.00549145852560103,
+    "ann_vol": 0.055993799155225774,
+    "sharpe": 0.09807261890513329,
+    "t": 0.30050719346502286,
+    "mean_bp_per_active_day": 0.21893288295035965,
+    "hit_rate_active_days": 0.4900212314225053,
+    "max_drawdown": -0.14205870485301392
+   },
+   "late_half": {
+    "first": "2016-08-05",
+    "last": "2025-12-31",
+    "n_days": 2365,
+    "n_active_days": 2365,
+    "ann_ret": 0.004108093865868716,
+    "ann_vol": 0.044043843946451805,
+    "sharpe": 0.09327282765925946,
+    "t": 0.2857396083852895,
+    "mean_bp_per_active_day": 0.1630195978519332,
+    "hit_rate_active_days": 0.5124735729386892,
+    "max_drawdown": -0.1279377856993701
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2007-03-16",
+     "last": "2008-12-31",
+     "n_days": 454,
+     "n_active_days": 443,
+     "ann_ret": -0.014111606817206482,
+     "ann_vol": 0.08757563675320353,
+     "sharpe": -0.1611362171076681,
+     "t": -0.216282220560913,
+     "mean_bp_per_active_day": -0.5738892019609937,
+     "hit_rate_active_days": 0.5056433408577878,
+     "max_drawdown": -0.09826063833687537
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.008127782057592854,
+     "ann_vol": 0.04615221110045182,
+     "sharpe": 0.17610818341731163,
+     "t": 0.465674244806819,
+     "mean_bp_per_active_day": 0.32253103403146244,
+     "hit_rate_active_days": 0.48297389330306467,
+     "max_drawdown": -0.14205870485301397
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0013383136345238493,
+     "ann_vol": 0.028534962504292924,
+     "sharpe": -0.0469008373262277,
+     "t": -0.09370857123035463,
+     "mean_bp_per_active_day": -0.053107683909676566,
+     "hit_rate_active_days": 0.5,
+     "max_drawdown": -0.049758475818795486
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.002475825712008841,
+     "ann_vol": 0.05506947379562251,
+     "sharpe": -0.044958223519572564,
+     "t": -0.07786992735393775,
+     "mean_bp_per_active_day": -0.09824705206384289,
+     "hit_rate_active_days": 0.5079365079365079,
+     "max_drawdown": -0.09303451280459014
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.02399220514256081,
+     "ann_vol": 0.047092290510076115,
+     "sharpe": 0.5094720363501392,
+     "t": 0.8800938811275021,
+     "mean_bp_per_active_day": 0.952071632641302,
+     "hit_rate_active_days": 0.5372340425531915,
+     "max_drawdown": -0.08045293612762876
+    }
+   },
+   "controls": {}
+  },
+  "THIN US equity S5 h5": {
+   "funds_per_day_mean": 102.43426930440332,
+   "days_invested": 6268,
+   "turnover_per_year_all_legs": 110.55096544377064,
+   "turnover_per_year_etf_legs": 78.95400116541528,
+   "median_adv_usd_selected": 231156.0309523812,
+   "median_price_selected": 30.93,
+   "median_spread_selected": 0.0023032629558540777,
+   "mean_spread_selected": 0.0035999962284158837,
+   "share_selected_with_quote": 0.997701142264406,
+   "share_selected_traded_on_t": 0.9806715281173974,
+   "held_fund_days": 1163873,
+   "held_fund_days_without_crsp_return": 2197,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6278,
+    "ann_ret": 0.005865262770406698,
+    "ann_vol": 0.03388232955602265,
+    "sharpe": 0.17310683318597667,
+    "t": 0.8643655928821438,
+    "mean_bp_per_active_day": 0.2329338910030067,
+    "hit_rate_active_days": 0.49538069448869065,
+    "max_drawdown": -0.1634841708150263
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3137,
+    "ann_ret": 0.0051912682267176175,
+    "ann_vol": 0.040039004857428805,
+    "sharpe": 0.12965527602903032,
+    "t": 0.45781815839777246,
+    "mean_bp_per_active_day": 0.20633105090227175,
+    "hit_rate_active_days": 0.4890022314313038,
+    "max_drawdown": -0.09789068572981159
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.0065615119926747895,
+    "ann_vol": 0.026323089711077042,
+    "sharpe": 0.2492683064448029,
+    "t": 0.8801767309333363,
+    "mean_bp_per_active_day": 0.26037746002677736,
+    "hit_rate_active_days": 0.5019096117122852,
+    "max_drawdown": -0.1275566908390984
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1758,
+     "ann_ret": -0.00010283986781133624,
+     "ann_vol": 0.04150719699267763,
+     "sharpe": -0.0024776394279160414,
+     "t": -0.00655335944642776,
+     "mean_bp_per_active_day": -0.0040925539247202315,
+     "hit_rate_active_days": 0.4863481228668942,
+     "max_drawdown": -0.08276052965178125
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.0027720823336945676,
+     "ann_vol": 0.025511271820822978,
+     "sharpe": 0.10866107943046262,
+     "t": 0.28732717084344395,
+     "mean_bp_per_active_day": 0.1100032672101019,
+     "hit_rate_active_days": 0.48637911464245176,
+     "max_drawdown": -0.05571672615838807
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.005448500910484803,
+     "ann_vol": 0.019291006043546017,
+     "sharpe": -0.28243736475877834,
+     "t": -0.5643140596726824,
+     "mean_bp_per_active_day": -0.2162103535906668,
+     "hit_rate_active_days": 0.49304174950298213,
+     "max_drawdown": -0.04112252811942256
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.01766410454808105,
+     "ann_vol": 0.03993312716932706,
+     "sharpe": 0.4423421304617733,
+     "t": 0.766159044288052,
+     "mean_bp_per_active_day": 0.700956529685756,
+     "hit_rate_active_days": 0.5079365079365079,
+     "max_drawdown": -0.08982891944532806
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.01440192349336893,
+     "ann_vol": 0.02199732673086523,
+     "sharpe": 0.6547124416332408,
+     "t": 1.130991247149545,
+     "mean_bp_per_active_day": 0.5715049005305131,
+     "hit_rate_active_days": 0.5199468085106383,
+     "max_drawdown": -0.039146370262668796
+    }
+   },
+   "controls": {}
+  },
+  "THIN international S5 h5": {
+   "funds_per_day_mean": 70.16804308797127,
+   "days_invested": 5570,
+   "turnover_per_year_all_legs": 105.5392348627366,
+   "turnover_per_year_etf_legs": 75.38865734969444,
+   "median_adv_usd_selected": 198991.74047619052,
+   "median_price_selected": 26.4,
+   "median_spread_selected": 0.003700014230824037,
+   "mean_spread_selected": 0.005724836112064513,
+   "share_selected_with_quote": 0.9980324228064968,
+   "share_selected_traded_on_t": 0.9706065971404886,
+   "held_fund_days": 719271,
+   "held_fund_days_without_crsp_return": 1679,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2002-09-09",
+    "last": "2025-12-31",
+    "n_days": 5867,
+    "n_active_days": 5588,
+    "ann_ret": 0.003142598254829328,
+    "ann_vol": 0.038027738149371354,
+    "sharpe": 0.08263963116831548,
+    "t": 0.39874582044254225,
+    "mean_bp_per_active_day": 0.1309326672311109,
+    "hit_rate_active_days": 0.49463135289906945,
+    "max_drawdown": -0.1512243475047314
+   },
+   "split_date": "2014-05-05",
+   "early_half": {
+    "first": "2002-09-09",
+    "last": "2014-05-05",
+    "n_days": 2934,
+    "n_active_days": 2655,
+    "ann_ret": 0.009493809835497947,
+    "ann_vol": 0.04225650755440355,
+    "sharpe": 0.22467095330287412,
+    "t": 0.7666139405136266,
+    "mean_bp_per_active_day": 0.41632795350717394,
+    "hit_rate_active_days": 0.4967984934086629,
+    "max_drawdown": -0.08115261401691452
+   },
+   "late_half": {
+    "first": "2014-05-05",
+    "last": "2025-12-31",
+    "n_days": 2934,
+    "n_active_days": 2934,
+    "ann_ret": -0.0032817536098040125,
+    "ann_vol": 0.033261744559986685,
+    "sharpe": -0.09866450642375225,
+    "t": -0.33665938986059907,
+    "mean_bp_per_active_day": -0.13022831784936556,
+    "hit_rate_active_days": 0.49250170415814587,
+    "max_drawdown": -0.12422892118083903
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-09-09",
+     "last": "2008-12-31",
+     "n_days": 1591,
+     "n_active_days": 1312,
+     "ann_ret": 0.015705643831483044,
+     "ann_vol": 0.05018359881359987,
+     "sharpe": 0.31296368141749886,
+     "t": 0.7863733034141165,
+     "mean_bp_per_active_day": 0.7557733055038207,
+     "hit_rate_active_days": 0.5099085365853658,
+     "max_drawdown": -0.051653588105389385
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.0025267103779139702,
+     "ann_vol": 0.03170031394383375,
+     "sharpe": 0.07970616260743559,
+     "t": 0.21076310230691095,
+     "mean_bp_per_active_day": 0.10026628483785596,
+     "hit_rate_active_days": 0.4880817253121453,
+     "max_drawdown": -0.12275281053383888
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.003670622662060418,
+     "ann_vol": 0.021478863500137068,
+     "sharpe": 0.1708946407726365,
+     "t": 0.3414500365172164,
+     "mean_bp_per_active_day": 0.14565962944684197,
+     "hit_rate_active_days": 0.5,
+     "max_drawdown": -0.05078198829775532
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.015997330402593355,
+     "ann_vol": 0.0453210099718866,
+     "sharpe": -0.35297824149366425,
+     "t": -0.6113762482333434,
+     "mean_bp_per_active_day": -0.6348146985156093,
+     "hit_rate_active_days": 0.48677248677248675,
+     "max_drawdown": -0.09132416648843339
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.003458488928673492,
+     "ann_vol": 0.030362643823052607,
+     "sharpe": -0.11390605339998952,
+     "t": -0.19676844550466543,
+     "mean_bp_per_active_day": -0.13724162415371,
+     "hit_rate_active_days": 0.48404255319148937,
+     "max_drawdown": -0.06241829707204673
+    }
+   },
+   "controls": {}
+  },
+  "THIN bond S5 h5": {
+   "funds_per_day_mean": 38.607428987618356,
+   "days_invested": 4119,
+   "turnover_per_year_all_legs": 97.80821473737572,
+   "turnover_per_year_etf_legs": 75.05174011130516,
+   "median_adv_usd_selected": 254193.86428571425,
+   "median_price_selected": 25.61,
+   "median_spread_selected": 0.002075119319360893,
+   "mean_spread_selected": 0.0033493557027375726,
+   "share_selected_with_quote": 0.9995095079987927,
+   "share_selected_traded_on_t": 0.9735134319348023,
+   "held_fund_days": 300182,
+   "held_fund_days_without_crsp_return": 422,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2008-06-26",
+    "last": "2025-12-31",
+    "n_days": 4407,
+    "n_active_days": 4152,
+    "ann_ret": 0.0042506437085132655,
+    "ann_vol": 0.027151103035298167,
+    "sharpe": 0.15655510212558063,
+    "t": 0.6546941807173933,
+    "mean_bp_per_active_day": 0.179035794792125,
+    "hit_rate_active_days": 0.503131021194605,
+    "max_drawdown": -0.08860212208989235
+   },
+   "split_date": "2017-03-28",
+   "early_half": {
+    "first": "2008-06-26",
+    "last": "2017-03-28",
+    "n_days": 2204,
+    "n_active_days": 1949,
+    "ann_ret": 0.008780909405036062,
+    "ann_vol": 0.03444739838109119,
+    "sharpe": 0.25490776713796953,
+    "t": 0.7538563432128649,
+    "mean_bp_per_active_day": 0.3940385449742131,
+    "hit_rate_active_days": 0.49820420728578757,
+    "max_drawdown": -0.08860212208989235
+   },
+   "late_half": {
+    "first": "2017-03-28",
+    "last": "2025-12-31",
+    "n_days": 2204,
+    "n_active_days": 2204,
+    "ann_ret": -0.0002144629519541912,
+    "ann_vol": 0.01695930589272695,
+    "sharpe": -0.01264573876494346,
+    "t": -0.0373981165407394,
+    "mean_bp_per_active_day": -0.008510434601356795,
+    "hit_rate_active_days": 0.5077132486388385,
+    "max_drawdown": -0.06213927571051371
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2008-06-26",
+     "last": "2008-12-31",
+     "n_days": 131,
+     "n_active_days": 60,
+     "ann_ret": 0.0013102033856396368,
+     "ann_vol": 0.05699927068970603,
+     "sharpe": 0.02298631841751367,
+     "t": 0.016573139880453534,
+     "mean_bp_per_active_day": 0.11351629862354046,
+     "hit_rate_active_days": 0.5,
+     "max_drawdown": -0.0538210920466798
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1578,
+     "ann_ret": 0.009347311877710872,
+     "ann_vol": 0.034787796113266344,
+     "sharpe": 0.26869514375894227,
+     "t": 0.7104974097467481,
+     "mean_bp_per_active_day": 0.4141761605137748,
+     "hit_rate_active_days": 0.49429657794676807,
+     "max_drawdown": -0.08860212208989234
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.0013411953929084658,
+     "ann_vol": 0.015584673300175322,
+     "sharpe": 0.08605861458086374,
+     "t": 0.17194639316016533,
+     "mean_bp_per_active_day": 0.053222039401129594,
+     "hit_rate_active_days": 0.5059642147117296,
+     "max_drawdown": -0.036348188643736436
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.0033566251320494116,
+     "ann_vol": 0.02271279657304965,
+     "sharpe": -0.1477856379884231,
+     "t": -0.25597223362493,
+     "mean_bp_per_active_day": -0.13319941000196078,
+     "hit_rate_active_days": 0.503968253968254,
+     "max_drawdown": -0.053595347438122776
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.004360841337680916,
+     "ann_vol": 0.008979026078954185,
+     "sharpe": 0.48566974851562494,
+     "t": 0.8389763194452852,
+     "mean_bp_per_active_day": 0.17304925943178237,
+     "hit_rate_active_days": 0.5172872340425532,
+     "max_drawdown": -0.011872749805660441
+    }
+   },
+   "controls": {}
+  },
+  "THIN commodity S5 h5": {
+   "funds_per_day_mean": 5.641214351425943,
+   "days_invested": 3261,
+   "turnover_per_year_all_legs": 136.30985068253884,
+   "turnover_per_year_etf_legs": 75.6925485648014,
+   "median_adv_usd_selected": 244244.80238095234,
+   "median_price_selected": 24.12005,
+   "median_spread_selected": 0.0029776674937964627,
+   "mean_spread_selected": 0.0045582465842542545,
+   "share_selected_with_quote": 0.9991302457055882,
+   "share_selected_traded_on_t": 0.9677647314633616,
+   "held_fund_days": 35416,
+   "held_fund_days_without_crsp_return": 86,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2012-04-18",
+    "last": "2025-12-31",
+    "n_days": 3447,
+    "n_active_days": 3312,
+    "ann_ret": 0.0009377838296186401,
+    "ann_vol": 0.0664931560184913,
+    "sharpe": 0.014103463961882766,
+    "t": 0.05216103069969964,
+    "mean_bp_per_active_day": 0.038730504522940475,
+    "hit_rate_active_days": 0.5069444444444444,
+    "max_drawdown": -0.30309896038373085
+   },
+   "split_date": "2019-02-25",
+   "early_half": {
+    "first": "2012-04-18",
+    "last": "2019-02-25",
+    "n_days": 1724,
+    "n_active_days": 1656,
+    "ann_ret": -0.038131939360961695,
+    "ann_vol": 0.07232726135449971,
+    "sharpe": -0.5272139252454827,
+    "t": -1.3789713177793133,
+    "mean_bp_per_active_day": -1.5753072870729323,
+    "hit_rate_active_days": 0.4939613526570048,
+    "max_drawdown": -0.30309896038373085
+   },
+   "late_half": {
+    "first": "2019-02-25",
+    "last": "2025-12-31",
+    "n_days": 1724,
+    "n_active_days": 1657,
+    "ann_ret": 0.03933121765638582,
+    "ann_vol": 0.0600221958615444,
+    "sharpe": 0.6552778866523431,
+    "t": 1.713933125813936,
+    "mean_bp_per_active_day": 1.6238712925350165,
+    "hit_rate_active_days": 0.5196137598068798,
+    "max_drawdown": -0.1382375259046931
+   },
+   "eras": {
+    "2009-2015": {
+     "first": "2012-04-18",
+     "last": "2015-12-31",
+     "n_days": 933,
+     "n_active_days": 865,
+     "ann_ret": -0.04961918660237282,
+     "ann_vol": 0.08827455387683804,
+     "sharpe": -0.5621006782045282,
+     "t": -1.0815700703156317,
+     "mean_bp_per_active_day": -2.123804986696663,
+     "hit_rate_active_days": 0.47861271676300576,
+     "max_drawdown": -0.2640328691634781
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0018846957065938293,
+     "ann_vol": 0.04699574432522721,
+     "sharpe": -0.04010353987695284,
+     "t": -0.08012746972957012,
+     "mean_bp_per_active_day": -0.0747895121664218,
+     "hit_rate_active_days": 0.5188866799204771,
+     "max_drawdown": -0.11417359450758882
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 718,
+     "ann_ret": 0.02397759373904244,
+     "ann_vol": 0.06776886282152665,
+     "sharpe": 0.35381431443211414,
+     "t": 0.612824369041572,
+     "mean_bp_per_active_day": 1.0018493205728043,
+     "hit_rate_active_days": 0.5069637883008357,
+     "max_drawdown": -0.13823752590469313
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 723,
+     "ann_ret": 0.04427684172184391,
+     "ann_vol": 0.05497439532352863,
+     "sharpe": 0.8054084353501522,
+     "t": 1.3913129380726035,
+     "mean_bp_per_active_day": 1.8274926439014372,
+     "hit_rate_active_days": 0.5242047026279392,
+     "max_drawdown": -0.046228223163289325
+    }
+   },
+   "controls": {}
+  },
+  "THIN low fit S5 h5": {
+   "funds_per_day_mean": 11.15586605637196,
+   "days_invested": 4151,
+   "turnover_per_year_all_legs": 130.78504121826194,
+   "turnover_per_year_etf_legs": 71.48101366204416,
+   "median_adv_usd_selected": 144656.00952380957,
+   "median_price_selected": 25.28,
+   "median_spread_selected": 0.004765687053216737,
+   "mean_spread_selected": 0.008786245812933757,
+   "share_selected_with_quote": 0.991081454608275,
+   "share_selected_traded_on_t": 0.9136650254815583,
+   "held_fund_days": 79981,
+   "held_fund_days_without_crsp_return": 233,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2008-06-04",
+    "last": "2025-12-31",
+    "n_days": 4423,
+    "n_active_days": 4177,
+    "ann_ret": -0.06685639984130452,
+    "ann_vol": 0.26040731457850874,
+    "sharpe": -0.25673779536307284,
+    "t": -1.075593098286926,
+    "mean_bp_per_active_day": -2.8092792398479376,
+    "hit_rate_active_days": 0.4982044529566675,
+    "max_drawdown": -1.5192765789481535
+   },
+   "split_date": "2017-03-16",
+   "early_half": {
+    "first": "2008-06-04",
+    "last": "2017-03-16",
+    "n_days": 2212,
+    "n_active_days": 2171,
+    "ann_ret": -0.1346024693330847,
+    "ann_vol": 0.3627975940851766,
+    "sharpe": -0.3710125743046772,
+    "t": -1.0992106305629057,
+    "mean_bp_per_active_day": -5.4422411982771335,
+    "hit_rate_active_days": 0.4942422846614463,
+    "max_drawdown": -1.388629934420929
+   },
+   "late_half": {
+    "first": "2017-03-16",
+    "last": "2025-12-31",
+    "n_days": 2212,
+    "n_active_days": 2007,
+    "ann_ret": 0.0014535829185092176,
+    "ann_vol": 0.06299120069805321,
+    "sharpe": 0.023075967792341858,
+    "t": 0.06836789603534907,
+    "mean_bp_per_active_day": 0.06357363149101945,
+    "hit_rate_active_days": 0.502740408570005,
+    "max_drawdown": -0.22429621107639458
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2008-06-04",
+     "last": "2008-12-31",
+     "n_days": 147,
+     "n_active_days": 111,
+     "ann_ret": 0.08165542252868933,
+     "ann_vol": 0.2138325888558062,
+     "sharpe": 0.3818661269810098,
+     "t": 0.29165507203834934,
+     "mean_bp_per_active_day": 4.291200883639827,
+     "hit_rate_active_days": 0.5045045045045045,
+     "max_drawdown": -0.20534170809479568
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1757,
+     "ann_ret": -0.1801240506951269,
+     "ann_vol": 0.4012998678836938,
+     "sharpe": -0.44885150758965897,
+     "t": -1.1868760597678727,
+     "mean_bp_per_active_day": -7.168120654001084,
+     "hit_rate_active_days": 0.48833238474672735,
+     "max_drawdown": -1.3602231514815302
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.008811041555922468,
+     "ann_vol": 0.043079979825629736,
+     "sharpe": -0.2045275227979676,
+     "t": -0.4086490355250737,
+     "mean_bp_per_active_day": -0.3496445061873995,
+     "hit_rate_active_days": 0.49105367793240556,
+     "max_drawdown": -0.1084294996195749
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 551,
+     "ann_ret": 0.011602984302851614,
+     "ann_vol": 0.049667906230278995,
+     "sharpe": 0.23361130322377266,
+     "t": 0.4046266464059533,
+     "mean_bp_per_active_day": 0.6317414320971839,
+     "hit_rate_active_days": 0.5208711433756806,
+     "max_drawdown": -0.08825650138379634
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.012980618866101903,
+     "ann_vol": 0.08722193369200094,
+     "sharpe": 0.14882287420890264,
+     "t": 0.25708594705489846,
+     "mean_bp_per_active_day": 0.515103923258012,
+     "hit_rate_active_days": 0.5132978723404256,
+     "max_drawdown": -0.15268351181897305
+    }
+   },
+   "controls": {}
+  },
+  "THIN traded on t": {
+   "funds_per_day_mean": 197.0857597454256,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 106.01127791721532,
+   "turnover_per_year_etf_legs": 78.6905201211315,
+   "median_adv_usd_selected": 224200.49047619046,
+   "median_price_selected": 28.6012,
+   "median_spread_selected": 0.002771129865222306,
+   "mean_spread_selected": 0.004475946924871586,
+   "share_selected_with_quote": 0.9979445928097884,
+   "share_selected_traded_on_t": 1.0,
+   "held_fund_days": 2245605,
+   "held_fund_days_without_crsp_return": 4505,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-08",
+    "last": "2025-12-31",
+    "n_days": 6283,
+    "n_active_days": 6283,
+    "ann_ret": 0.005855294801933012,
+    "ann_vol": 0.03082410886589606,
+    "sharpe": 0.18995828321938413,
+    "t": 0.9485090858394747,
+    "mean_bp_per_active_day": 0.2323529683306751,
+    "hit_rate_active_days": 0.4937131943339169,
+    "max_drawdown": -0.16576837444249906
+   },
+   "split_date": "2013-07-08",
+   "early_half": {
+    "first": "2001-01-08",
+    "last": "2013-07-08",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.009032532449998822,
+    "ann_vol": 0.037004787034838574,
+    "sharpe": 0.24409091833159433,
+    "t": 0.8618951587220446,
+    "mean_bp_per_active_day": 0.3584338273809057,
+    "hit_rate_active_days": 0.48854232972628897,
+    "max_drawdown": -0.07579556573265044
+   },
+   "late_half": {
+    "first": "2013-07-08",
+    "last": "2025-12-31",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": 0.0027474405155485685,
+    "ann_vol": 0.023040805995683176,
+    "sharpe": 0.11924237876328274,
+    "t": 0.4210497861741665,
+    "mean_bp_per_active_day": 0.10902541728367336,
+    "hit_rate_active_days": 0.4990451941438574,
+    "max_drawdown": -0.11571032898628476
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.010175654171802865,
+     "ann_vol": 0.03691576710029992,
+     "sharpe": 0.2756452045045054,
+     "t": 0.7290819174287554,
+     "mean_bp_per_active_day": 0.4037958004683676,
+     "hit_rate_active_days": 0.48553601815087916,
+     "max_drawdown": -0.052912472954539526
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.006090737770705842,
+     "ann_vol": 0.026031281422485644,
+     "sharpe": -0.23397763912784963,
+     "t": -0.6186956124824419,
+     "mean_bp_per_active_day": -0.24169594328197785,
+     "hit_rate_active_days": 0.4727582292849035,
+     "max_drawdown": -0.1066065349554055
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.00216440763351342,
+     "ann_vol": 0.015493891967032748,
+     "sharpe": -0.13969425100670352,
+     "t": -0.2791111932582123,
+     "mean_bp_per_active_day": -0.08588919180608809,
+     "hit_rate_active_days": 0.510934393638171,
+     "max_drawdown": -0.0412171137238118
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.007873450910322087,
+     "ann_vol": 0.03485418530035891,
+     "sharpe": 0.2258968569333053,
+     "t": 0.3912648334786026,
+     "mean_bp_per_active_day": 0.31243852818738443,
+     "hit_rate_active_days": 0.49867724867724866,
+     "max_drawdown": -0.0780686149693135
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.010320401261726769,
+     "ann_vol": 0.018086853284312823,
+     "sharpe": 0.5706023651266033,
+     "t": 0.9856942369250553,
+     "mean_bp_per_active_day": 0.40953973260820514,
+     "hit_rate_active_days": 0.5186170212765957,
+     "max_drawdown": -0.030096036845271686
+    }
+   },
+   "controls": {}
+  },
+  "THIN no trade on t": {
+   "funds_per_day_mean": 12.3496062992126,
+   "days_invested": 1905,
+   "turnover_per_year_all_legs": 61.711163272050044,
+   "turnover_per_year_etf_legs": 40.33533891316922,
+   "median_adv_usd_selected": 56339.59761904762,
+   "median_price_selected": 29.6325,
+   "median_spread_selected": 0.0051878670321106116,
+   "mean_spread_selected": 0.009069049213164872,
+   "share_selected_with_quote": 0.9919238289551985,
+   "share_selected_traded_on_t": 0.0,
+   "held_fund_days": 89331,
+   "held_fund_days_without_crsp_return": 321,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2007-11-27",
+    "last": "2025-12-31",
+    "n_days": 4553,
+    "n_active_days": 2506,
+    "ann_ret": 0.0035130215723259603,
+    "ann_vol": 0.019786321113313,
+    "sharpe": 0.17754799147388062,
+    "t": 0.7546825677576932,
+    "mean_bp_per_active_day": 0.2532776450613781,
+    "hit_rate_active_days": 0.505586592178771,
+    "max_drawdown": -0.06974966472528882
+   },
+   "split_date": "2016-12-09",
+   "early_half": {
+    "first": "2007-11-27",
+    "last": "2016-12-09",
+    "n_days": 2277,
+    "n_active_days": 1474,
+    "ann_ret": 0.006147700317598652,
+    "ann_vol": 0.02592976363873953,
+    "sharpe": 0.23709048810664354,
+    "t": 0.7126813199438532,
+    "mean_bp_per_active_day": 0.3768579618997042,
+    "hit_rate_active_days": 0.514246947082768,
+    "max_drawdown": -0.06974966472528882
+   },
+   "late_half": {
+    "first": "2016-12-09",
+    "last": "2025-12-31",
+    "n_days": 2277,
+    "n_active_days": 1033,
+    "ann_ret": 0.0008758070457287693,
+    "ann_vol": 0.010516142513386513,
+    "sharpe": 0.08328215832125818,
+    "t": 0.2503417112772146,
+    "mean_bp_per_active_day": 0.07660737884434336,
+    "hit_rate_active_days": 0.4927395934172314,
+    "max_drawdown": -0.02924850017719488
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2007-11-27",
+     "last": "2008-12-31",
+     "n_days": 277,
+     "n_active_days": 37,
+     "ann_ret": -0.006054250349428315,
+     "ann_vol": 0.013815791010948427,
+     "sharpe": -0.4382123574850386,
+     "t": -0.4594351667647939,
+     "mean_bp_per_active_day": -1.7986136280476646,
+     "hit_rate_active_days": 0.5405405405405406,
+     "max_drawdown": -0.012198297846151056
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1199,
+     "ann_ret": 0.008071831742811985,
+     "ann_vol": 0.026642545319584862,
+     "sharpe": 0.3029677399808495,
+     "t": 0.8011227574932902,
+     "mean_bp_per_active_day": 0.4707152630775224,
+     "hit_rate_active_days": 0.5154295246038365,
+     "max_drawdown": -0.0697496647252888
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 829,
+     "ann_ret": -0.002214428652545331,
+     "ann_vol": 0.020662725336931496,
+     "sharpe": -0.10717021188813729,
+     "t": -0.21412767888635614,
+     "mean_bp_per_active_day": -0.10663618551997067,
+     "hit_rate_active_days": 0.47406513872135103,
+     "max_drawdown": -0.03861982593623947
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 185,
+     "ann_ret": 0.004158071054216285,
+     "ann_vol": 0.006423222962670153,
+     "sharpe": 0.6473496371497219,
+     "t": 1.1212424618045955,
+     "mean_bp_per_active_day": 0.6742817925756139,
+     "hit_rate_active_days": 0.5621621621621622,
+     "max_drawdown": -0.010333384557678276
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 256,
+     "ann_ret": 0.003368963487008129,
+     "ann_vol": 0.00500417777803492,
+     "sharpe": 0.6732301761531503,
+     "t": 1.1629799406999703,
+     "mean_bp_per_active_day": 0.3927115175827928,
+     "hit_rate_active_days": 0.515625,
+     "max_drawdown": -0.008273780195541239
+    }
+   },
+   "controls": {}
+  },
+  "THIN S5 lagged 20": {
+   "funds_per_day_mean": 199.63575418994412,
+   "days_invested": 6265,
+   "turnover_per_year_all_legs": 105.35997758326705,
+   "turnover_per_year_etf_legs": 78.38357013929136,
+   "median_adv_usd_selected": 218260.8404761908,
+   "median_price_selected": 28.6758,
+   "median_spread_selected": 0.0027894002789401336,
+   "mean_spread_selected": 0.004528541914592355,
+   "share_selected_with_quote": 0.998037127473979,
+   "share_selected_traded_on_t": 0.9734632427133855,
+   "held_fund_days": 2225231,
+   "held_fund_days_without_crsp_return": 4297,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-02-06",
+    "last": "2025-12-31",
+    "n_days": 6263,
+    "n_active_days": 6263,
+    "ann_ret": 0.001427150597408662,
+    "ann_vol": 0.027876207026433737,
+    "sharpe": 0.05119601085095113,
+    "t": 0.2552272598728759,
+    "mean_bp_per_active_day": 0.056632960214629435,
+    "hit_rate_active_days": 0.48491138432061315,
+    "max_drawdown": -0.08946304084674477
+   },
+   "split_date": "2013-07-22",
+   "early_half": {
+    "first": "2001-02-06",
+    "last": "2013-07-22",
+    "n_days": 3132,
+    "n_active_days": 3132,
+    "ann_ret": 0.0012458645025611428,
+    "ann_vol": 0.03587469783959305,
+    "sharpe": 0.03472822288655339,
+    "t": 0.12243149888970412,
+    "mean_bp_per_active_day": 0.049439067561950115,
+    "hit_rate_active_days": 0.4722222222222222,
+    "max_drawdown": -0.07383797055596043
+   },
+   "late_half": {
+    "first": "2013-07-22",
+    "last": "2025-12-31",
+    "n_days": 3132,
+    "n_active_days": 3132,
+    "ann_ret": 0.0017198986182658151,
+    "ann_vol": 0.016350103349684324,
+    "sharpe": 0.10519191111406777,
+    "t": 0.3708454472559394,
+    "mean_bp_per_active_day": 0.06824994516927838,
+    "hit_rate_active_days": 0.49776500638569604,
+    "max_drawdown": -0.06585582284279741
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": 0.004368539718568025,
+     "ann_vol": 0.03480081476802045,
+     "sharpe": 0.12552981151988463,
+     "t": 0.3320265115509813,
+     "mean_bp_per_active_day": 0.17335475073682638,
+     "hit_rate_active_days": 0.4753261486103233,
+     "max_drawdown": -0.07383797055596043
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.005559149894428633,
+     "ann_vol": 0.02197919153206911,
+     "sharpe": -0.25292786071396034,
+     "t": -0.6688047553672041,
+     "mean_bp_per_active_day": -0.2206011862868505,
+     "hit_rate_active_days": 0.4767309875141884,
+     "max_drawdown": -0.08946304084674497
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.014279715098974296,
+     "ann_vol": 0.013944034907713435,
+     "sharpe": 1.0240733900540633,
+     "t": 2.046113879577307,
+     "mean_bp_per_active_day": 0.5666553610704086,
+     "hit_rate_active_days": 0.5228628230616302,
+     "max_drawdown": -0.016273434864073188
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.006534242495488528,
+     "ann_vol": 0.020438738849420858,
+     "sharpe": 0.31969890821681884,
+     "t": 0.5537347521558295,
+     "mean_bp_per_active_day": 0.25929533712256064,
+     "hit_rate_active_days": 0.48544973544973546,
+     "max_drawdown": -0.03399234231637623
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.012259056214737319,
+     "ann_vol": 0.014457262359474744,
+     "sharpe": -0.8479514246833322,
+     "t": -1.464804360418838,
+     "mean_bp_per_active_day": -0.4864704847117984,
+     "hit_rate_active_days": 0.47074468085106386,
+     "max_drawdown": -0.06585582284279742
+    }
+   },
+   "controls": {}
+  },
+  "SKIP: MAIN filled one session later": {
+   "funds_per_day_mean": 203.01575178997612,
+   "days_invested": 6285,
+   "turnover_per_year_all_legs": 105.28081518796688,
+   "turnover_per_year_etf_legs": 78.15683572338547,
+   "median_adv_usd_selected": 216753.1880952381,
+   "median_price_selected": 28.615,
+   "median_spread_selected": 0.002802428771602161,
+   "mean_spread_selected": 0.004589883844315192,
+   "share_selected_with_quote": 0.9976691949709786,
+   "share_selected_traded_on_t": 0.9742498554023108,
+   "held_fund_days": 2265952,
+   "held_fund_days_without_crsp_return": 5508,
+   "held_fund_days_without_mid_return": null,
+   "full": {
+    "first": "2001-01-09",
+    "last": "2025-12-31",
+    "n_days": 6282,
+    "n_active_days": 6282,
+    "ann_ret": -0.000979405651972939,
+    "ann_vol": 0.0310500754623936,
+    "sharpe": -0.0315427784759863,
+    "t": -0.15748842565653048,
+    "mean_bp_per_active_day": -0.0388653036497198,
+    "hit_rate_active_days": 0.5031836994587711,
+    "max_drawdown": -0.24689647068728085
+   },
+   "split_date": "2013-07-09",
+   "early_half": {
+    "first": "2001-01-09",
+    "last": "2013-07-09",
+    "n_days": 3142,
+    "n_active_days": 3142,
+    "ann_ret": -0.0020312605108642914,
+    "ann_vol": 0.03796685692823122,
+    "sharpe": -0.0535008866997862,
+    "t": -0.18891385041716133,
+    "mean_bp_per_active_day": -0.08060557582794807,
+    "hit_rate_active_days": 0.49172501591343093,
+    "max_drawdown": -0.15796453530018592
+   },
+   "late_half": {
+    "first": "2013-07-09",
+    "last": "2025-12-31",
+    "n_days": 3141,
+    "n_active_days": 3141,
+    "ann_ret": 3.172938394212326e-05,
+    "ann_vol": 0.022058845858013057,
+    "sharpe": 0.001438397282720814,
+    "t": 0.00507823216317021,
+    "mean_bp_per_active_day": 0.0012591025373858437,
+    "hit_rate_active_days": 0.5144858325374084,
+    "max_drawdown": -0.10698121820690183
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1763,
+     "ann_ret": -0.0014593413145491578,
+     "ann_vol": 0.037660353404534025,
+     "sharpe": -0.038750069572460896,
+     "t": -0.10249398343487484,
+     "mean_bp_per_active_day": -0.05791036962496658,
+     "hit_rate_active_days": 0.4900737379466818,
+     "max_drawdown": -0.10190955246799147
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.011803452005468229,
+     "ann_vol": 0.027215863879220696,
+     "sharpe": -0.4336974956168914,
+     "t": -1.1468050480506606,
+     "mean_bp_per_active_day": -0.4683909525979456,
+     "hit_rate_active_days": 0.4880817253121453,
+     "max_drawdown": -0.1421722414957872
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0003567627360194632,
+     "ann_vol": 0.015211601134138334,
+     "sharpe": -0.023453332287211075,
+     "t": -0.04686010707950116,
+     "mean_bp_per_active_day": -0.014157251429343777,
+     "hit_rate_active_days": 0.5238568588469185,
+     "max_drawdown": -0.03399146426717008
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.0006474433915384257,
+     "ann_vol": 0.032850347867210576,
+     "sharpe": -0.019708874747858256,
+     "t": -0.034136772423301744,
+     "mean_bp_per_active_day": -0.025692198076921656,
+     "hit_rate_active_days": 0.5264550264550265,
+     "max_drawdown": -0.07548849773418315
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.007345519133209162,
+     "ann_vol": 0.017355608765305907,
+     "sharpe": 0.4232360404374263,
+     "t": 0.7311244246693369,
+     "mean_bp_per_active_day": 0.29148885449242706,
+     "hit_rate_active_days": 0.5146276595744681,
+     "max_drawdown": -0.03139302906936058
+    }
+   },
+   "controls": {}
+  },
+  "MID: THIN S5 h5 on closing mids": {
+   "funds_per_day_mean": 205.0817447495961,
+   "days_invested": 6190,
+   "turnover_per_year_all_legs": 102.33683259828881,
+   "turnover_per_year_etf_legs": 75.31454365818335,
+   "median_adv_usd_selected": 220192.7261904761,
+   "median_price_selected": 28.6,
+   "median_spread_selected": 0.0027606977036014413,
+   "mean_spread_selected": 0.004461914138857409,
+   "share_selected_with_quote": 1.0,
+   "share_selected_traded_on_t": 0.9749136638055986,
+   "held_fund_days": 2195375,
+   "held_fund_days_without_crsp_return": 4459,
+   "held_fund_days_without_mid_return": 7586,
+   "full": {
+    "first": "2001-01-16",
+    "last": "2025-12-31",
+    "n_days": 6278,
+    "n_active_days": 6201,
+    "ann_ret": 0.004707030553784612,
+    "ann_vol": 0.027953799500581758,
+    "sharpe": 0.16838607408937925,
+    "t": 0.8404590476806777,
+    "mean_bp_per_active_day": 0.18910632576325231,
+    "hit_rate_active_days": 0.4899209804870182,
+    "max_drawdown": -0.131428718498882
+   },
+   "split_date": "2013-07-11",
+   "early_half": {
+    "first": "2001-01-16",
+    "last": "2013-07-11",
+    "n_days": 3140,
+    "n_active_days": 3063,
+    "ann_ret": 0.005709135017005469,
+    "ann_vol": 0.032242582897235646,
+    "sharpe": 0.17706816588490334,
+    "t": 0.6250360150299819,
+    "mean_bp_per_active_day": 0.23224823615965723,
+    "hit_rate_active_days": 0.4838393731635651,
+    "max_drawdown": -0.06931334642548315
+   },
+   "late_half": {
+    "first": "2013-07-11",
+    "last": "2025-12-31",
+    "n_days": 3139,
+    "n_active_days": 3139,
+    "ann_ret": 0.0037308519587632787,
+    "ann_vol": 0.022872782992459605,
+    "sharpe": 0.16311316204911386,
+    "t": 0.5756843115904325,
+    "mean_bp_per_active_day": 0.1480496809033047,
+    "hit_rate_active_days": 0.4960178400764575,
+    "max_drawdown": -0.11142929960983747
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1761,
+     "ann_ret": 0.0030722003468239513,
+     "ann_vol": 0.034845067881181184,
+     "sharpe": 0.08816743756390151,
+     "t": 0.23320298479133786,
+     "mean_bp_per_active_day": 0.12205117067887615,
+     "hit_rate_active_days": 0.4838160136286201,
+     "max_drawdown": -0.06931334642548281
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 4.3639118944435566e-05,
+     "ann_vol": 0.023246938170096758,
+     "sharpe": 0.0018771985637476292,
+     "t": 0.004963784229459557,
+     "mean_bp_per_active_day": 0.0017317110692236337,
+     "hit_rate_active_days": 0.4733257661748014,
+     "max_drawdown": -0.09223429743858969
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0006321889392150443,
+     "ann_vol": 0.016013374921166484,
+     "sharpe": -0.03947880708016252,
+     "t": -0.07887924430065596,
+     "mean_bp_per_active_day": -0.025086862667263662,
+     "hit_rate_active_days": 0.49502982107355864,
+     "max_drawdown": -0.038814611577014095
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.009363052380591692,
+     "ann_vol": 0.034201576297505774,
+     "sharpe": 0.273760843627389,
+     "t": 0.4741676902855562,
+     "mean_bp_per_active_day": 0.37154969764252743,
+     "hit_rate_active_days": 0.5079365079365079,
+     "max_drawdown": -0.07485186324206565
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.010421416461642583,
+     "ann_vol": 0.018014611151842604,
+     "sharpe": 0.5784979966429439,
+     "t": 0.9993336449580275,
+     "mean_bp_per_active_day": 0.4135482722874041,
+     "hit_rate_active_days": 0.5079787234042553,
+     "max_drawdown": -0.02995903683009064
+    }
+   },
+   "controls": {}
+  },
+  "MID: long leg": {
+   "funds_per_day_mean": 102.54087237479806,
+   "days_invested": 6190,
+   "turnover_per_year_all_legs": 52.39509987051063,
+   "turnover_per_year_etf_legs": 37.49285201393661,
+   "median_adv_usd_selected": 220726.31190476188,
+   "median_price_selected": 28.08,
+   "median_spread_selected": 0.0027730201451757882,
+   "mean_spread_selected": 0.004446720649162831,
+   "share_selected_with_quote": 1.0,
+   "share_selected_traded_on_t": 0.9751736176756027,
+   "held_fund_days": 1311385,
+   "held_fund_days_without_crsp_return": 2771,
+   "held_fund_days_without_mid_return": 4691,
+   "full": {
+    "first": "2001-01-16",
+    "last": "2025-12-31",
+    "n_days": 6278,
+    "n_active_days": 6201,
+    "ann_ret": 0.0034809782155024557,
+    "ann_vol": 0.025731224183241364,
+    "sharpe": 0.13528226215407202,
+    "t": 0.6752292422813282,
+    "mean_bp_per_active_day": 0.13984931537491668,
+    "hit_rate_active_days": 0.5091114336397355,
+    "max_drawdown": -0.13085871179629105
+   },
+   "split_date": "2013-07-11",
+   "early_half": {
+    "first": "2001-01-16",
+    "last": "2013-07-11",
+    "n_days": 3140,
+    "n_active_days": 3063,
+    "ann_ret": 0.008144687824477501,
+    "ann_vol": 0.03187527204883245,
+    "sharpe": 0.2555174372159071,
+    "t": 0.9019554696913515,
+    "mean_bp_per_active_day": 0.3313267904282469,
+    "hit_rate_active_days": 0.5079986940907607,
+    "max_drawdown": -0.06923319855330119
+   },
+   "late_half": {
+    "first": "2013-07-11",
+    "last": "2025-12-31",
+    "n_days": 3139,
+    "n_active_days": 3139,
+    "ann_ret": -0.0011786013541889254,
+    "ann_vol": 0.01754633522577255,
+    "sharpe": -0.06717079886048015,
+    "t": -0.2370696185101943,
+    "mean_bp_per_active_day": -0.04676989500749704,
+    "hit_rate_active_days": 0.5103536158012105,
+    "max_drawdown": -0.09560982620519382
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1761,
+     "ann_ret": 0.010591266859257395,
+     "ann_vol": 0.034330558607565925,
+     "sharpe": 0.3085084335599259,
+     "t": 0.8160052001889122,
+     "mean_bp_per_active_day": 0.42076569663860686,
+     "hit_rate_active_days": 0.5161839863713799,
+     "max_drawdown": -0.06222622525597754
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.0016095570160653586,
+     "ann_vol": 0.021439921113930706,
+     "sharpe": 0.07507289824026173,
+     "t": 0.19851158824716203,
+     "mean_bp_per_active_day": 0.06387131016132375,
+     "hit_rate_active_days": 0.5028376844494892,
+     "max_drawdown": -0.07517267626124566
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.000356568267015735,
+     "ann_vol": 0.012914675865061339,
+     "sharpe": 0.027609540552262363,
+     "t": 0.05516427307007183,
+     "mean_bp_per_active_day": 0.014149534405386311,
+     "hit_rate_active_days": 0.5178926441351889,
+     "max_drawdown": -0.025285557463090857
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.0005369573622929393,
+     "ann_vol": 0.025061903318226705,
+     "sharpe": 0.02142524274692368,
+     "t": 0.03710960900216839,
+     "mean_bp_per_active_day": 0.0213078318370214,
+     "hit_rate_active_days": 0.5105820105820106,
+     "max_drawdown": -0.07531349981904509
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.001978924015536258,
+     "ann_vol": 0.013349454617434925,
+     "sharpe": -0.1482400646504093,
+     "t": -0.25607916534815894,
+     "mean_bp_per_active_day": -0.07852873077524833,
+     "hit_rate_active_days": 0.49601063829787234,
+     "max_drawdown": -0.030087560511753524
+    }
+   },
+   "controls": {}
+  },
+  "MID: short leg": {
+   "funds_per_day_mean": 102.54087237479806,
+   "days_invested": 6190,
+   "turnover_per_year_all_legs": 52.51648822188768,
+   "turnover_per_year_etf_legs": 37.821691644246755,
+   "median_adv_usd_selected": 219743.79523809522,
+   "median_price_selected": 29.111,
+   "median_spread_selected": 0.002748196496049409,
+   "mean_spread_selected": 0.004477107628551987,
+   "share_selected_with_quote": 1.0,
+   "share_selected_traded_on_t": 0.9746537099355944,
+   "held_fund_days": 1327837,
+   "held_fund_days_without_crsp_return": 2409,
+   "held_fund_days_without_mid_return": 4407,
+   "full": {
+    "first": "2001-01-16",
+    "last": "2025-12-31",
+    "n_days": 6278,
+    "n_active_days": 6201,
+    "ann_ret": 0.0012260523382825203,
+    "ann_vol": 0.023557524218554175,
+    "sharpe": 0.052045042038707426,
+    "t": 0.2597704513565343,
+    "mean_bp_per_active_day": 0.04925701038835045,
+    "hit_rate_active_days": 0.49395258829221095,
+    "max_drawdown": -0.14867988675920968
+   },
+   "split_date": "2013-07-11",
+   "early_half": {
+    "first": "2001-01-16",
+    "last": "2013-07-11",
+    "n_days": 3140,
+    "n_active_days": 3063,
+    "ann_ret": -0.002435552807472023,
+    "ann_vol": 0.030214707498451857,
+    "sharpe": -0.08060818750592956,
+    "t": -0.28454025061876687,
+    "mean_bp_per_active_day": -0.09907855426858922,
+    "hit_rate_active_days": 0.4887365328109696,
+    "max_drawdown": -0.14867988675920968
+   },
+   "late_half": {
+    "first": "2013-07-11",
+    "last": "2025-12-31",
+    "n_days": 3139,
+    "n_active_days": 3139,
+    "ann_ret": 0.004909453312952899,
+    "ann_vol": 0.014027454433151404,
+    "sharpe": 0.34998889758289115,
+    "t": 1.2352351891053028,
+    "mean_bp_per_active_day": 0.19481957591082932,
+    "hit_rate_active_days": 0.4992035680152915,
+    "max_drawdown": -0.03593614040406613
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1761,
+     "ann_ret": -0.007519066512433663,
+     "ann_vol": 0.03204997387669334,
+     "sharpe": -0.2346044505796465,
+     "t": -0.620529070960611,
+     "mean_bp_per_active_day": -0.29871452595973924,
+     "hit_rate_active_days": 0.48779102782509937,
+     "max_drawdown": -0.14867988675920962
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.0015659178971204881,
+     "ann_vol": 0.019505783133724683,
+     "sharpe": -0.08027967328382123,
+     "t": -0.21227960850175184,
+     "mean_bp_per_active_day": -0.062139599092082866,
+     "hit_rate_active_days": 0.48637911464245176,
+     "max_drawdown": -0.0781968857840265
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0009887572062292275,
+     "ann_vol": 0.011201594017662228,
+     "sharpe": -0.08826933065688637,
+     "t": -0.17636343679286415,
+     "mean_bp_per_active_day": -0.03923639707258839,
+     "hit_rate_active_days": 0.48111332007952284,
+     "max_drawdown": -0.03420081010366841
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": 0.008826095018298726,
+     "ann_vol": 0.018974986012430885,
+     "sharpe": 0.4651436903572197,
+     "t": 0.8056525045187902,
+     "mean_bp_per_active_day": 0.350241865805505,
+     "hit_rate_active_days": 0.5066137566137566,
+     "max_drawdown": -0.03593614040406612
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.01240034047717939,
+     "ann_vol": 0.012816359652792046,
+     "sharpe": 0.9675399889763531,
+     "t": 1.671389130882623,
+     "mean_bp_per_active_day": 0.4920770030626742,
+     "hit_rate_active_days": 0.5319148936170213,
+     "max_drawdown": -0.013586792724921352
+    }
+   },
+   "controls": {}
+  },
+  "MID + SKIP": {
+   "funds_per_day_mean": 205.0817447495961,
+   "days_invested": 6190,
+   "turnover_per_year_all_legs": 102.33683259828881,
+   "turnover_per_year_etf_legs": 75.31454365818335,
+   "median_adv_usd_selected": 220192.7261904761,
+   "median_price_selected": 28.6,
+   "median_spread_selected": 0.0027606977036014413,
+   "mean_spread_selected": 0.004461914138857409,
+   "share_selected_with_quote": 1.0,
+   "share_selected_traded_on_t": 0.9749136638055986,
+   "held_fund_days": 2194253,
+   "held_fund_days_without_crsp_return": 5280,
+   "held_fund_days_without_mid_return": 8443,
+   "full": {
+    "first": "2001-01-17",
+    "last": "2025-12-31",
+    "n_days": 6277,
+    "n_active_days": 6200,
+    "ann_ret": -0.0022229694580525364,
+    "ann_vol": 0.027606509175005373,
+    "sharpe": -0.08052338106062279,
+    "t": -0.4018812976805172,
+    "mean_bp_per_active_day": -0.08930862319633748,
+    "hit_rate_active_days": 0.4935483870967742,
+    "max_drawdown": -0.21505680806568805
+   },
+   "split_date": "2013-07-11",
+   "early_half": {
+    "first": "2001-01-17",
+    "last": "2013-07-11",
+    "n_days": 3139,
+    "n_active_days": 3062,
+    "ann_ret": -0.00443420346427079,
+    "ann_vol": 0.03214607042938264,
+    "sharpe": -0.13793920703345974,
+    "t": -0.4868364787047473,
+    "mean_bp_per_active_day": -0.18038532594043225,
+    "hit_rate_active_days": 0.48334421946440237,
+    "max_drawdown": -0.12993066196339859
+   },
+   "late_half": {
+    "first": "2013-07-11",
+    "last": "2025-12-31",
+    "n_days": 3139,
+    "n_active_days": 3139,
+    "ann_ret": -7.55539833226427e-05,
+    "ann_vol": 0.022155854482797846,
+    "sharpe": -0.0034101137187601592,
+    "t": -0.01203550310696829,
+    "mean_bp_per_active_day": -0.00299817394137471,
+    "hit_rate_active_days": 0.5033450143357757,
+    "max_drawdown": -0.10798719877088549
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1761,
+     "ann_ret": -0.006350114184859438,
+     "ann_vol": 0.03476527712146996,
+     "sharpe": -0.18265679754751052,
+     "t": -0.48312746244478305,
+     "mean_bp_per_active_day": -0.2522748462703189,
+     "hit_rate_active_days": 0.48097671777399204,
+     "max_drawdown": -0.10991083106661859
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": -0.007090562889853552,
+     "ann_vol": 0.02352967784642994,
+     "sharpe": -0.3013455150610731,
+     "t": -0.7968331875836763,
+     "mean_bp_per_active_day": -0.28137154324815683,
+     "hit_rate_active_days": 0.4807037457434733,
+     "max_drawdown": -0.11829151817698756
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 9.486100075019407e-05,
+     "ann_vol": 0.015885422348968673,
+     "sharpe": 0.005971575616077512,
+     "t": 0.011931296984834807,
+     "mean_bp_per_active_day": 0.0037643254265950026,
+     "hit_rate_active_days": 0.5069582504970179,
+     "max_drawdown": -0.036342168662123586
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.0016511112228590726,
+     "ann_vol": 0.03261609928574082,
+     "sharpe": -0.05062258390845986,
+     "t": -0.08768088733987116,
+     "mean_bp_per_active_day": -0.06552028662139177,
+     "hit_rate_active_days": 0.5185185185185185,
+     "max_drawdown": -0.0741854154828399
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.007473086441015381,
+     "ann_vol": 0.01735729879353671,
+     "sharpe": 0.43054432201156295,
+     "t": 0.743749207652586,
+     "mean_bp_per_active_day": 0.2965510492466421,
+     "hit_rate_active_days": 0.5093085106382979,
+     "max_drawdown": -0.03211844593409211
+    }
+   },
+   "controls": {}
+  },
+  "MID: THIN S1 h1": {
+   "funds_per_day_mean": 205.57071600965406,
+   "days_invested": 6215,
+   "turnover_per_year_all_legs": 517.5421061802986,
+   "turnover_per_year_etf_legs": 377.2534229159485,
+   "median_adv_usd_selected": 217672.1476190476,
+   "median_price_selected": 28.53,
+   "median_spread_selected": 0.00281241211212147,
+   "mean_spread_selected": 0.004647232405194558,
+   "share_selected_with_quote": 1.0,
+   "share_selected_traded_on_t": 0.974720222413202,
+   "held_fund_days": 1276222,
+   "held_fund_days_without_crsp_return": 1138,
+   "held_fund_days_without_mid_return": 3459,
+   "full": {
+    "first": "2001-01-02",
+    "last": "2025-12-31",
+    "n_days": 6287,
+    "n_active_days": 6213,
+    "ann_ret": 0.01687801414529622,
+    "ann_vol": 0.03591938001135428,
+    "sharpe": 0.4698860097240266,
+    "t": 2.3470047817147606,
+    "mean_bp_per_active_day": 0.677739678780778,
+    "hit_rate_active_days": 0.5082890713021084,
+    "max_drawdown": -0.11899494101903124
+   },
+   "split_date": "2013-07-03",
+   "early_half": {
+    "first": "2001-01-02",
+    "last": "2013-07-03",
+    "n_days": 3144,
+    "n_active_days": 3070,
+    "ann_ret": 0.037584671821425567,
+    "ann_vol": 0.04382215696783653,
+    "sharpe": 0.8576636665559619,
+    "t": 3.029409692707842,
+    "mean_bp_per_active_day": 1.527405617684737,
+    "hit_rate_active_days": 0.5149837133550489,
+    "max_drawdown": -0.07751424105515387
+   },
+   "late_half": {
+    "first": "2013-07-03",
+    "last": "2025-12-31",
+    "n_days": 3144,
+    "n_active_days": 3144,
+    "ann_ret": -0.003831144007548388,
+    "ann_vol": 0.02562455778320659,
+    "sharpe": -0.14951063897224334,
+    "t": -0.5280962649196047,
+    "mean_bp_per_active_day": -0.152029524109063,
+    "hit_rate_active_days": 0.5019083969465649,
+    "max_drawdown": -0.08370799663526343
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2002-01-02",
+     "last": "2008-12-31",
+     "n_days": 1763,
+     "n_active_days": 1761,
+     "ann_ret": 0.03945361825389507,
+     "ann_vol": 0.04623320733595175,
+     "sharpe": 0.8533610477682617,
+     "t": 2.2571410595888914,
+     "mean_bp_per_active_day": 1.5673978750713655,
+     "hit_rate_active_days": 0.5241340147643384,
+     "max_drawdown": -0.0715667683256768
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.0019455446296372126,
+     "ann_vol": 0.02876602187898075,
+     "sharpe": 0.06763342661081742,
+     "t": 0.17883975775309607,
+     "mean_bp_per_active_day": 0.07720415196973066,
+     "hit_rate_active_days": 0.49943246311010214,
+     "max_drawdown": -0.10255016676925205
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": 0.0015234959954376858,
+     "ann_vol": 0.018780330569671943,
+     "sharpe": 0.08112189451542219,
+     "t": 0.16208275297227362,
+     "mean_bp_per_active_day": 0.06045619029514626,
+     "hit_rate_active_days": 0.49502982107355864,
+     "max_drawdown": -0.030385099445431184
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.017327784104016312,
+     "ann_vol": 0.03747089563923545,
+     "sharpe": -0.46243314466901986,
+     "t": -0.8009577016705913,
+     "mean_bp_per_active_day": -0.6876104803181076,
+     "hit_rate_active_days": 0.4973544973544973,
+     "max_drawdown": -0.0784612042534164
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": -0.002444924651600734,
+     "ann_vol": 0.02051495278097552,
+     "sharpe": -0.1191776884745271,
+     "t": -0.20587499786007105,
+     "mean_bp_per_active_day": -0.09702081950796564,
+     "hit_rate_active_days": 0.49867021276595747,
+     "max_drawdown": -0.03524367878070857
+    }
+   },
+   "controls": {}
+  },
+  "MID: LIQUID S5 h5": {
+   "funds_per_day_mean": 31.566944266495835,
+   "days_invested": 4683,
+   "turnover_per_year_all_legs": 123.24036544832165,
+   "turnover_per_year_etf_legs": 71.10907765060627,
+   "median_adv_usd_selected": 251102781.1666667,
+   "median_price_selected": 56.97,
+   "median_spread_selected": 0.0002635393332456217,
+   "mean_spread_selected": 0.0004141813833890757,
+   "share_selected_with_quote": 1.0,
+   "share_selected_traded_on_t": 1.0,
+   "held_fund_days": 227859,
+   "held_fund_days_without_crsp_return": 17,
+   "held_fund_days_without_mid_return": 365,
+   "full": {
+    "first": "2007-03-19",
+    "last": "2025-12-31",
+    "n_days": 4729,
+    "n_active_days": 4699,
+    "ann_ret": 0.006198104720739081,
+    "ann_vol": 0.0514556886847735,
+    "sharpe": 0.12045518929325286,
+    "t": 0.5218070002795513,
+    "mean_bp_per_active_day": 0.2475268059767455,
+    "hit_rate_active_days": 0.5081932326026815,
+    "max_drawdown": -0.16291544935545568
+   },
+   "split_date": "2016-08-05",
+   "early_half": {
+    "first": "2007-03-19",
+    "last": "2016-08-05",
+    "n_days": 2365,
+    "n_active_days": 2335,
+    "ann_ret": 0.00865930989594092,
+    "ann_vol": 0.05793157593228178,
+    "sharpe": 0.14947478566892583,
+    "t": 0.45791328291818884,
+    "mean_bp_per_active_day": 0.34803827034941504,
+    "hit_rate_active_days": 0.4980728051391863,
+    "max_drawdown": -0.13998289539090691
+   },
+   "late_half": {
+    "first": "2016-08-05",
+    "last": "2025-12-31",
+    "n_days": 2365,
+    "n_active_days": 2365,
+    "ann_ret": 0.0037197878359278513,
+    "ann_vol": 0.0440370596621261,
+    "sharpe": 0.08446948693822627,
+    "t": 0.2587707344566499,
+    "mean_bp_per_active_day": 0.14761062840983538,
+    "hit_rate_active_days": 0.5179704016913319,
+    "max_drawdown": -0.13267266253641274
+   },
+   "eras": {
+    "2002-2008": {
+     "first": "2007-03-19",
+     "last": "2008-12-31",
+     "n_days": 453,
+     "n_active_days": 423,
+     "ann_ret": -0.006486316614022342,
+     "ann_vol": 0.09051820831317081,
+     "sharpe": -0.07165758950487926,
+     "t": -0.09607513987580843,
+     "mean_bp_per_active_day": -0.2756483757506962,
+     "hit_rate_active_days": 0.5011820330969267,
+     "max_drawdown": -0.08805375139571309
+    },
+    "2009-2015": {
+     "first": "2009-01-02",
+     "last": "2015-12-31",
+     "n_days": 1762,
+     "n_active_days": 1762,
+     "ann_ret": 0.0103987087235061,
+     "ann_vol": 0.04788930181714777,
+     "sharpe": 0.21714053721665713,
+     "t": 0.5741740884675659,
+     "mean_bp_per_active_day": 0.41264717156770236,
+     "hit_rate_active_days": 0.49375709421112374,
+     "max_drawdown": -0.13998289539090691
+    },
+    "2016-2019": {
+     "first": "2016-01-04",
+     "last": "2019-12-31",
+     "n_days": 1006,
+     "n_active_days": 1006,
+     "ann_ret": -0.0011074351915128348,
+     "ann_vol": 0.028595154014703975,
+     "sharpe": -0.038728072279078415,
+     "t": -0.07737926499126407,
+     "mean_bp_per_active_day": -0.043945840933049,
+     "hit_rate_active_days": 0.5059642147117296,
+     "max_drawdown": -0.04995117125669493
+    },
+    "2020-2022": {
+     "first": "2020-01-02",
+     "last": "2022-12-30",
+     "n_days": 756,
+     "n_active_days": 756,
+     "ann_ret": -0.004648321437926022,
+     "ann_vol": 0.05497964460080855,
+     "sharpe": -0.08454622563816397,
+     "t": -0.1464383583934824,
+     "mean_bp_per_active_day": -0.1844571999176993,
+     "hit_rate_active_days": 0.5198412698412699,
+     "max_drawdown": -0.09822810635164159
+    },
+    "2023-2025": {
+     "first": "2023-01-03",
+     "last": "2025-12-31",
+     "n_days": 752,
+     "n_active_days": 752,
+     "ann_ret": 0.024673969001919514,
+     "ann_vol": 0.0471586958737323,
+     "sharpe": 0.5232114362955289,
+     "t": 0.9038281804796864,
+     "mean_bp_per_active_day": 0.9791257540444251,
+     "hit_rate_active_days": 0.5372340425531915,
+     "max_drawdown": -0.07973470390317688
+    }
+   },
+   "controls": {}
+  }
+ },
+ "checks": {
+  "profile": {
+   "trade prices | THIN-A": {
+    "t+1 (not ours)": {
+     "mean_bp": 39.57215439388965,
+     "t": 42.78578551534907,
+     "days": 4926
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": -0.23553457381241766,
+     "t": -0.37452451321582725,
+     "days": 4925
+    },
+    "t+3..t+6": {
+     "mean_bp": 2.4005229854410657,
+     "t": 2.208505884395998,
+     "days": 4921
+    },
+    "median_spread_bp": 34.18803418803467
+   },
+   "trade prices | THIN-B": {
+    "t+1 (not ours)": {
+     "mean_bp": 22.214521471301424,
+     "t": 32.05404844779939,
+     "days": 6077
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 1.485581002885897,
+     "t": 2.3984293407855657,
+     "days": 6076
+    },
+    "t+3..t+6": {
+     "mean_bp": 2.708075245849799,
+     "t": 2.509608425741056,
+     "days": 6072
+    },
+    "median_spread_bp": 23.432923257175833
+   },
+   "trade prices | MID": {
+    "t+1 (not ours)": {
+     "mean_bp": 10.702509717098543,
+     "t": 16.854149386089087,
+     "days": 6288
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 1.4809042554032958,
+     "t": 2.446937908862954,
+     "days": 6287
+    },
+    "t+3..t+6": {
+     "mean_bp": 3.6800754906355557,
+     "t": 3.2866671546126778,
+     "days": 6283
+    },
+    "median_spread_bp": 12.56807708420659
+   },
+   "trade prices | LARGE": {
+    "t+1 (not ours)": {
+     "mean_bp": 5.513850674608576,
+     "t": 7.522104525193474,
+     "days": 5761
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 0.9074148215167137,
+     "t": 1.3438390876519748,
+     "days": 5760
+    },
+    "t+3..t+6": {
+     "mean_bp": 3.3024661091699636,
+     "t": 2.579340865804375,
+     "days": 5756
+    },
+    "median_spread_bp": 5.138746145941194
+   },
+   "trade prices | LIQUID": {
+    "t+1 (not ours)": {
+     "mean_bp": 9.201446238276553,
+     "t": 7.793518234059661,
+     "days": 4715
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 0.019474699736379816,
+     "t": 0.016832180071132907,
+     "days": 4714
+    },
+    "t+3..t+6": {
+     "mean_bp": 6.191431800658983,
+     "t": 2.9191805851372874,
+     "days": 4710
+    },
+    "median_spread_bp": 2.6333113890712343
+   },
+   "closing mids | THIN-A": {
+    "t+1 (not ours)": {
+     "mean_bp": 11.254300928800458,
+     "t": 16.533076562238012,
+     "days": 4913
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 0.07508072698427906,
+     "t": 0.12188486400588178,
+     "days": 4912
+    },
+    "t+3..t+6": {
+     "mean_bp": 1.6450068936337223,
+     "t": 1.4137873743812077,
+     "days": 4905
+    },
+    "median_spread_bp": 33.35186214563641
+   },
+   "closing mids | THIN-B": {
+    "t+1 (not ours)": {
+     "mean_bp": 6.111626769516308,
+     "t": 10.045769320166947,
+     "days": 6042
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 0.7478916333733437,
+     "t": 1.268716639776386,
+     "days": 6041
+    },
+    "t+3..t+6": {
+     "mean_bp": 2.7351406771146105,
+     "t": 2.534248186796932,
+     "days": 6037
+    },
+    "median_spread_bp": 22.88853284504496
+   },
+   "closing mids | MID": {
+    "t+1 (not ours)": {
+     "mean_bp": 2.7726502576350867,
+     "t": 4.467085954015709,
+     "days": 6216
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 0.7715581935107818,
+     "t": 1.3243063009194915,
+     "days": 6213
+    },
+    "t+3..t+6": {
+     "mean_bp": 4.165840069023778,
+     "t": 3.6248799322281067,
+     "days": 6209
+    },
+    "median_spread_bp": 12.224938875305364
+   },
+   "closing mids | LARGE": {
+    "t+1 (not ours)": {
+     "mean_bp": 2.9125620788692803,
+     "t": 3.9656403065977637,
+     "days": 5705
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 0.9930160648655726,
+     "t": 1.4463371527575293,
+     "days": 5704
+    },
+    "t+3..t+6": {
+     "mean_bp": 2.6818654841181324,
+     "t": 2.097413003535118,
+     "days": 5700
+    },
+    "median_spread_bp": 5.094243504840327
+   },
+   "closing mids | LIQUID": {
+    "t+1 (not ours)": {
+     "mean_bp": 6.973899227051749,
+     "t": 5.796271037551551,
+     "days": 4702
+    },
+    "t+2 (first day earned)": {
+     "mean_bp": 0.07484514779676864,
+     "t": 0.0626644413353312,
+     "days": 4701
+    },
+    "t+3..t+6": {
+     "mean_bp": 6.132602810578442,
+     "t": 2.8033119314932144,
+     "days": 4697
+    },
+    "median_spread_bp": 2.6291573550671776
+   }
+  },
+  "slope_on_factor_implied_return": {
+   "trade prices | THIN-A": {
+    "t+1": {
+     "slope": 0.08729311412315177,
+     "t": 14.785854832423382,
+     "fund_days": 1668185
+    },
+    "t+2": {
+     "slope": -0.006460762285575711,
+     "t": -1.122664134369264,
+     "fund_days": 1666530
+    }
+   },
+   "trade prices | THIN-B": {
+    "t+1": {
+     "slope": 0.053997447174851214,
+     "t": 10.881381535954457,
+     "fund_days": 1531326
+    },
+    "t+2": {
+     "slope": -0.0022802156838147907,
+     "t": -0.44939502926304925,
+     "fund_days": 1530162
+    }
+   },
+   "trade prices | MID": {
+    "t+1": {
+     "slope": 0.032730499642528374,
+     "t": 10.192021188401112,
+     "fund_days": 2216390
+    },
+    "t+2": {
+     "slope": 0.0036837849082218517,
+     "t": 1.1149812248276347,
+     "fund_days": 2215219
+    }
+   },
+   "trade prices | LARGE": {
+    "t+1": {
+     "slope": 0.019996682863157575,
+     "t": 6.191696576234112,
+     "fund_days": 1055155
+    },
+    "t+2": {
+     "slope": 0.0015674961803339824,
+     "t": 0.4849507170404907,
+     "fund_days": 1054646
+    }
+   },
+   "trade prices | LIQUID": {
+    "t+1": {
+     "slope": 0.004620381091768918,
+     "t": 1.2206716681360503,
+     "fund_days": 393224
+    },
+    "t+2": {
+     "slope": 0.002012356799442101,
+     "t": 0.5171151525477442,
+     "fund_days": 393032
+    }
+   },
+   "trade prices | THIN US equity": {
+    "t+1": {
+     "slope": 0.06978850769030974,
+     "t": 12.743419412492145,
+     "fund_days": 1616359
+    },
+    "t+2": {
+     "slope": -0.006584057598613765,
+     "t": -1.1556104353276468,
+     "fund_days": 1614821
+    }
+   },
+   "trade prices | THIN international": {
+    "t+1": {
+     "slope": 0.07332004237006401,
+     "t": 12.283609517355943,
+     "fund_days": 989430
+    },
+    "t+2": {
+     "slope": -0.0016679839439337667,
+     "t": -0.28808996579045854,
+     "fund_days": 988694
+    }
+   },
+   "trade prices | THIN bond": {
+    "t+1": {
+     "slope": 0.07220780094609168,
+     "t": 5.887612539438176,
+     "fund_days": 408607
+    },
+    "t+2": {
+     "slope": 0.0015068972224403726,
+     "t": 0.13420108764393868,
+     "fund_days": 408214
+    }
+   },
+   "trade prices | THIN commodity": {
+    "t+1": {
+     "slope": 0.054255481183610475,
+     "t": 5.194390802358138,
+     "fund_days": 57576
+    },
+    "t+2": {
+     "slope": 0.02769297248258182,
+     "t": 2.3552600079921633,
+     "fund_days": 57546
+    }
+   },
+   "trade prices | THIN low fit": {
+    "t+1": {
+     "slope": 0.03219943935434546,
+     "t": 1.019970926917382,
+     "fund_days": 127539
+    },
+    "t+2": {
+     "slope": -0.015738720227291343,
+     "t": -0.5665307566964556,
+     "fund_days": 127417
+    }
+   },
+   "trade prices | THIN traded on t": {
+    "t+1": {
+     "slope": 0.07143277132554245,
+     "t": 13.627569631249605,
+     "fund_days": 3106641
+    },
+    "t+2": {
+     "slope": -0.004480185636656551,
+     "t": -0.8553408736998152,
+     "fund_days": 3103913
+    }
+   },
+   "trade prices | THIN no trade on t": {
+    "t+1": {
+     "slope": 0.02498797262355996,
+     "t": 2.774324185560058,
+     "fund_days": 92870
+    },
+    "t+2": {
+     "slope": 0.001959356022801005,
+     "t": 0.16052641165851655,
+     "fund_days": 92779
+    }
+   },
+   "closing mids | THIN-A": {
+    "t+1": {
+     "slope": 0.024559739405770643,
+     "t": 7.322099081236803,
+     "fund_days": 1662274
+    },
+    "t+2": {
+     "slope": 0.0029781513546348745,
+     "t": 0.8567386388609114,
+     "fund_days": 1660642
+    }
+   },
+   "closing mids | THIN-B": {
+    "t+1": {
+     "slope": 0.02230760160508098,
+     "t": 6.700620060891768,
+     "fund_days": 1528932
+    },
+    "t+2": {
+     "slope": 0.003246017715572748,
+     "t": 1.0342293308845616,
+     "fund_days": 1527774
+    }
+   },
+   "closing mids | MID": {
+    "t+1": {
+     "slope": 0.02428857238170027,
+     "t": 8.742869554290397,
+     "fund_days": 2213052
+    },
+    "t+2": {
+     "slope": 0.006016159885800688,
+     "t": 2.1355234833280345,
+     "fund_days": 2211909
+    }
+   },
+   "closing mids | LARGE": {
+    "t+1": {
+     "slope": 0.018125061062649665,
+     "t": 5.592398865751446,
+     "fund_days": 1053522
+    },
+    "t+2": {
+     "slope": 0.002428262549392091,
+     "t": 0.7648320648127179,
+     "fund_days": 1053002
+    }
+   },
+   "closing mids | LIQUID": {
+    "t+1": {
+     "slope": 0.003635276615330603,
+     "t": 0.9230082053994368,
+     "fund_days": 391493
+    },
+    "t+2": {
+     "slope": 0.002288689100036766,
+     "t": 0.5619022983878718,
+     "fund_days": 391314
+    }
+   },
+   "closing mids | THIN US equity": {
+    "t+1": {
+     "slope": 0.016078048574589426,
+     "t": 4.426235956214928,
+     "fund_days": 1611945
+    },
+    "t+2": {
+     "slope": 0.0008878844413851844,
+     "t": 0.2400355099256406,
+     "fund_days": 1610436
+    }
+   },
+   "closing mids | THIN international": {
+    "t+1": {
+     "slope": 0.03417415246123459,
+     "t": 8.747474752692165,
+     "fund_days": 986966
+    },
+    "t+2": {
+     "slope": 0.005908682069203083,
+     "t": 1.617027058239793,
+     "fund_days": 986221
+    }
+   },
+   "closing mids | THIN bond": {
+    "t+1": {
+     "slope": 0.05509025130690403,
+     "t": 4.769618595255076,
+     "fund_days": 408316
+    },
+    "t+2": {
+     "slope": 0.009556742330315728,
+     "t": 0.9170639939566917,
+     "fund_days": 407930
+    }
+   },
+   "closing mids | THIN commodity": {
+    "t+1": {
+     "slope": 0.039020401847460036,
+     "t": 3.6783062448311856,
+     "fund_days": 57485
+    },
+    "t+2": {
+     "slope": 0.0266178986142784,
+     "t": 2.242834918065907,
+     "fund_days": 57455
+    }
+   },
+   "closing mids | THIN low fit": {
+    "t+1": {
+     "slope": 0.03345026403871757,
+     "t": 0.9983034782049541,
+     "fund_days": 126494
+    },
+    "t+2": {
+     "slope": 0.00027295073216297575,
+     "t": 0.009388162681294561,
+     "fund_days": 126374
+    }
+   },
+   "closing mids | THIN traded on t": {
+    "t+1": {
+     "slope": 0.02353575383772017,
+     "t": 7.361882719728592,
+     "fund_days": 3099207
+    },
+    "t+2": {
+     "slope": 0.0030759427851369987,
+     "t": 0.9651268135762784,
+     "fund_days": 3096477
+    }
+   },
+   "closing mids | THIN no trade on t": {
+    "t+1": {
+     "slope": 0.017386674420735316,
+     "t": 2.6530692294161025,
+     "fund_days": 91999
+    },
+    "t+2": {
+     "slope": 0.00511298251342079,
+     "t": 0.7111141337404874,
+     "fund_days": 91939
+    }
+   }
+  },
+  "per_unit_turnover": {
+   "THIN S1 h5": {
+    "bp_per_unit_turnover": 1.243958686485644,
+    "half_median_spread_bp": 14.487504527344857,
+    "t": 2.9623891424409887
+   },
+   "THIN S5 h1": {
+    "bp_per_unit_turnover": 1.1324032737860803,
+    "half_median_spread_bp": 14.012143858010806,
+    "t": 2.8465265462998803
+   },
+   "MID S5 h5": {
+    "bp_per_unit_turnover": 1.9624012780939757,
+    "half_median_spread_bp": 6.1225450948999045,
+    "t": 2.3685095459949013
+   },
+   "MID: THIN S1 h1": {
+    "bp_per_unit_turnover": 0.447391941863351,
+    "half_median_spread_bp": 14.06206056060735,
+    "t": 2.3470047817147606
+   }
+  }
+ }
+}

@@ -188,6 +188,40 @@ MAX_GROSS_STRESS: "float | None" = _optional("max_gross_stress")
 # validates the value.
 SIZING_MULTIPLIER: "float | None" = _optional("sizing_multiplier")
 
+def _as_written(key: str, block: "dict | None" = None) -> Any:
+    """A frozen key's value as written, None ONLY when the key is ABSENT; a written null raises.
+
+    For keys whose absence means "today's rule" in the registry but whose null the registry
+    REFUSES (`below_min_names`, `below_min_names_floor`: src/deploy/registry.py). `_optional`
+    would be wrong for them twice over: it casts to float, and it maps null to None, so a null
+    the registry refuses would read here exactly like an absent key, i.e. as "flatten", and a
+    study would run against a book that cannot load. Raising names the key instead; orient's
+    SPEC section then reads UNMEASURED with this message, as it does for any SpecError.
+    Nothing is validated beyond that: the registry owns the accepted values. `block` is for
+    tests; it defaults to the live spec's `frozen` block.
+    """
+    fr = (_SPEC.get("frozen") or {}) if block is None else block
+    if key not in fr:
+        return None
+    if fr[key] is None:
+        raise SpecError(
+            f"{SPEC_PATH}: frozen {key} is null. Here None means ABSENT, and the registry "
+            f"refuses null for this key; delete the key for today's rule, or write a value")
+    return fr[key]
+
+
+# CEF trial 55 (te4, PAPER ONLY; results/cef/PREREG_THIN_TRADE_ELIGIBLE_2026-11-03.md): what the
+# core does on a session with fewer than MIN_NAMES eligible names. Each is the spec's value as
+# written, or None while the key is ABSENT -- which the registry reads as "flatten", with no floor
+# (src/deploy/registry.py::cef_below_min_names, cef_below_min_names_floor). The registry, not this
+# reader, validates them, and nothing here supplies the default: a caller that needs the rule
+# branches on None. Under "trade_eligible" the floor is the smallest eligible count the core
+# trades, the harness's `floor` (band_frontier.build_targets(min_names=),
+# thin_sessions(min_names=), band_gross_capped(floor=)); results/cef/prereg_thin_te4/compose.py
+# reads it from here once it is set.
+BELOW_MIN_NAMES: "str | None" = _as_written("below_min_names")
+BELOW_MIN_NAMES_FLOOR: "int | None" = _as_written("below_min_names_floor")
+
 # The live policy label, for table headers, so a chart cannot silently claim to
 # show a policy the book is not running. A constraint appears only when it is
 # ON, so a v6 header is unchanged and a v7 header cannot be mistaken for it.
