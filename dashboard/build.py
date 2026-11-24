@@ -472,7 +472,9 @@ def portfolio_section(snap: dict) -> str:
     if not pf["p"]:
         # Say why there is no portfolio (release-check review of 455eff4: with every book unreadable,
         # "no traded session yet" was false and dropped the reason).
-        why = (warn if pf["blocked"] else '<p class="gap">No book has a traded session on record yet.</p>')
+        why = ('<p class="gap">No portfolio tonight: no book\'s record could be read ('
+               + "; ".join(f"{escape(b['title'])}: {escape(w)}" for b, w in pf["blocked"]) + ").</p>"
+               if pf["blocked"] else '<p class="gap">No book has a traded session on record yet.</p>')
         return ('<section class="section"><div class="wrap"><div class="eyebrow">Portfolio</div>'
                 f'<h2>Portfolio results</h2>{why}</div></section>')
     p = pf["p"]

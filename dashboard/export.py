@@ -339,7 +339,15 @@ def after_close(book: str, book_dir: Path, kind: str) -> dict:
     on the previous reading's session (plan.json `asof`), which catches a session whose directory is
     missing altogether, whatever the account's size (release-check review of 455eff4: an equity
     tolerance of 0.1% let a $1,000 session through on a $1M account). Either gap makes the record
-    UNMEASURED, never smaller."""
+    UNMEASURED, never smaller.
+
+    EACH SESSION'S P&L IS THE CHANGE BETWEEN READINGS (release-check review of 0a4852b). Alpaca's
+    `change_usd` runs from its official close (`last_equity`), while the readings are taken at verify,
+    after the close; summing those changes lost or doubled the drift between each reading and the next
+    official close (the reviewer's probe: +$700 shown, +$200 moved). The difference between consecutive
+    readings telescopes, so the record's P&L is always the reading-to-reading move of the account. The
+    first session's base is Alpaca's close before it (`last_equity`). A deposit would read as P&L here;
+    the official end-of-day history, when the book has one, accounts for cash flows."""
     if kind != "sleeves":
         return absent("the official end-of-day history is this book's daily record")
     first = oldest_day_with(book_dir, "STARTED")
@@ -377,7 +385,7 @@ def after_close(book: str, book_dir: Path, kind: str) -> dict:
             elif asof != rows[-1]["date"]:
                 raise Unreadable(f"{d.name}: its plan was decided on {asof}, not on the last reading's session "
                                  f"{rows[-1]['date']}, so a session is missing")
-            rows.append({"date": d.name, "equity": equity, "change_usd": _float(eq.get("change_usd"), f"{d.name} change")})
+            rows.append({"date": d.name, "equity": equity, "change_usd": equity - rows[-1]["equity"]})
             t = iso_to_z(r["read_at"]) if r.get("read_at") else mtime_z(d / "verify.json")
             newest = max(newest or t, t)
         return reading({"rows": rows, "kind": "account equity read by verify after each close (not the end-of-day history)"},

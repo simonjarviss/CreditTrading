@@ -285,3 +285,15 @@ def test_consecutive_readings_join_into_the_record(state):
     _verify(st, "2026-11-24", 100510.0, 100010.0, 500.0, "2026-11-23")
     rows = book(snap_of(state), "events")["after_close"]["value"]["rows"]
     assert [(r["date"], r["change_usd"]) for r in rows] == [("2026-11-20", None), ("2026-11-23", 10.0), ("2026-11-24", 500.0)]
+
+
+def test_the_record_s_pnl_is_the_move_between_readings_whatever_the_after_hours_drift(state):
+    """Release-check review of 0a4852b: summing Alpaca's change from its official close lost the drift
+    between each after-close reading and the next close (+$700 shown, +$200 moved)."""
+    st, _ = state
+    # 11-23 read 100,010 after the close; the official 11-23 close was 100,300 (11-24's last_equity);
+    # 11-24 read 100,210, Alpaca's change from its close -90. The account moved +200 over 11-23..11-24.
+    _verify(st, "2026-11-24", 100210.0, 100300.0, -90.0, "2026-11-23")
+    rows = book(snap_of(state), "events")["after_close"]["value"]["rows"]
+    assert [r["change_usd"] for r in rows[1:]] == [10.0, 200.0]
+    assert sum(r["change_usd"] for r in rows[1:]) == rows[-1]["equity"] - rows[0]["equity"]

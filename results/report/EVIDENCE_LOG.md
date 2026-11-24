@@ -5670,3 +5670,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/export.py` @ `6a50403` (the equity tolerance); `dashboard/site.py` @ `6a50403`; the VM's `quantt_state/events/<day>/plan.json` and verify.json, read 2026-11-24; the fixes are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-05 · Release: release-20261124-4 on the VM; the event book's P&L on the site becomes the move between its readings, so after-hours drift can no longer distort it
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-4 on 591f4db (PR #110 merged `--admin --match-head-commit` 0a4852b, trees equal), tagged after the release check's pytest, doc_audit, orient and preview steps passed on 0a4852b; its reviewers then returned GO (workflow run wf_48248878-36b). The VM's site clone moved to it and the build published; Cloudflare's build of 591f4db succeeded; the performance page reads "Return since 29 Sep 2026 (+$1,326)" on both addresses. The trading clone still at release-20261123-2, cef and c4 AUTO_ARMED present [V]
+  - the quant review's finding, fixed in the commit that carries this entry: the event book's record summed Alpaca's `change_usd`, which runs from the official close, while its readings are taken after the close, so the drift between a reading and the next close fell out of the sum (the reviewer's probe: +$700 shown, +$200 moved). Each session's P&L is now the change between consecutive readings, which sums to the account's move exactly; the plan-date check still catches a missing session. On the VM's records the one traded session reads −$29.86, as before [V]
+  - the all-unreadable page no longer says "the portfolio below is the other books only" over no portfolio [V]
+- source: `dashboard/export.py` @ `591f4db` (`after_close` took `change_usd` from verify); the VM's site journal and `/srv/quantt-site`, read 2026-11-24 ~03:00 ET; the fix is in the commit that carries this entry
+- supports: §5
+- status: current
