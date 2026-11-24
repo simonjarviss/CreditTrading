@@ -281,7 +281,10 @@ def portfolio_section(snap: dict) -> str:
     if not pf["p"]:
         # Say why there is no portfolio (release-check review of 455eff4: with every book unreadable,
         # "no traded session yet" was false and dropped the reason).
-        why = warn or f'<p class="meta">First figures after the close of {fmt_short(RECORD_START)}.</p>'
+        # Release-check review of b76a7f4: with one book unreadable, the others' reasons were dropped.
+        why = (warn + "".join(f'<p class="meta">{escape(b["title"])} not included: {escape(w)}.</p>'
+                              for b, w in pf["excluded"]) if pf["blocked"]
+               else f'<p class="meta">First figures after the close of {fmt_short(RECORD_START)}.</p>')
         return f'<section class="section"><div class="wrap"><h2>Portfolio since {fmt_short(RECORD_START)}</h2>{why}</div></section>'
     p = pf["p"]
     colour = lambda x: BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR)                    # noqa: E731

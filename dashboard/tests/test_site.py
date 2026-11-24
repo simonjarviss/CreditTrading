@@ -244,3 +244,14 @@ def test_the_team_page_shows_the_people_then_the_pod_and_its_books(snap, tmp_pat
     assert pod.count('class="pod-card"') == 3 and pod.count("<h4>") == len(SITE.POD_RULES)
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
         assert title in pod, title
+
+
+def test_the_event_books_strategy_count_comes_from_its_record(snap, tmp_path, content):
+    """Release-check review of b76a7f4: "Eight strategies" was written into the text."""
+    n = SITE.event_strategies(snap)
+    home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    assert f"{n} strategies around scheduled corporate events" in home and "Eight strategies" not in home
+    ev = next(b for b in snap["books"] if b["name"] == "events")
+    ev["sleeves"] = {"UNMEASURED": "sleeve_scores.csv: unreadable"}
+    home = (build(snap, tmp_path / "site2", content) / "index.html").read_text()
+    assert "Strategies around scheduled corporate events" in home

@@ -272,3 +272,14 @@ def test_the_positioning_totals_only_when_every_book_is_read_and_priced(snap):
     for chart in ("Session P&amp;L", "Gross exposure, x equity", "Positions, long and short"):
         assert ">Portfolio</text>" not in h.split(chart, 1)[1].split("</svg>", 1)[0], chart
     assert "Event Book: session not read." in h
+
+
+def test_with_no_portfolio_every_book_left_out_is_named(snap, monkeypatch):
+    """Release-check review of b76a7f4: one book unreadable and the others not yet closed named only the
+    unreadable one."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-24")
+    book(snap, "cef")["official"] = {"UNMEASURED": "eod_equity.csv: read failed"}
+    h = page(snap).split("Portfolio since 24 Nov 2026", 1)[1].split("</section>", 1)[0]
+    assert "Not included: Fixed Income Book" in h
+    assert "Equity Cross-Asset Book not included: its first session from 24 Nov 2026 has not closed yet" in h
+    assert "Event Book not included: its first session from 24 Nov 2026 has not closed yet" in h

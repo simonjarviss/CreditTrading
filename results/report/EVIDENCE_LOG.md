@@ -5791,3 +5791,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `b76a7f4` (fund facts, sources and method, the latest-session table) and `dashboard/site.py` @ `b76a7f4` (the overview); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-15 · Release: release-20261124-11 live; the release check of b76a7f4 found three site wordings and gaps, fixed
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-11 on 866d5ba, site only, was installed in the VM's site clone at about 14:05 ET. The public performance page showed the positioning charts and the earlier record; /overview/ answered 404. The trading clone stayed at release-20261123-2 [V]
+  - the release check of b76a7f4 (workflow run wf_03cbeb9e-719): pytest, doc_audit and orient passed; the cef preview exited 4 on this laptop's stale panels (last close 2026-10-15), as before; both reviewers covered the range and found no order-path defect [V]
+  - its three site findings, fixed in the commit that carries this entry: the team page said positions are "set from the day's data", wrong for the core books, which decide one evening and send at the next close; with no portfolio, a book left out for a reason other than an unreadable record went unnamed; "Eight strategies" was written into the text instead of read from the event book's record [V]
+- source: `dashboard/site.py` and `dashboard/build.py` @ `866d5ba`; the VM's site clone, read 2026-11-24 ~14:06 ET; the fixes are in the commit that carries this entry
+- supports: §5
+- status: current

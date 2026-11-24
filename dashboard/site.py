@@ -31,9 +31,8 @@ import sys
 from html import escape
 from pathlib import Path
 
-from dashboard import build as perf, charts, layout as L, metrics as M, snapshot as S
-from dashboard.layout import (BOOK_COLOURS, BOOK_TEXT, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
-                              photo_style, tone, usd, when)
+from dashboard import build as perf, layout as L, snapshot as S
+from dashboard.layout import BOOK_COLOURS, CONTACT_EMAIL, REPO_URL, page, page_head
 
 HERE = Path(__file__).resolve().parent
 CONTENT = HERE / "content"
@@ -248,26 +247,46 @@ def person_card(m: dict) -> str:
 
 
 # The pod in a line per book and four working rules, for the team page (team lead, 2026-11-24: "a brief
-# overview of the multi strategy pod ... organized better", after the team's photographs). The full
-# descriptions are layout.BOOK_TEXT.
+# overview of the multi strategy pod ... organized better", after the team's photographs). The event
+# book's line starts with its strategy count, read from its record (event_strategies).
 POD_BOOKS = {
     "cef": "Leveraged credit closed-end funds. Long the widest discounts, short the richest, dollar-neutral.",
     "c4": "Equity, preferred and multi-asset closed-end funds, on discount and relative-value signals.",
-    "events": "Eight strategies around scheduled corporate events, from fund distributions to trust terminations.",
+    "events": "strategies around scheduled corporate events, from fund distributions to trust terminations.",
 }
 POD_RULES = (
     ("Systematic", "Written rules decide every trade. Nothing is placed by hand."),
-    ("At the close", "Positions are set from the day's data and traded near the close."),
+    # Release-check review of b76a7f4: "set from the day's data" was wrong for the core books, which
+    # decide on the evening of one session and send near the close of the next.
+    ("At the close", "Every trade is decided from data already published and sent near the market close."),
     ("Reconciled daily", "Every position is checked against the broker each evening."),
     ("Tested first", "A new strategy runs in simulation on live data before it trades."),
 )
+
+
+def event_strategies(snap: dict):
+    """How many strategies the event book runs, from its sleeve reading; None when that could not be read.
+    WHY (release-check review of b76a7f4): "Eight strategies" was written into the text twice, and would
+    have gone on saying eight after a sleeve was added or dropped."""
+    ev = next((b for b in snap["books"] if b["name"] == "events"), None)
+    if ev is None or "value" not in ev["sleeves"]:
+        return None
+    return len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
+
+
+def pod_line(snap: dict, b: dict) -> str:
+    text = POD_BOOKS.get(b["name"], "")
+    if b["name"] != "events":
+        return text
+    n = event_strategies(snap)
+    return f"{n} {text}" if n is not None else text[:1].upper() + text[1:]
 
 
 def pod_overview(snap: dict) -> str:
     """The pod under the team: one line, a card per book, four working rules."""
     cards = "".join(
         f'<div class="pod-card"><h3><span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}">'
-        f'</span>{escape(b["title"])}</h3><p>{escape(POD_BOOKS.get(b["name"], ""))}</p></div>'
+        f'</span>{escape(b["title"])}</h3><p>{escape(pod_line(snap, b))}</p></div>'
         for b in snap["books"])
     rules = "".join(f'<div><h4>{escape(k)}</h4><p>{escape(v)}</p></div>' for k, v in POD_RULES)
     return ('<section class="section soft"><div class="wrap"><div class="eyebrow">The pod</div>'
