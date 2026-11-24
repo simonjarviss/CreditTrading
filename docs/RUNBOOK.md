@@ -1550,10 +1550,15 @@ matters, and each step is checked before the next:
    install dry run (`install_vm --tag <installed tag>` without `--apply`), which must not
    refuse on the origin.
 
-A fresh VM (`quantt/deploy/vm/bootstrap.sh`) clones over ssh, so step 2 and step 3 for
-`quantt` come before bootstrap. `shadow/deploy/install_shadow_vm.sh` on the `shadow` branch
-still clones over https: a fresh shadow install needs the `quantt-shadow` key and the ssh URL
-first.
+**A fresh VM, once the repository is private** (corrected the same day, from the release check
+of `428d588`: the first version said to make the `quantt` key before bootstrap, but bootstrap
+creates the `quantt` user). The raw.githubusercontent.com downloads in 8.2 and 8.10 need a login
+once the repository is private, so copy each script over `scp` from a clone at the tag
+instead. Bootstrap clones over ssh: run it once, and it stops at the clone with "Permission
+denied (publickey)". Then do step 2 and step 3 for `quantt`, and run it again (re-running is
+safe; every step checks before it acts). `shadow/deploy/install_shadow_vm.sh`, on `main` and on
+`shadow`, still clones over https (`ORIGIN`, line 42). A fresh shadow install needs the
+`quantt-shadow` key and that line moved to the ssh URL first (`docs/ROADMAP.md` 7.41).
 
 **Undo.** A deploy key is removed in the repository's Settings, Deploy keys, or with
 `gh api -X DELETE repos/quanttqueensu/CreditTrading/keys/<id>`. While the repository is

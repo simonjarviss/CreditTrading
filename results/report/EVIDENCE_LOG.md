@@ -5837,6 +5837,21 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: supersedes the names-table part of E-2026-11-24-09. The table is restored byte for byte from `release-20261124-8`. Why the merge's own tests passed: `git rm --cached` left the file on disk in the worktree that ran them, so only a fresh checkout showed the fault. Splitting off its CRSP columns is `docs/ROADMAP.md` 7.37; the review's two other findings are 7.38 (the CUSIP table's shape checks, before any `halt`) and 7.39 (a deadline for the table's reads at the send)
 
+### E-2026-11-24-13 · Release: release-20261124-13 carries the corporate-action fix with both books' gates in report; installed for the core and C4 armed, the events book untouched and armed
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - `release-20261124-13` is 8674d2a: main after PRs #73, #23, #46, #70, #3, #68 and #116. Two release checks: NO-GO on 22cfa9b (15 C4 tests read a table #70's update had untracked; E-2026-11-24-12), GO on 8674d2a (pytest exit 0 with no failure or error in a fresh worktree; doc_audit 0 DRIFT; both reviewers covered release-20261124-8..8674d2a and found no order-path defect in `report`) [S]
+  - nothing under `quantt/deploy/`, `quantt/sleeves/`, `ops/sleeves/` or `requirements.txt` changed since release-20261123-2, so no venv step and no events install [V]
+  - the replay through the tagged code (RUNBOOK §8.6 step 2): 98 runs replayed, none refused now [V]
+  - installed 16:04 to 16:05 ET, after the day's sends, moved forward from 17:52 because the repository may go private (installs read the tag anonymously): a read-only precheck first (the VM saw the tag on origin at 8674d2a, no job running), then the core and C4 `--armed` (DRY_RUN=0 and AUTO_ARMED as before, timers read back active and enabled); `install_events_vm.sh` not run, the events send unit still DRY_RUN=0 with AUTO_ARMED. ops.prod_state read back: the VM ARMED at release-20261124-13 for the core and C4 [V]
+  - the tags release-20261124-1 to -12 and -14 to -16 are the public site's (its own clone); -13 is this release [V]
+  - follow-ups from the release checks, not blockers in `report`: docs/ROADMAP.md 7.37 (the names table's CRSP columns), 7.38 (the CUSIP table's shape checks, before any `halt`), 7.39 (a deadline for the CUSIP table's reads at the send) [S]
+- source: `quantt/broker/alpaca.py` @ `8674d2a`; `quantt/session/corp_actions.py` @ `8674d2a`; `ops/books/cef_discount_book.json` and `ops/books/c4_families_book.json` @ `8674d2a` (`corporate_actions.mode` "report"); the VM's installer output and `ops.prod_state`, read on 2026-11-24
+- supports: §1, §5
+- status: current. `halt` for either book waits for the team lead's ruling (E-2026-11-24-11)
+
 ### E-2026-11-24-25 · Ruling: the repository goes private once the VM reads it with deploy keys; the installer accepts the ssh spelling first
 - kind: ruling
 - era: ALPACA
