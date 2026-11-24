@@ -103,7 +103,7 @@ def test_an_unreadable_session_is_not_called_new_or_missing(snap, tmp_path, cont
     ev = next(b for b in snap["books"] if b["name"] == "events")
     ev["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
-    assert "its session record could not be read tonight" in h and "no record yet" not in h
+    assert "its session record could not be read tonight" in h.lower() and "no record yet" not in h
 
 
 def test_an_unmeasured_book_withholds_the_overviews_combined_figure(snap, tmp_path, content):

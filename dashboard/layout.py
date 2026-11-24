@@ -29,6 +29,16 @@ DISCLAIMER = (
 # dataviz validate_palette.js, 2026-11-23, all checks PASS).
 BOOK_COLOURS = {"cef": "#295caa", "c4": "#d2691e", "events": "#2a9d8f"}
 COMBINED_COLOUR = "#101213"
+BOOK_TEXT = {
+    "cef": ("A dollar-neutral discount mean-reversion book on 13 leveraged credit closed-end funds. It buys funds "
+            "trading at unusually wide discounts to their own history and shorts funds trading unusually rich, "
+            "sized to a 6% annual volatility target."),
+    "c4": ("The same discount signal, blended at equal risk with a relative-value signal against comparable funds, "
+           "applied to 74 equity, preferred and multi-asset closed-end funds. Its returns are close to uncorrelated "
+           "with the Fixed Income Book."),
+    "events": ("Eight strategies around scheduled events: distribution ex-dates in closed-end funds and partnership "
+               "units, special dividends, post-earnings drift in smaller companies, and unit trust terminations."),
+}
 
 
 def fmt_date(d: str) -> str:

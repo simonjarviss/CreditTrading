@@ -3,6 +3,11 @@
 (function () {
   "use strict";
 
+  function fmtPct(v) {
+    var s = Math.abs(v * 100).toFixed(2) + "%";
+    return (v > 0 ? "+" : v < 0 ? "−" : "") + s;
+  }
+
   function fmtUsd(v) {
     var s = Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     return (v > 0 ? "+$" : v < 0 ? "−$" : "$") + s;
@@ -30,7 +35,7 @@
       data.series.forEach(function (s) {
         var v = s.v[best];
         html += "<div><span class=\"sw\" style=\"background:" + s.color + "\"></span>" + s.name + ": " +
-          (v === null ? "no row" : fmtUsd(v)) + "</div>";
+          (v === null ? "no row" : (data.fmt === "pct" ? fmtPct(v) : fmtUsd(v))) + "</div>";
       });
       tip.innerHTML = html;
       tip.style.visibility = "visible";

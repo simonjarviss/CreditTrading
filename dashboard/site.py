@@ -32,7 +32,7 @@ from html import escape
 from pathlib import Path
 
 from dashboard import build as perf, charts, metrics as M, snapshot as S
-from dashboard.layout import (BOOK_COLOURS, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
+from dashboard.layout import (BOOK_COLOURS, BOOK_TEXT, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
                               photo_style, tone, usd, when)
 
 HERE = Path(__file__).resolve().parent
@@ -41,16 +41,6 @@ STATIC = HERE / "public" / "static"
 REPO = HERE.parent
 KEEP_BUILDS = 3
 
-BOOK_TEXT = {
-    "cef": ("A dollar-neutral discount mean-reversion book on 13 leveraged credit closed-end funds. It buys funds "
-            "trading at unusually wide discounts to their own history and shorts funds trading unusually rich, "
-            "sized to a 6% annual volatility target."),
-    "c4": ("The same discount signal, blended at equal risk with a relative-value signal against comparable funds, "
-           "applied to 74 equity, preferred and multi-asset closed-end funds. Its returns are close to uncorrelated "
-           "with the Fixed Income Book."),
-    "events": ("Eight strategies around scheduled events: distribution ex-dates in closed-end funds and partnership "
-               "units, special dividends, post-earnings drift in smaller companies, and unit trust terminations."),
-}
 
 STAGES = (
     ("Idea", "Every idea starts from a mechanism and a counterparty: who loses money to the trade, and why they keep "

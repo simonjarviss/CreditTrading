@@ -27,7 +27,9 @@ event-driven.quantt.ca  =  Cloudflare Worker `quantt-event-driven`, deployed fro
 ```
 
 - **Cloudflare is the public face.** The Worker relays every request to the VM and caches the
-  answer at the edge: pages for 60 seconds, static files for an hour. It writes nothing and
+  answer at the edge: pages for 60 seconds, static files for an hour. Browsers are sent
+  `no-cache` and revalidate on every visit (a 304 when nothing changed), because the zone's
+  4-hour browser cache setting replaced any shorter lifetime. It writes nothing and
   forwards no cookie or query string; if the VM cannot be reached it answers 503 with a page
   saying so. The VM's address is the Worker variable `ORIGIN`, set in the Cloudflare dashboard,
   never in the repository.
