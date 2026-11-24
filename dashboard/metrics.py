@@ -313,3 +313,13 @@ def index_points(dated: list, base_date: str) -> list:
         idx *= 1.0 + r
         out.append((d, idx - 1.0))
     return out
+
+
+def drawdown_index(dated: list, base_date: str) -> list:
+    """[(date, drawdown from the running peak of the compounded index)] from 0 at the base session."""
+    out, idx, peak = [(base_date, 0.0)], 1.0, 1.0
+    for d, r, _ in dated:
+        idx *= 1.0 + r
+        peak = max(peak, idx)
+        out.append((d, idx / peak - 1.0))
+    return out

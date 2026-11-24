@@ -5779,3 +5779,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `5edb846` (the performance page before the change); the VM's site clone and site journal, read 2026-11-24 ~13:20 ET; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-14 · Ruling and release: release-20261124-10 live; the overview deleted, the performance page as charts
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-10 on b76a7f4, a site-only release, was installed in the VM's site clone at 13:41 ET on the team lead's go ("just fucking check it and get it going"), after pytest and doc_audit passed on that commit and its diff from release-20261124-9 touched only `dashboard/`, docs and the evidence log. The public pages showed the change, and the trading clone stayed at release-20261123-2 [V]
+  - the team lead: "delete overview page"; "delete fund facts and sources and methods on performance page, performance should be graphs and bar charts demonstrate returns, risk and positioning"; "with tables for overall stats" (verbatim) [V]
+  - from the VM's records exported 2026-11-24 16:46 UTC, positioning after the close of 23 Nov 2026 read: session P&L −$1,798 (Fixed Income +$485, Equity Cross-Asset −$2,254, Event −$30 after close); 59 long and 18 short; gross 1.07x and net +0.04x of equity [V]
+- source: `dashboard/build.py` @ `b76a7f4` (fund facts, sources and method, the latest-session table) and `dashboard/site.py` @ `b76a7f4` (the overview); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

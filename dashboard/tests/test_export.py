@@ -228,8 +228,8 @@ def test_exposure_is_not_measured_when_a_close_is_missing(state):
     assert pos["gross_usd"] is None and pos["net_usd"] is None and pos["gross_x"] is None and pos["net_x"] is None
     from dashboard import build as B
     h = B.render(snap_of(state))
-    row = h.split("Latest session", 1)[1].split("Fixed Income Book", 1)[1].split("</tr>", 1)[0]
-    assert "not measured" in row and "x / " not in row
+    gross = h.split("Gross exposure, x equity", 1)[1].split("</svg>", 1)[0]
+    assert ">Fixed Income Book</text>" not in gross and ">Portfolio</text>" not in gross
 
 
 def test_a_core_fails_unmeasured_items_are_counted_as_notes(state):

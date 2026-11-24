@@ -37,23 +37,23 @@ def book(snap, name):
 
 
 def test_every_book_has_its_section(snap):
+    """Team lead, 2026-11-24: "performance should be graphs and bar charts demonstrate returns, risk and
+    positioning ... with tables for overall stats"; no fund facts, sources or method."""
     h = page(snap)
-    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio since", "Fund facts",
-                  "Key figures", "Latest session", "Sources and method"):
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio since", "Returns: cumulative",
+                  "Returns: P&amp;L by session", "Risk: drawdown from peak", "Key figures", "Positioning"):
         assert title in h, title
+    for gone in ("Fund facts", "Sources and method", "Latest session", "Strategies in simulation"):
+        assert gone not in h, gone
     for sym in ("AAA", "BBB", "CCC"):                   # aggregates only (team lead, 2026-11-23)
         assert sym not in h, sym
-    # Team lead, 2026-11-24: an investor page, without each book's own tables or the simulation scoreboard.
-    assert "Strategies in simulation" not in h and "Session of" not in h and "Gross exposure, risk report" not in h
-    cef = h.split("Latest session", 1)[1].split("Fixed Income Book", 1)[1].split("</tr>", 1)[0]
-    assert '2 <span class="meta">(1 long, 1 short)</span>' in cef and "1 of 1" in cef
+    held = h.split("Positions, long and short", 1)[1].split("</svg>", 1)[0]
+    assert ">Fixed Income Book</text>" in held and "1 long · 1 short" in held
 
-
-def test_every_figure_shows_its_source_and_read_time(snap):
-    h = page(snap)
-    assert "Alpaca end-of-day portfolio history, cef/eod_equity.csv" in h
-    assert "21 November 2026, 03:40 New York time" in h and "broker-confirmed" in h
-
+def test_the_page_shows_when_it_was_updated(snap):
+    """The sources and method were taken off the page (team lead, 2026-11-24); its update time stays."""
+    from dashboard.layout import when
+    assert f"Updated {when(snap['exported_at_utc'])}" in page(snap)
 
 def test_synthetic_banner_only_when_synthetic(snap):
     assert "Synthetic data" in page(snap)
@@ -64,7 +64,7 @@ def test_synthetic_banner_only_when_synthetic(snap):
 def test_a_gap_is_shown_as_not_measured_never_as_a_number(snap):
     book(snap, "cef")["official"] = {"UNMEASURED": "eod_equity.csv: read failed"}
     h = page(snap)
-    assert "not measured" in h and "read failed" in h
+    assert "Not included: Fixed Income Book (its official history could not be read)" in h
     assert "$100,050" not in h                               # the book's equity is gone, not carried
 
 
@@ -78,7 +78,9 @@ def test_the_portfolio_takes_each_book_from_its_first_send_and_the_event_book_on
     assert "Equity Cross-Asset Book<br><span class=\"meta\">from 19 Nov 2026" in head
     assert "Event Book<br><span class=\"meta\">from 23 Nov 2026" in head
     assert "Fixed Income Book<br>" not in head                       # it starts with the portfolio
-    assert "1 session left out" in h and "The Event Book uses these readings" in h
+    assert "1 session left out" in h
+    pnl = h.split("Session P&amp;L", 1)[1].split("</svg>", 1)[0]
+    assert "+$10 (after close)" in pnl                              # the event book's after-close reading
 
 
 def test_the_portfolio_view_switch_hides_the_books_until_chosen(snap):
@@ -111,7 +113,7 @@ def test_an_unreadable_book_is_left_out_of_the_portfolio_and_named(snap):
     it until a hand repair. The other books are shown, and the missing one is named above them."""
     book(snap, "c4")["official"] = {"UNMEASURED": "eod_equity.csv: not a number"}
     h = page(snap)
-    assert "Not included: Equity Cross-Asset Book, its record could not be read" in h
+    assert "Not included: Equity Cross-Asset Book (its official history could not be read)" in h
     assert "Cumulative return" in h and "Equity Cross-Asset Book<br>" not in h.split("Key figures", 1)[1].split("</thead>", 1)[0]
 
 
@@ -119,16 +121,14 @@ def test_the_newest_session_shows_its_after_close_reading_until_the_official_poi
     s = book(snap, "cef")["session"]["value"]
     s["date"] = "2026-11-23"
     s["equity_snapshot"]["change_usd"] = 123.0
-    h = page(snap)
-    latest = h.split("Latest session", 1)[1]
-    assert "23 Nov 2026" in latest and "+$123</span> <span class=\"meta\">after-close reading" in latest
-    s["date"] = "2026-11-20"                                 # official already covers it: no snapshot tile
-    cef_row = page(snap).split("Latest session", 1)[1].split("Fixed Income Book", 1)[1].split("</tr>", 1)[0]
-    assert "after-close reading" not in cef_row and "official" in cef_row
-
+    pnl = page(snap).split("Session P&amp;L", 1)[1].split("</svg>", 1)[0]
+    assert "+$123 (after close)" in pnl
+    s["date"] = "2026-11-20"                                 # official already covers it: Alpaca's figure, unmarked
+    pnl = page(snap).split("Session P&amp;L", 1)[1].split("</svg>", 1)[0]
+    assert "+$123" not in pnl and "−$50<" in pnl
 
 def test_text_from_a_record_cannot_inject_markup(snap):
-    book(snap, "cef")["official"]["source"] = "<script>alert(1)</script>"
+    book(snap, "cef")["title"] = "<script>alert(1)</script>"
     h = page(snap)
     assert "<script>alert" not in h and "&lt;script&gt;" in h
 
@@ -215,16 +215,14 @@ def test_the_return_is_named_time_weighted_and_shown_apart_from_the_pnl(snap):
     assert not re.search(r"Return since [^<]*\(", h)
 
 
-def test_an_after_close_books_session_pnl_reads_the_same_in_its_tile_and_its_row(snap):
+def test_an_after_close_books_session_pnl_is_the_move_between_its_readings(snap):
     """Release-check review of 596ba7f: the tile and the row took Alpaca's change, the record the move
     between readings, so one session read two ways."""
     ev = book(snap, "events")
     ev["session"]["value"]["equity_snapshot"]["change_usd"] = -90.0                   # Alpaca's, from its close
     ev["after_close"]["value"]["rows"][-1]["change_usd"] = 200.0                      # the record's, between readings
     h = page(snap)
-    row = h.split("Latest session", 1)[1].split("Event Book", 1)[1].split("</tr>", 1)[0]
-    assert "+$200" in row and "−$90" not in row and "−$90" not in h
-
+    assert "+$200 (after close)" in h and "−$90" not in h
 
 def test_the_record_starts_on_the_ruled_date():
     """Team lead, 2026-11-24: "we should use today as the first day for all books, but keep the old records too"."""
@@ -256,20 +254,21 @@ def test_before_its_first_session_closes_the_record_says_when_it_starts(snap, mo
     monkeypatch.setattr(B, "RECORD_START", "2026-11-24")
     h = page(snap)
     assert "Portfolio since 24 Nov 2026" in h and "First figures after the close of 24 Nov 2026" in h
-    assert "Latest session" in h and "Record before 24 Nov 2026" in h and "Key figures" not in h
+    assert "Positioning" in h and "Record before 24 Nov 2026" in h and "Key figures" not in h
     earlier = h.split("Record before 24 Nov 2026", 1)[1].split("</table>", 1)[0]
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
         assert title in earlier, title
 
 
-def test_the_fund_facts_sum_the_books_only_when_every_book_is_read_and_priced(snap):
-    """Team lead, 2026-11-24: "show our fund statistics". Capital and exposure are the books' sums, or not
-    measured; never a sum over part of the portfolio."""
-    h = page(snap)
-    facts = h.split('<dl class="facts">', 1)[1].split("</dl>", 1)[0]
-    assert "Record starts" in facts and "Capital, paper" in facts and "Gross exposure" in facts
-    assert "not measured" not in facts
+def test_the_positioning_totals_only_when_every_book_is_read_and_priced(snap):
+    """The portfolio's bar in each positioning chart is the books' sum, or absent; never a sum over part of
+    the portfolio. A book whose session could not be read is named."""
+    for name in ("cef", "c4"):                                    # every book's latest session on one date
+        book(snap, name)["session"]["value"]["date"] = "2026-11-23"
+    gross = page(snap).split("Gross exposure, x equity", 1)[1].split("</svg>", 1)[0]
+    assert ">Portfolio</text>" in gross
     book(snap, "events")["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
-    facts = page(snap).split('<dl class="facts">', 1)[1].split("</dl>", 1)[0]
-    cap = facts.split("Capital, paper", 1)[1].split("</dd>", 1)[0]
-    assert "not measured" in cap and "$" not in cap
+    h = page(snap)
+    for chart in ("Session P&amp;L", "Gross exposure, x equity", "Positions, long and short"):
+        assert ">Portfolio</text>" not in h.split(chart, 1)[1].split("</svg>", 1)[0], chart
+    assert "Event Book: session not read." in h

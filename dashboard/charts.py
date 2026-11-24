@@ -63,6 +63,70 @@ def _month_labels(dates: list, x, height: int) -> list:
     return out
 
 
+def bar_chart(points: list, label: str, height: int = 240) -> str:
+    """points: [(date, dollars)]. One bar per session, green up and red down, on one dollar axis."""
+    if not points:
+        return '<p class="meta">No session yet.</p>'
+    h = height
+    dates = [d for d, _ in points]
+    vals = [v for _, v in points]
+    ticks = nice_ticks(min(min(vals), 0.0), max(max(vals), 0.0), 4)
+    lo, hi = ticks[0], ticks[-1]
+    n = len(points)
+    slot = (W - PAD_L - PAD_R) / n
+    bw = max(1.5, min(18.0, slot * 0.6))
+    x = lambda i: PAD_L + slot * (i + 0.5)                                    # noqa: E731
+    y = lambda v: PAD_T + (h - PAD_T - PAD_B) * (hi - v) / (hi - lo)          # noqa: E731
+    parts = [f'<svg viewBox="0 0 {W} {h}" role="img" aria-label="{escape(label)}">']
+    for t in ticks:
+        cls = "zero" if t == 0 else "grid-line"
+        parts.append(f'<line class="{cls}" x1="{PAD_L}" x2="{W - PAD_R}" y1="{y(t):.1f}" y2="{y(t):.1f}"/>')
+        parts.append(f'<text class="axis" x="{PAD_L - 8}" y="{y(t) + 4:.1f}" text-anchor="end">{usd_axis(t)}</text>')
+    parts += _month_labels(dates, x, h)
+    for i, v in enumerate(vals):
+        top, bot = (y(v), y(0)) if v >= 0 else (y(0), y(v))
+        parts.append(f'<rect class="{"bar-pos" if v >= 0 else "bar-neg"}" x="{x(i) - bw / 2:.1f}" y="{top:.1f}" '
+                     f'width="{bw:.1f}" height="{max(bot - top, 0.8):.1f}" rx="2"/>')
+    parts.append(f'<line class="hair" x1="0" x2="0" y1="{PAD_T}" y2="{h - PAD_B}"/>')
+    parts.append("</svg>")
+    data = {"x": [round(x(i), 1) for i in range(n)], "dates": dates, "fmt": "usd",
+            "series": [{"name": "Portfolio P&L", "color": "#5f6670", "v": [round(v, 2) for v in vals]}]}
+    return (f'<div class="chart" data-series="{escape(json.dumps(data, separators=(",", ":")))}">'
+            + "".join(parts) + '<div class="tip"></div></div>')
+
+
+# A horizontal bar chart has its own, narrower canvas: it sits two to a row, and text drawn on the
+# 960-wide canvas would shrink to half size there.
+HB_W, HB_LEFT, HB_RIGHT, HB_ROW = 560, 168, 150, 38
+
+
+def hbar_chart(rows: list, label: str) -> str:
+    """rows: [(name, colour, [(value, opacity)], text)]: one row per book, each value a bar drawn from a
+    shared zero (a negative one to the left), and `text` its figures, right-aligned in their own column
+    so a long bar never runs into them. Category names are on the left; no legend is needed."""
+    if not rows:
+        return '<p class="meta">Not measured.</p>'
+    vals = [v for _, _, segs, _ in rows for v, _ in segs] + [0.0]
+    lo, hi = min(vals), max(vals)
+    if hi == lo:
+        hi = lo + 1.0
+    x0, x1 = HB_LEFT, HB_W - HB_RIGHT
+    x = lambda v: x0 + (x1 - x0) * (v - lo) / (hi - lo)                        # noqa: E731
+    h = len(rows) * HB_ROW + 8
+    parts = [f'<svg viewBox="0 0 {HB_W} {h}" role="img" aria-label="{escape(label)}">',
+             f'<line class="zero" x1="{x(0):.1f}" x2="{x(0):.1f}" y1="2" y2="{h - 2}"/>']
+    for i, (name, colour, segs, text) in enumerate(rows):
+        yc = 4 + i * HB_ROW + HB_ROW / 2
+        parts.append(f'<text class="cat" x="{x0 - 12}" y="{yc + 4:.1f}" text-anchor="end">{escape(name)}</text>')
+        for v, op in segs:
+            a, b = sorted((x(0), x(v)))
+            parts.append(f'<rect x="{a:.1f}" y="{yc - 7:.1f}" width="{max(b - a, 1.0):.1f}" height="14" rx="2" '
+                         f'fill="{colour}" fill-opacity="{op}"><title>{escape(name)}: {escape(text)}</title></rect>')
+        parts.append(f'<text class="val" x="{HB_W - 4}" y="{yc + 4:.1f}" text-anchor="end">{escape(text)}</text>')
+    parts.append("</svg>")
+    return '<div class="chart hbar">' + "".join(parts) + "</div>"
+
+
 def line_chart(series: list, label: str, fmt: str = "usd", height: int = H) -> str:
     """series: [{"name", "color" (a CSS colour or var), "points": [(date, value)]}]; fmt "usd" or
     "pct" (values as fractions). Returns the chart's HTML (container, SVG, legend, hover data)."""

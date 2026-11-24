@@ -18,7 +18,8 @@ CONTACT_EMAIL = "simon.jarvis@queensu.ca"       # team lead, 2026-11-23: the sit
 REPO_URL = "https://github.com/quanttqueensu/CreditTrading"
 # The team page is the home page (team lead, 2026-11-24: "when we open the page, it should be the team
 # page which shows first"); /team/ serves the same page so earlier links still work.
-NAV = (("team", "/", "Team"), ("overview", "/overview/", "Overview"), ("performance", "/performance/", "Performance"),
+# The overview page was deleted (team lead, 2026-11-24: "delete overview page").
+NAV = (("team", "/", "Team"), ("performance", "/performance/", "Performance"),
        ("research", "/research/", "Research"), ("library", "/library/", "Library"), ("contact", "/contact/", "Contact"))
 
 DISCLAIMER = (
