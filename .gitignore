@@ -125,14 +125,14 @@ results/cef/exposure_readout/_out_c4/
 # codes, CRSP-based liquidity per name). The last two are the table and column listings
 # of the R2 mirror, which scripts/data/r2_catalog.py and
 # scripts/events/ssx/ssx_data_r2_inventory.py rebuild on disk. Patterns, not single
-# files, so that a re-run with a new date stays out of git as well. Added 2026-11-24 (team lead's
-# go on this pull request): the C4 families names table, which carries per-fund CRSP share codes,
-# coverage dates and row counts (written by scripts/data/cef_families_quality.py; read only by
-# the research script scripts/cef/c4_feasibility.py, never by the live path).
+# files, so that a re-run with a new date stays out of git as well. The C4 families names table
+# (results/cef/cef_families/names_2026-10-12.csv, per-fund CRSP share codes and coverage) was added
+# here on 2026-11-24 and taken back out the same day: scripts/cef/tests/test_c4_paper_benchmark.py
+# reads it (15 tests, among them the check that C4's frozen spec matches the trial), so it stays
+# tracked until its CRSP columns are split off (docs/ROADMAP.md 7.37).
 results/data/cef_crosscheck_crsp_*.nonagree.csv
 results/data/universe_*/universe_map.csv
 results/xasset/**/slate_feasibility_*.csv
 results/cef/c4/c4_crsp_identity_*.csv
 results/data/R2_CATALOG.md
 results/events/ssx/ssx_data/[Rr]2_[Ff][Uu][Ll][Ll]_[Ii][Nn][Vv][Ee][Nn][Tt][Oo][Rr][Yy]*
-results/cef/cef_families/names_*.csv
