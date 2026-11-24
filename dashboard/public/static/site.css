@@ -222,13 +222,27 @@ details.data summary { cursor: pointer; color: var(--blue); }
 .dark .lede { color: rgba(255,255,255,0.82); }
 .site-footer { background: #081224; color: rgba(255,255,255,0.62); padding: 80px 0 48px; font-size: 14px; }
 .site-footer a { color: #fff; }
-.site-footer .cols { margin-top: 0; }
-.site-footer h4 { color: #fff; font: 600 12px/1.4 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; }
-.site-footer .logo { height: 26px; width: auto; margin-bottom: 20px; }
-.disclaimer { border-top: 1px solid rgba(255,255,255,0.14); margin-top: 56px; padding-top: 28px; font-size: 12px; line-height: 1.75; color: rgba(255,255,255,0.48); }
+/* footer: brand (6 of 12 columns), site links (3), contact (3); then the disclaimer and a base line */
+.foot-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; row-gap: 40px; align-items: start; }
+.foot-brand { grid-column: span 6; }
+.foot-nav { grid-column: span 3; }
+.foot-contact { grid-column: span 3; }
+.site-footer h4 { color: rgba(255,255,255,0.55); font: 600 11px/1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 18px; }
+.site-footer .logo { height: 26px; width: auto; margin-bottom: 22px; }
+.foot-brand p { max-width: 34ch; margin: 0; }
+.foot-name { display: block; font: 500 20px/1.3 var(--serif); color: #fff; margin-bottom: 6px; }
+.foot-nav ul { list-style: none; padding: 0; margin: 0; }
+.foot-nav li + li { margin-top: 10px; }
+.foot-nav a, .foot-contact a { color: rgba(255,255,255,0.86); }
+.foot-nav a:hover, .foot-contact a:hover { color: #fff; }
+.foot-contact p { margin: 0 0 10px; }
+.disclaimer { border-top: 1px solid rgba(255,255,255,0.14); margin-top: 64px; padding-top: 28px; font-size: 12px; line-height: 1.75; color: rgba(255,255,255,0.46); }
+.foot-base { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 0; font-size: 12px; color: rgba(255,255,255,0.46); }
 
 @media (max-width: 900px) {
   .sec-label, .sec-body { grid-column: 1 / -1; }
+  .foot-brand { grid-column: 1 / -1; }
+  .foot-nav, .foot-contact { grid-column: span 6; }
   .row { grid-template-columns: 40px minmax(0, 1fr); }
   .row .stat { grid-column: 2; text-align: left; }
 }

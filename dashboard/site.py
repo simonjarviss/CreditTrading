@@ -2,14 +2,14 @@
 
     python3 -m dashboard.site --snapshot snapshot.json --out /srv/quantt-site
 
-WHY (team lead, 2026-11-23): "a site that shows team overview, a slideshow ... everything
+WHY (team lead, 2026-11-23): "a site that shows team overview, ... everything
 someone who would want to give us capital would see", "our library (all literary sources)",
 "anything any R&D website would have", hosted from the VM at event-driven.quantt.ca for anyone
 to read. quantt.ca, the club's site, is the style reference only.
 
 WHAT IS LIVE AND WHAT IS FIXED. The performance page and the figures on the overview come
 from the night's snapshot (dashboard/export.py), so they are measured at build time. The
-words, the team, the slides and the library are files in this repository
+words, the team and the library are files in this repository
 (dashboard/content/, dashboard/public/static/), so they change only with a release; on the public
 address Cloudflare serves dashboard/public/ from `main` (dashboard/worker/index.js). The research
 ledger count is read from results/IDEA_LEDGER.md of the same release.
@@ -38,7 +38,6 @@ HERE = Path(__file__).resolve().parent
 CONTENT = HERE / "content"
 STATIC = HERE / "public" / "static"
 REPO = HERE.parent
-DECK_PDF = "QUANTT-Event-Driven-Trading.pdf"
 KEEP_BUILDS = 3
 
 BOOK_TEXT = {
@@ -100,8 +99,8 @@ def overview(snap: dict) -> str:
             '<h1>Event Driven Trading</h1>'
             '<p class="lede">A systematic trading team. Three automated books trade closed-end fund discounts '
             'and scheduled corporate events, each in its own paper account.</p>'
-            '<div class="buttons"><a class="btn primary" href="/performance/">Live performance</a>'
-            '<a class="btn ghost" href="/strategy/">Strategy presentation</a></div>'
+            '<div class="buttons"><a class="btn primary" href="/team/">Meet the team</a>'
+            '<a class="btn ghost" href="/performance/">Live performance</a></div>'
             '</div></section>')
     kf = (f'<section class="kf"><div class="wrap"><div class="figures">{"".join(figs)}</div>'
           f'<p class="meta note">Live figures, updated {escape(when(snap["exported_at_utc"]))} from the trading '
@@ -124,7 +123,7 @@ def overview(snap: dict) -> str:
                 '<div class="eyebrow">Approach</div><h2>Three books, one portfolio</h2>'
                 '<p class="lede">Each book runs a fully specified rule set. The system decides after the close, '
                 'trades at the next close and reports each morning, with no manual intervention.</p>'
-                '<a class="link-arrow" href="/strategy/">Read the strategy</a></div>'
+                '<a class="link-arrow" href="/research/">How we research</a></div>'
                 f'<div class="sec-body"><div class="rows">{"".join(rows_html)}</div></div></div></section>')
     performance = ""
     if series:
@@ -158,14 +157,17 @@ def overview(snap: dict) -> str:
                '<a class="link-arrow" href="/research/">How we research</a></div>'
                '<div class="sec-body">' + stages_html() + '</div></div></section>')
     members = json.loads((CONTENT / "team.json").read_text())["members"]
+    people = "".join(
+        f'<div class="person"><h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div>'
+        f'<p>{escape(m["bio"])}</p>'
+        + (f'<a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a>' if m.get("linkedin") else "")
+        + '</div>' for m in members)
     team = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
-                '<div class="eyebrow">Team</div><h2>The team</h2>'
-                '<p class="lede">Four Queen\'s University students covering portfolio management, risk, research '
-                'and data.</p><a class="link-arrow" href="/team/">Meet the team</a></div>'
-                '<div class="sec-body"><div class="people">'
-                + "".join(f'<div class="person"><h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div></div>'
-                          for m in members) + '</div></div></div></section>')
-    return page("overview", "Overview", hero + kf + approach + performance + opportunity + process + team + contact_band(),
+            '<div class="eyebrow">The team</div><h2>Who we are</h2>'
+            '<p class="lede">Four Queen\'s University students at QUANTT, covering portfolio management, risk, '
+            'research and data.</p><a class="link-arrow" href="/team/">The team</a></div>'
+            f'<div class="sec-body"><div class="people">{people}</div></div></div></section>')
+    return page("overview", "Overview", hero + team + kf + approach + performance + opportunity + process + contact_band(),
                 "A systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts "
                 "and scheduled corporate events.")
 
@@ -177,31 +179,6 @@ def contact_band() -> str:
             'contact Simon Jarvis, Portfolio Manager.</p>'
             f'<div class="buttons"><a class="btn primary" href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></div>'
             '</div></div></section>')
-
-
-# ------------------------------------------------------------------- strategy --
-
-def strategy(slides: list) -> str:
-    first = slides[0]
-    thumbs = "".join(
-        f'<a href="/static/slides/slide-{s["n"]:02d}.webp" data-title="{escape(s["title"])}" id="t{i + 1}">'
-        f'<img loading="lazy" src="/static/slides/slide-{s["n"]:02d}.webp" alt="">'
-        f'<span>{i + 1}. {escape(s["title"])}</span></a>' for i, s in enumerate(slides))
-    head = page_head("Strategy", "Strategy presentation",
-                     "Our strategies in full: the opportunity, each book's rules and backtest, the event strategies, "
-                     "portfolio construction, infrastructure and paper results to date.",
-                     f'<div class="buttons"><a class="btn primary" href="/static/{DECK_PDF}">Download the PDF</a></div>')
-    body = (head + '<section class="section"><div class="wrap">'
-            f'<div class="deck" data-count="{len(slides)}"><div class="slide-frame">'
-            f'<img src="/static/slides/slide-{first["n"]:02d}.webp" alt="{escape(first["title"])}"></div>'
-            '<div class="deck-controls"><button class="prev" type="button">Previous</button>'
-            f'<span class="deck-count">Slide 1 of {len(slides)}: {escape(first["title"])}</span>'
-            '<button class="next" type="button">Next</button></div>'
-            '<p class="meta">Use the arrow keys to move between slides. Backtest figures are gross of costs unless '
-            'a slide states otherwise.</p></div>'
-            f'<div class="thumbs">{thumbs}</div></div></section>')
-    return page("strategy", "Strategy presentation", body,
-                "The Event Driven Trading team's strategy presentation: rules, backtests and paper results.")
 
 
 # ------------------------------------------------------------------- research --
@@ -331,8 +308,6 @@ def team(t: dict) -> str:
                      "Four students at Queen's University, part of QUANTT, the Queen's University Algorithmic Network "
                      "and Trading Team.")
     body = (head + f'<section class="section"><div class="wrap"><div class="people">{"".join(cards)}</div></div></section>'
-            + '<section class="section tight"><div class="wrap"><img class="photo" style="aspect-ratio:21/9" '
-              'src="/static/img/team-atrium.webp" alt="QUANTT members" loading="lazy"></div></section>'
             + contact_band())
     return page("team", "Team", body, "The Event Driven Trading team at QUANTT, Queen's University.")
 
@@ -358,11 +333,9 @@ def not_found() -> str:
 
 def pages(snap: dict, *, content: Path = CONTENT, repo: Path = REPO) -> dict:
     """{relative path: html}. Raises on a missing content file: a page is never built from a default."""
-    slides = json.loads((content / "slides.json").read_text())
     return {
         "index.html": overview(snap),
         "performance/index.html": perf.render(snap),
-        "strategy/index.html": strategy(slides),
         "research/index.html": research(snap, ledger_count(repo / "results" / "IDEA_LEDGER.md")),
         "library/index.html": library(json.loads((content / "library.json").read_text())),
         "team/index.html": team(json.loads((content / "team.json").read_text())),

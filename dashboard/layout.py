@@ -1,7 +1,7 @@
 """The page shell shared by every page of the public site: head, navigation, footer, disclaimer.
 
 Standard library only. Every page is static HTML; the one script (static/site.js) only
-draws chart tooltips and turns slides. The Content-Security-Policy the web server sends
+draws chart tooltips. The Content-Security-Policy the web server sends
 (dashboard/deploy/Caddyfile.tmpl) allows nothing from another origin.
 """
 from __future__ import annotations
@@ -13,9 +13,8 @@ SITE_NAME = "Event Driven Trading"
 TEAM_LINE = "QUANTT · Queen's University"
 CONTACT_EMAIL = "simon.jarvis@queensu.ca"       # team lead, 2026-11-23: the site's contact address
 REPO_URL = "https://github.com/quanttqueensu/CreditTrading"
-NAV = (("overview", "/", "Overview"), ("strategy", "/strategy/", "Strategy"),
-       ("performance", "/performance/", "Performance"), ("research", "/research/", "Research"),
-       ("library", "/library/", "Library"), ("team", "/team/", "Team"), ("contact", "/contact/", "Contact"))
+NAV = (("overview", "/", "Overview"), ("team", "/team/", "Team"), ("performance", "/performance/", "Performance"),
+       ("research", "/research/", "Research"), ("library", "/library/", "Library"), ("contact", "/contact/", "Contact"))
 
 DISCLAIMER = (
     "All performance on this site comes from paper-trading accounts at Alpaca Markets or from "
@@ -75,7 +74,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
     cta = ' class="nav-cta"'
     nav = "".join(f'<a href="{href}"{cur if key == active else ""}{cta if key == "contact" else ""}>'
                   f'{escape(label)}</a>' for key, href, label in NAV if key != "overview")
-    foot_nav = "".join(f'<li><a href="{href}">{escape(label)}</a></li>' for _, href, label in NAV)
+    foot_nav = "".join(f'<li><a href="{href}">{escape(label)}</a></li>' for key, href, label in NAV if key != "contact")
     full_title = SITE_NAME if active == "overview" else f"{title} · {SITE_NAME}"
     return f"""<!doctype html>
 <html lang="en-CA">
@@ -104,12 +103,14 @@ def page(active: str, title: str, body: str, description: str) -> str:
 {body}
 </main>
 <footer class="site-footer"><div class="wrap">
-<div class="cols">
-<div><img class="logo" src="/static/img/quantt-logo-white.png" alt="QUANTT" width="97" height="24"><p>{SITE_NAME}: a systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts and scheduled corporate events.</p></div>
-<div><h4>Pages</h4><ul style="list-style:none;padding:0;margin:0;columns:2">{foot_nav}</ul></div>
-<div><h4>Contact</h4><p>Simon Jarvis, Portfolio Manager<br><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
+<div class="foot-grid">
+<div class="foot-brand"><img class="logo" src="/static/img/quantt-logo-white.png" alt="QUANTT" width="105" height="26">
+<p><span class="foot-name">{SITE_NAME}</span>A systematic trading team at QUANTT, Queen's University.</p></div>
+<nav class="foot-nav" aria-label="Footer"><h4>Site</h4><ul>{foot_nav}</ul></nav>
+<div class="foot-contact"><h4>Contact</h4><p>Simon Jarvis<br>Portfolio Manager</p><p><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
 </div>
 <p class="disclaimer">{escape(DISCLAIMER)}</p>
+<p class="foot-base"><span>&copy; {dt.date.today().year} {SITE_NAME}</span><span>QUANTT &middot; Queen's University, Kingston, Ontario</span></p>
 </div></footer>
 </body>
 </html>

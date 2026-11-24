@@ -40,7 +40,7 @@ def test_every_page_is_built_and_carries_the_disclaimer_and_contact(snap, tmp_pa
     target = build(snap, tmp_path / "site", content)
     pages = sorted(p.relative_to(target).as_posix() for p in target.rglob("*.html"))
     assert pages == ["404.html", "contact/index.html", "index.html", "library/index.html",
-                     "performance/index.html", "research/index.html", "strategy/index.html", "team/index.html"]
+                     "performance/index.html", "research/index.html", "team/index.html"]
     for p in pages:
         h = (target / p).read_text()
         assert "No client or outside capital is invested" in h, p
@@ -58,13 +58,14 @@ def test_every_local_link_and_asset_exists(snap, tmp_path, content):
     assert not missing, missing
 
 
-def test_the_slideshow_shows_every_kept_slide_and_the_pdf(snap, tmp_path, content):
+def test_the_overview_leads_with_the_team_and_there_is_no_slideshow(snap, tmp_path, content):
+    """Team lead, 2026-11-23: "take out the slideshow and make the team the first thing"."""
     target = build(snap, tmp_path / "site", content)
-    h = (target / "strategy" / "index.html").read_text()
-    slides = json.loads((content / "slides.json").read_text())
-    assert len(re.findall(r'class="thumbs"', h)) == 1
-    assert h.count('data-title="') == len(slides) and f"Slide 1 of {len(slides)}" in h
-    assert SITE.DECK_PDF in h
+    h = (target / "index.html").read_text()
+    assert h.index("Who we are") < h.index("Books trading") < h.index("Three books, one portfolio")
+    assert not (target / "strategy").exists() and "/strategy/" not in h and "slide-" not in h
+    nav = h.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
+    assert nav.index("/team/") < nav.index("/performance/")
 
 
 def test_the_team_page_lists_the_four_members_with_their_links(snap, tmp_path, content):
@@ -110,11 +111,10 @@ def test_a_dirty_snapshot_publishes_nothing(snap, tmp_path, content):
 
 
 def test_the_committed_content_is_complete():
-    """What a release needs: slides for every caption, the deck, the font and the library."""
-    slides = json.loads((DASH / "content" / "slides.json").read_text())
-    for s in slides:
-        assert (DASH / "public" / "static" / "slides" / f"slide-{s['n']:02d}.webp").is_file(), s
-    assert (DASH / "public" / "static" / SITE.DECK_PDF).is_file()
+    """What a release needs: the fonts, the photographs and the library."""
+    for f in ("fonts/inter-latin-wght.woff2", "fonts/source-serif-4-latin-wght.woff2", "img/hero-office.webp",
+              "img/quantt-logo.png", "img/quantt-logo-white.png"):
+        assert (DASH / "public" / "static" / f).is_file(), f
     assert (DASH / "public" / "static" / "fonts" / "inter-latin-wght.woff2").is_file()
     lib = json.loads((DASH / "content" / "library.json").read_text())
     assert lib["entries"] and all(e["title"] and e["topic"] for e in lib["entries"])
