@@ -288,3 +288,11 @@ def test_the_positioning_is_detailed_in_aggregates(snap):
     assert ev_row.count("no report") == 2                          # the event book has no risk report
     for sym in ("AAA", "BBB", "CCC"):
         assert sym not in pos, sym
+
+
+def test_one_session_is_named_in_the_singular(snap, monkeypatch):
+    """The live page read "Sharpe ratio (1 sessions)" on the record's first evening, 24 Nov 2026."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-23")
+    assert B.portfolio(snap)["p"]["n"] == 1
+    h = page(snap)
+    assert "Sharpe ratio (1 session)" in h and not re.search(r"\b1 sessions\b", h)

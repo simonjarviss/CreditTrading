@@ -376,7 +376,7 @@ def portfolio_section(snap: dict) -> str:
     # its gains when one was. A reader shown "+0.06% (-$472)" would read an error.
     kpis = [fig(pct(p["cum_return"], True), "Return, time-weighted"),
             fig(usd(p["pnl"], True), "P&amp;L"),
-            fig(_ratio_s(p["sharpe"]) if p["sharpe"] is not None else "n/a", f"Sharpe ratio ({p['n']} sessions)"),
+            fig(_ratio_s(p["sharpe"]) if p["sharpe"] is not None else "n/a", f"Sharpe ratio ({p['n']} {'session' if p['n'] == 1 else 'sessions'})"),
             fig(pct(p["max_drawdown"]), "Maximum drawdown")]
     growth = [{"name": "Portfolio", "color": PORTFOLIO_COLOUR, "bold": True,
                "points": M.index_points(pf["dated"], pf["base"])}]
