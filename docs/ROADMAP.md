@@ -112,7 +112,7 @@ live path follows `docs/TEAM.md` §2 and reaches the VM only in a release.
 | 7.2 | The events account on every state surface (`ops.prod_state` per account, the banner, `ops.daily_page`) | A8.5, A5.2 | 2 | A | open |
 | 7.3 | A P&L of record for the events account (collector, `pnl_report`, report units) | A6.2 | 3 | A | open |
 | 7.4 | HALVE and KILL defined and reported for the events account | A4.3 | 4 | A, TL sets levels | open |
-| 7.5 | A corporate-action gate in the events runner; correct `quantt/sleeves/ledger.py`'s claim | A7.3 | 5 | A | open |
+| 7.5 | A corporate-action gate in the events runner; correct `quantt/sleeves/ledger.py`'s claim | A7.3 | 5 | A | open. The core and C4 half of A7.3 (the bond-ISIN fix and the CUSIP check, PR #68) is live from release-20261124-13, both books in `report` (team lead 2026-11-24, "Fix first, block later"; E-2026-11-24-13); the events runner still has no gate |
 | 7.6 | One ruling on who may merge, tag, install and arm; then `docs/RUNBOOK.md:968` and `CLAUDE.md` point at it | A1.3, A10.4 | 6 | TL, then A | done 2026-11-23: "Agents release; arming is yours" (`docs/SYSTEM.md` §5); `CLAUDE.md`, RUNBOOK §8.6 and `docs/TEAM.md` follow it |
 
 **7b. Stopping and recovering.**
