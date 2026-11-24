@@ -5775,3 +5775,13 @@ that adds it does not exist when it is written.
 - source: `quantt/broker/alpaca.py` @ `4a3cf51`; `quantt/session/tests/test_ca_cusip_table.py` @ `4a3cf51`; `results/ops/ca_unresolved_2026-11-08/measure.py` @ `4a3cf51`
 - supports: §1, §5
 - status: open. A new release-check is needed on the fixed commit, with the preview run on current panels
+
+### E-2026-11-24-11 · The team lead's rulings on the seven old pull requests: the corporate-action fix ships in report, "block later"; four merged or closed; #70 and #3 updated
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings by question prompt: "Fix first, block later", "Go on all four", "Update it now", "Yes, update it", "Check each, then propose", the clean-up "Go", and "make sure all our sleeves are live on the vm and armed")
+- source: `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — the old pull requests and the corporate-action gate" @ `c42686d` (the block is added by the commit that carries this entry); `ops/books/cef_discount_book.json` and `ops/books/c4_families_book.json` @ `c42686d` (`corporate_actions.mode` "report", unchanged by #68)
+- supports: §5
+- status: supersedes the 2026-11-09 ruling "Halt in tonight's release" (E-2026-11-09-31), which never shipped. #68 now carries the bond-ISIN fix and the CUSIP check with both books in report. E-2026-11-09-32's measurement (a flat book under `halt` refused 0 of 28 sessions over 2026-10-01..11-09, the core as held 5 of 28) is what blocking would have cost then; the team lead decides on `halt` after reading what the gate would have refused under report

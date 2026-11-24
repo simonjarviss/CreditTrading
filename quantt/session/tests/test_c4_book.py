@@ -89,7 +89,7 @@ def test_the_c4_book_json_validates_through_every_runner_reader():
     assert rn.stale_nav_for(_c4()) is None and "stale_nav" not in book["data"]   # no CEFConnect
     assert rn.missing_nav_for(_c4()) == "hold" and rn.missing_nav_max_sessions_for(_c4()) == 2
     assert rn.drawdown_for(_c4()) == "report"
-    assert rn.corporate_actions_for(_c4()) == "halt"       # team lead 2026-11-09, with the core
+    assert rn.corporate_actions_for(_c4()) == "report"     # team lead 2026-11-02, as the core
     assert rn.halts_for(_c4()) == [] or all(h for h in rn.halts_for(_c4()))         # it reads, by book_id
     assert book["book_id"] == "c4_families_paper"
     # One sleeve, the C4 spec, at its own $100k, and no risk_budget: a single-spec book.
@@ -128,7 +128,7 @@ def test_default_deps_builds_c4_with_its_own_client_panel_and_refresh(monkeypatc
     assert asked == ["c4"]                                   # ALPACA_C4_* keys, never the core's
     assert deps.stale_nav is None and deps.nav_gate is None and deps.sleeves is None
     assert deps.missing_nav == "hold" and deps.missing_nav_max_sessions == 2
-    assert deps.drawdown == "report" and deps.corp_actions == "halt"
+    assert deps.drawdown == "report" and deps.corp_actions == "report"
     assert deps.execution["mode"] == "late_market"
     assert rn.spec_panel(spec) == rn.Panel(rn.REPO / "data/cef_c4/cef_prices.parquet",
                                            rn.REPO / "data/cef_c4/cef_nav.parquet")

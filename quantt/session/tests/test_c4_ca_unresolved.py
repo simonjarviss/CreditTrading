@@ -1,4 +1,4 @@
-"""C4's corporate-action gate on a replica of the three unresolved rows of 2026-11-02: `halt` measured, and deployed since 2026-11-09.
+"""C4's corporate-action gate on a replica of the three unresolved rows of 2026-11-02: `halt` measured, `report` deployed.
 
 WHY THIS EXISTS (2026-11-02). The core's release-check on 3478159 found three
 market-wide rows in Alpaca's real corporate-action feed with a party symbol
@@ -9,11 +9,10 @@ kept `halt`, and this file measured what that would do to C4's dry sessions.
 
 THE RULING IT INFORMED (team lead, 2026-11-02). C4's gate runs in REPORT, the
 same as the core, until the ISIN fix and the re-ruling of the unresolved rows
-land. They landed on 2026-11-09 and the team lead restored HALT with the core
-in that release (ops/books/c4_families_book.json `_mode_halt_note`, which says
-how to revert). `test_the_deployed_c4_book_sets_halt_with_the_core` pins that.
-The measurements below name `halt` explicitly. The replica's missing symbols are
-`null`, neither a bond's ISIN nor a CUSIP, so neither fix changes what they show.
+land (ops/books/c4_families_book.json `_mode_report_note`, which says how to
+RESTORE halt). `test_the_deployed_c4_book_sets_report_until_the_unresolved_rows_are_re_ruled`
+pins that. The measurements below still name `halt` explicitly, because halt
+is what the RESTORE line brings back, and they show what it will do then.
 
 THE REPLICA. The three rows as the core's gate recorded them in its preview of
 session 2026-11-03 (as-of 2026-11-02, read 2026-11-02 23:34-00:14Z, the record's
@@ -123,20 +122,20 @@ def _step_3b(tmp_path, session_date, positions, closed, targets, mode=cam.HALT):
     return rec, refusal
 
 
-def test_the_deployed_c4_book_sets_halt_with_the_core():
-    """Team lead 2026-11-09: C4's gate back to HALT together with the core, in the release
-    carrying the ISIN fix and the CUSIP check. The book json says how to revert; this pin
-    makes any switch a visible, tested edit (test_corp_actions.py pins the core's the same
-    way). Fails on the book as it stood before that release."""
-    assert rn.corporate_actions_for(_c4()) == cam.HALT
+def test_the_deployed_c4_book_sets_report_until_the_unresolved_rows_are_re_ruled():
+    """Team lead 2026-11-02: C4's gate in REPORT, the same as the core, until the ISIN fix
+    and the re-ruling of the unresolved rows land (this file's measurements decided it).
+    The book json says how to restore halt; this pin makes the switch back a visible,
+    tested edit (test_corp_actions.py pins the core's the same way). Fails on ebb73ab."""
+    assert rn.corporate_actions_for(_c4()) == cam.REPORT
     block = json.loads(_c4().book_path.read_text())["corporate_actions"]
-    note = block["_mode_halt_note"]
-    assert "REVERT" in note and "report" in note and "together with the core" in note
-    assert rn.corporate_actions_for(rn.BOOKS["cef"]) == cam.HALT        # the core's, as the note says
+    note = block["_mode_report_note"]
+    assert "RESTORE" in note and "halt" in note and "together with the core" in note
+    assert rn.corporate_actions_for(rn.BOOKS["cef"]) == cam.REPORT      # the core's, as the note says
 
 
 def test_report_mode_records_the_same_rows_and_never_refuses(tmp_path):
-    """Report mode (the book json's REVERT) on the same replica: every session's record lists the rows halt
+    """The deployed mode on the same replica: every session's record lists the rows halt
     would block (flat: the JAGX merger on 11-03; held: all three), and none refuses."""
     names = sorted(_universe())[:10]
     pos, closed = _held_since_oct20(names)
@@ -228,27 +227,27 @@ def _dry_decide(tmp_path, monkeypatch, asof: dt.date, mode=None):
 
 def test_under_halt_the_c4_dry_decide_refuses_on_the_merger_and_plans_the_next_day(
         tmp_path, monkeypatch):
-    """The same answer through the whole runner, on the book json as deployed (halt): the
+    """The same answer through the whole runner, under halt (the RESTORE target): the
     evening decide for 2026-11-03 is REFUSED (exit 11), a gate-5 `data` refusal naming the
     JAGX row; the one for 2026-11-04 is PLANNED (exit 6), the three rows in the record as
     unresolved, blocking nothing."""
-    code, plan = _dry_decide(tmp_path / "a", monkeypatch, dt.date(2026, 11, 2))
+    code, plan = _dry_decide(tmp_path / "a", monkeypatch, dt.date(2026, 11, 2), mode=cam.HALT)
     assert code == rn.EXIT_REFUSED and plan["status"] == "refused"
     assert [r["gate"] for r in plan["refusals"]] == ["data"]
     assert JAGX_MERGER in plan["refusals"][0]["detail"]
     assert plan["corporate_actions"]["mode"] == "halt"
-    code, plan = _dry_decide(tmp_path / "b", monkeypatch, dt.date(2026, 11, 3))
+    code, plan = _dry_decide(tmp_path / "b", monkeypatch, dt.date(2026, 11, 3), mode=cam.HALT)
     assert code == rn.EXIT_PLANNED and plan["status"] == "decided", plan["refusals"]
     ca = plan["corporate_actions"]
     assert ca["status"] == "CLEAR" and ca["blocking"] == []
     assert {u["id"] for u in ca["unresolved"]} == ALL3 and not any(u["blocks"] for u in ca["unresolved"])
 
 
-def test_under_report_the_c4_dry_decide_plans_and_records_the_merger(tmp_path, monkeypatch):
-    """Report mode (the book json's REVERT): the evening decide for 2026-11-03 is PLANNED
+def test_as_deployed_the_c4_dry_decide_plans_and_records_the_merger(tmp_path, monkeypatch):
+    """The book json as deployed (report): the evening decide for 2026-11-03 is PLANNED
     (exit 6) with no refusal, and its record carries the JAGX row as BLOCKING, recorded
     only, with the three listed as unresolved."""
-    code, plan = _dry_decide(tmp_path, monkeypatch, dt.date(2026, 11, 2), mode=cam.REPORT)
+    code, plan = _dry_decide(tmp_path, monkeypatch, dt.date(2026, 11, 2))
     assert code == rn.EXIT_PLANNED and plan["status"] == "decided" and plan["refusals"] == []
     ca = plan["corporate_actions"]
     assert ca["mode"] == "report" and ca["status"] == "BLOCKING"

@@ -394,17 +394,16 @@ def test_the_setting_absent_is_no_gate_and_a_bad_one_raises(tmp_path):
                    halts=None).corp_actions is None
 
 
-def test_the_deployed_book_sets_halt_with_the_cusip_check():
-    """Team lead 2026-10-28: a HALT guard for the paper runner. REPORT from 2026-11-02,
-    because three real market-wide rows with a missing party would have refused every
-    session (release-check on 3478159). Team lead 2026-11-09: HALT restored, in the
-    release carrying the bond-ISIN fix and the CUSIP check (`alpaca._CaCusipTable`). The
-    book json says how to revert; this pin makes any switch a visible, tested edit
-    rather than a silent one. Fails on the book as it stood before that release."""
-    assert rn.corporate_actions_for(rn.BOOKS["cef"]) == cam.HALT
+def test_the_deployed_book_sets_report_until_the_unresolved_rows_are_re_ruled():
+    """Team lead 2026-10-28: a HALT guard for the paper runner. Team lead 2026-11-02:
+    REPORT for the release that carries CEF trial 53, because three real market-wide
+    rows with a missing party would halt every session under the unresolved-rows
+    ruling (release-check on 3478159). The book json says how to restore halt; this
+    pin makes the switch back a visible, tested edit rather than a silent one."""
+    assert rn.corporate_actions_for(rn.BOOKS["cef"]) == cam.REPORT
     import json
     block = json.loads(rn.BOOKS["cef"].book_path.read_text())["corporate_actions"]
-    assert "REVERT" in block["_mode_halt_note"] and "report" in block["_mode_halt_note"]
+    assert "RESTORE" in block["_mode_report_note"] and "halt" in block["_mode_report_note"]
 
 
 # ------------------------------------------------------------- run_session

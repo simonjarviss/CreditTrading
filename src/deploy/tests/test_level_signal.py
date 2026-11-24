@@ -363,9 +363,6 @@ def print_pins():
 # after the merge), identical; SESSION_PINS by 4485a96's, whose runner (#40, the C4 arming gate) writes a
 # different plan.json and run record from f7f7be5's. Each unseeded and under PYTHONHASHSEED 1 and 2,
 # identical every time, and identical on this tree. Arm64 Mac, Python 3.13.5, pandas 2.3.3, numpy 2.3.4.
-# SESSION_PINS RE-DERIVED 2026-11-09 on 1aab61d: C4's book json sets the corporate-action gate to halt (team
-# lead 2026-11-09), which the plan and the run records carry. Unseeded and under PYTHONHASHSEED 1, identical;
-# all 12 fields equal 4485a96's byte for byte once the gate's `"mode": "halt"` is mapped back to `"report"`.
 PANEL_SHA = "40f63cf6abe235957e2ab157693f44636619a6bdf803c94c3c6503758e53c80c"
 TARGET_PINS = {
     "2026-08-14|flat": {"repr": "44bcd85d2a1463dfa760e18da25c4133060daaba8d16b22532522ade7a279a3e", "rounded": "c0a53875acacab6ba3f9e92891a518bc5557088e22b541a8eb40d6ea16589020"},
@@ -380,16 +377,16 @@ SESSION_PINS = {
         "exit": 6,
         "n_orders": 60,
         "orders": "dc62cc3047434e6e004edc0ada3c0c9f354397837dcff43cde1ec9ed1d0c8d14",
-        "plan_json": "a87875901754ac246f97a334e03221fc3775850e981ba128642f74f751b017aa",
+        "plan_json": "488434c6d3e3958cf83e1734296192f102d2159fedce966f6b4db903650a18bb",
         "plan_sha": "9a45e9805d3ac937009c9dc5cb923eb5ccf62fdceb6b8e2ff4874606687848d4",
-        "run_record": "5f1e547afcb18a1c7730f0536bb67ad12de7dd96667b17d3095ae5be7fdcd325",
+        "run_record": "10638d0fa02f89794f848acdd16a57206e16c77b437a8f0a21bb1ae3dd52626f",
         "status": "decided",
         "submits": 0,
         "targets": "f6ab2ad2e9ca4253b88085c260e6e90d128649dc7e7b4c6944a786208d1feaf2",
     },
     "send": {
         "exit": 10,
-        "run_record": "db587a236287a9aa9a20e3b40a0a8755a9affe29fccfbd398eced9d8e691a633",
+        "run_record": "bf94169f1cefdb24ee6ad54cb9c767a154f3ac1dcf5fc4e9d91bb7cb211e9b0d",
         "submits": 0,
     },
 }

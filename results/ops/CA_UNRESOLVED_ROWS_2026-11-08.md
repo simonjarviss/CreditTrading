@@ -1,5 +1,11 @@
 # The corporate-action gate: the ISIN fix, and the three unresolved rows to re-rule (2026-11-08)
 
+> **2026-11-24, before merge.** The team lead ruled "Fix first, block later" (`docs/SYSTEM.md` §5,
+> 2026-11-24; `EVIDENCE_LOG` E-2026-11-24-11): the fix and the CUSIP check ship with both books still
+> in `report`. Where this note says the gate goes back to `halt` in the release, that was the
+> 2026-11-09 plan, which never shipped. `halt` waits for a later ruling. The measured figures below
+> are as of 2026-11-08 and 2026-11-09 and were not re-run for the merge.
+
 > For the team lead, ruling of 2026-11-08 ("Start the fix"). Part 1 is the bond-ISIN
 > fix (branch `ca-isin-fix`). Part 2 brings the three rows for a ruling. **Nothing here
 > changes either book json's `corporate_actions.mode`, and no `ca-ack` was run.**

@@ -688,7 +688,7 @@ Relayed by the coordinating session, 2026-11-09, on `results/ops/CA_UNRESOLVED_R
 |---|---|
 | CUSIP-format parties on corporate-action rows, unresolved after the bond-ISIN fix | **"Build a check against our CUSIPs".** A CUSIP-format party matching none of the funds of the book's universe, read at run time from Alpaca across a stated lookback, names nobody and blocks nothing; a party matching one of ours is that fund. Every CUSIP seen for a fund is held. If any fund's CUSIP cannot be read, the read fails, or a split, reorganisation or CUSIP change inside the lookback cannot be confirmed, such rows stay unresolved, naming the fund and the reason; never "not ours". A rule may only move a row from unresolved to resolved on proof of non-membership, and no row naming one of our tickers or CUSIPs may stop blocking. Letter-led CUSIPs take the same path as digit-led ones |
 | The three unresolved rows brought for a ruling | **"Accept all three"**: db0847b7 no action; e34ddd44 and 6abeb209 acked with `ca-ack`, both books, at the return to `halt`. Amended by the last row below |
-| How the gate goes back to `halt` (asked after the check was built, answered directly) | **"Halt in tonight's release".** One release, after the day's verify and subject to release-check GO, carries the fix and `halt` for both books. The first `halt` decide is that night's, for the 2026-11-10 session. Cost accepted: on a day the CUSIP table cannot be proved, a CUSIP-format row inside a held or targeted name's window refuses the session |
+| How the gate goes back to `halt` (asked after the check was built, answered directly) | *(Superseded 2026-11-24, "Fix first, block later", below: never shipped; the fix goes out in `report`.)* **"Halt in tonight's release".** One release, after the day's verify and subject to release-check GO, carries the fix and `halt` for both books. The first `halt` decide is that night's, for the 2026-11-10 session. Cost accepted: on a day the CUSIP table cannot be proved, a CUSIP-format row inside a held or targeted name's window refuses the session |
 | The two acks, since `ca-ack` refuses a row the table proves foreign (answered directly) | **"Drop them unless needed".** No acks at the release. If the table cannot be proved on a day either row is in a window, it blocks again and comes to the team lead that day |
 
 ### Team lead, 2026-11-08 — research is not pass or fail
@@ -998,6 +998,21 @@ our active books", and then for an investor site around it.
 | The performance page's portfolio, 2026-11-24. **Supersedes** "The performance page, 2026-11-24" above | **"Overall portfolio (shown as one line), can split into 3 lines (our sleeves) and analyze below (all things institutional investors would look at)"; the event book "should be included automatically"; "auto updated with live P&L".** One composite line, each book from its first traded session (asset-weighted daily returns), with a switch to show the books; returns, risk (volatility, downside deviation, drawdowns and their length, one-day 95% VaR and expected shortfall), Sharpe, Sortino and Calmar, the distribution of daily returns, correlation, contribution and monthly returns. The event book joins on its after-close readings until its end-of-day history is collected. The page rebuilds every 30 minutes from the records |
 | Installing it | **"Yes, when the check passes."** An agent in the team lead's session runs the release check, merges, tags and installs only the site's own units, Caddy and the network rule for ports 80 and 443. No trading unit, `DRY_RUN` or `AUTO_ARMED` is touched |
 
+### Team lead, 2026-11-24 — the old pull requests and the corporate-action gate
+
+Answered through question prompts on 2026-11-24, after the seven pull requests open since
+October were compared with `main` (`EVIDENCE_LOG` E-2026-11-24-11).
+
+| question | ruling |
+|---|---|
+| Before any build: the state of the books on the VM | **"Make sure all our sleeves are live on the VM and armed."** Read back at 00:15 ET: the core, C4 and the events book armed, all eight events sleeves enabled, each with its decision file for the next session. Nothing was changed |
+| The clean-up of 2026-11-24 (`docs/STANDARD.md` A1.2): five worktrees, a dead worktree record and two merged GitHub branches | **"Go"**: each archive-tagged first (tags kept local) |
+| The seven pull requests open since October | **"Check each, then propose"**, then the rows below |
+| #68, the bond-ISIN fix and the CUSIP check, which also set both books' gate back to `halt`. **Supersedes** 2026-11-09's "Halt in tonight's release", which never shipped | **"Fix first, block later."** The fix ships with both books' `corporate_actions.mode` still `report` (the book files unchanged). `halt` returns only on a later ruling, after the team lead has read what the gate would have refused |
+| #73 (the halt alert's recipient from config), #23 (the stale-NAV note that would switch the missing-NAV hold off), #46 (the agent-desk design the nightly checks cite), #17 (the retired research loop) | **"Go on all four"**: #73 and #23 merged after the tests, #46 merged with a status box, #17 closed |
+| #70, row-level CRSP tables and the R2 inventories out of the tree | **"Update it now"**: brought up to date, the C4 families names table added, merged. The history rewrite stays the team lead's to push |
+| #3, the team's `data/` copy in R2: do the analysts still need it? | **"Yes, update it"** (row "Sharing the desk's data", 2026-10-26, above) |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
@@ -1049,3 +1064,4 @@ our active books", and then for an investor site around it.
 | 2026-11-23 | §5 records the public site's rulings: public, on the VM at `event-driven.quantt.ca`, its content, snapshots kept on the VM (superseding 2026-10-26's repository route). | the public site, for the team lead |
 | 2026-11-23 | §5 records the clean-up's go, AUTO_ARMED on a passing VERIFY, and the rulings after the events book's partial first send (disarm, hold, fix and release). | the 429 incident, for the team lead |
 | 2026-11-23 | §5 records "AUTO_ARMED now" for the events book, superseding "Yes, if VERIFY passes". | release-20261123-2, for the team lead |
+| 2026-11-24 | §5 records the rulings on the seven old pull requests and the corporate-action gate ("Fix first, block later", superseding 2026-11-09's "Halt in tonight's release"), the clean-up's go and the arming read-back. | the old pull requests, for the team lead |

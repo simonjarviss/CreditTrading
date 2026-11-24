@@ -724,8 +724,8 @@ until the team lead installs it; the steps are
   the core; the missing-NAV hold (2 sessions); drawdown in report mode, against
   the core's halve/kill levels since spec `c4_families.v3.20261102` (team lead
   2026-10-30; until v3 the spec named none and every decide recorded
-  UNMEASURED); the corporate-action gate in `halt`, with the core, since the
-  team lead's 2026-11-09 ruling (`report` from 2026-11-02, a ruling that followed the
+  UNMEASURED); the corporate-action gate in `report`, as the core, since the
+  team lead's 2026-11-02 ruling (it was `halt` until then; the ruling followed the
   measurement in the checklist's "corporate-action mode"). **No `data.stale_nav`**:
   CEFConnect is disabled for C4, and the spec's NAV-repeat mask is its defence.
 - **The refresh** is `fetch_daily --data-book c4 --book ops/books/c4_families_book.json`
@@ -763,6 +763,12 @@ until the team lead installs it; the steps are
   with the gate block removed and as released.
 
 ## As built (2026-10-28): the corporate-action gate, `halt` on paper
+
+**Mode today: `report` in both books** (team lead 2026-11-02; and 2026-11-24, "Fix first,
+block later": the bond-ISIN fix and the CUSIP check below ship in `report`, and `halt`
+returns only on a later ruling, after the team lead has read what the gate would have
+refused. That supersedes 2026-11-09's "Halt in tonight's release", which never shipped).
+The book json's `corporate_actions.mode` is the authority; this line is not.
 
 **The defect.** Alpaca paper processes no corporate actions: no splits and no
 mergers (`docs/REFERENCES.md` §12pc). IBKR paper processes none either, so paper

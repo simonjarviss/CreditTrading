@@ -67,15 +67,6 @@ two pins together are the core's no-op proof for the C4 integration: the
 session default_deps builds is cee16ad's with the gate absent and 35b429f's
 as released.
 
-RE-PINNED ON 1aab61d (2026-11-09). The team lead put the gate back to `halt` in the
-release carrying the bond-ISIN fix and the CUSIP check, so the released book json's gate
-mode changed and the `RELEASED_*` pins moved (the gate-absent pins remove that block and
-did not). `print_pins("released")` in a detached worktree of 1aab61d (`v8_spec` needs git)
-with the real data/ symlinked in, unseeded and under PYTHONHASHSEED 1, identical. Only
-`book`, `plan_json`, `run_record` and `send_json` moved, and on the synthetic panel all 50
-fields equal the 862b1d0 pins byte for byte once the gate's `"mode": "halt"` is mapped back
-to `"report"`: against a clear feed, halt and report trade the same.
-
 RE-PINNED ON 862b1d0 (merge of c4-integrate onto main, 2026-11-02). Main moved
 on after c4-integrate was cut: release-20261102-1 (862b1d0) is prod's code, the
 released book json sets the gate to `report` (team lead 2026-11-02) and names spec
@@ -627,31 +618,32 @@ REAL_PINNED = {
 }
 
 
-# RE-PINNED 2026-11-09 on 1aab61d (module docstring, RE-PINNED ON 1aab61d): the released
-# book json as is, the corporate-action gate in HALT (team lead 2026-11-09) against a clear
-# feed. Until then made on 862b1d0 with the gate in report, and before that on 35b429f
-# with it in halt.
+# PINNED 2026-11-02 on 862b1d0 (release-20261102-1, main): the released book json as
+# is, the corporate-action gate in REPORT (team lead 2026-11-02) against a clear feed
+# (module docstring, THE CORPORATE-ACTION GATE). `print_pins("released")` in a
+# `git archive 862b1d0` tree, unseeded and under PYTHONHASHSEED 1 (identical), then on
+# c4-rel (identical again). Until then made on 35b429f with the gate in halt.
 RELEASED_SYN_PINNED = {
  "panel": "172d57548229a8776518927875787e15e3c5476f9e57cd9df99e90c78738b277",
  "released": {
-  "book": "58a2cedf4025cc52e5b8287680f905fe81ad401162ea522e8a1b3f9e47018f4d",
+  "book": "2a942f2b83f054600ef2b642c9d82107d7c94bbf09d5bfd20371c65410113d6a",
   "complete|decide": {
    "exit": 6,
    "n_orders": 7,
    "nav_gate_csv": "a43fad90c4741dc4b1cc9cef3f7eb697a360c4779d3ac981ee8df218e287a845",
    "orders": "e628eb451ee60ed44c2a3432437a51e54f7759a97439d112ce119d11e3271024",
-   "plan_json": "8bb9b3afdce5efe5cbaf080a089085b885c4c85d15e111f4b9b7e216fe1de865",
+   "plan_json": "8451da694905286c408bd0edb65c7114dc55dffcbe863b207ca0ac0207201352",
    "plan_sha": "aa3cc8b1827344eac6a143892be4faa969df5bcb1431b09903b93b8c229a780e",
    "refusals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "run_record": "7fb02530f4f73be2673b8461440cd893ce0f136645c5134c1cb124108766c220",
+   "run_record": "dc6b959a8ec8dd31ac59491aa0e0e974542a5cd72fb8d8e6a55d11b1ce140315",
    "sent": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "status": "decided",
    "targets": "732894a285fe4821a443ae4ce9d9d609cc3e382edc831ccb239c03e155f5fb6f"
   },
   "complete|send": {
    "exit": 0,
-   "run_record": "049746ef2353e73cb3ede8e1ead785f5f7b84747bd2598bf55f1c1ea088eed9a",
-   "send_json": "26f2e40c25f4b9221ec335c43057ab1408f43ec0c320afbdcac19cf5556987e8",
+   "run_record": "87395a39cab28cd27326eaa2f773684d2499459c0cc2e1d1aaf89ea3298d017d",
+   "send_json": "c8247f662bb788c21d1bf1701a4641330bf23679d05a0b4e106b8403eb5dc05b",
    "sent": "5409c95d63e197ab80437a44fa71fb69e234f2578348b84b75cc9217193f6aaf"
   },
   "missing|eve": {
@@ -659,10 +651,10 @@ RELEASED_SYN_PINNED = {
    "n_orders": 0,
    "nav_gate_csv": "a43fad90c4741dc4b1cc9cef3f7eb697a360c4779d3ac981ee8df218e287a845",
    "orders": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "plan_json": "9025b800b4547f17532f711515855ad0affb3bc56e90cc0206a62efe5fa017a5",
+   "plan_json": "2510ad85d2f6fc70341c47fbce077bb02511a86718f8761ceace41d7d03cc3f6",
    "plan_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "refusals": "0d32802d42ce7301e6a64fd20245a41f44cf43cb6831cad8175bff9375748d66",
-   "run_record": "2839c3f73980377f7c6fd5631069e2c4ccf0834d85c7fe1ce585cff8d01a4c89",
+   "run_record": "638d3b0a452032271b710e277e7943acb496d67ffc734a15e974bfb7049fc5ee",
    "sent": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "status": "refused",
    "targets": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
@@ -672,10 +664,10 @@ RELEASED_SYN_PINNED = {
    "n_orders": 6,
    "nav_gate_csv": "8c5ca313d8bddeb168b5f6b56f8f909f90e67576f2309c9dde7157d758097d86",
    "orders": "8e83a5fab26db52c76fcfbc357e9d9674bb742cca88049155b4f2a64e7f63d9a",
-   "plan_json": "76c9fba86a6e4b44ceddb9a09ae7c17873f7ad54b72671e75c4704bde0d4fbe5",
+   "plan_json": "05ae1230eee06a990adf7e07418a1617b20811054710878d7207f1542a33b7d1",
    "plan_sha": "dabc5f382dc87baecf74fe4782e0c5f07902dc744eb7c5ae8bf5e0e59cdcb500",
    "refusals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "run_record": "21b51e0a303c1c0110149ff0d46e0ec280f3f5c21aac28bc3350f17d9f55e889",
+   "run_record": "8bffa8cc96573dc32871f0987aca903e8ba8398a23f1a6737410551ddc0ded21",
    "sent": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "status": "decided",
    "targets": "ad3fafebc78bba0add3d0f9c46c1c629d3d30a6e15a852a9cc04ed8594c0f9c0"
@@ -685,10 +677,10 @@ RELEASED_SYN_PINNED = {
    "n_orders": 6,
    "nav_gate_csv": "8c5ca313d8bddeb168b5f6b56f8f909f90e67576f2309c9dde7157d758097d86",
    "orders": "97bb764435fad43e59e6fe5be9480eccf28231974fd49bc8555bbdba79fa5a88",
-   "plan_json": "767a08295511de403a653159b8f1e0847adfb08994a8bc7df255beb09dc8db13",
+   "plan_json": "1e531bae16ad7ec1edd3233d6b5c6a183192e735a9caaa3b6e4c3d30c18b964d",
    "plan_sha": "11b246acc248978f8cfb0e8f0d9ba58b4cead022b23bfa9284e31de4d7db92cb",
    "refusals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "run_record": "2bc7af07ba73c5c2c75568c1aa1611533fbd283a9ba4768304cae0b4425b782f",
+   "run_record": "e32815e98847c81e5bc7c194bdd5400bbb45bd1fc32f2042ded5e9673e5db8c9",
    "sent": "178635e34eccb5810101fda355a3f703e6f4f17a7bef24cee399e3a9e60afbc5",
    "status": None,
    "targets": "ad3fafebc78bba0add3d0f9c46c1c629d3d30a6e15a852a9cc04ed8594c0f9c0"
@@ -699,24 +691,24 @@ RELEASED_SYN_PINNED = {
 # (test_combine_noop's PINNED_INPUT_V8). Until then made on 35b429f with v7.
 RELEASED_REAL_PINNED = {
  "released": {
-  "book": "726864316b95831a0bd4e937fdfca9b434fd0a0233fd5fb42772daaaac845bcf",
+  "book": "f40cb49aa6c380b6d1950575f74516165030a99eee5eeb5e0718a96662227b3c",
   "complete|decide": {
    "exit": 6,
    "n_orders": 6,
    "nav_gate_csv": "18734cfdbe33cc779a2277bef135248fcafa1c90de9b2a0c203ae82a729af304",
    "orders": "037bdf2b328be4ea86d1c6b581918fc8219d9f2e8a58e2d6da31edf1f0794830",
-   "plan_json": "e487b8891c575f3b6c89cd705951988c5602a8c2a2f6bd230137314eeb0c42e5",
+   "plan_json": "771a3fd00558ee44f066dd5e4e8a191348397ed05efe05428dcce505f476e71e",
    "plan_sha": "03509da3b3be0cc129fb1029116a58dac5a1ef26c90fb6590216d2b8ce3eebc7",
    "refusals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "run_record": "7203a3eea7a27517567ae4f249bdd6d9b48f3e0eaa049afe2c1d7dd77fdc9712",
+   "run_record": "ec6e656060a47b26e15d5d63dd4b6ecff468e4d16dd4549115248d7db061bee0",
    "sent": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "status": "decided",
    "targets": "a18254b6c48fd1c58d2c45eb84ea766c8f3df55368f6520ab4d9cf055ef34369"
   },
   "complete|send": {
    "exit": 0,
-   "run_record": "b984d77f01490e9b4484df78cacec9dbb03b4c7b099f797ebcc8cbd4d079185a",
-   "send_json": "ac79cbaf41f02bebda07f8c5ead10f4b31ccc76391d3d8b35b3d2b746c1147a3",
+   "run_record": "4d8e558a97fab4b2df5afd7bd18e1359969722a4ffa6d72388770cb2be5be8d7",
+   "send_json": "4c6221e465ef1f44e839b4d51d807ec6f5de8eb8717bf172c17ec92b06676af7",
    "sent": "8aaa3cd32318320fe85ad32276dbdb7c144fecbda9370e7e7d319ef50a666a50"
   },
   "missing|eve": {
@@ -724,10 +716,10 @@ RELEASED_REAL_PINNED = {
    "n_orders": 0,
    "nav_gate_csv": "18734cfdbe33cc779a2277bef135248fcafa1c90de9b2a0c203ae82a729af304",
    "orders": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "plan_json": "ebc033e4fffa97cb61840a9d42fa077860f0861ae1e4656d2954590d1002d55a",
+   "plan_json": "02515ffc4fd4e42db85691605570ad38b0cc5ff2e5e019ecd9bde249ba405023",
    "plan_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "refusals": "45fb724cc5c4f4b809d81561866376313a6deee1633f27933aef93a6c4e09b03",
-   "run_record": "4b3f6310e13909efbd05197da514b16d9ab0921c91f5dc79edd435afbb34ccd2",
+   "run_record": "6e20e49fb1270d57699f033574f6354c86cb24a15794d90c3ee46828f89184eb",
    "sent": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "status": "refused",
    "targets": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
@@ -737,10 +729,10 @@ RELEASED_REAL_PINNED = {
    "n_orders": 5,
    "nav_gate_csv": "3e17b6fc3741ec740818874935a3a078f2b300f7ee49a86dd1204828f1597100",
    "orders": "9b7f367c05673eb6e51a7617ca8c1e3df33a1ac8b670a8d0b2b3e41904843b07",
-   "plan_json": "e8bf8c0bc6146f4c278f80f5d13c2ccb9911c1e7cd4d57ed68a6c81fa7e92ad3",
+   "plan_json": "ce0d283983fb816adf875d84252a324c0c886d7e8db65dc1fd6440f52a043d4d",
    "plan_sha": "424ed40c4df4bf5ad166484b392ab1062cc948ad894722444930904bdf534a82",
    "refusals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "run_record": "15546d20d82f89ed2883d8f458762953c7538f9654d66ce0fe758cca3a7fea68",
+   "run_record": "049163f3202d3e035d0cdf5c95a6cedb809066e50466923212ef24cd57f09f7b",
    "sent": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
    "status": "decided",
    "targets": "5b9f106426de44eaeb18641a86c3f53452d223ae4fc466df6df9970d7dbc2036"
@@ -750,10 +742,10 @@ RELEASED_REAL_PINNED = {
    "n_orders": 5,
    "nav_gate_csv": "3e17b6fc3741ec740818874935a3a078f2b300f7ee49a86dd1204828f1597100",
    "orders": "71adff005d8e0ea1f5f46af244f5d3b547961dacc8c0a0c2a091ec089f6f1e67",
-   "plan_json": "a05ce64b928cf7fb6b30cc1264a78f53408bf10073b211cc67655ebac82b89b4",
+   "plan_json": "6fceb8179dc3273a80ecf5dcb7c5e9ce4fca08424f414783df4d36f121535629",
    "plan_sha": "f6095fcfa894c6253137a628d3d00190547065d3c51db6634ce0c33c80e2caee",
    "refusals": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-   "run_record": "2d9774febd8f082c7be98aa3516991a0290c01f13a635a650713f08e9daa5188",
+   "run_record": "d298afff744e3c41f39369b5c44f012d0bcda86e3360c7ffda46729f61785934",
    "sent": "6f7bccd5afbf21a8e7298cff39b9c1e238f3252e6a6da0c56204624bb01dfc85",
    "status": None,
    "targets": "5b9f106426de44eaeb18641a86c3f53452d223ae4fc466df6df9970d7dbc2036"
@@ -823,7 +815,7 @@ def _released_not_vacuous(got: dict, gate_absent: dict):
     assert r["complete|decide"]["plan_json"] != h["complete|decide"]["plan_json"]
 
 
-def test_synthetic_released_book_is_1aab61d(tmp_path, monkeypatch):
+def test_synthetic_released_book_is_862b1d0(tmp_path, monkeypatch):
     got = _released_synthetic_pins(tmp_path, monkeypatch)
     assert got["released"]["book"] == RELEASED_SYN_PINNED["released"]["book"], (
         "today's released book json is not the one this pin was made on: what the runner "
@@ -835,7 +827,7 @@ def test_synthetic_released_book_is_1aab61d(tmp_path, monkeypatch):
 
 @pytest.mark.skipif(not _real_panel_ready(), reason="real CEF panels absent (data/ is "
                                                      "gitignored); the synthetic pin still runs")
-def test_real_panel_released_book_is_1aab61d(tmp_path, monkeypatch):
+def test_real_panel_released_book_is_862b1d0(tmp_path, monkeypatch):
     from src.deploy.sleeves import cef_discount as cefmod
     real = {f: f.read_bytes() for f in (cefmod.PX_PATH, cefmod.NAV_PATH)}
     got = _released_real_pins(tmp_path, monkeypatch)
