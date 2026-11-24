@@ -159,6 +159,15 @@ def test_reports_refuses_a_clone_not_at_the_tag(rw, capsys):
     assert rc == 2 and "install the core at v2 first" in out
 
 
+def test_reports_read_the_tag_from_the_clone_on_the_second_spelling(rw, capsys):
+    """--reports reads the tag the same way as a book install: from the clone's own origin,
+    which is one of the accepted spellings (install_vm.clone_origin; the repository went
+    private, team lead, 2026-11-24). The first spelling here names nothing."""
+    nowhere = str(rw.layout.prod_dir.parent / "no-such-https-spelling.git")
+    rc, out = rw.run("--reports", seed=False, origin_url=(nowhere, str(rw.origin)), capsys=capsys)
+    assert rc == 0, out
+
+
 def test_reports_refuses_a_tag_without_the_files(rw, capsys):
     git("rm", "-q", "scripts/ops/data_qa.py", cwd=rw.dev)
     git("commit", "-q", "-m", "no qa", cwd=rw.dev)

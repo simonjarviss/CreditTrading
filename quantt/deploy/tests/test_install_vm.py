@@ -27,6 +27,7 @@ from __future__ import annotations
 import datetime as dt
 import fcntl
 import hashlib
+import inspect
 import os
 import shutil
 import sys
@@ -1300,6 +1301,40 @@ def test_clone_of_another_origin_is_refused(world, capsys):
     assert rc == 2 and "not of" in out
 
 
+def test_a_clone_on_the_second_spelling_installs_and_reads_its_tag_there(world, capsys):
+    """The repository went private (team lead, 2026-11-24), and the VM's clone moves from the
+    https spelling to the ssh one, read with a deploy key. The installer must accept the second
+    spelling AND read the tag from it. Reading the first spelling would fail once anonymous
+    https reads stop. Here the first accepted spelling names nothing, so only a read from the
+    clone's own origin can succeed. A moved tag is read there too (v2 below)."""
+    nowhere = str(world.layout.prod_dir.parent / "no-such-https-spelling.git")
+    spellings = (nowhere, str(world.origin))
+    rc, out = world.run("--apply", origin_url=spellings, capsys=capsys)
+    assert rc == 0, out
+    assert f"(origin {world.origin})" in out
+    world.commit_and_tag("v2", lambda d: (d / "ops/halt.py").write_text("# v2\n"))
+    rc, out = world.run("--apply", tag="v2", origin_url=spellings, capsys=capsys)
+    assert rc == 0, out
+    assert world.head() == world.tag_commit("v2")
+
+
+def test_a_clone_on_neither_spelling_is_refused_naming_both(world, capsys):
+    git("remote", "set-url", "origin", "/elsewhere.git", cwd=world.layout.prod_dir)
+    rc, out = world.run(origin_url=("/https-spelling.git", "/ssh-spelling.git"), capsys=capsys)
+    assert rc == 2
+    assert "'/https-spelling.git' or '/ssh-spelling.git'" in out
+
+
+def test_the_accepted_spellings_name_one_repository():
+    """https and ssh spellings of the same owner/name, and nothing else: accepting a second
+    repository would let prod install a tag from code the team lead never released."""
+    assert iv.ORIGIN_URLS == (iv.ORIGIN_URL, iv.ORIGIN_URL_SSH)
+    https = iv.ORIGIN_URL.removeprefix("https://github.com/")
+    ssh = iv.ORIGIN_URL_SSH.removeprefix("git@github.com:")
+    assert https == ssh == "quanttqueensu/CreditTrading.git"
+    assert inspect.signature(iv.main).parameters["origin_url"].default == iv.ORIGIN_URLS
+
+
 def test_tag_not_on_origin_is_refused(world, capsys):
     world.commit_and_tag("v2", lambda d: (d / "ops/halt.py").write_text("# v2\n"), push=False)
     rc, out = world.run("--apply", tag="v2", capsys=capsys)
@@ -1410,7 +1445,7 @@ def test_bootstrap_builds_the_layout_the_installer_expects():
     assert _sh_var("PROD").replace("${HOME_DIR}", str(home)) == str(lay.prod_dir)
     assert Path(_sh_var("VENV").replace("${HOME_DIR}", str(home))) / "bin" / "python" \
         == lay.venv_python
-    assert _sh_var("ORIGIN") == iv.ORIGIN_URL
+    assert _sh_var("ORIGIN") == iv.ORIGIN_URL_SSH          # the repository is private (RUNBOOK 8.14)
     assert _sh_var("TZ_NAME") == iv.REQUIRED_TZ
 
 

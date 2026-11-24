@@ -1468,7 +1468,7 @@ book: `dashboard/README.md`. It runs beside the books and is installed on its ow
 # on the VM. The site runs from its OWN clone, so releasing it never moves the trading clone.
 # First time only (a local clone of the prod clone, then GitHub as its origin):
 sudo -u quantt git clone -q /home/quantt/prod/quantt-alpaca /home/quantt/site/quantt-alpaca
-sudo -u quantt git -C /home/quantt/site/quantt-alpaca remote set-url origin https://github.com/quanttqueensu/CreditTrading.git
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca remote set-url origin git@github.com:quanttqueensu/CreditTrading.git   # ssh: the repository is private (8.14)
 # Each site release (T = a release tag that carries dashboard/):
 sudo -u quantt git -C /home/quantt/site/quantt-alpaca fetch -q --tags origin
 sudo -u quantt git -C /home/quantt/site/quantt-alpaca checkout -q --detach T
@@ -1508,6 +1508,57 @@ A failed build leaves the last good site in place and marks only `quantt-site.se
 failed. The usual causes are a record format change in a runner (the exporter names the file
 and field as UNMEASURED, which still builds) or a privacy refusal (`snapshot refused`: a
 record carried something §2 of `dashboard/README.md` forbids; read it before anything else).
+
+### 8.14 A private repository: the VM reads it with deploy keys (2026-11-24)
+
+**Why.** The team lead decided on 2026-11-24 to make `quanttqueensu/CreditTrading` private:
+"make github private for everyone except ethan solnik, me and my team ... i just dont want
+people copying our stratgey". An anonymous https fetch of a private repository fails. Three
+clones on the VM fetch from GitHub:
+
+| clone | user | fetches when | if the fetch fails |
+|---|---|---|---|
+| `/home/quantt/prod/quantt-alpaca` | `quantt` | each install (`install_vm` ls-remote, then fetch of tags) | the install refuses; trading stays on the installed tag |
+| `/home/quantt/site/quantt-alpaca` | `quantt` | each site release (8.13) | no site release; the 30-minute rebuild does not fetch and keeps going |
+| `/home/quantt-shadow/quantt-shadow` | `quantt-shadow` | every night (`shadow/deploy/nightly.sh`) | the books run on the code already there, with a WARNING; new `shadow` commits stop arriving |
+
+Core, C4 and the events book never fetch at run time (measured by the trading-ops session,
+2026-11-24). Cloudflare Workers Builds reads `main` through Cloudflare's GitHub app. An app
+installed on the organisation keeps its access to a repository that goes private. Only an
+org owner can see the app's repository list (org Settings, GitHub Apps).
+
+**How.** Each user gets its own read-only deploy key: one for `quantt`, used by the prod and
+site clones, and one for `quantt-shadow`. Each key is created on the VM, and its private half
+never leaves the VM and is never printed. The installer accepts the https spelling and the
+ssh one (`install_vm.ORIGIN_URLS`), and reads the tag from whichever spelling the clone uses.
+So the change ships in a release installed while the repository is still public. The order
+matters, and each step is checked before the next:
+
+1. Install a release that carries `install_vm.ORIGIN_URLS`. It runs over https: the old
+   installer fetches the tag, and 8.6's checkout step moves to the new installer.
+2. For each of `quantt` and `quantt-shadow`, on the VM: create `~/.ssh/github_deploy`
+   (ed25519, no passphrase, mode 600). Point `~/.ssh/config` at it for `Host github.com`
+   with `IdentitiesOnly yes`. Write GitHub's host keys into `~/.ssh/known_hosts` from
+   `gh api meta --jq '.ssh_keys[]'`, read on a trusted machine, never from a first
+   connection.
+3. Add each public half to the repository as a deploy key with write access OFF
+   (`gh api repos/quanttqueensu/CreditTrading/keys -f title=... -f key=... -F read_only=true`).
+4. As each user: `git ls-remote git@github.com:quanttqueensu/CreditTrading.git HEAD` must
+   print a commit. Then `git remote set-url origin git@github.com:quanttqueensu/CreditTrading.git`
+   in each of the three clones, and `git fetch --dry-run origin` in each must succeed.
+5. Only then make the repository private. Re-run step 4's ls-remote as each user, and an
+   install dry run (`install_vm --tag <installed tag>` without `--apply`), which must not
+   refuse on the origin.
+
+A fresh VM (`quantt/deploy/vm/bootstrap.sh`) clones over ssh, so step 2 and step 3 for
+`quantt` come before bootstrap. `shadow/deploy/install_shadow_vm.sh` on the `shadow` branch
+still clones over https: a fresh shadow install needs the `quantt-shadow` key and the ssh URL
+first.
+
+**Undo.** A deploy key is removed in the repository's Settings, Deploy keys, or with
+`gh api -X DELETE repos/quanttqueensu/CreditTrading/keys/<id>`. While the repository is
+public, `git remote set-url origin https://github.com/quanttqueensu/CreditTrading.git` in
+each clone restores the old path.
 
 ## Open questions (for the TL)
 

@@ -5836,3 +5836,13 @@ that adds it does not exist when it is written.
 - source: the release-check workflow's result, 2026-11-24 (run in a fresh worktree at `22cfa9b`); `.gitignore` @ `22cfa9b` (the `names_*.csv` line this entry's commit removes); `scripts/cef/c4_feasibility.py` @ `22cfa9b` (`NAMES_CSV`, also read by `scripts/cef/c4_families.py`, `scripts/data/fetch_alpaca_split_bars.py` and `scripts/data/stage_crsp_cef_families.py`)
 - supports: §5
 - status: supersedes the names-table part of E-2026-11-24-09. The table is restored byte for byte from `release-20261124-8`. Why the merge's own tests passed: `git rm --cached` left the file on disk in the worktree that ran them, so only a fresh checkout showed the fault. Splitting off its CRSP columns is `docs/ROADMAP.md` 7.37; the review's two other findings are 7.38 (the CUSIP table's shape checks, before any `halt`) and 7.39 (a deadline for the table's reads at the send)
+
+### E-2026-11-24-25 · Ruling: the repository goes private once the VM reads it with deploy keys; the installer accepts the ssh spelling first
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - GitHub traffic API, 2026-11-24: 1,276 clones from 338 sources in 14 days; CI, the VM and laptops are among them [S]
+- source: `quantt/deploy/install_vm.py` @ `8674d2a` (the exact-https origin check this entry's commit widens to `ORIGIN_URLS`, `clone_origin`); `docs/RUNBOOK.md` @ `8674d2a` (8.13's https set-url, which this commit moves to ssh and follows with 8.14); `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — a private repository" and four tests in `quantt/deploy/tests/`, which fail against `8674d2a`, all added in this entry's commit
+- supports: §5
+- status: current. The team lead's reason: "i just dont want people copying our stratgey". The order: the installer change ships in a release while the repository is public, then deploy keys for `quantt` and `quantt-shadow`, set-url to ssh in the three VM clones, then the switch, confirmed with the team lead just before. Already done: the team lead's fork `simonjarviss/CreditTrading` made private, and GitHub taken off the site (`release-20261124-16`, site session). Waiting on: an org owner turning on private forking for the analysts
