@@ -3510,16 +3510,22 @@ def _submit_one(c, o, log: Path, deps: Deps, out, *,
                                        "error": f"{type(le).__name__}: {le}"})
             return "stop", f"AmbiguousSubmit on {cid}; batch stopped"
         except OrderRejected as e:
-            if e.status != 429 or attempt == len(POST_429_WAITS_S):
+            if e.status != 429:
                 rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
                                        "error": str(e)})
                 return "rejected", e
+            # Every 429, the last one included, is waited out and the id read: a 429 can come
+            # back for an order Alpaca made (release check of 93021c8: the last attempt booked
+            # `rejected` unread, so a made order was never confirmed or polled). After the last
+            # one, "not found" is a rejection and nothing is resent.
             last_429 = e
-            wait = POST_429_WAITS_S[attempt]
+            final = attempt == len(POST_429_WAITS_S)
+            wait = POST_429_WAITS_S[min(attempt, len(POST_429_WAITS_S) - 1)]
             rec.append_jsonl(log, {"event": "rate_limited", "at": now(), "client_order_id": cid,
                                    "attempt": attempt + 1, "wait_s": wait, "error": str(e)})
             print(f"  RATE-LIMITED {cid} (HTTP 429): waiting {wait:.0f}s, then reading the id "
-                  "before any resend", file=out)
+                  + ("(the last attempt: it is not resent)" if final else "before any resend"),
+                  file=out)
             deps.sleep(wait)
             try:
                 found = c.order_by_client_id(cid)
@@ -3535,6 +3541,11 @@ def _submit_one(c, o, log: Path, deps: Deps, out, *,
                                    "order": _order_summary(found) if found else None})
             if found is not None:
                 return "accepted", found
+            if final:
+                rec.append_jsonl(log, {"event": "rejected", "at": now(), "client_order_id": cid,
+                                       "error": f"HTTP 429 on all {attempt + 1} attempts, read as not "
+                                                f"at Alpaca; not resent: {e}"})
+                return "rejected", e
         except Exception as e:
             rec.append_jsonl(log, {"event": "error", "at": now(), "client_order_id": cid,
                                    "error": f"{type(e).__name__}: {e}"})

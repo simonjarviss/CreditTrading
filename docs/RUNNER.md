@@ -132,9 +132,11 @@ settled these points. Alpaca facts, each with its source and status:
   host: a burst of `TRADING_BURST`, then `TRADING_MAX_PER_MIN` a minute, under Alpaca's
   200 [S] (`quantt/broker/alpaca.py`). A 429 to an order is not a rejection at first:
   `_submit_one` waits `POST_429_WAITS_S`, reads the order by its `client_order_id`, and
-  resends only if Alpaca has none. A found order counts as sent; a failed read stops the
-  batch; after the last wait it is a rejection, as above. The send window is checked
-  again before every resend.
+  resends only if Alpaca has none, up to four POSTs. A found order counts as sent. A
+  failed read is a rejection (never a resend) and the rest of the batch goes on. After
+  the fourth 429 the id is still read: found counts as sent, not found is a rejection.
+  The send window is checked again before every resend; a batch stopped there after a
+  429 records that order as `rejected` (the events VERIFY needs a terminal event).
 - **Gate 7** checks `shortable` only; hard-to-borrow is a preview warning (team
   lead, 2026-09-28).
 - **Gate 4** re-reads the Alpaca clock at the gate and again before every POST; the

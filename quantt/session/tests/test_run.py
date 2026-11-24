@@ -383,6 +383,21 @@ def test_a_429_that_never_clears_is_a_rejection_after_the_waits(tmp_path):
     assert run_rec["rejected"] == [bbb] and run_rec["sent"] == ["cef-20260929-AAA-1"]
 
 
+def test_a_429_on_the_last_attempt_is_still_looked_up(tmp_path):
+    """Release check of 93021c8: the fourth 429 was booked `rejected` without a read, so an order
+    Alpaca had made was never confirmed or polled. It is read, found, and counts as sent."""
+    bbb = "cef-20260929-BBB-1"
+    c, deps, state, _, sleeps = _armed_with_sleeps(
+        tmp_path, submit={bbb: [_r429(bbb), _r429(bbb), _r429(bbb), "429-created"]})
+    assert rn.run_session(BOOK, SPEC, deps) == rn.EXIT_SENT
+    assert [s[1] for s in c.submits()].count(bbb) == len(rn.POST_429_WAITS_S) + 1   # never a fifth
+    run_rec = json.loads(sorted((state / D.isoformat() / "runs").glob("*.json"))[-1].read_text())
+    assert bbb in run_rec["sent"] and run_rec["rejected"] == []
+    ev = _events(state, bbb)
+    i = ev.index("accepted")
+    assert ev[i - 2:i + 1] == ["rate_limited", "lookup", "accepted"] and ev.count("submit") == 4
+
+
 def test_a_429_whose_lookup_fails_is_a_rejection_and_the_rest_go(tmp_path):
     """Release check of 81e1071: stopping here left the order with no terminal event, so the
     events VERIFY could not book the day. A failed read after a 429 is a rejection (never a

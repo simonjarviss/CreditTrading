@@ -147,7 +147,12 @@ def main() -> int:
                        f"({am.get('last_fetch') or 'never fetched'})")
             body.append(f"  git {g.get('branch')}, {g.get('dirty')} file(s) uncommitted, {rel}.")
             if am and "UNMEASURED" not in am and am.get("behind"):
-                body.insert(0, f"  WARNING — this checkout is {am['behind']} commit(s) behind "
+                # Below any prod WARNING (two armed schedulers outranks a stale checkout;
+                # release check of 93021c8, 2026-11-23), above everything else.
+                at = 0
+                while at < len(body) and body[at].strip().startswith("WARNING"):
+                    at += 1
+                body.insert(at, f"  WARNING — this checkout is {am['behind']} commit(s) behind "
                                f"origin/main: the CLAUDE.md and rules this session loaded may be "
                                f"superseded. Work from origin/main (docs/STANDARD.md A1.1).")
     except Exception as e:  # a state this banner cannot format is said, not skipped
