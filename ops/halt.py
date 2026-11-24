@@ -79,8 +79,6 @@ def _halt_paths(book=None):
     return (HALT_PATH, "ops/HALT.md") if book is None else (
         scoped_path(book), f"ops/{scoped_path(book).name}")
 
-DEFAULT_ALERT_TO = "simon.jarvis0@gmail.com"
-
 
 # -- environment ----------------------------------------------------------
 
@@ -291,10 +289,10 @@ def _speak(phrase: str):
 def _email(subject: str, body: str):
     """SMTP over STARTTLS. Configured entirely from config/.env:
 
-        ALERT_EMAIL_TO=simon.jarvis0@gmail.com
+        ALERT_EMAIL_TO=you@example.com
         ALERT_SMTP_HOST=smtp.gmail.com
         ALERT_SMTP_PORT=587
-        ALERT_SMTP_USER=simon.jarvis0@gmail.com
+        ALERT_SMTP_USER=you@example.com
         ALERT_SMTP_PASS=<16-char Google app password, NOT the account password>
 
     Gmail rejects a plain account password over SMTP, so this needs an App
@@ -302,11 +300,16 @@ def _email(subject: str, body: str):
     Absent credentials is a configuration state, not an error — it returns a
     message saying so rather than raising, because a missing mail password must
     never stop a halt from being recorded.
+
+    No address is written in this file, because the repository is public (team
+    lead, 2026-11-09). With no ALERT_EMAIL_TO the alert goes to the SMTP account
+    itself: until that date a hard-coded recipient filled this gap, and a machine
+    that sets only the SMTP pair must not lose its halt alerts at this change.
     """
-    to = _cfg("ALERT_EMAIL_TO", DEFAULT_ALERT_TO)
     host = _cfg("ALERT_SMTP_HOST", "smtp.gmail.com")
     port = int(_cfg("ALERT_SMTP_PORT", "587"))
     user = _cfg("ALERT_SMTP_USER")
+    to = _cfg("ALERT_EMAIL_TO", user)
     password = _cfg("ALERT_SMTP_PASS")
     if not (user and password):
         return ("not configured — add ALERT_SMTP_USER and ALERT_SMTP_PASS "
