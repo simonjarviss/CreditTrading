@@ -190,11 +190,7 @@ def overview(snap: dict) -> str:
                '<a class="link-arrow" href="/research/">How we research</a></div>'
                '<div class="sec-body">' + stages_html() + '</div></div></section>')
     members = json.loads((CONTENT / "team.json").read_text())["members"]
-    people = "".join(
-        f'<div class="person"><h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div>'
-        f'<p>{escape(m["bio"])}</p>'
-        + (f'<a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a>' if m.get("linkedin") else "")
-        + '</div>' for m in members)
+    people = "".join(person_card(m) for m in members)
     team = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
             '<div class="eyebrow">The team</div><h2>Who we are</h2>'
             '<p class="lede">Four Queen\'s University students at QUANTT, covering portfolio management, risk, '
@@ -328,15 +324,18 @@ def library(lib: dict) -> str:
 
 # ----------------------------------------------------------------------- team --
 
+def person_card(m: dict) -> str:
+    """One team member: headshot, name and LinkedIn (team lead, 2026-11-23: "use the same headshots
+    on quantt.ca"; "delete the teams bios, just name and linkedin"; dashboard/content/team.json)."""
+    photo = (f'<img class="headshot" src="{escape(m["photo"])}" alt="{escape(m["name"])}" width="480" height="480" '
+             'loading="lazy" decoding="async">' if m.get("photo") else "")
+    li = (f'<p><a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>'
+          if m.get("linkedin") else "")
+    return f'<div class="person">{photo}<h3>{escape(m["name"])}</h3>{li}</div>'
+
+
 def team(t: dict) -> str:
-    cards = []
-    for m in t["members"]:
-        initials = "".join(w[0] for w in m["name"].split()[:2])
-        li = (f'<p><a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>'
-              if m.get("linkedin") else "")
-        cards.append(f'<div class="person"><div class="avatar" aria-hidden="true">{escape(initials)}</div>'
-                     f'<h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div>'
-                     f'<p>{escape(m["bio"])}</p>{li}</div>')
+    cards = [person_card(m) for m in t["members"]]
     head = page_head("Team", "The team",
                      "Four students at Queen's University, part of QUANTT, the Queen's University Algorithmic Network "
                      "and Trading Team.")

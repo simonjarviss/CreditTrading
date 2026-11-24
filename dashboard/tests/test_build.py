@@ -83,7 +83,9 @@ def test_text_from_a_record_cannot_inject_markup(snap):
 
 def test_the_page_loads_nothing_from_another_origin(snap):
     h = page(snap)
-    assert not re.search(r"(src|href)\s*=\s*[\"']?(https?:)?//", h, re.I)
+    # what the page LOADS: src= and <link href=. A plain link to another site (LinkedIn, GitHub) loads nothing.
+    assert not re.search(r"(\bsrc\s*=|<link\b[^>]*\bhref\s*=)\s*[\"']?(https?:)?//", h, re.I)
+    assert not re.search(r"url\(\s*[\"']?(https?:)?//", h, re.I)
     assert re.findall(r"<script[^>]*>", h) == ['<script src="/static/site.js" defer>']
 
 

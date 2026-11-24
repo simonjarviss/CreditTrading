@@ -128,9 +128,9 @@ def risk_block(r: dict) -> str:
     rows = []
     if v["gross"] is not None:
         cap = f" (limit {v['cap']:.2f}x)" if v["cap"] is not None else ""
-        rows.append(("Gross exposure", f"{v['gross']:.2f}x equity{cap}"))
+        rows.append(("Gross exposure, risk report", f"{v['gross']:.2f}x equity{cap}"))
     if v["net"] is not None:
-        rows.append(("Net exposure", f"{v['net']:+.2f}x equity"))
+        rows.append(("Net exposure, risk report", f"{v['net']:+.2f}x equity".replace("-", "\u2212")))
     if v.get("largest_share") is not None:
         rows.append(("Largest position", f"{pct(v['largest_share'], dp=1)} of equity"))
     if v["top3_share"] is not None:
@@ -175,10 +175,14 @@ def session_block(r: dict) -> str:
     rows = [("Session", f"{escape(status.capitalize())}")]
     if p["n"]:
         rows.append(("Positions after the close", f'{p["n"]} ({p["n_long"]} long, {p["n_short"]} short)'))
-        if p["gross_x"] is not None:
-            rows.append(("Gross exposure", f'{p["gross_x"]:.2f}x equity ({usd(p["gross_usd"])})'))
+        if p["n_unpriced"]:
+            one = p["n_unpriced"] == 1
+            rows.append(("Exposure at the close", f'not measured: {p["n_unpriced"]} '
+                                                  f'{"position has" if one else "positions have"} no close on record'))
+        elif p["gross_x"] is not None:
+            rows.append(("Gross exposure at the close", f'{p["gross_x"]:.2f}x equity ({usd(p["gross_usd"])})'))
             net_x = f'{p["net_x"]:+.2f}'.replace("-", "\u2212")
-            rows.append(("Net exposure", f'{net_x}x equity ({usd(p["net_usd"], True)})'))
+            rows.append(("Net exposure at the close", f'{net_x}x equity ({usd(p["net_usd"], True)})'))
     else:
         rows.append(("Positions after the close", "none"))
     if o["n"]:
@@ -188,13 +192,8 @@ def session_block(r: dict) -> str:
             rows.append(("Shares filled", pct(o["fill_rate_shares"], dp=1)))
     else:
         rows.append(("Orders", "none needed"))
-    unpriced = ""
-    if p["n_unpriced"]:
-        one = p["n_unpriced"] == 1
-        unpriced = (f' {p["n_unpriced"]} {"position has" if one else "positions have"} no close on record and '
-                    f'{"is" if one else "are"} left out of the exposure figures.')
     return (f"<h3>Session of {fmt_date(v['date'])}</h3>" + tbl(["Measure", "Value"], rows)
-            + f'<p class="meta">Prices are the {escape(v["close_basis"])}.{unpriced}{notes} Holdings and '
+            + f'<p class="meta">Prices are the {escape(v["close_basis"])}.{notes} Holdings and '
               'orders are reported in aggregate.</p>' + prov(r))
 
 
