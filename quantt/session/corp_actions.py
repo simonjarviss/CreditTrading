@@ -202,6 +202,27 @@ longer in the feed is harmless. A file that cannot be read or does not parse
 ruling. Any type can be acknowledged; acknowledging a split or a merger clears
 the halt without fixing the count, which docs/RUNBOOK.md §6.1 says.
 
+A BOND IS NOT A MISSING PARTY (team lead, 2026-11-08, "Start the fix"). A party
+field that holds a bond's ISIN, as 58 of the 208 unreadable rows do over process
+dates 2025-11-01 -> 2028-11-08, was read as a missing party and judged as each of
+the gate's names, so a partial call on a corporate bond could halt the book.
+`AlpacaClient.corporate_actions` now classifies a checked, US, CUSIP-corroborated,
+debt-format ISIN as a bond (`alpaca._ca_bond_isin`): it never reaches `parties`, the
+gate records the row under `bond_rows` and it blocks nothing. Every other value
+that is not a ticker is still a missing party and still judged as each name
+(UNRESOLVED ROWS, `blocking_events`). `saw` on the record says what such a row
+actually carried.
+
+A CUSIP IS PROVED FOREIGN, OR IT STAYS UNRESOLVED (team lead, 2026-11-09, "Build a
+check against our CUSIPs"; `alpaca._CaCusipTable`). A CUSIP-format party, digit-led or
+letter-led, leaves the unresolved list only when the book's table of every CUSIP seen
+for every fund across a stated lookback proves it names none of ours: the record then
+lists it under `foreign_cusip_rows`, and it blocks nothing. Otherwise it stays
+unresolved, naming the fund and the reason, and a party matching a CUSIP of ours
+(a superseded one included) also names that fund. A table that cannot be read or
+cannot confirm a fund's CUSIP change proves nothing, so every such row stays
+unresolved: never "not ours". The table's state is the record's `cusip_table`.
+
 BE CONSERVATIVE: EVERY PARTY BLOCKS. A held or targeted name blocks in any role
 the event gives it, on the window its role and match call for (TWO WINDOWS). That
 includes the ACQUIRER in all three merger types, a cash merger's included: its
@@ -437,6 +458,8 @@ def blocking_events(events, *, held: dict, targets, asof: dt.date,
                          "undated": {**e.get("undated", {}), **e.get("faults", {})}}
                     if field is not None:
                         b.update(unresolved=field, row_id=e.get("row_id"))
+                        if e.get("saw", {}).get(field):
+                            b["saw"] = e["saw"][field]
                     out.append(b)
             continue
         for u in e.get("missing", ()):
@@ -445,12 +468,15 @@ def blocking_events(events, *, held: dict, targets, asof: dt.date,
                 if m is None:
                     continue
                 rule, (lo, hi), hits = m
-                out.append({"symbol": sym, "role": u["role"], "held": sym in held,
-                            "unresolved": u["field"], "row_id": e.get("row_id"),
-                            "id": e["id"], "type": e["type"], "date": e["date"],
-                            "date_field": e["date_field"], "process_date": e["process_date"],
-                            "rule": rule, "in_window": hits, "window": [lo, hi],
-                            "parties": e["parties"]})
+                b = {"symbol": sym, "role": u["role"], "held": sym in held,
+                     "unresolved": u["field"], "row_id": e.get("row_id"),
+                     "id": e["id"], "type": e["type"], "date": e["date"],
+                     "date_field": e["date_field"], "process_date": e["process_date"],
+                     "rule": rule, "in_window": hits, "window": [lo, hi],
+                     "parties": e["parties"]}
+                if e.get("saw", {}).get(u["field"]):
+                    b["saw"] = e["saw"][u["field"]]   # what the row carried there
+                out.append(b)
         for sym, role in e["parties"]:
             if sym not in win:
                 continue
@@ -532,10 +558,14 @@ def check(fetch, closed_orders, positions: dict, targets, asof: dt.date,
     `universe` (the book's symbols; run.py always passes it): the fetch skips a
     row whose every party symbol is present and none ours, while a non-party
     field is malformed, and hands it back (`skipped_malformed` in the record,
-    only when there is one); and returns a row with a missing party symbol as
+    only when there is one); returns a row with a missing party symbol as
     an UNRESOLVED event (docs/SYSTEM.md §5, team lead 2026-11-02 (unresolved corporate-action rows)), which `blocking_events` judges as each of
     the gate's names and the record lists under `unresolved`, only when there
-    is one. None, the default, is the read
+    is one; and hands back a row whose party is a bond by its ISIN (`bond_rows`
+    in the record, only when there is one: A BOND IS NOT A MISSING PARTY in
+    the module docstring) or a CUSIP proved foreign (`foreign_cusip_rows`, and
+    the table's state as `cusip_table`, only when the table was read: A CUSIP
+    IS PROVED FOREIGN). None, the default, is the read
     before the 2026-10-29 ruling: any malformed row raises. `acks`
     (`parse_acks`, or None for no file): a blocking pair whose action id is
     acknowledged, and whose every current feed row equals the acknowledged row
@@ -594,8 +624,24 @@ def check(fetch, closed_orders, positions: dict, targets, asof: dt.date,
     blocking = still
     out = {**rec, "status": BLOCKING if blocking else CLEAR, "query": [qs, qe],
            "events": events, "blocking": blocking}
-    if skipped:
-        out["skipped_malformed"] = skipped
+    # The fetch's one record list holds several things, kept apart here: a skip
+    # record carrying `bonds` is a row naming a bond by its ISIN, one carrying
+    # `foreign_cusips` a row with a CUSIP proved foreign, `cusip_table` the table's
+    # state (`alpaca._ca_skip_record`, `_CaCusipTable`), and the rest malformed rows.
+    recs = list(skipped or [])
+    table = next((k["cusip_table"] for k in recs if "cusip_table" in k), None)
+    recs = [k for k in recs if "cusip_table" not in k]
+    malformed = [k for k in recs if "bonds" not in k and "foreign_cusips" not in k]
+    bond_rows = [k for k in recs if "bonds" in k]
+    foreign_rows = [k for k in recs if "foreign_cusips" in k and "bonds" not in k]
+    if malformed:
+        out["skipped_malformed"] = malformed
+    if bond_rows:
+        out["bond_rows"] = bond_rows
+    if foreign_rows:
+        out["foreign_cusip_rows"] = foreign_rows
+    if table is not None:
+        out["cusip_table"] = table
     unresolved = [e for e in events if "row_id" in e]      # every irregular row
     if unresolved:
         # UNRESOLVED ROWS (blocking_events): each, and whether it blocked.
@@ -607,7 +653,8 @@ def check(fetch, closed_orders, positions: dict, targets, asof: dt.date,
                               "undated": e.get("undated"), "faults": e.get("faults"),
                               "conflict": bool(e.get("conflict")),
                               "blocks": e["id"] in blocked,
-                              "acknowledged": e["id"] in would_block and e["id"] not in blocked}
+                              "acknowledged": e["id"] in would_block and e["id"] not in blocked,
+                              **({"saw": e["saw"]} if e.get("saw") else {})}
                              for e in unresolved]
     if acked:
         out["acknowledged"] = [{**b, "ack": acks[b["id"]]} for b in acked]
@@ -637,8 +684,9 @@ def _event_text(b: dict) -> str:
                 f"({'held' if b['held'] else 'target'}), treated as inside every window; the "
                 f"team lead clears it with ca-ack --id {b['id']}")
     elif "unresolved" in b:
+        why = f" (read as missing: {b['saw']})" if b.get("saw") else ""
         text = (f"an UNRESOLVED {b['type']} {b['id']} (row id {b['row_id']!r}; its "
-                f"{b['unresolved']} is missing; present {b['parties']}), its missing "
+                f"{b['unresolved']} is missing{why}; present {b['parties']}), its missing "
                 f"{b['role']} treated as {b['symbol']} ({'held' if b['held'] else 'target'}) "
                 f"({b['date_field']} {b['date']}, process_date {b['process_date']}; "
                 f"{b['rule']} window {b['window'][0]}..{b['window'][1]}); the team lead "
@@ -693,11 +741,24 @@ def lines(rec: dict) -> list[str]:
                    f"the team lead at {a['acked_utc']}: {a['reason']}")
     for e in rec.get("unresolved", []):
         if not e["blocks"] and not e["acknowledged"]:
+            saw = f"; saw {e['saw']}" if e.get("saw") else ""
             out.append(f"{head}: UNRESOLVED, recorded only: {e['type']} {e['id']} (row id "
-                       f"{e['row_id']!r}; {[m['field'] for m in e['missing']]} missing; "
+                       f"{e['row_id']!r}; {[m['field'] for m in e['missing']]} missing{saw}; "
                        f"undated {e['undated']}; "
                        f"present {e['parties']}; {e['date_field']} {e['date']}): treated as "
                        f"each of the gate's names, it blocks for none")
+    if rec.get("bond_rows"):
+        out.append(f"{head}: {len(rec['bond_rows'])} row(s) name a bond by its ISIN, not a "
+                   f"share of any fund (recorded under bond_rows; none blocks): "
+                   f"{[k['id'] for k in rec['bond_rows']]}")
+    if rec.get("foreign_cusip_rows"):
+        out.append(f"{head}: {len(rec['foreign_cusip_rows'])} row(s) carry only a CUSIP proved "
+                   f"foreign to this book (recorded under foreign_cusip_rows; none blocks): "
+                   f"{[k['id'] for k in rec['foreign_cusip_rows']]}")
+    table = rec.get("cusip_table")
+    if table is not None and table["status"] != "PROVED":
+        out.append(f"{head}: CUSIP TABLE NOT PROVED ({table['n_reasons']} reason(s)): every "
+                   f"CUSIP-format row stays unresolved: {table['reasons'][:3]}")
     for k in rec.get("skipped_malformed", []):
         bad = ", ".join(f"{f}={v!r}" for f, v in k["malformed"].items())
         out.append(f"{head}: SKIPPED a malformed row: {k['type']} id {k['id']!r}, malformed "

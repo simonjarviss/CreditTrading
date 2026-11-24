@@ -373,6 +373,13 @@ from a named source; [doc] copied from a named note.
 - **The loop.** Follow-ups come first. It no longer admits anything: it writes a scorecard and the team lead decides.
 - **Not changed.** The live book's stops, real-capital admission, the analysts' process and the guides.
 
+**The corporate-action gate: the bond-ISIN fix and the three unresolved rows** (branch `ca-isin-fix`, not released; `results/ops/CA_UNRESOLVED_ROWS_2026-11-08.md`; E-2026-11-08-30). On the team lead's ruling of 2026-11-08, "Start the fix".
+- **The bug.** `_ca_symbol` accepts only ticker-shaped values, and `_ca_read` turned every other value into a *missing party*, judged as each of the gate's names. The feed's 58 bond ISINs (57 partial calls, one reorganization) therefore read as any fund of ours.
+- **The fix.** A checked, US, CUSIP-corroborated, debt-format ISIN is a bond: it never reaches the party list, the row is recorded under `bond_rows`, and it blocks nothing. Anything else that is not a ticker stays unresolved; a CUSIP among them, and the record now says what the field held.
+- **The three rows.** db0847b7 (the Office Properties 8.375% 2029 bond) is resolved by the fix. e34ddd44 (SNTI's CVRs) and 6abeb209 (the JAGX Series R conversion) are CUSIP-format and stay unresolved; they are for the team lead to acknowledge. None of the three can be one of our funds.
+- **Found:** the fix removes only part of the problem. A flat book would still be refused on 15 of 23 sessions (10-01..11-02, down from 17) and 4 of 5 (11-03..11-09): every row still blocking is CUSIP-format, which needs its own ruling before `halt` returns (the note, §3).
+- **No mode changed, no `ca-ack` run.** Both books stay in report.
+
 ## 2026-11-09 (Mon)
 
 **The mission** (`docs/SYSTEM.md` §5, 2026-11-09; `docs/MISSION.md`; `results/report/EVIDENCE_LOG.md` E-2026-11-09-01, -02).
@@ -395,6 +402,18 @@ from a named source; [doc] copied from a named note.
 - **What.** `scripts/ops/data_qa.py` (Q1–Q8, per book) and `scripts/ops/risk_daily.py` (per account), wrapping the existing readers, on VM timers installed by a separate `install_vm --reports` (`docs/RUNBOOK.md` 8.11). Book installs and rendered units are byte-identical to before.
 - **Thresholds** are derived on the fit panels to the design's budget; the calibration note says what falls short: Q3 cannot catch one-row stale copies, Q6 13/22 on the core, Q4's split-basis names are not panel steps (`results/ops/DATA_QA_CALIBRATION_2026-11-08.md`).
 - **Push on ACT only** through the existing SMTP path; until the team lead adds the two vault secrets, a fired stop says `ACT: notification NOT delivered` and fails loudly.
+
+**The corporate-action gate: the CUSIP check** (branch `ca-isin-fix`, not released; `results/ops/CA_UNRESOLVED_ROWS_2026-11-08.md` §5; E-2026-11-09-30).
+- **Rulings** (`docs/SYSTEM.md` §5, 2026-11-09): "Build a check against our CUSIPs", and "Accept all three" on the rows.
+- **The check.** A CUSIP-format party, digit-led or letter-led, leaves the unresolved list only when a run-time table of every CUSIP seen for every fund in the book's universe, over a stated lookback (731 days), proves it names none of ours. Anything short of proof, a fund or read it cannot confirm included, stays unresolved and names why.
+- **Measured** (feed as read today; the table as read today, not as each past session could read it): `halt` over 10-01..11-09 would have refused a flat book 21 of 28 sessions before any fix, 19 with the ISIN fix alone, and 0 now. The core as actually held: 25 of 28, 25, then 5, all on two `NOEA:` worthless removals that left the core's window after 10-07. C4 as held: 0 in the sessions it has run (11-06 and 11-09 are upper bounds; its keys are not on this machine).
+- **Open.** A review and release of this branch, which also sets both books' `mode` back to `halt` and updates the two pins. Both books stay in `report` until then. `e34ddd44` and `6abeb209` are now proved foreign, so `ca-ack` refuses them while the table is proved: the acks are needed only on a day it is not.
+
+**The corporate-action gate goes back to `halt`** (`docs/SYSTEM.md` §5, 2026-11-09; E-2026-11-09-31).
+- **Rulings.** "Halt in tonight's release", and the acks for e34ddd44 and 6abeb209 are dropped unless needed: while the CUSIP table is proved those rows are foreign and `ca-ack` would refuse them.
+- **The change.** Both books' `corporate_actions.mode` is `halt`, with the pins moved in the same commit. The session-output pins were re-derived on 1aab61d. Against a clear feed only the gate's mode string differs, so halt and report trade the same.
+- **What the release leaves out.** It is cut from this branch, not from `main`, so te4's dark code is not in it. The nightly checks (PR #65) get their own review and release.
+- **The release-check said NO-GO on dd2c084, and the fixes are at 4a3cf51** (E-2026-11-09-32). Four defects in the CUSIP table, each reproduced and each with a test that fails on dd2c084. The first could have passed a row of ours as foreign: a renamed fund's old CUSIP was never held. Re-measured, the table is still PROVED with the same counts, so no fund of ours was affected. The check's fifth reason was the preview on the laptop's stale panels; it needs current panels from the VM, which did not answer ssh that afternoon.
 
 ## 2026-11-10 (Tue)
 
