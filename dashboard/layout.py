@@ -156,6 +156,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <div class="foot-contact"><h4>Contact</h4><p>Simon Jarvis<br>Portfolio Manager</p><p><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
 </div>
 <p class="disclaimer">{escape(DISCLAIMER)}</p>
+<p class="foot-credits">{photo_credits()}</p>
 <p class="foot-base"><span>&copy; {dt.date.today().year} {SITE_NAME}</span><span>QUANTT &middot; Queen's University, Kingston, Ontario</span></p>
 </div></footer>
 </body>
@@ -171,7 +172,8 @@ PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "h
 # views that fit the darker vibe"; 2026-11-24: "a darker type image of Toronto's skyline / financial
 # district but it's day-ish"; "use toronto photos for research and contact pages"). All from Wikimedia
 # Commons, fetched 2026-11-24 at 2400 px and re-encoded to WebP with their metadata removed. CC BY-SA
-# requires the credit and licence beside the photograph; the CC0 one is credited as a courtesy.
+# requires the author and licence to be credited, so the credits are in the footer of every page
+# (team lead, 2026-11-24: take the credit off the photographs); the CC0 one is credited as a courtesy.
 PHOTO_CREDITS = {
     "toronto-skyline-day": ("Dlsz", "CC BY-SA 4.0",
                             "https://commons.wikimedia.org/wiki/File:View_of_Toronto_Skyline_from_Toronto_Islands.jpg"),
@@ -192,15 +194,19 @@ GITHUB_MARK = ('<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="tru
                '1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>')
 
 
+def photo_credits() -> str:
+    """One line naming every photograph not taken by QUANTT, its author and licence, linked to its page."""
+    return "Photographs from Wikimedia Commons: " + "; ".join(
+        f'<a href="{escape(url)}" rel="noopener">{escape(who)}</a> ({escape(lic)})'
+        for who, lic, url in PHOTO_CREDITS.values()) + "."
+
+
 def photo_style(key: str) -> str:
     return f' style="background-image:url(/static/img/{PHOTOS.get(key, "hero-office")}.webp)"'
 
 
 def page_head(eyebrow: str, title: str, lede: str, extra: str = "", photo: str = "") -> str:
     key = photo or eyebrow.lower()
-    c = PHOTO_CREDITS.get(PHOTOS.get(key, ""))
-    credit = (f'<p class="credit">Photograph: <a href="{escape(c[2])}" rel="noopener">{escape(c[0])}</a>, '
-              f'{escape(c[1])}</p>' if c else "")
     return (f'<section class="page-head"{photo_style(key)}><div class="wrap">'
             f'<div class="eyebrow">{escape(eyebrow)}</div>'
-            f'<h1>{escape(title)}</h1><p class="lede">{escape(lede)}</p>{extra}</div>{credit}</section>')
+            f'<h1>{escape(title)}</h1><p class="lede">{escape(lede)}</p>{extra}</div></section>')

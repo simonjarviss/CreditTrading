@@ -1,5 +1,5 @@
 {
- "_note": "Names and LinkedIn links as published on quantt.ca (content/team/2026-2027, read 2026-11-23); titles kept for reference, not shown. Headshots are quantt.ca's own (https://quantt.ca/team/photos/<name>, fetched 2026-11-23, 600 px JPEG), re-encoded to 480 px WebP with their metadata removed (team lead, 2026-11-23: \"use the same headshots on quantt.ca\"). Bios removed (team lead, 2026-11-23: \"just name and linkedin\").",
+ "_note": "Names and LinkedIn links as published on quantt.ca (content/team/2026-2027, read 2026-11-23); titles shown under each name (team lead, 2026-11-24). Headshots are quantt.ca's own (https://quantt.ca/team/photos/<name>, fetched 2026-11-23, 600 px JPEG), re-encoded to 480 px WebP with their metadata removed (team lead, 2026-11-23: \"use the same headshots on quantt.ca\"). Bios removed (team lead, 2026-11-23: \"just name and linkedin\").",
  "members": [
   {"name": "Simon Jarvis", "title": "Portfolio Manager", "linkedin": "https://uk.linkedin.com/in/jarvissimon",
    "photo": "/static/img/team/simon-jarvis.webp"},

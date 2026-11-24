@@ -79,9 +79,10 @@ def stages_html() -> str:
 # ------------------------------------------------------------------- overview --
 
 def overview(snap: dict) -> str:
-    """The front page. Its figures are the portfolio's (build.portfolio: each book from its first
-    traded session, the event book included once it trades; team lead, 2026-11-24). A portfolio
-    withheld because a book's record could not be read shows no portfolio figure at all."""
+    """The front page. Its figures are the portfolio's (build.portfolio: from build.RECORD_START, the
+    first session on which all three books trade; team lead, 2026-11-24). Until that session has
+    closed there is no portfolio figure, and the section says when the record starts and shows the
+    record before it."""
     pf = perf.portfolio(snap)
     figs = []
     n_books, n_unread = books_trading(snap)
@@ -129,7 +130,7 @@ def overview(snap: dict) -> str:
                 'trades at the next close and reports each morning, with no manual intervention.</p>'
                 '<a class="link-arrow" href="/research/">How we research</a></div>'
                 f'<div class="sec-body"><div class="rows">{"".join(rows_html)}</div></div></div></section>')
-    performance = ""
+    start = fmt_short(perf.RECORD_START)
     if pf["p"]:
         line = [{"name": "Portfolio", "color": "#111418", "bold": True,
                  "points": M.index_points(pf["dated"], pf["base"])}]
@@ -137,13 +138,17 @@ def overview(snap: dict) -> str:
         # table (release-check review of 455eff4: the overview showed both without saying so).
         missing = "".join(f'<p class="gap">Not included tonight: {escape(b["title"])} ({escape(w)}).</p>'
                           for b, w in pf["blocked"])
-        performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
-                       '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'
-                       '<p class="lede">The portfolio\'s cumulative return, each book from its first traded session, '
-                       'from Alpaca\'s records, gross of the costs a paper account does not charge.</p>'
-                       '<a class="link-arrow" href="/performance/">Performance and risk</a></div>'
-                       '<div class="sec-body">' + missing + charts.line_chart(line, "Cumulative return of the portfolio", fmt="pct")
-                       + '</div><div class="sec-full">' + perf.summary_table(snap) + '</div></div></section>')
+        body = (missing + charts.line_chart(line, "Cumulative return of the portfolio", fmt="pct")
+                + '</div><div class="sec-full">' + perf.summary_table(snap))
+    else:
+        body = (f'<p>The portfolio\'s record starts with the {start} session. Its first figures appear once that '
+                'session has closed.</p></div><div class="sec-full">' + perf.earlier_record(snap))
+    performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
+                   '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'
+                   f'<p class="lede">The portfolio\'s cumulative return from the {start} session, the first on which all '
+                   'three books trade, from Alpaca\'s records, gross of the costs a paper account does not charge.</p>'
+                   '<a class="link-arrow" href="/performance/">Performance and risk</a></div>'
+                   '<div class="sec-body">' + body + '</div></div></section>')
     opportunity = ('<section class="section"><div class="wrap split">'
                    '<img class="photo" src="/static/img/group-lights.webp" alt="QUANTT members at a firm visit, January 2026" loading="lazy">'
                    '<div><div class="eyebrow">The opportunity</div><h2>Why the mispricing persists</h2>'
@@ -340,13 +345,15 @@ def library(lib: dict) -> str:
 # ----------------------------------------------------------------------- team --
 
 def person_card(m: dict) -> str:
-    """One team member: headshot, name and LinkedIn (team lead, 2026-11-23: "use the same headshots
-    on quantt.ca"; "delete the teams bios, just name and linkedin"; dashboard/content/team.json)."""
+    """One team member: headshot, name, title and LinkedIn (team lead, 2026-11-23: "use the same
+    headshots on quantt.ca"; "delete the teams bios, just name and linkedin"; 2026-11-24: "add
+    portfolio manager under me, and quantitative trading analyst under the other 3")."""
     photo = (f'<img class="headshot" src="{escape(m["photo"])}" alt="{escape(m["name"])}" width="480" height="480" '
              'loading="lazy" decoding="async">' if m.get("photo") else "")
     li = (f'<p><a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>'
           if m.get("linkedin") else "")
-    return f'<div class="person">{photo}<h3>{escape(m["name"])}</h3>{li}</div>'
+    role = f'<p class="role">{escape(m["title"])}</p>' if m.get("title") else ""
+    return f'<div class="person">{photo}<h3>{escape(m["name"])}</h3>{role}{li}</div>'
 
 
 def team(t: dict) -> str:

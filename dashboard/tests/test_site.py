@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from dashboard import build as B
 from dashboard import site as SITE
 
 DASH = Path(__file__).resolve().parents[1]
@@ -25,6 +26,13 @@ def content(tmp_path):
     shutil.copytree(DASH / "content", c)
     (c / "library.json").write_text(json.dumps(LIB))
     return c
+
+
+@pytest.fixture(autouse=True)
+def record_from_the_fixtures_first_send(monkeypatch):
+    """The fixture's books trade from 17 Nov 2026, before the shipped RECORD_START (24 Nov), which would
+    leave them no session. Tests of the record start set their own."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-17")
 
 
 @pytest.fixture
@@ -120,6 +128,10 @@ def test_the_team_page_lists_the_four_members_with_their_links(snap, tmp_path, c
     for name in ("Simon Jarvis", "Ryan Press", "James Simone", "Lucy Keith"):
         assert name in h
     assert h.count(">LinkedIn</a>") == 4
+    # Team lead, 2026-11-24: "add portfolio manager under me, and quantitative trading analyst under the other 3".
+    assert re.findall(r'<h3>([^<]+)</h3><p class="role">([^<]+)</p>', h) == [
+        ("Simon Jarvis", "Portfolio Manager"), ("Ryan Press", "Quantitative Trading Analyst"),
+        ("James Simone", "Quantitative Trading Analyst"), ("Lucy Keith", "Quantitative Trading Analyst")]
 
 
 def test_the_library_links_each_source(snap, tmp_path, content):
@@ -211,15 +223,19 @@ def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, conte
     assert r.count('class="row slim timed"') == 6 and "team-atrium" not in r and "How a result is tested" in r
 
 
-def test_every_page_photo_not_taken_by_quantt_is_credited(snap, tmp_path, content):
+def test_every_page_photo_not_taken_by_quantt_is_credited_in_the_footer(snap, tmp_path, content):
+    """Team lead, 2026-11-24: take the credit off the photographs. CC BY-SA still requires one, so every
+    page's footer names each photograph's author and licence."""
     from dashboard import layout as L
     target = build(snap, tmp_path / "site", content)
     for page_name, key in (("team", "team"), ("library", "library"), ("research", "research"), ("contact", "contact")):
         h = (target / page_name / "index.html").read_text()
         photo = L.PHOTOS[key]
         assert photo in L.PHOTO_CREDITS, photo
-        who, lic, url = L.PHOTO_CREDITS[photo]
-        assert f"{who}</a>, {lic}" in h and url in h, page_name
+        assert 'class="credit"' not in h and "Photograph:" not in h, page_name
+        foot = h.split('class="foot-credits"', 1)[1].split("</p>", 1)[0]
+        for who, lic, url in L.PHOTO_CREDITS.values():
+            assert f"{who}</a> ({lic})" in foot and url in foot, (page_name, who)
 
 
 def test_the_pages_hash_the_stylesheet_the_build_serves(snap, tmp_path, content):
@@ -258,3 +274,12 @@ def test_with_every_book_unreadable_the_page_says_why(snap, tmp_path, content):
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
     assert "No book has a traded session" not in h and "No portfolio tonight. Fixed Income Book: its record could not be read" in h
     assert "The portfolio below is the other books only" not in h
+
+
+def test_the_overview_says_when_the_record_starts_before_its_first_session_closes(snap, tmp_path, content, monkeypatch):
+    """24 Nov 2026, before the close (team lead, 2026-11-24: "use today as the first day for all books, but
+    keep the old records too"): no portfolio figure yet, the start date said, the earlier record shown."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-24")
+    h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
+    assert "record starts with the 24 Nov 2026 session" in h and "Record before 24 Nov 2026" in h
+    assert "Portfolio return, time-weighted" not in h

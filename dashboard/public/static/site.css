@@ -95,8 +95,6 @@ img { max-width: 100%; display: block; }
 .hero .lede, .page-head .lede { color: rgba(255,255,255,0.86); margin-top: 24px; max-width: 56ch; }
 .hero .eyebrow, .page-head .eyebrow { color: rgba(255,255,255,0.72); }
 .page-head .meta { color: rgba(255,255,255,0.66); margin-top: 18px; }
-.page-head .credit { position: absolute; right: 16px; bottom: 10px; margin: 0; font-size: 11px; color: rgba(255,255,255,0.6); }
-.page-head .credit a { color: rgba(255,255,255,0.78); }
 .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
 .btn { display: inline-block; padding: 13px 24px; font: 600 14px/1.2 var(--sans); letter-spacing: 0.02em; border: 1px solid transparent; }
 .btn:hover { text-decoration: none; }
@@ -211,7 +209,8 @@ table.stats tr.grp:first-child td { padding-top: 14px; }
 
 /* team */
 .people { display: grid; gap: 48px 40px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
-.person h3 { font: 500 24px/1.25 var(--serif); padding-top: 20px; border-top: 1px solid var(--ink); margin-bottom: 10px; }
+.person h3 { font: 500 24px/1.25 var(--serif); padding-top: 20px; border-top: 1px solid var(--ink); margin-bottom: 4px; }
+.person .role { margin: 0 0 10px; font-size: 14.5px; color: var(--muted); }
 .headshot { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; background: var(--rule); margin-bottom: 22px; }
 
 /* library */
@@ -272,6 +271,8 @@ table.stats tr.grp:first-child td { padding-top: 14px; }
 .foot-nav a:hover, .foot-contact a:hover { color: #fff; }
 .foot-contact p { margin: 0 0 10px; }
 .disclaimer { border-top: 1px solid rgba(255,255,255,0.14); margin-top: 64px; padding-top: 28px; font-size: 12px; line-height: 1.75; color: rgba(255,255,255,0.46); }
+.foot-credits { margin: 14px 0 0; font-size: 11.5px; line-height: 1.6; color: rgba(255,255,255,0.46); }
+.foot-credits a { color: rgba(255,255,255,0.62); }
 .foot-base { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 28px 0 0; font-size: 12px; color: rgba(255,255,255,0.46); }
 
 @media (max-width: 900px) {

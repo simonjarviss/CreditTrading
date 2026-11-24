@@ -234,9 +234,18 @@ def book_section(b: dict) -> str:
 
 PORTFOLIO_COLOUR = COMBINED_COLOUR
 
+# The portfolio's record starts with this session (team lead, 2026-11-24: "we should use today as the
+# first day for all books, but keep the old records too"). It is the first session on which all three
+# books trade a full plan: the event book's first send, on 2026-11-23, placed 46 of its 219 orders
+# before Alpaca's rate limit refused the rest (fixed in release-20261123-2). Every figure of the
+# portfolio and of each book counts from the close of the session before it; each book's record before
+# it is kept and shown apart, as the earlier record, never merged into the figures from this date.
+RECORD_START = "2026-11-24"
 
-def portfolio(snap: dict) -> dict:
-    """The books that trade, each from its first traded session, and their composite.
+
+def portfolio(snap: dict, before: str | None = None) -> dict:
+    """The books that trade and their composite, from RECORD_START; with `before`, the earlier record
+    instead: each book from its first traded session to the last session before that date.
 
     A book's daily record is its official end-of-day history, or, while it has none, its
     after-close readings (the event book), labelled as such. A book that has not sent an order is
@@ -267,16 +276,24 @@ def portfolio(snap: dict) -> dict:
             excluded.append((b, "it has not sent an order yet"))
             continue
         first = st["value"]["first_send"]
+        if before is not None and first >= before:
+            excluded.append((b, f"it began trading on {fmt_short(first)}"))
+            continue
+        # From RECORD_START, or from the first send when that is later; the base is the close before.
+        start = first if before is not None else max(first, RECORD_START)
         try:
-            tr = M.trading_rows(rows, first)
+            tr = M.trading_rows(rows, start)
+            if before is not None:
+                tr = [r for r in tr if r["date"] < before]
             dated = M.daily(tr)
         except ValueError as e:
             blocked.append((b, str(e)))
             continue
         if not dated:
-            excluded.append((b, "its first traded session has no closing record yet"))
+            excluded.append((b, "its first traded session has no closing record yet" if start == first
+                             else f"its first session from {fmt_short(start)} has not closed yet"))
             continue
-        books.append({"b": b, "kind": kind, "first": first, "rows": tr, "base": tr[0]["date"], "dated": dated,
+        books.append({"b": b, "kind": kind, "first": start, "rows": tr, "base": tr[0]["date"], "dated": dated,
                       "p": M.profile(dated)})
     out = {"books": books, "excluded": excluded, "blocked": blocked, "dated": [], "comp": [], "left": 0,
            "p": None, "base": None, "first": None}
@@ -402,6 +419,10 @@ def portfolio_section(snap: dict) -> str:
     for the portfolio and each book; then the latest session's P&L. Each book's own session, exposure and
     execution follow below."""
     pf = portfolio(snap)
+    tail = ('<h3 class="block-title">Latest session</h3>' + latest_sessions(snap["books"]) + earlier_record(snap)
+            + '<p class="meta">Returns are time-weighted: each session\'s return is the books\' combined P&amp;L over '
+              'their combined equity at the previous close, compounded. A session\'s P&amp;L is the after-close '
+              'reading until Alpaca publishes its official end-of-day figure overnight.</p></div></section>')
     warn = ""
     if pf["blocked"]:
         why = "; ".join(f"{escape(b['title'])}: {escape(w)}" for b, w in pf["blocked"])
@@ -413,9 +434,12 @@ def portfolio_section(snap: dict) -> str:
         why = ('<p class="gap">No portfolio tonight. '
                + "; ".join([f"{escape(b['title'])}: its record could not be read ({escape(w)})" for b, w in pf["blocked"]]
                            + [f"{escape(b['title'])}: {escape(w)}" for b, w in pf["excluded"]]) + ".</p>"
-               if pf["blocked"] else '<p class="gap">No book has a traded session on record yet.</p>')
+               if pf["blocked"] else
+               f'<p class="narrow">The portfolio\'s record starts with the {fmt_short(RECORD_START)} session, the first '
+               'on which all three books trade a full plan. Its figures appear once that session has closed: the '
+               'after-close readings in the evening, Alpaca\'s end-of-day figures overnight.</p>')
         return ('<section class="section"><div class="wrap"><div class="eyebrow">Portfolio</div>'
-                f'<h2>Portfolio results</h2>{why}</div></section>')
+                f'<h2>Portfolio results</h2>{why}' + tail)
     p = pf["p"]
     colour = lambda x: BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR)                    # noqa: E731
     members = "; ".join(f'{escape(x["b"]["title"])} from {fmt_short(x["first"])}'
@@ -442,17 +466,13 @@ def portfolio_section(snap: dict) -> str:
     cols = [("Portfolio", PORTFOLIO_COLOUR, p)] + [(x["b"]["title"], colour(x), x["p"]) for x in pf["books"]]
     return (f'<section class="section"><div class="wrap">'
             f'<div class="eyebrow">Portfolio &middot; to {fmt_short(p["last_date"])}</div>'
-            f'<h2>Portfolio results</h2><p class="narrow">A composite of the books that are trading, each from its '
-            f'first traded session: {members}.{left}{out_txt}</p>{warn}'
+            f'<h2>Portfolio results</h2><p class="narrow">A composite of the books that are trading, from the '
+            f'{fmt_short(RECORD_START)} session, the first on which all three trade a full plan: {members}.'
+            f'{left}{out_txt}</p>{warn}'
             f'<div class="figures kpis">{"".join(kpis)}</div>'
             f'<div class="chart-head"><h3 class="chart-title">Growth since inception</h3>{switch}</div>'
             + charts.line_chart(growth, "Cumulative return of the portfolio and of each book", fmt="pct")
-            + '<h3 class="block-title">Key figures</h3>' + stats_table(cols)
-            + '<h3 class="block-title">Latest session</h3>' + latest_sessions(snap["books"])
-            + '<p class="meta">Returns are time-weighted: each session\'s return is the books\' combined P&amp;L over '
-              'their combined equity at the previous close, compounded. Hover over the chart for each session\'s '
-              'values. A session\'s P&amp;L is the after-close reading until Alpaca publishes its official end-of-day '
-              'figure overnight.</p></div></section>')
+            + '<h3 class="block-title">Key figures</h3>' + stats_table(cols) + tail)
 
 
 def started_text(b: dict) -> str:
@@ -469,31 +489,50 @@ def started_text(b: dict) -> str:
     return f"trading since {fmt_short(st['value']['first_send'])}"
 
 
-def summary_table(snap: dict) -> str:
-    """The portfolio and each trading book, from each one's first traded session: the figures an
-    allocator reads first (the overview's table; the performance page has the full set)."""
-    pf = portfolio(snap)
+def record_table(pf: dict, span: bool = False) -> str:
+    """The portfolio and each book of one record (a `portfolio` result), one row each: when it starts
+    (and, with `span`, ends), P&L, time-weighted return, Sharpe and maximum drawdown."""
     dot = lambda c: f'<span class="dot" style="background:{c}"></span>'                    # noqa: E731
     rows = []
 
     def row(name, colour, since, p):
-        ratio = (f'{_ratio_s(p["sharpe"])} <span class="meta">({p["n"]} sessions)</span>' if p["sharpe"] is not None
-                 else f'<span class="meta">{p["n"]} sessions; needs {M.MIN_RETURNS_FOR_RATIOS}</span>')
-        rows.append((dot(colour) + name, fmt_short(since), f'<span class="{tone(p["pnl"])}">{usd(p["pnl"], True)}</span>',
-                     _sgn(p["cum_return"]), ratio, pct(p["max_drawdown"])))
+        n = f'{p["n"]} {"session" if p["n"] == 1 else "sessions"}'
+        ratio = (f'{_ratio_s(p["sharpe"])} <span class="meta">({n})</span>' if p["sharpe"] is not None
+                 else f'<span class="meta">{n}; needs {M.MIN_RETURNS_FOR_RATIOS}</span>')
+        rows.append([dot(colour) + name, fmt_short(since)] + ([fmt_short(p["last_date"])] if span else [])
+                    + [f'<span class="{tone(p["pnl"])}">{usd(p["pnl"], True)}</span>', _sgn(p["cum_return"]), ratio,
+                       pct(p["max_drawdown"])])
 
     if pf["p"]:
         row("<b>Portfolio</b>", PORTFOLIO_COLOUR, pf["first"], pf["p"])
     for x in pf["books"]:
         row(escape(x["b"]["title"]), BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR), x["first"], x["p"])
+    head = ["", "From"] + (["To"] if span else []) + ["P&L", "Return, time-weighted", "Sharpe", "Max drawdown"]
     for b, why in pf["excluded"] + pf["blocked"]:
-        rows.append((dot(BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)) + escape(b["title"]),
-                     f'<span class="meta">{escape(why[:1].upper() + why[1:])}</span>', "", "", "", ""))
-    head = ["", "From", "P&L", "Return, time-weighted", "Sharpe", "Max drawdown"]
-    th = "".join(f'<th class="{"r" if i >= 2 else ""}">{escape(h)}</th>' for i, h in enumerate(head))
-    body = "".join("<tr>" + "".join(f'<td class="{"r" if i >= 2 else ""}">{c}</td>' for i, c in enumerate(r)) + "</tr>"
+        rows.append([dot(BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)) + escape(b["title"]),
+                     f'<span class="meta">{escape(why[:1].upper() + why[1:])}</span>'] + [""] * (len(head) - 2))
+    num = len(head) - 4
+    th = "".join(f'<th class="{"r" if i >= num else ""}">{escape(h)}</th>' for i, h in enumerate(head))
+    body = "".join("<tr>" + "".join(f'<td class="{"r" if i >= num else ""}">{c}</td>' for i, c in enumerate(r)) + "</tr>"
                    for r in rows)
     return f'<div class="tbl-wrap"><table class="summary"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table></div>'
+
+
+def summary_table(snap: dict) -> str:
+    """The portfolio and each trading book from RECORD_START: the figures an allocator reads first (the
+    overview's table)."""
+    return record_table(portfolio(snap))
+
+
+def earlier_record(snap: dict) -> str:
+    """Each book's record before RECORD_START, from its first traded session, and their composite, as it
+    stood (team lead, 2026-11-24: "keep the old records too"). Empty when no book traded before it."""
+    old = portfolio(snap, before=RECORD_START)
+    if not old["books"] and not old["blocked"]:
+        return ""
+    return (f'<h3 class="block-title">Record before {fmt_short(RECORD_START)}</h3>'
+            '<p class="meta">Each book from its first traded session to the last session before the portfolio\'s '
+            'record began, kept as it was. These sessions are not in the figures above.</p>' + record_table(old, span=True))
 
 
 def shadow_section(r: dict) -> str:
@@ -516,7 +555,7 @@ def shadow_section(r: dict) -> str:
 
 METHOD = """<section class="section"><div class="wrap narrow"><div class="eyebrow">Method</div><h2>How these figures are produced</h2>
 <p><b>Official P&amp;L.</b> Each account's results come from Alpaca's end-of-day portfolio history, the record we report against. A paper account differs from a live account in three ways: it charges no stock borrow fees, it does not credit or debit distributions on positions, and it fills orders at the current quote rather than in the closing auction. A live account's results would differ for those reasons.</p>
-<p><b>The portfolio.</b> A composite of the books that are trading, each from its first traded session, so an account's idle cash before it trades never dilutes the result. Each session's return is the books' combined P&amp;L divided by their combined equity at the previous close, and the returns compound: the return is time-weighted, the standard for a composite. Because a session counts by its return and not by its dollars, the portfolio's return and its dollar P&amp;L can differ, even in sign, when the capital trading changes, as it does when a book joins. A session on which a trading book has no record is left out, never filled. The event book counts from its first traded session; until Alpaca's end-of-day history is collected for it, its daily figures are the account equity read after each close.</p><p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility and the Sharpe ratio are shown once a series has 20 sessions and are annualised with 252 sessions; the Sharpe ratio subtracts no risk-free rate. Drawdown is measured on the compounded return from its running peak. A record of a few dozen sessions measures every ratio only loosely.</p>
+<p><b>The portfolio.</b> A composite of the books that are trading. Its record starts with the 24 Nov 2026 session, the first on which all three books trade a full plan, and every figure above counts from the close before it; each book's record before that date is shown apart and is not in those figures. A book that starts later joins from its first traded session, so an account's idle cash before it trades never dilutes the result. Each session's return is the books' combined P&amp;L divided by their combined equity at the previous close, and the returns compound: the return is time-weighted, the standard for a composite. Because a session counts by its return and not by its dollars, the portfolio's return and its dollar P&amp;L can differ, even in sign, when the capital trading changes, as it does when a book joins. A session on which a trading book has no record is left out, never filled. The event book counts from its first traded session; until Alpaca's end-of-day history is collected for it, its daily figures are the account equity read after each close.</p><p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility and the Sharpe ratio are shown once a series has 20 sessions and are annualised with 252 sessions; the Sharpe ratio subtracts no risk-free rate. Drawdown is measured on the compounded return from its running peak. A record of a few dozen sessions measures every ratio only loosely.</p>
 <p><b>Positions and orders.</b> Taken from the trading system's reconciliation with the broker after each close and reported in aggregate: how many positions each book holds, its gross and net exposure at the closing price, and how many orders were filled. Individual holdings and orders are not published.</p>
 <p><b>Updates.</b> The page rebuilds automatically every 30 minutes from the trading system's records, so a session appears shortly after the close and its official figure after Alpaca publishes it overnight. A figure the system could not read is marked as not measured; it is never estimated or carried forward.</p>
 </div></section>"""

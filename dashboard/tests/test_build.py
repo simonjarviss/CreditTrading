@@ -21,6 +21,13 @@ def snap():
     return json.loads(FIXTURE.read_text())
 
 
+@pytest.fixture(autouse=True)
+def record_from_the_fixtures_first_send(monkeypatch):
+    """The fixture's books trade from 17 Nov 2026, before the shipped RECORD_START (24 Nov), which would
+    leave them no session. Tests of the record start set their own."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-17")
+
+
 def page(snap):
     return B.render(snap)
 
@@ -251,3 +258,40 @@ def test_the_event_books_caption_says_an_unreadable_history_could_not_be_read(sn
     book(snap, "events")["official"] = {"UNMEASURED": "eod_equity.csv: read failed"}
     cap = event_caption(snap)
     assert "end-of-day history could not be read" in cap and "not yet collected" not in cap
+
+
+def test_the_record_starts_on_the_ruled_date():
+    """Team lead, 2026-11-24: "we should use today as the first day for all books, but keep the old records too"."""
+    assert re.search(r'^RECORD_START = "2026-11-24"$', Path(B.__file__).read_text(), re.M)  # the shipped value
+
+
+def test_the_record_counts_from_its_start_and_keeps_the_earlier_record_apart(snap, monkeypatch):
+    """From 20 Nov: the Fixed Income Book's 20 Nov session (-$50) is the record; its 17-19 Nov sessions
+    (+$250, -$350, +$200) are the earlier record, shown apart and summed apart."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-20")
+    pf = B.portfolio(snap)
+    cef = next(x for x in pf["books"] if x["b"]["name"] == "cef")
+    assert cef["first"] == "2026-11-20" and cef["base"] == "2026-11-19" and cef["p"]["pnl"] == -50.0
+    ev = next(x for x in pf["books"] if x["b"]["name"] == "events")
+    assert ev["first"] == "2026-11-23"                                   # a book that starts later joins later
+    old = B.portfolio(snap, before="2026-11-20")
+    ocef = next(x for x in old["books"] if x["b"]["name"] == "cef")
+    assert ocef["first"] == "2026-11-17" and ocef["p"]["last_date"] == "2026-11-19" and ocef["p"]["pnl"] == 100.0
+    assert [why for b, why in old["excluded"]] == ["it began trading on 23 Nov 2026"]
+    h = page(snap)
+    assert "P&amp;L since 20 Nov 2026" in h
+    earlier = h.split("Record before 20 Nov 2026", 1)[1].split("</table>", 1)[0]
+    assert "17 Nov 2026" in earlier and "19 Nov 2026" in earlier and "+$100" in earlier
+
+
+def test_before_its_first_session_closes_the_record_says_when_it_starts(snap, monkeypatch):
+    """24 Nov 2026, before the close: no session of the record yet. The page says when it starts, and
+    shows the latest session and the earlier record; it never shows an empty figure."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-24")
+    h = page(snap)
+    assert "The portfolio&#x27;s record starts with the 24 Nov 2026 session" in h or \
+        "The portfolio's record starts with the 24 Nov 2026 session" in h
+    assert "Latest session" in h and "Record before 24 Nov 2026" in h and "Key figures" not in h
+    earlier = h.split("Record before 24 Nov 2026", 1)[1].split("</table>", 1)[0]
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
+        assert title in earlier, title

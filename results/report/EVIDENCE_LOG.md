@@ -5741,3 +5741,17 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `7a7d118` (the portfolio section before the change); the VM's records, exported 2026-11-24 16:46 UTC; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-11 · Ruling: the portfolio's record starts on 24 Nov 2026, the earlier record kept apart; team titles; photograph credits in the footer
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, asked whether to restart the site's figures at 24 Nov: "we should use today as the frist day for all books , but keep the old recrods too" (verbatim) [V]
+  - the team lead: "on site tke away the Photograph: Dlsz, CC BY-SA 4.0 (and same for others), add portoflio manager under me, and quantitative trading analyst under the other 3" (verbatim) [V]
+  - 24 Nov 2026 is the first session on which all three books trade a full plan: the event book's 23 Nov send placed 46 of its 219 orders, and Alpaca answered HTTP 429 "rate limit exceeded" to the other 173 (the VM's events send log and send.json for 2026-11-23, read 2026-11-24 ~12:25 ET); release-20261123-2 paces the trading host and waits out a 429 [V]
+  - the record before 24 Nov, from the VM's records exported 2026-11-24 16:46 UTC: portfolio 29 Sep to 23 Nov 2026, −$472, +0.06% time-weighted, Sharpe 0.08 over 40 sessions, maximum drawdown −2.65%; Fixed Income Book −$147, Equity Cross-Asset Book −$295 from 4 Nov, Event Book −$30 on 23 Nov [V]
+  - the 2026-11-24 event plan, decided 12:16 ET: 205 orders, gross $146,130.56 against the $149,937 exposure limit, no check predicting a refusal at send, `DRY_RUN=0` and `AUTO_ARMED` present [V]
+- source: `dashboard/build.py` @ `ee05e4c` (each book from its first send before the change); the VM's events state for 2026-11-23 and 2026-11-24; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
