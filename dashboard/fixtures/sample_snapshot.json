@@ -248,7 +248,7 @@
      "kind": "account equity read by verify after each close (not the end-of-day history)",
      "rows": [
       {
-       "change_usd": 0.0,
+       "change_usd": null,
        "date": "2026-11-20",
        "equity": 100000.0
       },

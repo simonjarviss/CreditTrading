@@ -85,11 +85,13 @@ def test_the_statistics_table_has_every_group_and_needs_twenty_sessions_for_rati
     assert "needs 20 sessions, has 4" in h                       # the fixture's portfolio has 4 sessions
 
 
-def test_an_unreadable_book_withholds_the_portfolio_and_names_it(snap):
+def test_an_unreadable_book_is_left_out_of_the_portfolio_and_named(snap):
+    """Release-check review of 904bd35: withholding the whole portfolio over one unreadable record hid
+    it until a hand repair. The other books are shown, and the missing one is named above them."""
     book(snap, "c4")["official"] = {"UNMEASURED": "eod_equity.csv: not a number"}
     h = page(snap)
-    assert "The portfolio is not shown tonight" in h and "Equity Cross-Asset Book: its official history could not be read" in h
-    assert "Growth since inception" not in h
+    assert "Not included tonight, because its record could not be read: Equity Cross-Asset Book" in h
+    assert "Growth since inception" in h and "Equity Cross-Asset Book from" not in h.split("Portfolio results", 1)[1].split("</p>", 1)[0]
 
 
 def test_the_newest_session_shows_its_after_close_reading_until_the_official_point_lands(snap):

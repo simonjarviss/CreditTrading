@@ -243,3 +243,42 @@ def test_a_core_fails_unmeasured_items_are_counted_as_notes(state):
     p.write_text(json.dumps(r))
     v = book(snap_of(state), "cef")["session"]["value"]
     assert v["verdict"] == "FAIL" and v["n_notes"] == 2
+
+
+def _verify(st, day, equity, last, change):
+    d = st / "events" / day
+    d.mkdir(exist_ok=True)
+    v = json.loads((st / "events" / "2026-11-23" / "verify.json").read_text())
+    v.update(session_date=day, equity={"equity": equity, "last_equity": last, "change_usd": change})
+    (d / "verify.json").write_text(json.dumps(v))
+
+
+def test_a_traded_session_without_a_reading_is_a_gap_not_skipped(state):
+    """Release-check review of 904bd35: a session missing its verify.json vanished from the record,
+    understating the P&L (+$500 shown for +$1,500)."""
+    st, _ = state
+    (st / "events" / "2026-11-24").mkdir()                                  # verified? no: a gap
+    _verify(st, "2026-11-25", 101510.0, 100510.0, 1000.0)
+    ac = book(snap_of(state), "events")["after_close"]
+    assert S.UNMEASURED in ac and "2026-11-24: a traded session has no verify.json" in ac[S.UNMEASURED]
+
+
+def test_the_newest_session_not_yet_verified_is_pending_not_a_gap(state):
+    st, _ = state
+    (st / "events" / "2026-11-24").mkdir()                                  # tonight's plan, verify not run yet
+    rows = book(snap_of(state), "events")["after_close"]["value"]["rows"]
+    assert [r["date"] for r in rows] == ["2026-11-20", "2026-11-23"]
+
+
+def test_a_missing_session_directory_is_caught_by_the_previous_close(state):
+    st, _ = state
+    _verify(st, "2026-11-25", 101510.0, 100510.0, 1000.0)                  # 11-23 closed at 100,010; 11-24 is missing
+    ac = book(snap_of(state), "events")["after_close"]
+    assert S.UNMEASURED in ac and "a session is missing" in ac[S.UNMEASURED]
+
+
+def test_consecutive_readings_join_into_the_record(state):
+    st, _ = state
+    _verify(st, "2026-11-24", 100510.0, 100010.0, 500.0)
+    rows = book(snap_of(state), "events")["after_close"]["value"]["rows"]
+    assert [(r["date"], r["change_usd"]) for r in rows] == [("2026-11-20", None), ("2026-11-23", 10.0), ("2026-11-24", 500.0)]

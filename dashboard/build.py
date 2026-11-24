@@ -219,8 +219,10 @@ def portfolio(snap: dict) -> dict:
 
     A book's daily record is its official end-of-day history, or, while it has none, its
     after-close readings (the event book), labelled as such. A book that has not sent an order is
-    left out and named. If any book's record could not be read, the portfolio is withheld and the
-    book named, because a composite of part of the books would read as the whole."""
+    left out and named. A book whose record could not be read is left out too, and named in a
+    warning above the figures and in every label that sums the books, so the composite never reads
+    as the whole without saying so. (Release-check review of 904bd35, 2026-11-24: withholding the
+    whole portfolio over one book's unreadable record hid it until someone repaired the record.)"""
     books, excluded, blocked = [], [], []
     for b in snap["books"]:
         o, ac, st = b["official"], b.get("after_close", {}), b.get("start", {})
@@ -257,7 +259,7 @@ def portfolio(snap: dict) -> dict:
                       "p": M.profile(dated)})
     out = {"books": books, "excluded": excluded, "blocked": blocked, "dated": [], "comp": [], "left": 0,
            "p": None, "base": None, "first": None}
-    if books and not blocked:
+    if books:
         comp, left = M.composite({x["b"]["name"]: x["rows"] for x in books})
         if comp:
             dated = [(d, r, pnl) for d, r, pnl, _, _ in comp]
@@ -462,11 +464,11 @@ def portfolio_section(snap: dict) -> str:
     each book's contribution; monthly returns; and the latest session's positioning."""
     books = snap["books"]
     pf = portfolio(snap)
+    warn = ""
     if pf["blocked"]:
         why = "; ".join(f"{escape(b['title'])}: {escape(w)}" for b, w in pf["blocked"])
-        return ('<section class="section"><div class="wrap"><div class="eyebrow">Portfolio</div><h2>Portfolio results</h2>'
-                f'<p class="gap">The portfolio is not shown tonight, because a book\'s record could not be read ({why}). '
-                'Each book\'s own figures are below.</p>' + latest_sessions(books) + "</div></section>")
+        warn = (f'<p class="gap">Not included tonight, because its record could not be read: {why}. The portfolio '
+                'below is the other books only.</p>')
     if not pf["p"]:
         return ('<section class="section"><div class="wrap"><p class="gap">No book has a traded session on record '
                 'yet.</p></div></section>')
@@ -502,7 +504,7 @@ def portfolio_section(snap: dict) -> str:
             f'<div class="eyebrow">Portfolio &middot; to {fmt_short(p["last_date"])}</div>'
             f'<h2>Portfolio results</h2><p class="narrow">A composite of the books that are trading, each from its '
             f'first traded session: {members}. Each session\'s return is the books\' combined P&amp;L over their '
-            f'combined equity at the previous close.{left}{out_txt}</p>'
+            f'combined equity at the previous close.{left}{out_txt}</p>{warn}'
             f'<div class="figures kpis">{"".join(kpis)}</div>'
             f'<div class="chart-head"><h3 class="chart-title">Growth since inception</h3>{switch}</div>'
             + charts.line_chart(growth, "Cumulative return of the portfolio and of each book", fmt="pct")
