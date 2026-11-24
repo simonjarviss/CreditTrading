@@ -313,28 +313,3 @@ def index_points(dated: list, base_date: str) -> list:
         idx *= 1.0 + r
         out.append((d, idx - 1.0))
     return out
-
-
-def drawdown_index(dated: list, base_date: str) -> list:
-    """[(date, drawdown from the running peak of the compounded index)] from 0 at the base session."""
-    out, idx, peak = [(base_date, 0.0)], 1.0, 1.0
-    for d, r, _ in dated:
-        idx *= 1.0 + r
-        peak = max(peak, idx)
-        out.append((d, idx / peak - 1.0))
-    return out
-
-
-def corr_dated(a: list, b: list) -> tuple:
-    """(Pearson correlation of two dated return series on their common sessions, n); None below
-    MIN_RETURNS_FOR_RATIOS common sessions or when either is constant there."""
-    ra, rb = {d: r for d, r, _ in a}, {d: r for d, r, _ in b}
-    common = sorted(set(ra) & set(rb))
-    n = len(common)
-    if n < MIN_RETURNS_FOR_RATIOS:
-        return None, n
-    xs, ys = [ra[d] for d in common], [rb[d] for d in common]
-    mx, my = sum(xs) / n, sum(ys) / n
-    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
-    sxx, syy = sum((x - mx) ** 2 for x in xs), sum((y - my) ** 2 for y in ys)
-    return (None, n) if sxx == 0 or syy == 0 else (sxy / math.sqrt(sxx * syy), n)

@@ -63,38 +63,6 @@ def _month_labels(dates: list, x, height: int) -> list:
     return out
 
 
-def bar_chart(points: list, label: str, height: int = 260) -> str:
-    """points: [(date, dollars)]. One bar per session, green up and red down, on one dollar axis."""
-    if len(points) < 2:
-        return '<p class="meta">The chart needs at least two sessions.</p>'
-    h = height
-    dates = [d for d, _ in points]
-    vals = [v for _, v in points]
-    ticks = nice_ticks(min(min(vals), 0.0), max(max(vals), 0.0), 4)
-    lo, hi = ticks[0], ticks[-1]
-    n = len(points)
-    slot = (W - PAD_L - PAD_R) / n
-    bw = max(1.5, min(14.0, slot * 0.7))
-    x = lambda i: PAD_L + slot * (i + 0.5)                                    # noqa: E731
-    y = lambda v: PAD_T + (h - PAD_T - PAD_B) * (hi - v) / (hi - lo)          # noqa: E731
-    parts = [f'<svg viewBox="0 0 {W} {h}" role="img" aria-label="{escape(label)}">']
-    for t in ticks:
-        cls = "zero" if t == 0 else "grid-line"
-        parts.append(f'<line class="{cls}" x1="{PAD_L}" x2="{W - PAD_R}" y1="{y(t):.1f}" y2="{y(t):.1f}"/>')
-        parts.append(f'<text class="axis" x="{PAD_L - 8}" y="{y(t) + 4:.1f}" text-anchor="end">{usd_axis(t)}</text>')
-    parts += _month_labels(dates, x, h)
-    for i, v in enumerate(vals):
-        top, bot = (y(v), y(0)) if v >= 0 else (y(0), y(v))
-        parts.append(f'<rect class="{"bar-pos" if v >= 0 else "bar-neg"}" x="{x(i) - bw / 2:.1f}" y="{top:.1f}" '
-                     f'width="{bw:.1f}" height="{max(bot - top, 0.8):.1f}"/>')
-    parts.append(f'<line class="hair" x1="0" x2="0" y1="{PAD_T}" y2="{h - PAD_B}"/>')
-    parts.append("</svg>")
-    data = {"x": [round(x(i), 1) for i in range(n)], "dates": dates, "fmt": "usd",
-            "series": [{"name": "Session P&L", "color": "#5f6670", "v": [round(v, 2) for v in vals]}]}
-    return (f'<div class="chart" data-series="{escape(json.dumps(data, separators=(",", ":")))}">'
-            + "".join(parts) + '<div class="tip"></div></div>')
-
-
 def line_chart(series: list, label: str, fmt: str = "usd", height: int = H) -> str:
     """series: [{"name", "color" (a CSS colour or var), "points": [(date, value)]}]; fmt "usd" or
     "pct" (values as fractions). Returns the chart's HTML (container, SVG, legend, hover data)."""

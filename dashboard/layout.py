@@ -16,7 +16,9 @@ SITE_NAME = "Event Driven Trading"
 TEAM_LINE = "QUANTT · Queen's University"
 CONTACT_EMAIL = "simon.jarvis@queensu.ca"       # team lead, 2026-11-23: the site's contact address
 REPO_URL = "https://github.com/quanttqueensu/CreditTrading"
-NAV = (("overview", "/", "Overview"), ("team", "/team/", "Team"), ("performance", "/performance/", "Performance"),
+# The team page is the home page (team lead, 2026-11-24: "when we open the page, it should be the team
+# page which shows first"); /team/ serves the same page so earlier links still work.
+NAV = (("team", "/", "Team"), ("overview", "/overview/", "Overview"), ("performance", "/performance/", "Performance"),
        ("research", "/research/", "Research"), ("library", "/library/", "Library"), ("contact", "/contact/", "Contact"))
 
 DISCLAIMER = (
@@ -117,9 +119,9 @@ def page(active: str, title: str, body: str, description: str) -> str:
     cur = ' aria-current="page"'
     cta = ' class="nav-cta"'
     nav = "".join(f'<a href="{href}"{cur if key == active else ""}{cta if key == "contact" else ""}>'
-                  f'{escape(label)}</a>' for key, href, label in NAV if key != "overview")
+                  f'{escape(label)}</a>' for key, href, label in NAV)
     foot_nav = "".join(f'<li><a href="{href}">{escape(label)}</a></li>' for key, href, label in NAV if key != "contact")
-    full_title = SITE_NAME if active == "overview" else f"{title} · {SITE_NAME}"
+    full_title = SITE_NAME if active == "team" else f"{title} · {SITE_NAME}"
     return f"""<!doctype html>
 <html lang="en-CA">
 <head>
@@ -162,18 +164,23 @@ def page(active: str, title: str, body: str, description: str) -> str:
 
 
 # quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
-PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "hero-office", "research": "roundtable",
-          "library": "toronto-financial-day", "team": "toronto-skyline-day", "contact": "hero-office", "": "hero-office"}
+PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "hero-office",
+          "research": "toronto-financial-street", "library": "toronto-financial-day", "team": "toronto-skyline-day",
+          "contact": "toronto-bay-street", "": "hero-office"}
 # Photographs not taken by QUANTT, credited where they are shown (team lead, 2026-11-23: "proper Toronto
 # views that fit the darker vibe"; 2026-11-24: "a darker type image of Toronto's skyline / financial
-# district but it's day-ish"). Both from Wikimedia Commons, fetched 2026-11-24 at 2400 px and
-# re-encoded to WebP with their metadata removed. The skyline is CC BY-SA 4.0, which requires the
-# credit and licence beside it; the Financial District is CC0 and is credited as a courtesy.
+# district but it's day-ish"; "use toronto photos for research and contact pages"). All from Wikimedia
+# Commons, fetched 2026-11-24 at 2400 px and re-encoded to WebP with their metadata removed. CC BY-SA
+# requires the credit and licence beside the photograph; the CC0 one is credited as a courtesy.
 PHOTO_CREDITS = {
     "toronto-skyline-day": ("Dlsz", "CC BY-SA 4.0",
                             "https://commons.wikimedia.org/wiki/File:View_of_Toronto_Skyline_from_Toronto_Islands.jpg"),
     "toronto-financial-day": ("Gregory Karastergios", "CC0",
                               "https://commons.wikimedia.org/wiki/File:Toronto_Financial_District.jpg"),
+    "toronto-financial-street": ("Ken Lund", "CC BY-SA 2.0",
+                                 "https://commons.wikimedia.org/wiki/File:Financial_District,_Toronto,_Ontario_(29376117743).jpg"),
+    "toronto-bay-street": ("Dillan Payne", "CC BY-SA 2.0",
+                           "https://commons.wikimedia.org/wiki/File:Bay_Street,_Toronto,_March_8_2025.jpg"),
 }
 # GitHub's mark (Octicons, MIT licence), inline so the page loads nothing from another origin.
 GITHUB_MARK = ('<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" '

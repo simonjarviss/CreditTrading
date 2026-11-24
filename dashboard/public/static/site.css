@@ -194,9 +194,6 @@ table.months td.total { font-weight: 600; }
 .book-text { max-width: 72ch; color: var(--text); margin: 10px 0 18px; }
 .book-grid { display: grid; gap: 48px 56px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); margin-top: 40px; }
 .book-grid td { white-space: normal; }
-.latest th, .latest td { white-space: normal; padding-left: 18px; }
-.latest td:nth-child(2), .latest td:nth-child(5), .latest td:nth-child(6) { white-space: nowrap; }
-.latest th:first-child, .latest td:first-child { padding-left: 0; }
 .book-grid h3 { margin-top: 0; }
 .chart-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 64px; }
 .chart-head .chart-title { margin: 0; }

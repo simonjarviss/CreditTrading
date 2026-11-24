@@ -102,7 +102,7 @@ def overview(snap: dict) -> str:
             '<h1>Event Driven Trading</h1>'
             '<p class="lede">A systematic trading team. Three automated books trade closed-end fund discounts '
             'and scheduled corporate events, each in its own paper account.</p>'
-            '<div class="buttons"><a class="btn primary" href="/team/">Meet the team</a>'
+            '<div class="buttons"><a class="btn primary" href="/">Meet the team</a>'
             '<a class="btn ghost" href="/performance/">Live performance</a></div>'
             '</div></section>')
     kf = (f'<section class="kf"><div class="wrap"><div class="figures">{"".join(figs)}</div>'
@@ -166,7 +166,7 @@ def overview(snap: dict) -> str:
     team = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
             '<div class="eyebrow">The team</div><h2>Who we are</h2>'
             '<p class="lede">Four Queen\'s University students at QUANTT, covering portfolio management, risk, '
-            'research and data.</p><a class="link-arrow" href="/team/">The team</a></div>'
+            'research and data.</p><a class="link-arrow" href="/">The team</a></div>'
             f'<div class="sec-body"><div class="people">{people}</div></div></div></section>')
     return page("overview", "Overview", hero + team + kf + approach + performance + opportunity + process + contact_band(),
                 "A systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts "
@@ -372,7 +372,7 @@ def contact() -> str:
 def not_found() -> str:
     return page("", "Page not found", page_head("Error 404", "Page not found",
                                                  "The page you asked for does not exist.",
-                                                 '<div class="buttons"><a class="btn primary" href="/">Go to the overview</a></div>'),
+                                                 '<div class="buttons"><a class="btn primary" href="/">Go to the home page</a></div>'),
                 "Page not found.")
 
 
@@ -380,12 +380,14 @@ def not_found() -> str:
 
 def pages(snap: dict, *, content: Path = CONTENT, repo: Path = REPO) -> dict:
     """{relative path: html}. Raises on a missing content file: a page is never built from a default."""
+    team_page = team(json.loads((content / "team.json").read_text()))
     return {
-        "index.html": overview(snap),
+        "index.html": team_page,                     # the home page (team lead, 2026-11-24)
+        "overview/index.html": overview(snap),
         "performance/index.html": perf.render(snap),
         "research/index.html": research(snap, ledger_count(repo / "results" / "IDEA_LEDGER.md")),
         "library/index.html": library(json.loads((content / "library.json").read_text())),
-        "team/index.html": team(json.loads((content / "team.json").read_text())),
+        "team/index.html": team_page,                # earlier links to /team/
         "contact/index.html": contact(),
         "404.html": not_found(),
     }

@@ -5729,3 +5729,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `84a58e7` (`book_section`); the VM's site clone and site journal, read 2026-11-24 ~11:30 ET; the caption is in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-10 · Ruling: the team page opens the site, Toronto photographs on research and contact, and a shorter portfolio section
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, 2026-11-24: "when we open the page, it should be the team page which shows first, use toronto photos for research and contact pages, the protfolio results is too many analytics" (verbatim) [V]
+  - the home page is the team page; the overview is at /overview/. The research page carries Ken Lund's "Financial District, Toronto, Ontario" and the contact page Dillan Payne's "Bay Street, Toronto, March 8 2025", both CC BY-SA 2.0 on Wikimedia Commons, credited on the page [V]
+  - the portfolio section keeps four headline figures, the growth chart with its by-book switch, eight key figures and the latest session's P&L; the drawdown and daily P&L charts, monthly returns, correlation, contribution, and the Sortino, Calmar, VaR, expected shortfall and daily-distribution rows are removed. Built from the VM's records exported 2026-11-24 16:46 UTC, it read +0.06% time-weighted, −$472, Sharpe 0.08 over 40 sessions and a −2.65% maximum drawdown, as on the live page [V]
+- source: `dashboard/build.py` @ `7a7d118` (the portfolio section before the change); the VM's records, exported 2026-11-24 16:46 UTC; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

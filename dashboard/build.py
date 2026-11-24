@@ -311,43 +311,22 @@ def _dated_pct(t, signed=True) -> str:
     return f'{pct(t[1], signed)} <span class="meta">({fmt_short(t[0])})</span>'
 
 
-# One table of statistics, in groups, one column per series (metrics.profile has the definitions).
+# The key figures, one column per series (team lead, 2026-11-24: "the portfolio results is too many
+# analytics"). metrics.profile computes more than the page shows; the page shows these eight.
 STAT_GROUPS = (
-    ("Returns", (
-        ("Last session", lambda p: "none" if p["last"] is None else _sgn(p["last"])),
-        ("Last 5 sessions", lambda p: "none" if p["last5"] is None else _sgn(p["last5"])),
-        ("Month to date", lambda p: "none" if p["mtd"] is None else _sgn(p["mtd"])),
+    ("Return", (
+        ("Sessions", lambda p: f'{p["n"]}'),
         ("Since inception, time-weighted", lambda p: _sgn(p["cum_return"])),
-        ("Annualised, time-weighted", lambda p: _num(p["ann_return"], p, _sgn)),
         ("P&L since inception", lambda p: f'<span class="{tone(p["pnl"])}">{usd(p["pnl"], True)}</span>'),
+        ("Sessions with a gain", lambda p: "none" if p["hit_rate"] is None else
+         f'{pct(p["hit_rate"], dp=0)} <span class="meta">of sessions that moved</span>'),
     )),
     ("Risk", (
         ("Volatility, annualised", lambda p: _num(p["vol"], p, pct)),
-        ("Downside deviation, annualised", lambda p: _num(p["downside_dev"], p, pct)),
+        ("Sharpe ratio", lambda p: _num(p["sharpe"], p, _ratio_s)),
         ("Maximum drawdown", lambda p: "0.00%" if p["max_drawdown_date"] is None
          else _dated_pct((p["max_drawdown_date"], p["max_drawdown"]), False)),
         ("Current drawdown", lambda p: pct(p["drawdown"])),
-        ("Longest drawdown", lambda p: f'{p["longest_drawdown"]} {"session" if p["longest_drawdown"] == 1 else "sessions"}'),
-        ("Value at risk, 95%, one day", lambda p: _num(p["var95"], p, pct)),
-        ("Expected shortfall, 95%, one day", lambda p: _num(p["es95"], p, pct)),
-    )),
-    ("Risk-adjusted return", (
-        ("Sharpe ratio", lambda p: _num(p["sharpe"], p, _ratio_s)),
-        ("Sortino ratio", lambda p: _num(p["sortino"], p, _ratio_s)),
-        ("Calmar ratio", lambda p: _num(p["calmar"], p, _ratio_s)),
-    )),
-    ("Daily returns", (
-        ("Sessions", lambda p: f'{p["n"]}'),
-        ("Sessions with a gain", lambda p: "none" if p["hit_rate"] is None else
-         f'{pct(p["hit_rate"], dp=0)} <span class="meta">of sessions that moved</span>'),
-        ("Average gain", lambda p: "none" if p["avg_gain"] is None else pct(p["avg_gain"], True)),
-        ("Average loss", lambda p: "none" if p["avg_loss"] is None else pct(p["avg_loss"], True)),
-        ("Gain to loss ratio", lambda p: "none" if p["gain_loss_ratio"] is None else _ratio_s(p["gain_loss_ratio"])),
-        ("Profit factor", lambda p: "none" if p["profit_factor"] is None else _ratio_s(p["profit_factor"])),
-        ("Best session", lambda p: _dated_pct(p["best"])),
-        ("Worst session", lambda p: _dated_pct(p["worst"])),
-        ("Skewness", lambda p: _num(p["skew"], p, _ratio_s)),
-        ("Excess kurtosis", lambda p: _num(p["kurt"], p, _ratio_s)),
     )),
 )
 
@@ -362,64 +341,6 @@ def stats_table(cols: list) -> str:
                  for label, f in rows]
     return (f'<div class="tbl-wrap"><table class="matrix stats"><thead><tr><th>Measure</th>{th}</tr></thead>'
             f'<tbody>{"".join(body)}</tbody></table></div>')
-
-
-def monthly_table(cols: list) -> str:
-    """cols: [(title, colour, dated returns, cumulative)]. Each month's return compounds its sessions."""
-    def by_month(dated):
-        out = {}
-        for d, r, _ in dated:
-            out[d[:7]] = out.get(d[:7], 1.0) * (1.0 + r)
-        return {m: v - 1.0 for m, v in out.items()}
-    rows = [(n, c, by_month(dated), cum) for n, c, dated, cum in cols]
-    months = sorted({m for _, _, d, _ in rows for m in d})
-    head = "".join(f'<th class="r">{charts.MONTHS[int(m[5:]) - 1]} {m[:4]}</th>' for m in months)
-    cell = lambda v: "" if v is None else _sgn(v)                                       # noqa: E731
-    body = "".join(f'<tr><td><span class="dot" style="background:{c}"></span>{escape(n)}</td>'
-                   + "".join(f'<td class="r">{cell(d.get(m))}</td>' for m in months)
-                   + f'<td class="r total">{cell(cum)}</td></tr>' for n, c, d, cum in rows)
-    return (f'<div class="tbl-wrap"><table class="matrix months"><thead><tr><th>Series</th>{head}'
-            f'<th class="r">Since inception</th></tr></thead><tbody>{body}</tbody></table></div>')
-
-
-def correlation_table(books: list) -> str:
-    """The books' daily returns against each other, on the sessions each pair shares."""
-    if len(books) < 2:
-        return '<p class="meta">One book is trading, so there is no correlation to show yet.</p>'
-    head = "".join(f'<th class="r"><span class="dot" style="background:{BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR)}">'
-                   f'</span>{escape(x["b"]["title"])}</th>' for x in books)
-    body = []
-    for a in books:
-        cells = []
-        for b in books:
-            if a is b:
-                cells.append('<td class="r meta">1.00</td>')
-                continue
-            rho, n = M.corr_dated(a["dated"], b["dated"])
-            cells.append(f'<td class="r">{_ratio_s(rho)} <span class="meta">({n})</span></td>' if rho is not None
-                         else f'<td class="r"><span class="meta">n/a ({n})</span></td>')
-        body.append(f'<tr><td><span class="dot" style="background:{BOOK_COLOURS.get(a["b"]["name"], COMBINED_COLOUR)}">'
-                    f'</span>{escape(a["b"]["title"])}</td>{"".join(cells)}</tr>')
-    return (f'<div class="tbl-wrap"><table class="matrix"><thead><tr><th>Daily returns</th>{head}</tr></thead>'
-            f'<tbody>{"".join(body)}</tbody></table></div>'
-            f'<p class="meta">Pearson correlation of daily returns; the number of sessions both books traded in '
-            f'brackets. Shown once a pair shares {M.MIN_RETURNS_FOR_RATIOS} sessions.</p>')
-
-
-def contribution_table(pf: dict) -> str:
-    """Each book's P&L over the portfolio's sessions, and its share of the portfolio's P&L."""
-    dates = {d for d, _, _ in pf["dated"]}
-    rows, total = [], pf["p"]["pnl"]
-    for x in pf["books"]:
-        pnl = sum(v for d, _, v in x["dated"] if d in dates)
-        share = (pnl / total) if total else None
-        rows.append((f'<span class="dot" style="background:{BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR)}"></span>'
-                     f'{escape(x["b"]["title"])}', fmt_short(x["first"]),
-                     f'<span class="{tone(pnl)}">{usd(pnl, True)}</span>',
-                     "none" if share is None else pct(share, dp=0)))
-    rows.append(("<b>Portfolio</b>", fmt_short(pf["first"]),
-                 f'<b class="{tone(total)}">{usd(total, True)}</b>', "100%"))
-    return tbl(["Book", "First traded session", "P&L", "Share of portfolio P&L"], rows, right=(2, 3))
 
 
 def session_pnl(b: dict, date: str) -> tuple:
@@ -443,62 +364,43 @@ def session_pnl(b: dict, date: str) -> tuple:
 
 
 def latest_sessions(books: list) -> str:
-    """Each book's newest verified session, side by side, in aggregates, and the portfolio's sum when
-    every trading book has a reading for the same session. A P&L is Alpaca's official figure when it
-    has landed, else the after-close reading, labelled as such."""
-    rows, sums, gross, net, eq, dates, complete = [], 0.0, 0.0, 0.0, 0.0, set(), True
+    """Each book's newest verified session and its P&L, and the portfolio's sum when every book has a P&L for
+    the same session: the live figure of the evening, before Alpaca's end-of-day history lands overnight. A
+    P&L is Alpaca's official figure when it has landed, else the after-close reading, labelled as such.
+    Positions, exposure and orders are in each book's own section (team lead, 2026-11-24: "the portfolio
+    results is too many analytics")."""
+    rows, total, dates, complete = [], 0.0, set(), True
     for b in books:
         sess = b["session"]
         name = (f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)}"></span>'
                 f'{escape(b["title"])}')
         if "value" not in sess:
             rows.append((name, '<span class="meta">not measured</span>' if S.UNMEASURED in sess
-                         else '<span class="meta">none yet</span>', "", "", "", "", ""))
+                         else '<span class="meta">none yet</span>', "", ""))
             complete = False
             continue
         v = sess["value"]
         dates.add(v["date"])
-        e = v.get("equity_snapshot")
         ch, kind = session_pnl(b, v["date"])
         if ch is not None:
+            total += ch
             pnl = f'<span class="{tone(ch)}">{usd(ch, True)}</span> <span class="meta">{kind}</span>'
         else:
             pnl = '<span class="meta">not measured</span>'
             complete = False
-        p, o = v["positions"], v["orders"]
-        held = f'{p["n"]} <span class="meta">({p["n_long"]} long, {p["n_short"]} short)</span>' if p["n"] else "none"
-        if p["n"] and (p["n_unpriced"] or p["gross_x"] is None):
-            ex = '<span class="meta">not measured</span>'
-            complete = False
-        elif p["n"]:
-            ex = f'{p["gross_x"]:.2f}x / ' + f'{p["net_x"]:+.2f}x'.replace("-", "−")
-        else:
-            ex = "none"
-        if ch is not None and e and e.get("equity") is not None and (p["gross_usd"] is not None or not p["n"]):
-            sums += ch
-            gross += p["gross_usd"] or 0.0
-            net += p["net_usd"] or 0.0
-            eq += e["equity"]
-        else:
-            complete = False
-        orders = f'{o["n_filled"]} of {o["n"]}' if o["n"] else "none needed"
         check = "Reconciled" if v["verdict"] == "PASS" else '<span class="neg">Flagged for review</span>'
-        rows.append((name, fmt_short(v["date"]), pnl, held, ex, orders, check))
-    if complete and len(dates) == 1 and eq:
-        rows.append(("<b>Portfolio</b>", fmt_short(next(iter(dates))),
-                     f'<b class="{tone(sums)}">{usd(sums, True)}</b>', "",
-                     f'{gross / eq:.2f}x / ' + f'{net / eq:+.2f}x'.replace("-", "−"), "", ""))
-    return ('<div class="latest">' + tbl(["Book", "Session", "P&L", "Positions", "Gross / net exposure", "Orders filled",
-                                          "Check"], rows, right=(2, 3, 4, 5, 6)) + "</div>")
+        rows.append((name, fmt_short(v["date"]), pnl, check))
+    if complete and len(dates) == 1:
+        rows.append(("<b>Portfolio</b>", fmt_short(next(iter(dates))), f'<b class="{tone(total)}">{usd(total, True)}</b>', ""))
+    return tbl(["Book", "Session", "P&L", "Check"], rows, right=(2, 3))
 
 
 def portfolio_section(snap: dict) -> str:
     """The page's top (team lead, 2026-11-24: "overall portfolio (shown as one line), can split into
-    3 lines (our sleeves) and analyze below (all things institutional investors would look at)").
-    The portfolio's line, and its books' on a switch; drawdown; each session's P&L; then returns,
-    risk, risk-adjusted return and the distribution of daily returns side by side; correlation;
-    each book's contribution; monthly returns; and the latest session's positioning."""
-    books = snap["books"]
+    3 lines (our sleeves)"; later the same day: "the portfolio results is too many analytics"). Four
+    headline figures, the portfolio's line with its books' on a switch, and one table of key figures
+    for the portfolio and each book; then the latest session's P&L. Each book's own session, exposure and
+    execution follow below."""
     pf = portfolio(snap)
     warn = ""
     if pf["blocked"]:
@@ -528,43 +430,29 @@ def portfolio_section(snap: dict) -> str:
     kpis = [fig(pct(p["cum_return"], True), f"Time-weighted return since {fmt_short(pf['first'])}"),
             fig(usd(p["pnl"], True), f"P&amp;L since {fmt_short(pf['first'])}"),
             fig(_ratio_s(p["sharpe"]) if p["sharpe"] is not None else "n/a", f"Sharpe ratio ({p['n']} sessions)"),
-            fig(pct(p["vol"]) if p["vol"] is not None else "n/a", "Volatility, annualised"),
             fig(pct(p["max_drawdown"]), "Maximum drawdown")]
     growth = [{"name": "Portfolio", "color": PORTFOLIO_COLOUR, "bold": True,
                "points": M.index_points(pf["dated"], pf["base"])}]
-    under = [{"name": "Portfolio", "color": PORTFOLIO_COLOUR, "bold": True,
-              "points": M.drawdown_index(pf["dated"], pf["base"])}]
     for x in pf["books"]:
         growth.append({"name": x["b"]["title"], "color": colour(x), "cls": "bk",
                        "points": M.index_points(x["dated"], x["base"])})
-        under.append({"name": x["b"]["title"], "color": colour(x), "cls": "bk",
-                      "points": M.drawdown_index(x["dated"], x["base"])})
     switch = ('<div class="view-switch" role="group" aria-label="Chart view" hidden>'
               '<button type="button" data-view="portfolio" aria-pressed="true">Portfolio</button>'
               '<button type="button" data-view="books" aria-pressed="false">By book</button></div>')
     cols = [("Portfolio", PORTFOLIO_COLOUR, p)] + [(x["b"]["title"], colour(x), x["p"]) for x in pf["books"]]
-    mcols = [("Portfolio", PORTFOLIO_COLOUR, pf["dated"], p["cum_return"])] + [
-        (x["b"]["title"], colour(x), x["dated"], x["p"]["cum_return"]) for x in pf["books"]]
     return (f'<section class="section"><div class="wrap">'
             f'<div class="eyebrow">Portfolio &middot; to {fmt_short(p["last_date"])}</div>'
             f'<h2>Portfolio results</h2><p class="narrow">A composite of the books that are trading, each from its '
-            f'first traded session: {members}. Each session\'s return is the books\' combined P&amp;L over their '
-            f'combined equity at the previous close.{left}{out_txt}</p>{warn}'
+            f'first traded session: {members}.{left}{out_txt}</p>{warn}'
             f'<div class="figures kpis">{"".join(kpis)}</div>'
             f'<div class="chart-head"><h3 class="chart-title">Growth since inception</h3>{switch}</div>'
             + charts.line_chart(growth, "Cumulative return of the portfolio and of each book", fmt="pct")
-            + '<h3 class="chart-title">Drawdown from the peak</h3>'
-            + charts.line_chart(under, "Drawdown of the portfolio and of each book", fmt="pct", height=250)
-            + '<h3 class="chart-title">Portfolio P&amp;L of each session</h3>'
-            + charts.bar_chart([(d, v) for d, _, v in pf["dated"]], "Portfolio P&L of each session", height=230)
-            + '<h3 class="block-title">Performance and risk</h3>' + stats_table(cols)
-            + '<h3 class="block-title">Monthly returns</h3>' + monthly_table(mcols)
-            + '<h3 class="block-title">Contribution to portfolio P&amp;L</h3>' + contribution_table(pf)
-            + '<h3 class="block-title">Correlation of daily returns</h3>' + correlation_table(pf["books"])
-            + '<h3 class="block-title">Latest session</h3>' + latest_sessions(books)
-            + '<p class="meta">Returns compound each session\'s return. Hover over a chart for each session\'s values. '
-              'A session\'s P&amp;L is the after-close reading until Alpaca publishes its official end-of-day figure '
-              'overnight.</p></div></section>')
+            + '<h3 class="block-title">Key figures</h3>' + stats_table(cols)
+            + '<h3 class="block-title">Latest session</h3>' + latest_sessions(snap["books"])
+            + '<p class="meta">Returns are time-weighted: each session\'s return is the books\' combined P&amp;L over '
+              'their combined equity at the previous close, compounded. Hover over the chart for each session\'s '
+              'values. A session\'s P&amp;L is the after-close reading until Alpaca publishes its official end-of-day '
+              'figure overnight.</p></div></section>')
 
 
 def started_text(b: dict) -> str:
@@ -628,7 +516,7 @@ def shadow_section(r: dict) -> str:
 
 METHOD = """<section class="section"><div class="wrap narrow"><div class="eyebrow">Method</div><h2>How these figures are produced</h2>
 <p><b>Official P&amp;L.</b> Each account's results come from Alpaca's end-of-day portfolio history, the record we report against. A paper account differs from a live account in three ways: it charges no stock borrow fees, it does not credit or debit distributions on positions, and it fills orders at the current quote rather than in the closing auction. A live account's results would differ for those reasons.</p>
-<p><b>The portfolio.</b> A composite of the books that are trading, each from its first traded session, so an account's idle cash before it trades never dilutes the result. Each session's return is the books' combined P&amp;L divided by their combined equity at the previous close, and the returns compound: the return is time-weighted, the standard for a composite. Because a session counts by its return and not by its dollars, the portfolio's return and its dollar P&amp;L can differ, even in sign, when the capital trading changes, as it does when a book joins. A session on which a trading book has no record is left out, never filled. The event book counts from its first traded session; until Alpaca's end-of-day history is collected for it, its daily figures are the account equity read after each close.</p><p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility, downside deviation, the Sharpe, Sortino and Calmar ratios, value at risk, expected shortfall, skewness and kurtosis are shown once a series has 20 sessions, and are annualised with 252 sessions where they are rates. No ratio subtracts a risk-free rate. The Sortino ratio divides by the downside deviation of daily returns; the Calmar ratio divides the annualised return by the maximum drawdown. Value at risk and expected shortfall are historical and one-day: the 5th percentile of daily returns and the average of the returns at or below it. Drawdown is measured on the compounded return from its running peak. A record of a few dozen sessions measures every ratio only loosely.</p>
+<p><b>The portfolio.</b> A composite of the books that are trading, each from its first traded session, so an account's idle cash before it trades never dilutes the result. Each session's return is the books' combined P&amp;L divided by their combined equity at the previous close, and the returns compound: the return is time-weighted, the standard for a composite. Because a session counts by its return and not by its dollars, the portfolio's return and its dollar P&amp;L can differ, even in sign, when the capital trading changes, as it does when a book joins. A session on which a trading book has no record is left out, never filled. The event book counts from its first traded session; until Alpaca's end-of-day history is collected for it, its daily figures are the account equity read after each close.</p><p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility and the Sharpe ratio are shown once a series has 20 sessions and are annualised with 252 sessions; the Sharpe ratio subtracts no risk-free rate. Drawdown is measured on the compounded return from its running peak. A record of a few dozen sessions measures every ratio only loosely.</p>
 <p><b>Positions and orders.</b> Taken from the trading system's reconciliation with the broker after each close and reported in aggregate: how many positions each book holds, its gross and net exposure at the closing price, and how many orders were filled. Individual holdings and orders are not published.</p>
 <p><b>Updates.</b> The page rebuilds automatically every 30 minutes from the trading system's records, so a session appears shortly after the close and its official figure after Alpaca publishes it overnight. A figure the system could not read is marked as not measured; it is never estimated or carried forward.</p>
 </div></section>"""

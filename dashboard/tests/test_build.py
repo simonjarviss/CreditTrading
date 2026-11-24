@@ -72,17 +72,25 @@ def test_the_portfolio_takes_each_book_from_its_first_send_and_the_event_book_on
 def test_the_portfolio_view_switch_hides_the_books_until_chosen(snap):
     h = page(snap)
     assert 'class="view-switch" role="group" aria-label="Chart view" hidden' in h
-    assert h.count('data-view="portfolio"') >= 4                  # growth and drawdown charts and their legends
+    assert h.count('data-view="portfolio"') >= 2                  # the growth chart and its legend
     assert 'class="series bk"' in h and "By book" in h
 
 
-def test_the_statistics_table_has_every_group_and_needs_twenty_sessions_for_ratios(snap):
+def test_the_portfolio_shows_eight_key_figures_and_needs_twenty_sessions_for_ratios(snap):
+    """Team lead, 2026-11-24: "the portfolio results is too many analytics". Four headline figures, one
+    chart, eight key figures and the latest session; nothing else."""
     h = page(snap)
-    for label in ("Returns", "Risk", "Risk-adjusted return", "Daily returns", "Value at risk, 95%, one day",
-                  "Expected shortfall, 95%, one day", "Sortino ratio", "Calmar ratio", "Profit factor", "Skewness",
-                  "Longest drawdown", "Month to date", "Since inception, time-weighted"):
-        assert f"<td>{label}</td>" in h or re.search(rf'colspan="\d+">{re.escape(label)}</td>', h), label
+    labels = ("Sessions", "Since inception, time-weighted", "P&amp;L since inception", "Sessions with a gain",
+              "Volatility, annualised", "Sharpe ratio", "Maximum drawdown", "Current drawdown")
+    table = h.split("Key figures", 1)[1].split("</table>", 1)[0]
+    assert re.findall(r"<tr><td>([^<]+)</td>", table) == list(labels)
+    assert re.findall(r'colspan="\d+">([^<]+)</td>', table) == ["Return", "Risk"]
     assert "needs 20 sessions, has 4" in h                       # the fixture's portfolio has 4 sessions
+    kpis = h.split('class="figures kpis"', 1)[1].split("</div></div></div>", 1)[0]
+    assert kpis.count('class="fig"') == 4
+    for gone in ("Drawdown from the peak", "Monthly returns", "Correlation of daily returns", "Contribution to",
+                 "Sortino", "Value at risk", "Skewness", "Profit factor"):
+        assert gone not in h, gone
 
 
 def test_an_unreadable_book_is_left_out_of_the_portfolio_and_named(snap):

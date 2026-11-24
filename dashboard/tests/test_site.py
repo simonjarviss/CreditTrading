@@ -40,7 +40,7 @@ def test_every_page_is_built_and_carries_the_disclaimer_and_contact(snap, tmp_pa
     target = build(snap, tmp_path / "site", content)
     pages = sorted(p.relative_to(target).as_posix() for p in target.rglob("*.html"))
     assert pages == ["404.html", "contact/index.html", "index.html", "library/index.html",
-                     "performance/index.html", "research/index.html", "team/index.html"]
+                     "overview/index.html", "performance/index.html", "research/index.html", "team/index.html"]
     for p in pages:
         h = (target / p).read_text()
         assert "No client or outside capital is invested" in h, p
@@ -61,18 +61,26 @@ def test_every_local_link_and_asset_exists(snap, tmp_path, content):
 def test_the_overview_leads_with_the_team_and_there_is_no_slideshow(snap, tmp_path, content):
     """Team lead, 2026-11-23: "take out the slideshow and make the team the first thing"."""
     target = build(snap, tmp_path / "site", content)
-    h = (target / "index.html").read_text()
+    h = (target / "overview" / "index.html").read_text()
     assert h.index("Who we are") < h.index("Books trading") < h.index("Three books, one portfolio")
     assert not (target / "strategy").exists() and "/strategy/" not in h and "slide-" not in h
-    nav = h.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
-    assert nav.index("/team/") < nav.index("/performance/")
+
+
+def test_the_team_page_is_the_home_page(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "when we open the page, it should be the team page which shows first"."""
+    target = build(snap, tmp_path / "site", content)
+    home = (target / "index.html").read_text()
+    assert "Lucy Keith" in home and home.count(">LinkedIn</a>") == 4 and "<title>Event Driven Trading</title>" in home
+    assert (target / "team" / "index.html").read_text() == home                       # earlier links still work
+    nav = home.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
+    assert nav.index('href="/"') < nav.index('href="/overview/"') < nav.index('href="/performance/"')
 
 
 def test_the_overviews_portfolio_figure_states_its_window(snap, tmp_path, content):
     """Release-check review, 2026-11-23: without a start date the figure read as P&L since inception."""
     from dashboard import build as B
     pf = B.portfolio(snap)
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
     assert f"Portfolio return, time-weighted, {SITE.date_range(pf['first'], pf['p']['last_date'])}<" in h
     assert SITE.date_range("2026-09-29", "2026-11-20") == "29 Sep to 20 Nov 2026"
     assert SITE.date_range("2025-12-30", "2026-01-05") == "30 Dec 2025 to 5 Jan 2026"
@@ -86,7 +94,7 @@ def test_a_new_book_is_dated_by_its_first_send_not_its_newest_session(snap, tmp_
     ev["session"]["value"]["date"] = "2026-11-25"           # two sessions later
     target = build(snap, tmp_path / "site", content)
     assert "rading since 23 Nov 2026" in (target / "performance" / "index.html").read_text()
-    for page in ("index.html", "performance/index.html"):
+    for page in ("overview/index.html", "performance/index.html"):
         h = (target / page).read_text()
         assert "since 25 Nov 2026" not in h, page
 
@@ -102,7 +110,7 @@ def test_an_unmeasured_book_withholds_the_overviews_combined_figure(snap, tmp_pa
     """A book whose history could not be read would change the sum's basis silently: no figure, no line."""
     cef = next(b for b in snap["books"] if b["name"] == "cef")
     cef["official"] = {"UNMEASURED": "eod_equity.csv: not a number in column equity"}
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
     assert "Paper P&amp;L of the" not in h and "Combined paper P&amp;L" not in h
     assert "Accounts combined" not in h and "Books trading" in h
 
@@ -128,7 +136,7 @@ def test_a_missing_library_file_stops_the_build(snap, tmp_path, content):
 
 
 def test_the_overview_figures_come_from_the_snapshot(snap, tmp_path, content):
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
     assert "Books trading" in h and ">3<" in h                         # three books with a session or history
     assert "Systematic strategies" in h                                # 2 core books + the event book's strategies
     assert "Paper results to date" in h                                # the live chart
@@ -187,7 +195,7 @@ def test_every_daemon_reload_in_the_site_installer_is_guarded():
 def test_the_stylesheet_and_script_urls_change_with_their_content(snap, tmp_path, content):
     """2026-11-24: Cloudflare kept the previous release's stylesheet for up to an hour beside new pages."""
     from dashboard import layout as L
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
     v = L.asset_version()
     assert re.fullmatch(r"[0-9a-f]{12}", v)
     assert f'href="/static/site.css?v={v}"' in h and f'src="/static/site.js?v={v}"' in h
@@ -206,7 +214,7 @@ def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, conte
 def test_every_page_photo_not_taken_by_quantt_is_credited(snap, tmp_path, content):
     from dashboard import layout as L
     target = build(snap, tmp_path / "site", content)
-    for page_name, key in (("team", "team"), ("library", "library")):
+    for page_name, key in (("team", "team"), ("library", "library"), ("research", "research"), ("contact", "contact")):
         h = (target / page_name / "index.html").read_text()
         photo = L.PHOTOS[key]
         assert photo in L.PHOTO_CREDITS, photo
@@ -220,7 +228,7 @@ def test_the_pages_hash_the_stylesheet_the_build_serves(snap, tmp_path, content)
     import hashlib
     target = build(snap, tmp_path / "site", content)
     h = hashlib.sha256((target / "static" / "site.css").read_bytes() + (target / "static" / "site.js").read_bytes())
-    assert f'site.css?v={h.hexdigest()[:12]}"' in (target / "index.html").read_text()
+    assert f'site.css?v={h.hexdigest()[:12]}"' in (target / "overview" / "index.html").read_text()
 
 
 def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content):
@@ -230,7 +238,7 @@ def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content):
     ev["start"] = {"absent": "no session has sent an order yet"}
     assert SITE.books_trading(snap) == (2, 0)
     ev["start"] = {"UNMEASURED": "STARTED unreadable"}
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
     assert ">2<" in h and "Books trading (1 not read tonight)" in h
 
 
@@ -238,7 +246,7 @@ def test_the_overview_names_a_book_left_out_beside_every_portfolio_figure(snap, 
     """Release-check review of 455eff4: with one book unreadable, the overview's P&L figure and chart
     did not name it."""
     next(b for b in snap["books"] if b["name"] == "c4")["official"] = {"UNMEASURED": "eod_equity.csv: not a number"}
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
     assert h.count("without the Equity Cross-Asset Book: not read tonight") == 2         # return and P&L figures
     assert "Not included tonight: Equity Cross-Asset Book (its official history could not be read)." in h
 
