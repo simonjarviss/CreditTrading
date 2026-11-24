@@ -6,6 +6,11 @@ for `results/cef/RESEARCH_AGENDA_2026-10-08.md` §1. **True on its date only.**
 `shortable` and `easy_to_borrow` change daily, and the liquidity window ended on
 2024-12-31.
 
+**`universe_map.csv` left the repository on 2026-11-09.** It carries permnos and
+CRSP-based liquidity per name, which `docs/TEAM.md` keeps off a public repository. The
+team lead holds a copy; placed at this path it stays out of git. The scripts that read
+it need that copy.
+
 **How it was made.** A desk agent (market-structure-analyst) ran these steps on
 2026-10-08:
 

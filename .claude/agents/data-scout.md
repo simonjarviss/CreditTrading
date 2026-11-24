@@ -34,10 +34,10 @@ Label every row `[V]`/`[S]`/`[U]`.
 
 ## What you own
 
-1. **The R2 mirror** (`docs/DATA.md`; inventory in
-   `results/events/ssx/ssx_data/R2_FULL_INVENTORY_2026-10-19.md` and
-   `results/data/R2_CATALOG.md`). Read the inventory, never recall it. Re-run the
-   catalogue script before quoting a table's last date. R2 reads go through
+1. **The R2 mirror** (`docs/DATA.md` §3, which also says how to generate the
+   inventory; it is git-ignored since 2026-11-24 because this repository is public, so
+   it exists only on a machine that has generated it). Read the inventory, never recall
+   it. Re-run the catalogue script before quoting a table's last date. R2 reads go through
    `src/data/r2.py` only. **R2 is never on the live path**; a test enforces it.
    The team lead runs the pulls that need the token.
 2. **Free sources.** SEC EDGAR, FRED and ALFRED, Treasury and Federal Reserve
