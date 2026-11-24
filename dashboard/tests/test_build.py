@@ -88,7 +88,7 @@ def test_the_page_loads_nothing_from_another_origin(snap):
     # what the page LOADS: src= and <link href=. A plain link to another site (LinkedIn, GitHub) loads nothing.
     assert not re.search(r"(\bsrc\s*=|<link\b[^>]*\bhref\s*=)\s*[\"']?(https?:)?//", h, re.I)
     assert not re.search(r"url\(\s*[\"']?(https?:)?//", h, re.I)
-    assert re.findall(r"<script[^>]*>", h) == ['<script src="/static/site.js" defer>']
+    assert re.fullmatch(r'<script src="/static/site\.js\?v=[0-9a-f]{12}" defer>', "".join(re.findall(r"<script[^>]*>", h)))
 
 
 def test_build_refuses_a_snapshot_with_a_secret_and_writes_nothing(snap, tmp_path):
@@ -116,7 +116,7 @@ def test_cli_builds_the_fixture(tmp_path):
 
 # ------------------------------------------------------------ read-only ----
 STDLIB = {"__future__", "argparse", "csv", "datetime", "json", "math", "os", "re", "shutil", "sys", "html",
-          "pathlib", "tempfile", "zoneinfo", "dashboard"}
+          "pathlib", "tempfile", "zoneinfo", "hashlib", "dashboard"}
 CODE = ["build.py", "snapshot.py", "export.py", "metrics.py", "charts.py", "layout.py", "site.py"]
 
 

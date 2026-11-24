@@ -51,7 +51,7 @@ def test_every_local_link_and_asset_exists(snap, tmp_path, content):
     target = build(snap, tmp_path / "site", content)
     missing = []
     for page in target.rglob("*.html"):
-        for ref in re.findall(r'(?:href|src)="(/[^"#]*)', page.read_text()):
+        for ref in re.findall(r'(?:href|src)="(/[^"#?]*)', page.read_text()):
             p = target / ref.lstrip("/")
             if not (p.is_file() or (p / "index.html").is_file()):
                 missing.append((page.name, ref))
@@ -190,3 +190,33 @@ def test_every_daemon_reload_in_the_site_installer_is_guarded():
             assert "--no-reload" in line, line
     for refusal in ('|| die "cannot list the running quantt units"', '|| die "cannot list the quantt units"'):
         assert refusal in guard, "a failed query must refuse, never read as nothing running"
+
+
+def test_the_stylesheet_and_script_urls_change_with_their_content(snap, tmp_path, content):
+    """2026-11-24: Cloudflare kept the previous release's stylesheet for up to an hour beside new pages."""
+    from dashboard import layout as L
+    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    v = L.asset_version()
+    assert re.fullmatch(r"[0-9a-f]{12}", v)
+    assert f'href="/static/site.css?v={v}"' in h and f'src="/static/site.js?v={v}"' in h
+
+
+def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "re organize the library / research its ugly"."""
+    target = build(snap, tmp_path / "site", content)
+    h = (target / "library" / "index.html").read_text()
+    assert 'id="lib-search"' in h and 'class="lib-side"' in h and h.count('class="lib-row"') == len(LIB["entries"])
+    assert '<span>Closed-end fund discounts</span><span class="c">1</span>' in h
+    r = (target / "research" / "index.html").read_text()
+    assert r.count('class="row slim timed"') == 6 and "team-atrium" not in r and "How a result is tested" in r
+
+
+def test_every_page_photo_not_taken_by_quantt_is_credited(snap, tmp_path, content):
+    from dashboard import layout as L
+    target = build(snap, tmp_path / "site", content)
+    for page_name, key in (("team", "team"), ("library", "library")):
+        h = (target / page_name / "index.html").read_text()
+        photo = L.PHOTOS[key]
+        assert photo in L.PHOTO_CREDITS, photo
+        who, lic, url = L.PHOTO_CREDITS[photo]
+        assert f"{who}</a>, {lic}" in h and url in h, page_name

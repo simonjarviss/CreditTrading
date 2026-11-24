@@ -84,7 +84,12 @@ export default {
     if (!origin) return unavailable(env.ORIGIN ? "origin is not an http(s) URL" : "origin not configured");
 
     const isStatic = url.pathname.startsWith("/static/");
-    const key = new Request(url.origin + url.pathname, { method: "GET" });
+    // A static file's `v` (the site's content hash, dashboard/layout.py asset_version) is part of its
+    // cache key, so each release's stylesheet is its own edge entry. Only a 12-hex-digit v counts, so a
+    // visitor cannot fill the cache with keys; nothing else in a query string is used or forwarded.
+    const v = isStatic ? url.searchParams.get("v") : null;
+    const key = new Request(url.origin + url.pathname + (v && /^[0-9a-f]{12}$/.test(v) ? "?v=" + v : ""),
+                            { method: "GET" });
     const cache = caches.default;
     const hit = await cache.match(key);
     if (hit) return forBrowser(request, hit);
