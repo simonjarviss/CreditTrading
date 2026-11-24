@@ -32,7 +32,7 @@ from html import escape
 from pathlib import Path
 
 from dashboard import build as perf, layout as L, snapshot as S
-from dashboard.layout import BOOK_COLOURS, CONTACT_EMAIL, REPO_URL, page, page_head
+from dashboard.layout import BOOK_COLOURS, CONTACT_EMAIL, page, page_head
 
 HERE = Path(__file__).resolve().parent
 CONTENT = HERE / "content"
@@ -166,10 +166,7 @@ def research(snap: dict, ledger: tuple) -> str:
     record = ('<section class="section dark"><div class="wrap sec-grid"><div class="sec-label">'
               '<div class="eyebrow">Record</div><h2>The research ledger</h2>'
               '<p class="lede">Every idea we test is recorded with its data, gross result and status, including the '
-              'ideas we set aside. The research code, notes and trading system are public.</p>'
-              f'<div class="buttons"><a class="btn primary" href="{REPO_URL}/blob/main/results/IDEA_LEDGER.md" '
-              'rel="noopener">Read the ledger</a>'
-              f'<a class="btn ghost" href="{REPO_URL}" rel="noopener">Source code on GitHub</a></div></div>'
+              'ideas we set aside.</p></div>'
               '<div class="sec-body"><div class="figures">'
               + perf.fig(str(n_ledger), f"Ideas recorded since {since}")
               + perf.fig(str(n_books), "Books trading on paper" + (f" ({n_unread} not read tonight)" if n_unread else ""))

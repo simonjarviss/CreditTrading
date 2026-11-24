@@ -5847,3 +5847,14 @@ that adds it does not exist when it is written.
 - source: `dashboard/layout.py` and `dashboard/site.py` @ `04be676` (before the change); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-20 · Ruling: no GitHub link on the site, the repository going private
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - session 2027-bc relayed the team lead's request to take every GitHub link off event-driven.quantt.ca because the repository is going private; this session folded the change into its next site release, as agreed with 2027-bc [S]
+  - removed: the header's GitHub link and mark, the research page's "Read the ledger" (a link into the repository) and "Source code on GitHub" buttons, and the sentence saying the research code is public. A test fails on any page that names GitHub [V]
+- source: `dashboard/layout.py` and `dashboard/site.py` @ `65d72ee` (before the change); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

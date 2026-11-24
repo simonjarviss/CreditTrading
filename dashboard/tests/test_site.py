@@ -279,3 +279,13 @@ def test_every_page_links_to_quantt_and_carries_the_share_card(snap, tmp_path, c
         nav = h.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
         assert 'href="https://quantt.ca"' in nav, page.name
         assert f'<meta property="og:image" content="{L.SITE_URL}/static/img/og-card.png">' in h, page.name
+
+
+def test_no_page_links_to_github(snap, tmp_path, content, monkeypatch):
+    """Team lead, 2026-11-24 (through session 2027-bc): the repository is going private, so the site links to
+    no GitHub page, the research page's content included."""
+    monkeypatch.setattr(SITE, "RESEARCH_UNDER_CONSTRUCTION", False)
+    target = build(snap, tmp_path / "site", content)
+    for page in target.rglob("*.html"):
+        h = page.read_text()
+        assert "github.com" not in h and "GitHub" not in h, page
