@@ -5570,3 +5570,18 @@ that adds it does not exist when it is written.
 - source: `dashboard/worker/index.js` @ `3247a23` and `dashboard/wrangler.jsonc` @ `3247a23` (the Worker, PR #103); `dashboard/site.py` @ `3858e67` (the redesign, no slideshow, the team first); the combined figure's label, the installer's guard and `docs/SYSTEM.md` §5 "the public site" are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-23-05 · Release: release-20261123-2 paces the Alpaca trading host and waits out a 429 before any resend; installed for the core and C4 armed, and the events book armed with AUTO_ARMED
+- kind: release
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - `release-20261123-2` is df7f6fc (PR #100, merged to main as b1f2279), and it contains release-20261123-1. Three release checks: NO-GO on 81e1071 (a 429 path left an order with no terminal event, so the events VERIFY would not book the day); NO-GO on 4cf8431 (it did not contain release-20261123-1); NO-GO on 93021c8 (the fourth 429 was not looked up; a banner test read the real repository); GO on df7f6fc: pytest exit 0 (5077 passed, 2 skipped), doc_audit 0 DRIFT, two reviewers with no order-path defect [V]
+  - the replay through the tagged code (RUNBOOK §8.6 step 2): 97 runs replayed, none refused now [V]
+  - that evening's events VERIFY for 2026-11-23: FAIL (the partial send), no problems, ledger booked to 2026-11-23, 46 symbols filled, 63 bookings [V]
+  - installed 21:41 to 21:42 ET: the core and C4 `--armed` (DRY_RUN=0 and AUTO_ARMED as before, timers read back active); the events installer re-run with `--keep-state`; then, on "AUTO_ARMED now", the events send unit DRY_RUN=0 and AUTO_ARMED created; no HALT. ops.prod_state read back: the VM ARMED at release-20261123-2 for the core and C4; the site clone left at release-20261123-1 [V]
+  - not yet seen: the events book's first paced send (2026-11-24, 15:40 to 15:58 ET) [U]
+  - follow-ups from the release check, not blockers: about 226 paced asset reads now come before gate 4, so a set above about 290 orders is refused even at 15:41, and the 15:46 retry holds about 201 (fails closed, nothing sent in part); a non-429 4xx on a resend is booked `rejected` where the safer reading is ambiguous; from the release check of df7f6fc [S]
+- source: `quantt/broker/alpaca.py` @ `df7f6fc`; `quantt/session/run.py` @ `df7f6fc`; `quantt/sleeves/run.py` @ `df7f6fc`; the VM's installer output, events VERIFY and `ops.prod_state`, read on 2026-11-23
+- supports: §1, §5
+- status: current

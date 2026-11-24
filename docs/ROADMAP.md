@@ -155,6 +155,8 @@ live path follows `docs/TEAM.md` §2 and reaches the VM only in a release.
 | 7.30 | CI: type checks, a coverage floor, a lint for silent excepts | A2.2, A2.3, A2.5 | 30 | A | open |
 | 7.31 | Access: a 2FA checklist, key rotation for every secret unit, one access table, Bash deny rules | A10.2, A10.3, A10.4 | 31 | TL (2FA, rotation), A | open |
 | 7.32 | Data terms per source, with a ruling each | A7.5 | 32 | A, TL rules | open |
+| 7.35 | Events send capacity after pacing: read the assets in one request (`AlpacaClient.assets()`) instead of one per symbol before gate 4; correct the capacity figures in `quantt/sleeves/deploy/README.md` and `ops/sleeves/events_sleeves.json` (`max_orders`); extend the budget test to the reads before the gate (release check of df7f6fc) | A3.3 | — | A | open |
+| 7.36 | A non-429 4xx on a resend after a 429 is read as ambiguous and stops the batch, not booked `rejected` (release check of df7f6fc) | A3.6 | — | A | open |
 | 7.33 | Small document contradictions (the audit's F7, F8, F13, F15, F16), including phase 4 above | A1.5 | 33 | A | open |
 
 **7e. Already built.**
