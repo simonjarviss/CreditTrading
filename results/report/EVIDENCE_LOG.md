@@ -5645,3 +5645,16 @@ that adds it does not exist when it is written.
 - source: `dashboard/metrics.py` @ `89c145d` (statistics over each account's funded rows); the VM's `quantt_state/{cef,c4,events}` STARTED, eod_equity.csv and verify.json, read 2026-11-24; `dashboard/build.py` `portfolio`, `metrics.composite` and `metrics.profile` are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-03 · Release: release-20261124-2 put the portfolio page live; the event book's record now refuses a skipped session, and an unreadable book is named and left out instead of hiding the portfolio
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release check (workflow run wf_56e06952-0a7) on 904bd35: pytest 5113 passed and 2 skipped, doc_audit 0 DRIFT, orient exit 0, preview exit 4; no order-path file in the range. Merged as 0c03c96 (PR #108, trees equal) and tagged release-20261124-2 after its checks passed, before its reviewers returned; their verdict, GO, covers it [V]
+  - VM, 01:4x ET: the site clone moved from release-20261124-1 to release-20261124-2 and is clean; the build published; the performance page reads "Return since 29 Sep 2026 (+$1,326)"; no client order id on any page. Cloudflare's build of 0c03c96 succeeded and `event-driven.quantt.ca` serves the same page and stylesheet hash. The trading clone still at release-20261123-2; cef and c4 AUTO_ARMED present [V]
+  - the reviewers' site findings, fixed in the commit that carries this entry: a traded session without verify.json was skipped, understating the event book's P&L (the reviewer's probe: +$500 shown for +$1,500); an unreadable record withheld the whole portfolio until repaired by hand; metrics.py still said every figure matched orient. The record now refuses a missing reading or a `last_equity` that is not the previous reading's equity, the newest unverified sessions count as pending, and an unreadable book is left out and named above the figures and in the overview's label [V]
+  - outside the site, from the same check, for the team lead: the cef plan for 2026-11-24 carries a pre-flight WARNING (worst-day shock $1,220.47); a worthless_removal corporate action with no symbol (3d567376-eccf-458b-977d-49469e51f0f7) is read as touching every held cef name, BLOCKING in report mode, so nothing is refused; the newest Alpaca probe snapshot is 40 days old (from the release check's preview and orient, not re-read here) [S]
+- source: `dashboard/export.py` @ `0c03c96` (`after_close` read only the days with a verify.json); `dashboard/build.py` @ `0c03c96` (`portfolio_section` withheld on any unreadable book); the VM's site journal and `/srv/quantt-site`, read 2026-11-24 01:4x ET; the fixes are in the commit that carries this entry
+- supports: §5
+- status: current

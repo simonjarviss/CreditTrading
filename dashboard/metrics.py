@@ -1,7 +1,9 @@
-"""Performance statistics from an official end-of-day equity series. Standard library only.
+"""Performance statistics. Standard library only.
 
-The definitions are the ones `ops/orient.py` PNL prints, so the site and orient agree to
-the cent (dashboard/tests/test_metrics.py pins that on a recorded series):
+`summary` uses the definitions `ops/orient.py` PNL prints, so on one account's official series it
+agrees with orient to the cent (dashboard/tests/test_metrics.py pins that on a recorded series). The
+performance page's figures come from `profile` over each book from its first traded session and
+over the portfolio composite (below), so they differ from orient's, which count from funding:
 
   * daily return r_t = change_usd_t / equity_{t-1}  (Alpaca's own change, never a
     difference we compute: the change carries cash flows Alpaca knows about and we do not);

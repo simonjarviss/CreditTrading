@@ -91,10 +91,11 @@ def overview(snap: dict) -> str:
         n_strat = len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
         figs.append(perf.fig(str(n_strat + sum(1 for b in snap["books"] if b["name"] != "events")),
                              "Systematic strategies"))
-    if pf["p"] and not pf["blocked"]:
+    if pf["p"]:
         p = pf["p"]
+        not_read = "".join(f" (without the {escape(b['title'])}: not read tonight)" for b, _ in pf["blocked"])
         figs.append(perf.fig(pct(p["cum_return"], True),
-                             f"Portfolio return, {date_range(pf['first'], p['last_date'])}"))
+                             f"Portfolio return, {date_range(pf['first'], p['last_date'])}{not_read}"))
         figs.append(perf.fig(usd(p["pnl"], True), f"Portfolio P&amp;L over {p['n']} sessions"))
     hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
             '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
@@ -129,7 +130,7 @@ def overview(snap: dict) -> str:
                 '<a class="link-arrow" href="/research/">How we research</a></div>'
                 f'<div class="sec-body"><div class="rows">{"".join(rows_html)}</div></div></div></section>')
     performance = ""
-    if pf["p"] and not pf["blocked"]:
+    if pf["p"]:
         line = [{"name": "Portfolio", "color": "#111418", "bold": True,
                  "points": M.index_points(pf["dated"], pf["base"])}]
         performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
