@@ -10,11 +10,6 @@
   "name": "quantt-event-driven",
   "main": "worker/index.js",
   "compatibility_date": "2026-09-01",
-  "assets": {
-    "directory": "public",
-    "binding": "ASSETS",
-    "run_worker_first": true
-  },
   "keep_vars": true,
   // Only the custom domain serves the site: no public workers.dev address and no preview URLs, so an
   // unreviewed branch build can never run with ORIGIN on a public address.

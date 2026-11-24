@@ -52,8 +52,13 @@
 # (say Environment=DRY_RUN=0 on a disarmed book) would go live through this install without a
 # word (quantt/deploy/install_vm.py scan_units says why the C4 install refuses first). So before
 # each reload this script refuses, as the other installers do, on: any drop-in for a quantt- unit
-# other than the site's own; any quantt- job queued or running; and the send windows, weekdays
-# 12:30-13:00 and 15:30-16:00 New York (install_vm.py RESTART_REFUSE_RANGES_ET's neighbourhood).
+# other than the site's own; any quantt- unit whose file changed on disk since systemd last read it
+# (NeedDaemonReload, the same risk without a drop-in); any quantt- job queued or running; and the
+# send windows, weekdays 12:30-13:00 and 15:30-16:00 New York (install_vm.py
+# RESTART_REFUSE_RANGES_ET's neighbourhood). The guard runs FIRST, before caddy's package is
+# installed: a package's post-install reloads systemd too (release-check review, 2026-11-23). The
+# two `systemctl enable` calls pass --no-reload, so the install's one reload is the guarded one.
+# A systemctl query that fails refuses the install; it never reads as "nothing running".
 #
 # THE INSTALLER'S UNIT NAMES ARE REGISTERED in quantt/deploy/install_vm.py SITE_UNIT_FILES, so a
 # C4 or --reports install does not refuse beside them (pinned by a test).
@@ -133,8 +138,18 @@ check_safe_to_reload() {
   fi
   jobs="$(systemctl list-jobs --no-legend 'quantt-*')" || die "cannot list systemd jobs"
   [ -z "${jobs}" ] || die "a quantt job is queued or running: ${jobs}"
-  active="$(systemctl list-units --type=service --state=activating,running --no-legend 'quantt-*' | awk '{print $1}' | grep -v '^quantt-site\.service$' | tr '\n' ' ')"
+  running="$(systemctl list-units --type=service --state=activating,running --no-legend --plain 'quantt-*')" \
+    || die "cannot list the running quantt units"
+  active="$(printf '%s\n' "${running}" | awk 'NF {print $1}' | grep -v '^quantt-site\.service$' | tr '\n' ' ')"
   [ -z "$(echo "${active}" | tr -d ' ')" ] || die "a quantt job is running: ${active}; run this between the books' jobs"
+  loaded="$(systemctl list-units --all --no-legend --plain 'quantt-*')" || die "cannot list the quantt units"
+  stale=""
+  for u in $(printf '%s\n' "${loaded}" | awk 'NF {print $1}'); do
+    case "${u}" in quantt-site.service|quantt-site.timer) continue ;; esac
+    need="$(systemctl show -p NeedDaemonReload --value "${u}")" || die "cannot read NeedDaemonReload of ${u}"
+    [ "${need}" = "no" ] || stale="${stale} ${u}"
+  done
+  [ -z "${stale}" ] || die "unit file(s) changed on disk since systemd read them would go live at this install's daemon-reload:${stale}. Find out why, and re-run"
   found=""
   for root in /etc/systemd/system /run/systemd/system /usr/lib/systemd/system /lib/systemd/system \
               /etc/systemd/system.control /run/systemd/system.control /run/systemd/transient; do
@@ -240,19 +255,19 @@ write_caddyfile() {
 do_install() {
   check_root
   check_clone
+  check_safe_to_reload                          # first: caddy's package post-install reloads systemd
   install_caddy
   step "site root ${SITE_ROOT}"
   install -d -m 0755 -o "${RUN_USER}" -g "${RUN_USER}" "${SITE_ROOT}"
-  check_safe_to_reload
   write_units
   systemctl daemon-reload
   step "first build"
   systemctl start quantt-site.service || die "the first build failed: journalctl -u quantt-site.service"
   [ -L "${SITE_ROOT}/current" ] || die "the build left no ${SITE_ROOT}/current"
   write_caddyfile
-  systemctl enable caddy >/dev/null 2>&1
+  systemctl enable --no-reload caddy >/dev/null 2>&1
   systemctl restart caddy
-  systemctl enable --now quantt-site.timer
+  systemctl enable --no-reload --now quantt-site.timer
   step "done. caddy: $(systemctl is-active caddy); timer: $(systemctl is-active quantt-site.timer)"
   systemctl list-timers quantt-site.timer --no-pager | sed -n 1,3p
 }

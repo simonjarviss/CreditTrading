@@ -1882,3 +1882,103 @@ def test_eod_a_stamp_outside_the_clock_raises_unexpected_response(env_file, slee
     c, _ = eod_client(env_file, sleeps, history([utc0(2026, 10, 16), stamp], [100000.0, 100001.0]))
     with pytest.raises(al.UnexpectedResponse, match=str(stamp)):
         c.eod_equity_history(dt.date(2026, 10, 1), dt.date(2026, 11, 3))
+
+
+# ------------------------------------------------ pacing the trading host (2026-11-23)
+# The events book's first armed send read 219 assets and POSTed 219 orders with nothing pacing
+# them, and Alpaca answered HTTP 429 to 173 of the orders. Every request to the trading host now
+# takes a token from a bucket (TRADING_BURST, refilled at TRADING_MAX_PER_MIN a minute).
+
+CLOCK_OK = {"timestamp": "2026-09-29T15:45:00-04:00", "is_open": True,
+            "next_open": "2026-09-30T09:30:00-04:00", "next_close": "2026-09-29T16:00:00-04:00"}
+
+
+class VirtualTime:
+    """A clock that only moves when the client sleeps, so pacing is measured, not timed."""
+
+    def __init__(self):
+        self.t = 0.0
+        self.sleeps = []
+
+    def sleep(self, s):
+        self.sleeps.append(s)
+        self.t += s
+
+    def monotonic(self):
+        return self.t
+
+
+def paced_client(env_file, vt, get=None, post=None):
+    s = FakeSession(get or route({"/v2/clock": FakeResp(200, CLOCK_OK)}), post)
+    return al.AlpacaClient("cef", env_file, session=s, sleep=vt.sleep,
+                           monotonic=vt.monotonic), s
+
+
+def test_a_burst_goes_unpaced_and_the_rest_wait_their_turn(env_file):
+    """Failed before 2026-11-23 (no pacing, and no `monotonic` to inject)."""
+    vt = VirtualTime()
+    c, s = paced_client(env_file, vt)
+    for _ in range(al.TRADING_BURST):
+        c.clock()
+    assert vt.sleeps == []                      # the core's few dozen requests never wait
+    for _ in range(20):
+        c.clock()
+    step = 60.0 / al.TRADING_MAX_PER_MIN
+    assert vt.sleeps == pytest.approx([step] * 20)
+
+
+def test_no_minute_holds_more_than_alpacas_limit(env_file):
+    """219 asset reads, then 219 orders each with its clock read: the 2026-11-23 shape."""
+    vt = VirtualTime()
+    stamps = []
+
+    def get(url, params):
+        stamps.append(vt.t)
+        if url.endswith("/v2/clock"):
+            return FakeResp(200, CLOCK_OK)
+        sym = url.rsplit("/", 1)[-1]
+        return FakeResp(200, {"symbol": sym, "tradable": True, "shortable": True,
+                              "easy_to_borrow": True, "marginable": True, "status": "active",
+                              "class": "us_equity", "fractionable": True})
+
+    def post(url, js):
+        stamps.append(vt.t)
+        return FakeResp(200, {**js, "id": "o-" + js["client_order_id"], "status": "accepted",
+                              "filled_qty": "0", "submitted_at": "2026-09-29T19:45:00Z"})
+    c, s = paced_client(env_file, vt, get=get, post=post)
+    for i in range(219):
+        c._get(c._base, f"/v2/assets/S{i}")
+    for i in range(219):
+        c.clock()
+        try:
+            c.submit_order(f"S{i}", 1, "buy", f"cid-{i}", time_in_force="day")
+        except al.AlpacaError:
+            pass                                  # the echo check is not what this test is about
+    assert len(stamps) == 219 * 3
+    worst = max(sum(1 for t in stamps if a <= t < a + 60.0) for a in stamps)
+    assert worst <= al.TRADING_BURST + al.TRADING_MAX_PER_MIN < 200, worst
+
+
+def test_the_data_host_is_not_paced(env_file):
+    vt = VirtualTime()
+    c, s = paced_client(env_file, vt, get=lambda url, params: FakeResp(200, {}))
+    for _ in range(al.TRADING_BURST + 30):
+        c._get(c._data, "/v2/stocks/bars")
+    assert vt.sleeps == []
+
+
+def test_an_order_is_paced_like_a_read(env_file):
+    vt = VirtualTime()
+    c, s = paced_client(env_file, vt, post=lambda url, js: FakeResp(422, {"message": "x"}))
+    for _ in range(al.TRADING_BURST):
+        c.clock()
+    with pytest.raises(al.OrderRejected):
+        c.submit_order("PDI", 1, "buy", "cid-1", time_in_force="day")
+    assert vt.sleeps == pytest.approx([60.0 / al.TRADING_MAX_PER_MIN])
+
+
+def test_the_send_budget_covers_the_pacing():
+    """Gate 4 allows SEND_ALLOWANCE_PER_ORDER_S per order; each order is a clock read and a
+    POST, so the pacing alone must fit inside that allowance once the burst is spent."""
+    from quantt.session import gate as gt
+    assert gt.SEND_ALLOWANCE_PER_ORDER_S >= 2 * 60.0 / al.TRADING_MAX_PER_MIN

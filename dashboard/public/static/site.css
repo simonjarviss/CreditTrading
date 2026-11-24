@@ -182,22 +182,6 @@ table.summary td:first-child { font: 500 18px/1.3 var(--serif); color: var(--ink
 details.data { margin-top: 12px; font-size: 14px; }
 details.data summary { cursor: pointer; color: var(--blue); }
 
-/* slides */
-.deck { margin-top: 0; }
-.slide-frame { position: relative; background: #fff; aspect-ratio: 16 / 9; border: 1px solid var(--rule); box-shadow: 0 24px 60px rgba(17,20,24,0.10); }
-.slide-frame img { width: 100%; height: 100%; object-fit: contain; }
-.deck-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
-.deck-controls button { font: 600 14px/1 var(--sans); background: transparent; color: var(--ink); border: 1px solid var(--ink); padding: 11px 20px; cursor: pointer; }
-.deck-controls button:hover { background: var(--ink); color: #fff; }
-.deck-controls button:disabled { color: var(--rule-2); border-color: var(--rule); background: transparent; cursor: default; }
-.deck-count { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; text-align: center; flex: 1; }
-.thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 22px 16px; margin-top: 72px; padding-top: 40px; border-top: 1px solid var(--rule); }
-.thumbs a { display: block; color: var(--muted); }
-.thumbs a:hover { text-decoration: none; color: var(--ink); }
-.thumbs img { aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid var(--rule); }
-.thumbs a[aria-current="true"] img { outline: 2px solid var(--ink); outline-offset: 2px; }
-.thumbs span { display: block; font-size: 12px; padding-top: 8px; line-height: 1.35; }
-
 /* team */
 .people { display: grid; gap: 48px 40px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
 .person { padding-top: 24px; border-top: 1px solid var(--ink); }

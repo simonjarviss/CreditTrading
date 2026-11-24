@@ -10,9 +10,10 @@ to read. quantt.ca, the club's site, is the style reference only.
 WHAT IS LIVE AND WHAT IS FIXED. The performance page and the figures on the overview come
 from the night's snapshot (dashboard/export.py), so they are measured at build time. The
 words, the team and the library are files in this repository
-(dashboard/content/, dashboard/public/static/), so they change only with a release; on the public
-address Cloudflare serves dashboard/public/ from `main` (dashboard/worker/index.js). The research
-ledger count is read from results/IDEA_LEDGER.md of the same release.
+(dashboard/content/, dashboard/public/static/), so they change only with a site release. The public
+address's Cloudflare Worker only relays and caches what the VM serves (dashboard/worker/index.js), so
+a page and its styles always come from the same release. The research ledger count is read from
+results/IDEA_LEDGER.md of the same release.
 
 PUBLISHING IS ATOMIC. Pages are written into a new directory beside the served one, then a
 symlink `current` is swapped to it with one rename, so a reader never sees half a site. The
@@ -68,6 +69,26 @@ def _official(snap: dict) -> dict:
     return {b["name"]: b["official"]["value"]["rows"] for b in snap["books"] if "value" in b["official"]}
 
 
+def combined_label(snap: dict) -> str | None:
+    """The label of the overview's combined P&L figure, or None when that figure is withheld.
+
+    WHY (release-check review, 2026-11-23): the figure sums only the books with an official
+    history, and used to be called "combined" whatever it left out. A book that is new (no
+    end-of-day history yet, `absent`) is named out of it: the label says which books it sums. A
+    book whose history could not be read tonight (UNMEASURED) withholds the figure, because the sum
+    would change basis from one night to the next with nothing on the page to say so; the
+    performance page names the book and the reason."""
+    if not _official(snap) or any(S.UNMEASURED in b["official"] for b in snap["books"]):
+        return None
+    summed = [b["title"] for b in snap["books"] if "value" in b["official"]]
+    if len(summed) == len(snap["books"]):
+        return "Combined paper P&amp;L"
+    short = [escape(t[:-len(" Book")] if t.endswith(" Book") else t) for t in summed]
+    if len(short) == 1:
+        return f"Paper P&amp;L of the {short[0]} Book"
+    return f"Paper P&amp;L of the {', '.join(short[:-1])} and {short[-1]} books"
+
+
 def stages_html() -> str:
     return '<div class="rows">' + "".join(
         f'<div class="row slim"><div class="num">0{i}</div><div><h3>{escape(t)}</h3><p>{escape(d)}</p></div></div>'
@@ -89,10 +110,11 @@ def overview(snap: dict) -> str:
     if "cef" in series:
         s = M.summary(series["cef"])
         figs.append(perf.fig(str(s["n_returns"]), f"Sessions traded since {fmt_short(series['cef'][1]['date'])}"))
-    if series:
+    label = combined_label(snap)
+    if label is not None:
         rows, _ = M.combined(series)
         c = M.summary(rows)
-        figs.append(perf.fig(usd(c["cum_pnl"], True), f"Combined paper P&amp;L to {fmt_short(c['last_date'])}",
+        figs.append(perf.fig(usd(c["cum_pnl"], True), f"{label} to {fmt_short(c['last_date'])}",
                              tone(c["cum_pnl"])))
     hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
             '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
@@ -130,7 +152,7 @@ def overview(snap: dict) -> str:
         rows, _ = M.combined(series)
         lines = [{"name": b["title"], "color": BOOK_COLOURS.get(b["name"], "#111418"),
                   "points": perf.cum_points(series[b["name"]])} for b in snap["books"] if b["name"] in series]
-        if len(series) > 1:
+        if len(series) > 1 and combined_label(snap) is not None:
             lines.append({"name": "Accounts combined", "color": "#111418", "points": perf.cum_points(rows), "bold": True})
         performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
                        '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'

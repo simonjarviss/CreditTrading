@@ -5518,6 +5518,32 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
+### E-2026-11-23-03 · Incident: the events book's first armed send hit Alpaca's rate limit; 46 of 219 orders went, 173 were answered HTTP 429, and the book holds a partial, unhedged position
+- kind: incident
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - the send at 15:41 ET on plan dff7c378…12ad: 46 orders sent and all 46 fully filled; 173 answered HTTP 429 "rate limit exceeded" ("too many requests" for the last few) and booked as rejections, the index hedge among them; exit 20 FAIL [V]
+  - the later send runs that day refused (exit 11): a set had already started, the projected gross was over 1.5 × live equity, and positions had moved since the plan. Read at 15:54 ET by a second session as well: gross held $22,664.71, live equity $99,958.06 [V]
+  - cause: before its first order the send read every symbol's asset flags (219 GETs), then sent each order as a clock read and a POST, none of it paced, against Alpaca's "200 requests per minute, per account" [S: the support page cited in `quantt/broker/alpaca.py`]. GETs retry on 429 in the client; a POST never does, by design (the doubled-book rule). The core and C4 send a few dozen orders and never reached the limit [V]
+  - what it did not do: no order was doubled, nothing was sent outside the window, and the runner refused every retry that day [V]
+  - the team lead, through question prompts: "Disarm until the fix ships" (send unit DRY_RUN=1 again at 16:57 ET, read back); "Hold them" (the 46 positions); "Build it now and release" [V]
+  - the fix: the client paces the trading host (a burst of 40, then 150 a minute), and a 429 to an order is waited out and the id read before any resend; tests that fail against the old code [V]
+- source: `quantt/session/run.py` @ `87728af` (`_transmit`: a 4xx is a rejection, never retried); `quantt/broker/alpaca.py` @ `87728af` (`GET_BACKOFF_S` and the rate-limit note); the VM's events send log and unit environment, read on 2026-11-23; the fix is in the commit that carries this entry
+- supports: §1, §5
+- status: current
+
+### E-2026-11-23-04 · Ruling: the branch clean-up goes ahead with the caches kept; AUTO_ARMED for the events book only on a passing VERIFY
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - none (a ruling). "Go, keep the caches" on the list of 116 worktrees, 147 local and 88 GitHub branches, each fully merged into `main`; "Yes, if VERIFY passes" for AUTO_ARMED (not created: the session's send failed, E-2026-11-23-03)
+  - applied at 15:52 to 15:53 ET with no skips: 116 worktrees removed after their ignored files (research caches and one-off wrappers, 35 GB) were moved to a folder outside the repository; 147 local and 88 GitHub branches deleted; 185 `archive/*` tags kept on the laptop and not pushed. The inventory afterwards: 55 local branches (10 with no reason, each holding commits not on main), 28 worktrees, 16 GitHub branches [V]
+- source: `ops/branch_inventory.py` @ `87728af` (the inventory, read before and after); `docs/STANDARD.md` @ `87728af` (A1.2)
+- supports: §5
+- status: current
+
 ### E-2026-11-23-11 · Release: release-20261123-1, the public site, installed in its own clone on the VM; the trading clone and every book's arming unchanged
 - kind: release
 - era: ALPACA
@@ -5529,5 +5555,18 @@ that adds it does not exist when it is written.
   - read back after: the trading clone still at release-20261122-2, cef DRY_RUN=0 and AUTO_ARMED present, as before [V]
   - live over HTTPS on the VM's own name: every page 200, an unknown path 404, the Content-Security-Policy, HSTS and frame headers sent; the performance page built 19:06 ET shows the 2026-11-23 after-close reading beside the official history to 2026-11-20 [V]
 - source: `dashboard/deploy/install_site_vm.sh` @ `83a7b14`; `docs/RUNBOOK.md` §8.13 @ `83a7b14`; the release check's verdict (workflow run wf_22fe6f40-95c) and the install's read-back, 2026-11-23
+- supports: §5
+- status: current
+
+### E-2026-11-23-12 · Ruling: the public site without the slideshow, the team first, quantt.ca's photographs and logo, served at event-driven.quantt.ca by a read-only Cloudflare Worker
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - none (a ruling). Through messages after release-20261123-1: the address is `event-driven.quantt.ca`, "running on a cloudflare worker called quantt-event-driven", which "deploys [our] repository ... all needs to be run on main"; "use the same pictures on the quant site"; "include the quant logo too"; "a higher resolution image in the back"; it looked "not professionally made and ... not well organized"; "take out the slideshow and make the team the first thing"; on the team page "the 2nd photo (the one in the middle) ... should be taken out"; the footer "is organized bad" [V]
+  - done: the strategy page, its 63 slide images and the deck PDF removed; Team first in the menu and the overview's first section; quantt.ca's photographs at 2400 px and its logo; serif headlines over Inter on a 12-column grid; the footer in three columns. The Worker (PR #103, merged as 3247a23) is a read-only caching proxy to the VM: GET and HEAD only, the target host fixed to the variable ORIGIN, off-site redirects refused, a 503 page when the VM is down; its config sits in `dashboard/` so the build installs no Python [V]
+  - the release check's review findings fixed: the overview's combined P&L names the books it sums and is withheld when a book is unmeasured; the site installer's guard runs before caddy's package can reload systemd, refuses on a unit file changed on disk (NeedDaemonReload) and on a failed systemctl query, and its two `enable` calls pass `--no-reload` [V]
+  - not yet done: Cloudflare's build of `main` has failed on every commit so far (6d2786ba at the repository root; 3247a23 not yet read), so `event-driven.quantt.ca` does not serve the site yet [V]
+- source: `dashboard/worker/index.js` @ `3247a23` and `dashboard/wrangler.jsonc` @ `3247a23` (the Worker, PR #103); `dashboard/site.py` @ `3858e67` (the redesign, no slideshow, the team first); the combined figure's label, the installer's guard and `docs/SYSTEM.md` §5 "the public site" are in the commit that carries this entry
 - supports: §5
 - status: current

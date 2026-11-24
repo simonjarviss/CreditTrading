@@ -1473,8 +1473,9 @@ from the internet (rule `site-http-https`). Caddy fetches the certificate itself
 
 **The public address, `event-driven.quantt.ca`, is Cloudflare's**, not the VM's: the Worker
 `quantt-event-driven` (`dashboard/worker/index.js`, `dashboard/wrangler.jsonc`; the build's Root directory is `dashboard`, because at the repository root the build image pip-installs `requirements.txt` and fails) is deployed by Cloudflare
-Workers Builds from `main`. It serves `dashboard/public/` (styles, script, slides, font, PDF)
-itself and fetches every page from the VM, caching it for 60 seconds. Its variable `ORIGIN`
+Workers Builds from `main`. It is a read-only caching proxy: every path, pages and `/static/*`
+alike, is fetched from the VM, pages cached at the edge for 60 seconds and static files for an
+hour, so a page and its styles always come from the same site release. Its variable `ORIGIN`
 (`https://` + the VM's DNS name) is set once in the Cloudflare dashboard (Worker, Settings,
 Variables and Secrets) and kept across deploys (`keep_vars`). If the VM cannot be reached,
 the Worker answers 503 with a page saying so.
