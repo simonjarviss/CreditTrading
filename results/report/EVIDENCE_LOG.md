@@ -5825,3 +5825,14 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `4c72747` (the record before 24 Nov and the four positioning charts); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-18 · Release and ruling: release-20261124-14 live after a tag collision; the research page under construction
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the site was meant to be tagged release-20261124-13, but the other session had already tagged its trading release there (8674d2a). The tag command failed and the install after it still ran, so the site clone built the public site once from 8674d2a; the public site served that build from about 14:55:07 to 14:56:07 ET. The site was re-tagged release-20261124-14 (2ce506c) and reinstalled at 14:55:28. The trading clone stayed at release-20261123-2. The other session confirmed that its tag was unchanged and that main's privacy check held during that minute (aggregates only) [V]
+  - the team lead: "make the research tab under consturction right now" (verbatim). The research page shows "Under construction"; its content is kept behind `RESEARCH_UNDER_CONSTRUCTION` [V]
+- source: `dashboard/site.py` @ `2ce506c` (the research page before the change); the VM's site builds directory (/srv/quantt-site/builds, 14:55:07 and 14:55:28 ET) and the public site's cache headers, read 2026-11-24; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

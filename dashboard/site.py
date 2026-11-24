@@ -129,6 +129,24 @@ def _sec(cls: str, eyebrow: str, title: str, lede: str, body: str) -> str:
             + f'</div><div class="sec-body">{body}</div></div></section>')
 
 
+# The research page shows "Under construction" while it is rebuilt (team lead, 2026-11-24: "make the
+# research tab under construction right now"). Its content is kept below; set False to show it again.
+RESEARCH_UNDER_CONSTRUCTION = True
+
+
+def research_page(snap: dict, ledger_path: Path) -> str:
+    if RESEARCH_UNDER_CONSTRUCTION:
+        return under_construction()
+    return research(snap, ledger_count(ledger_path))
+
+
+def under_construction() -> str:
+    head = page_head("Research", "Research", "Under construction.")
+    body = (head + '<section class="section"><div class="wrap narrow"><p>This page is being rebuilt.</p>'
+            '<p><a class="link-arrow" href="/performance/">Live performance</a></p></div></section>')
+    return page("research", "Research", body, "The Event Driven Trading team's research.")
+
+
 def research(snap: dict, ledger: tuple) -> str:
     """Pipeline, standards, the ledger, the trading day and the controls, each in the site's
     label-and-content grid (team lead, 2026-11-24: "re organize the library / research")."""
@@ -319,7 +337,7 @@ def pages(snap: dict, *, content: Path = CONTENT, repo: Path = REPO) -> dict:
     return {
         "index.html": team_page,                     # the home page (team lead, 2026-11-24)
         "performance/index.html": perf.render(snap),
-        "research/index.html": research(snap, ledger_count(repo / "results" / "IDEA_LEDGER.md")),
+        "research/index.html": research_page(snap, repo / "results" / "IDEA_LEDGER.md"),
         "library/index.html": library(json.loads((content / "library.json").read_text())),
         "team/index.html": team_page,                # earlier links to /team/
         "contact/index.html": contact(),

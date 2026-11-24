@@ -181,8 +181,9 @@ def test_the_stylesheet_and_script_urls_change_with_their_content(snap, tmp_path
     assert f'href="/static/site.css?v={v}"' in h and f'src="/static/site.js?v={v}"' in h
 
 
-def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, content):
+def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, content, monkeypatch):
     """Team lead, 2026-11-24: "re organize the library / research its ugly"."""
+    monkeypatch.setattr(SITE, "RESEARCH_UNDER_CONSTRUCTION", False)
     target = build(snap, tmp_path / "site", content)
     h = (target / "library" / "index.html").read_text()
     assert 'id="lib-search"' in h and 'class="lib-side"' in h and h.count('class="lib-row"') == len(LIB["entries"])
@@ -215,8 +216,9 @@ def test_the_pages_hash_the_stylesheet_the_build_serves(snap, tmp_path, content)
     assert f'site.css?v={h.hexdigest()[:12]}"' in (target / "index.html").read_text()
 
 
-def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content):
+def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content, monkeypatch):
     """Release-check review, 2026-11-24: a dry-run book counted as trading; an unreadable one vanished."""
+    monkeypatch.setattr(SITE, "RESEARCH_UNDER_CONSTRUCTION", False)
     assert SITE.books_trading(snap) == (3, 0)
     ev = next(b for b in snap["books"] if b["name"] == "events")
     ev["start"] = {"absent": "no session has sent an order yet"}
@@ -255,3 +257,12 @@ def test_the_event_books_strategy_count_comes_from_its_record(snap, tmp_path, co
     ev["sleeves"] = {"UNMEASURED": "sleeve_scores.csv: unreadable"}
     home = (build(snap, tmp_path / "site2", content) / "index.html").read_text()
     assert "Strategies around scheduled corporate events" in home
+
+
+def test_the_research_page_is_under_construction(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "make the research tab under construction right now"."""
+    target = build(snap, tmp_path / "site", content)
+    r = (target / "research" / "index.html").read_text()
+    assert "Under construction." in r and "This page is being rebuilt." in r and "How a result is tested" not in r
+    nav = (target / "index.html").read_text().split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
+    assert 'href="/research/"' in nav
