@@ -1,0 +1,4 @@
+CEF trial 54, P3 (H2): matched turnover
+  blend: gross SR +1.481 at 51.2 turns/yr; z-only spec book at band 0.0447 (matched within 0.0%): gross SR +1.310 at 51.2/yr
+  sharpe_diff (reported, not gated): block 42; delta 0.01081, delta_annual 0.1716, se 0.01167, d 0.9258, p_value 0.3536, z_boot 2.012, z_normal 1.96, block 42, M 4999, T 4497, hac_p_value 0.3545
+  rule blend gross SR > matched z-only: PASS

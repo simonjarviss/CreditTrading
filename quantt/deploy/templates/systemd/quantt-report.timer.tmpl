@@ -1,0 +1,14 @@
+# ${SERVICE} schedule: ${KIND} for ${BOOK}, Mon-Fri ${HOUR}:${MINUTE} local.
+# Clear of every runner slot (session :00/:30, collect :10/:40, verify 17:30).
+# RENDERED by quantt/deploy/install_vm.py --reports from release tag ${TAG}.
+[Unit]
+Description=QUANTT ${BOOK} ${KIND} report schedule (release ${TAG})
+
+[Timer]
+OnCalendar=Mon,Tue,Wed,Thu,Fri *-*-* ${HOUR}:${MINUTE}:00
+AccuracySec=1s
+Persistent=false
+Unit=${SERVICE}
+
+[Install]
+WantedBy=timers.target

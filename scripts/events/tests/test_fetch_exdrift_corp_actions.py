@@ -30,7 +30,8 @@ class FakeSession:
         self.calls, self.ann_status, self.first_429 = [], ann_status, first_429
         self.headers = {"APCA-API-KEY-ID": KEY, "APCA-API-SECRET-KEY": SECRET}
 
-    def get(self, url, params=None, timeout=None):
+    def get(self, url, params=None, timeout=None, allow_redirects=None):
+        self.redirect_flags = getattr(self, "redirect_flags", []) + [allow_redirects]
         self.calls.append((url, dict(params or {})))
         if self.first_429:
             self.first_429 = False

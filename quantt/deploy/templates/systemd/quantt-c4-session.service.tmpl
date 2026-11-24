@@ -1,0 +1,32 @@
+# quantt-c4-session.service : C4's trading session on its own Alpaca paper account.
+#
+# RENDERED by quantt/deploy/install_vm.py --book c4 from release tag ${TAG}. Do
+# not hand-edit the installed copy: re-run the installer (docs/RUNBOOK.md
+# section 8). Started only by quantt-c4-session.timer. The command is the core
+# session's with --book c4 (install_vm._book_job); the installer checks the
+# command and the environment key by key.
+#
+# DRY_RUN is "1" unless the installer was given --armed. The runner transmits
+# only when DRY_RUN is exactly "0" AND AUTO_ARMED exists in C4's own state dir
+# (docs/RUNNER.md gate 2). C4's state dir must be named c4: the runner refuses
+# any other (quantt/session/records.py STATE_DIR_NAMES). SuccessExitStatus as
+# for the core: IDLE, NOTHING_TO_SEND, PREVIEW, PLANNED and DRY are normal.
+[Unit]
+Description=QUANTT C4 session (release ${TAG})
+Wants=quantt-c4-secret.service
+After=quantt-c4-secret.service
+
+[Service]
+Type=oneshot
+User=${USER}
+Group=${USER}
+WorkingDirectory=${PROD_DIR}
+Environment=DRY_RUN=${DRY_RUN}
+Environment=QUANTT_STATE_DIR=${STATE_DIR}
+Environment=QUANTT_ENV_FILE=${ENV_FILE}
+Environment=PATH=${PATH}
+Environment=PYTHONUNBUFFERED=1
+ExecStart=${PYTHON} -m quantt.session run --book c4 --scheduled
+SuccessExitStatus=3 4 5 6 10
+StandardOutput=append:${LOG_DIR}/session.out.log
+StandardError=append:${LOG_DIR}/session.err.log

@@ -484,4 +484,7 @@ def test_the_frozen_spec_carries_the_adopted_key_with_its_note():
     assert "group_cap" not in frozen, (
         "group_cap is in the spec: that needs its own pre-registration, because "
         "its rule gives k = 0 (killed hard neutrality) on the 13-name universe")
-    assert spec["_supersedes"] == "cef_discount.v6.20260906"
+    # 2026-11-01 (CEF trial 53): v8 added `sizing_multiplier` only and superseded v7; 2026-11-02
+    # (amendment 1): v9 changes its value only and supersedes v8. group_cap is still absent
+    # (asserted above). The multiplier's own note is tested in test_sizing_multiplier.py.
+    assert spec["_supersedes"] == "cef_discount.v8.20261101"

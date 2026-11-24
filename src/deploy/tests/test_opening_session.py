@@ -113,12 +113,31 @@ def _real_dates(n=3):
 # these dates are stable; each was checked to reach "band hold" on both the dev
 # and the prod panels. The latest dates still run, byte-identity only.
 HOLD_DATES = ("2026-09-23", "2026-09-24", "2026-09-25")
+# CEF trial 53 amendment 1 (2026-11-02): the live spec holds 1.30 x the unit book. On 2026-09-23
+# the day-one book at x1.30 is gross-capped (unit gross above 1.80 / 1.30), so the held book sits
+# below target by the cap's factor and the band trades every name: no HOLD to control for. That
+# date stays in the test on the UNIT book (the live spec without `sizing_multiplier`), where it
+# still reaches "band hold". The live spec runs on the dates where it does. Checked 2026-11-02:
+# unit 13 / 13 / 12 holds, x1.30 0 / 13 / 12.
+HOLD_DATES_LIVE = ("2026-09-24", "2026-09-25")
+UNIT_SPEC = json.loads(json.dumps(LIVE_SPEC))
+UNIT_SPEC["frozen"].pop("sizing_multiplier", None)
+UNIT_SPEC["frozen"].pop("_sizing_multiplier_note", None)
 
 
 def _pinned_dates():
+    """The HOLD_DATES the panel holds (other test files import this; it stays a list of dates)."""
     d = pd.read_parquet(cefmod.PX_PATH, columns=["date"])["date"]
     have = {str(x.date()) for x in pd.to_datetime(d).unique()}
     return [x for x in HOLD_DATES if x in have]
+
+
+def _hold_cases():
+    """(asof, which spec) pairs for this file's HOLD-branch test: the live spec on
+    HOLD_DATES_LIVE, the unit book on every HOLD_DATES date (above)."""
+    have = set(_pinned_dates())
+    return ([(x, "live") for x in HOLD_DATES_LIVE if x in have]
+            + [(x, "unit") for x in HOLD_DATES if x in have])
 
 
 def _real_close(asof):
@@ -145,25 +164,26 @@ def _held_book(targets, nav, close):
 # ---------------------------------------------------------------------------
 
 @needs_panel
-@pytest.mark.parametrize("asof", _pinned_dates() if cefmod.PX_PATH.exists() else [])
-def test_real_panel_absent_and_false_are_byte_identical(asof):
+@pytest.mark.parametrize("asof,which", _hold_cases() if cefmod.PX_PATH.exists() else [])
+def test_real_panel_absent_and_false_are_byte_identical(asof, which):
     # The held book is what day one would have bought (full target, gross-
     # capped), so on the next call the band sees gaps smaller than its width
     # and HOLDs -- the branch a flat book never reaches.
-    day_one = _run(LIVE_SPEC, LIVE_NAV, asof, {}, opening=True)
+    spec = LIVE_SPEC if which == "live" else UNIT_SPEC
+    day_one = _run(spec, LIVE_NAV, asof, {}, opening=True)
     held = _held_book(day_one, LIVE_NAV, _real_close(asof))
     assert len(held) >= 6, f"{asof}: the fixture built no real book to hold"
     for holdings in ({}, held):
-        a = _fingerprint(_run(LIVE_SPEC, LIVE_NAV, asof, holdings))
-        f = _fingerprint(_run(LIVE_SPEC, LIVE_NAV, asof, holdings, opening=False))
+        a = _fingerprint(_run(spec, LIVE_NAV, asof, holdings))
+        f = _fingerprint(_run(spec, LIVE_NAV, asof, holdings, opening=False))
         assert a, "emitted nothing; the comparison would be vacuous"
         assert a == f, f"{asof}: opening_session=False is not byte-identical to absent"
         assert TAG not in a
     # CONTROL: the held book must actually reach the HOLD branch, or the second
     # comparison proves nothing about it.
     assert any("band hold" in t.reason
-               for t in _run(LIVE_SPEC, LIVE_NAV, asof, held)), \
-        f"{asof}: no HOLD emitted for the held book; the no-op test is partial"
+               for t in _run(spec, LIVE_NAV, asof, held)), \
+        f"{asof} ({which}): no HOLD emitted for the held book; the no-op test is partial"
 
 
 @needs_panel

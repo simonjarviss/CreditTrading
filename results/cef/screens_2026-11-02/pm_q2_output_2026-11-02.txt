@@ -1,0 +1,51 @@
+opportunity core: absz mean 1.080 (sd 0.468), disp mean 0.896; names eligible median 5
+opportunity c4: absz mean 1.165 (sd 0.334), disp mean 1.114; names eligible median 12
+  corr of the two sleeves' absz on W1: +0.463
+  corr of the two sleeves' disp on W1: -0.004
+
+EXACT BUILD, W1, combined $200k; price only (paper's P&L of record) first, total return beside
+  static 1.13 / 1.27 [PR]            gross  9.65%/yr SR 1.840 vol 5.24% maxDD 6.57% turn  38.0/yr | net +7.75 / +3.95 / -1.75 %/yr at 5/15/30bp | era SR 1.65 / 2.01
+  static 1.13 / 1.27 [TR]            gross  8.75%/yr SR 1.724 vol 5.08% maxDD 7.01% turn  38.0/yr | net +6.86 / +3.06 / -2.64 %/yr at 5/15/30bp | era SR 1.59 / 1.85
+
+  absz / daily: C4 risk weight on W1 mean 0.501, p5 0.455, p95 0.557; m core 0.36..1.53, m C4 0.53..1.75
+  absz/daily [PR]                    gross  9.57%/yr SR 1.829 vol 5.23% maxDD 6.57% turn  38.1/yr | net +7.66 / +3.85 / -1.87 %/yr at 5/15/30bp | era SR 1.68 / 1.96 | turn vs static +0.3%
+                                     active (dynamic - static): -0.081%/yr, IR -0.163, NW t -0.46
+  absz/daily [TR]                    gross  8.76%/yr SR 1.729 vol 5.07% maxDD 7.01% turn  38.1/yr | net +6.85 / +3.04 / -2.68 %/yr at 5/15/30bp | era SR 1.63 / 1.81 | turn vs static +0.3%
+                                     active (dynamic - static): +0.002%/yr, IR +0.004, NW t +0.01
+
+  absz / monthly: C4 risk weight on W1 mean 0.544, p5 0.464, p95 0.634; m core 0.48..1.44, m C4 0.77..1.71
+  absz/monthly [PR]                  gross  9.71%/yr SR 1.880 vol 5.17% maxDD 6.19% turn  40.0/yr | net +7.71 / +3.71 / -2.29 %/yr at 5/15/30bp | era SR 1.70 / 2.04 | turn vs static +5.3%
+                                     active (dynamic - static): +0.065%/yr, IR +0.078, NW t +0.34
+  absz/monthly [TR]                  gross  8.86%/yr SR 1.772 vol 5.00% maxDD 6.29% turn  40.0/yr | net +6.86 / +2.86 / -3.14 %/yr at 5/15/30bp | era SR 1.63 / 1.90 | turn vs static +5.3%
+                                     active (dynamic - static): +0.103%/yr, IR +0.129, NW t +0.54
+
+  disp / daily: C4 risk weight on W1 mean 0.505, p5 0.476, p95 0.587; m core 0.42..1.48, m C4 0.66..1.73
+  disp/daily [PR]                    gross  9.63%/yr SR 1.843 vol 5.23% maxDD 6.57% turn  38.1/yr | net +7.73 / +3.92 / -1.79 %/yr at 5/15/30bp | era SR 1.68 / 1.99 | turn vs static +0.3%
+                                     active (dynamic - static): -0.011%/yr, IR -0.026, NW t -0.08
+  disp/daily [TR]                    gross  8.81%/yr SR 1.739 vol 5.07% maxDD 7.01% turn  38.1/yr | net +6.91 / +3.10 / -2.62 %/yr at 5/15/30bp | era SR 1.63 / 1.84 | turn vs static +0.3%
+                                     active (dynamic - static): +0.056%/yr, IR +0.132, NW t +0.40
+
+  disp / monthly: C4 risk weight on W1 mean 0.550, p5 0.474, p95 0.642; m core 0.60..1.33, m C4 0.99..1.67
+  disp/monthly [PR]                  gross  9.85%/yr SR 1.909 vol 5.16% maxDD 6.09% turn  40.1/yr | net +7.84 / +3.83 / -2.19 %/yr at 5/15/30bp | era SR 1.73 / 2.07 | turn vs static +5.6%
+                                     active (dynamic - static): +0.202%/yr, IR +0.280, NW t +1.07
+  disp/monthly [TR]                  gross  9.02%/yr SR 1.807 vol 5.00% maxDD 6.16% turn  40.1/yr | net +7.02 / +3.01 / -3.01 %/yr at 5/15/30bp | era SR 1.68 / 1.92 | turn vs static +5.6%
+                                     active (dynamic - static): +0.270%/yr, IR +0.387, NW t +1.43
+
+NEGATIVE CONTROL: b4 circularly shifted by 200 random offsets (>= 252 sessions), house cap model, PR, W1
+  absz/daily: model active -0.171%/yr | placebo p5 / median / p95 -0.255 / -0.072 / +0.119 | real beats 22% of placebos
+  absz/monthly: model active -0.184%/yr | placebo p5 / median / p95 -0.390 / -0.164 / +0.069 | real beats 44% of placebos
+  disp/daily: model active +0.070%/yr | placebo p5 / median / p95 -0.201 / -0.051 / +0.114 | real beats 87% of placebos
+  disp/monthly: model active +0.044%/yr | placebo p5 / median / p95 -0.328 / -0.154 / +0.042 | real beats 95% of placebos
+
+NEGATIVE CONTROL, EXACT BUILD (the same placebo, 100 offsets per variant, route B with a moving m), PR, W1
+  absz/daily: exact active -0.081%/yr | placebo p5 / median / p95 -0.316 / -0.051 / +0.134 | real beats 38% of placebos
+  absz/monthly: exact active +0.065%/yr | placebo p5 / median / p95 -0.254 / +0.018 / +0.282 | real beats 59% of placebos
+  disp/daily: exact active -0.011%/yr | placebo p5 / median / p95 -0.254 / -0.042 / +0.169 | real beats 61% of placebos
+  disp/monthly: exact active +0.202%/yr | placebo p5 / median / p95 -0.153 / +0.004 / +0.278 | real beats 89% of placebos
+  model vs exact active (PR, %/yr): absz/daily exact -0.081 model -0.171; absz/monthly exact +0.065 model -0.184; disp/daily exact -0.011 model +0.070; disp/monthly exact +0.202 model +0.044
+
+POWER at the desk bar, N = 54 (sqrt(2 ln N) = 2.825), on the active series (PR):
+  absz/daily [PR]          active IR -0.163 (95% top +0.473; skew -0.9, raw kurt 24) | P(pass) at the fit IR: 1y 0.000, 3y 0.000, 9.5y 0.000 | at the CI top: 1y 0.000, 3y 0.000, 9.5y 0.001
+  absz/monthly [PR]        active IR +0.078 (95% top +0.714; skew +0.5, raw kurt 38) | P(pass) at the fit IR: 1y 0.000, 3y 0.000, 9.5y 0.000 | at the CI top: 1y 0.000, 3y 0.001, 9.5y 0.012
+  disp/daily [PR]          active IR -0.026 (95% top +0.609; skew +0.1, raw kurt 24) | P(pass) at the fit IR: 1y 0.000, 3y 0.000, 9.5y 0.000 | at the CI top: 1y 0.000, 3y 0.000, 9.5y 0.005
+  disp/monthly [PR]        active IR +0.280 (95% top +0.915; skew +0.1, raw kurt 16) | P(pass) at the fit IR: 1y 0.000, 3y 0.000, 9.5y 0.000 | at the CI top: 1y 0.000, 3y 0.002, 9.5y 0.050

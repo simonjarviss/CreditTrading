@@ -38,7 +38,12 @@ from zoneinfo import ZoneInfo
 ET = ZoneInfo("America/New_York")
 
 GATES = ("dry_run", "arming", "halt", "clock", "data", "no_set_in_auction",
-         "shortability", "exposure", "sanity")
+         "shortability", "exposure", "sanity",
+         # run.py THE FIRST-SESSION GATE (C4; release-check of 4f759a9, execution-trader 1):
+         # its own name, outside verify's DELIBERATE_GATES, so an armed day it refuses is
+         # scored a MISSED day, not an explained one. Raised only by run.py, never by
+         # `evaluate`.
+         "first_session")
 
 # Gate 4. Alpaca: "CLS orders submitted after 3:50pm but before 7:00pm ET will
 # be rejected" [V, docs "orders-at-alpaca"]; 15:45 leaves five minutes (RUNNER.md).
@@ -102,8 +107,8 @@ class GateFacts:
     nav_dates: dict                  # symbol -> date of the last finite, positive NAV <= as-of
     # 6
     started_exists: bool
-    orders_recent: list              # Alpaca orders (status=all) since 00:00 ET the day before the as-of date
-    orders_open: list                # Alpaca orders (status=open), any age
+    orders_recent: list | None       # Alpaca orders (status=all) since 00:00 ET the day before the as-of date
+    orders_open: list | None         # Alpaca orders (status=open), any age; both None only with orders_unread
     cid_prefix: str
     # 7
     orders: tuple                    # decide.Order, the list that would be sent
@@ -143,6 +148,11 @@ class GateFacts:
     # count could not be read. Both None unless missing_nav is set.
     missing_nav_max_sessions: int | None = None
     missing_nav_held_before: dict | None = None
+    # 6, a failed read (review 2026-10-29). None, the default: both order lists
+    # were read, as the last broker read before the gate's clock read
+    # (`run._gate6_orders`), and gate 6 judges them. Otherwise why that read
+    # failed; both lists are then None and gate 6 refuses (gate_no_set_in_auction).
+    orders_unread: str | None = None
 
 
 # ----------------------------------------------------------------- the gates
@@ -679,7 +689,7 @@ def _gate_data_for(f: GateFacts) -> list[Refusal]:
 
 
 def gate_no_set_in_auction(started_exists, orders_recent, orders_open, cid_prefix,
-                           session_date) -> list[Refusal]:
+                           session_date, unread: str | None = None) -> list[Refusal]:
     """Gate 6. Refuse if a set may already be headed for today's auction:
     `<state>/<date>/STARTED` exists, or Alpaca shows any order whose
     client_order_id starts with `<prefix>-<YYYYMMDD>-`, or ANY open order.
@@ -690,10 +700,29 @@ def gate_no_set_in_auction(started_exists, orders_recent, orders_open, cid_prefi
     second local run; the Alpaca order checks catch a run from another machine
     or a lost state dir. `status=all` for the prefix check, because an order
     already filled or cancelled today still means the set went.
+
+    UNREAD (review 2026-10-29). run.py reads the two lists as the last broker
+    read before the gate's clock read (`run._gate6_orders`), so they are as
+    fresh as the gate can judge. `unread` is why that read failed; both lists
+    are then None and the gate refuses, naming it: a list that cannot be read
+    is not an empty one, and no earlier read may stand in for it, so a list
+    passed with `unread` raises. STARTED is still checked.
     """
     out = []
     if started_exists:
         out.append(Refusal("no_set_in_auction", f"STARTED exists for {session_date}"))
+    if unread is not None:
+        if orders_recent is not None or orders_open is not None:
+            raise ValueError(f"gate 6: order lists given together with unread={unread!r}; "
+                             f"an earlier read never stands in for a failed one")
+        out.append(Refusal("no_set_in_auction", f"Alpaca's orders could not be read at the "
+                                                f"gate: {unread}; a list that cannot be read "
+                                                f"is not an empty one, so nothing is sent"))
+        return out
+    if orders_recent is None or orders_open is None:
+        raise ValueError(f"gate 6: an order list was not read (orders_recent "
+                         f"{'None' if orders_recent is None else 'read'}, orders_open "
+                         f"{'None' if orders_open is None else 'read'}) and no reason was given")
     pfx = f"{cid_prefix}-{session_date:%Y%m%d}-"
     ours = sorted({o.get("client_order_id") or "" for o in orders_recent
                    if (o.get("client_order_id") or "").startswith(pfx)})
@@ -939,7 +968,7 @@ def evaluate(f: GateFacts) -> list[Refusal]:
                     f.asof),
         *_gate_data_for(f),
         *gate_no_set_in_auction(f.started_exists, f.orders_recent, f.orders_open,
-                                f.cid_prefix, f.session_date),
+                                f.cid_prefix, f.session_date, unread=f.orders_unread),
         *gate_shortability(f.orders, f.positions, f.shortable, f.shorting_enabled),
         *gate_exposure(f.orders, f.positions, f.closes, f.equity, f.buying_power,
                        f.max_gross_usd, f.max_gross_stress, sized_equity=f.sized_equity,

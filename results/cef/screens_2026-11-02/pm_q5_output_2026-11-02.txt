@@ -1,0 +1,10 @@
+
+PR: account vols at the approved multipliers core 7.44%, C4 7.27%
+  equal ($100k)                      C4 $ 100.0k (all capital $200k): gross  9.65%/yr SR 1.840 vol 5.24% maxDD 6.57% | net +7.75 / +3.95 / -1.75 at 5/15/30bp
+  derived, EB-shrunk Sharpes         C4 $ 128.2k (all capital $228k): gross  9.94%/yr SR 1.887 vol 5.27% maxDD 6.17% | net +7.90 / +3.83 / -2.29 at 5/15/30bp
+  derived, fit Sharpes (not robust)  C4 $ 167.8k (all capital $268k): gross 10.25%/yr SR 1.908 vol 5.38% maxDD 5.75% | net +8.07 / +3.70 / -2.86 at 5/15/30bp
+
+TR: account vols at the approved multipliers core 7.22%, C4 7.02%
+  equal ($100k)                      C4 $ 100.0k (all capital $200k): gross  8.75%/yr SR 1.724 vol 5.08% maxDD 7.01% | net +6.86 / +3.06 / -2.64 at 5/15/30bp
+  derived, EB-shrunk Sharpes         C4 $ 113.7k (all capital $214k): gross  8.89%/yr SR 1.750 vol 5.08% maxDD 6.64% | net +6.92 / +2.97 / -2.94 at 5/15/30bp
+  derived, fit Sharpes (not robust)  C4 $ 158.3k (all capital $258k): gross  9.23%/yr SR 1.785 vol 5.17% maxDD 5.96% | net +7.07 / +2.76 / -3.70 at 5/15/30bp

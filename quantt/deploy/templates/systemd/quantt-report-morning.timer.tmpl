@@ -1,0 +1,16 @@
+# ${SERVICE} schedule: ${KIND} for ${BOOK}, Tue-Sat ${HOUR}:${MINUTE} local, for the session before.
+# The pnl and risk reports run the morning after: Alpaca publishes a day's EOD point in the
+# small hours (install_vm.py, REPORT_SCHEDULE; team lead, 2026-11-19).
+# Clear of every runner slot (session :00/:30, collect :10/:40, verify 17:30).
+# RENDERED by quantt/deploy/install_vm.py --reports from release tag ${TAG}.
+[Unit]
+Description=QUANTT ${BOOK} ${KIND} report schedule (release ${TAG})
+
+[Timer]
+OnCalendar=Tue,Wed,Thu,Fri,Sat *-*-* ${HOUR}:${MINUTE}:00
+AccuracySec=1s
+Persistent=false
+Unit=${SERVICE}
+
+[Install]
+WantedBy=timers.target

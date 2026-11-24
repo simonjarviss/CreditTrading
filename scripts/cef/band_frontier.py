@@ -171,7 +171,32 @@ def build_panel(end=None, universe=None, source=None, mask=None):
     return dict(px=px, nav=nav, vol=vol, ret=ret, disc=disc, mu=mu, sd=sd, z=z, adv=adv)
 
 
-def build_targets(universe=None, source=None, mask=None, min_adv=None):
+def _min_names_arg(min_names):
+    """`min_names` as `build_targets` and `thin_sessions` read it (added 2026-11-03
+    for `below_min_names="trade_eligible"`). None, the default, is the spec's
+    `min_names`, read from the module's `MIN_NAMES` at call time, so the
+    production path is unchanged. Otherwise an int of at least 2.
+
+    WHY 2, AND NOT 1. The weights are w = -(z - zbar) / sum|z - zbar| over the
+    eligible names. With one name z - zbar is exactly 0, so w is 0/0 = NaN, and
+    `build_targets` would fill it with 0 on a session it calls active: a silent
+    degenerate book, which this refuses. Two names are defined, but carry only
+    the sign of z1 - z2 (w = +-1/2 whatever the z magnitudes); three force one
+    side to a single fund holding half the gross. Those are the reasons the
+    third-rule report derives its floor at 4
+    (`results/backtests/thin-third-rule-2026-11-03/REPORT.md` section 1); this
+    check refuses only the case that is undefined."""
+    if min_names is None:
+        return int(MIN_NAMES)
+    if isinstance(min_names, bool) or not isinstance(min_names, (int, np.integer)):
+        raise TypeError(f"min_names must be an int (or None for the spec's), got {min_names!r}")
+    if int(min_names) < 2:
+        raise ValueError(f"min_names must be at least 2, got {min_names}: with one eligible name "
+                         "z - mean(z) is 0 and the weights are 0/0")
+    return int(min_names)
+
+
+def build_targets(universe=None, source=None, mask=None, min_adv=None, min_names=None):
     """Frictionless daily target weights, exactly as the sleeve would build them.
 
     `universe=None` is the spec's universe; `source` and `mask` are passed to
@@ -191,28 +216,125 @@ def build_targets(universe=None, source=None, mask=None, min_adv=None):
     the FIRST call in a process hashes 007e221b...7cdc and the SECOND
     c8291c1e...e599, identically on both sides of the edit. (The bytes differ
     between first and second call although the frames are value-identical: a
-    pickle memo quirk, present before this edit. Compare like with like.)"""
+    pickle memo quirk, present before this edit. Compare like with like.)
+
+    `min_names` (added 2026-11-03 for `results/backtests/thin-third-rule-2026-11-03/`,
+    a zero-trial report): the smallest eligible count on which a target is
+    built; below it the previous target is held, as before. None (the default)
+    is the spec's `min_names`, so the production path is unchanged: sha256 of
+    the default T and R before and after the edit in that folder's
+    noop_before.txt / noop_after.txt. A smaller value builds the target on the
+    SMALLER eligible set with the unchanged construction (demean, normalise,
+    the vol scalar on that set's own trailing 63-session return), which is
+    what the live sleeve would do on that set: its construction (l.911-920)
+    does not depend on how many names there are. The third-rule report runs the
+    live sleeve on every such session to confirm it (`sleeve_reduced_check.py`).
+    Pair it with `thin_sessions(..., min_names=)` at the same value and
+    `band_gross_capped(below_min_names="trade_eligible", floor=)`."""
     U = UNIVERSE if universe is None else list(universe)
     floor = MIN_ADV if min_adv is None else float(min_adv)
+    n_min = _min_names_arg(min_names)
     p = build_panel(universe=U, source=source, mask=mask)
     ret, z, adv = p["ret"], p["z"], p["adv"]
 
     tgt = pd.DataFrame(0.0, index=z.index, columns=U)
     start = z.index.searchsorted(pd.Timestamp(SAMPLE_START))
     for i in range(start, len(z.index)):
-        row = z.iloc[i].dropna()
-        row = row[[t for t in row.index if (adv.iloc[i].get(t, 0) or 0) >= floor]]
-        if len(row) < MIN_NAMES:
+        row = _eligible(z.iloc[i], adv.iloc[i], floor)
+        if len(row) < n_min:
             tgt.iloc[i] = tgt.iloc[i - 1]          # hold; nothing eligible
             continue
-        w = -(row - row.mean())
-        w = w / w.abs().sum()
-        hist = ret[list(row.index)].iloc[:i + 1].mul(w, axis=1).sum(axis=1).tail(VOL_LOOKBACK)
-        rv = hist.std() * np.sqrt(252)
-        scal = float(np.clip(VOL_TARGET / rv, 0.2, 2.5)) if rv > 0 else 1.0
-        tgt.iloc[i] = (w * scal).reindex(U).fillna(0.0).values
+        tgt.iloc[i] = _target_row(row, ret, i).reindex(U).fillna(0.0).values
     T = tgt.iloc[start:]
     return T, ret.reindex(T.index)[U].fillna(0.0)
+
+
+def _target_row(row, ret, i):
+    """The target on one decision date from its eligible z-scores `row`: the
+    sleeve's construction (`cef_discount.py::target_positions` l.911-920),
+    w = -(z - mean z) / sum|z - mean z|, times the vol scalar
+    clip(VOL_TARGET / rv, 0.2, 2.5), rv the annualised sd of the last
+    VOL_LOOKBACK rows of these names' returns times w, through row i.
+
+    Moved out of `build_targets`' loop VERBATIM on 2026-11-03 (the third-rule
+    report), so that a caller asking "what would the book be on this smaller
+    set" uses this one definition rather than a second copy of the signal.
+    sha256 of the default T and R before and after: that report's
+    noop_before.txt / noop_after.txt. ALIGNMENT (H7): `row` is date i of
+    `build_panel` (z standardised on a window ending i-1; ADV through i-1) and
+    `ret` through row i is known at i's close, which is when the sleeve
+    decides. NaN weights (every z equal: 0/0) are returned as NaN; the caller
+    decides what that means (`build_targets` fills 0)."""
+    w = -(row - row.mean())
+    w = w / w.abs().sum()
+    hist = ret[list(row.index)].iloc[:i + 1].mul(w, axis=1).sum(axis=1).tail(VOL_LOOKBACK)
+    rv = hist.std() * np.sqrt(252)
+    scal = float(np.clip(VOL_TARGET / rv, 0.2, 2.5)) if rv > 0 else 1.0
+    return w * scal
+
+
+def _eligible(z_row, adv_row, floor):
+    """The names eligible on one decision date: a z-score, and an ADV at or
+    above `floor`. ONE definition, shared by `build_targets` and
+    `thin_sessions` (added 2026-11-03), so the session the target holds on and
+    the session the policy flattens on can never be two different sets.
+
+    The expression is `build_targets`'s loop body before 2026-11-03, moved here
+    verbatim. A NaN ADV fails at any floor: `nan or 0` is `nan` (NaN is truthy)
+    and `nan >= floor` is False, which `scripts/cef/tests/test_c5_harness.py`
+    pins. ALIGNMENT (H7): both rows are date-t rows of `build_panel`, whose z is
+    standardised on a window ending t-1 and whose ADV ends t-1.
+
+    WHY THIS IS THE LIVE SLEEVE'S TEST ON HISTORY, NOT A SUBSET OF IT. The
+    sleeve (`src/deploy/sleeves/cef_discount.py::target_positions`) also drops
+    a name with no NAV or a NAV older than `max_nav_age_bd` (l.829-834), but its
+    `nav` is the pivot of the SAME inner join of prices and NAV (`_read_panel`),
+    so a name with a finite z on t has a paired row on t and a NAV age of 0: that
+    test cannot bind behind a finite z. The runner's stale-NAV and missing-NAV
+    holds (`extras["nav_hold"]`, l.837) exist only at run time and have no
+    history. `results/backtests/thin-days-2026-11-03/sleeve_thin_check.py` ran
+    the sleeve itself on every decision date and compares its count."""
+    row = z_row.dropna()
+    return row[[t for t in row.index if (adv_row.get(t, 0) or 0) >= floor]]
+
+
+def thin_sessions(index, universe=None, source=None, mask=None, min_adv=None, min_names=None):
+    """Bool Series on `index`: True on a decision date with fewer than the
+    spec's `min_names` eligible names (`_eligible`, the rule `build_targets`
+    holds on). Added 2026-11-03 for `band_gross_capped(below_min_names=
+    "flatten")`, the live sleeve's rule; the arguments are `build_targets`'s and
+    must be the same ones the targets were built with.
+
+    Every date of `index` must be a date of the panel: a date the panel does
+    not hold has no eligibility to count, and treating it as thin or as active
+    would be a guess, so it raises. Dates before `SAMPLE_START` are counted like
+    any other (`build_targets` starts there; this does not need to).
+
+    `min_names` (added 2026-11-03, the third-rule report): None, the default,
+    counts against the spec's `min_names` and returns the Series named "thin",
+    unchanged (noop_before.txt / noop_after.txt in that folder). An int counts
+    against that floor instead and names the Series "thin_below_<n>", so that
+    `band_gross_capped(below_min_names="trade_eligible", floor=n)` can refuse a
+    mask counted at another floor."""
+    U = UNIVERSE if universe is None else list(universe)
+    floor = MIN_ADV if min_adv is None else float(min_adv)
+    n_min = _min_names_arg(min_names)
+    p = build_panel(universe=U, source=source, mask=mask)
+    z, adv = p["z"], p["adv"]
+    idx = pd.DatetimeIndex(index)
+    missing = idx.difference(z.index)
+    if len(missing):
+        raise ValueError(f"thin_sessions: {len(missing)} date(s) the panel does not hold, "
+                         f"first {missing[0].date()}")
+    pos = z.index.get_indexer(idx)
+    n = [len(_eligible(z.iloc[i], adv.iloc[i], floor)) for i in pos]
+    name = "thin" if min_names is None else _below_name(n_min)
+    return pd.Series(np.asarray(n) < n_min, index=idx, name=name)
+
+
+def _below_name(n):
+    """The name `thin_sessions(..., min_names=n)` gives its mask."""
+    return f"thin_below_{int(n)}"
 
 
 def calendar(T, k):
@@ -258,7 +380,75 @@ def _unshortable_mask(unshortable, T):
     return unshortable.reindex(columns=T.columns, fill_value=False).to_numpy(dtype=bool)
 
 
-def band_gross_capped(T, b, cap, unshortable=None):
+BELOW_MIN_NAMES = ("hold", "flatten", "trade_eligible")       # the first is the harness default
+
+
+def _thin_mask(thin, T):
+    """`band_gross_capped`'s `thin` argument as a bool array on T's grid,
+    validated like `_unshortable_mask`: a mask on another calendar, a NaN, or a
+    number where a bool belongs raises, because a mask that silently misses a
+    session would hold that session where the live sleeve closes the book."""
+    if not isinstance(thin, pd.Series):
+        raise TypeError("thin must be a bool Series on T's index (thin_sessions(T.index))")
+    if not thin.index.equals(T.index):
+        raise ValueError("thin must be on T's own index, row for row")
+    if thin.isna().any():
+        raise ValueError("thin holds NaN; every session must say True or False")
+    if thin.dtype != bool:
+        raise TypeError(f"thin must be bool, got {thin.dtype}")
+    return thin.to_numpy(dtype=bool)
+
+
+def _check_thin_matches_T(flat, T):
+    """Refuse a `thin` mask that was not built with T's own arguments (added
+    2026-11-03, review of the thin-days report, defect 3).
+
+    WHY. `_thin_mask` checks the calendar, NaNs and dtype, but cannot see the
+    universe, source, mask or ADV floor a mask was counted with. The review
+    built the WIDE targets (`build_targets(min_adv=0)`, which hold on NO
+    session) and passed `thin_sessions(T.index)` at the spec floor: it was
+    accepted and flattened 3,621 sessions on which the WIDE book was trading.
+    The reverse mistake is as quiet: a mask counted on a larger universe than T
+    (a leave-one-name-out run that forgets `universe=`) flags fewer sessions,
+    so flatten silently returns the hold book on the rest.
+
+    THE CHECK uses `build_targets`' own signature: on a session with fewer than
+    `min_names` eligible names it copies the previous row ("hold; nothing
+    eligible"), and on every other session it recomputes the row from that
+    day's z-scores and vol scalar. So, from the second row on:
+      * a row flagged thin must repeat the previous row exactly;
+      * a NONZERO row that repeats the previous row exactly must be flagged
+        thin. Zero rows are exempt: a book that has never opened repeats zero,
+        and on 2020-03-18 and 2025-04-07 every eligible z sat at the -4 clip,
+        the weights were 0/0 and `build_targets` filled them with 0 on an
+        active session.
+    On the panel of 2026-10-15 both hold on all 5,480 rows of the spec targets
+    and of the WIDE targets (no active nonzero row repeats its predecessor), and
+    the review's mismatch fails the first test on 3,621 rows. A hand-made T
+    must satisfy the same contract: hold the row on a thin session, move it
+    otherwise."""
+    A = np.asarray(T.values)
+    same = np.zeros(len(A), dtype=bool)
+    if len(A) > 1:
+        same[1:] = (A[1:] == A[:-1]).all(axis=1)
+    nonzero = np.abs(A).sum(axis=1) > 0
+    moved_on_thin = flat & ~same
+    moved_on_thin[0] = False
+    held_not_thin = same & nonzero & ~flat
+    if moved_on_thin.any():
+        bad = T.index[moved_on_thin]
+        raise ValueError(f"thin flags {len(bad)} session(s) on which T moved, first {bad[0].date()}: "
+                         "the mask was not counted with T's own arguments (universe, source, mask, "
+                         "min_adv); build it with thin_sessions(T.index, <the same arguments>)")
+    if held_not_thin.any():
+        bad = T.index[held_not_thin]
+        raise ValueError(f"T repeats a nonzero row on {len(bad)} session(s) that thin calls active, "
+                         f"first {bad[0].date()}: build_targets held there, so the mask was counted "
+                         "with other arguments than T")
+
+
+def band_gross_capped(T, b, cap, unshortable=None, defer_flips=False,
+                      below_min_names="hold", thin=None, floor=None):
     """`band()` with the frozen `max_gross_stress` ceiling applied to the HELD
     book after the band, exactly where the sleeve applies it (added 2026-09-28).
 
@@ -290,13 +480,125 @@ def band_gross_capped(T, b, cap, unshortable=None):
     so it cannot open a short either. Nothing here re-neutralises the book: a
     blocked short leaves it net long by that weight, which is what the runner
     does today (R13 of the IBKR note) and the beta the comparison must show.
+
+    `defer_flips` (added 2026-11-02 for
+    `results/backtests/turnover-live-2026-11-02/`, a zero-trial report): False,
+    the default, is the code path above, unchanged: sha256 of the held book's
+    values+index+columns on the panel of 2026-10-14, before and after the edit,
+    173f767e...2432 with the v7 ceiling and 2c205883...70cc with cap=inf (equal
+    to band(T, BAND_WIDTH)). True models the live runner's
+    deferred flip, `quantt/session/decide.py` with `FLIP_SAME_SESSION =
+    False`: when the book decided today would hold a name on the OTHER side of
+    zero from what it held yesterday (long -> short or short -> long), only the
+    closing leg is sent, so the name is held FLAT for this session; the next
+    session sees flat and the band opens from there (to the same edge, A - b
+    toward zero, if the target is still outside the band; not at all if it is
+    not). It is applied LAST, after the band, the unshortable floor and the
+    ceiling, because decide.py runs on the sleeve's output (band, then
+    `_cap_gross`), and it does not rescale the other names: decide.py sends
+    them as the sleeve sized them, so a deferred flip leaves the book's gross
+    below the ceiling for that session. decide.py tests the flip in SHARES
+    (`cur != 0 and tgt != 0` with opposite signs); in weight space that is
+    `prev * cur < 0`. A target that truncates to zero shares is a close, not a
+    flip, and ends flat either way, so the two agree on what is held.
+
+    `below_min_names` and `thin` (added 2026-11-03 for
+    `results/backtests/thin-days-2026-11-03/`, a zero-trial report): what the
+    book does on a decision date with fewer than `min_names` eligible names.
+
+      "hold" (the default) is the code path above, unchanged: `build_targets`
+          has already carried the previous TARGET onto such a date ("hold;
+          nothing eligible"), and the band and the ceiling act on it as on any
+          other day. `thin` must be None. sha256 of the held book (values,
+          index, columns) on the panel of 2026-10-15, before and after the
+          edit, with the v7 ceiling, cap=inf and defer_flips:
+          `results/backtests/thin-days-2026-11-03/noop_before.txt` and
+          `noop_after.txt`.
+      "flatten" is the LIVE rule, read from the code on 2026-11-03. The frozen
+          spec carries no `below_min_names` key, which the registry reads as
+          "flatten" (`src/deploy/registry.py::cef_below_min_names`). With fewer
+          than `min_names` eligible and no stale-NAV holds, the sleeve returns
+          every name FLAT before the band and the ceiling run
+          (`src/deploy/sleeves/cef_discount.py` l.841, l.892-895). decide.py
+          sizes FLAT as 0 shares (`target_shares`, l.243-244), a close is not a
+          flip (l.332: `tgt != 0`) and never needs a borrow check (l.262-264),
+          and v7's `min_trade_usd` is $0, so every whole share is closed: the
+          book goes STRAIGHT TO ZERO, not to within the band of zero. The next
+          session the sleeve bands against what the account holds, which is
+          flat, so the band reopens from zero to the EDGE (l.1070-1091); the
+          runner sets `opening_session` only when the account has never had a
+          fill (`quantt/session/run.py::is_opening_session`), so re-entry after
+          a thin day is NOT a full-target build. Here: on a row where `thin`
+          is True the held book is zero and nothing else runs (a zero book has
+          nothing to floor, scale or defer); on every other row the loop is
+          the one above, from that zero. `thin` is required, a bool Series on
+          T's index, normally `thin_sessions(T.index)` with the arguments T
+          was built with. T's values on a thin row are not used, but they are
+          CHECKED (`_check_thin_matches_T`, added 2026-11-03 after review):
+          a mask built with other arguments than T raises.
+      "trade_eligible" (added 2026-11-03 for
+          `results/backtests/thin-third-rule-2026-11-03/`, a zero-trial report;
+          NOT the live rule): on a session with fewer than `min_names` but at
+          least `floor` eligible names, the book TRADES THE ELIGIBLE NAMES: the
+          sleeve's own construction on the smaller set, then the band and the
+          ceiling as on any other day. Below `floor` it does what the live
+          sleeve does, FLAT (the "flatten" path above). The floor is derived in
+          that report's section 1 from what the construction does at each count:
+          one name is 0/0, two carry only the sign of z1 - z2, three force one
+          side to a single fund holding half the gross, four is the first count
+          with none of those. It is an argument, never a default, because it is
+          not a spec key. Callers pass
+              T     = build_targets(min_names=floor, <the same arguments>)
+              thin  = thin_sessions(T.index, min_names=floor, <the same arguments>)
+          so T already carries the reduced-set target on the sessions between
+          `floor` and `min_names`, and `thin` flags only the sessions below
+          `floor`. Three checks refuse a mismatch: `floor` must be an int with
+          2 <= floor < the spec's `min_names` (at `min_names` it IS "flatten");
+          `thin` must be named "thin_below_<floor>", the name thin_sessions
+          gives a mask counted at that floor (the spec mask is named "thin");
+          and `_check_thin_matches_T` must pass, so T was built at the mask's
+          floor. `floor` is refused under "hold" and "flatten".
     """
     from src.deploy.sleeves.cef_discount import _cap_gross
+    if below_min_names not in BELOW_MIN_NAMES:
+        raise ValueError(f"below_min_names must be one of {BELOW_MIN_NAMES}, got {below_min_names!r}")
+    if below_min_names != "trade_eligible" and floor is not None:
+        raise ValueError(f"floor is only read with below_min_names='trade_eligible', not {below_min_names!r}")
+    if below_min_names == "hold":
+        if thin is not None:
+            raise ValueError("thin is only read with below_min_names='flatten' or 'trade_eligible'; under "
+                             "'hold' build_targets has already held the target on a thin session")
+        flat = None
+    else:
+        if thin is None:
+            raise ValueError(f"below_min_names={below_min_names!r} needs thin (thin_sessions(T.index)); "
+                             "the harness will not guess which sessions were thin")
+        if below_min_names == "trade_eligible":
+            if floor is None:
+                raise ValueError("below_min_names='trade_eligible' needs floor, the smallest eligible count "
+                                 "it trades; it is not a spec key, so there is no default")
+            if isinstance(floor, bool) or not isinstance(floor, (int, np.integer)):
+                raise TypeError(f"floor must be an int, got {floor!r}")
+            if not 2 <= int(floor) < int(MIN_NAMES):
+                raise ValueError(f"floor must satisfy 2 <= floor < min_names ({MIN_NAMES}), got {floor}: "
+                                 "one name is 0/0, and at min_names the rule is 'flatten'")
+            if thin.name != _below_name(floor):
+                raise ValueError(f"thin is named {thin.name!r}, not {_below_name(floor)!r}: it was not "
+                                 f"counted at floor {floor}; build it with "
+                                 f"thin_sessions(T.index, min_names={floor}, <T's arguments>)")
+        flat = _thin_mask(thin, T)
+        _check_thin_matches_T(flat, T)
     A, cur = T.values, np.zeros(T.shape[1])
     H = np.zeros_like(A)
     cols = T.columns
     blocked = None if unshortable is None else _unshortable_mask(unshortable, T)
     for i in range(len(A)):
+        if flat is not None and flat[i]:
+            # the live sleeve: every name FLAT, straight to zero (see above);
+            # under "trade_eligible" only below `floor`, the rows thin flags
+            cur = np.zeros(T.shape[1])
+            H[i] = cur
+            continue
         gap = A[i] - cur
         mv = np.abs(gap) > b
         prev = cur
@@ -308,6 +610,10 @@ def band_gross_capped(T, b, cap, unshortable=None):
         if np.isfinite(cap):
             w, _ = _cap_gross(pd.Series(cur, index=cols), cap)
             cur = w.values
+        if defer_flips:
+            # decide.py: a long<->short flip sends only the closing leg today
+            cur = cur.copy()
+            cur[(prev * cur) < 0] = 0.0
         H[i] = cur
     return pd.DataFrame(H, index=T.index, columns=T.columns)
 

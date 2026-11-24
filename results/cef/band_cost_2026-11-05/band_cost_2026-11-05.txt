@@ -1,0 +1,150 @@
+BAND WIDTH RE-DERIVED FROM THE MEASURED COST (2026-11-05T20:27:40+00:00); code d06ed06; FIT ONLY (<= 2022-12-30); zero trials
+COST INPUTS, read from results/cef/exec_cost_2026-11-05/aggregates_2026-11-05.json at 2476a16 (H14):
+  core paper B 7.14bp (142 orders, 21 days); 95% interval 3.00-14.24bp (day mean 8.62, t 3.20); quoted half-spread at send 5.98bp
+  quoted half-spread at 15:52:00 ET, mean over name-days: C4's traded names 10.55bp / core 6.06bp = ratio 1.741 -> C4 c = 12.43bp; median ratio 1.496 -> 10.68bp
+  C4's own fills: ONE session (the opening build), B 0.66bp, QHS 10.51bp: not used (n = 1)
+
+CORE  spec cef_discount.v9.20261102: m 1.3, cap 1.8, band 0.048; 13 names; targets 2005-01-03..2022-12-30 (4531 sessions, 3484 thin)
+  fit-cut panels: {'cef_prices': {'rows': 226191, 'last': '2022-12-30'}, 'cef_nav': {'rows': 193375, 'last': '2022-12-30'}, 'cef_distributions': {'rows': 9937, 'last': '2022-12-28'}, 'cef_splits': {'rows': 0, 'last': None}}
+  core target dynamics (primary: active pairs, in the book both days, pooled): sigma_w 0.06134/day, phi_w 0.95807, kappa_w 0.04284, half-life 16.2d; 1025 active pairs, 6752 name-days, 2013-06-24..2022-12-30; mean |w| 0.1669
+    sensitivity: either-day non-zero sigma_w 0.06259, phi_w 0.95593; per-name mean sd 0.05855
+    2005-09: FLAT (0 active pairs, 0 name-days); not measured
+    2010-14: sigma_w 0.05488, phi_w 0.97105, half-life 23.6d, 266 pairs
+    2015-19: sigma_w 0.05752, phi_w 0.96752, half-life 21.0d, 345 pairs
+    2020-22: sigma_w 0.06730, phi_w 0.94035, half-life 11.3d, 414 pairs
+    CALIBRATION, the 17-name v6 book on the FIT only: sigma_w 0.06050, phi_w 0.95246, half-life 14.2d; the law at 15bp 5.53%, at 22bp 6.28%. The 2026-09-06 inputs (17 names, whole sample to 2026-09, script not preserved) [S]: sigma_w 0.04083, phi_w 0.9528, half-life 14.3d
+    the same 17 names, DILUTED (every name-day of every session): sigma_w 0.03136, phi_w 0.95125 (77010 name-days); not a candidate input
+    thin sessions: 3484 of 4531 on the fit; 2 non-thin session(s) before W1; W1 1353 thin of 2398
+  core DERIVED h* = (3 c sigma_w^2 / 2 kappa_w)^(1/3), unit weights (the spec key's units):
+    at c* = 7.14bp: 4.55%   [95% interval of c 3.00-14.24bp -> 3.41-5.72%]
+    the same half-width centred on the pooled c* (1.52-12.76bp) -> 2.72-5.52%
+    grid: 5bp 4.04%, 15bp 5.83%, 30bp 7.34%; 22bp (the 2026-09-06 mid-range) 6.62%
+    sensitivities at c*: account-weight reading (x1.3) 4.17% in unit weights; either-day non-zero 4.53%; per-name sd 4.41%; by era 2010-14 4.79%, 2015-19 4.75%, 2020-22 4.29%
+    the 2026-09-06 inputs at c*: 3.33% (the study's 'about 3.3%')
+
+  core (x1.30, flatten, cap 1.80/m), total returns, fit to 2022-12-30: gross SR is the headline; net at c* = 7.14bp and the 5/15/30bp grid beside it (labelled, never mixed); no borrow
+      width  gross SR   ann%  turn/yr   net@c*   net@5  net@15  net@30  flips?
+      1.60%     0.781   2.79     16.9    0.444   0.545   0.072  -0.637     YES
+      2.27%     0.753   2.65     15.3    0.443   0.536   0.103  -0.547     YES
+      2.40%     0.746   2.62     15.0    0.441   0.532   0.105  -0.535     YES
+      2.86%     0.719   2.50     14.1    0.430   0.516   0.111  -0.496     YES
+      3.20%     0.688   2.39     13.5    0.411   0.494   0.106  -0.476     YES
+      3.61%     0.655   2.27     12.8    0.391   0.470   0.101  -0.453     YES
+      4.50%     0.602   2.07     11.6    0.362   0.434   0.097  -0.409     YES  <- h* as the spec would hold it (0.1pp, truncated)
+      4.55%     0.599   2.05     11.5    0.360   0.431   0.096  -0.407     YES  <- h* (derived)
+      4.80%     0.586   2.00     11.2    0.352   0.422   0.094  -0.397     YES  <- live
+      5.73%     0.544   1.83     10.2    0.329   0.393   0.092  -0.361     YES
+      6.40%     0.526   1.75      9.5    0.322   0.383   0.098  -0.331     YES
+      7.22%     0.502   1.66      8.8    0.311   0.368   0.101  -0.301     YES
+      9.10%     0.417   1.36      7.5    0.253   0.303   0.073  -0.272     YES
+      9.60%     0.387   1.26      7.2    0.230   0.277   0.057  -0.272     YES
+    grid argmax of net@c*: 1.60% (NOT chosen; named so the draft can say so). P1: best - h* = +0.084 (OUTSIDE 0.05). P2: argmax - h* +0.085/yr, SE 0.067, HAC p 0.204, boot p 0.254
+    h* - live at c*: +0.008/yr (SE 0.008, HAC p 0.321); turnover h* / live - 1 = +2.8% (an H2 pair (within 5%))
+    spec value 4.5% - live at c*: +0.010/yr (SE 0.010, HAC p 0.310); turnover +3.3%
+    PASS-RULE STATISTIC, spec value - live: net at c* +0.0385pp/yr, Newey-West t (lag 21) 1.34 (lag 63: 1.83); gross +0.0650pp/yr, NW t 2.23; against the bar sqrt(2 ln 56) = 2.837
+    2010-14: argmax 1.60% (narrower than h*); net@c* at h* 0.090, at live 0.081, at argmax 0.140; turn/yr h* 10.0, live 9.7
+    2015-19: argmax 2.27% (narrower than h*); net@c* at h* 0.132, at live 0.122, at argmax 0.232; turn/yr h* 11.7, live 11.4
+    2020-22: argmax 2.27% (narrower than h*); net@c* at h* 1.019, at live 1.006, at argmax 1.197; turn/yr h* 32.8, live 31.9
+    MODEL, h* vs live, fit: turn/yr 11.5 vs 11.2 (+2.8%); cost at 7.14bp +0.022%NAV/yr; gross +0.053pp/yr; net +0.031pp/yr
+    MODEL, h* vs live, 2020-22: turn/yr 32.8 vs 31.9 (+2.9%); cost at 7.14bp +0.065%NAV/yr; gross +0.152pp/yr; net +0.086pp/yr
+    MODEL, spec value vs live, fit: turn/yr 11.6 vs 11.2 (+3.3%); cost at 7.14bp +0.027%NAV/yr; gross +0.065pp/yr; net +0.038pp/yr
+    MODEL, spec value vs live, 2020-22: turn/yr 33.0 vs 31.9 (+3.4%); cost at 7.14bp +0.078%NAV/yr; gross +0.191pp/yr; net +0.113pp/yr
+
+  core (x1.30, flatten, cap 1.80/m), price-only returns, fit to 2022-12-30: gross SR is the headline; net at c* = 7.14bp and the 5/15/30bp grid beside it (labelled, never mixed); no borrow
+      width  gross SR   ann%  turn/yr   net@c*   net@5  net@15  net@30  flips?
+      1.60%     0.822   3.09     16.9    0.502   0.598   0.150  -0.522     YES
+      2.27%     0.795   2.95     15.3    0.501   0.589   0.178  -0.438     YES
+      2.40%     0.788   2.92     15.0    0.499   0.586   0.181  -0.426     YES
+      2.86%     0.762   2.79     14.1    0.488   0.570   0.186  -0.389     YES
+      3.20%     0.733   2.68     13.5    0.470   0.549   0.181  -0.371     YES
+      3.61%     0.701   2.56     12.8    0.451   0.526   0.175  -0.351     YES
+      4.50%     0.652   2.35     11.6    0.423   0.492   0.171  -0.310     YES  <- h* as the spec would hold it (0.1pp, truncated)
+      4.55%     0.649   2.34     11.5    0.421   0.490   0.171  -0.308     YES  <- h* (derived)
+      4.80%     0.636   2.28     11.2    0.414   0.481   0.169  -0.298     YES  <- live
+      5.73%     0.596   2.11     10.2    0.391   0.453   0.165  -0.266     YES
+      6.40%     0.577   2.01      9.5    0.382   0.440   0.168  -0.242     YES
+      7.22%     0.551   1.90      8.8    0.369   0.423   0.167  -0.217     YES
+      9.10%     0.468   1.58      7.5    0.310   0.358   0.137  -0.195     YES
+      9.60%     0.439   1.48      7.2    0.288   0.333   0.121  -0.196     YES
+    grid argmax of net@c*: 1.60% (NOT chosen; named so the draft can say so). P1: best - h* = +0.081 (OUTSIDE 0.05). P2: argmax - h* +0.082/yr, SE 0.063, HAC p 0.194, boot p 0.236
+    h* - live at c*: +0.008/yr (SE 0.008, HAC p 0.344); turnover h* / live - 1 = +2.8% (an H2 pair (within 5%))
+    spec value 4.5% - live at c*: +0.009/yr (SE 0.010, HAC p 0.333); turnover +3.3%
+    PASS-RULE STATISTIC, spec value - live: net at c* +0.0401pp/yr, Newey-West t (lag 21) 1.38 (lag 63: 1.88); gross +0.0667pp/yr, NW t 2.24; against the bar sqrt(2 ln 56) = 2.837
+    2010-14: argmax 1.60% (narrower than h*); net@c* at h* 0.343, at live 0.334, at argmax 0.397; turn/yr h* 10.0, live 9.7
+    2015-19: argmax 2.27% (narrower than h*); net@c* at h* 0.201, at live 0.193, at argmax 0.292; turn/yr h* 11.7, live 11.4
+    2020-22: argmax 2.27% (narrower than h*); net@c* at h* 0.959, at live 0.948, at argmax 1.131; turn/yr h* 32.8, live 31.9
+    MODEL, h* vs live, fit: turn/yr 11.5 vs 11.2 (+2.8%); cost at 7.14bp +0.022%NAV/yr; gross +0.055pp/yr; net +0.033pp/yr
+    MODEL, h* vs live, 2020-22: turn/yr 32.8 vs 31.9 (+2.9%); cost at 7.14bp +0.065%NAV/yr; gross +0.145pp/yr; net +0.080pp/yr
+    MODEL, spec value vs live, fit: turn/yr 11.6 vs 11.2 (+3.3%); cost at 7.14bp +0.027%NAV/yr; gross +0.067pp/yr; net +0.040pp/yr
+    MODEL, spec value vs live, 2020-22: turn/yr 33.0 vs 31.9 (+3.4%); cost at 7.14bp +0.078%NAV/yr; gross +0.184pp/yr; net +0.105pp/yr
+
+C4  spec c4_families.v5.20261103: m 1.26, cap 1.9, band 0.048; 74 names; the v5 blend 2005-01-03..2022-12-30; first book 2005-02-17; 382 hold rows after it; reproduction gate PASS (trial 52 fit SR 1.216958 TR / 1.359591 PR)
+  C4 target dynamics (primary: active pairs, in the book both days, pooled): sigma_w 0.04880/day, phi_w 0.93624, kappa_w 0.06588, half-life 10.5d; 4020 active pairs, 46200 name-days, 2005-02-18..2022-12-30; mean |w| 0.1011
+    sensitivity: either-day non-zero sigma_w 0.06542, phi_w 0.88224; per-name mean sd 0.04017
+    2005-09: sigma_w 0.04710, phi_w 0.93078, half-life 9.7d, 877 pairs
+    2010-14: sigma_w 0.05225, phi_w 0.93579, half-life 10.4d, 1243 pairs
+    2015-19: sigma_w 0.05672, phi_w 0.93555, half-life 10.4d, 1193 pairs
+    2020-22: sigma_w 0.03185, phi_w 0.94694, half-life 12.7d, 707 pairs
+  C4 DERIVED h* = (3 c sigma_w^2 / 2 kappa_w)^(1/3), unit weights (the spec key's units):
+    at c* = 12.43bp: 4.07%   [95% interval of c 5.22-24.79bp -> 3.05-5.12%]
+    grid: 5bp 3.00%, 15bp 4.33%, 30bp 5.46%; 22bp (the 2026-09-06 mid-range) 4.92%
+    sensitivities at c*: account-weight reading (x1.26) 3.77% in unit weights; either-day non-zero 3.99%; per-name sd 3.57%; by era 2005-09 3.86%, 2010-14 4.25%, 2015-19 4.48%, 2020-22 3.26%
+  C4 at the median spread ratio (1.496 -> 10.68bp): h* 3.87%; at the core's unscaled 7.14bp: 3.38%
+
+  C4 (x1.26, hold, cap 1.90/m, the v5 blend), total (CRSP ret) returns, fit to 2022-12-30: gross SR is the headline; net at c* = 12.43bp and the 5/15/30bp grid beside it (labelled, never mixed); no borrow
+      width  gross SR   ann%  turn/yr   net@c*   net@5  net@15  net@30  flips?
+      1.60%     1.890  13.68     90.5    0.335   1.265   0.014  -1.862     YES
+      2.04%     1.832  13.26     82.9    0.408   1.259   0.113  -1.605     YES
+      2.40%     1.775  12.86     77.3    0.448   1.241   0.174  -1.426     YES
+      2.56%     1.749  12.69     75.0    0.464   1.232   0.199  -1.351     YES
+      3.20%     1.646  11.98     66.8    0.506   1.188   0.271  -1.105     YES
+      3.23%     1.642  11.95     66.4    0.508   1.186   0.274  -1.095     YES
+      4.00%     1.536  11.15     58.1    0.541   1.136   0.335  -0.866     YES  <- h* as the spec would hold it (0.1pp, truncated)
+      4.07%     1.528  11.09     57.4    0.545   1.132   0.341  -0.846     YES  <- h* (derived)
+      4.80%     1.476  10.68     50.8    0.602   1.124   0.421  -0.633     YES  <- live
+      5.13%     1.455  10.53     48.2    0.627   1.122   0.456  -0.543     YES
+      6.40%     1.334   9.74     39.4    0.664   1.065   0.525  -0.283     YES
+      6.46%     1.326   9.69     39.0    0.663   1.059   0.526  -0.275     YES
+      8.14%     1.103   8.23     30.1    0.602   0.902   0.498  -0.107     YES
+      9.60%     0.881   6.84     24.2    0.493   0.725   0.413  -0.055     YES
+    grid argmax of net@c*: 6.40% (NOT chosen; named so the draft can say so). P1: best - h* = +0.119 (OUTSIDE 0.05). P2: argmax - h* +0.120/yr, SE 0.082, HAC p 0.143, boot p 0.139
+    h* - live at c*: -0.058/yr (SE 0.028, HAC p 0.038); turnover h* / live - 1 = +12.9% (NOT an H2 pair: priced at c instead)
+    spec value 4.0% - live at c*: -0.061/yr (SE 0.030, HAC p 0.042); turnover +14.3%
+    PASS-RULE STATISTIC, spec value - live: net at c* -0.4300pp/yr, Newey-West t (lag 21) -1.91 (lag 63: -1.61); gross +0.4714pp/yr, NW t 2.09; against the bar sqrt(2 ln 56) = 2.837
+    2005-09: argmax 2.56% (narrower than h*); net@c* at h* 1.264, at live 1.203, at argmax 1.365; turn/yr h* 30.9, live 27.2
+    2010-14: argmax 8.14% (wider than h*); net@c* at h* 0.258, at live 0.289, at argmax 0.381; turn/yr h* 67.7, live 59.6
+    2015-19: argmax 8.14% (wider than h*); net@c* at h* -0.155, at live -0.055, at argmax 0.206; turn/yr h* 84.9, live 76.5
+    2020-22: argmax 6.40% (wider than h*); net@c* at h* 0.777, at live 0.998, at argmax 1.344; turn/yr h* 38.8, live 32.9
+    MODEL, h* vs live, fit: turn/yr 57.4 vs 50.8 (+12.9%); cost at 12.43bp +0.816%NAV/yr; gross +0.412pp/yr; net -0.404pp/yr
+    MODEL, h* vs live, 2020-22: turn/yr 38.8 vs 32.9 (+17.8%); cost at 12.43bp +0.730%NAV/yr; gross -0.896pp/yr; net -1.626pp/yr
+    MODEL, spec value vs live, fit: turn/yr 58.1 vs 50.8 (+14.3%); cost at 12.43bp +0.901%NAV/yr; gross +0.471pp/yr; net -0.430pp/yr
+    MODEL, spec value vs live, 2020-22: turn/yr 39.4 vs 32.9 (+19.7%); cost at 12.43bp +0.807%NAV/yr; gross -0.957pp/yr; net -1.764pp/yr
+
+  C4 (x1.26, hold, cap 1.90/m, the v5 blend), price-only (CRSP retx) returns, fit to 2022-12-30: gross SR is the headline; net at c* = 12.43bp and the 5/15/30bp grid beside it (labelled, never mixed); no borrow
+      width  gross SR   ann%  turn/yr   net@c*   net@5  net@15  net@30  flips?
+      1.60%     2.117  16.05     90.5    0.633   1.520   0.327  -1.464     YES
+      2.04%     2.051  15.55     82.9    0.691   1.504   0.410  -1.231     YES
+      2.40%     1.989  15.09     77.3    0.722   1.480   0.460  -1.068     YES
+      2.56%     1.960  14.89     75.0    0.734   1.467   0.480  -1.000     YES
+      3.20%     1.849  14.09     66.8    0.760   1.411   0.535  -0.779     YES
+      3.23%     1.845  14.06     66.4    0.762   1.409   0.538  -0.769     YES
+      4.00%     1.733  13.17     58.1    0.783   1.351   0.586  -0.560     YES  <- h* as the spec would hold it (0.1pp, truncated)
+      4.07%     1.725  13.11     57.4    0.786   1.347   0.591  -0.542     YES  <- h* (derived)
+      4.80%     1.658  12.56     50.8    0.824   1.323   0.651  -0.355     YES  <- live
+      5.13%     1.630  12.35     48.2    0.839   1.312   0.676  -0.279     YES
+      6.40%     1.489  11.37     39.4    0.848   1.231   0.716  -0.058     YES
+      6.46%     1.481  11.31     39.0    0.847   1.226   0.715  -0.050     YES
+      8.14%     1.241   9.67     30.1    0.761   1.048   0.662   0.082      no
+      9.60%     1.013   8.20     24.2    0.641   0.863   0.564   0.115      no
+    grid argmax of net@c*: 6.40% (NOT chosen; named so the draft can say so). P1: best - h* = +0.063 (OUTSIDE 0.05). P2: argmax - h* +0.063/yr, SE 0.080, HAC p 0.435, boot p 0.444
+    h* - live at c*: -0.038/yr (SE 0.027, HAC p 0.152); turnover h* / live - 1 = +12.9% (NOT an H2 pair: priced at c instead)
+    spec value 4.0% - live at c*: -0.041/yr (SE 0.029, HAC p 0.159); turnover +14.3%
+    PASS-RULE STATISTIC, spec value - live: net at c* -0.2927pp/yr, Newey-West t (lag 21) -1.30 (lag 63: -1.10); gross +0.6087pp/yr, NW t 2.69; against the bar sqrt(2 ln 56) = 2.837
+    2005-09: argmax 2.56% (narrower than h*); net@c* at h* 1.557, at live 1.484, at argmax 1.656; turn/yr h* 30.9, live 27.2
+    2010-14: argmax 5.13% (wider than h*); net@c* at h* 0.568, at live 0.572, at argmax 0.578; turn/yr h* 67.7, live 59.6
+    2015-19: argmax 8.14% (wider than h*); net@c* at h* -0.072, at live 0.014, at argmax 0.211; turn/yr h* 84.9, live 76.5
+    2020-22: argmax 6.40% (wider than h*); net@c* at h* 1.061, at live 1.261, at argmax 1.576; turn/yr h* 38.8, live 32.9
+    MODEL, h* vs live, fit: turn/yr 57.4 vs 50.8 (+12.9%); cost at 12.43bp +0.816%NAV/yr; gross +0.543pp/yr; net -0.273pp/yr
+    MODEL, h* vs live, 2020-22: turn/yr 38.8 vs 32.9 (+17.8%); cost at 12.43bp +0.730%NAV/yr; gross -0.754pp/yr; net -1.484pp/yr
+    MODEL, spec value vs live, fit: turn/yr 58.1 vs 50.8 (+14.3%); cost at 12.43bp +0.901%NAV/yr; gross +0.609pp/yr; net -0.293pp/yr
+    MODEL, spec value vs live, 2020-22: turn/yr 39.4 vs 32.9 (+19.7%); cost at 12.43bp +0.807%NAV/yr; gross -0.804pp/yr; net -1.611pp/yr

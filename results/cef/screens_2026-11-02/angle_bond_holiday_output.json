@@ -1,0 +1,53 @@
+{
+ "spec": "cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13",
+ "panel_last": "2022-12-30",
+ "holidays_active": [
+  "2013-10-14",
+  "2013-11-11",
+  "2014-10-13",
+  "2014-11-11",
+  "2015-10-12",
+  "2015-11-11",
+  "2016-10-10",
+  "2016-11-11",
+  "2017-10-09",
+  "2018-10-08",
+  "2018-11-12",
+  "2019-10-14",
+  "2019-11-11",
+  "2020-10-12",
+  "2020-11-11",
+  "2021-10-11",
+  "2021-11-11",
+  "2022-10-10",
+  "2022-11-11"
+ ],
+ "table": [
+  {
+   "set": "bond-holiday decisions",
+   "dates": 19,
+   "dates_with_trades": 5,
+   "turnover_total": 0.22490157335840755,
+   "pnl_bp_per_unit_turnover": -20.005580798222674,
+   "pnl_total_pct_capital": -0.04499286597469025
+  },
+  {
+   "set": "CONTROL: +/-5 sessions",
+   "dates": 38,
+   "dates_with_trades": 11,
+   "turnover_total": 1.6908823878242005,
+   "pnl_bp_per_unit_turnover": -3.890877325349107,
+   "pnl_total_pct_capital": -0.06579015942617338
+  },
+  {
+   "set": "all active decision dates",
+   "dates": 2394,
+   "dates_with_trades": 1078,
+   "turnover_total": 128.56242024569292,
+   "pnl_bp_per_unit_turnover": 17.973495752462398,
+   "pnl_total_pct_capital": 23.10716114212248
+  }
+ ],
+ "holiday_share_of_turnover": 0.0017427086070764424,
+ "holiday_share_of_dates": 0.007916666666666667
+}

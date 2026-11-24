@@ -259,7 +259,12 @@ NOII **does** refresh — every 10 seconds from 15:50, then every second from
 **its cutoff and threshold could not be verified** and vendor sources only
 suggest parity with NYSE. **Confirm before routing.** (2026-10-08: a 2018 SEC
 release puts Arca's closing imbalance freeze at 15:59. That is not the current
-rule text; `docs/REFERENCES.md` §3.)
+rule text; `docs/REFERENCES.md` §3.) *Correction 2026-11-02: the cutoff is
+verified. SEC Rel. 34-103886 (SR-NYSEARCA-2025-67, 90 FR 43676, 10 Sep 2025)
+puts the Closing Auction Imbalance Freeze one minute before the close, and
+NYSE's Arca timetable reads 15:00 imbalance publication, 15:59 freeze (only
+offsetting MOC/LOC accepted, cancels rejected). The publication threshold is
+still unverified. `docs/REFERENCES.md` §3.*
 
 Our clips are one to three orders of magnitude below 50,000 shares, so we never
 register as a published imbalance. NYSE's **Closing IO Order** (Rule

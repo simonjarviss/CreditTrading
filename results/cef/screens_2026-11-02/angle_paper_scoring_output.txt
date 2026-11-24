@@ -1,0 +1,17 @@
+a. distribution leg the paper record omits (unit book, % of capital per year)
+        era  days  leg_ann_pct  leg_t  long_credit_ann_pct  short_charge_ann_pct  gross_sr_price  gross_sr_total  gross_ann_price_pct  gross_ann_total_pct
+    2010-14   384       -2.309 -1.738                5.600                -7.908           1.631           1.298                9.642                7.333
+    2015-19  1258        0.665  1.949                6.516                -5.851           0.719           0.835                5.037                5.702
+    2020-22   756       -0.614 -1.465                4.820                -5.434           1.084           1.020                7.101                6.487
+fit 2005-22  2398       -0.214 -0.654                5.835                -6.049           0.959           0.955                6.425                6.211
+
+   24-session sums (% of capital): quantiles {0.05: -0.487, 0.25: -0.088, 0.5: 0.002, 0.75: 0.145, 0.95: 0.349}; live +0.321% sits at percentile 0.944
+
+b. trades filled at the close just before an ex-date carry 7.2% of |leg|; mean -0.300%/yr
+
+c. CRSP closing quoted half-spread 2020-22: median 7.65bp, mean 9.08bp; by group {'hy': 5.01, 'loan': 6.29, 'multi': 7.86, 'muni': 9.35} (n 9556)
+
+d. paper late-market fill cost implied by fit turnover (B = 5.1bp vs close [V fill-drift])
+    era  turn_per_yr_unit  multiplier  paper_fill_cost_pct_per_yr  half_spread_part_pct_per_yr
+2015-19             7.793        1.13                       0.449                        0.542
+2020-22            21.453        1.13                       1.236                        1.493

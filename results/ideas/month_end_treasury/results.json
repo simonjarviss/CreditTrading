@@ -1,0 +1,106 @@
+{
+ "panel_last_date": "2026-10-09",
+ "symbol": "IEF",
+ "convention": "shift(2), gross, weight 1.0 in window",
+ "full": {
+  "n_days": 6064,
+  "n_window_days": 861,
+  "ann_ret": 0.02625487598999836,
+  "ann_vol": 0.024471766544987367,
+  "sharpe": 1.07286394473129,
+  "t": 5.262886163577788,
+  "mean_bp_per_window_day": 7.337793263801323,
+  "hit_rate_window_days": 0.5888501742160279
+ },
+ "early_half": {
+  "n_days": 3033,
+  "n_window_days": 428,
+  "ann_ret": 0.026439394658753713,
+  "ann_vol": 0.026098877564358317,
+  "sharpe": 1.0130471930662805,
+  "t": 3.5145167082040967,
+  "mean_bp_per_window_day": 7.43497663551402,
+  "hit_rate_window_days": 0.5911214953271028
+ },
+ "late_half": {
+  "n_days": 3032,
+  "n_window_days": 433,
+  "ann_ret": 0.02606163720427113,
+  "ann_vol": 0.022727885451535385,
+  "sharpe": 1.1466811226167342,
+  "t": 3.9774707176197155,
+  "mean_bp_per_window_day": 7.241732101923645,
+  "hit_rate_window_days": 0.5866050808314087
+ },
+ "split_date": "2014-09-19",
+ "eras": {
+  "2002-09-01..2008-12-31": {
+   "n_days": 1594,
+   "n_window_days": 227,
+   "ann_ret": 0.02752791718946048,
+   "ann_vol": 0.02659233001190895,
+   "sharpe": 1.0351825950239242,
+   "t": 2.6035195882052933,
+   "mean_bp_per_window_day": 7.670704845814979,
+   "hit_rate_window_days": 0.5814977973568282
+  },
+  "2009-01-01..2015-12-31": {
+   "n_days": 1762,
+   "n_window_days": 249,
+   "ann_ret": 0.024329584562996595,
+   "ann_vol": 0.025085447436015554,
+   "sharpe": 0.969868471553202,
+   "t": 2.5645757016427453,
+   "mean_bp_per_window_day": 6.831887550200803,
+   "hit_rate_window_days": 0.6024096385542169
+  },
+  "2016-01-01..2019-12-31": {
+   "n_days": 1006,
+   "n_window_days": 143,
+   "ann_ret": 0.030156083499005962,
+   "ann_vol": 0.017162142375513154,
+   "sharpe": 1.7571281509721357,
+   "t": 3.5107682054996983,
+   "mean_bp_per_window_day": 8.41853146853147,
+   "hit_rate_window_days": 0.6293706293706294
+  },
+  "2020-01-01..2022-12-31": {
+   "n_days": 756,
+   "n_window_days": 107,
+   "ann_ret": 0.030854999999999997,
+   "ann_vol": 0.02854888130075333,
+   "sharpe": 1.0807779007153537,
+   "t": 1.8719622357366241,
+   "mean_bp_per_window_day": 8.650934579439255,
+   "hit_rate_window_days": 0.5607476635514018
+  },
+  "2023-01-01..2026-12-31": {
+   "n_days": 946,
+   "n_window_days": 135,
+   "ann_ret": 0.019870972519397526,
+   "ann_vol": 0.02264515176317918,
+   "sharpe": 0.877493457637478,
+   "t": 1.7001576149085684,
+   "mean_bp_per_window_day": 5.525555556540288,
+   "hit_rate_window_days": 0.5555555555555556
+  }
+ },
+ "control_other_sessions": {
+  "n_days": 6064,
+  "n_window_days": 5147,
+  "ann_ret": 0.00631578573056955,
+  "ann_vol": 0.06319131883630263,
+  "sharpe": 0.09994704726658132,
+  "t": 0.49028577643318105,
+  "mean_bp_per_window_day": 0.29527853079906125,
+  "hit_rate_window_days": 0.5098115407033224
+ },
+ "turnover_per_year": 24.041379310344826,
+ "share_of_days_in_market": 0.14198548812664907,
+ "capacity": {
+  "median_dollar_volume_2026": 740663693.334021,
+  "position_pct_of_adv_at_1M": 0.13501404335057973,
+  "position_pct_of_adv_at_5M": 0.6750702167528986,
+  "position_pct_of_adv_at_10M": 1.3501404335057972
+ }
+}

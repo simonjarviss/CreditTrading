@@ -236,7 +236,7 @@ def test_synthetic_book_with_keys_absent_is_the_code_before_them(tmp_path, monke
 
 class _ClearFeed:
     """Mixin: Alpaca's corporate-action read, listing nothing, counting calls."""
-    def corporate_actions(self, symbols, start, end):
+    def corporate_actions(self, symbols, start, end, **kw):   # kw: universe, skipped
         self.ca_reads = getattr(self, "ca_reads", 0) + 1
         return []
 

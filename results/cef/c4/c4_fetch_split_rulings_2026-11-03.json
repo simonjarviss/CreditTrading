@@ -1,0 +1,16 @@
+{
+ "ruled_by": "team lead (Simon Jarvis), 2026-11-03: \"Hold C4 one day, fix IGR\" (relayed by the coordinator); the release-check confirms this file's one entry with the team lead before the install",
+ "ruled_on": "2026-11-03",
+ "record": "this file; scripts/cef/data_guards.py THE LIVE FETCH'S PRICE BASIS; read by scripts/cef/fetch_daily.py --data-book c4 (data_books.C4_FETCH_SPLIT_RULINGS) and scripts/cef/data_books.py repair-basis",
+ "ruling": "C4's panels are on the raw, as-traded share basis, the NAV symbols' (served unadjusted). Yahoo back-adjusts a fund's pre-split closes after the fact, late and at once (IGR: raw in the 2026-10-12 families build, x3.0 by the 2026-11-03 fetch). So on each ruled split the fetch puts every pre-ex row it finds on the adjusted basis back on the NAV's, judged row by row against the NAV on every fetch, and refuses any row it cannot place.",
+ "splits": [
+  {
+   "ticker": "IGR",
+   "ex_date": "2026-09-08",
+   "factor": 0.3333333333333333,
+   "series": "close",
+   "treatment": "to_nav_basis",
+   "reason": "IGR's 1:3 reverse split, effective 2026-09-08 (yfinance multiplier 0.3333333333333333, data/cef_families/cef_actions.parquet). The 2026-11-03 fetch served 2026-05-04..09-04 at x3.0 the raw closes (14.04 on 05-04 against NAV 4.64; the seed's raw close 4.68), which read as a +200% premium for four months; IGR's NAV symbol was not adjusted. Pre-ex closes on the adjusted basis go back to raw (x0.3333; volume /0.3333)."
+  }
+ ]
+}

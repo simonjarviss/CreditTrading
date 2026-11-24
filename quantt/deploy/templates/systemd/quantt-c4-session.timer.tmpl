@@ -1,0 +1,37 @@
+# quantt-c4-session.timer : when C4's session is tried. THE CORE'S SCHEDULE,
+# derived (install_vm._book_job), so the two books' windows cannot drift apart:
+#
+#   every :00 and :30, every day. The runner decides whether this is a slot
+#     (evening 22:00-01:00 ET, morning 06:00-15:15 ET) and otherwise idles.
+#   15:52 and 15:55 Mon-Fri: the late-market send window for a 16:00 close
+#     (C4's book json: window_minutes_before_close [8, 2]); 12:52 and 12:55 for
+#     a 13:00 early close.
+#
+# RENDERED by quantt/deploy/install_vm.py --book c4 from release tag ${TAG}; the
+# installer refuses a template whose lines differ from that translation and runs
+# `systemd-analyze calendar` on each one. Local time (the system zone must be
+# America/New_York); Persistent=false; AccuracySec=1s. Every note in
+# quantt-cef-session.timer applies here unchanged, including the restart that
+# replays a missed slot (install_vm refuses an install, and a timer restart,
+# inside the late windows: _refuse_if_late).
+#
+# C4's refresh runs at the same minutes as the core's, and does not wait for it:
+# fetch_daily --data-book c4 locks data/cef_c4/.fetch.lock, never the core's
+# data/cef/.fetch.lock. Whether two sessions at once fit the VM's memory is
+# measured by the DRY sessions (results/ops/C4_DRY_RUN_CHECKLIST_2026-10-29.md).
+[Unit]
+Description=QUANTT C4 session schedule (release ${TAG})
+
+[Timer]
+OnCalendar=*-*-* *:00:00
+OnCalendar=*-*-* *:30:00
+OnCalendar=Mon,Tue,Wed,Thu,Fri *-*-* 15:52:00
+OnCalendar=Mon,Tue,Wed,Thu,Fri *-*-* 15:55:00
+OnCalendar=Mon,Tue,Wed,Thu,Fri *-*-* 12:52:00
+OnCalendar=Mon,Tue,Wed,Thu,Fri *-*-* 12:55:00
+AccuracySec=1s
+Persistent=false
+Unit=quantt-c4-session.service
+
+[Install]
+WantedBy=timers.target

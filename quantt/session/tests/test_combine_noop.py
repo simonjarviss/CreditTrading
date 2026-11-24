@@ -21,13 +21,29 @@ combiner, de6e9c5 (release-20261028-1, what prod runs). Four tests:
      are copied from `test_c4_synthetic_pin.py` on branch `simon` (made for the
      same purpose at 66ec3df); the pins are this tree's own.
   3. `test_real_sleeve_on_the_real_panel_is_the_code_before_the_combiner`. The
-     same on the real sleeve, the live spec and a copy of the real panels'
-     universe rows through 2026-09-25 (the `test_nav_gate.py` and
-     `test_c4_keys_noop.py` pattern: half the day-one book held, so the band
-     trades and holds). A pin is only a proof on the inputs it was made on, so
-     the copy's content and the live spec are hashed, and when either is not
-     what the pin was made on the test WARNS and skips, naming both. Test 2 is
-     the one that never skips.
+     same on the real sleeve, a copy of the real panels' universe rows through
+     2026-09-25 (the `test_nav_gate.py` and `test_c4_keys_noop.py` pattern:
+     half the day-one book held, so the band trades and holds), and the core's
+     spec AS IT WAS BEFORE CEF TRIAL 53 (cef_discount.v7.20260928), read from git
+     at 35b429f (`pre_trial_spec`). Until 2026-11-01 this read the live spec,
+     which then was v7. The activation made the live spec v8, and de6e9c5's code
+     cannot run v8's `sizing_multiplier`, so the code-versus-code proof keeps
+     v7. A pin is only a proof on the inputs it was made on, so the copy's
+     content and that spec are hashed, and when either is not what the pin was
+     made on, or git cannot show the spec, the test WARNS and skips, naming
+     both. Test 2 is the one that never skips.
+  3b. `test_real_sleeve_on_the_real_panel_live_spec_v9`: the same five outputs
+     on the LIVE spec as released by CEF trial 53 amendment 1 (team lead
+     2026-11-02): v9, with `sizing_multiplier` 1.30 applied. The pin was made on
+     the amendment's tree (trial53-amend1), not on older code, so it is a
+     regression pin of the released book. It is not a no-op proof: that is
+     test 3, plus test_sizing_multiplier_noop.py. It FAILS, rather than skips,
+     on any spec but v9 at x1.30. It also asserts that the live spec is the
+     pre-trial spec plus the multiplier and nothing else, and that the
+     multiplier acts (every weight target says `smult=1.3000`). Until the
+     amendment it was a v8 pin at x1.13, made on 3478159, and it is in git at
+     8b14298. v8's bytes are kept as `PINNED_INPUT_V8` / `v8_spec()` (git at
+     862b1d0) for test_panels_noop's 862b1d0 pins.
   4. `test_one_sleeve_through_the_combiner_sends_what_the_single_sleeve_book_sends`,
      on the synthetic panel and (if present) the real one. Not a pin. It is a
      check of the combiner's arithmetic: the live spec as the only sleeve at
@@ -61,6 +77,7 @@ import hashlib
 import json
 import platform
 import warnings
+from pathlib import Path
 
 import pandas as pd
 import pytest
@@ -77,6 +94,11 @@ EVE = dt.datetime(2026, 9, 25, 22, 0, tzinfo=ET)
 SEND = dt.datetime(2026, 9, 28, 15, 52, 30, tzinfo=ET)       # inside 15:52-15:58 ET
 SESSION_DIR = "2026-09-28"
 LIVE_SPEC_PATH = rn.REPO / "ops/specs/cef_discount.frozen.json"
+# The core's spec before CEF trial 53 (cef_discount.v7.20260928), on origin/main, so every
+# clone can show it. The revert tag spec-cef_discount.v7.20260928 names the same bytes, but it
+# is local only, so the tests read the commit instead.
+PRE_TRIAL_COMMIT = "35b429f"
+TRIAL_KEYS = ("sizing_multiplier", "_sizing_multiplier_note")
 
 
 class RealPanelPinNotApplicable(UserWarning):
@@ -95,6 +117,32 @@ class _Quiet:
 
 def _sha(x) -> str:
     return hashlib.sha256(x if isinstance(x, bytes) else x.encode()).hexdigest()
+
+
+def pre_trial_spec() -> "tuple[bytes, dict] | None":
+    """(raw bytes, parsed) of the core's frozen spec at PRE_TRIAL_COMMIT, or None when git
+    cannot show it (no history: an archive, a shallow clone). The no-op pins made on older
+    code read this, because that code cannot run trial 53's key."""
+    import subprocess
+    r = subprocess.run(["git", "-C", str(rn.REPO), "show",
+                        f"{PRE_TRIAL_COMMIT}:ops/specs/cef_discount.frozen.json"],
+                       capture_output=True)
+    if r.returncode != 0 or not r.stdout:
+        return None
+    return r.stdout, json.loads(r.stdout)
+
+
+def assert_live_is_pre_trial_plus_the_multiplier(pre: dict, live: dict):
+    """The live spec is the pre-trial spec plus trial 53's key and its note, under a new id,
+    and nothing else. A later spec change fails here; re-pin test 3b when that happens."""
+    a, b = json.loads(json.dumps(pre)), json.loads(json.dumps(live))
+    assert b["frozen"].get("sizing_multiplier") is not None, "the live spec has no multiplier"
+    for k in TRIAL_KEYS:
+        b["frozen"].pop(k, None)
+    assert a["frozen"] == b["frozen"]
+    for k in ("spec_id", "_supersedes", "description", "frozen"):
+        a.pop(k), b.pop(k)
+    assert a == b
 
 
 def _real_panel_ready() -> bool:
@@ -453,11 +501,17 @@ PINNED = {
 def test_real_sleeve_on_the_real_panel_is_the_code_before_the_combiner(tmp_path, monkeypatch):
     from src.deploy.sleeves import cef_discount as cefmod
     real = {f: f.read_bytes() for f in (cefmod.PX_PATH, cefmod.NAV_PATH)}
-    spec = json.loads(LIVE_SPEC_PATH.read_text())
+    pre = pre_trial_spec()
+    if pre is None:
+        why = (f"REAL-PANEL COMBINER NO-OP PIN NOT APPLIED: git cannot show "
+               f"{PRE_TRIAL_COMMIT}:ops/specs/cef_discount.frozen.json, the spec the pin was made on")
+        warnings.warn(why, RealPanelPinNotApplicable)
+        pytest.skip(why)
+    raw, spec = pre
     (tmp_path / "panels").mkdir()
     got_input = {"panel": _frozen_copy(tmp_path / "panels", monkeypatch,
                                        spec["frozen"]["universe"]),
-                 "spec": _sha(LIVE_SPEC_PATH.read_bytes())}
+                 "spec": _sha(raw)}
     if got_input != PINNED_INPUT:
         why = (f"REAL-PANEL COMBINER NO-OP PIN NOT APPLIED: it was made on panel/spec "
                f"{PINNED_INPUT}; this tree has {got_input} (a refresh revised rows through "
@@ -469,6 +523,117 @@ def test_real_sleeve_on_the_real_panel_is_the_code_before_the_combiner(tmp_path,
     r = _session(tmp_path / "run", spec)
     _compare(_hashes(r), PINNED, "combiner real-panel pin")
     _assert_not_vacuous(r)
+    assert all(f.read_bytes() == b for f, b in real.items()), "a real panel changed"
+
+
+# -------------------------------------------------- 3b. the live spec as released (v9)
+
+# The core's spec as RELEASED BEFORE amendment 1 (cef_discount.v8.20261101, release-20261102-1 at
+# 862b1d0, on origin/main). test_panels_noop's 862b1d0 pins were made on it, and read it here so
+# they survive the v9 activation. The local tag spec-cef_discount.v8.20261101 names the same bytes.
+V8_COMMIT = "862b1d0"
+# The v8 input those pins were made on (the same panel copy as test 3; v8's sha).
+PINNED_INPUT_V8 = {
+    "panel": PINNED_INPUT["panel"],
+    "spec": "b9259d70c11d2ecfc1011a953e328e22c325bc34fc2a48318ffb502e0c0d3cd5",
+}
+
+
+def v8_spec() -> "tuple[bytes, dict] | None":
+    """(raw bytes, parsed) of the core's spec at V8_COMMIT, or None when git cannot show it."""
+    import subprocess
+    r = subprocess.run(["git", "-C", str(rn.REPO), "show", f"{V8_COMMIT}:ops/specs/cef_discount.frozen.json"],
+                       capture_output=True)
+    if r.returncode != 0 or not r.stdout:
+        return None
+    return r.stdout, json.loads(r.stdout)
+
+
+# The live spec as released by CEF trial 53 amendment 1 (team lead 2026-11-02): v9, x1.30.
+LIVE_ID, LIVE_M = "cef_discount.v9.20261102", 1.3
+
+
+def _live(tmp_path, monkeypatch):
+    """(input, raw outputs, live spec) of test 3's five outputs on the LIVE spec."""
+    raw = LIVE_SPEC_PATH.read_bytes()
+    spec = json.loads(raw)
+    (tmp_path / "panels").mkdir()
+    got_input = {"panel": _frozen_copy(tmp_path / "panels", monkeypatch,
+                                       spec["frozen"]["universe"]),
+                 "spec": _sha(raw)}
+    return got_input, (_session(tmp_path / "run", spec) if got_input == PINNED_INPUT_V9 else None), spec
+
+
+def print_live_pin():
+    """Print test 3b's pin (module docstring, 3b): run on the release tree, never edited by hand."""
+    import tempfile
+    with tempfile.TemporaryDirectory() as d, pytest.MonkeyPatch.context() as mp:
+        got_input, r, _ = _live(Path(d), mp)
+        print("input", got_input)
+        print("PINNED_V9 =", json.dumps(_hashes(r) if r else None, indent=1, sort_keys=True))
+
+
+# PINNED 2026-11-02 on trial53-amend1 (8b14298 plus amendment 1's v9 spec and this file), on the
+# laptop's dev panels (cef_prices to 2026-10-15, cef_nav to 2026-10-14; only rows through ASOF are
+# read). The live spec is cef_discount.v9.20261102: the pre-trial spec plus sizing_multiplier 1.30.
+# Until amendment 1 this was a v8 pin at x1.13 (PINNED_V8, in git at 8b14298).
+# RE-PINNED 2026-11-11, input only: a note-only edit (team lead 2026-11-11, no spec_id bump) made
+# `frozen._sizing_multiplier_note` also name scripts/cef/exposure_readout.py. The file's sha256 moved
+# from dd92e06d814a... and no value moved. PINNED_V9 below is unchanged and still matches. Without
+# the re-pin this test would skip, with a warning, instead of comparing.
+PINNED_INPUT_V9 = {
+    "panel": PINNED_INPUT["panel"],
+    "spec": "555286d0659cd69dd4a5e5c98e16e4f64e089db1ac0d2605baec20e5917bb777",
+}
+# Identical unseeded and under PYTHONHASHSEED 1 and 2.
+PINNED_V9 = {
+ "band_holds": 6,
+ "cls_exit": 0,
+ "cls_plan_json": "13cf21aeea16c7e7f90ed28c5b19f5e351115e636855de3bd93cd61eccf13579",
+ "cls_sent": "c7abedb293ac6711b6acedb4f0c10f723478d2c8e08f9d2ca6793059929a7e1d",
+ "day_one_targets": "4e001f8f0e557d14ff643cf11bd7cfbb5f8aa7e819121805f636a04d66d7a0a7",
+ "exit": 6,
+ "held_targets": "4b555dcfff8b3bbf16b4972344d574ad25ee35ea2a57d0c9cdc100bc69757379",
+ "n_orders": 6,
+ "orders": "43047d3746b9b7af657653bc7750be1bfd9b10cb894cb07f32d5a0d35d35f316",
+ "plan_json": "b2c7e93fddd497ce0a2b0eb5e05be17bffe7d334c7058b2292523cfa20faf699",
+ "plan_sha": "5492fb8b0b83ff766cbeba4d101429d7c3bb74fb38d70321c8b99f74987dbcd6",
+ "plan_targets": "0f9d957fa4f1c107c95b100ecd3f9b70a8f724cff2fd0097750a080f0995bb6a",
+ "send_exit": 0,
+ "send_json": "da634201e75bc81f15745da4c517dad67a10501462721b98ab004b880ad726c1",
+ "send_sent": "4346b2811ae0fa9dcf7cde81487ee03b84fcbd706463d0b41be30123ce25d706",
+ "status": "decided"
+}
+
+
+@pytest.mark.skipif(not _real_panel_ready(), reason="real CEF panels absent (data/ is "
+                                                     "gitignored); the synthetic pin still runs")
+def test_real_sleeve_on_the_real_panel_live_spec_v9(tmp_path, monkeypatch):
+    from src.deploy.sleeves import cef_discount as cefmod
+    real = {f: f.read_bytes() for f in (cefmod.PX_PATH, cefmod.NAV_PATH)}
+    live = json.loads(LIVE_SPEC_PATH.read_text())
+    # The released spec IS amendment 1's: this fails (it does not skip) on any other spec, so a
+    # spec change cannot leave this pin silently unapplied. Re-pin with print_live_pin().
+    assert (live["spec_id"], live["frozen"].get("sizing_multiplier")) == (LIVE_ID, LIVE_M)
+    pre = pre_trial_spec()
+    got_input, r, live = _live(tmp_path, monkeypatch)
+    if r is None:
+        why = (f"REAL-PANEL LIVE-SPEC (v9) PIN NOT APPLIED: it was made on panel/spec "
+               f"{PINNED_INPUT_V9}; this tree has {got_input} (a refresh revised rows through "
+               f"{ASOF}, or another machine's panel). Re-pin with print_live_pin(); test 3 and "
+               f"the synthetic pins still run")
+        warnings.warn(why, RealPanelPinNotApplicable)
+        pytest.skip(why)
+    if pre is not None:
+        assert_live_is_pre_trial_plus_the_multiplier(pre[1], live)
+    m = live["frozen"]["sizing_multiplier"]
+    for t in r["day1"]:
+        if t.weight:
+            assert f"smult={m:.4f}" in t.reason, t.reason       # the multiplier acts
+    _compare(_hashes(r), PINNED_V9, "live-spec (v9) real-panel pin")
+    plan = json.loads(r["plan_raw"])
+    assert r["exit"] == rn.EXIT_PLANNED and plan["orders"]
+    assert r["send_exit"] == rn.EXIT_SENT and r["cls_exit"] == rn.EXIT_SENT
     assert all(f.read_bytes() == b for f, b in real.items()), "a real panel changed"
 
 
@@ -526,14 +691,34 @@ def test_one_sleeve_through_the_combiner_sends_what_the_single_sleeve_book_sends
     _assert_same_trades(single, combined, budget_nav=100_000.0)
 
 
+def combinable(spec: dict) -> dict:
+    """The spec with `sizing_multiplier` and its note removed (CEF trial 53, 2026-11-01).
+
+    A combined book refuses the key (quantt/session/combine.py, ONE SIZING AUTHORITY PER
+    BOOK), so since the live spec carries it (cef_discount.v8.20261101) the combiner's tests
+    on the live spec take it without the key. Everything else is the live spec's."""
+    s = json.loads(json.dumps(spec))
+    s["frozen"].pop("sizing_multiplier", None)
+    s["frozen"].pop("_sizing_multiplier_note", None)
+    return s
+
+
 @pytest.mark.skipif(not _real_panel_ready(), reason="real CEF panels absent (data/ is "
                                                      "gitignored); the synthetic version runs")
 def test_one_sleeve_through_the_combiner_on_the_real_panel(tmp_path, monkeypatch):
-    spec = json.loads(LIVE_SPEC_PATH.read_text())
+    from quantt.session import combine as cmb
+    live = json.loads(LIVE_SPEC_PATH.read_text())
+    if "sizing_multiplier" in live["frozen"]:          # refused as it stands (one sizing authority)
+        (tmp_path / "refused").mkdir()
+        with pytest.raises(cmb.CombineError, match="sizing_multiplier"):
+            _one_sleeve(tmp_path / "refused", LIVE_SPEC_PATH, rn.REPO)
+    spec = combinable(live)
+    sp = tmp_path / "live_combinable.frozen.json"
+    sp.write_text(json.dumps(spec))
     (tmp_path / "panels").mkdir()
     _frozen_copy(tmp_path / "panels", monkeypatch, spec["frozen"]["universe"])
     single = _session(tmp_path / "single", spec)
     combined = _session(tmp_path / "combined", spec,
-                        sleeves=_one_sleeve(tmp_path, LIVE_SPEC_PATH, rn.REPO))
+                        sleeves=_one_sleeve(tmp_path, sp, tmp_path))
     _assert_not_vacuous(single)
     _assert_same_trades(single, combined, budget_nav=100_000.0)

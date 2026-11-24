@@ -1,0 +1,5 @@
+# Research-only packages: installed by CI so scripts/research tests run, NEVER on the VM.
+# The VM's venv is built from requirements.txt alone (docs/RUNBOOK.md 8.6 step 3); keeping
+# research packages out of it means a research dependency never forces a prod venv rebuild.
+# arch: the prewhitened QS-kernel HAC in scripts/research/resampling.py (main's CI red since 2026-10-29).
+arch==8.0.0

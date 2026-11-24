@@ -127,7 +127,7 @@ itself, and a banner shows the book's state. Tell Claude once, durably, who you
 are: add this line to `~/.claude/CLAUDE.md` (your personal file, outside the repo):
 
 ```
-In the quanttqueensu/CreditTrading repository I am an analyst in the <MACRO (fixed income) | equities and ETFs | dashboard and data> lane, not the team lead.
+In the quanttqueensu/CreditTrading repository I am an analyst in the <FICC risk | equity risk | cross-asset signals, dashboard and data> lane, not the team lead.
 ```
 
 `CLAUDE.md`, "Who you are working for", tells Claude what that means.
@@ -147,12 +147,12 @@ In the quanttqueensu/CreditTrading repository I am an analyst in the <MACRO (fix
 | `ops/specs/`, `ops/books/` | the frozen spec and the book json: governance, not config | live | PM |
 | `ops/orient.py`, `ops/prod_state.py`, `ops/doc_audit.py` | where am I; which machine is prod; are the documents true | tooling | PM |
 | `scripts/cef/` | **the research harness**: `band_frontier.py` (its `evaluate()` is the canonical backtest), `validate.py`, diagnostics, the CEF trials. Also `spec.py` and `fetch_daily.py`, which the runner calls | research, plus two live files | PM |
-| `scripts/macro/` | fixed-income research: macro events, credit events and fixed-income instruments | research | MACRO |
-| `scripts/xasset/` | equity and ETF research: the XASSET protocol, runner and trials | research | equities and ETFs |
+| `scripts/macro/` | fixed-income research: macro events, credit events and fixed-income instruments | research | FICC risk |
+| `scripts/xasset/` | equity and ETF research: the XASSET protocol, runner and trials | research | equity risk |
 | `scripts/events/` | corporate-event research: the merger pair, NAV tenders, SPACs, merger arbitrage, their gates | research | PM |
 | `scripts/gamma/` | the short-TLT-variance test: Cboe volatility indices, gate G2, option snapshots | research | PM |
-| `scripts/data/`, `scripts/rv/`, `scripts/holdings/`, `scripts/build_etf_daily.py`, `src/data/` | fetchers and data builds: the EDGAR client, CRSP stagers, CEFConnect, factor files, ETF bars, the R2 reader | research | dashboard and data |
-| `dashboard/` | the read-only dashboard, and `snapshots/`, the book's nightly snapshot it reads (`dashboard/README.md`) | monitor | dashboard and data |
+| `scripts/data/`, `scripts/rv/`, `scripts/holdings/`, `scripts/build_etf_daily.py`, `src/data/` | fetchers and data builds: the EDGAR client, CRSP stagers, CEFConnect, factor files, ETF bars, the R2 reader | research | cross-asset, dashboard and data |
+| `dashboard/` | the read-only dashboard, and `snapshots/`, the book's nightly snapshot it reads (`dashboard/README.md`) | monitor | cross-asset, dashboard and data |
 | `src/backtest/` | the original engine, lookahead guard, cost model and walk-forward | research | PM |
 | `results/<family>/` | dated findings and pre-registrations, each true **as of its date** | record | that family's lane |
 | `docs/` | one owner per question; `docs/INDEX.md` lists them | | per the index |
@@ -183,9 +183,9 @@ Then your lane:
 
 | lane | read next |
 |---|---|
-| MACRO (fixed income) | The KILLED and WATCH tables of `docs/RESEARCH_STATE.md` (the credit-ETF, flow, trend and calendar ideas that died here, including XASSET-X3, the month-end Treasury extension that was term premium; the forced IG-to-HY index deletion on WATCH stays with the PM); `docs/BRIEF.md` §1 (what finding alpha means for this book); `results/cef/W10_PARTB_2026-10-12.md` (where the book's edge lives across fund groups, which an overlay has to respect); `results/cef/RESEARCH_PLAN_2026-10-09.md` §3, trial C2 (macro observables per fund group, planned on CEF: whether it moves to MACRO is the team lead's open question, so do not start a test like it); `results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md` (how a signal joins the book) |
-| Equities and ETFs | `results/xasset/PREREG_XASSET_SLATE_2026-10-12.md` and `results/xasset/XASSET_RESULTS_2026-10-14.md` (the first slate and why each test failed); `scripts/xasset/protocol.py` and `scripts/xasset/runner.py` (how a slate runs once); `results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md` (how a new sleeve joins the book) |
-| Dashboard and data | `CLAUDE.md`, "Any monitor is read-only"; `dashboard/README.md` (the snapshot it reads, and what a snapshot may never carry); `docs/RUNNER.md` (what a session records); `quantt/session/records.py` (the on-disk record the snapshot is cut from); `ops/orient.py` and `ops/prod_state.py` (read-only readers that already exist); `docs/HISTORY.md` (the IBKR-era dashboard, at tag `pre-clean-slate`); `docs/DATA.md` and `CLAUDE.md`, "Hard rules: data" (the data platform you keep: every series has a fetcher and a source note in `docs/REFERENCES.md`) |
+| FICC risk | `scripts/cef/exposure_readout.py` and `scripts/cef/live_attribution.py` (the book's rate, credit and muni risk); the KILLED and WATCH tables of `docs/RESEARCH_STATE.md` (the credit-ETF, flow, trend and calendar ideas that died here, including XASSET-X3, the month-end Treasury extension that was term premium; the forced IG-to-HY index deletion on WATCH stays with the PM); `docs/BRIEF.md` §1 (what finding alpha means for this book); `results/cef/W10_PARTB_2026-10-12.md` (where the book's edge lives across fund groups, which an overlay has to respect); `results/cef/RESEARCH_PLAN_2026-10-09.md` §3, trial C2 (macro observables per fund group, planned on CEF: whether it moves to MACRO is the team lead's open question, so do not start a test like it); `results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md` (how a signal joins the book) |
+| Equity risk | `scripts/xasset/book_profile.py` and `scripts/xasset/specialist_betas.py` (written for the core; adapt them for C4); `results/xasset/PREREG_XASSET_SLATE_2026-10-12.md` and `results/xasset/XASSET_RESULTS_2026-10-14.md` (the first slate and why each test failed); `scripts/xasset/protocol.py` and `scripts/xasset/runner.py` (how a slate runs once); `results/cef/PORTFOLIO_FRAMEWORK_2026-10-15.md` (how a new sleeve joins the book) |
+| Cross-asset signals, dashboard and data | `results/xasset/XASSET_RESULTS_2026-10-14.md` (the first four cross-asset tests and why each failed); `CLAUDE.md`, "Any monitor is read-only"; `dashboard/README.md` (the snapshot it reads, and what a snapshot may never carry); `docs/RUNNER.md` (what a session records); `quantt/session/records.py` (the on-disk record the snapshot is cut from); `ops/orient.py` and `ops/prod_state.py` (read-only readers that already exist); `docs/HISTORY.md` (the IBKR-era dashboard, at tag `pre-clean-slate`); `docs/DATA.md` and `CLAUDE.md`, "Hard rules: data" (the data platform you keep: every series has a fetcher and a source note in `docs/REFERENCES.md`) |
 
 ---
 

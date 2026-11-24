@@ -1,0 +1,24 @@
+te4 sleeve no-op proof, 2026-11-03 (python3 results/cef/te4_impl/sleeve_noop_diff.py)
+base: a worktree at ac15d095df0197df2d992e37b0f7963dfb6812cd
+new:  this checkout at e2ad8afbfb45c6bd7d5bad6303c0fae249195848 (clean)
+  code under test, git blob ids: src/deploy/sleeves/cef_discount.py  base 23243cebe145  new 06a82cd312eb
+  code under test, git blob ids: src/deploy/registry.py  base db3b46f75fe5  new b5dad8f2412d
+  code under test, git blob ids: src/deploy/sleeve.py  base 2c5e7bba6430  new 2c5e7bba6430
+spec cef_discount.v9.20261102 (identical file in both trees); panel data/cef/, prices to 2026-10-15, NAV to 2026-10-14
+decision dates: 7018 (1998-11-18 .. 2026-10-14, --dates all); books flat and held; 14036 (date, book) target lists per variant
+new:te4 floor: the pre-registration's approved 4 (not yet a spec key)
+
+  base:absent   sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1282s
+  base:flatten  sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1278s
+  new:absent    sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1282s
+  new:flatten   sha256 dc31a96506c9c49322e45b120c7dde7e58569559d1ec8b534ce0df1449ba4f84   raises     0   1284s
+  new:te4       sha256 0b782940707b81e3f2df0d189c8d2e23b08693d4fb663e36bcb0ba994d9af2f5   raises     0   1293s
+
+base:flatten  vs base:absent: 14036 of 14036 (date, book) pickles byte-identical
+new:absent    vs base:absent: 14036 of 14036 (date, book) pickles byte-identical
+new:flatten   vs base:absent: 14036 of 14036 (date, book) pickles byte-identical
+new:te4       vs base:absent on (date, book) with >= min_names eligible: 3716 of 3716 byte-identical with meta['cef_thin'] removed
+              thin (date, book): 10320; reduced build ran on 3416; below the floor (FLAT) 6904; with holds 0
+              sensitivity: the reduced build's targets differ from base:absent's FLAT on 3416 of 3416 (the comparison can see a change)
+
+VERDICT: NO-OP PROVED (every comparison byte-identical)

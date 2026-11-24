@@ -1,0 +1,250 @@
+{
+ "meta": {
+  "measured": "2026-11-03T17:44:39+00:00",
+  "source": "read-only GETs: FILL activities, SIP quotes, SIP daily bars raw",
+  "fills": 344,
+  "first_date": "2026-09-29",
+  "last_date": "2026-11-02",
+  "sessions_with_fills": 20,
+  "symbols": 13,
+  "symbol_days_with_both_sides": 0,
+  "crossed_or_locked_quotes": {
+   "at_1550": 0,
+   "at_fill": 0
+  },
+  "quote_age_s": {
+   "1550_median": 0.0,
+   "1550_max": 1.4,
+   "fill_median": 3.8,
+   "fill_max": 12.5
+  },
+  "fill_time_of_day_ET": {
+   "earliest": "15:52:02",
+   "latest": "15:59:58",
+   "share_in_15:52": 0.994
+  },
+  "ties_to_attribution": {
+   "cache_last_fill_date": "2026-10-30",
+   "fills": 338,
+   "B_fill_vs_close_usd_cost": 308.71,
+   "A_minus_B_minus_C_usd": 0.0
+  }
+ },
+ "definitions": "s = +1 buy, -1 sell or sell_short. Every cost is in bp of the 15:50 mid, positive =\nworse for us:\n  A  1550mid->fill  = s*(fill - mid1550)/mid1550\n  B  fill vs close  = s*(fill - close)/mid1550        (the attribution's fill line, as a cost)\n  C  1550mid->close = s*(close - mid1550)/mid1550     (the market's move after 15:50, in our direction)\n  A = B + C exactly (asserted). Also E = fill vs the fill-time mid (the effective half-spread) and\n  D = 1550 mid -> fill-time mid, so A = D + E.\nAggregates are notional-weighted (sum of cost$ / sum of notional at the 15:50 mid).",
+ "tables": {
+  "all": {
+   "all": {
+    "fills": 344,
+    "symbol_days": 127,
+    "notional_usd": 570482.32,
+    "A_1550mid_to_fill_bp": 10.76,
+    "B_fill_vs_close_bp": 5.1,
+    "C_1550mid_to_close_bp": 5.67,
+    "D_1550mid_to_fillmid_bp": 4.6,
+    "E_fill_vs_fillmid_bp": 6.16
+   }
+  },
+  "period": {
+   "10-13 on": {
+    "fills": 247,
+    "symbol_days": 89,
+    "notional_usd": 337009.15,
+    "A_1550mid_to_fill_bp": 9.46,
+    "B_fill_vs_close_bp": 8.63,
+    "C_1550mid_to_close_bp": 0.83,
+    "D_1550mid_to_fillmid_bp": 3.5,
+    "E_fill_vs_fillmid_bp": 5.96
+   },
+   "to 10-12": {
+    "fills": 97,
+    "symbol_days": 38,
+    "notional_usd": 233473.18,
+    "A_1550mid_to_fill_bp": 12.64,
+    "B_fill_vs_close_bp": -0.0,
+    "C_1550mid_to_close_bp": 12.64,
+    "D_1550mid_to_fillmid_bp": 6.19,
+    "E_fill_vs_fillmid_bp": 6.46
+   }
+  },
+  "grp": {
+   "hy": {
+    "fills": 35,
+    "symbol_days": 11,
+    "notional_usd": 31763.95,
+    "A_1550mid_to_fill_bp": 9.19,
+    "B_fill_vs_close_bp": 2.6,
+    "C_1550mid_to_close_bp": 6.59,
+    "D_1550mid_to_fillmid_bp": 3.02,
+    "E_fill_vs_fillmid_bp": 6.17
+   },
+   "loan": {
+    "fills": 29,
+    "symbol_days": 10,
+    "notional_usd": 97188.14,
+    "A_1550mid_to_fill_bp": 7.65,
+    "B_fill_vs_close_bp": 2.23,
+    "C_1550mid_to_close_bp": 5.43,
+    "D_1550mid_to_fillmid_bp": 0.84,
+    "E_fill_vs_fillmid_bp": 6.81
+   },
+   "multi": {
+    "fills": 228,
+    "symbol_days": 85,
+    "notional_usd": 266532.67,
+    "A_1550mid_to_fill_bp": 14.66,
+    "B_fill_vs_close_bp": 4.97,
+    "C_1550mid_to_close_bp": 9.69,
+    "D_1550mid_to_fillmid_bp": 8.74,
+    "E_fill_vs_fillmid_bp": 5.92
+   },
+   "muni": {
+    "fills": 52,
+    "symbol_days": 21,
+    "notional_usd": 174997.58,
+    "A_1550mid_to_fill_bp": 6.84,
+    "B_fill_vs_close_bp": 7.33,
+    "C_1550mid_to_close_bp": -0.49,
+    "D_1550mid_to_fillmid_bp": 0.68,
+    "E_fill_vs_fillmid_bp": 6.16
+   }
+  },
+  "side_l": {
+   "buy": {
+    "fills": 174,
+    "symbol_days": 65,
+    "notional_usd": 283972.42,
+    "A_1550mid_to_fill_bp": 14.97,
+    "B_fill_vs_close_bp": 6.65,
+    "C_1550mid_to_close_bp": 8.33,
+    "D_1550mid_to_fillmid_bp": 8.55,
+    "E_fill_vs_fillmid_bp": 6.42
+   },
+   "sell": {
+    "fills": 170,
+    "symbol_days": 62,
+    "notional_usd": 286509.91,
+    "A_1550mid_to_fill_bp": 6.59,
+    "B_fill_vs_close_bp": 3.56,
+    "C_1550mid_to_close_bp": 3.03,
+    "D_1550mid_to_fillmid_bp": 0.69,
+    "E_fill_vs_fillmid_bp": 5.9
+   }
+  },
+  "period x grp": {
+   "10-13 on | hy": {
+    "fills": 28,
+    "symbol_days": 9,
+    "notional_usd": 24238.87,
+    "A_1550mid_to_fill_bp": 11.22,
+    "B_fill_vs_close_bp": -8.45,
+    "C_1550mid_to_close_bp": 19.67,
+    "D_1550mid_to_fillmid_bp": 5.01,
+    "E_fill_vs_fillmid_bp": 6.21
+   },
+   "10-13 on | loan": {
+    "fills": 15,
+    "symbol_days": 6,
+    "notional_usd": 47500.61,
+    "A_1550mid_to_fill_bp": 8.25,
+    "B_fill_vs_close_bp": 11.41,
+    "C_1550mid_to_close_bp": -3.17,
+    "D_1550mid_to_fillmid_bp": 1.39,
+    "E_fill_vs_fillmid_bp": 6.85
+   },
+   "10-13 on | multi": {
+    "fills": 160,
+    "symbol_days": 59,
+    "notional_usd": 138536.77,
+    "A_1550mid_to_fill_bp": 9.19,
+    "B_fill_vs_close_bp": 7.82,
+    "C_1550mid_to_close_bp": 1.37,
+    "D_1550mid_to_fillmid_bp": 3.48,
+    "E_fill_vs_fillmid_bp": 5.71
+   },
+   "10-13 on | muni": {
+    "fills": 44,
+    "symbol_days": 15,
+    "notional_usd": 126732.91,
+    "A_1550mid_to_fill_bp": 9.88,
+    "B_fill_vs_close_bp": 11.74,
+    "C_1550mid_to_close_bp": -1.85,
+    "D_1550mid_to_fillmid_bp": 4.03,
+    "E_fill_vs_fillmid_bp": 5.85
+   },
+   "to 10-12 | hy": {
+    "fills": 7,
+    "symbol_days": 2,
+    "notional_usd": 7525.08,
+    "A_1550mid_to_fill_bp": 2.66,
+    "B_fill_vs_close_bp": 38.19,
+    "C_1550mid_to_close_bp": -35.53,
+    "D_1550mid_to_fillmid_bp": -3.38,
+    "E_fill_vs_fillmid_bp": 6.04
+   },
+   "to 10-12 | loan": {
+    "fills": 14,
+    "symbol_days": 4,
+    "notional_usd": 49687.54,
+    "A_1550mid_to_fill_bp": 7.09,
+    "B_fill_vs_close_bp": -6.55,
+    "C_1550mid_to_close_bp": 13.64,
+    "D_1550mid_to_fillmid_bp": 0.31,
+    "E_fill_vs_fillmid_bp": 6.78
+   },
+   "to 10-12 | multi": {
+    "fills": 68,
+    "symbol_days": 26,
+    "notional_usd": 127995.9,
+    "A_1550mid_to_fill_bp": 20.59,
+    "B_fill_vs_close_bp": 1.89,
+    "C_1550mid_to_close_bp": 18.7,
+    "D_1550mid_to_fillmid_bp": 14.43,
+    "E_fill_vs_fillmid_bp": 6.16
+   },
+   "to 10-12 | muni": {
+    "fills": 8,
+    "symbol_days": 6,
+    "notional_usd": 48264.66,
+    "A_1550mid_to_fill_bp": -1.15,
+    "B_fill_vs_close_bp": -4.22,
+    "C_1550mid_to_close_bp": 3.08,
+    "D_1550mid_to_fillmid_bp": -8.14,
+    "E_fill_vs_fillmid_bp": 6.99
+   }
+  }
+ },
+ "predictability": {
+  "price moved AGAINST our side by 15:50": {
+   "symbol_days": 47,
+   "notional_usd": 241417.27,
+   "B_fill_vs_close_bp_wtd": 1.74,
+   "C_1550mid_to_close_bp_wtd": 4.76,
+   "B_bp_mean_of_symbol_days": 6.93,
+   "B_t_symbol_days": 1.71,
+   "C_bp_mean_of_symbol_days": -0.91,
+   "C_t_symbol_days": -0.23
+  },
+  "price moved WITH our side by 15:50 (adverse, e.g. buying after a rise)": {
+   "symbol_days": 80,
+   "notional_usd": 329065.05,
+   "B_fill_vs_close_bp_wtd": 7.56,
+   "C_1550mid_to_close_bp_wtd": 6.34,
+   "B_bp_mean_of_symbol_days": 7.62,
+   "B_t_symbol_days": 2.63,
+   "C_bp_mean_of_symbol_days": 2.06,
+   "C_t_symbol_days": 0.63
+  },
+  "difference (with - against), mean over days having both, clustered by date": {
+   "days": 17,
+   "B_diff_bp": 2.95,
+   "B_t_days": 0.55,
+   "C_diff_bp": 0.03,
+   "C_t_days": 0.0
+  },
+  "spearman over symbol-days (x vs B, x vs C)": {
+   "n": 127,
+   "rho_B": 0.009,
+   "rho_C": 0.061
+  }
+ }
+}

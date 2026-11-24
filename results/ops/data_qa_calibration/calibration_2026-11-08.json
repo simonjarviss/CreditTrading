@@ -1,0 +1,399 @@
+{
+ "cef": {
+  "book": "cef",
+  "fit_nav_dates": [
+   "2005-01-03",
+   "2022-12-30"
+  ],
+  "fit_weeks": 938.6,
+  "n_names": 13,
+  "panel_last": "2026-10-14",
+  "data_dir": "~/quantt_data/cef",
+  "budget_flags_per_week_per_check": 0.2,
+  "note": [],
+  "Q1": {
+   "row_count_rate": {
+    "close": {
+     "rows_differ_nights": 4,
+     "per_week": 0.004
+    },
+    "nav": {
+     "rows_differ_nights": 9,
+     "per_week": 0.01
+    }
+   }
+  },
+  "Q2": {
+   "z_threshold": 6.5,
+   "flags_per_week": 0.192,
+   "plateau": {
+    "6.0": 0.221,
+    "7.0": 0.17
+   },
+   "reverted_share_at_z": 0.144,
+   "recall": [],
+   "recall_rows": "0/0",
+   "n_positives_in_book": 0
+  },
+  "Q3": {
+   "delta": 0,
+   "new_runs_per_week": 0.11,
+   "flag_nights_per_week": 0.162,
+   "plateau": {
+    "1": 0.033
+   },
+   "recall": "NOT MEASURABLE from this panel, by construction: the stale-NAV gate's record is one-row stale copies (results/cef/LIVE_NAV_QUALITY_2026-10-12.md); a one-row repeat is not a run longer than the name's own trailing maximum, and about a fifth of NAV rows genuinely repeat. The second source (CEFConnect, the decide-time gate) is what separates them."
+  },
+  "Q4": {
+   "tol": 0.13976194237515868,
+   "flags_per_week": 0.0,
+   "n_flags": 0,
+   "sample": [],
+   "recall": []
+  },
+  "Q5": {
+   "line": 0.22,
+   "flags_per_week": 0.181,
+   "plateau": {
+    "0.21": 0.206,
+    "0.23": 0.177
+   },
+   "known_positive_BME_2021_06_28": null,
+   "recall": null,
+   "design_line_50pp_rate": 0.053
+  },
+  "Q6": {
+   "median_least_liquid_eligible_over_floor": 1.141,
+   "margin": 0.025,
+   "flags_per_week": 0.2,
+   "plateau": {
+    "0.02": 0.155,
+    "0.030000000000000002": 0.246
+   },
+   "fit_dates_used": [
+    "2013-01-02",
+    "2022-12-30"
+   ],
+   "recall_thin_episode_starts": [
+    {
+     "episode_start": "2013-01-02",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2013-07-03",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2013-09-13",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2013-10-21",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2013-11-14",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2014-07-01",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2014-07-23",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2014-08-14",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2014-08-28",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2015-03-23",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2015-09-09",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2016-03-24",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2017-06-21",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2018-04-05",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2019-03-27",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2020-06-23",
+     "flagged_in_prior_5_sessions_or_day": true
+    },
+    {
+     "episode_start": "2021-03-31",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2021-05-27",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2021-06-25",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2021-06-29",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2021-12-07",
+     "flagged_in_prior_5_sessions_or_day": false
+    },
+    {
+     "episode_start": "2022-08-08",
+     "flagged_in_prior_5_sessions_or_day": true
+    }
+   ],
+   "recall": "13/22"
+  },
+  "joint_flags_per_week_sum_of_shares": 0.683
+ },
+ "c4": {
+  "book": "c4",
+  "fit_nav_dates": [
+   "2005-01-03",
+   "2022-12-30"
+  ],
+  "fit_weeks": 938.6,
+  "n_names": 74,
+  "panel_last": "2026-10-09",
+  "data_dir": "~/quantt_data/cef_families",
+  "budget_flags_per_week_per_check": 0.2,
+  "note": [],
+  "Q1": {
+   "row_count_rate": {
+    "close": {
+     "rows_differ_nights": 39,
+     "per_week": 0.042
+    },
+    "nav": {
+     "rows_differ_nights": 61,
+     "per_week": 0.065
+    }
+   }
+  },
+  "Q2": {
+   "z_threshold": 10.0,
+   "flags_per_week": 0.177,
+   "plateau": {
+    "9.5": 0.2,
+    "10.5": 0.161
+   },
+   "reverted_share_at_z": 0.133,
+   "recall": [
+    {
+     "ticker": "BME",
+     "date": "2006-07-24",
+     "flagged": true,
+     "z": 20.71
+    },
+    {
+     "ticker": "ASG",
+     "date": "2006-12-20",
+     "flagged": true,
+     "z": 17.9
+    },
+    {
+     "ticker": "PFO",
+     "date": "2006-12-26",
+     "flagged": true,
+     "z": 232.78
+    },
+    {
+     "ticker": "JPC",
+     "date": "2008-01-11",
+     "flagged": true,
+     "z": 25.53
+    },
+    {
+     "ticker": "BME",
+     "date": "2021-06-28",
+     "flagged": true,
+     "z": 94.42
+    },
+    {
+     "ticker": "PFO",
+     "date": "2006-12-27",
+     "flagged": true,
+     "z": 232.78
+    },
+    {
+     "ticker": "PFO",
+     "date": "2006-12-28",
+     "flagged": true,
+     "z": 232.78
+    },
+    {
+     "ticker": "SCD",
+     "date": "2010-10-01",
+     "flagged": true,
+     "z": 15.57
+    },
+    {
+     "ticker": "GAM",
+     "date": "2006-04-19",
+     "flagged": true,
+     "z": 14.27
+    }
+   ],
+   "recall_rows": "9/9",
+   "n_positives_in_book": 9
+  },
+  "Q3": {
+   "delta": 1,
+   "new_runs_per_week": 0.087,
+   "flag_nights_per_week": 0.127,
+   "plateau": {
+    "0": 0.4,
+    "2": 0.015
+   },
+   "recall": "NOT MEASURABLE from this panel, by construction: the stale-NAV gate's record is one-row stale copies (results/cef/LIVE_NAV_QUALITY_2026-10-12.md); a one-row repeat is not a run longer than the name's own trailing maximum, and about a fifth of NAV rows genuinely repeat. The second source (CEFConnect, the decide-time gate) is what separates them."
+  },
+  "Q4": {
+   "tol": 0.13976194237515868,
+   "flags_per_week": 0.004,
+   "n_flags": 4,
+   "sample": [
+    {
+     "ticker": "EMO",
+     "date": "2020-03-18",
+     "series": "close",
+     "step": 0.4897959117473669,
+     "factor": 0.5
+    },
+    {
+     "ticker": "KYN",
+     "date": "2020-03-18",
+     "series": "close",
+     "step": 0.5405405335743293,
+     "factor": 0.5
+    },
+    {
+     "ticker": "EMO",
+     "date": "2020-03-09",
+     "series": "nav",
+     "step": 0.5454545454545454,
+     "factor": 0.5
+    },
+    {
+     "ticker": "EMO",
+     "date": "2020-03-18",
+     "series": "nav",
+     "step": 0.529761906113484,
+     "factor": 0.5
+    }
+   ],
+   "recall": [
+    {
+     "ticker": "IGR",
+     "date": "2026-09-08",
+     "flagged_no_ca_file": [
+      {
+       "ticker": "IGR",
+       "date": "2026-09-09 00:00:00",
+       "series": "close",
+       "step": 2.8819599643678364,
+       "factor": 3.0
+      },
+      {
+       "ticker": "IGR",
+       "date": "2026-09-08 00:00:00",
+       "series": "nav",
+       "step": 2.9886105431848837,
+       "factor": 3.0
+      }
+     ],
+     "flagged_with_ca_rows": [],
+     "why": ""
+    },
+    {
+     "ticker": "BTO",
+     "date": "2008-12-30",
+     "flagged_no_ca_file": [],
+     "flagged_with_ca_rows": [],
+     "why": "the panel has no split-sized step on this name-day (the vendor already split-adjusted it); the defect was a recorded split applied again, a formula defect caught by data_guards.guard_split_basis, not a panel step"
+    },
+    {
+     "ticker": "TYG",
+     "date": "2020-05-01",
+     "flagged": false,
+     "why": "not in this book's universe"
+    },
+    {
+     "ticker": "NXG",
+     "date": "2020-06-15",
+     "flagged_no_ca_file": [],
+     "flagged_with_ca_rows": [],
+     "why": "the panel has no split-sized step on this name-day (the vendor already split-adjusted it); the defect was a recorded split applied again, a formula defect caught by data_guards.guard_split_basis, not a panel step"
+    },
+    {
+     "ticker": "EMO",
+     "date": "2020-07-28",
+     "flagged_no_ca_file": [],
+     "flagged_with_ca_rows": [],
+     "why": "the panel has no split-sized step on this name-day (the vendor already split-adjusted it); the defect was a recorded split applied again, a formula defect caught by data_guards.guard_split_basis, not a panel step"
+    }
+   ]
+  },
+  "Q5": {
+   "line": 0.27,
+   "flags_per_week": 0.189,
+   "plateau": {
+    "0.26": 0.218,
+    "0.28": 0.144
+   },
+   "known_positive_BME_2021_06_28": 0.7562,
+   "recall": true,
+   "design_line_50pp_rate": 0.004
+  },
+  "Q6": {
+   "median_least_liquid_eligible_over_floor": 1.029,
+   "margin": 0.13,
+   "flags_per_week": 0.196,
+   "plateau": {
+    "0.125": 0.176,
+    "0.135": 0.246
+   },
+   "fit_dates_used": [
+    "2013-01-02",
+    "2022-12-30"
+   ],
+   "recall": "NOT MEASURABLE: no thin-session record exists for C4 (thin-days-2026-11-03 is the core's)"
+  },
+  "joint_flags_per_week_sum_of_shares": 0.653
+ },
+ "thresholds": {
+  "cef": {
+   "q2_z": 6.5,
+   "q3_delta": 0,
+   "q5_line": 0.22,
+   "q6_margin": 0.025
+  },
+  "c4": {
+   "q2_z": 10.0,
+   "q3_delta": 1,
+   "q5_line": 0.27,
+   "q6_margin": 0.13
+  }
+ }
+}

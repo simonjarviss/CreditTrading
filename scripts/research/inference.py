@@ -412,7 +412,8 @@ def read_result(estimate: float, se: float, meaningful: float, *, n_trials: floa
     - PRESENT: lo > 0. The effect is there, whatever later gates decide about its
       expression.
     - ABSENT: hi < meaningful. Every effect worth trading is ruled out. This is
-      the only reading that justifies "never re-test without new data".
+      the strongest reading. Since 2026-11-08 even this idea can return if the
+      agent says what is different (docs/SYSTEM.md §5).
     - INCONCLUSIVE: anything else. The test could not tell. Record it as
       underpowered, with what would make it decidable, not as a kill.
     The audit behind this module found 20 of 82 kills were underpowered in this

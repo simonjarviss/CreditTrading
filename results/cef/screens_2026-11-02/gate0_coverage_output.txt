@@ -1,0 +1,34 @@
+====================================================================================================
+GATE 0 COVERAGE: is the CRSP pull enough? (zero trials)
+spec: cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13
+fit window only: <= 2022-12-30 (asserted)
+====================================================================================================
+
+Q1. CRSP-MF matches 36; NAV rows 2608 for 25 funds
+   matched on CUSIP: 0; genuine (CUSIP, or name score >= 0.5 with NAV inside the CEF listing): 2
+     First Trust Exchange-Traded Fund: First  ~ FIRST TRUST VALUE LINE DIVID FD    score 0.52, NAV months inside the CEF listing 40, genuine True
+     Claymore Exchange-Traded Fund Trust: Cla ~ CLAYMORE RAYMOND JAMES SB1 EQTY    score 0.74, NAV months inside the CEF listing 0, genuine False
+     First Trust Exchange-Traded Fund: First  ~ FIRST TRUST VALUE LINE 100 FD      score 0.59, NAV months inside the CEF listing 48, genuine True
+   genuine and DEAD (delisted <= 2022-12-30): 2; of those in C4's families: see Q2's classes (C4-candidate, C4-candidate)
+
+Q2. CRSP CEF permnos 1003; listed inside the fit window 991; C4's 74 mapped to 74 permnos (excluded)
+   DEAD inside the fit window (delisted <= 2022-12-30): 498, by name class:
+     C4-candidate             75 funds,   1108 fund-half-years in 2005-22; delist codes {231: 48, 450: 9, 331: 9, 470: 3}
+     out:credit/muni/conv    279 funds,   4599 fund-half-years in 2005-22; delist codes {231: 164, 450: 47, 331: 40, 232: 12}
+     out:global/country       29 funds,    527 fund-half-years in 2005-22; delist codes {450: 13, 231: 9, 232: 3, 332: 2}
+     unknown                 115 funds,   1519 fund-half-years in 2005-22; delist codes {231: 54, 450: 20, 232: 10, 332: 10}
+
+Q3. survivors' semiannual slope (June/Dec month-ends, t+2..t+127, z out): b_A -27.24bp/pp, t -4.55, 1570 fund-half-years on 33 dates
+   population: survivors 1570 + dead candidates (C4-candidate + unknown) 2626 fund-half-years; survivors' share 0.374
+   P(Gate 0 flags, HALT or FAIL) for a true all-fund slope r x b_A:
+     NAV coverage of the dead                        rule r=0.5 (halving)  r=0.25   r=0  r=1 (false alarm)
+     this pull: CRSP-MF genuine (9 fund-half-years)    <0.5            0.00    0.00  0.00               0.00
+     this pull: CRSP-MF genuine (9 fund-half-years)   <0.75            0.00    0.00  0.00               0.00
+     EDGAR, full (2626)                              <0.5            0.50    0.99  1.00               0.00
+     EDGAR, full (2626)                             <0.75            0.97    1.00  1.00               0.03
+     EDGAR, 80% (2101)                               <0.5            0.35    0.95  1.00               0.00
+     EDGAR, 80% (2101)                              <0.75            0.94    1.00  1.00               0.03
+
+Q4. EDGAR N-CSR/N-CSRS in the cached index (index_extra_2026Q4_2026-10-18.parquet), filed 2008-01-01..2023-06-30: 100710 filings, 3863 filers. Filers mapped by name to a dead candidate: 134 CIKs -> 133 of 190 candidate permnos; their filings: 1694
+   by year filed: {2008: 214, 2009: 199, 2010: 168, 2011: 159, 2012: 149, 2013: 135, 2014: 140, 2015: 107, 2016: 88, 2017: 77, 2018: 76, 2019: 61, 2020: 55, 2021: 43, 2022: 19, 2023: 4}
+   candidates dead before 2008 (need 2004-07 indexes, not cached): 26

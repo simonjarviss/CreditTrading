@@ -394,9 +394,16 @@ def test_the_setting_absent_is_no_gate_and_a_bad_one_raises(tmp_path):
                    halts=None).corp_actions is None
 
 
-def test_the_deployed_book_sets_halt():
-    """Team lead 2026-10-28: a HALT guard for the paper runner."""
-    assert rn.corporate_actions_for(rn.BOOKS["cef"]) == cam.HALT
+def test_the_deployed_book_sets_report_until_the_unresolved_rows_are_re_ruled():
+    """Team lead 2026-10-28: a HALT guard for the paper runner. Team lead 2026-11-02:
+    REPORT for the release that carries CEF trial 53, because three real market-wide
+    rows with a missing party would halt every session under the unresolved-rows
+    ruling (release-check on 3478159). The book json says how to restore halt; this
+    pin makes the switch back a visible, tested edit rather than a silent one."""
+    assert rn.corporate_actions_for(rn.BOOKS["cef"]) == cam.REPORT
+    import json
+    block = json.loads(rn.BOOKS["cef"].book_path.read_text())["corporate_actions"]
+    assert "RESTORE" in block["_mode_report_note"] and "halt" in block["_mode_report_note"]
 
 
 # ------------------------------------------------------------- run_session
@@ -409,12 +416,19 @@ class CAClient(FakeClient):
         self.events = list(events)
         self.ca_error = ca_error
 
-    def corporate_actions(self, symbols, start, end):
+    def corporate_actions(self, symbols, start, end, *, universe=None, skipped=None, rows=None):
+        # `universe`/`skipped` (AlpacaClient.corporate_actions, MALFORMED ROWS):
+        # these synthetic events are well-formed, so nothing is ever skipped.
+        # `rows` (RAW ROWS): a synthetic event has no raw row, so it stands as its own.
         self.ca_at = len(self.calls)          # where in the call log the read happened
         self.calls.append(("corporate_actions", tuple(symbols), start, end))
         if self.ca_error is not None:
             raise self.ca_error
-        return [e for e in self.events if any(s in symbols for s, _ in e["parties"])]
+        out = [e for e in self.events if any(s in symbols for s, _ in e["parties"])]
+        if rows is not None:
+            for e in out:
+                rows.setdefault(e["id"], []).append(dict(e))
+        return out
 
 
 def run(tmp_path, mode, *, events=(), ca_error=None, positions=None, closed=None,

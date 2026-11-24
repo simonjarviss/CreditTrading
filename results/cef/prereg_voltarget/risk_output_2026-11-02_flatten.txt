@@ -1,0 +1,54 @@
+HALVE 0.12, KILL 0.18 (core spec risk, fractions); caps core 1.8, C4 1.9; W1 2013-06-25..2022-12-30, W2 2005-02-22..2022-12-30; 10 core books 2013-12-31..2022-12-30
+
+=== today: core x1.0, C4 x1.0
+  core account      W1 gross TR  2.98%/yr vol 3.73% SR 0.799 maxDD  6.64% | PR  3.39% SR 0.866 maxDD  6.52% | turn  15.9/yr | net +2.18 / +0.59 / -1.80 %/yr at 5/15/30bp | breakeven 18.7bp
+  C4 account        W1 gross TR  8.54%/yr vol 5.81% SR 1.471 maxDD  8.61% | PR  9.47% SR 1.574 maxDD  7.20% | turn  47.5/yr | net +6.17 / +1.42 / -5.70 %/yr at 5/15/30bp | breakeven 18.0bp
+  combined ($200k)  W1 gross TR  5.76%/yr vol 3.49% SR 1.652 maxDD  3.76% | PR  6.43% SR 1.771 maxDD  3.87% | turn  31.7/yr | net +4.18 / +1.01 / -3.75 %/yr at 5/15/30bp | breakeven 18.2bp
+  cap binds W1: core 0.1%, C4 3.6% (C4 on W2 2.5%); mean uncapped gross core 0.465 / C4 1.447; held core 0.466 / C4 1.447
+  W1 odds, zero edge (worst method, worse of TR/PR): core H  0.27% K  0.00% | c4 H  6.19% K  0.25% | comb H  0.09% K  0.00%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  0.01% K  0.00% | c4 H  0.23% K  0.00% | comb H  0.00% K  0.00%
+  W2 odds, zero edge: core account H 0.00/0.18/14.18% K 0.00/0.00/5.47% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 7.06% K 0.35% | combined H 0.06/0.09/4.22% K 0.00/0.00/0.16%
+  W2 odds, fit edge: core account H 0.00/0.03/10.70% K 0.00/0.00/4.73% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 0.51% K 0.00% | combined H 0.00/0.00/3.12% K 0.00/0.00/0.05%
+  W2 worst drawdown (worse of TR/PR): core account 6.6/7.1/31.2% (GFC window 0.0/2.3/25.2%) | C4 account 9.3% (trough 2011-05-25) | combined 4.8/4.9/13.8% (GFC 1.1/1.7/12.6%)
+
+=== live: core x1.13, C4 x1.27
+  core account      W1 gross TR  3.33%/yr vol 4.19% SR 0.793 maxDD  7.55% | PR  3.79% SR 0.862 maxDD  7.42% | turn  18.0/yr | net +2.42 / +0.62 / -2.08 %/yr at 5/15/30bp | breakeven 18.5bp
+  C4 account        W1 gross TR 10.10%/yr vol 6.97% SR 1.449 maxDD 10.06% | PR 11.17% SR 1.549 maxDD  8.46% | turn  59.7/yr | net +7.11 / +1.15 / -7.80 %/yr at 5/15/30bp | breakeven 16.9bp
+  combined ($200k)  W1 gross TR  6.71%/yr vol 4.11% SR 1.632 maxDD  4.50% | PR  7.48% SR 1.750 maxDD  4.41% | turn  38.8/yr | net +4.77 / +0.89 / -4.94 %/yr at 5/15/30bp | breakeven 17.3bp
+  cap binds W1: core 3.2%, C4 47.4% (C4 on W2 38.0%); mean uncapped gross core 0.526 / C4 1.838; held core 0.522 / C4 1.704
+  W1 odds, zero edge (worst method, worse of TR/PR): core H  0.77% K  0.00% | c4 H 14.23% K  1.17% | comb H  0.64% K  0.00%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  0.08% K  0.00% | c4 H  0.87% K  0.01% | comb H  0.00% K  0.00%
+  W2 odds, zero edge: core account H 0.02/0.51/21.36% K 0.00/0.00/6.78% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 16.34% K 1.60% | combined H 0.42/0.58/6.42% K 0.00/0.00/0.44%
+  W2 odds, fit edge: core account H 0.00/0.14/16.97% K 0.00/0.00/6.58% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 1.74% K 0.05% | combined H 0.00/0.01/4.14% K 0.00/0.00/0.13%
+  W2 worst drawdown (worse of TR/PR): core account 7.5/8.0/34.7% (GFC window 0.0/2.6/28.1%) | C4 account 10.8% (trough 2011-05-25) | combined 5.5/5.7/15.4% (GFC 1.3/2.0/14.0%)
+  stops, core account (W1): D_R 6.96% (fit-edge p95 of 12m maxDD, max method: TR 6.78% PR 6.96%; capped at HALVE) | R2 p5 of 120-session PR return -2.31% | R3 p95 of 60-session vol 7.29% | zero-edge P(KILL) 0.00% -> 0.00% with R1 acting
+  stops, c4 account (W2): D_R 10.09% (fit-edge p95 of 12m maxDD, max method: TR 10.09% PR 10.02%; capped at HALVE) | R2 p5 of 120-session PR return -3.04% | R3 p95 of 60-session vol 9.96% | zero-edge P(KILL) 1.60% -> 0.68% with R1 acting
+  stops, core account on W2 at the median book 2021-12-31: zero-edge P(KILL) 0.00% -> 0.00% with R1 acting
+
+=== flatten-active-derived: core x1.3, C4 x1.26
+  core account      W1 gross TR  3.79%/yr vol 4.75% SR 0.797 maxDD  8.52% | PR  4.33% SR 0.869 maxDD  8.37% | turn  20.5/yr | net +2.76 / +0.71 / -2.36 %/yr at 5/15/30bp | breakeven 18.5bp
+  C4 account        W1 gross TR 10.05%/yr vol 6.93% SR 1.449 maxDD 10.04% | PR 11.12% SR 1.549 maxDD  8.44% | turn  59.3/yr | net +7.08 / +1.15 / -7.75 %/yr at 5/15/30bp | breakeven 16.9bp
+  combined ($200k)  W1 gross TR  6.92%/yr vol 4.25% SR 1.626 maxDD  4.58% | PR  7.73% SR 1.745 maxDD  4.75% | turn  39.9/yr | net +4.92 / +0.93 / -5.06 %/yr at 5/15/30bp | breakeven 17.3bp
+  cap binds W1: core 7.2%, C4 46.2% (C4 on W2 37.1%); mean uncapped gross core 0.605 / C4 1.823; held core 0.587 / C4 1.698
+  W1 odds, zero edge (worst method, worse of TR/PR): core H  1.98% K  0.01% | c4 H 14.00% K  1.16% | comb H  0.82% K  0.00%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  0.25% K  0.00% | c4 H  0.85% K  0.01% | comb H  0.00% K  0.00%
+  W2 odds, zero edge: core account H 0.10/1.29/32.08% K 0.00/0.02/8.07% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 15.95% K 1.52% | combined H 0.49/0.76/7.45% K 0.00/0.00/1.37%
+  W2 odds, fit edge: core account H 0.02/0.41/26.30% K 0.00/0.00/7.89% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 1.72% K 0.05% | combined H 0.00/0.01/5.81% K 0.00/0.00/0.29%
+  W2 worst drawdown (worse of TR/PR): core account 8.5/9.1/39.1% (GFC window 0.0/2.9/31.7%) | C4 account 10.8% (trough 2011-05-25) | combined 5.5/5.9/17.7% (GFC 1.3/2.2/16.1%)
+  stops, core account (W1): D_R 7.84% (fit-edge p95 of 12m maxDD, max method: TR 7.65% PR 7.84%; capped at HALVE) | R2 p5 of 120-session PR return -2.57% | R3 p95 of 60-session vol 8.32% | zero-edge P(KILL) 0.01% -> 0.00% with R1 acting
+  stops, c4 account (W2): D_R 10.04% (fit-edge p95 of 12m maxDD, max method: TR 10.04% PR 9.97%; capped at HALVE) | R2 p5 of 120-session PR return -3.02% | R3 p95 of 60-session vol 9.90% | zero-edge P(KILL) 1.52% -> 0.67% with R1 acting
+  stops, core account on W2 at the median book 2014-12-31: zero-edge P(KILL) 0.04% -> 0.00% with R1 acting
+
+=== flatten-calendar-derived: core x1.96, C4 x1.26
+  core account      W1 gross TR  5.06%/yr vol 5.93% SR 0.854 maxDD  9.21% | PR  5.69% SR 0.918 maxDD  9.11% | turn  26.9/yr | net +3.72 / +1.03 / -3.01 %/yr at 5/15/30bp | breakeven 18.8bp
+  C4 account        W1 gross TR 10.05%/yr vol 6.93% SR 1.449 maxDD 10.04% | PR 11.12% SR 1.549 maxDD  8.44% | turn  59.3/yr | net +7.08 / +1.15 / -7.75 %/yr at 5/15/30bp | breakeven 16.9bp
+  combined ($200k)  W1 gross TR  7.56%/yr vol 4.65% SR 1.626 maxDD  4.68% | PR  8.41% SR 1.740 maxDD  4.84% | turn  43.1/yr | net +5.40 / +1.09 / -5.38 %/yr at 5/15/30bp | breakeven 17.5bp
+  cap binds W1: core 29.6%, C4 46.2% (C4 on W2 37.1%); mean uncapped gross core 0.912 / C4 1.823; held core 0.713 / C4 1.698
+  W1 odds, zero edge (worst method, worse of TR/PR): core H  7.35% K  0.35% | c4 H 14.00% K  1.16% | comb H  1.55% K  0.00%
+  W1 odds, fit edge (worst method, worse of TR/PR): core H  1.23% K  0.01% | c4 H  0.85% K  0.01% | comb H  0.01% K  0.00%
+  W2 odds, zero edge: core account H 1.01/5.29/65.08% K 0.00/0.52/28.33% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 15.95% K 1.52% | combined H 0.78/1.67/19.99% K 0.00/0.02/6.14%
+  W2 odds, fit edge: core account H 0.20/2.71/60.20% K 0.00/0.14/23.71% (min/median/max over 10 books; worst 2018-12-31) | C4 account H 1.72% K 0.05% | combined H 0.00/0.07/9.50% K 0.00/0.00/5.38%
+  W2 worst drawdown (worse of TR/PR): core account 9.2/11.6/54.2% (GFC window 0.0/4.3/44.5%) | C4 account 10.8% (trough 2011-05-25) | combined 5.5/6.7/26.6% (GFC 1.3/2.8/23.9%)
+  stops, core account (W1): D_R 9.52% (fit-edge p95 of 12m maxDD, max method: TR 9.30% PR 9.52%; capped at HALVE) | R2 p5 of 120-session PR return -2.94% | R3 p95 of 60-session vol 10.56% | zero-edge P(KILL) 0.35% -> 0.00% with R1 acting
+  stops, c4 account (W2): D_R 10.04% (fit-edge p95 of 12m maxDD, max method: TR 10.04% PR 9.97%; capped at HALVE) | R2 p5 of 120-session PR return -3.02% | R3 p95 of 60-session vol 9.90% | zero-edge P(KILL) 1.52% -> 0.67% with R1 acting
+  stops, core account on W2 at the median book 2014-12-31: zero-edge P(KILL) 1.04% -> 0.00% with R1 acting

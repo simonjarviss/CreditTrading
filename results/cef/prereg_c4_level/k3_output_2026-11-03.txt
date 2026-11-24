@@ -1,0 +1,6 @@
+CEF trial 54, K3 (D4): Dimson FF5+UMD, TERM, HY at t and t-1, HAC(21), betas scaled to the spec's vol target
+  level  full fit, FF6+TERM   n 4497 alpha +6.69%/yr t 3.06 max|beta| 0.072 (mktrf +0.038, smb +0.072, hml -0.050, rmw +0.032, cma -0.057, umd +0.014, TERM +0.033) -> pass
+  level  from HYG, +HY        n 3959 alpha +7.14%/yr t 2.96 max|beta| 0.082 (mktrf +0.044, smb +0.082, hml -0.055, rmw +0.035, cma -0.054, umd +0.014, TERM +0.041, HY -0.001) -> FAIL
+  blend  full fit, FF6+TERM   n 4497 alpha +10.84%/yr t 6.68 max|beta| 0.064 (mktrf +0.011, smb +0.025, hml -0.050, rmw -0.016, cma -0.064, umd -0.014, TERM -0.008) -> pass
+  blend  from HYG, +HY        n 3959 alpha +11.33%/yr t 6.38 max|beta| 0.060 (mktrf +0.012, smb +0.035, hml -0.056, rmw -0.016, cma -0.060, umd -0.013, TERM +0.007, HY +0.010) -> pass
+  rule (C4's D4 block, on the level-only book): alpha t >= 3.0 and every |beta| <= 0.1 in both: KILL (D4)  (the blend is reported beside it)

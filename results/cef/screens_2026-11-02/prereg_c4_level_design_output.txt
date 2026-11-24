@@ -1,0 +1,23 @@
+====================================================================================================
+PREREG_C4_LEVEL design inputs (zero trials; no P&L of the blended book)
+spec: cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13
+fit window only: <= 2022-12-30 (asserted)
+====================================================================================================
+C4 spec at c4-rel: c4_families.v3.20261102; max_gross_stress 1.9; sizing_multiplier 1.27
+
+A. SPLIT INPUTS (fit 2005-02-22 -> 2022-12-30; total return; already seen in K4):
+   z spec book (x1.27, cap 1.9) SR 1.178; level book SR 1.123; daily corr +0.104
+   mean-variance risk weights (s1 - rho s2, s2 - rho s1)/(1 - rho^2): 1.073 : 1.011 -> share on z 0.515
+   plateau, blend of the two unit-risk series (a = share of risk on z):
+     a 0.30: SR 1.443
+     a 0.40: SR 1.517
+     a 0.50: SR 1.549
+     a 0.60: SR 1.531
+     a 0.70: SR 1.471
+
+B. THE SHARED CAP (account x1.27, cap 1.9; band 0.048; fit sessions with a target):
+   book               target gross P(tgt>cap) uncapped held  P(>cap) held gross P(at cap)  turn/yr
+   z-only spec book          1.525      23.2%         2.118    59.4%      1.556     22.0%     48.9
+   blend a = 0.5             2.298      72.6%         2.556    85.1%      1.722     29.0%     33.2
+
+   level book's own ex-ante scalar: median 1.62; z: 1.20; blend: 1.84

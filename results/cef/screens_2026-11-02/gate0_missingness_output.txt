@@ -1,0 +1,27 @@
+====================================================================================================
+GATE 0 MISSINGNESS: is the coverage loss random? (zero trials; fit only)
+spec: cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13
+fit window only: <= 2022-12-30 (asserted)
+====================================================================================================
+
+M1. in-life reports of mapped dead funds: 2133; missed 456 (21.4%)
+    months to delisting <=6m   : P(missed) 14.1% of 149
+    months to delisting 6-12m  : P(missed) 15.6% of 147
+    months to delisting 12-24m : P(missed) 15.1% of 284
+    months to delisting 24-60m : P(missed) 19.0% of 715
+    months to delisting >60m   : P(missed) 27.8% of 838
+    the fund's LAST report: P(missed) 13.3% (n 150) vs earlier 22.0%
+    by period year (5-year bins): 2005: 26%, 2010: 17%, 2015: 15%, 2020: 27%
+
+M2. missed vs found reports, excess over the same period-end month's mean of all in-life dead reports:
+    forward t+2..t+127    : missed   -17.3bp (n 455), found    +4.7bp (n 1672); missed - found   -22.0bp, t -0.34
+    trailing 126 sessions : missed   -14.7bp (n 456), found    +4.0bp (n 1677); missed - found   -18.7bp, t -0.23
+
+M3. candidate funds by coverage status:
+    covered          148 funds; delistings: merger (2xx) 61%, liquidation (4xx) 19%, exchange (3xx) 16%, dropped (5xx) 4%; last-year CRSP return, excess over same-delisting-year mean +339bp
+    mapped, no NAV     6 funds; delistings: liquidation (4xx) 50%, merger (2xx) 33%, dropped (5xx) 17%; last-year CRSP return, excess over same-delisting-year mean -1191bp
+    no CIK mapped     36 funds; delistings: merger (2xx) 75%, liquidation (4xx) 14%, dropped (5xx) 8%, exchange (3xx) 3%; last-year CRSP return, excess over same-delisting-year mean -1197bp
+    never covered - covered, last-year excess return: -1535bp (t -2.70; n 42 vs 148)
+
+M4. cheap fix (offline, cached filings): of 516 'close not found' reports, 79 yield a NAV against the 3 prior sessions' closes or +-$0.01 (15%); 0 not in the cache
+    if all were in-life and kept, coverage would rise by about 1.5% of candidate fund-half-years (each report is one half-year; upper bound)

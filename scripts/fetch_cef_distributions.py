@@ -44,6 +44,22 @@ caller. So:
     delete every other name's history, the very loss the write guard below
     exists to prevent. It also lets a trial keep sealed names unloaded (the 27
     `cef_universe.csv` names outside the deployed universe are a holdout).
+
+`--data-book c4` (added 2026-10-29, default off; C4 deployment plan step 3, DARK)
+---------------------------------------------------------------------------------
+C4's own distribution panel, for its 74 frozen funds, through this same fetcher
+and its same whole-panel write guard: `data/cef_c4/cef_distributions.parquet`
+(and `cef_splits.parquet` when a split is recorded). The funds and their
+families come from `scripts/cef/data_books.py` (the frozen file of 2026-10-14);
+`data/cef/cef_universe.csv` is never read, so no core or holdout name is
+fetched. Only the actions panels are written: the features file reads the
+CORE's price panel, and the facts file is a dated snapshot that nothing on C4's
+path reads (and that invites look-ahead, above). `data/cef_c4/` must already
+exist (it is created by the seed, data_books.py SEED): a missing directory
+refuses before any fetch rather than starting an unseeded book. With `--out`,
+C4's actions go to DIR instead, as for the core. Absent, or `--data-book cef`,
+the run is the bare run above, byte for byte
+(scripts/data/tests/test_fetch_cef_distributions_books.py).
 """
 import argparse
 import json
@@ -79,6 +95,9 @@ def parse_args(argv=None):
                     help="write only the actions panels, to this directory (never inside data/)")
     ap.add_argument("--tickers", default=None,
                     help="comma-separated names from cef_universe.csv; requires --out")
+    ap.add_argument("--data-book", choices=["c4", "cef"], default=None,
+                    help="whose distributions: cef (the default; data/cef) or c4 (data/cef_c4, "
+                         "the 74 frozen funds, actions panels only)")
     a = ap.parse_args(argv)
     if a.tickers is not None and a.out is None:
         raise SystemExit("--tickers requires --out: the data/ panels are replaced whole, so a subset "
@@ -330,14 +349,32 @@ def write_facts(TICKERS, GRP, errors, empty):
         json.dump(diag, fh, indent=1)
 
 
+def c4_universe_frame():
+    """C4's 74 frozen funds as the (ticker, grp) frame this script fetches, grp
+    = the frozen family (the families panels' own `grp`), sorted by ticker."""
+    from scripts.cef import data_books
+    fam = data_books.c4_universe()
+    return pd.DataFrame({"ticker": sorted(fam), "grp": [fam[t] for t in sorted(fam)]})
+
+
 def main(argv=None) -> int:
     a = parse_args(argv)
-    uni = pd.read_csv(os.path.join(CEF, "cef_universe.csv"))
+    c4 = a.data_book == "c4"
+    if c4:
+        from scripts.cef import data_books
+        c4_dir = str(data_books.C4_DIR)
+        if a.out is None and not os.path.isdir(c4_dir):
+            raise SystemExit(f"--data-book c4: {c4_dir} does not exist; seed it first "
+                             f"(scripts/cef/data_books.py, SEED), nothing fetched")
+        uni, uni_name = c4_universe_frame(), data_books.C4_UNIVERSE.name
+    else:
+        uni = pd.read_csv(os.path.join(CEF, "cef_universe.csv"))
+        uni_name = "cef_universe.csv"
     if a.tickers is not None:
         want = [t.strip() for t in a.tickers.split(",") if t.strip()]
         unknown = sorted(set(want) - set(uni["ticker"]))
         if not want or unknown:
-            raise SystemExit(f"--tickers: {unknown or 'no names'} not in cef_universe.csv")
+            raise SystemExit(f"--tickers: {unknown or 'no names'} not in {uni_name}")
         uni = uni[uni["ticker"].isin(want)]          # the other names are never fetched
     TICKERS = uni["ticker"].tolist()
     GRP = dict(zip(uni["ticker"], uni["grp"]))
@@ -348,6 +385,14 @@ def main(argv=None) -> int:
         os.makedirs(a.out, exist_ok=True)
         write_actions(dist, splits, a.out)
         print("\nDONE (--out: actions panels only; features and facts are written only to data/cef)")
+        return 0
+    if c4:
+        # C4's own panel, replaced whole like the core's; nothing else is
+        # written (module docstring, --data-book c4).
+        write_actions(dist, splits, c4_dir)
+        print("\nDONE (--data-book c4: actions panels only)")
+        print("empty:", empty)
+        print("errors:", list(errors))
         return 0
     write_actions(dist, splits, CEF)
     write_features(dist)

@@ -1,0 +1,32 @@
+fit-cut panels: {'cef_prices': {'rows': 226191, 'last': '2022-12-30'}, 'cef_nav': {'rows': 193375, 'last': '2022-12-30'}, 'cef_distributions': {'rows': 9937, 'last': '2022-12-28'}, 'cef_splits': {'rows': 0, 'last': None}}
+unit book reproduces the derivation's core series: max abs diff 0.0e+00
+
+TR (W1 2013-06-25..2022-12-30), core account, m = 1.24
+  unit (today)           SR 0.955 ann  6.21% vol 6.50% maxDD 12.78% turn  13.5/yr mean gross 1.206 at cap 7.3% | net SR 0.852 / 0.645 / 0.334 | breakeven 46.1bp | eras 0.858 / 1.037
+  model                  SR 0.950 ann  7.41% vol 7.79% maxDD 14.90% turn  16.6/yr mean gross 1.418 at cap 32.2% | net SR 0.844 / 0.630 / 0.310 | breakeven 44.5bp | eras 0.908 / 0.987
+  B sizing_multiplier    SR 0.889 ann  6.94% vol 7.81% maxDD 15.85% turn  17.1/yr mean gross 1.347 at cap 21.7% | net SR 0.780 / 0.561 / 0.233 | breakeven 40.7bp | eras 0.757 / 0.998 | corr with model 0.9912, ann - model -0.47%/yr
+  A vol_target_annual    SR 0.902 ann  7.10% vol 7.87% maxDD 15.79% turn  19.2/yr mean gross 1.350 at cap 21.9% | net SR 0.780 / 0.536 / 0.170 | breakeven 37.0bp | eras 0.762 / 1.019 | corr with model 0.9897, ann - model -0.31%/yr
+
+PR (W1 2013-06-25..2022-12-30), core account, m = 1.24
+  unit (today)           SR 0.959 ann  6.43% vol 6.70% maxDD 13.64% turn  13.5/yr mean gross 1.206 at cap 7.3% | net SR 0.859 / 0.658 / 0.356 | breakeven 47.7bp | eras 0.841 / 1.058
+  model                  SR 0.964 ann  7.74% vol 8.03% maxDD 15.59% turn  16.6/yr mean gross 1.418 at cap 32.2% | net SR 0.861 / 0.654 / 0.343 | breakeven 46.5bp | eras 0.900 / 1.019
+  B sizing_multiplier    SR 0.971 ann  7.81% vol 8.04% maxDD 16.00% turn  17.1/yr mean gross 1.347 at cap 21.7% | net SR 0.865 / 0.653 / 0.335 | breakeven 45.8bp | eras 0.852 / 1.071 | corr with model 0.9912, ann - model +0.07%/yr
+  A vol_target_annual    SR 0.988 ann  8.02% vol 8.12% maxDD 15.94% turn  19.2/yr mean gross 1.350 at cap 21.9% | net SR 0.870 / 0.633 / 0.278 | breakeven 41.8bp | eras 0.878 / 1.082 | corr with model 0.9897, ann - model +0.28%/yr
+  unit (today)           TR: sessions on which the drawdown first reaches 12% again: ['2018-06-04', '2018-11-02']
+  unit (today)           PR: sessions on which the drawdown first reaches 12% again: ['2018-05-23', '2018-07-25', '2018-08-02', '2018-09-05', '2018-09-20', '2018-09-25', '2018-10-09', '2018-10-19', '2018-10-23', '2018-10-31']
+  model                  TR: sessions on which the drawdown first reaches 12% again: ['2018-05-17', '2018-06-20', '2018-07-02', '2018-07-05', '2018-07-10', '2018-07-16', '2018-08-28', '2018-10-09', '2018-10-16', '2018-10-31']
+  model                  PR: sessions on which the drawdown first reaches 12% again: ['2018-05-04', '2018-05-14', '2018-06-18', '2018-06-29', '2018-10-15']
+  B sizing_multiplier    TR: sessions on which the drawdown first reaches 12% again: ['2018-05-04', '2018-05-15', '2018-06-18', '2018-06-29', '2018-10-15']
+  B sizing_multiplier    PR: sessions on which the drawdown first reaches 12% again: ['2018-05-04', '2018-05-14', '2018-06-18', '2018-06-29', '2018-10-15']
+
+RAMP (a held x1.0 book switched to B at each year-end; gross relative to B's own path):
+  2013-12-31: day-1 gross 0.929 of B's; 95% after 1 sessions; identical to B after 952
+  2014-12-31: day-1 gross 1.009 of B's; 95% after 0 sessions; identical to B after 719
+  2015-12-31: day-1 gross 1.155 of B's; 95% after 0 sessions; identical to B after 470
+  2016-12-30: day-1 gross 0.944 of B's; 95% after 1 sessions; identical to B after 219
+  2017-12-29: day-1 gross 1.000 of B's; 95% after 0 sessions; identical to B after 559
+  2018-12-31: day-1 gross 0.913 of B's; 95% after 3 sessions; identical to B after 308
+  2019-12-31: day-1 gross 1.000 of B's; 95% after 0 sessions; identical to B after 56
+  2020-12-31: day-1 gross 0.856 of B's; 95% after 22 sessions; identical to B after None
+  2021-12-31: day-1 gross 0.972 of B's; 95% after 0 sessions; identical to B after None
+  median sessions to 95% of B's gross: 0.0 (of 9 switches)

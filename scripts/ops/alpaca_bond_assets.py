@@ -36,7 +36,7 @@ def read(client, asset_class: str) -> dict:
     from quantt.broker.alpaca import PAPER_BASE, TIMEOUT_S
     t0 = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     r = client._session.get(PAPER_BASE + "/v2/assets", params={"asset_class": asset_class},
-                            timeout=TIMEOUT_S)
+                            timeout=TIMEOUT_S, allow_redirects=False)   # key headers: never follow a 3xx
     rec = {"asset_class": asset_class, "utc": t0, "status": r.status_code}
     try:
         body = r.json()

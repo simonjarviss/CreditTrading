@@ -1,0 +1,54 @@
+====================================================================================================
+GATE 0: survivorship evidence for the team lead's judgment (zero trials; post-data, NOT a mechanical gate)
+spec: cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13
+fit window only: <= 2022-12-30 (asserted)
+====================================================================================================
+inputs: pull 1 manifest 2026-11-03T03:01:05+00:00; pull 2 manifest 2026-11-03T03:59:47+00:00: 1795 NAVs for 148 of 190 candidates; coverage 64.2%
+dropped: survivors {'window past the fit end': 59, 'missing delisting return': 0, 'no session': 0}; dead {'window past the fit end': 0, 'missing delisting return': 5, 'no session': 0}
+calibration: report NAV vs panel NAV within 1% on 100% of 24 survivor reports
+
+ALL dead candidates; cells family x period-end month (PRIMARY):
+   levels beyond +-50pp (kept, flagged): A 0, D 0
+   obs: A 1728 fund-half-years (65 funds), D 1478 (133 funds); cells with >= 2 obs
+   slopes, bp per pp (half-year-clustered t): b_A -27.35 (t -4.96); b_D -37.19 (t -6.48); b_B -32.90 (t -7.55)
+   ratio b_D/b_A +1.360: 95% CI (1) fund-half-year +0.799 .. +2.127; (2) calendar half-year +0.946 .. +2.321
+   ratio b_B/b_A +1.203: 95% CI (1) +0.955 .. +1.542; (2) +0.998 .. +1.661
+   sign test, D-only slope per calendar half-year: negative in 30 of 33 (two-sided binomial p 0.000); P(b_D >= 0) under bootstrap (1) 0.000
+   the two candidate rules (b_B < 0 and b_B/b_A >= threshold); power and false-alarm at this coverage (D 1478 of 2627 candidate fund-half-years):
+     >= 0.5  : MET (point); CI (1) lower bound >= 0.5; P(flag | halving) 0.12, P(flag | r = 1) 0.00
+     >= 0.75 : MET (point); CI (1) lower bound >= 0.75; P(flag | halving) 0.89, P(flag | r = 1) 0.01
+
+dead, unclassified names excluded; cells family x period-end month (PRIMARY):
+   levels beyond +-50pp (kept, flagged): A 0, D 0
+   obs: A 1728 fund-half-years (65 funds), D 891 (79 funds); cells with >= 2 obs
+   slopes, bp per pp (half-year-clustered t): b_A -27.35 (t -4.96); b_D -33.59 (t -4.35); b_B -31.02 (t -6.67)
+   ratio b_D/b_A +1.228: 95% CI (1) fund-half-year +0.631 .. +2.117; (2) calendar half-year +0.664 .. +2.420
+   ratio b_B/b_A +1.134: 95% CI (1) +0.924 .. +1.439; (2) +0.906 .. +1.592
+   sign test, D-only slope per calendar half-year: negative in 27 of 33 (two-sided binomial p 0.000); P(b_D >= 0) under bootstrap (1) 0.000
+   the two candidate rules (b_B < 0 and b_B/b_A >= threshold); power and false-alarm at this coverage (D 891 of 2627 candidate fund-half-years):
+     >= 0.5  : MET (point); CI (1) lower bound >= 0.5; P(flag | halving) 0.02, P(flag | r = 1) 0.00
+     >= 0.75 : MET (point); CI (1) lower bound >= 0.75; P(flag | halving) 0.63, P(flag | r = 1) 0.01
+
+ALL dead candidates; cells family x half-year (sensitivity):
+   levels beyond +-50pp (kept, flagged): A 0, D 0
+   obs: A 1728 fund-half-years (65 funds), D 1649 (144 funds); cells with >= 2 obs
+   slopes, bp per pp (half-year-clustered t): b_A -27.35 (t -4.96); b_D -43.17 (t -5.77); b_B -37.50 (t -6.16)
+   ratio b_D/b_A +1.578: 95% CI (1) fund-half-year +1.047 .. +2.457; (2) calendar half-year +1.057 .. +2.751
+   ratio b_B/b_A +1.371: 95% CI (1) +1.083 .. +1.880; (2) +1.068 .. +1.988
+   sign test, D-only slope per calendar half-year: negative in 32 of 34 (two-sided binomial p 0.000); P(b_D >= 0) under bootstrap (1) 0.000
+   the two candidate rules (b_B < 0 and b_B/b_A >= threshold); power and false-alarm at this coverage (D 1649 of 2627 candidate fund-half-years):
+     >= 0.5  : MET (point); CI (1) lower bound >= 0.5; P(flag | halving) 0.17, P(flag | r = 1) 0.00
+     >= 0.75 : MET (point); CI (1) lower bound >= 0.75; P(flag | halving) 0.92, P(flag | r = 1) 0.01
+
+dead, unclassified names excluded; cells family x half-year (sensitivity):
+   levels beyond +-50pp (kept, flagged): A 0, D 0
+   obs: A 1728 fund-half-years (65 funds), D 1038 (90 funds); cells with >= 2 obs
+   slopes, bp per pp (half-year-clustered t): b_A -27.35 (t -4.96); b_D -36.38 (t -3.61); b_B -33.77 (t -5.52)
+   ratio b_D/b_A +1.330: 95% CI (1) fund-half-year +0.771 .. +2.163; (2) calendar half-year +0.590 .. +2.627
+   ratio b_B/b_A +1.235: 95% CI (1) +0.974 .. +1.646; (2) +0.926 .. +1.786
+   sign test, D-only slope per calendar half-year: negative in 27 of 33 (two-sided binomial p 0.000); P(b_D >= 0) under bootstrap (1) 0.000
+   the two candidate rules (b_B < 0 and b_B/b_A >= threshold); power and false-alarm at this coverage (D 1038 of 2627 candidate fund-half-years):
+     >= 0.5  : MET (point); CI (1) lower bound >= 0.5; P(flag | halving) 0.03, P(flag | r = 1) 0.00
+     >= 0.75 : MET (point); CI (1) lower bound >= 0.75; P(flag | halving) 0.73, P(flag | r = 1) 0.01
+
+READ AS: evidence for the team lead's Gate 0 judgment, recorded post-data in docs/SYSTEM.md §5. The trial's own pass rule (PREREG §6.2) is unchanged.

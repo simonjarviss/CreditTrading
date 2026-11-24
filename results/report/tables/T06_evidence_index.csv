@@ -1,0 +1,297 @@
+id,date,kind,era,supports,n_figures,tags,claim
+E-2026-07-28-01,2026-07-28,result,HISTORY,§6,5,S,"credit_rv, the first family: a real cross-sectional signal on credit ETFs that was far too small to pay for its own execution"
+E-2026-07-30-01,2026-07-30,kill,HISTORY,§6,4,S,credit_rv was killed at its sealed holdout: the gross edge was negative before costs (D1)
+E-2026-07-30-02,2026-07-30,kill,HISTORY,§6,4,S,"E1 (HYG vs JNK premium/discount reversion) died because the dislocation collapsed, not because the mechanism was wrong; its band form went to WATCH (D1 reclassified D5)"
+E-2026-07-30-03,2026-07-30,result,HISTORY,"§3, §6",3,S,"Night one found that HYG's published NAV is smoothed and that the ETF ""opportunity"" shrank with the smoothing: the stale-price well is dry in ETFs"
+E-2026-07-30-04,2026-07-30,kill,HISTORY,§6,1,S,S1-as-specified was killed: cross-issuer bond-price disagreement carries no information because every issuer buys from the same vendor (D1)
+E-2026-07-30-05,2026-07-30,result,HISTORY,§6,4,S,"S3 forced flow: index deletion of fallen angels causes real, temporary price pressure, but only as a rare crisis-regime sleeve (WATCH, D6)"
+E-2026-07-30-06,2026-07-30,kill,HISTORY,§6,2,S,"S3-wrapper was killed: the fallen-angel ETF expression was a credit-quality premium in costume, and the unconditional pair beat the signal (D4)"
+E-2026-07-30-07,2026-07-30,kill,HISTORY,§6,1,S,"raw-flow-z was killed: an ETF creation/redemption z-score is a precise zero, and the Treasury control is equally flat (D1)"
+E-2026-07-30-08,2026-07-30,method,HISTORY,§2,2,S,"Benchmarks and a random null trader were run through one accounting path; the null trader lost exactly its costs, so the accounting does not invent profit"
+E-2026-07-31-01,2026-07-31,correction,HISTORY,"§2, §6",4,S,"The 21.2%/yr cost headline was a full-sample artefact of 2007–14 ETF illiquidity; current-era cost is 1.73bp per trade, and fixing it rescued no dead signal"
+E-2026-07-31-02,2026-07-31,kill,HISTORY,§6,3,S,"single-fund-PD was killed: wide ETF premium/discount dispersion is NAV staleness, and trading it fades price discovery (D1)"
+E-2026-07-31-03,2026-07-31,kill,HISTORY,§6,3,S,leadlag was killed: thin-wrapper lag was non-synchronous trading measured on a price that cannot be traded (D1)
+E-2026-07-31-04,2026-07-31,kill,HISTORY,§6,3,S,nport-trace-nav was infeasible: the bonds that print on TRACE each day cover too little of a fund and are selected for news (D7)
+E-2026-07-31-05,2026-07-31,kill,HISTORY,§6,2,S,"dealer-constraint was killed: no credit name responds to primary-dealer inventory, and the Treasury control shows the same magnitude (D1)"
+E-2026-07-31-06,2026-07-31,kill,HISTORY,§6,2,S,"short-pressure was killed: crowded credit hedges do not reverse, and the rates comparison group scores higher (D1)"
+E-2026-07-31-07,2026-07-31,kill,HISTORY,"§5, §6",3,S,"pair-reversion was killed on arithmetic: the 22 pairs diversified, but costs do not, and the book could not reach the mandate's vol (D2 + capacity)"
+E-2026-07-31-08,2026-07-31,counter,HISTORY,"§5, §6",4,SU,"The trial counters as they stood when the ETF search was stopped: LEGACY carried the ETF work, and each new data source got its own counter"
+E-2026-07-31-09,2026-07-31,ruling,HISTORY,"§3, §6",1,,"The pivot: ""credit"" had silently meant ""credit ETFs""; the instruction ""it has to be credit"" opened closed-end funds"
+E-2026-07-31-10,2026-07-31,result,HISTORY,"§2, §3, §6",4,S,"The CEF premise was checked first: credit CEF discounts are about 150× the ETF gap, and the ETF decomposition reverses — the discount predicts price, not NAV"
+E-2026-07-31-11,2026-07-31,result,HISTORY,"§3, §6",5,S,"The first CEF sleeve was the first candidate to pass Test 7 (not a market exposure); its modern-era alpha t missed the 3.0 gate, and the gate was lowered to 2.0 on instruction"
+E-2026-07-31-12,2026-07-31,result,HISTORY,"§3, §5, §6",5,SU,"Sizing up into dislocation was backwards: the strategy is best in calm markets, so vol targeting replaced dispersion sizing"
+E-2026-07-31-13,2026-07-31,kill,HISTORY,§6,3,S,Hard group (muni) neutrality was measured and rejected: within-group demeaning throws away most of a thin cross-section
+E-2026-07-31-14,2026-07-31,kill,HISTORY,§6,1,S,"Sizing up on |z| was rejected: every threshold above zero lowers the Sharpe, so the edge is spread across the cross-section"
+E-2026-07-31-15,2026-07-31,method,HISTORY,"§2, §5",4,S,"How the names were chosen: a credit-only CEF list, a first cut on today's ADV that was then rebuilt point-in-time, and 17 names frozen at a $3m ADV screen"
+E-2026-07-31-16,2026-07-31,result,HISTORY,§6,3,S,"The CEF search was stopped at ten specifications, with a deflated Sharpe that passed only because the trial count was recorded as ten"
+E-2026-07-31-17,2026-07-31,release,HISTORY,"§2, §4, §5",4,S,The CEF book was deployed to IBKR paper at $500k on a validation battery that later failed to reproduce
+E-2026-07-31-18,2026-07-31,incident,HISTORY,"§4, §5",5,SU,"Day one: plain market orders rested overnight and filled pre-market, costing far more than the modelled spread; the order type was changed to MOC"
+E-2026-07-31-19,2026-07-31,ruling,HISTORY,§5,2,S,Standing instruction: the paper book runs observe-only; the pre-committed kill rule became a human checklist and automatic drawdown suspends were raised to 99%
+E-2026-07-31-20,2026-07-31,result,HISTORY,"§3, §6",4,S,"The 2026-07-31 audit tried twice to kill the alpha as a muni-vs-taxable bet and failed; the signal is a breadth machine, not a timing machine"
+E-2026-07-31-21,2026-07-31,correction,HISTORY,"§2, §6",3,S,"The audit diagnosed that the headline backtest entered at a price that did not exist (shift(1)), predicted its cost, and left it unfixed"
+E-2026-07-31-22,2026-07-31,result,HISTORY,"§2, §5",2,S,"Specification, code and optimum disagreed on the holding period: the spec said 5 days, the sleeve traded every session, and the measured optimum was 2"
+E-2026-07-31-23,2026-07-31,incident,HISTORY,§5,2,S,"Order stacking during the fix: repeated armed runs queued orders unseen from fresh client ids, which established that the trade phase is not idempotent"
+E-2026-07-31-24,2026-07-31,method,HISTORY,"§3, §6",4,S,"The graveyard's two patterns: most deaths were stale-price artefacts, the next most common a control group scoring as well as the treatment"
+E-2026-07-31-25,2026-07-31,kill,HISTORY,§6,5,S,"A distribution-cut filter was rejected: cuts do re-rate the discount, but the damage arrives at 63 days and excluding cut funds costs more breadth than it saves"
+E-2026-07-31-26,2026-07-31,result,HISTORY,"§2, §6",5,S,"A Kalman state-space estimator was built and lost to a shorter rolling window; z_window 252 → 63 was recommended, at a cost of 29 trials"
+E-2026-07-31-27,2026-07-31,ruling,HISTORY,"§5, §6",3,S,"Spec v3 (z_window 63, rebalance 2) was frozen and the 2024+ holdout pre-registered with a decision rule written before it was run"
+E-2026-07-31-28,2026-07-31,kill,HISTORY,"§5, §6",5,S,The holdout was opened once and the z_window 63 change failed on net: the signal generalised but its turnover did not (the argmax lesson)
+E-2026-07-31-29,2026-07-31,release,HISTORY,"§2, §5",2,S,Spec v4 reverted to z_window 252 and a 5-day rebalance after the holdout failure; the 16 queued MOC orders for the failed configuration were cancelled
+E-2026-07-31-30,2026-07-31,release,HISTORY,"§2, §5",5,S,Spec v5 set the calendar to 2 days with a cadence gate and fixed the order type at MOC; it was the live spec until the band
+E-2026-07-31-31,2026-07-31,result,HISTORY,"§2, §6",4,S,The first execution study rejected a no-trade band on the 5-day calendar and found that holding longer destroys the edge; price-weighting was recommended but never entered a frozen spec
+E-2026-09-01-01,2026-09-01,incident,HISTORY,"§4, §5",2,SV,"A 21-session silent outage ended: the book had refused to arm on a broker-port misconfiguration while every surface read ""ok"""
+E-2026-09-01-02,2026-09-01,incident,HISTORY,§5,3,S,The units trap: a drawdown limit meant to be off at 99% was live at 0.99% because the code divides percent keys by 100
+E-2026-09-01-03,2026-09-01,live-pnl,HISTORY,"§4, §5",3,U,"The first MOC session realised a few basis points, but it was one session, and its own documents disagree on the cost, the dispersion and the fill count"
+E-2026-09-05-01,2026-09-05,result,HISTORY,"§2, §3, §6",9,SU,"An independent alpha audit confirmed the discount IC at a tradable lag, distinct from reversal, not credit beta, not one name, and present in every era"
+E-2026-09-05-02,2026-09-05,result,HISTORY,"§3, §5",4,S,"The audit fixed the strategy's cost threshold: breakeven is 32.6bp per unit turnover, so whether the edge is harvestable is a question of execution"
+E-2026-09-06-01,2026-09-06,result,HISTORY,"§3, §5",5,S,"The short leg was charged for the first time: borrow cost about a quarter of a Sharpe on one day's fees, and availability bound on two Nuveen munis"
+E-2026-09-06-02,2026-09-06,result,HISTORY,"§2, §3",6,S,"On the 2-day calendar, a no-trade band dominated the calendar at matched turnover and stayed positive at 30bp where every calendar went negative"
+E-2026-09-06-03,2026-09-06,method,HISTORY,§2,4,S,"The band width was derived from the cube-root law on measured target-weight dynamics, not swept; the sweep-topping 6.4% was deliberately not chosen"
+E-2026-09-06-04,2026-09-06,release,HISTORY,"§2, §5",4,S,"Spec v6 replaced the 2-day calendar with the 4.8% band (CEF trial 48), proved a byte-identical no-op with the key absent"
+E-2026-09-06-05,2026-09-06,kill,HISTORY,"§2, §6",4,S,"Per-name OU reversion speed in the score was withdrawn: the z-score already carries κ^(1/2), so the extra term double-counts"
+E-2026-09-06-06,2026-09-06,result,HISTORY,"§2, §6",2,S,"Σ⁻¹α construction confirmed the concentration diagnosis and raised gross Sharpe, but bought breadth with turnover; it wins only if execution is cheap"
+E-2026-09-06-07,2026-09-06,kill,HISTORY,§6,2,S,Sequential Σ⁻¹α plus a scalar band was rejected: the band gives back what Σ⁻¹ buys
+E-2026-09-06-08,2026-09-06,result,HISTORY,"§2, §6",3,S,"A joint cost-aware optimiser beat the band at matched turnover but was not deployed, on turnover stability and an ADV modelling fork"
+E-2026-09-06-09,2026-09-06,result,HISTORY,"§3, §5",3,S,"Effective breadth was 2.24, not 17: two-thirds of book variance was one unmanaged muni-versus-taxable factor"
+E-2026-09-06-10,2026-09-06,kill,HISTORY,§6,2,S,Combining the discount with a price-reversal signal was rejected: the price signal is almost entirely subsumed
+E-2026-09-06-11,2026-09-06,kill,HISTORY,§6,1,S,"Cointegration pairs were listed among the rejected CEF construction variants, on the same figures as the ETF pair-reversion kill"
+E-2026-09-08-01,2026-09-08,ruling,HISTORY,"§2, §5",3,S,"Team lead: keep the 17 as the liquid set, treat the other 27 CEFs as the illiquid tail and a sealed holdout, and add a 2023 time holdout to every fit"
+E-2026-09-08-02,2026-09-08,ruling,HISTORY,§5,3,S,"Team lead's standing decisions of 2026-09-08: two trial counters (CEF and GAMMA), HALVE/KILL to be armed on broker NAV, paper indefinitely, retire the null trader"
+E-2026-09-08-03,2026-09-08,correction,HISTORY,"§2, §5",4,S,Dust orders: band HOLDs were leaking out as small live orders through a price mismatch; HOLDs were expressed in shares and a derived $517 minimum trade added
+E-2026-09-09-01,2026-09-09,counter,HISTORY,"§5, §6",3,S,The CEF trial counter was corrected from 18 to 48: it had missed the 29 trials of the estimator session and the band trial
+E-2026-09-09-02,2026-09-09,correction,HISTORY,§2,2,S,"The harness books raw-price returns, so longs were never credited distributions; the bias nets out on average but swings by era"
+E-2026-09-09-03,2026-09-09,live-pnl,HISTORY,§4,3,V,"The book's first real band trades were transmitted from the 2026-09-09 decision, sized against the epoch NAV row"
+E-2026-09-10-01,2026-09-10,correction,HISTORY,"§2, §5, §6",7,S,The headline validation was re-scored at shift(2) with its announced embargo applied: the retired calendar fails its deflated-Sharpe bar at every trial count
+E-2026-09-10-02,2026-09-10,correction,HISTORY,"§5, §6",2,S,"""Gross 1.23 in-sample, 1.75 out-of-sample"" was withdrawn as evidence: 1.75 is the gross of a holdout whose recorded verdict is FAIL"
+E-2026-09-10-03,2026-09-10,result,HISTORY,"§2, §5",2,S,"The traded band policy has never been walk-forwarded, bootstrapped or deflated; its only figures come from the full-sample harness"
+E-2026-09-10-04,2026-09-10,correction,HISTORY,"§2, §6",4,SU,The joint optimiser's comparison had been run against the band width not chosen; re-run against the live 4.8% band its edge was larger
+E-2026-09-10-05,2026-09-10,correction,HISTORY,§5,4,S,Borrow history overturned the one-day borrow estimate: the PIMCO premium funds had borrowed at double-digit fees over 2021–26
+E-2026-09-10-06,2026-09-10,result,HISTORY,§5,4,V,"The borrow-availability dispute could not be settled: the two sources never reported on the same day, and the public file died"
+E-2026-09-10-07,2026-09-10,live-pnl,HISTORY,§4,4,V,"The IBKR arm rate and fill record as re-measured on 2026-09-10: few sessions armed, three dates with broker-confirmed fills, and a ledger of modelled fills"
+E-2026-09-10-08,2026-09-10,live-pnl,HISTORY,"§4, §5",3,SV,The honest CEF track record on IBKR was two NAV observations: the pre-epoch ledger had booked fills for sessions the account never made
+E-2026-09-11-01,2026-09-11,result,HISTORY,§5,7,S,The book is not short volatility in a way an option can profitably hedge: the convexity overlay's pre-written gate failed on both conditions
+E-2026-09-11-02,2026-09-11,correction,HISTORY,"§2, §5",3,SU,"The live band held nothing before 2013-06-14, so the book has never traded a credit crisis; the documented flat-period count was wrong"
+E-2026-09-13-01,2026-09-13,kill,HISTORY,"§5, §6",5,S,The options programme was closed: credit gamma is far more expensive than equity gamma and no declared conditioner times it; GAMMA stays at 0
+E-2026-09-13-02,2026-09-13,result,HISTORY,§5,5,SU,"The vol scalar was measured over its history: the ""1.5×"" in the sizing note was never a bound, and the real bound is the gross-exposure cap"
+E-2026-09-13-03,2026-09-13,release,HISTORY,"§2, §5",2,SV,The W3 go-live moved decisions to the morning on yesterday's complete pair and re-seeded the CEF ledger from broker positions at a clean epoch
+E-2026-09-14-01,2026-09-14,ruling,HISTORY,§5,1,S,"Team lead, 2026-09-14: the frozen vol target stays in force until W6 derives a new one; retiring the null trader is open"
+E-2026-09-15-01,2026-09-15,incident,HISTORY,"§4, §5",4,SV,Ledger desyncs halted all three IBKR books: the morning schedule's first sessions sent orders the ledger never recorded; the last broker-confirmed fills were on 2026-09-15
+E-2026-09-15-02,2026-09-15,ruling,HISTORY,"§3, §5",1,,Team lead (D19/D20): the paper account is scored on gross P&L with no borrow or execution cost
+E-2026-09-16-01,2026-09-16,release,HISTORY,"§2, §5",7,S,"Spec v7 (group cap 0.30, gross ceiling 1.90×) was pre-registered on the nextgen branch as a risk change, not a return change; it never traded on IBKR"
+E-2026-09-21-01,2026-09-21,ruling,HISTORY,§5,4,S,"The hardening freeze decisions D1–D20: no external alerting, retire the null trader before re-arming, nextgen and spec v7 parked"
+E-2026-09-28-01,2026-09-28,incident,HISTORY,"§4, §5",5,SV,"IBKR was retired: a final flatten of 34 MOC orders was sent, reached the broker as PendingSubmit, and was left unconfirmed by the team lead's decision"
+E-2026-09-28-02,2026-09-28,ruling,HISTORY,§5,5,S,"Team lead, 2026-09-28: move to Alpaca paper with one account per book, keep only the CEF book and the b6 benchmark, and hold main's CEF counter of 48 as authoritative"
+E-2026-09-28-03,2026-09-28,release,HISTORY,"§2, §5",2,S,The 17-name v6 spec was tagged as the revert path for v7-on-Alpaca; ibkr-final marks the last IBKR-era commit
+E-2026-09-28-04,2026-09-28,ruling,ALPACA,"§4, §5",4,S,"IBKR was retired and the book moved to Alpaca paper, one $100k account per book, with both P&Ls recorded"
+E-2026-09-28-05,2026-09-28,counter,ALPACA,"§2, §3, §5",7,SV,Spec v7 for Alpaca spent two CEF trials: the universe cut 17 → 13 (trial 49) and a 1.80 gross ceiling derived from Reg T (trial 50)
+E-2026-09-28-06,2026-09-28,result,ALPACA,"§2, §5, §6",4,S,The v7 report-only backtest (2013-06-14 → 2026-09-21) showed the 13-name book weaker than the 17 overall but stronger since 2023
+E-2026-09-28-07,2026-09-28,release,ALPACA,"§2, §5",3,SU,"release-20260928-1: the first Alpaca runner release, laptop prod, DRY_RUN=1 until the team lead's go"
+E-2026-09-28-08,2026-09-28,release,ALPACA,"§2, §5",2,SU,release-20260928-2: verify reads closing-auction prints in a timestamp window (Basic-plan SIP 403 fix)
+E-2026-09-28-09,2026-09-28,ruling,ALPACA,"§4, §5",1,,"Go-live rulings: arm on 2026-09-29, trade day one to full target, no fallback from `cls` to `day`, skip a rejected name and send the rest"
+E-2026-09-28-90,2026-09-28,live-pnl,ALPACA,§4,5,SU,"cef paper book, 2026-09-28: FAIL, did not trade"
+E-2026-09-29-01,2026-09-29,incident,ALPACA,"§4, §5",3,S,The first armed Alpaca session sent 13 MOC (`cls`) orders; paper filled 2 and let 11 expire
+E-2026-09-29-02,2026-09-29,ruling,ALPACA,"§4, §5",4,S,"Paper-only exception to the MOC rule: decide in the evening, send market `day` orders 8 to 2 minutes before the close, fully automatic"
+E-2026-09-29-03,2026-09-29,release,ALPACA,"§2, §5",2,SU,"release-20260929-1: evening decision, morning backstop, nightly collector and shadow benchmark"
+E-2026-09-29-04,2026-09-29,release,ALPACA,"§2, §5",2,SU,"release-20260929-2: paper late-market execution (decide in the evening, send market `day` from 15:52)"
+E-2026-09-29-90,2026-09-29,live-pnl,ALPACA,§4,6,SU,"cef paper book, 2026-09-29: FAIL, traded"
+E-2026-10-05-90,2026-10-05,live-pnl,ALPACA,§4,5,SU,"cef paper book, 2026-10-05: FAIL, did not trade"
+E-2026-10-07-01,2026-10-07,incident,ALPACA,"§4, §5",3,U,The laptop prod sent no orders on three of its first six sessions; two sources give different causes for 2026-10-06
+E-2026-10-07-02,2026-10-07,ruling,ALPACA,§5,2,S,"The cloud VM was chosen: Azure for Students, Standard_B2pts_v2 (Arm64) in canadacentral"
+E-2026-10-07-03,2026-10-07,release,ALPACA,"§2, §5",2,SU,release-20261007-1: verify parses `sell_short` fills
+E-2026-10-07-04,2026-10-07,release,ALPACA,"§2, §5",4,SU,"release-20261007-2: the exposure gate becomes two checks, plans scale to fit, fills are polled and TCA is recorded"
+E-2026-10-07-90,2026-10-07,live-pnl,ALPACA,§4,7,SU,"cef paper book, 2026-10-07: PASS, traded"
+E-2026-10-08-01,2026-10-08,release,ALPACA,"§2, §5",4,SU,"release-20261008-1: the Azure VM prod package and the late-market send-budget gate, after eight release-check NO-GOs"
+E-2026-10-08-02,2026-10-08,release,ALPACA,"§2, §5",3,SU,release-20261008-2: a duckdb pin with no order-path change; the VM was armed at this tag
+E-2026-10-08-03,2026-10-08,ruling,ALPACA,"§4, §5",4,S,"Prod cut over from the laptop to the VM the same morning, skipping the shadow, and the VM was made fully automatic"
+E-2026-10-08-90,2026-10-08,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-08: PASS, traded"
+E-2026-10-09-01,2026-10-09,incident,ALPACA,"§4, §5",4,S,"On 2026-10-09 the VM refused both sends on the stress cap, for a plan that took gross down, and verify read PASS"
+E-2026-10-09-02,2026-10-09,ruling,ALPACA,"§3, §4, §5",4,S,"Real capital was planned, the target set at ≥10%/yr gross, the book made alpha-only, and EVENTS and XASSET opened as counters"
+E-2026-10-09-03,2026-10-09,method,ALPACA,"§2, §3, §6",4,S,"The research plan put C4 (the z-score on other CEF families) on the slate to add breadth, the book's binding weakness"
+E-2026-10-09-90,2026-10-09,live-pnl,ALPACA,§4,7,SU,"cef paper book, 2026-10-09: PASS, did not trade"
+E-2026-10-11-01,2026-10-11,ruling,ALPACA,§5,3,S,The stress cap is judged on the lower of the sized and the live equity for a plan that adds gross; a plan that cuts gross always passes
+E-2026-10-11-02,2026-10-11,release,ALPACA,"§2, §5",2,S,"release-20261011-1: the missed-day fix, release-check GO on cd5082e after a NO-GO on b3e4e9e"
+E-2026-10-11-03,2026-10-11,result,ALPACA,"§2, §5, §6",3,S,"W4: the signal the book actually trades is about half as strong as the documents quoted, and no artifact explains it"
+E-2026-10-12-01,2026-10-12,correction,ALPACA,"§2, §5",3,S,"SYSTEM.md's IC row was corrected: the −0.074 is the wide 17-name set, the deployed book's is −0.033"
+E-2026-10-12-02,2026-10-12,correction,ALPACA,"§2, §3, §6",4,SU,"W10-B: the ""BR_eff 1.17, 92.5% of risk"" figure is a 17-name fact; the deployed 13's fit book had median BR_eff 3.30, and its edge is within-group selection"
+E-2026-10-12-03,2026-10-12,result,ALPACA,§5,4,V,"The real-money cost gate failed: net of measured borrow the deployed book lost money over 2021-09-14 → 2022-12-30, so real capital waits"
+E-2026-10-12-04,2026-10-12,incident,ALPACA,"§2, §5",2,S,"Live NAV quality: Yahoo served stale NAV copies at decision time, and real orders were sized on them"
+E-2026-10-12-05,2026-10-12,kill,ALPACA,§6,2,S,"Appendix — CORE-a/CORE-b: no distribution adjustment around specials, and no December–January tax-loss sleeve or gate"
+E-2026-10-12-90,2026-10-12,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-12: PASS, traded"
+E-2026-10-13-01,2026-10-13,ruling,ALPACA,"§2, §5",4,S,"The stale-NAV gate was redesigned the same day to defer and hold rather than drop, and starts in report mode"
+E-2026-10-13-02,2026-10-13,kill,ALPACA,§6,2,S,"Appendix — E1-G1a: E1's short-acquirer leg cannot be built at Alpaca for munis, where the merger-pair effect lives"
+E-2026-10-13-90,2026-10-13,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-13: PASS, traded"
+E-2026-10-14-01,2026-10-14,release,ALPACA,"§2, §5",4,S,"release-20261014-1: the stale-NAV gate in report mode, MISSED on a send scaled to zero, the exact fit and the third P&L line"
+E-2026-10-14-02,2026-10-14,counter,ALPACA,"§2, §6",5,S,CEF 50 → 52: C5 (the opening-auction fill) became trial 51 and C4 (the z-score on five other CEF families) trial 52
+E-2026-10-14-03,2026-10-14,result,ALPACA,"§2, §6",4,S,"C4 (CEF trial 52) passed all six fit stages: gross Sharpe 1.217 over 2005–22, positive in 16 of 18 years, with costs flipping its sign by 30bp"
+E-2026-10-14-04,2026-10-14,kill,ALPACA,§6,4,S,"Appendix — C5 (CEF trial 51), the opening-auction fill, was killed at the fit: a placebo earned more than the treatment"
+E-2026-10-14-05,2026-10-14,kill,ALPACA,§6,2,S,"Appendix — XASSET-X1, credit and rates trend (MOP TSMOM on nine ETFs): D1"
+E-2026-10-14-06,2026-10-14,kill,ALPACA,§6,1,S,"Appendix — XASSET-X2, front-running pension rebalancing (SPY vs IEF): D1"
+E-2026-10-14-07,2026-10-14,kill,ALPACA,§6,2,S,"Appendix — XASSET-X3, month-end Treasury extension: real effect, but term premium in a part-time wrapper (D4, and D2)"
+E-2026-10-14-08,2026-10-14,kill,ALPACA,§6,2,S,"Appendix — XASSET-X4, multi-asset trend: D4 on the historical-mean rule; the XASSET slate closed with no sleeve"
+E-2026-10-14-90,2026-10-14,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-14: PASS, traded"
+E-2026-10-15-90,2026-10-15,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-15: PASS, traded"
+E-2026-10-16-90,2026-10-16,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-16: PASS, traded"
+E-2026-10-18-01,2026-10-18,result,ALPACA,§2,3,S,"C4's holdout, opened once, first read gross Sharpe 0.725 and net −0.304 at 15bp (labelled D2)"
+E-2026-10-18-02,2026-10-18,correction,ALPACA,"§2, §5",3,SV,"An independent review found four bad IGR price bars in C4's holdout; corrected, gross Sharpe is 1.434 and net at 15bp turns positive"
+E-2026-10-18-03,2026-10-18,kill,ALPACA,§6,2,S,Appendix — SS5-MA / SS5-IBKR: equity merger arbitrage is D4 in costume on the published evidence; IBKR's cost and unlocks measured
+E-2026-10-19-01,2026-10-19,ruling,ALPACA,"§2, §5",3,SV,"C4's verdict is the corrected book: PASS, with a recorded deviation, paper only and no real-money sleeve"
+E-2026-10-19-02,2026-10-19,ruling,ALPACA,"§4, §5",3,V,Alpaca's end-of-day portfolio history became the paper book's official daily P&L; the 17:30 reading is a labelled snapshot
+E-2026-10-19-03,2026-10-19,ruling,ALPACA,§5,3,S,HALVE/KILL had been read by no code on the Alpaca path; they were wired in report mode on the official equity series
+E-2026-10-19-04,2026-10-19,release,ALPACA,"§2, §5",1,S,release-20261019-1: the official daily P&L is Alpaca's end-of-day history; the collector writes eod_equity.csv
+E-2026-10-19-05,2026-10-19,kill,ALPACA,§6,2,S,"Appendix — SSX-1: of 57 special-situation candidates, 8 passed a zero-trial gate and 20 were killed"
+E-2026-10-19-90,2026-10-19,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-19: PASS, traded"
+E-2026-10-20-01,2026-10-20,release,ALPACA,"§2, §5",1,S,"release-20261019-2 (tagged 2026-10-20): the HALVE/KILL drawdown check in report mode, orders proved unchanged"
+E-2026-10-20-02,2026-10-20,ruling,ALPACA,"§5, §6",3,V,Appendix — IBKR as a second broker waits for a trigger: its benefit to the core is small and indistinguishable from zero
+E-2026-10-20-03,2026-10-20,kill,ALPACA,§6,3,S,"Appendix — EVENTS trial 2, NAV tenders: a real gross payoff that costs eat (D2 at stage 3)"
+E-2026-10-20-04,2026-10-20,kill,ALPACA,§6,2,S,"Appendix — SPAC-DL: the deadline-only SPAC route is a premium in costume (D4), closed at zero trials"
+E-2026-10-20-05,2026-10-20,kill,ALPACA,§6,2,S,"Appendix — MA-HZ, merger arbitrage on the completion-hazard hump: mechanism holds, cost marginal; WATCH, then closed UNDERPOWERED"
+E-2026-10-20-06,2026-10-20,kill,ALPACA,§6,1,S,Appendix — A1-ISSUANCE: CEF share issuance at a premium gives no event the z-score misses; closed at zero trials
+E-2026-10-20-07,2026-10-20,kill,ALPACA,§6,1,S,Appendix — A2-INSIDER: insider buying in CEFs and BDCs is the book's own signal; gate G2 fails
+E-2026-10-20-08,2026-10-20,kill,ALPACA,§6,1,S,"Appendix — MUNI-HZ (B1, B2): subtract-only muni hazard flags are not worth building, not even in report mode"
+E-2026-10-20-90,2026-10-20,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-20: PASS, traded"
+E-2026-10-21-90,2026-10-21,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-21: PASS, traded"
+E-2026-10-22-01,2026-10-22,incident,ALPACA,"§2, §5",3,S,"The book missed 2026-10-22: one late NAV refused all 13 names, because CEFConnect had refused every scripted request since 2026-10-21"
+E-2026-10-22-02,2026-10-22,kill,ALPACA,§6,4,SU,"Appendix — EVENTS trial 1, E1 (the CEF merger pair): Stage 0 cleared on 2026-10-22; the fit's alpha failed D4 on power; parked until real capital"
+E-2026-10-22-90,2026-10-22,live-pnl,ALPACA,§4,7,SU,"cef paper book, 2026-10-22: FAIL MISSED, did not trade"
+E-2026-10-23-90,2026-10-23,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-23: PASS, traded"
+E-2026-10-26-01,2026-10-26,result,ALPACA,"§2, §5",4,S,"C4's ex-date P&L concentration was MIXED: the drift is generic, and paper overstates C4; the team lead sent C4 to paper anyway"
+E-2026-10-26-02,2026-10-26,live-pnl,ALPACA,§4,1,V,"Live session 2026-10-26: PASS, 6 of 6 orders filled; snapshot −$446.70, auction-marked −$520.85"
+E-2026-10-26-03,2026-10-26,kill,ALPACA,§6,1,S,Appendix — SCR-MACRO-STATE: no fund group's own macro observable changes the within-group IC
+E-2026-10-26-04,2026-10-26,kill,ALPACA,§6,1,S,"Appendix — SCR-MACRO-DAYS: discount moves on FOMC, CPI and NFP days do not revert more; the placebo scores more"
+E-2026-10-26-90,2026-10-26,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-26: PASS, traded"
+E-2026-10-27-01,2026-10-27,ruling,ALPACA,"§3, §5",4,S,"C4 goes in its own paper account (the spare connector account), an exception to ""one combined book"", because one account couples the books"
+E-2026-10-27-02,2026-10-27,method,ALPACA,"§2, §6",3,S,"The 82-kill audit: most kills were sound, but four of seven counted-trial kills since 2026-09-28 had a real gross effect killed by a gate their own power forecast said they would fail"
+E-2026-10-27-03,2026-10-27,ruling,ALPACA,"§2, §5",4,S,"Research-method rulings: evidence outcomes beside every D-code, a power gate in the workflow, paper-only admission by marginal contribution, and the paper's deflated-Sharpe bar once trial series are stored"
+E-2026-10-27-04,2026-10-27,ruling,ALPACA,"§2, §5",3,S,"The autonomous research loop: a daily cycle on the laptop that approves its own trials, and the canonical evaluate() restructured into a harness byte-identical on the live book"
+E-2026-10-27-05,2026-10-27,correction,ALPACA,§5,1,S,"A ""pytest exit 0"" had been read through a pipe, so it measured tail's exit; re-verified and corrected"
+E-2026-10-27-06,2026-10-27,live-pnl,ALPACA,§4,1,V,"Live session 2026-10-27: PASS, 6 of 6 orders filled; snapshot +$251.43, auction-marked +$192.95"
+E-2026-10-27-07,2026-10-27,kill,ALPACA,§6,2,S,Appendix — SCR-IDX-REBAL: fund-of-CEF index reconstitution pressure is an artifact when pooled; the placebo scores more
+E-2026-10-27-08,2026-10-27,kill,ALPACA,§6,1,S,Appendix — SCR-BDC-DISC: the discount z-score on BDCs is nothing in the tradable set; at ADV ≥ $3m it is short-term reversal
+E-2026-10-27-90,2026-10-27,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-27: PASS, traded"
+E-2026-10-28-01,2026-10-28,incident,ALPACA,"§2, §5",2,S,"fetch_daily had written yfinance's empty ex-date rows over good bars; prod's panel held 91 empty closes, 24 of them on the live book"
+E-2026-10-28-02,2026-10-28,release,ALPACA,"§2, §5",2,SV,"release-20261028-1: empty fetched rows and non-finite NAVs are refused (PR #6), release-check GO"
+E-2026-10-28-03,2026-10-28,incident,ALPACA,"§2, §5",3,V,Prod's panel was repaired from Alpaca's closing-auction prints; the day's plan barely moved
+E-2026-10-28-04,2026-10-28,method,ALPACA,"§2, §6",4,SV,The trial-series backfill: EVENTS and XASSET qualify for the paper's deflated-Sharpe bar (with safeguards); CEF stays on the desk's √(2 ln N)
+E-2026-10-28-05,2026-10-28,ruling,ALPACA,§5,4,UV,Real capital is deferred until Alpaca Canada is approved; paper stays on Alpaca because no paper broker processes corporate actions
+E-2026-10-28-06,2026-10-28,ruling,ALPACA,§5,3,SV,"A corporate-action HALT guard was ruled for the paper runner, because Alpaca paper processes no splits or mergers"
+E-2026-10-28-07,2026-10-28,live-pnl,ALPACA,§4,2,UV,"Live session 2026-10-28: PASS, 10 of 10 filled; the ""equity at the close"" figure was a 17:10 after-hours read"
+E-2026-10-28-08,2026-10-28,kill,ALPACA,§6,1,S,"Appendix — A1-BOOK: the live book's shorts earned more, not less, inside share-issuance windows; blocking them would cost Sharpe"
+E-2026-10-28-09,2026-10-28,kill,ALPACA,§6,2,S,Appendix — GAMMA G2 (TLT short-variance) closed UNDERPOWERED with no data pulled; GAMMA stays at 0
+E-2026-10-28-90,2026-10-28,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-28: PASS, traded"
+E-2026-10-29-01,2026-10-29,incident,ALPACA,§5,2,S,An order-path defect reached main in PR #20: gate 6 judged order lists read before the corporate-action fetch
+E-2026-10-29-02,2026-10-29,counter,ALPACA,"§2, §5",4,S,"C4's spec v1 was frozen with its own gross cap, 1.90, derived by the core's Reg T rule; the team lead ruled it is not a trial"
+E-2026-10-29-03,2026-10-29,result,ALPACA,"§2, §5",3,S,C4 step 2: the live sleeve rebuilds trial 52's book on 907 of 907 fit sessions; at the 1.90 cap paper trades a book the trial did not test exactly
+E-2026-10-29-04,2026-10-29,result,ALPACA,§5,1,U,The independent risk-split review chose equal risk per account; core + C4 came to about 9% gross on the fit
+E-2026-10-29-05,2026-10-29,ruling,ALPACA,§5,2,S,"""Add all 3"": C4, the ex-date short as a forward test and PCEF (EVENTS trial 4) were all to go to paper at a full equal-risk share"
+E-2026-10-29-06,2026-10-29,ruling,ALPACA,"§2, §5",3,S,"One missing NAV no longer refuses the book: the fund is held for at most 2 sessions (a policy, not derived) and the rest trade; switched ON the same day"
+E-2026-10-29-07,2026-10-29,release,ALPACA,"§2, §5",2,SV,"release-20261029-1: the multi-sleeve combiner, dark for the one-sleeve book, GO after a first NO-GO on two defects"
+E-2026-10-29-08,2026-10-29,release,ALPACA,"§2, §5",2,SV,"release-20261029-2: the missing-NAV hold built dark, CEFConnect-down status and NYSE American/Nasdaq official closes; both reviewers GO"
+E-2026-10-29-09,2026-10-29,release,ALPACA,"§2, §5",2,SV,"release-20261029-3: the missing-NAV hold switched ON, deliberately excluding PR #20's corporate-action gate; the VM armed at it"
+E-2026-10-29-10,2026-10-29,ruling,ALPACA,§5,3,S,"The corporate-action gate's windows and malformed rows were ruled: two windows, and a malformed row is skipped and recorded unless it could be ours"
+E-2026-10-29-11,2026-10-29,live-pnl,ALPACA,§4,2,UV,"Live session 2026-10-29: PASS, 3 of 3 filled; the ""equity at the close"" figure was again a 17:10 read"
+E-2026-10-29-12,2026-10-29,kill,ALPACA,§6,4,S,"Appendix — EVENTS trial 3, the post-ex-date short: passes D4 on the full 2005–22 fit but every era fails alone; kept built and off as a forward test"
+E-2026-10-29-13,2026-10-29,kill,ALPACA,§6,3,SU,"Appendix — EVENTS trial 4, PCEF reconstitution: approved, weakly powered, built and kept off; its counter never moved"
+E-2026-10-29-90,2026-10-29,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-10-29: PASS, traded"
+E-2026-10-30-01,2026-10-30,result,ALPACA,§5,1,U,Four sleeves across three $100k accounts would give only about 6.1%/yr gross; core + C4 gives about 9%
+E-2026-10-30-02,2026-10-30,ruling,ALPACA,"§4, §5",3,S,"The book optimises % return on all capital: core + C4 only, the ex-date short and PCEF built but off, and the core's vol-target raise pre-registered as trial 53"
+E-2026-10-30-03,2026-10-30,incident,ALPACA,§5,1,S,The corporate-action gate's release-check found a second order-path defect: rows with a null id were de-duplicated as one
+E-2026-10-30-04,2026-10-30,live-pnl,ALPACA,§4,2,UV,"Live session 2026-10-30, the first with the missing-NAV hold on: PASS, 7 of 7 filled"
+E-2026-10-30-90,2026-10-30,live-pnl,ALPACA,§4,7,SU,"cef paper book, 2026-10-30: PASS, traded"
+E-2026-11-01-01,2026-11-01,counter,ALPACA,"§2, §5",6,SV,"CEF 52 → 53: the vol-target raise was approved at the milder pair, core ×1.13 and C4 ×1.27, through a new `sizing_multiplier` key; spec v8 activated"
+E-2026-11-01-02,2026-11-01,correction,ALPACA,"§2, §5",3,S,The core's 2023+ is not sealed: its 2024–26 returns were opened on 2026-07-31 and the v7 pre-registration computed 2013-06-14 → 2026-09-21
+E-2026-11-01-03,2026-11-01,correction,ALPACA,§5,2,S,"After two more corporate-action NO-GOs, ""any null party symbol refuses"" was recorded as a team-lead ruling; it was not one"
+E-2026-11-02-01,2026-11-02,correction,ALPACA,§5,3,S,"The null-party rule was corrected: a row with a missing party symbol halts only where a well-formed row would halt for one of our held funds, and ca-ack clears it on its full content"
+E-2026-11-02-02,2026-11-02,correction,ALPACA,§5,3,SU,The corporate-action reader now validates every field; the journal and the runner design give different failure counts for the property test on 1c64638
+E-2026-11-02-03,2026-11-02,correction,ALPACA,"§4, §5",8,SUV,"Reconciled against Alpaca's official closes, the desk's own records had flattered the account: the 17:30 snapshot ran $560 too favourable over 10-07..10-30"
+E-2026-11-02-04,2026-11-02,correction,ALPACA,§4,4,SU,"The journal's ""equity at the close"" for 10-28, 10-29 and 10-30 were 17:10 ET after-hours reads; the official closes differ"
+E-2026-11-02-05,2026-11-02,ruling,ALPACA,§5,2,S,"Trial 53 ships tonight even if the gate fails review, and C4 uses the existing spare account: no new account, and not inside the core's"
+E-2026-11-02-06,2026-11-02,incident,ALPACA,§5,3,S,The release-check of 3478159 was NO-GO on three market-wide unresolved rows; the corporate-action gate shipped in report mode under the fallback ruling
+E-2026-11-02-07,2026-11-02,incident,ALPACA,§5,2,S,"Alpaca's winter end-of-day stamps are 01:00Z, which the client refused; from 11-02 the official P&L would have stayed PENDING"
+E-2026-11-02-08,2026-11-02,correction,ALPACA,"§4, §5",3,SU,"Paper does charge SEC and CAT regulatory fees on this account, contradicting CLAUDE.md landmine 1; the team lead deferred the correction"
+E-2026-11-02-09,2026-11-02,live-pnl,ALPACA,"§4, §5",6,V,"Live attribution 09-29 → 10-30: the signal's discount leg earned +$1,583; unchosen NAV exposure, mostly the muni shorts, lost −$2,251"
+E-2026-11-02-10,2026-11-02,result,ALPACA,"§4, §5",4,SU,Live fill cost and live turnover: two zero-trial notes measure them on different windows and reach different readings
+E-2026-11-02-11,2026-11-02,correction,ALPACA,"§2, §5",3,V,"The canonical harness holds the last target on thin sessions where the live sleeve flattens, so the fit-era cost case for the live policy was weaker than stated"
+E-2026-11-02-12,2026-11-02,release,ALPACA,"§2, §5",4,SV,"release-20261102-1: CEF trial 53 live at ×1.13 (spec v8), the corporate-action gate in report mode, the gate-6 fix and the winter stamp fix; GO after six NO-GOs"
+E-2026-11-02-13,2026-11-02,ruling,ALPACA,§5,3,S,Autonomy: agents may run releases and arming end to end when every gate passes; the journal is the only notice
+E-2026-11-02-14,2026-11-02,result,ALPACA,"§2, §3, §5",4,V,"Two accounts as one portfolio: arming C4 is the largest available gain, about +6%/yr gross on all capital, and the accounts are uncorrelated"
+E-2026-11-02-15,2026-11-02,result,ALPACA,"§2, §5",4,SV,"Thin sessions: the harness's hold rule out-earned the live flatten rule on the fit, but the gap is one name, ten days and one stretch, not alpha"
+E-2026-11-02-16,2026-11-02,result,ALPACA,"§2, §5",6,SV,"Trial 53 re-measured on the live flatten rule: the core is flat on 56% of W1, and the same sizing rule on the sessions it trades gives ×1.30"
+E-2026-11-02-17,2026-11-02,counter,ALPACA,"§2, §5",5,SV,"Trial 53 amendment 1: core ×1.13 → ×1.30 (spec v9), C4 ×1.27 → ×1.26 (spec v4), the core's stops recalibrated; CEF stays 53"
+E-2026-11-02-18,2026-11-02,result,ALPACA,§5,3,SU,"C4's corporate-action halt was measured on today's unresolved rows; C4's gate was ruled into report mode, as the core's"
+E-2026-11-02-19,2026-11-02,incident,ALPACA,§5,2,S,The release-check of 8b14298 was NO-GO: C4 could decide on an unruled spike bar on a day with a late NAV; fixed by exit-code precedence
+E-2026-11-02-20,2026-11-02,counter,ALPACA,"§2, §5",4,S,"C4's spec moved v1 → v4 before arming: ×1.27 (v2), the core's halve/kill levels in report (v3), ×1.26 (v4)"
+E-2026-11-02-21,2026-11-02,incident,ALPACA,§5,2,SV,"The research loop's standing exception lets it trade in the same spare account C4 will use; the account read flat, and the loop must be confirmed off before C4 arms"
+E-2026-11-02-22,2026-11-02,result,ALPACA,"§2, §6",5,SU,"The 2026-11-02 alpha slate found one signal to pursue: C4's discount level against its family peers, which the z-score cannot see; it went to a pre-registration"
+E-2026-11-02-23,2026-11-02,ruling,ALPACA,"§2, §5",3,S,"Gate 0 became a post-data judgment (""keep it flexible and make judgment off results""); the first CRSP pull was too thin to test survivorship"
+E-2026-11-02-24,2026-11-02,kill,ALPACA,§6,4,S,"Appendix — the rest of the 2026-11-02 alpha slate: tax-loss on WATCH; distribution cuts, lead-lag, fast/slow z and own-name corporate events killed"
+E-2026-11-02-25,2026-11-02,kill,ALPACA,§6,4,S,"Appendix — the 2026-11-02 unique angles: turn-of-month found post hoc and left on WATCH; the NAV drag, muni recall, bond holidays and leverage cost killed; paper scoring an artefact"
+E-2026-11-02-26,2026-11-02,kill,ALPACA,"§5, §6",1,S,"Appendix — NAV-HEDGE-1: an ETF overlay to hedge the core's NAV moves was closed at the power gate (UNDERPOWERED), zero trials"
+E-2026-11-02-27,2026-11-02,result,ALPACA,"§4, §3",6,V,Paper fills cost 10.8bp against the 15:50 mid: about 6.2bp half-spread at the fill and 4.6bp mid drift to 15:52
+E-2026-11-02-28,2026-11-02,result,ALPACA,§4,3,V,"The fill-vs-close cost splits by period: zero to 2026-10-12, 8.6bp from 2026-10-13, because the post-15:50 market move stopped running against the book"
+E-2026-11-02-29,2026-11-02,result,ALPACA,"§4, §3",2,V,No evidence that the pre-15:50 move predicts the fill cost or the move to the close (127 symbol-days)
+E-2026-11-02-30,2026-11-02,ruling,ALPACA,"§3, §5",5,SV,"The Sharpe-framed NAV hedge on the core book was closed as underpowered at Stage 0, spending no trial; a report-only exposure readout replaces it"
+E-2026-11-02-90,2026-11-02,live-pnl,ALPACA,§4,7,SU,"cef paper book, 2026-11-02: PASS, traded"
+E-2026-11-03-01,2026-11-03,release,ALPACA,"§2, §5",3,SU,"release-20261103-1: trial 53 amendment 1 (core ×1.30, spec v9) with C4 integrated dark (spec v4, ×1.26); GO for the core only"
+E-2026-11-03-02,2026-11-03,result,ALPACA,"§2, §5",5,V,"A third thin-session rule, trading the 4 or 5 eligible names, scored the highest gross return in every window but was not shown to be alpha"
+E-2026-11-03-03,2026-11-03,result,ALPACA,"§2, §5",5,V,"Gate 0 evidence for trial 54: dead CEFs show the family-level discount effect at least as strongly as survivors, so survivorship does not explain it"
+E-2026-11-03-04,2026-11-03,release,ALPACA,"§2, §5",3,SUV,"release-20261103-2: C4 arming prep — the opening-session probe, specs named everywhere, and a C4 install that scans every book's units"
+E-2026-11-03-05,2026-11-03,correction,ALPACA,§5,1,S,The journal and the C4 checklist had named f27ef81 as release-20261103-1; the tag's commit is 336df9d
+E-2026-11-03-06,2026-11-03,ruling,ALPACA,"§2, §5",5,SU,"CEF 53 → 54: Gate 0 cleared post-data (""I approve, lets try and deploy as fast as possible""), trial 54 approved, on the two existing accounts, with C4 to open from flat"
+E-2026-11-03-07,2026-11-03,release,ALPACA,"§2, §5",3,SU,"release-20261103-3: C4 opens correctly in the shared spare account (`own_prefix`), and an armed first session is gated in code"
+E-2026-11-03-08,2026-11-03,result,ALPACA,§2,2,V,"Trial 54 Stage 0: the second-source gate cleared and the team lead signed the data-flag rulings as proposed (KEEP 237, MASK 9)"
+E-2026-11-03-09,2026-11-03,counter,ALPACA,"§2, §5",4,SV,"CEF 54 → 55: the thin-session rule `trade_eligible` (floor 4) was approved for paper only, against the drafting session's recommendation"
+E-2026-11-03-10,2026-11-03,result,ALPACA,§2,4,V,"Trial 54's fit stages, as committed: P1 passed at the bar, P2, K1 and K2 passed, and K3 (D4) killed it on the level book's post-2007 alpha t 2.96"
+E-2026-11-03-11,2026-11-03,ruling,ALPACA,"§2, §5",3,V,"The team lead overrode trial 54's K3 kill post-data (""revive it and figure out a way to not kill it""); it is not a pass of K3, and the holdout decides"
+E-2026-11-03-12,2026-11-03,correction,ALPACA,"§2, §5",4,V,DG-L4 halted trial 54 on a defect in the trial script (a truncated vol lookback); the corrected run matched the sleeve on 907 of 907 sessions and moved P1 to t 2.8315
+E-2026-11-03-13,2026-11-03,result,ALPACA,§2,2,V,Trial 54 P3 passed: the blend beat the z-only book at matched turnover on the fit
+E-2026-11-03-14,2026-11-03,release,ALPACA,"§2, §5",4,SU,"release-20261103-4: the C4 arming fixes; the team lead ruled ""no dry sessions"", so C4 arms at the night's install"
+E-2026-11-03-15,2026-11-03,result,ALPACA,"§2, §5",6,V,"Trial 54's holdout, opened once (2023-01-03 → 2026-09-30), passed: the level book earned a gross Sharpe of 1.636 and the blend beat C4's z book; the evidence is still INCONCLUSIVE"
+E-2026-11-03-16,2026-11-03,release,ALPACA,"§1, §2, §3, §5",4,S,"Release tag release-20261103-4 is commit 8ce0395, carrying core spec v9 at ×1.30 and C4 spec v4 at ×1.26 with C4's arming fixes"
+E-2026-11-03-17,2026-11-03,method,ALPACA,"§1, §2, §3",8,S,"The core account trades cef_discount.v9.20261102: 13 credit CEFs, a 6% unit vol target held at ×1.30, a 4.8% no-trade band and a 1.80× gross cap"
+E-2026-11-03-18,2026-11-03,method,ALPACA,"§1, §2, §3, §5",8,S,The core's sizing multiplier 1.30 was re-derived on the live thin-day rule (flatten); 1.13 and 1.96 were not chosen
+E-2026-11-03-19,2026-11-03,method,ALPACA,"§1, §2, §3, §5",9,S,"C4 is spec c4_families.v4.20261102: the core's z-score on 74 non-credit CEFs in five families, ×1.26, its own 1.90× cap, holding on thin days; its book json says DARK"
+E-2026-11-03-20,2026-11-03,method,ALPACA,"§1, §3, §5",3,S,"The b6 equal-weight credit benchmark has a frozen spec but no book json and no runner entry, so nothing trades it at this tag"
+E-2026-11-03-21,2026-11-03,method,ALPACA,"§1, §5",7,S,The run pipeline: collector at :10/:40; session slots at 22:00–01:00 and 06:00–15:15 ET; final check at close − 90 min; late send at 15:52/15:55; verify at 17:30 ET
+E-2026-11-03-22,2026-11-03,method,ALPACA,"§1, §2, §5",4,S,"Both paper books decide in the evening and send market day orders 8 to 2 minutes before the close, the recorded paper-only exception to the MOC rule, because paper runs no closing auction"
+E-2026-11-03-23,2026-11-03,method,ALPACA,"§1, §4, §5",4,S,"The official daily P&L is Alpaca's end-of-day portfolio history (1D); the 17:30 ET equity reading is a labelled snapshot, never blended"
+E-2026-11-03-24,2026-11-03,method,ALPACA,"§1, §5",6,S,"Nine pure pre-transmit gates run on every send, and every refusal is returned; only dry_run, arming and halt explain a no-trade day, and any other refusal is a MISSED FAIL"
+E-2026-11-03-25,2026-11-03,method,ALPACA,"§1, §5",3,S,"C4's first armed session must be an opening session: only C4's own c4- fills count against it, and a position, another runner's open order or an unreadable order list refuses it under its own gate"
+E-2026-11-03-26,2026-11-03,method,ALPACA,"§1, §2, §5",5,S,Data gates at the tag: the core's stale-NAV gate records only (report); both books hold a late-NAV fund for at most 2 sessions; C4 has no stale-NAV gate and relies on its NAV-repeat mask
+E-2026-11-03-27,2026-11-03,method,ALPACA,"§1, §5",4,SU,"The corporate-action gate runs in report mode on both books at this tag, recording events and sending anyway, until the ISIN fix and the re-ruling of unresolved rows"
+E-2026-11-03-28,2026-11-03,method,ALPACA,"§1, §5",6,S,"HALVE/KILL are measured on the EOD equity series in report mode only, and trial 53's stops R1–R3 are read and acted on by the team lead; no stop is enforced in code"
+E-2026-11-03-29,2026-11-03,method,ALPACA,"§1, §5",7,SU,The gross ceiling is derived from Reg T initial margin and the worst five-session loss; gate 8 judges it on the lower of sized and live equity and always passes a plan that does not add gross
+E-2026-11-03-30,2026-11-03,method,ALPACA,"§1, §3, §4, §5",5,SU,Each book has its own Alpaca paper account because Alpaca rejects opposite-side orders in one symbol and gates 6 and 9 refuse a shared account; paper diverges from a live account
+E-2026-11-03-31,2026-11-03,method,ALPACA,§4,3,SV,The pack's own re-derivation of paper fill cost against the official close agrees with FILL-DRIFT within 0.2bp
+E-2026-11-03-32,2026-11-03,correction,ALPACA,"§4, §5",4,SUV,The 17:10 ET equity snapshot and the P&L of record disagree over 2026-09-28..10-30; Alpaca's own last_equity confirms the record
+E-2026-11-03-33,2026-11-03,method,ALPACA,"§4, §5",2,V,"The research evidence pack opens: an append-only evidence log, the sanitised live record, and figures rebuilt from committed sources"
+E-2026-11-03-34,2026-11-03,ruling,ALPACA,"§4, §5",1,,Ruling: the public repository keeps the live record as daily aggregates; per-name and per-fill rows stay in a gitignored cache
+E-2026-11-03-35,2026-11-03,ruling,ALPACA,§5,3,SV,"The exposure readout's declared lag rule gave L = 0, and the team lead made MUNI its headline, with TERM, CREDIT and LOANS indicative"
+E-2026-11-03-36,2026-11-03,result,ALPACA,"§3, §5",3,SV,"On the current window the muni funds' own MUNI beta rises with the lag choice, unlike the fit era; the L = 0 headline is unchanged pending the team lead"
+E-2026-11-03-37,2026-11-03,ruling,ALPACA,§5,1,,"Ruling: on a te4 reduced session, a short skipped at send time is accepted and labelled; the send path is unchanged"
+E-2026-11-03-38,2026-11-03,release,ALPACA,"§1, §4",4,V,Release: release-20261103-4 installed; the core armed at ×1.30 (spec v9) and C4 installed and armed on v4 after VM pre-arm reads
+E-2026-11-03-39,2026-11-03,ruling,ALPACA,"§1, §5",2,S,Ruling: C4 v5's gross cap stays 1.90 over the frozen rule's 1.80 (the blend's w5 0.0536 against the z book's 0.0261)
+E-2026-11-03-40,2026-11-03,release,ALPACA,"§1, §4",3,V,Release: release-20261103-5 installed; C4 re-armed on the v5 blend (CEF trial 54's level_signal); the core byte-identical
+E-2026-11-03-41,2026-11-03,result,ALPACA,§5,2,V,"Finding: the drawdown read is UNMEASURED at every 22:00 decide, because the EOD row for the as-of date is never written yet"
+E-2026-11-03-42,2026-11-03,ruling,ALPACA,§5,4,SU,"Ruling: te4's K0 reads the previous session's EOD row, answering E-2026-11-03-41 (the 22:00 decide never has the day's row); the missing-NAV hold frequency stays unmeasured"
+E-2026-11-03-43,2026-11-03,result,ALPACA,"§1, §4",3,V,The first plans at release-20261103-5: the core's first ×1.30 and C4's first armed plan on the v5 blend (session 2026-11-04)
+E-2026-11-03-44,2026-11-03,incident,ALPACA,"§4, §5",3,V,Incident: C4's first fetch wrote IGR's split-adjusted pre-split closes against unadjusted NAVs; C4 halted for the 2026-11-04 session
+E-2026-11-03-90,2026-11-03,live-pnl,ALPACA,§4,7,SU,"cef paper book, 2026-11-03: PASS, traded"
+E-2026-11-03-91,2026-11-03,live-pnl,ALPACA,§4,6,SU,"c4 paper book, 2026-11-03: FAIL, did not trade"
+E-2026-11-04-10,2026-11-04,correction,ALPACA,§5,1,,"Correction: a merge interleaved E-2026-11-03-35..39, and E-39/41/43/44 failed the log's format; restored from the clean commits, no figure changed"
+E-2026-11-04-11,2026-11-04,release,ALPACA,"§1, §4, §5",5,V,"Release: release-20261104-1 (C4 fetch keeps one price basis with its NAVs; fetch-time basis-step guard; repair-basis) installed, and IGR's stored history repaired"
+E-2026-11-04-12,2026-11-04,result,ALPACA,"§1, §4",4,V,C4's 2026-11-04 plan re-decided on the repaired panel and approved by sha; the unsent corrupt plan retired
+E-2026-11-04-13,2026-11-04,live-pnl,ALPACA,§4,2,V,"Both books traded on 2026-11-04: the core's first ×1.30 session and C4's first session ever, both verify PASS"
+E-2026-11-04-14,2026-11-04,correction,ALPACA,"§1, §4",2,V,"Correction to E-2026-11-03-43: the core's ""gross 1.025× → 1.797×"" was the sleeve's target gross, not the book after the trades"
+E-2026-11-04-15,2026-11-04,result,ALPACA,"§4, §5",4,V,"C4's 11-05 decide is deferred on KYN's late NAV (the missing-NAV hold, by design); the IGR fix holds through a nightly fetch"
+E-2026-11-04-90,2026-11-04,live-pnl,ALPACA,§4,7,SU,"cef paper book, 2026-11-04: PASS, traded"
+E-2026-11-04-91,2026-11-04,live-pnl,ALPACA,§4,8,SU,"c4 paper book, 2026-11-04: PASS, traded"
+E-2026-11-05-20,2026-11-05,correction,ALPACA,§4,3,S,"Correction to E-2026-11-03-90: its official EOD figure was UNMEASURED because eod_equity.csv had no point for 11-03 yet, not because the file was missing from the pull"
+E-2026-11-05-21,2026-11-05,method,ALPACA,"§4, §5",1,,Method: snapshot_live ingests a C4 pull without distribution_scores.csv and names the distribution-adjusted P&L UNMEASURED; a core pull must still carry the file
+E-2026-11-05-22,2026-11-05,correction,ALPACA,§4,3,S,"Correction to E-2026-11-04-90: its official EOD figure was UNMEASURED because eod_equity.csv had no point for 11-04 yet, not because the file was missing from the pull"
+E-2026-11-05-30,2026-11-05,result,ALPACA,"§4, §3",10,V,"The core's paper fill cost is the quoted half-spread (half a cent a share); no send time inside the window narrows it, and none of it carries over to a live MOC fill"
+E-2026-11-05-40,2026-11-05,method,ALPACA,"§3, §6",6,V,"Method: the band width re-derived from the measured paper cost lands at 4.55% (core) and 4.07% (C4); the draft recommends adopting neither, and CEF stays 55"
+E-2026-11-05-41,2026-11-05,ruling,ALPACA,"§2, §3, §6",4,SV,"Ruling: the band stays 4.8% on both books (the re-derivation at the measured cost is CLOSED at zero trials, CEF stays 55), and post-then-cross is ""not now"""
+E-2026-11-05-90,2026-11-05,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-11-05: PASS, traded"
+E-2026-11-05-91,2026-11-05,live-pnl,ALPACA,§4,8,SU,"c4 paper book, 2026-11-05: PASS, traded"
+E-2026-11-06-90,2026-11-06,live-pnl,ALPACA,§4,8,SU,"cef paper book, 2026-11-06: PASS, traded"
+E-2026-11-06-91,2026-11-06,live-pnl,ALPACA,§4,8,SU,"c4 paper book, 2026-11-06: PASS, traded"

@@ -1,0 +1,34 @@
+1. NAV part vs discount part, unit book, active days (% of capital per year)
+        era  days  nav_ann_pct  nav_t  disc_ann_pct  disc_t  hold_ann_pct  hold_sr  vol_nav_pct  vol_disc_pct  vol_hold_pct  corr_daily  corr_25d  share_25d_nav_bigger_than_hold  share_25d_nav_neg_disc_pos
+    2010-14   384       -0.311 -0.132         9.953   2.062         9.642    1.631        3.413         6.167         5.910      -0.350    -0.194                           0.312                       0.375
+    2015-19  1258       -0.410 -0.442         5.447   1.822         5.037    0.719        2.216         6.995         7.008      -0.153     0.068                           0.255                       0.333
+    2020-22   756       -0.016 -0.012         7.117   2.180         7.101    1.084        2.317         6.824         6.550      -0.286    -0.450                           0.226                       0.323
+fit 2005-22  2398       -0.270 -0.363         6.695   3.289         6.425    0.959        2.475         6.813         6.698      -0.228    -0.198                           0.240                       0.375
+
+2. NAV-lag forecast known at t -> realised at t+2 (slope per unit forecast, NW t)
+  nav_part: {'slope': -0.004065704484473095, 'nw_t': -0.026730482478828213, 'n': 2398}
+  disc_part: {'slope': 0.005838906243767717, 'nw_t': 0.018217495726054227, 'n': 2398}
+  hold_NEGATIVE_CONTROL: {'slope': 0.001773201759294923, 'nw_t': 0.0069121598899436806, 'n': 2398}
+  corr_pred_navpart: -0.0010003252536952133
+  sd_pred_vs_sd_navpart: 0.24603983332173673
+  AR_nav_part: {'slope': 0.051692437508052774, 'nw_t': 0.4318203644590344, 'n': 2398}
+  AR_disc_part: {'slope': 0.18440735349741644, 'nw_t': 0.9321012818357253, 'n': 2398}
+  AR_hold_NEGATIVE_CONTROL: {'slope': 0.23609979100546916, 'nw_t': 1.1907258514842276, 'n': 2398}
+  AR_corr_pred_navpart: 0.013895307124058629
+
+3b. position-based hedge (per-name trailing betas x held weight), second method
+      series                names    n  oos_var_reduction   corr  hedge_mean_ann  hedge_nw_t
+hold (price)      MUB+HYG+IEF+LQD 2398            -0.0874 0.0990          0.0074      0.6905
+hold (price) MUB+HYG+IEF+LQD+BKLN 2398            -0.1365 0.0817          0.0080      0.6538
+
+3. hedgeable share (Dimson lags 0-2; OOS betas trailing 252 strictly before)
+             series                names      start        end    n  r2_in_sample  oos_var_reduction  factor_component_mean_ann  factor_component_nw_t
+       hold (price)      MUB+HYG+IEF+LQD 2013-06-25 2022-12-30 2398        0.0206            -0.2015                     0.0051                 0.5504
+       hold (price) MUB+HYG+IEF+LQD+BKLN 2013-06-25 2022-12-30 2398        0.0214            -0.3572                     0.0019                 0.1847
+       hold (price) MUB+HYG+IEF+LQD+BKLN 2015-01-02 2022-12-30 2014        0.0271            -0.4485                     0.0040                 0.3212
+hold (total return)      MUB+HYG+IEF+LQD 2013-06-25 2022-12-30 2398        0.0193            -0.2350                     0.0033                 0.3417
+hold (total return) MUB+HYG+IEF+LQD+BKLN 2013-06-25 2022-12-30 2398        0.0202            -0.3877                     0.0010                 0.0985
+hold (total return) MUB+HYG+IEF+LQD+BKLN 2015-01-02 2022-12-30 2014        0.0255            -0.4931                     0.0026                 0.2095
+           NAV part      MUB+HYG+IEF+LQD 2013-06-25 2022-12-30 2364        0.0322            -0.1752                     0.0003                 0.0701
+           NAV part MUB+HYG+IEF+LQD+BKLN 2013-06-25 2022-12-30 2364        0.0388            -0.1741                    -0.0009                -0.2022
+           NAV part MUB+HYG+IEF+LQD+BKLN 2015-01-02 2022-12-30 1980        0.0506            -0.1508                     0.0021                 0.4994

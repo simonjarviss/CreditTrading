@@ -45,8 +45,31 @@ Lines at `simon` dff4b5c. Nothing changed.
 2. **Dark:** row 2, plus a fidelity test against `build_book`.
    - *Divergences the fidelity test must declare* (added 2026-10-27 by step 1, `c4-step1`): **while `below_min_names = "hold"` lasts, `max_gross_stress` is effectively off.** The sleeve holds shares, so price drift can leave the book above 1.8x; the trial holds a weight-space target and caps it every day (`cef_discount.py`, the `min_names` block). Also PREREG_C4 §3 items 5 and 6 (`min_abs_weight` and whole shares; holdings, not the stored target, as the reference state).
 3. **Dark:** row 3; GETs only. Measure fetch time.
+   - *As built 2026-10-29 (`c4-step3-data`, zero trials):* `fetch_daily.py --data-book c4`, `fetch_cef_distributions.py --data-book c4` and the collector's `BOOKS["c4"]` write `data/cef_c4/` under its own lock. They cover the 74 frozen funds, use the NAV symbol map `results/cef/c4/c4_nav_symbols_2026-10-14.csv`, and read no CEFConnect. Books and paths are in `scripts/cef/data_books.py`. Without `--data-book`, every fetcher matches 29e5dc0 byte for byte.
+   - **Fetch time: UNMEASURED.** There was no network in the build.
+   - **Seed:** `data_books.py` SEED, not run. It refuses on IGR's four bars, 2026-07-29..08-11 [V: `data_guards.guard_closes` on `data/cef_families/`, read-only, 2026-10-29. These are the same four bars as `python3 scripts/cef/data_guards.py scan`, 2026-10-19].
+   - **Open:** the nightly spike guard has no rulings file. If Yahoo still serves IGR's four bars, every C4 fetch exits 6 until they leave the six-month window (about 2027-02) or a ruling path for the live panel is decided.
 4. Row 4.
 5. Row 6A (or 6S) and row 9, at `DRY_RUN=1` for at least 5 sessions.
+   - *Row 6A as built 2026-10-29 (`c4-row6a`, DARK):* the runner reads each sleeve's closes, NAV dates, pre-flight history and stale-NAV file from the panel its spec decides on (`quantt/session/run.py` PER-SLEEVE PANELS); `require_core_panel` is gone. The released book is byte-identical to 5e627ff, with `data.missing_nav` absent and set (`quantt/session/tests/test_panels_noop.py`). An absent panel, or a universe its own panel does not cover, FAILs the decide naming it. A non-core panel's refresh is refused at gate 5 until step 3's `--data-book` fills `run.refresh_flags`. Still open: `BOOKS["c4"]` and its book json, the installer units, and verify's distributions panel (row 8).
+   - *Integrated 2026-10-29 (`c4-integrate`, DARK, zero trials):*
+     - steps 2 and 3 and row 6A are merged onto main 35b429f;
+     - `run.refresh_flags` gives C4's panel `--data-book c4`;
+     - `BOOKS["c4"]` and `ops/books/c4_families_book.json` exist, with no stale-NAV
+       gate, the missing-NAV hold, report drawdown (UNMEASURED: the spec names no
+       levels) and the corporate-action gate in `halt`;
+     - verify scores against C4's own distributions panel (row 8);
+     - row 11 is built: `install_vm --book c4`, with `--eod-from` required.
+
+     The core's session and install are proved byte-identical to cee16ad
+     (release-20261029-3). Still open, for the team lead:
+     - the vault secrets;
+     - the seed;
+     - the release and install;
+     - the halve/kill levels;
+     - the cap re-derived before arming.
+
+     The steps are `results/ops/C4_DRY_RUN_CHECKLIST_2026-10-29.md`.
 6. Arm, on the team lead's go.
 
 ## 3. Decisions for the team lead

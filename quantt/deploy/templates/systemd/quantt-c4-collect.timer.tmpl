@@ -1,0 +1,21 @@
+# quantt-c4-collect.timer : every :10 and :40, every day: the core collector's
+# schedule (derived: install_vm._book_job). The collector works out the latest
+# data day itself and idles once that day is complete. It runs beside the core's
+# collector without contending for a lock: each locks its own state dir's
+# data/.collect.lock, and C4's fetch locks data/cef_c4/.fetch.lock.
+#
+# RENDERED by quantt/deploy/install_vm.py --book c4 from release tag ${TAG}.
+# Local time (the system zone must be America/New_York); Persistent=false;
+# AccuracySec=1s.
+[Unit]
+Description=QUANTT C4 data collector schedule (release ${TAG})
+
+[Timer]
+OnCalendar=*-*-* *:10:00
+OnCalendar=*-*-* *:40:00
+AccuracySec=1s
+Persistent=false
+Unit=quantt-c4-collect.service
+
+[Install]
+WantedBy=timers.target

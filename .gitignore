@@ -15,6 +15,19 @@ config/.env.*
 *.pyc
 .pytest_cache/
 results/**/_cache_*
+# The live attribution's cache (scripts/cef/live_attribution.py fetch): the cef
+# paper account's FILL activities and EOD equity series. This repository is
+# public; account fills are never committed (docs/REFERENCES.md §12an keeps the
+# series of record outside the repository for the same reason).
+results/cef/live_attribution/_cache/
+# Its analyse outputs carry the same account data (daily.csv holds the EOD equity
+# of every session); the tool refuses to write either where git can see it.
+results/cef/live_attribution/_out/
+results/cef/live_attribution/_out_c4/
+# The evidence pack's row-level live records (per name, per fill, positions). Team lead,
+# 2026-11-03: "Aggregates in repo, rows private". results/**/_cache_* covers it too; this line
+# says so by name, and scripts/report/tests pins it.
+results/report/_cache_live/
 .ipynb_checkpoints/
 *.log
 
@@ -96,3 +109,13 @@ results/events/cef_corp_action_events_full.csv
 # book's series can be a licensed security's return. The tracked ledger holds each
 # series' sha256.
 /results/research/trials/series/
+
+# Exposure readout (scripts/cef/exposure_readout.py, 2026-11-02, report only): the keyless
+# yfinance cache, and the analyse outputs, which carry the caller's positions and equity.
+# This repository is public; the module also refuses any path git can see.
+results/cef/exposure_readout/_cache/
+results/cef/exposure_readout/_out/
+results/cef/exposure_readout/_out_c4/
+
+# Generated site pages (dashboard/build.py, dashboard/site.py); rebuilt from a snapshot, never committed.
+/dashboard/out/

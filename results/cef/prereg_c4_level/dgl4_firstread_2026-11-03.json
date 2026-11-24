@@ -1,0 +1,113 @@
+{
+ "verdict": "HALT (a diff: stop and report)",
+ "sleeve_head": "3b4c963239a856e8598cbd3f67b2c981f5e2061c",
+ "a": {
+  "spec_id": "c4_families.v4.20261102",
+  "sessions": 907,
+  "first": "2005-01-03",
+  "last": "2022-12-30",
+  "trade_sessions": 829,
+  "hold_sessions": 78,
+  "sessions_matched": 907,
+  "session_match_rate": 1.0,
+  "cells_compared": 61346,
+  "cells_matched": 61346,
+  "cell_match_rate": 1.0,
+  "largest_gap": 0.0,
+  "tolerance": 1e-12,
+  "largest_unexplained_gap": null,
+  "kind_breaks": 0,
+  "breaks": [],
+  "n_breaks": 0,
+  "item5_sub_min_abs_names": 370,
+  "item5_of_held_names": 10092,
+  "item5_sessions": 267,
+  "min_abs_weight": 0.005
+ },
+ "b": {
+  "spec_id": "c4_families.v4.20261102",
+  "sessions": 907,
+  "first": "2005-01-03",
+  "last": "2022-12-30",
+  "trade_sessions": 829,
+  "hold_sessions": 78,
+  "sessions_matched": 901,
+  "session_match_rate": 0.9933847850055126,
+  "cells_compared": 61346,
+  "cells_matched": 61310,
+  "cell_match_rate": 0.9994131646725133,
+  "largest_gap": 0.04988168618153993,
+  "tolerance": 1e-12,
+  "largest_unexplained_gap": {
+   "date": "2005-03-09",
+   "kind": "weight",
+   "gap": 0.04988168618153993,
+   "ticker": "RNP",
+   "sleeve": -0.46612273073479465,
+   "trial": -0.5160044169163346,
+   "detail": "weight: largest gap 4.988e-02 on RNP (sleeve -0.466123, trial -0.516004)"
+  },
+  "kind_breaks": 0,
+  "breaks": [
+   {
+    "date": "2005-02-23",
+    "kind": "weight",
+    "gap": 0.02442784524708269,
+    "ticker": "UTF",
+    "sleeve": 0.20791492797139632,
+    "trial": 0.18348708272431363,
+    "detail": "weight: largest gap 2.443e-02 on UTF (sleeve +0.207915, trial +0.183487)"
+   },
+   {
+    "date": "2005-03-02",
+    "kind": "weight",
+    "gap": 0.01589431378856171,
+    "ticker": "RNP",
+    "sleeve": -0.3716182242311402,
+    "trial": -0.3875125380197019,
+    "detail": "weight: largest gap 1.589e-02 on RNP (sleeve -0.371618, trial -0.387513)"
+   },
+   {
+    "date": "2005-03-09",
+    "kind": "weight",
+    "gap": 0.04988168618153993,
+    "ticker": "RNP",
+    "sleeve": -0.46612273073479465,
+    "trial": -0.5160044169163346,
+    "detail": "weight: largest gap 4.988e-02 on RNP (sleeve -0.466123, trial -0.516004)"
+   },
+   {
+    "date": "2005-03-16",
+    "kind": "weight",
+    "gap": 0.032069373843281235,
+    "ticker": "RNP",
+    "sleeve": -0.38995730949027757,
+    "trial": -0.35788793564699634,
+    "detail": "weight: largest gap 3.207e-02 on RNP (sleeve -0.389957, trial -0.357888)"
+   },
+   {
+    "date": "2005-03-23",
+    "kind": "weight",
+    "gap": 0.016268419525964417,
+    "ticker": "IGR",
+    "sleeve": -0.41543645112269134,
+    "trial": -0.3991680315967269,
+    "detail": "weight: largest gap 1.627e-02 on IGR (sleeve -0.415436, trial -0.399168)"
+   },
+   {
+    "date": "2005-03-31",
+    "kind": "weight",
+    "gap": 0.0038269068093214065,
+    "ticker": "EVT",
+    "sleeve": 0.3221848512850318,
+    "trial": 0.3183579444757104,
+    "detail": "weight: largest gap 3.827e-03 on EVT (sleeve +0.322185, trial +0.318358)"
+   }
+  ],
+  "n_breaks": 6,
+  "item5_sub_min_abs_names": 393,
+  "item5_of_held_names": 10092,
+  "item5_sessions": 270,
+  "min_abs_weight": 0.005
+ }
+}

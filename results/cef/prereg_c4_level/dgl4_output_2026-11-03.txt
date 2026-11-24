@@ -1,0 +1,4 @@
+CEF trial 54, DG-L4 against the sleeve at 3b4c963 (c4-level-impl): C4 spec c4_families.v4.20261102
+  (a, key absent vs build_book) sessions 907 (2005-01-03..2022-12-30), matched 907, cells 61346/61346, largest gap 0.0, breaks 0
+  (b, key present vs the trial's blend) sessions 907 (2005-01-03..2022-12-30), matched 907, cells 61346/61346, largest gap 5.551115123125783e-16, breaks 0
+  CLEAR

@@ -1,0 +1,299 @@
+"""The exporter: the runners' records in, a clean snapshot out; every gap a gap; nothing private."""
+import datetime as dt
+import json
+
+import pytest
+
+from dashboard import export as E, snapshot as S
+from dashboard.tests import synth
+
+NOW = dt.datetime(2026, 11, 23, 23, 20, tzinfo=dt.timezone.utc)
+
+
+@pytest.fixture
+def state(tmp_path):
+    return synth.make_state(tmp_path)
+
+
+def snap_of(state):
+    st, sb = state
+    return E.export(st, sb, NOW)
+
+
+def book(snap, name):
+    return next(b for b in snap["books"] if b["name"] == name)
+
+
+def test_a_full_night_exports_clean(state):
+    s = snap_of(state)
+    assert E.check(s) == [], E.check(s)
+    assert [b["name"] for b in s["books"]] == ["cef", "c4", "events"]
+    assert s["exported_at_utc"] == "2026-11-23T23:20:00Z" and s["synthetic"] is False
+
+
+def test_official_rows_are_alpacas_and_the_read_time_is_theirs(state):
+    o = book(snap_of(state), "cef")["official"]
+    assert o["label"] == "broker-confirmed" and o["read_at"] == "2026-11-21T08:40:04Z"
+    assert o["value"]["rows"][0] == {"date": "2026-11-16", "equity": 100000.0, "change_usd": None}
+    assert o["value"]["rows"][-1]["change_usd"] == -50.0
+
+
+def test_the_session_is_the_newest_day_that_has_a_reconcile_not_a_plan_directory(state):
+    v = book(snap_of(state), "cef")["session"]["value"]
+    assert v["date"] == "2026-11-20" and v["verdict"] == "PASS"
+    eq = v["equity_snapshot"]["equity"]
+    # AAA +100 at 10 and BBB -50 at 20: aggregates only (team lead, 2026-11-23)
+    assert v["positions"] == {"n": 2, "n_long": 1, "n_short": 1, "n_unpriced": 0, "gross_usd": 2000.0,
+                              "net_usd": 0.0, "gross_x": 2000.0 / eq, "net_x": 0.0}
+    assert v["orders"] == {"n": 1, "n_filled": 1, "n_partial": 0, "n_unfilled": 0, "fill_rate_shares": 1.0}
+    assert v["n_notes"] == 0 and v["equity_snapshot"]["change_usd"] == -40.0
+
+
+def test_order_and_fill_ids_never_reach_the_snapshot(state):
+    text = json.dumps(snap_of(state))
+    for leak in ("client_order_id", "order_id", "b3a7e512", "cef-20261120-AAA-1", "2baa43f0", "/home/"):
+        assert leak not in text, leak
+
+
+def test_the_newest_risk_report_is_read_and_its_paths_are_not_copied(state):
+    r = book(snap_of(state), "cef")["risk"]
+    assert r["value"]["asof"] == "2026-11-20" and r["value"]["severity"] == "WATCH"
+    assert r["value"]["gross"] == 1.5 and r["value"]["largest_share"] is not None
+    assert "AAA" not in json.dumps(r)                       # the largest position's share, never its name
+    assert r["read_at"] == "2026-11-21T10:45:00Z" and r["label"] == "modelled"
+
+
+def test_the_event_book_reads_verify_json_and_its_strategy_scores(state):
+    ev = book(snap_of(state), "events")
+    assert ev["official"] == {"absent": "no end-of-day equity history is recorded for this account yet"}
+    v = ev["session"]["value"]
+    assert v["date"] == "2026-11-23" and v["verdict"] == "PASS"
+    # CCC -7 at 30; the zero line for DDD is not a position
+    assert v["positions"]["n"] == 1 and v["positions"]["n_short"] == 1
+    assert v["positions"]["gross_usd"] == 210.0 and v["positions"]["net_usd"] == -210.0
+    assert v["orders"]["n"] == 1 and v["orders"]["n_filled"] == 1
+    assert v["equity_snapshot"]["change_usd"] == 10.0
+    slugs = [r["slug"] for r in ev["sleeves"]["value"]["rows"]]
+    assert slugs == ["cef_exdate_after", "uit_termination", "_book"]
+    assert "absent" in ev["risk"] and "absent" in ev["execution"]
+
+
+def test_the_shadow_scoreboard_is_simulated_and_stops_at_its_first_table(state):
+    sh = snap_of(state)["shadow"]
+    assert sh["label"] == "simulated" and sh["value"]["asof"] == "2026-11-20"
+    rows = sh["value"]["rows"]
+    assert [r["book"] for r in rows] == ["month_end_ief", "units_exdate_after"]
+    assert rows[0]["pnl_total"] is None and rows[1]["pnl_total"] == 20674.0
+    assert rows[1]["max_drawdown"] == pytest.approx(-0.0197)
+
+
+def test_a_corrupt_eod_file_is_unmeasured_never_a_number(state):
+    st, _ = state
+    (st / "cef" / "eod_equity.csv").write_text(synth.EOD_HEAD + "2026-11-16,abc,,2026-11-21T08:40:04+00:00\n")
+    o = book(snap_of(state), "cef")["official"]
+    assert S.UNMEASURED in o and "not a number" in o[S.UNMEASURED]
+
+
+def test_a_missing_column_is_named(state):
+    st, _ = state
+    (st / "cef" / "eod_equity.csv").write_text("date,equity\n2026-11-16,1\n")
+    assert "change_usd" in book(snap_of(state), "cef")["official"][S.UNMEASURED]
+
+
+def test_a_missing_book_directory_is_unmeasured_in_every_section(state):
+    st, _ = state
+    import shutil
+    shutil.rmtree(st / "c4")
+    b = book(snap_of(state), "c4")
+    assert all(S.UNMEASURED in b[k] for k in ("official", "session", "risk", "execution", "sleeves"))
+
+
+def test_a_missing_scoreboard_is_unmeasured(state, tmp_path):
+    st, _ = state
+    sh = E.export(st, tmp_path / "nope.md", NOW)["shadow"]
+    assert S.UNMEASURED in sh
+
+
+def test_a_verdict_for_another_day_is_refused(state):
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    r["verdict"] = "2026-11-19 PASS cef traded"
+    p.write_text(json.dumps(r))
+    assert S.UNMEASURED in book(snap_of(state), "cef")["session"]
+
+
+def test_note_text_is_counted_never_copied(state):
+    """Aggregates only (team lead, 2026-11-23): a note can name a symbol, a share count or an order id."""
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    r["problems"] = ["could not read /home/quantt/quantt_state/cef/x.json", "PDI holds +29 with no close"]
+    p.write_text(json.dumps(r))
+    s = snap_of(state)
+    assert book(s, "cef")["session"]["value"]["n_notes"] == 2
+    assert "PDI" not in json.dumps(s) and "could not read" not in json.dumps(s)
+    assert E.check(s) == []
+
+
+def test_main_refuses_a_dirty_snapshot_and_writes_nothing(state, tmp_path, monkeypatch, capsys):
+    st, sb = state
+    real = E.export
+    monkeypatch.setattr(E, "export", lambda *a, **k: {**real(*a, **k), "note": "PKABCDEFGHIJKLMNOPQRS"})
+    out = tmp_path / "snap.json"
+    assert E.main(["--state-root", str(st), "--shadow-scoreboard", str(sb), "-o", str(out)]) == 2
+    assert not out.exists() and "refused" in capsys.readouterr().err
+
+
+def test_main_writes_the_snapshot(state, tmp_path):
+    st, sb = state
+    out = tmp_path / "snap.json"
+    assert E.main(["--state-root", str(st), "--shadow-scoreboard", str(sb), "-o", str(out)]) == 0
+    assert S.validate(json.loads(out.read_text())) == []
+
+
+def test_an_empty_change_after_funding_is_that_books_gap_not_a_failed_site(state):
+    """Release-check review, 2026-11-23: one empty change_usd used to stop the whole site build."""
+    st, _ = state
+    p = st / "cef" / "eod_equity.csv"
+    p.write_text(p.read_text().replace("2026-11-19,100100.0,200.0,", "2026-11-19,100100.0,,"))
+    s = snap_of(state)
+    assert S.UNMEASURED in book(s, "cef")["official"] and "no change_usd" in book(s, "cef")["official"][S.UNMEASURED]
+    assert "value" in book(s, "c4")["official"]
+    from dashboard import build as B
+    assert "Fixed Income Book" in B.render(s)
+
+
+def test_order_ids_in_a_verify_note_never_reach_the_snapshot(state):
+    """2026-11-23: the event book's first send listed its 173 rejected order ids in verify's reason and
+    problems, and the list reached the public page. Notes are now counted, and an id in an error text
+    (an UNMEASURED reading is published) is withheld."""
+    st, _ = state
+    p = st / "events" / "2026-11-23" / "verify.json"
+    v = json.loads(p.read_text())
+    ids = ["events-20261123-WRLD-1", "events-20261123-BRK.B-2"]
+    v["ok"] = False
+    v["reason"] = f"the send ended FAIL: 2 order(s) rejected by Alpaca {ids!r}"
+    v["fails"] = [f"{ids[0]}: Alpaca says filled_qty 0"]
+    p.write_text(json.dumps(v))
+    s = snap_of(state)
+    sess = book(s, "events")["session"]["value"]
+    assert sess["verdict"] == "FAIL" and sess["n_notes"] == 1
+    assert "events-20261123" not in json.dumps(s) and "WRLD" not in json.dumps(s) and E.check(s) == []
+    assert E.scrub(f"rejected {ids!r}") == "rejected (order ids withheld)"
+    assert E.scrub(f"{ids[0]}: HTTP 429") == "<order id>: HTTP 429"
+
+
+def test_an_unreadable_position_does_not_name_its_symbol(state):
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    r["positions_after"]["ZZZ"] = "lots"
+    p.write_text(json.dumps(r))
+    sess = book(snap_of(state), "cef")["session"]
+    assert S.UNMEASURED in sess and "ZZZ" not in sess[S.UNMEASURED] and "a position's quantity" in sess[S.UNMEASURED]
+
+
+def test_the_privacy_check_refuses_an_order_id():
+    assert any("client order id" in x for x in S.find_private({"basis": "see c4-20261120-PDI-1"}))
+    assert S.find_private({"basis": "events/2026-11-23/verify.json"}) == []
+
+
+def test_the_first_send_is_the_oldest_day_with_started_not_a_dry_run(state):
+    st, _ = state
+    s = snap_of(state)
+    assert book(s, "events")["start"]["value"]["first_send"] == "2026-11-23"
+    assert book(s, "cef")["start"]["value"]["first_send"] == "2026-11-17" and book(s, "cef")["start"]["label"] == "recorded"
+    (st / "events" / "2026-11-23" / "STARTED").unlink()
+    assert book(snap_of(state), "events")["start"] == {"absent": "no session has sent an order yet"}
+
+
+def test_the_event_books_after_close_readings_are_its_daily_record(state):
+    ev = book(snap_of(state), "events")
+    rows = ev["after_close"]["value"]["rows"]
+    assert [r["date"] for r in rows] == ["2026-11-20", "2026-11-23"] and rows[-1]["change_usd"] == 10.0
+    assert book(snap_of(state), "cef")["after_close"] == {"absent": "the official end-of-day history is this book's daily record"}
+
+
+def test_exposure_is_not_measured_when_a_close_is_missing(state):
+    """Release-check review, 2026-11-23: summed over the priced names only, a book with every close
+    missing showed 0.00x. Any unpriced name now withholds gross and net."""
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    del r["auction_prints_d"]["prices"]["BBB"]
+    p.write_text(json.dumps(r))
+    pos = book(snap_of(state), "cef")["session"]["value"]["positions"]
+    assert pos["n"] == 2 and pos["n_unpriced"] == 1
+    assert pos["gross_usd"] is None and pos["net_usd"] is None and pos["gross_x"] is None and pos["net_x"] is None
+    from dashboard import build as B
+    h = B.render(snap_of(state))
+    assert "not measured: 1 position has no close on record" in h and "Gross exposure at the close" not in h.split(
+        "Fixed Income Book")[1].split("Equity Cross-Asset Book")[0]
+
+
+def test_a_core_fails_unmeasured_items_are_counted_as_notes(state):
+    """verify.py writes a core FAIL's unmeasured items only into the verdict line, never into problems."""
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    r["verdict"] = ("2026-11-20 FAIL UNMEASURED auction print for AAA; UNMEASURED official change | "
+                    "traded 1 order(s), 1 filled; P&L pending")
+    r["problems"] = []
+    p.write_text(json.dumps(r))
+    v = book(snap_of(state), "cef")["session"]["value"]
+    assert v["verdict"] == "FAIL" and v["n_notes"] == 2
+
+
+def _verify(st, day, equity, last, change, asof):
+    d = st / "events" / day
+    d.mkdir(exist_ok=True)
+    (d / "plan.json").write_text(json.dumps({"session_date": day, "asof": asof}))
+    v = json.loads((st / "events" / "2026-11-23" / "verify.json").read_text())
+    v.update(session_date=day, equity={"equity": equity, "last_equity": last, "change_usd": change})
+    (d / "verify.json").write_text(json.dumps(v))
+
+
+def test_a_traded_session_without_a_reading_is_a_gap_not_skipped(state):
+    """Release-check review of 904bd35: a session missing its verify.json vanished from the record,
+    understating the P&L (+$500 shown for +$1,500)."""
+    st, _ = state
+    (st / "events" / "2026-11-24").mkdir()                                  # verified? no: a gap
+    _verify(st, "2026-11-25", 101510.0, 100510.0, 1000.0, "2026-11-24")
+    ac = book(snap_of(state), "events")["after_close"]
+    assert S.UNMEASURED in ac and "2026-11-24: a traded session has no verify.json" in ac[S.UNMEASURED]
+
+
+def test_the_newest_session_not_yet_verified_is_pending_not_a_gap(state):
+    st, _ = state
+    (st / "events" / "2026-11-24").mkdir()                                  # tonight's plan, verify not run yet
+    rows = book(snap_of(state), "events")["after_close"]["value"]["rows"]
+    assert [r["date"] for r in rows] == ["2026-11-20", "2026-11-23"]
+
+
+def test_a_missing_session_directory_is_caught_by_its_plans_date(state):
+    """Release-check review of 455eff4: an equity tolerance let a $1,000 session through on a $1M
+    account. 11-25's plan was decided on 11-24, a session with no directory at all."""
+    st, _ = state
+    _verify(st, "2026-11-25", 100011.0, 100010.5, 0.5, "2026-11-24")        # equity looks continuous; the date is not
+    ac = book(snap_of(state), "events")["after_close"]
+    assert S.UNMEASURED in ac and "decided on 2026-11-24, not on the last reading's session 2026-11-23" in ac[S.UNMEASURED]
+
+
+def test_consecutive_readings_join_into_the_record(state):
+    st, _ = state
+    _verify(st, "2026-11-24", 100510.0, 100010.0, 500.0, "2026-11-23")
+    rows = book(snap_of(state), "events")["after_close"]["value"]["rows"]
+    assert [(r["date"], r["change_usd"]) for r in rows] == [("2026-11-20", None), ("2026-11-23", 10.0), ("2026-11-24", 500.0)]
+
+
+def test_the_record_s_pnl_is_the_move_between_readings_whatever_the_after_hours_drift(state):
+    """Release-check review of 0a4852b: summing Alpaca's change from its official close lost the drift
+    between each after-close reading and the next close (+$700 shown, +$200 moved)."""
+    st, _ = state
+    # 11-23 read 100,010 after the close; the official 11-23 close was 100,300 (11-24's last_equity);
+    # 11-24 read 100,210, Alpaca's change from its close -90. The account moved +200 over 11-23..11-24.
+    _verify(st, "2026-11-24", 100210.0, 100300.0, -90.0, "2026-11-23")
+    rows = book(snap_of(state), "events")["after_close"]["value"]["rows"]
+    assert [r["change_usd"] for r in rows[1:]] == [10.0, 200.0]
+    assert sum(r["change_usd"] for r in rows[1:]) == rows[-1]["equity"] - rows[0]["equity"]

@@ -23,10 +23,14 @@ WHAT IS PROVED HERE
      has since 10-21) and the drawdown check in `report`.
        * `test_synthetic_key_absent_is_bd87144` NEVER SKIPS: the generated
          13-fund panel of test_combine_noop.py and its fixture spec.
-       * `test_real_panel_key_absent_is_bd87144`: the real sleeve, the live spec
-         and a copy of the real panels through 2026-09-25 (test_combine_noop's
-         input pin); it warns and skips when the copy or the spec is not what
-         the pin was made on.
+       * `test_real_panel_key_absent_is_bd87144`: the real sleeve, a copy of the
+         real panels through 2026-09-25 (test_combine_noop's input pin), and the
+         core's spec AS IT WAS BEFORE CEF TRIAL 53 (v7), read from git at 35b429f
+         (test_combine_noop's `pre_trial_spec`). Until 2026-11-01 this read the
+         live spec, which then was v7. bd87144's code cannot run v8's
+         `sizing_multiplier`, so the code-versus-code proof keeps v7, and
+         survives the activation. It warns and skips when the copy or that spec
+         is not what the pin was made on, or when git cannot show it.
      HOW THE PINS WERE MADE: `git archive bd87144` into a scratch directory
      (the real data/ symlinked in, read only), this file copied into that tree,
      and `print_pins()` run there unseeded and under PYTHONHASHSEED 1; then on
@@ -62,6 +66,7 @@ from quantt.session import run as rn
 from quantt.session.tests.test_combine_noop import (
     LIVE_SPEC_PATH,
     PINNED_INPUT as COMBINE_PINNED_INPUT,
+    pre_trial_spec,
     SYN_SPEC,
     SYN_TICKERS,
     RealPanelPinNotApplicable,
@@ -276,12 +281,16 @@ def _synthetic_pins(work: Path, mp) -> dict:
 
 
 def _real_pins(work: Path, mp) -> dict | None:
-    """None when the real copy or the live spec is not what the pin was made on."""
-    spec = json.loads(LIVE_SPEC_PATH.read_text())
+    """None when git cannot show the pre-trial spec, or the real copy or that spec is not
+    what the pin was made on."""
+    pre = pre_trial_spec()
+    if pre is None:
+        return None
+    raw, spec = pre
     base = work / "base"
     base.mkdir(parents=True)
     got = {"panel": _frozen_copy(base, mp, spec["frozen"]["universe"]),
-           "spec": _sha(LIVE_SPEC_PATH.read_bytes())}
+           "spec": _sha(raw)}
     if got != COMBINE_PINNED_INPUT:
         return None
     return _absent_scenarios(work, base, mp, spec, REAL_MISSING)
@@ -462,8 +471,9 @@ def test_real_panel_key_absent_is_bd87144(tmp_path, monkeypatch):
     got = _real_pins(tmp_path, monkeypatch)
     if got is None:
         why = (f"REAL-PANEL MISSING-NAV NO-OP PIN NOT APPLIED: it was made on panel/spec "
-               f"{COMBINE_PINNED_INPUT} (test_combine_noop's input pin); this tree's copy "
-               f"differs. The synthetic pin still runs")
+               f"{COMBINE_PINNED_INPUT} (test_combine_noop's input pin; the spec is the "
+               f"pre-trial v7, read from git); this tree's copy differs, or git cannot show "
+               f"that spec. The synthetic pin still runs")
         import warnings
         warnings.warn(why, RealPanelPinNotApplicable)
         pytest.skip(why)
@@ -805,11 +815,16 @@ def test_a_combined_book_with_the_key_fails_naming_it(tmp_path, monkeypatch):
     base = _synthetic_base(tmp_path, monkeypatch)
     _scenario_panel(base, tmp_path / "p", monkeypatch, ASOF)
     from quantt.session import combine as cmb
+    from quantt.session.tests.test_combine_noop import combinable
+    # The live spec without `sizing_multiplier` (CEF trial 53): a combined book refuses that key
+    # first (combine.py, ONE SIZING AUTHORITY PER BOOK), and this test is about missing_nav.
+    sp = tmp_path / "live_combinable.frozen.json"
+    sp.write_text(json.dumps(combinable(json.loads(LIVE_SPEC_PATH.read_text()))))
     bj = tmp_path / "book.json"
     bj.write_text(json.dumps({"book_id": "t", "sleeves": [
         {"name": "cef_discount", "enabled": True,
-         "spec_path": LIVE_SPEC_PATH.relative_to(rn.REPO).as_posix(), "risk_budget": 1.0}]}))
-    sleeves = cmb.load_sleeves(bj, LIVE_SPEC_PATH, rn.REPO, rn._sleeve_target_fn)
+         "spec_path": sp.name, "risk_budget": 1.0}]}))
+    sleeves = cmb.load_sleeves(bj, sp, tmp_path, rn._sleeve_target_fn)
     state = tmp_path / "state"
     state.mkdir()
     from quantt.session.tests.test_run import FakeClient

@@ -169,8 +169,38 @@ WHAT CLEARS A HALT.
     the team lead (CLAUDE.md order-path rule 1). docs/RUNBOOK.md,
     "Corporate-action halt", is the procedure, including the phantom P&L paper
     keeps.
-There is no per-event acknowledgement. Its shape would need a ruling, and
-`report` already says "send anyway, recorded".
+  * By the team lead's ACKNOWLEDGEMENT of that action's id (ACKNOWLEDGEMENTS
+    below; ruling 2026-10-29). Until that ruling there was none.
+
+ACKNOWLEDGEMENTS (team lead, 2026-10-29, on the review of 4c63b1f). A name
+change, redemption, worthless removal or partial call carries no ex or
+effective date, only process_date, so `date` IS its process date and a
+BACKFILLED one (processed long after it happened) matches the long window as if
+it had just happened. Under `halt` it then refuses every session, and a
+corrective order may be impossible (a redeemed or removed security) or
+pointless (the action predates the holding). The ruling: the team lead may
+acknowledge one action by its Alpaca id, with a one-line reason, recorded in
+`<state>/ca_acks.json` (ACKS_FILE). Only `python3 -m quantt.session ca-ack`
+writes it (`run.ca_ack_main`: it confirms the id in the feed, read-only, and
+writes atomically, with the row exactly as Alpaca listed it). The gate then
+clears THAT ID ONLY: every other action, a new one on the same fund included,
+still blocks. And only WHILE THE ROW IS UNCHANGED (release-check of 9cf5cf2,
+2026-11-01): the feed's current row for that id must equal the acknowledged
+row field for field (dates, parties, ratio, every other field), and its TYPE
+must still be the acknowledged one (release-check of 709d6cb, 2026-11-02: the
+raw row carries no type, so a row moved from one list to another was
+"unchanged"). Otherwise the action blocks again, its record carrying
+`ack_mismatch` and its refusal naming each change. A revised action is a
+different action from the one the team lead judged, so it needs a new
+acknowledgement. An UNRESOLVED row (a missing party symbol; docs/SYSTEM.md §5, team lead 2026-11-02 (unresolved corporate-action rows)) is
+acknowledged the same way, by its id, or by the hash key
+(`alpaca.ca_row_key`) when its id is null too. The cleared pairs stay in the
+record under `acknowledged`, with the acknowledgement, and in the log. An id no
+longer in the feed is harmless. A file that cannot be read or does not parse
+(`parse_acks`) is never read as empty: the gate is UNMEASURED and, under
+`halt`, refuses. No file at all is no acknowledgement, the state before the
+ruling. Any type can be acknowledged; acknowledging a split or a merger clears
+the halt without fixing the count, which docs/RUNBOOK.md §6.1 says.
 
 BE CONSERVATIVE: EVERY PARTY BLOCKS. A held or targeted name blocks in any role
 the event gives it, on the window its role and match call for (TWO WINDOWS). That
@@ -210,6 +240,12 @@ REPORT, HALT = "report", "halt"
 MODES = (REPORT, HALT)
 
 CLEAR, BLOCKING, UNMEASURED = "CLEAR", "BLOCKING", "UNMEASURED"
+
+# The team lead's acknowledgements, in the book's state dir (ACKNOWLEDGEMENTS).
+ACKS_FILE = "ca_acks.json"
+# The four types dated by process_date alone, whose backfills the ruling is for.
+PROCESS_DATE_TYPES = frozenset({"name_change", "redemption", "worthless_removal",
+                                "partial_call"})
 
 # The three merger types: an ACQUIRER in any of them is judged on the short
 # window, on its market date only (module docstring, TWO WINDOWS).
@@ -317,6 +353,8 @@ def query_window(win: dict) -> tuple[dt.date, dt.date]:
 
 # Which rule judged a blocking pair (module docstring, TWO WINDOWS).
 LONG, SHORT_PROCESS = "long", "short: process_date only"
+UNDATED_RULE = ("unreadable: its dates or terms cannot be read, so it is inside every "
+                "window")
 SHORT_ACQUIRER, SHORT_ALLOCATED = "short: merger acquirer", "short: reorganization allocated"
 
 
@@ -360,13 +398,59 @@ def blocking_events(events, *, held: dict, targets, asof: dt.date,
       * otherwise its market date inside the name's long window (THE WINDOW);
       * otherwise its process date alone inside (as-of, session].
     Each pair records the rule, the window (as inclusive calendar dates) and
-    the dates that fell inside it. Pure: no clock, no network."""
+    the dates that fell inside it. Pure: no clock, no network.
+
+    UNRESOLVED ROWS (docs/SYSTEM.md §5, team lead 2026-11-02 (unresolved
+    corporate-action rows)). An event with `missing` parties
+    (AlpacaClient.corporate_actions, UNRESOLVED ROWS) is judged on its
+    present parties as above, and each missing party is treated as EACH of
+    the gate's names in turn, in the missing field's role, on the same
+    windows: it blocks exactly when a well-formed row of that type and those
+    dates would block for one of them. Each such pair names the missing field
+    (`unresolved`) and the name it was treated as. If none blocks, the event
+    blocks nothing and `check` records it only (`unresolved` in the record).
+    The gate's names are its held AND targeted names (`windows`), the names a
+    well-formed row is judged for; a target-only name is priced at the as-of
+    close, as a held one is."""
     win = windows(held, targets, asof, session_date)
     # (as-of, session], open at the as-of (TWO WINDOWS: one session). Dates are
     # whole calendar days, so this is [as-of + 1 day, session] exactly.
     short_w = (asof + dt.timedelta(days=1), session_date)
     out = []
     for e in events:
+        if e.get("undated") or e.get("faults"):
+            # UNDATED (AlpacaClient `_ca_unresolved`): its dates cannot be read, so
+            # it is treated as inside every window (fail-closed): each missing
+            # party, as each of the gate's names, and each present party that is
+            # one of them, blocks. Only the team lead's ca-ack, by its hash key,
+            # clears it.
+            for sym in win:
+                hits = [(u["role"], u["field"]) for u in e.get("missing", ())]
+                hits += [(role, None) for s2, role in e["parties"] if s2 == sym]
+                for role, field in hits:
+                    b = {"symbol": sym, "role": role, "held": sym in held,
+                         "id": e["id"], "type": e["type"], "date": e["date"],
+                         "date_field": e["date_field"], "process_date": e["process_date"],
+                         "rule": UNDATED_RULE,
+                         "in_window": sorted({**e.get("undated", {}), **e.get("faults", {})}),
+                         "window": list(win[sym]), "parties": e["parties"],
+                         "undated": {**e.get("undated", {}), **e.get("faults", {})}}
+                    if field is not None:
+                        b.update(unresolved=field, row_id=e.get("row_id"))
+                    out.append(b)
+            continue
+        for u in e.get("missing", ()):
+            for sym in win:
+                m = _match(e, u["role"], win[sym], short_w)
+                if m is None:
+                    continue
+                rule, (lo, hi), hits = m
+                out.append({"symbol": sym, "role": u["role"], "held": sym in held,
+                            "unresolved": u["field"], "row_id": e.get("row_id"),
+                            "id": e["id"], "type": e["type"], "date": e["date"],
+                            "date_field": e["date_field"], "process_date": e["process_date"],
+                            "rule": rule, "in_window": hits, "window": [lo, hi],
+                            "parties": e["parties"]})
         for sym, role in e["parties"]:
             if sym not in win:
                 continue
@@ -374,20 +458,92 @@ def blocking_events(events, *, held: dict, targets, asof: dt.date,
             if m is None:
                 continue
             rule, (lo, hi), hits = m
-            out.append({"symbol": sym, "role": role, "held": sym in held,
-                        "id": e["id"], "type": e["type"], "date": e["date"],
-                        "date_field": e["date_field"], "process_date": e["process_date"],
-                        "rule": rule, "in_window": hits, "window": [lo, hi],
-                        "parties": e["parties"]})
-    return sorted(out, key=lambda b: (b["date"], b["symbol"], b["type"], b["id"]))
+            b = {"symbol": sym, "role": role, "held": sym in held,
+                 "id": e["id"], "type": e["type"], "date": e["date"],
+                 "date_field": e["date_field"], "process_date": e["process_date"],
+                 "rule": rule, "in_window": hits, "window": [lo, hi],
+                 "parties": e["parties"]}
+            if "row_id" in e:         # keyed by its hash (AlpacaClient `_ca_key_events`)
+                b.update(row_id=e["row_id"], conflict=bool(e.get("conflict")))
+            out.append(b)
+    return sorted(out, key=lambda b: (b["date"] or dt.date.min, b["symbol"], b["type"], b["id"]))
+
+
+def parse_acks(obj, book: str) -> dict:
+    """{action id: entry} from `<state>/ca_acks.json`'s parsed JSON
+    (ACKNOWLEDGEMENTS). Raises, naming the fault, on anything but
+    {"acks": [{"id", "reason", "acked_utc", "book", ...}, ...]} with a
+    non-empty id, a one-line non-empty reason, an aware ISO UTC time, this book,
+    and no id twice: a file that does not say what it acknowledges is never
+    read as acknowledging nothing."""
+    from quantt.broker.alpaca import parse_ts
+    if not isinstance(obj, dict) or not isinstance(obj.get("acks"), list):
+        raise ValueError(f"{ACKS_FILE}: expected {{\"acks\": [...]}}, got {type(obj).__name__}")
+    out = {}
+    for i, e in enumerate(obj["acks"]):
+        where = f"{ACKS_FILE} acks[{i}]"
+        if not isinstance(e, dict):
+            raise ValueError(f"{where}: not an object")
+        aid, reason = e.get("id"), e.get("reason")
+        if not isinstance(aid, str) or not aid.strip():
+            raise ValueError(f"{where}: id {aid!r} is not an action id")
+        if not isinstance(reason, str) or not reason.strip() or "\n" in reason or "\r" in reason:
+            raise ValueError(f"{where} ({aid}): reason {reason!r} is not one non-empty line")
+        parse_ts(e.get("acked_utc"), f"{where} ({aid}) acked_utc")
+        if e.get("book") != book:
+            raise ValueError(f"{where} ({aid}): book {e.get('book')!r} is not {book!r}")
+        if not (isinstance(e.get("event"), dict) and isinstance(e["event"].get("type"), str)):
+            raise ValueError(f"{where} ({aid}): event {e.get('event')!r} does not say the "
+                             f"action type acknowledged, so the acknowledgement cannot be checked")
+        if "row" not in e:
+            raise ValueError(f"{where} ({aid}): row None is not the feed row acknowledged "
+                             f"(no `row`), so the acknowledgement cannot be checked")
+        if ack_row_canonical(e) is None:
+            raise ValueError(f"{where} ({aid}): row_canonical {e.get('row_canonical')!r:.80} is "
+                             f"not the canonical form of its row, so the acknowledgement "
+                             f"cannot be checked")
+        if aid in out:
+            raise ValueError(f"{where}: {aid} is acknowledged twice")
+        out[aid] = e
+    return out
+
+
+def ack_row_canonical(entry: dict) -> str | None:
+    """The canonical form an acknowledgement matches on (`alpaca.ca_row_canonical`),
+    or None when the entry's `row_canonical` disagrees with its `row`. ONE
+    validator for both sides: `ca-ack` writes `row` and `row_canonical`, and
+    `parse_acks` and the gate read them through this, so any row the feed can
+    serve (an object or not, with a NaN or not) can be acknowledged and read
+    back (execution-trader, 2026-11-02, reproduced). An entry written before
+    `row_canonical` existed is matched on the canonical form of its `row`."""
+    from quantt.broker.alpaca import ca_row_canonical
+    canon = ca_row_canonical(entry["row"])
+    given = entry.get("row_canonical", canon)
+    return canon if isinstance(given, str) and given == canon else None
 
 
 def check(fetch, closed_orders, positions: dict, targets, asof: dt.date,
-          session_date: dt.date, mode: str) -> dict:
+          session_date: dt.date, mode: str, *, universe=None, acks: dict | None = None) -> dict:
     """The gate's record for one session (module docstring). `fetch(symbols,
     start, end)` is `AlpacaClient.corporate_actions`. Raises on anything it
     cannot measure; run.py `_corporate_actions` turns that into UNMEASURED (and,
-    under `halt`, a refusal)."""
+    under `halt`, a refusal).
+
+    `universe` (the book's symbols; run.py always passes it): the fetch skips a
+    row whose every party symbol is present and none ours, while a non-party
+    field is malformed, and hands it back (`skipped_malformed` in the record,
+    only when there is one); and returns a row with a missing party symbol as
+    an UNRESOLVED event (docs/SYSTEM.md §5, team lead 2026-11-02 (unresolved corporate-action rows)), which `blocking_events` judges as each of
+    the gate's names and the record lists under `unresolved`, only when there
+    is one. None, the default, is the read
+    before the 2026-10-29 ruling: any malformed row raises. `acks`
+    (`parse_acks`, or None for no file): a blocking pair whose action id is
+    acknowledged, and whose every current feed row equals the acknowledged row
+    (the fetch's `rows`), leaves `blocking` for `acknowledged`, added only when
+    one is, provided the acknowledged TYPE is still its type; a changed row or
+    type stays blocking with `ack_mismatch` (ACKNOWLEDGEMENTS).
+    Absent both, the record is exactly as before, and the fetch is called as
+    before."""
     if mode not in MODES:
         raise ValueError(f"corporate-action mode {mode!r} is not one of {MODES}")
     held = held_since(closed_orders, [s for s, q in positions.items() if q])
@@ -399,11 +555,70 @@ def check(fetch, closed_orders, positions: dict, targets, asof: dt.date,
         return {**rec, "status": CLEAR, "query": None, "events": [], "blocking": [],
                 "note": "nothing held and nothing targeted: no name to check"}
     qs, qe = query_window(win)
-    events = fetch(list(win), qs, qe)
+    skipped, rows, kw = None, None, {}
+    if universe is not None:
+        skipped = []
+        kw.update(universe=sorted(set(universe)), skipped=skipped)
+    if acks:
+        rows = {}
+        kw["rows"] = rows
+    events = fetch(list(win), qs, qe, **kw)
     blocking = blocking_events(events, held=held, targets=targets, asof=asof,
                                session_date=session_date)
-    return {**rec, "status": BLOCKING if blocking else CLEAR, "query": [qs, qe],
-            "events": events, "blocking": blocking}
+    would_block = {b["id"] for b in blocking}
+    if acks:
+        from quantt.broker.alpaca import ca_row_canonical
+    acked, still = [], []
+    for b in blocking:
+        if not (acks and b["id"] in acks):
+            still.append(b)
+            continue
+        a = acks[b["id"]]
+        now = rows.get(b["id"], [])
+        canon = ack_row_canonical(a)           # parse_acks has checked it is not None
+        changed = next(((_row_changes(a["row"], r) if isinstance(a["row"], dict)
+                         and isinstance(r, dict) else None)
+                        or {"row": [canon, ca_row_canonical(r)]}
+                        for r in now if ca_row_canonical(r) != canon), None)
+        if a["event"]["type"] != b["type"]:
+            # The raw row carries no type: the type is which list Alpaca put it
+            # in (release-check of 709d6cb, 2026-11-02, reproduced).
+            changed = {"type": [a["event"]["type"], b["type"]], **(changed or {})}
+        if now and changed is None:
+            acked.append(b)
+        else:
+            # ACKNOWLEDGEMENTS: the row changed since it was acknowledged.
+            still.append({**b, "ack_mismatch": {"acked_utc": a["acked_utc"],
+                                                "reason": a["reason"],
+                                                "changed": changed or {"row": "not returned"}}})
+    blocking = still
+    out = {**rec, "status": BLOCKING if blocking else CLEAR, "query": [qs, qe],
+           "events": events, "blocking": blocking}
+    if skipped:
+        out["skipped_malformed"] = skipped
+    unresolved = [e for e in events if "row_id" in e]      # every irregular row
+    if unresolved:
+        # UNRESOLVED ROWS (blocking_events): each, and whether it blocked.
+        blocked = {b["id"] for b in blocking}
+        out["unresolved"] = [{"id": e["id"], "row_id": e["row_id"], "type": e["type"],
+                              "date": e["date"], "date_field": e["date_field"],
+                              "process_date": e["process_date"], "parties": e["parties"],
+                              "missing": e.get("missing", []),
+                              "undated": e.get("undated"), "faults": e.get("faults"),
+                              "conflict": bool(e.get("conflict")),
+                              "blocks": e["id"] in blocked,
+                              "acknowledged": e["id"] in would_block and e["id"] not in blocked}
+                             for e in unresolved]
+    if acked:
+        out["acknowledged"] = [{**b, "ack": acks[b["id"]]} for b in acked]
+    return out
+
+
+def _row_changes(acked: dict, now: dict) -> dict:
+    """{field: [acknowledged value, current value]} for every field that differs
+    (absent on one side reads None there, and still counts)."""
+    return {k: [acked.get(k), now.get(k)] for k in sorted(set(acked) | set(now))
+            if (k in acked) != (k in now) or acked.get(k) != now.get(k)}
 
 
 def unmeasured_record(mode: str, asof, session_date, why: str) -> dict:
@@ -413,9 +628,38 @@ def unmeasured_record(mode: str, asof, session_date, why: str) -> dict:
 
 
 def _event_text(b: dict) -> str:
-    return (f"{b['symbol']} ({'held' if b['held'] else 'target'}) is the {b['role']} in "
-            f"{b['type']} {b['id']} ({b['date_field']} {b['date']}, process_date "
-            f"{b['process_date']}; {b['rule']} window {b['window'][0]}..{b['window'][1]})")
+    if "undated" in b:
+        who = (f"its missing {b['role']} ({b['unresolved']}, row id {b['row_id']!r}) treated "
+               f"as {b['symbol']}" if "unresolved" in b else
+               f"{b['symbol']} as its {b['role']}")
+        text = (f"an UNRESOLVED, UNDATED {b['type']} {b['id']} (fields it cannot read: "
+                f"{b['undated']}; present {b['parties']}), {who} "
+                f"({'held' if b['held'] else 'target'}), treated as inside every window; the "
+                f"team lead clears it with ca-ack --id {b['id']}")
+    elif "unresolved" in b:
+        text = (f"an UNRESOLVED {b['type']} {b['id']} (row id {b['row_id']!r}; its "
+                f"{b['unresolved']} is missing; present {b['parties']}), its missing "
+                f"{b['role']} treated as {b['symbol']} ({'held' if b['held'] else 'target'}) "
+                f"({b['date_field']} {b['date']}, process_date {b['process_date']}; "
+                f"{b['rule']} window {b['window'][0]}..{b['window'][1]}); the team lead "
+                f"clears it with ca-ack --id {b['id']}")
+    else:
+        text = (f"{b['symbol']} ({'held' if b['held'] else 'target'}) is the {b['role']} in "
+                f"{b['type']} {b['id']} ({b['date_field']} {b['date']}, process_date "
+                f"{b['process_date']}; {b['rule']} window {b['window'][0]}..{b['window'][1]})")
+        if "row_id" in b:
+            why = ("Alpaca lists that id with different content" if b.get("conflict")
+                   else "it is not a usable id")
+            text += (f" [keyed by its content: its id as sent is {b['row_id']!r} and {why}; "
+                     f"the team lead clears it with ca-ack --id {b['id']}]")
+    if "ack_mismatch" in b:
+        m = b["ack_mismatch"]
+        changes = "; ".join(f"{k}: {v[0]!r} -> {v[1]!r}" if isinstance(v, list) else f"{k}: {v}"
+                            for k, v in m["changed"].items())
+        text += (f" [acknowledged at {m['acked_utc']}, but the feed row has changed since "
+                 f"({changes}); not cleared: acknowledge the revised action again if it "
+                 f"still stands]")
+    return text
 
 
 def refusal_text(rec: dict) -> str | None:
@@ -440,5 +684,23 @@ def lines(rec: dict) -> list[str]:
         n = len(rec["names"])
         q = rec.get("query")
         where = f" (asked {q[0]}..{q[1]}, {len(rec['events'])} event(s) naming them)" if q else ""
-        return [f"{head}: CLEAR for {n} name(s){where}"]
-    return [f"{head}: BLOCKING: {_event_text(b)}{tail}" for b in rec["blocking"]]
+        out = [f"{head}: CLEAR for {n} name(s){where}"]
+    else:
+        out = [f"{head}: BLOCKING: {_event_text(b)}{tail}" for b in rec["blocking"]]
+    for b in rec.get("acknowledged", []):
+        a = b["ack"]
+        out.append(f"{head}: ACKNOWLEDGED, cleared for this id only: {_event_text(b)}; by "
+                   f"the team lead at {a['acked_utc']}: {a['reason']}")
+    for e in rec.get("unresolved", []):
+        if not e["blocks"] and not e["acknowledged"]:
+            out.append(f"{head}: UNRESOLVED, recorded only: {e['type']} {e['id']} (row id "
+                       f"{e['row_id']!r}; {[m['field'] for m in e['missing']]} missing; "
+                       f"undated {e['undated']}; "
+                       f"present {e['parties']}; {e['date_field']} {e['date']}): treated as "
+                       f"each of the gate's names, it blocks for none")
+    for k in rec.get("skipped_malformed", []):
+        bad = ", ".join(f"{f}={v!r}" for f, v in k["malformed"].items())
+        out.append(f"{head}: SKIPPED a malformed row: {k['type']} id {k['id']!r}, malformed "
+                   f"{bad}; every party symbol present and none the book's (present: "
+                   f"{k['present']}; CUSIPs, not compared: {k['cusips'] or 'none'})")
+    return out

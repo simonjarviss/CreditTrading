@@ -53,6 +53,7 @@ class FakeClient:
         self.extra, self.missing = set(extra_days), set(missing_days)
         self.prints = {"AAA": 9.50, "BBB": 19.00, "CCC": 5.00} if prints is None else prints
         self.calls = []
+        self.superseded = {}
 
     def clock(self):
         self.calls.append("clock")
@@ -81,8 +82,10 @@ class FakeClient:
         p = self.prints.get(symbols[0])
         if p is None:
             raise al.MissingAuctionPrint(f"no print for {symbols}", symbols=list(symbols))
-        return {symbols[0]: {"price": p, "exchange": "N", "condition": "M",
-                             "t": "2026-09-29T20:00:01Z"}}
+        out = {"price": p, "exchange": "N", "condition": "M", "t": "2026-09-29T20:00:01Z"}
+        if symbols[0] in self.superseded:
+            out["superseded"] = self.superseded[symbols[0]]
+        return {symbols[0]: out}
 
     def account(self):
         self.calls.append("account")
@@ -562,6 +565,42 @@ def test_official_close_file_is_deduplicated_and_not_refetched(env):
     queried = [c[1] for c in client.calls if isinstance(c, tuple) and c[0] == "prints"]
     assert queried == ["BBB", "CCC"], "AAA already had D's print and was queried again"
     assert f.loc[(f.ticker == "AAA") & (f.date == pd.Timestamp(D)), "fetched_at_utc"].item() == "old"
+
+
+def test_a_later_print_the_client_chose_is_stored_and_flagged_in_the_days_report(env):
+    """Two prices from the primary, the later one confirmed by the daily bar (ruling 2026-11-22):
+    the price is stored like any other and the day's report names the fund and what was set aside."""
+    state, cef = env
+    client = FakeClient()
+    client.superseded = {"BBB": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}
+    assert co.collect(make_ctx(env, client)) == co.EXIT_OK
+    f = pd.read_parquet(cef / co.OFFICIAL_CLOSE_FILE)
+    assert f.loc[(f.ticker == "BBB") & (f.date == pd.Timestamp(D)), "price"].item() == client.prints["BBB"]
+    rep = json.loads((state / "data" / D.isoformat() / "report.json").read_text())
+    flags = [x for x in rep["steps"]["official_closes"]["detail"]["flags"]]
+    assert flags == [{"fund": "BBB", "check": "two_primary_prints_later_used", "price": client.prints["BBB"],
+                      "t": "2026-09-29T20:00:01Z", "superseded": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}]
+
+
+def test_the_later_print_flag_survives_a_retry_that_does_not_ask_for_that_fund_again(env):
+    """Review 2026-11-22: BBB is resolved and stored on the first slot while CCC errors, so the
+    step fails; on the next slot BBB is not asked for again. Its flag must still be in the record."""
+    client = FakeClient()
+    client.superseded = {"BBB": [{"price": 9.9, "t": "2026-09-29T20:00:00Z"}]}
+    real = client.closing_auction_prints
+
+    def flaky(symbols, date, **kw):
+        if symbols[0] == "CCC":
+            raise al.AlpacaHTTPError("GET /v2/stocks/auctions -> HTTP 503", status=503)
+        return real(symbols, date, **kw)
+    client.closing_auction_prints = flaky
+    assert co.collect(make_ctx(env, client)) == co.EXIT_INCOMPLETE
+    client.closing_auction_prints = real
+    client.calls.clear()
+    co.collect(make_ctx(env, client))
+    d = status(env)["steps"]["official_closes"]
+    assert d["ok"] and ("prints", "BBB") not in client.calls
+    assert [(f["fund"], f["check"]) for f in d["detail"]["flags"]] == [("BBB", "two_primary_prints_later_used")]
 
 
 # ------------------------------------------------------------------ account

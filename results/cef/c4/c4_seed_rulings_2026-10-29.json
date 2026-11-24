@@ -1,0 +1,167 @@
+{
+ "ruled_by": "team lead (Simon Jarvis), answered interactively; relayed by the coordinator on 2026-10-29",
+ "ruled_on": "2026-10-29",
+ "record": "this file (written by `python3 scripts/cef/c4_paper_benchmark.py seed-rulings`); ops/specs/c4_families.frozen.json _panel_source_note",
+ "ruling": "Seed C4's panel (data/cef_c4/, plan row 3) with the SAME four corrected IGR bars the team lead's 2026-10-19 corrected book used (results/cef/C4_RESULT_2026-10-14.md \u00a79; c4_bar_rulings_2026-10-19.json): each row's open, high, low, close and volume replaced by Alpaca's raw bar, as results/cef/c4/holdout_review_2026-10-18/corrected.py did, logged cell by cell (`cells`). The corrected rows feed both legs, signal and return, as in the corrected book.",
+ "standing_rule": "data_guards.guard_closes accepts exactly the four cells in `bars` and nothing else. The seed runs guard_closes on the RAW families closes of the 74 over the whole seeded span with this file as `rulings`: it must treat exactly these four (any other spike-and-revert bar raises, unruled; a ruling that matches no bar raises), and only then are the four rows replaced and each replaced cell logged. The seeded panel then holds corrected bars, so a later guard run on data/cef_c4/ must find no bar and must NOT pass this file: a fifth bar, or one of these four coming back, needs a new ruling.",
+ "source_ruling": {
+  "path": "results/cef/c4/c4_bar_rulings_2026-10-19.json",
+  "sha256": "8c4bb0abf813437a71465dda600148b84c98672244bf6fe8f2f2ee8cb2443833"
+ },
+ "replacement_source": {
+  "path": "results/cef/c4/_cache_c4/alpaca_bars_c4pool_2024-12-02_2026-09-30.parquet",
+  "sha256": "29dbd045dcbb4be098d27b73242c7b4da2e000ef5fb1181fe759c63fdb024f56",
+  "fetched_utc": "2026-10-14T22:31:17Z",
+  "selection": "ticker IGR, adjustment raw, the four dates",
+  "fetcher": "python3 scripts/data/fetch_alpaca_split_bars.py --c4-pool --start 2024-12-02 --end 2026-09-30 (docs/REFERENCES.md, the Alpaca SIP daily bars row); gitignored, staged from the trial-c4 worktree by `c4_paper_benchmark.py stage`"
+ },
+ "checks": {
+  "guard_over_families_panel": "guard_closes over 1980-03-17..2026-10-09 for the 74 treated exactly 4 cells, these four",
+  "panel_close_is_alpaca_split_adjusted_close": "within 1e-6, each of the four",
+  "alpaca_raw_close_is_panel_close_over_factor": "within 4e-08, each of the four"
+ },
+ "bars": [
+  {
+   "ticker": "IGR",
+   "date": "2026-07-29",
+   "run_end": "2026-07-29",
+   "factor": 3,
+   "treatment": "rebase",
+   "reason": "post-split-basis bar (x3) inside the raw pre-split series, ahead of IGR's 1:3 reverse split effective 2026-09-08; NAV flat; volume about a third of its neighbours'"
+  },
+  {
+   "ticker": "IGR",
+   "date": "2026-08-04",
+   "run_end": "2026-08-04",
+   "factor": 3,
+   "treatment": "rebase",
+   "reason": "post-split-basis bar (x3) inside the raw pre-split series, ahead of IGR's 1:3 reverse split effective 2026-09-08; NAV flat; volume about a third of its neighbours'"
+  },
+  {
+   "ticker": "IGR",
+   "date": "2026-08-07",
+   "run_end": "2026-08-07",
+   "factor": 3,
+   "treatment": "rebase",
+   "reason": "post-split-basis bar (x3) inside the raw pre-split series, ahead of IGR's 1:3 reverse split effective 2026-09-08; NAV flat; volume about a third of its neighbours'"
+  },
+  {
+   "ticker": "IGR",
+   "date": "2026-08-11",
+   "run_end": "2026-08-11",
+   "factor": 3,
+   "treatment": "rebase",
+   "reason": "post-split-basis bar (x3) inside the raw pre-split series, ahead of IGR's 1:3 reverse split effective 2026-09-08; NAV flat; volume about a third of its neighbours'"
+  }
+ ],
+ "cells": [
+  {
+   "ticker": "IGR",
+   "date": "2026-07-29",
+   "columns": {
+    "open": {
+     "panel": 14.279999732971191,
+     "corrected": 4.76
+    },
+    "high": {
+     "panel": 14.34000015258789,
+     "corrected": 4.78
+    },
+    "low": {
+     "panel": 14.130000114440918,
+     "corrected": 4.71
+    },
+    "close": {
+     "panel": 14.25,
+     "corrected": 4.75
+    },
+    "volume": {
+     "panel": 145000.0,
+     "corrected": 434991.0
+    }
+   },
+   "raw_close_minus_panel_close_over_factor": 0.0
+  },
+  {
+   "ticker": "IGR",
+   "date": "2026-08-04",
+   "columns": {
+    "open": {
+     "panel": 14.100000381469727,
+     "corrected": 4.7
+    },
+    "high": {
+     "panel": 14.25,
+     "corrected": 4.75
+    },
+    "low": {
+     "panel": 13.920000076293945,
+     "corrected": 4.64
+    },
+    "close": {
+     "panel": 14.039999961853027,
+     "corrected": 4.68
+    },
+    "volume": {
+     "panel": 260000.0,
+     "corrected": 778859.0
+    }
+   },
+   "raw_close_minus_panel_close_over_factor": 1.2715656971806766e-08
+  },
+  {
+   "ticker": "IGR",
+   "date": "2026-08-07",
+   "columns": {
+    "open": {
+     "panel": 14.069999694824219,
+     "corrected": 4.69
+    },
+    "high": {
+     "panel": 14.130000114440918,
+     "corrected": 4.71
+    },
+    "low": {
+     "panel": 13.949999809265137,
+     "corrected": 4.65
+    },
+    "close": {
+     "panel": 14.130000114440918,
+     "corrected": 4.71
+    },
+    "volume": {
+     "panel": 141700.0,
+     "corrected": 425076.0
+    }
+   },
+   "raw_close_minus_panel_close_over_factor": 3.814697269177714e-08
+  },
+  {
+   "ticker": "IGR",
+   "date": "2026-08-11",
+   "columns": {
+    "open": {
+     "panel": 14.010000228881836,
+     "corrected": 4.67
+    },
+    "high": {
+     "panel": 14.039999961853027,
+     "corrected": 4.675
+    },
+    "low": {
+     "panel": 13.890000343322754,
+     "corrected": 4.63
+    },
+    "close": {
+     "panel": 13.920000076293945,
+     "corrected": 4.64
+    },
+    "volume": {
+     "panel": 138167.0,
+     "corrected": 412859.0
+    }
+   },
+   "raw_close_minus_panel_close_over_factor": 2.543131571997037e-08
+  }
+ ]
+}

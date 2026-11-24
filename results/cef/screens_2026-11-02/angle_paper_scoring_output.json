@@ -1,0 +1,110 @@
+{
+ "spec": "cef_discount.v8.20261101 | live policy: band 4.8% + gmax 1.80x | universe 13",
+ "panel_last": "2022-12-30",
+ "distribution_leg_by_era": [
+  {
+   "era": "2010-14",
+   "days": 384,
+   "leg_ann_pct": -2.3086158974143665,
+   "leg_t": -1.7381376516712728,
+   "long_credit_ann_pct": 5.59982770489548,
+   "short_charge_ann_pct": -7.908443602309849,
+   "gross_sr_price": 1.6313478313201601,
+   "gross_sr_total": 1.2982961155699828,
+   "gross_ann_price_pct": 9.641586360926857,
+   "gross_ann_total_pct": 7.33297046351249
+  },
+  {
+   "era": "2015-19",
+   "days": 1258,
+   "leg_ann_pct": 0.6650556187959448,
+   "leg_t": 1.9492914360356421,
+   "long_credit_ann_pct": 6.5161018588815764,
+   "short_charge_ann_pct": -5.851046240085632,
+   "gross_sr_price": 0.7187650028562793,
+   "gross_sr_total": 0.8354013754788104,
+   "gross_ann_price_pct": 5.03715525277296,
+   "gross_ann_total_pct": 5.702210871568906
+  },
+  {
+   "era": "2020-22",
+   "days": 756,
+   "leg_ann_pct": -0.6140284260723462,
+   "leg_t": -1.4651045533344869,
+   "long_credit_ann_pct": 4.819675377018583,
+   "short_charge_ann_pct": -5.433703803090929,
+   "gross_sr_price": 1.0841590070584664,
+   "gross_sr_total": 1.0204327037740888,
+   "gross_ann_price_pct": 7.101025493985742,
+   "gross_ann_total_pct": 6.4869970679133955
+  },
+  {
+   "era": "fit 2005-22",
+   "days": 2398,
+   "leg_ann_pct": -0.21437615774500077,
+   "leg_t": -0.6535924680659091,
+   "long_credit_ann_pct": 5.834555697322326,
+   "short_charge_ann_pct": -6.048931855067325,
+   "gross_sr_price": 0.9592958569026686,
+   "gross_sr_total": 0.9553877979353718,
+   "gross_ann_price_pct": 6.425140010023985,
+   "gross_ann_total_pct": 6.210763852278987
+  }
+ ],
+ "leg_24_session_sums_pct": {
+  "quantiles": {
+   "0.05": -0.486794313238512,
+   "0.25": -0.08822269734367089,
+   "0.5": 0.0023155339984062898,
+   "0.75": 0.144561624156763,
+   "0.95": 0.34865067063262023
+  },
+  "live": 0.32085,
+  "live_percentile": 0.9435789473684211,
+  "n_windows": 2375
+ },
+ "deferrable": {
+  "share_of_abs_leg": 0.071822771726539,
+  "deferrable_ann_pct": -0.3000671154926698,
+  "leg_ann_pct": -0.21437615774500077
+ },
+ "crsp_closing_half_spread_2020_22_bp": {
+  "all_median": 7.645259938837757,
+  "all_mean": 9.084188276706158,
+  "by_group_median": {
+   "hy": 5.01,
+   "loan": 6.29,
+   "multi": 7.86,
+   "muni": 9.35
+  },
+  "n": 9556
+ },
+ "paper_fill_cost": {
+  "fill_drift_bp": {
+   "fills": 344,
+   "symbol_days": 127,
+   "notional_usd": 570482.32,
+   "A_1550mid_to_fill_bp": 10.76,
+   "B_fill_vs_close_bp": 5.1,
+   "C_1550mid_to_close_bp": 5.67,
+   "D_1550mid_to_fillmid_bp": 4.6,
+   "E_fill_vs_fillmid_bp": 6.16
+  },
+  "rows": [
+   {
+    "era": "2015-19",
+    "turn_per_yr_unit": 7.792828783182,
+    "multiplier": 1.13,
+    "paper_fill_cost_pct_per_yr": 0.4491007227747786,
+    "half_spread_part_pct_per_yr": 0.5424432259397326
+   },
+   {
+    "era": "2020-22",
+    "turn_per_yr_unit": 21.453264535286376,
+    "multiplier": 1.13,
+    "paper_fill_cost_pct_per_yr": 1.2363516351685537,
+    "half_spread_part_pct_per_yr": 1.493318837772214
+   }
+  ]
+ }
+}

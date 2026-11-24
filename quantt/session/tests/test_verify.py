@@ -622,7 +622,7 @@ def test_end_to_end_through_the_real_client_shapes(state, tmp_path):
         headers = {}
         posts = []
 
-        def get(self, url, params=None, timeout=None):
+        def get(self, url, params=None, timeout=None, allow_redirects=None):
             for base in (al.PAPER_BASE, al.DATA_BASE):
                 if url.startswith(base):
                     path = url[len(base):]
@@ -729,7 +729,10 @@ def test_the_2026_10_09_refusal_is_a_fail_not_a_pass():
 @pytest.mark.parametrize("gate,missed", [("dry_run", False), ("arming", False), ("halt", False),
                                          ("exposure", True), ("shortability", True),
                                          ("sanity", True), ("no_set_in_auction", True),
-                                         ("clock", True), ("data", True)])
+                                         ("clock", True), ("data", True),
+                                         # C4's first-session gate: a MISSED day (release-check of
+                                         # 4f759a9; test_c4_first_session.py drives it end to end)
+                                         ("first_session", True)])
 def test_only_a_humans_choice_explains_a_refused_send(gate, missed):
     from quantt.session.verify import late_no_trade_reason as why
     plan = {"book": "cef", "session_date": D.isoformat(), "mode": "run", "execution": "late_market",

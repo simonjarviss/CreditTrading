@@ -1,0 +1,12 @@
+spec cef_discount.v7.20260928 | T 2005-01-03 .. 2026-10-14 (5480, 13)
+build_targets T             a4d13e26467c187d3123c0b57bcd06934198c31e1db20a763e0bdc81e5ce97ba
+build_targets R             bc507f8ca947caccc92bea324331869da88a3696c7ad8f03d4b112d86beb981b
+build_targets(min_adv=0) T  78452ee2fe54ebc13ca5bf1e5f3b511e2297b3cda7ee8129f10fd65ab155ba3a
+band(T, BAND_WIDTH)         a1bc8a4d7e5bd087c08a224d28bf15c722bbb7565c7596e56b427ff22b231ed7
+band_gross_capped cap       8d670fdac8a0cc70262453e10de1c144e01245766d7522922a319878cba975c3
+band_gross_capped inf       a1bc8a4d7e5bd087c08a224d28bf15c722bbb7565c7596e56b427ff22b231ed7
+band_gross_capped defer     be16ea3ac42dfe284493eb4642ceb9f8fdef99586c4c96c6687221ae8e20058c
+band_gross_capped WIDE cap  925bde46ec4a12fb25b7b3a178cb2ee917ac197e07d1e274dbd7df05ee227371
+thin_sessions(T.index)      ade22c5a26ebea8ada24f596319d96351fbfaffb3dfb8a64fdf1f39a2bbf3f19 | thin 3622
+flatten cap                 66883ee2dbb04e0322b5b9510b8aa5a68d510473aba0fd67fa44df33c13b92db
+flatten cap defer           f8bfedfc99540ea78c45c6105c2e36e9ae54b8e7209ca94524c0e3c8767fa907

@@ -27,7 +27,8 @@ at "about 2%/yr" measured **−0.01%/yr**.
 | borrow drag on net Sharpe | `pre-clean-slate:scripts/cef/borrow_impact.py` |
 | where availability binds, capacity | `pre-clean-slate:scripts/cef/borrow_capacity.py` |
 | the joint cost-aware optimiser | `pre-clean-slate:scripts/cef/joint_cost_optimiser.py` |
-| the original backtest (the retired calendar policy) | `scripts/cef/validate.py --trials <N>` (`--trials` is required, no default — read N off the **CEF** row of `docs/RESEARCH_STATE.md`'s counter table every time; the deflated-Sharpe verdict depends on it) |
+| the original backtest (the retired calendar policy) | `scripts/cef/validate.py --trials <N>` (the flag is still required by the script; it only feeds a statistic that research no longer uses, so read the gross rows) |
+| any idea tested since 2026-11-09 | the command named in its results note; its line is in `results/IDEA_LEDGER.md` |
 
 ## Panel freshness — check this first
 
@@ -73,13 +74,10 @@ way every time it appears.
 5. **Label provenance** `[V]` verified / `[S]` sourced but not re-read / `[U]`
    uncertain, as `docs/REFERENCES.md` does.
 6. **Correct in place, visibly.** Leave a dated correction rather than a silent
-   edit — someone is relying on the old number somewhere. `RESEARCH_STATE.md`'s
-   CEF-counter correction is the model.
+   edit — someone is relying on the old number somewhere.
 
 ## Numbers that are known to need care
 
-- **The CEF trial counter.** `RESEARCH_STATE.md`'s own table read **18** for five
-  weeks; the canonical figure is **48**. Check the correction note before quoting.
 - **`realised/modelled = 4.59×`.** Pooled across two different execution methods.
   Split by session or do not quote it.
 - **Effective breadth.** 2.24 historically, **1.17** on today's live weights. Say
