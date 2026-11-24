@@ -23,7 +23,7 @@ from html import escape
 from pathlib import Path
 
 from dashboard import charts, metrics as M, snapshot as S
-from dashboard.layout import (BOOK_COLOURS, BOOK_TEXT, COMBINED_COLOUR, fmt_short, page, page_head, pct, tone,
+from dashboard.layout import (BOOK_COLOURS, COMBINED_COLOUR, fmt_short, page, page_head, pct, tone,
                               usd, when)
 
 def prov(r: dict) -> str:
@@ -168,13 +168,17 @@ STAT_GROUPS = (
 )
 
 
-def stats_table(cols: list) -> str:
-    """cols: [(title, colour, profile)]."""
-    th = "".join(f'<th class="r"><span class="dot" style="background:{c}"></span>{escape(n)}</th>' for n, c, _ in cols)
+def stats_table(cols: list, first: str) -> str:
+    """cols: [(title, colour, profile, its first session)]. A column that starts after `first`, the
+    portfolio's start, says from when under its name, so a book that joined later is never read as
+    having traded the whole period."""
+    th = "".join(f'<th class="r"><span class="dot" style="background:{c}"></span>{escape(n)}'
+                 + (f'<br><span class="meta">from {fmt_short(d)}</span>' if d != first else "") + '</th>'
+                 for n, c, _, d in cols)
     body = []
     for group, rows in STAT_GROUPS:
         body.append(f'<tr class="grp"><td colspan="{len(cols) + 1}">{escape(group)}</td></tr>')
-        body += [f'<tr><td>{escape(label)}</td>' + "".join(f'<td class="r">{f(p)}</td>' for _, _, p in cols) + "</tr>"
+        body += [f'<tr><td>{escape(label)}</td>' + "".join(f'<td class="r">{f(p)}</td>' for _, _, p, _ in cols) + "</tr>"
                  for label, f in rows]
     return (f'<div class="tbl-wrap"><table class="matrix stats"><thead><tr><th>Measure</th>{th}</tr></thead>'
             f'<tbody>{"".join(body)}</tbody></table></div>')
@@ -249,52 +253,34 @@ def latest_sessions(books: list) -> str:
         rows.append(("<b>Portfolio</b>", fmt_short(next(iter(dates))), f'<b class="{tone(total)}">{usd(total, True)}</b>',
                      str(n_pos), f'{gross / eq:.2f}x / ' + f'{net / eq:+.2f}x'.replace("-", "−"), "", ""))
     return ('<div class="latest">' + tbl(["Book", "Session", "P&L", "Positions", "Gross / net exposure", "Orders filled",
-                                          "Check"], rows, right=(2, 3, 4, 5, 6))
-            + '<p class="meta">Exposure is the market value of long and short positions at the closing price, as a '
-              'multiple of the account\'s equity. Individual holdings and orders are not published.</p></div>')
+                                          "Check"], rows, right=(2, 3, 4, 5, 6)) + '</div>')
 
 
 def portfolio_section(snap: dict) -> str:
-    """The page's top (team lead, 2026-11-24: "overall portfolio (shown as one line), can split into
-    3 lines (our sleeves)"; later the same day: "the portfolio results is too many analytics"). Four
-    headline figures, the portfolio's line with its books' on a switch, and one table of key figures
-    for the portfolio and each book; then the latest session's P&L. Each book's own session, exposure and
-    execution follow below."""
+    """The page's top: four headline figures, the portfolio's line with its books' on a switch, return and
+    risk measures for the portfolio and each book, each book's latest session, and the record before
+    RECORD_START. Headings and figures only (team lead, 2026-11-24: "there is too much unnecessary
+    writing on the website"); what each figure means is in the folded method below."""
     pf = portfolio(snap)
-    tail = ('<h3 class="block-title">Latest session</h3>' + latest_sessions(snap["books"]) + earlier_record(snap)
-            + '<p class="meta">Returns are time-weighted: each session\'s return is the books\' combined P&amp;L over '
-              'their combined equity at the previous close, compounded. A session\'s P&amp;L is the after-close '
-              'reading until Alpaca publishes its official end-of-day figure overnight.</p></div></section>')
-    warn = ""
-    if pf["blocked"]:
-        why = "; ".join(f"{escape(b['title'])}: {escape(w)}" for b, w in pf["blocked"])
-        warn = (f'<p class="gap">Not included tonight, because its record could not be read: {why}. The portfolio '
-                'below is the other books only.</p>')
+    tail = '<h3 class="block-title">Latest session</h3>' + latest_sessions(snap["books"]) + earlier_record(snap)
+    warn = "".join(f'<p class="gap">Not included: {escape(b["title"])}, its record could not be read ({escape(w)}).</p>'
+                   for b, w in pf["blocked"])
     if not pf["p"]:
         # Say why there is no portfolio (release-check review of 455eff4: with every book unreadable,
         # "no traded session yet" was false and dropped the reason).
-        why = ('<p class="gap">No portfolio tonight. '
-               + "; ".join([f"{escape(b['title'])}: its record could not be read ({escape(w)})" for b, w in pf["blocked"]]
-                           + [f"{escape(b['title'])}: {escape(w)}" for b, w in pf["excluded"]]) + ".</p>"
-               if pf["blocked"] else
-               f'<p class="narrow">The portfolio\'s record starts with the {fmt_short(RECORD_START)} session, the first '
-               'on which all three books trade a full plan. Its figures appear once that session has closed: the '
-               'after-close readings in the evening, Alpaca\'s end-of-day figures overnight.</p>')
-        return ('<section class="section"><div class="wrap"><div class="eyebrow">Portfolio</div>'
-                f'<h2>Portfolio results</h2>{why}' + tail)
+        why = warn or f'<p class="meta">First figures after the close of {fmt_short(RECORD_START)}.</p>'
+        return (f'<section class="section"><div class="wrap"><h2>Portfolio since {fmt_short(RECORD_START)}</h2>{why}'
+                + tail + '</div></section>')
     p = pf["p"]
     colour = lambda x: BOOK_COLOURS.get(x["b"]["name"], COMBINED_COLOUR)                    # noqa: E731
-    members = "; ".join(f'{escape(x["b"]["title"])} from {fmt_short(x["first"])}'
-                        + (" (after-close readings until its end-of-day history begins)" if x["kind"] == "after-close" else "")
-                        for x in pf["books"])
-    left = (f' {pf["left"]} {"session is" if pf["left"] == 1 else "sessions are"} left out because a trading book has no '
-            'record for it yet.' if pf["left"] else "")
-    out_txt = ("".join(f' {escape(b["title"])} is not included: {escape(w)}.' for b, w in pf["excluded"]))
+    notes = "".join([f'<p class="meta">{pf["left"]} {"session" if pf["left"] == 1 else "sessions"} left out: a '
+                     'book has no record for it yet.</p>'] if pf["left"] else []) + "".join(
+        f'<p class="meta">{escape(b["title"])} not included: {escape(w)}.</p>' for b, w in pf["excluded"])
     # Return and P&L are shown apart and the return is named time-weighted: on 2026-11-24 the portfolio
     # read +0.06% beside -$472, both right, because its losses fell when three books were trading and
     # its gains when one was. A reader shown "+0.06% (-$472)" would read an error.
-    kpis = [fig(pct(p["cum_return"], True), f"Time-weighted return since {fmt_short(pf['first'])}"),
-            fig(usd(p["pnl"], True), f"P&amp;L since {fmt_short(pf['first'])}"),
+    kpis = [fig(pct(p["cum_return"], True), "Return, time-weighted"),
+            fig(usd(p["pnl"], True), "P&amp;L"),
             fig(_ratio_s(p["sharpe"]) if p["sharpe"] is not None else "n/a", f"Sharpe ratio ({p['n']} sessions)"),
             fig(pct(p["max_drawdown"]), "Maximum drawdown")]
     growth = [{"name": "Portfolio", "color": PORTFOLIO_COLOUR, "bold": True,
@@ -305,16 +291,13 @@ def portfolio_section(snap: dict) -> str:
     switch = ('<div class="view-switch" role="group" aria-label="Chart view" hidden>'
               '<button type="button" data-view="portfolio" aria-pressed="true">Portfolio</button>'
               '<button type="button" data-view="books" aria-pressed="false">By book</button></div>')
-    cols = [("Portfolio", PORTFOLIO_COLOUR, p)] + [(x["b"]["title"], colour(x), x["p"]) for x in pf["books"]]
-    return (f'<section class="section"><div class="wrap">'
-            f'<div class="eyebrow">Portfolio &middot; to {fmt_short(p["last_date"])}</div>'
-            f'<h2>Portfolio results</h2><p class="narrow">A composite of the books that are trading, from the '
-            f'{fmt_short(RECORD_START)} session, the first on which all three trade a full plan: {members}.'
-            f'{left}{out_txt}</p>{warn}'
-            f'<div class="figures kpis">{"".join(kpis)}</div>'
-            f'<div class="chart-head"><h3 class="chart-title">Growth since inception</h3>{switch}</div>'
+    cols = [("Portfolio", PORTFOLIO_COLOUR, p, pf["first"])] + [(x["b"]["title"], colour(x), x["p"], x["first"])
+                                                              for x in pf["books"]]
+    return (f'<section class="section"><div class="wrap"><h2>Portfolio since {fmt_short(pf["first"])}</h2>'
+            f'{warn}{notes}<div class="figures kpis">{"".join(kpis)}</div>'
+            f'<div class="chart-head"><h3 class="chart-title">Cumulative return</h3>{switch}</div>'
             + charts.line_chart(growth, "Cumulative return of the portfolio and of each book", fmt="pct")
-            + '<h3 class="block-title">Key figures</h3>' + stats_table(cols) + tail)
+            + '<h3 class="block-title">Key figures</h3>' + stats_table(cols, pf["first"]) + tail + '</div></section>')
 
 
 def started_text(b: dict) -> str:
@@ -372,9 +355,7 @@ def earlier_record(snap: dict) -> str:
     old = portfolio(snap, before=RECORD_START)
     if not old["books"] and not old["blocked"]:
         return ""
-    return (f'<h3 class="block-title">Record before {fmt_short(RECORD_START)}</h3>'
-            '<p class="meta">Each book from its first traded session to the last session before the portfolio\'s '
-            'record began, kept as it was. These sessions are not in the figures above.</p>' + record_table(old, span=True))
+    return f'<h3 class="block-title">Record before {fmt_short(RECORD_START)}</h3>' + record_table(old, span=True)
 
 
 def n_strategies(snap: dict):
@@ -420,52 +401,50 @@ def fund_facts(snap: dict) -> str:
              ("Trading", "Daily, near the close"),
              ("Broker", "Alpaca Markets, paper accounts")]
     cells = "".join(f'<div><dt>{escape(k)}</dt><dd>{v}</dd></div>' for k, v in items)
-    return ('<section class="section soft"><div class="wrap"><div class="eyebrow">At a glance</div>'
-            f'<h2>Fund facts</h2><dl class="facts">{cells}</dl>'
-            f'<p class="meta">Capital, exposure and positions {asof}, from the trading system\'s reconciliation with '
-            'the broker, in aggregate.</p></div></section>')
+    return ('<section class="section soft"><div class="wrap"><h2>Fund facts</h2>'
+            f'<dl class="facts">{cells}</dl><p class="meta">Capital, exposure and positions {asof}.</p></div></section>')
 
 
-def books_list(snap: dict) -> str:
-    """The three books in a sentence each, and when each began trading. Their figures are in the key
-    figures above; their positions, risk reports and fills are not published here (team lead,
-    2026-11-24: "no one really cares about some of the tables")."""
-    def source(b):
-        """Where the book's daily figures come from, read when, and how far to trust them; a record that is
-        absent or could not be read says so."""
+def sources(snap: dict) -> str:
+    """Where each book's daily figures come from, read when, and how far to trust them; a record that is
+    absent or could not be read says so. Folded with the method, out of the way of the figures."""
+    out = []
+    for b in snap["books"]:
         o, ac = b["official"], b.get("after_close", {})
         if "value" in o:
-            return prov(o)
-        return gap(o, "Official end-of-day history") + (prov(ac) if "value" in ac else gap(ac, "After-close readings")
-                                                       if ac else "")
-    rows = "".join(
-        f'<div class="row"><div class="num">0{i}</div><div><h3><span class="dot" style="background:'
-        f'{BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)}"></span>{escape(b["title"])}</h3>'
-        f'<p>{escape(BOOK_TEXT.get(b["name"], ""))}</p>{source(b)}</div>'
-        f'<div class="stat"><span>{escape(started_text(b)[:1].upper() + started_text(b)[1:])}</span></div></div>'
-        for i, b in enumerate(snap["books"], start=1))
-    return ('<section class="section"><div class="wrap"><div class="eyebrow">The books</div><h2>What each book trades</h2>'
-            f'<div class="rows">{rows}</div></div></section>')
+            src = prov(o)
+        else:
+            src = gap(o, "Official end-of-day history") + (prov(ac) if "value" in ac else gap(ac, "After-close readings")
+                                                          if ac else "")
+        out.append(f'<div class="src"><b>{escape(b["title"])}</b>{src}</div>')
+    return "".join(out)
 
 
-METHOD = """<section class="section" style="padding-top:0"><div class="wrap narrow"><details class="method"><summary>How these figures are produced</summary>
-<p><b>Official P&amp;L.</b> Each account's results come from Alpaca's end-of-day portfolio history, the record we report against. A paper account differs from a live account in three ways: it charges no stock borrow fees, it does not credit or debit distributions on positions, and it fills orders at the current quote rather than in the closing auction. A live account's results would differ for those reasons.</p>
-<p><b>The portfolio.</b> A composite of the books that are trading. Its record starts with the 24 Nov 2026 session, the first on which all three books trade a full plan, and every figure above counts from the close before it; each book's record before that date is shown apart and is not in those figures. A book that starts later joins from its first traded session, so an account's idle cash before it trades never dilutes the result. Each session's return is the books' combined P&amp;L divided by their combined equity at the previous close, and the returns compound: the return is time-weighted, the standard for a composite. Because a session counts by its return and not by its dollars, the portfolio's return and its dollar P&amp;L can differ, even in sign, when the capital trading changes, as it does when a book joins. A session on which a trading book has no record is left out, never filled. The event book counts from its first traded session; until Alpaca's end-of-day history is collected for it, its daily figures are the account equity read after each close.</p><p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility and the Sharpe ratio are shown once a series has 20 sessions and are annualised with 252 sessions; the Sharpe ratio subtracts no risk-free rate. Drawdown is measured on the compounded return from its running peak. A record of a few dozen sessions measures every ratio only loosely.</p>
-<p><b>Capital and exposure.</b> Taken from the trading system's reconciliation with the broker after each close and reported in aggregate: account equity, the number of positions, and gross and net exposure at the closing price. Individual holdings and orders are not published.</p>
-<p><b>Updates.</b> The page rebuilds automatically every 30 minutes from the trading system's records, so a session appears shortly after the close and its official figure after Alpaca publishes it overnight. A figure the system could not read is marked as not measured; it is never estimated or carried forward.</p>
-</details></div></section>"""
+def method(snap: dict) -> str:
+    """How the figures are made, folded at the foot of the page."""
+    return ('<section class="section" style="padding-top:0"><div class="wrap narrow"><details class="method">'
+            '<summary>Sources and method</summary>' + sources(snap)
+            + "<p>Daily P&amp;L is Alpaca's end-of-day account history. Until it is published, a session shows the "
+              "account's after-close reading, labelled as such. The Event Book uses these readings until its "
+              "end-of-day history is collected.</p>"
+            + f"<p>The portfolio's return is the books' combined P&amp;L over their combined equity at the previous "
+              f"close, compounded (time-weighted). Its record starts on {fmt_short(RECORD_START)}, the first session "
+              "with all three books trading; earlier sessions are shown separately.</p>"
+            + "<p>Volatility, Sharpe and Sortino are annualised over 252 sessions with no risk-free rate, and are "
+              "shown after 20 sessions. Exposure is the market value of long and short positions at the close, as a "
+              "multiple of equity. Individual holdings and orders are not published.</p>"
+            + "<p>Paper accounts charge no borrow fees, pay no distributions and fill at the quote rather than in "
+              "the closing auction. The page updates every 30 minutes; a figure that could not be read shows as not "
+              "measured, never estimated.</p></details></div></section>")
 
 
 def render_body(snap: dict) -> str:
     exported = snap["exported_at_utc"]
     banner = ('<div class="wrap"><p class="gap" style="margin-top:20px">Synthetic data: every number on this page is '
               'invented for testing and is not the book.</p></div>') if snap["synthetic"] else ""
-    head = page_head("Performance", "Live performance",
-                     "Daily results of our three paper-trading accounts at Alpaca, built automatically from the "
-                     "trading system's own records.",
-                     f'<p class="meta" style="color:rgba(255,255,255,0.7);margin-top:14px">Updated {escape(when(exported))}. '
-                     'Paper trading only: no client capital is invested.</p>')
-    return head + banner + portfolio_section(snap) + fund_facts(snap) + books_list(snap) + METHOD
+    head = page_head("Performance", "Performance", "Live results of our three paper-trading books.",
+                     f'<p class="meta" style="color:rgba(255,255,255,0.7);margin-top:14px">Updated {escape(when(exported))}</p>')
+    return head + banner + portfolio_section(snap) + fund_facts(snap) + method(snap)
 
 
 def render(snap: dict) -> str:

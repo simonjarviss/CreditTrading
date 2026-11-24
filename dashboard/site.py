@@ -245,7 +245,7 @@ def research(snap: dict, ledger: tuple) -> str:
     since = dt.date.fromisoformat(first).strftime("%B %Y")
     n_books, n_unread = books_trading(snap)
     head = page_head("Research", "Research",
-                     "How we find, test and promote trading strategies, and the infrastructure that runs them.")
+                     "How we find, test and run our strategies.")
     pipeline = _sec("", "Pipeline", "From idea to live capital",
                     "Every strategy passes through the same five stages. Breadth is the main lever: we keep many ideas "
                     "in testing and in paper trading at once.", stages_html())
@@ -325,8 +325,7 @@ def library(lib: dict) -> str:
     n_pdf = sum(1 for e in entries if e.get("oa_pdf_url"))
     years = [e["year"] for e in entries if e.get("year")]
     head = page_head("Library", "Research library",
-                     f"The {len(entries)} sources our strategies rest on: academic papers, industry research and the "
-                     "rules that govern the markets we trade, each with a note on how we use it.")
+                     f"The {len(entries)} sources behind our strategies.")
     figs = ('<div class="figures lib-figs">' + perf.fig(str(len(entries)), "Sources")
             + perf.fig(str(n_pdf), "With a free, open-access copy") + perf.fig(str(len(topics)), "Topics")
             + (perf.fig(f"{min(years)}–{max(years)}", "Years of publication") if years else "") + "</div>")
@@ -356,38 +355,41 @@ def person_card(m: dict) -> str:
     return f'<div class="person">{photo}<h3>{escape(m["name"])}</h3>{role}{li}</div>'
 
 
+# The pod in a line per book and four working rules, for the team page (team lead, 2026-11-24: "a brief
+# overview of the multi strategy pod ... organized better", after the team's photographs). The full
+# descriptions are layout.BOOK_TEXT.
+POD_BOOKS = {
+    "cef": "Leveraged credit closed-end funds. Long the widest discounts, short the richest, dollar-neutral.",
+    "c4": "Equity, preferred and multi-asset closed-end funds, on discount and relative-value signals.",
+    "events": "Eight strategies around scheduled corporate events, from fund distributions to trust terminations.",
+}
+POD_RULES = (
+    ("Systematic", "Written rules decide every trade. Nothing is placed by hand."),
+    ("At the close", "Positions are set from the day's data and traded near the close."),
+    ("Reconciled daily", "Every position is checked against the broker each evening."),
+    ("Tested first", "A new strategy runs in simulation on live data before it trades."),
+)
+
+
 def pod_overview(snap: dict) -> str:
-    """What the pod runs, in plain words, above the people (team lead, 2026-11-24: "a brief overview of the
-    multi strategy pod we are running (written in plain english that is easy to understand using proper
-    industry terminology)"). The books' names and descriptions are the performance page's own."""
-    books = "".join(
-        f'<div class="row slim"><div class="num">0{i}</div><div><h3><span class="dot" style="background:'
-        f'{BOOK_COLOURS.get(b["name"], "#111418")}"></span>{escape(b["title"])}</h3>'
-        f'<p>{escape(BOOK_TEXT.get(b["name"], ""))}</p></div></div>'
-        for i, b in enumerate(snap["books"], start=1))
-    body = ('<p>Each book follows a written, rules-based process. The system builds its positions from market '
-            'prices, fund data and company filings, trades near the market close, and reconciles every position '
-            'with the broker after the close. No trade is placed by hand.</p>'
-            f'<div class="rows pod-books">{books}</div>'
-            '<p style="margin-top:28px">The books trade different instruments and events, so the portfolio does not '
-            'rely on a single source of return. New strategies follow one path: research on historical data, a '
-            'simulation on live data, and then a paper-trading account. All three books trade paper accounts at '
-            'Alpaca Markets, and no outside capital is invested.</p>'
-            '<p><a class="link-arrow" href="/performance/">Live performance</a></p>')
-    return _sec("", "The pod", "A multi-strategy pod",
-                "Event Driven Trading is a systematic multi-strategy pod within QUANTT. Three independent books run "
-                "side by side and are managed as one portfolio.", body)
+    """The pod under the team: one line, a card per book, four working rules."""
+    cards = "".join(
+        f'<div class="pod-card"><h3><span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}">'
+        f'</span>{escape(b["title"])}</h3><p>{escape(POD_BOOKS.get(b["name"], ""))}</p></div>'
+        for b in snap["books"])
+    rules = "".join(f'<div><h4>{escape(k)}</h4><p>{escape(v)}</p></div>' for k, v in POD_RULES)
+    return ('<section class="section soft"><div class="wrap"><div class="eyebrow">The pod</div>'
+            '<h2>A multi-strategy pod</h2>'
+            '<p class="lede narrow">Three systematic books, managed as one portfolio.</p>'
+            f'<div class="pod-grid">{cards}</div><div class="pod-rules">{rules}</div>'
+            '<a class="link-arrow" href="/performance/">Live performance</a></div></section>')
 
 
 def team(t: dict, snap: dict) -> str:
     cards = [person_card(m) for m in t["members"]]
-    head = page_head("Team", "The team",
-                     "Four students at Queen's University, part of QUANTT, the Queen's University Algorithmic Network "
-                     "and Trading Team.")
-    body = (head + pod_overview(snap)
-            + f'<section class="section soft"><div class="wrap"><div class="eyebrow">The people</div>'
-              f'<div class="people">{"".join(cards)}</div></div></section>'
-            + contact_band())
+    head = page_head("Team", "The team", "Four students at Queen's University, part of QUANTT.")
+    body = (head + f'<section class="section"><div class="wrap"><div class="people">{"".join(cards)}</div></div></section>'
+            + pod_overview(snap) + contact_band())
     return page("team", "Team", body, "The Event Driven Trading team at QUANTT, Queen's University.")
 
 

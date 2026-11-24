@@ -38,8 +38,8 @@ def book(snap, name):
 
 def test_every_book_has_its_section(snap):
     h = page(snap)
-    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio results", "Fund facts",
-                  "What each book trades", "Latest session"):
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio since", "Fund facts",
+                  "Key figures", "Latest session", "Sources and method"):
         assert title in h, title
     for sym in ("AAA", "BBB", "CCC"):                   # aggregates only (team lead, 2026-11-23)
         assert sym not in h, sym
@@ -73,10 +73,12 @@ def test_the_portfolio_takes_each_book_from_its_first_send_and_the_event_book_on
     book has no end-of-day history, so it joins on its after-close readings, labelled; a session a
     trading book has no record for is left out and counted."""
     h = page(snap)
-    lede = h.split("Portfolio results", 1)[1].split("</p>", 1)[0]
-    assert "Fixed Income Book from 17 Nov 2026" in lede and "Equity Cross-Asset Book from 19 Nov 2026" in lede
-    assert "Event Book from 23 Nov 2026 (after-close readings until its end-of-day history begins)" in lede
-    assert "1 session is left out" in lede
+    assert "Portfolio since 17 Nov 2026" in h
+    head = h.split("Key figures", 1)[1].split("</thead>", 1)[0]
+    assert "Equity Cross-Asset Book<br><span class=\"meta\">from 19 Nov 2026" in head
+    assert "Event Book<br><span class=\"meta\">from 23 Nov 2026" in head
+    assert "Fixed Income Book<br>" not in head                       # it starts with the portfolio
+    assert "1 session left out" in h and "The Event Book uses these readings" in h
 
 
 def test_the_portfolio_view_switch_hides_the_books_until_chosen(snap):
@@ -109,8 +111,8 @@ def test_an_unreadable_book_is_left_out_of_the_portfolio_and_named(snap):
     it until a hand repair. The other books are shown, and the missing one is named above them."""
     book(snap, "c4")["official"] = {"UNMEASURED": "eod_equity.csv: not a number"}
     h = page(snap)
-    assert "Not included tonight, because its record could not be read: Equity Cross-Asset Book" in h
-    assert "Growth since inception" in h and "Equity Cross-Asset Book from" not in h.split("Portfolio results", 1)[1].split("</p>", 1)[0]
+    assert "Not included: Equity Cross-Asset Book, its record could not be read" in h
+    assert "Cumulative return" in h and "Equity Cross-Asset Book<br>" not in h.split("Key figures", 1)[1].split("</thead>", 1)[0]
 
 
 def test_the_newest_session_shows_its_after_close_reading_until_the_official_point_lands(snap):
@@ -208,7 +210,8 @@ def test_dashboard_code_has_no_route_to_a_broker_or_the_network(name):
 def test_the_return_is_named_time_weighted_and_shown_apart_from_the_pnl(snap):
     """2026-11-24: the portfolio read "+0.06% (-$472)", both right and read as an error."""
     h = page(snap)
-    assert "Time-weighted return since" in h and "P&amp;L since" in h
+    kpis = h.split('class="figures kpis"', 1)[1].split("</div></div></div>", 1)[0]
+    assert "Return, time-weighted" in kpis and '<div class="l">P&amp;L</div>' in kpis
     assert not re.search(r"Return since [^<]*\(", h)
 
 
@@ -242,7 +245,7 @@ def test_the_record_counts_from_its_start_and_keeps_the_earlier_record_apart(sna
     assert ocef["first"] == "2026-11-17" and ocef["p"]["last_date"] == "2026-11-19" and ocef["p"]["pnl"] == 100.0
     assert [why for b, why in old["excluded"]] == ["it began trading on 23 Nov 2026"]
     h = page(snap)
-    assert "P&amp;L since 20 Nov 2026" in h
+    assert "Portfolio since 20 Nov 2026" in h
     earlier = h.split("Record before 20 Nov 2026", 1)[1].split("</table>", 1)[0]
     assert "17 Nov 2026" in earlier and "19 Nov 2026" in earlier and "+$100" in earlier
 
@@ -252,8 +255,7 @@ def test_before_its_first_session_closes_the_record_says_when_it_starts(snap, mo
     shows the latest session and the earlier record; it never shows an empty figure."""
     monkeypatch.setattr(B, "RECORD_START", "2026-11-24")
     h = page(snap)
-    assert "The portfolio&#x27;s record starts with the 24 Nov 2026 session" in h or \
-        "The portfolio's record starts with the 24 Nov 2026 session" in h
+    assert "Portfolio since 24 Nov 2026" in h and "First figures after the close of 24 Nov 2026" in h
     assert "Latest session" in h and "Record before 24 Nov 2026" in h and "Key figures" not in h
     earlier = h.split("Record before 24 Nov 2026", 1)[1].split("</table>", 1)[0]
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):

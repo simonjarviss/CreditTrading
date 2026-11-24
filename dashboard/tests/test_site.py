@@ -101,7 +101,7 @@ def test_a_new_book_is_dated_by_its_first_send_not_its_newest_session(snap, tmp_
     assert ev["start"]["value"]["first_send"] == "2026-11-23"
     ev["session"]["value"]["date"] = "2026-11-25"           # two sessions later
     target = build(snap, tmp_path / "site", content)
-    assert "rading since 23 Nov 2026" in (target / "performance" / "index.html").read_text()
+    assert "Event Book<br><span class=\"meta\">from 23 Nov 2026" in (target / "performance" / "index.html").read_text()
     for page in ("overview/index.html", "performance/index.html"):
         h = (target / page).read_text()
         assert "since 25 Nov 2026" not in h, page
@@ -273,8 +273,8 @@ def test_with_every_book_unreadable_the_page_says_why(snap, tmp_path, content):
         b["official"] = {"UNMEASURED": "unreadable"}
         b["after_close"] = {"UNMEASURED": "unreadable"}
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
-    assert "No book has a traded session" not in h and "No portfolio tonight. Fixed Income Book: its record could not be read" in h
-    assert "The portfolio below is the other books only" not in h
+    assert "No book has a traded session" not in h and "Not included: Fixed Income Book, its record could not be read" in h
+    assert "First figures after the close" not in h and "Key figures" not in h
 
 
 def test_the_overview_says_when_the_record_starts_before_its_first_session_closes(snap, tmp_path, content, monkeypatch):
@@ -286,10 +286,12 @@ def test_the_overview_says_when_the_record_starts_before_its_first_session_close
     assert "Portfolio return, time-weighted" not in h
 
 
-def test_the_team_page_opens_with_the_pod_and_its_books(snap, tmp_path, content):
-    """Team lead, 2026-11-24: "team page should have a brief overview of the multi strategy pod we are running"."""
+def test_the_team_page_shows_the_people_then_the_pod_and_its_books(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "a brief overview of the multi strategy pod we are running"; then "it should be
+    the team pictures first then the pod description (which needs to be organized better)"."""
     home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert home.index("A multi-strategy pod") < home.index("Simon Jarvis")
-    pod = home.split("A multi-strategy pod", 1)[1].split('class="people"', 1)[0]
+    assert home.index('class="people"') < home.index("A multi-strategy pod")
+    pod = home.split("A multi-strategy pod", 1)[1].split("</section>", 1)[0]
+    assert pod.count('class="pod-card"') == 3 and pod.count("<h4>") == len(SITE.POD_RULES)
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
         assert title in pod, title

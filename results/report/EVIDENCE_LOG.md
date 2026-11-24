@@ -5767,3 +5767,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `6626d0e` (each book's own session, risk, execution and strategy tables, and the simulation scoreboard); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-13 · Ruling and release: release-20261124-9 live on the site; the pages then cut to headings and figures, the team first
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-9 on 5edb846, a site-only release, was installed in the VM's site clone at 13:18 ET. The build published, and `/` served the team page with the three analysts' titles (read through event-driven.quantt.ca). The trading clone stays at release-20261123-2, with cef, c4 and events AUTO_ARMED present. Its release check (workflow run wf_e041438c-b22) passed every mechanical step; the execution review found no order-path change; the quant review failed on a network error [V]
+  - the team lead: "there is too much uncesssary writing on the website, the live performance needs a more applicable pciture, this too much writing is in headers, explanations, tables ect. the performance page is fucking awful man" and "on the team page is should be the team icutes first then the pod descritption (which needs to be organized better)" (verbatim) [V]
+  - the performance page's photograph is Francisco Gonzalez's "Tickers" (CC BY 2.0, Wikimedia Commons), credited in the footer [V]
+- source: `dashboard/build.py` @ `5edb846` (the performance page before the change); the VM's site clone and site journal, read 2026-11-24 ~13:20 ET; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

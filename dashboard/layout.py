@@ -165,7 +165,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 
 
 # quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
-PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "hero-office",
+PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "markets-ticker",
           "research": "toronto-financial-street", "library": "toronto-financial-day", "team": "toronto-skyline-day",
           "contact": "toronto-bay-street", "": "hero-office"}
 # Photographs not taken by QUANTT, credited where they are shown (team lead, 2026-11-23: "proper Toronto
@@ -183,6 +183,9 @@ PHOTO_CREDITS = {
                                  "https://commons.wikimedia.org/wiki/File:Financial_District,_Toronto,_Ontario_(29376117743).jpg"),
     "toronto-bay-street": ("Dillan Payne", "CC BY-SA 2.0",
                            "https://commons.wikimedia.org/wiki/File:Bay_Street,_Toronto,_March_8_2025.jpg"),
+    # The performance page (team lead, 2026-11-24: "the live performance needs a more applicable picture").
+    "markets-ticker": ("Francisco Gonzalez", "CC BY 2.0",
+                       "https://commons.wikimedia.org/wiki/File:Tickers_(8085342806).jpg"),
 }
 # GitHub's mark (Octicons, MIT licence), inline so the page loads nothing from another origin.
 GITHUB_MARK = ('<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" '
