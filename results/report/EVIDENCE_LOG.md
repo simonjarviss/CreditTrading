@@ -5747,3 +5747,13 @@ that adds it does not exist when it is written.
 - source: `.gitignore` @ `b5c9913` (the `names_*.csv` line and its comment are added by the commit that carries this entry, on top of that main); `results/cef/cef_families/names_2026-10-12.csv` @ `b5c9913` (its columns include `current_shrcds`, `crsp_first`, `crsp_last` and `crsp_trade_rows` per fund)
 - supports: §5
 - status: current. E-2026-11-09-61 and -62 are this pull request's entries of 2026-11-09, renumbered on the merge because main had since used -01 and -02. The files leave the tree from this merge on; they stay in git history until the history rewrite, which is the team lead's to push
+
+### E-2026-11-24-10 · The team's data/ copy in R2 for the analysts is merged (pull request #3): the team lead confirmed the analysts still need it
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (the team lead's answer by question prompt, "Yes, update it", to whether the analysts still need the R2 copy; no figure)
+- source: `scripts/data/team_data.py` @ `56c2dd0`; `docs/SYSTEM.md` §5 "Sharing the desk's data" @ `b5c9913` (the row is added by the commit that carries this entry)
+- supports: §5
+- status: current. Ruled 2026-10-26, unmerged until now. On the merge, boto3 moved from requirements.txt to requirements-research.txt so the VM's trading venv is not rebuilt for a research package. The copy is as fresh as the team lead's last push (`team_data.py status` says when)
