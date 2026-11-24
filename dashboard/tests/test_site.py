@@ -137,3 +137,17 @@ def test_the_worker_config_names_the_worker_and_no_address():
     for t in (text, worker):
         assert not re.search(r"cloudapp\.azure\.com|\b\d{1,3}(\.\d{1,3}){3}\b", t)
     assert "env.ORIGIN" in worker and 'request.method !== "GET"' in worker
+
+
+def test_every_daemon_reload_in_the_site_installer_is_guarded():
+    """A reload applies to every unit on the VM, so each one must follow the guard that refuses on
+    drop-ins, running quantt jobs and the send windows (execution review of 83a7b14, 2026-11-23)."""
+    sh = (DASH / "deploy" / "install_site_vm.sh").read_text()
+    body = sh.split("check_safe_to_reload() {", 1)[1]
+    for fn in ("do_install() {", "do_uninstall() {"):
+        part = body.split(fn, 1)[1].split("\n}\n", 1)[0]
+        assert "systemctl daemon-reload" in part
+        assert part.index("check_safe_to_reload") < part.index("systemctl daemon-reload"), fn
+    guard = body.split("\n}\n", 1)[0]
+    for needle in ("list-jobs", "1530", "1230", "quantt-*.d", "service.d"):
+        assert needle in guard, needle
