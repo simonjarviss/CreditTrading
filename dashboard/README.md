@@ -7,9 +7,8 @@ dashboard-and-data lane). The rulings behind it are `docs/SYSTEM.md` §5, "Team 
 snapshots kept on the VM). What is true about the book right now is `python3 -m ops.orient`,
 never this folder.
 
-The site is the desk's public face for prospective investors: the team, the strategy
-presentation, the live paper results of every book, the research process and the library of
-sources. quantt.ca, the club's site, is its style reference only.
+The site is the desk's public face for prospective investors: the team, the live paper results
+of every book, the research process and the library of sources. quantt.ca, the club's site, is its style reference only.
 
 ---
 
@@ -19,10 +18,19 @@ sources. quantt.ca, the club's site, is its style reference only.
 the VM (prod)                                                    the web
 quantt_state/<book>/  ─┐
 shadow SCOREBOARD.md  ─┼─► dashboard.export ─► snapshot.json ─► dashboard.site ─► /srv/quantt-site/current ─► Caddy (HTTPS)
-results/IDEA_LEDGER.md │   (read only, no network)              (pages, atomic swap)                          eventdriven.quantt.ca
+results/IDEA_LEDGER.md │   (read only, no network)              (pages, atomic swap)                          (the origin)
 dashboard/content,     ┘
-dashboard/static (at the release tag)
+dashboard/public (at the release tag)
+
+event-driven.quantt.ca  =  Cloudflare Worker `quantt-event-driven`, deployed from `main` (dashboard/wrangler.jsonc, build root `dashboard`):
+                           a read-only caching proxy; every path, pages and /static/* alike, fetched from the origin above
 ```
+
+- **Cloudflare is the public face.** The Worker relays every request to the VM and caches the
+  answer at the edge: pages for 60 seconds, static files for an hour. It writes nothing and
+  forwards no cookie or query string; if the VM cannot be reached it answers 503 with a page
+  saying so. The VM's address is the Worker variable `ORIGIN`, set in the Cloudflare dashboard,
+  never in the repository.
 
 - **The build reads only files.** `dashboard/export.py` reads the records each runner has
   already written (`eod_equity.csv`, the newest `reconcile.json` or `verify.json`, `tca.csv`,
@@ -44,9 +52,11 @@ dashboard/static (at the release tag)
 - **The site has its own clone** on the VM, `/home/quantt/site/quantt-alpaca`, at a release
   tag. Releasing the site never moves the trading clone, so it never changes what the books
   trade; a trading release never moves the site.
-- **What changes only with a release**: the words (`dashboard/site.py`), the team
-  (`dashboard/content/team.json`), the slides and the deck PDF (`dashboard/static/`), the
-  library (`dashboard/content/library.json`).
+- **What changes with a site release** (the VM's site clone moves to a new tag): everything a
+  visitor sees, the words (`dashboard/site.py`), the team (`dashboard/content/team.json`), the
+  library (`dashboard/content/library.json`) and the styles, fonts and photographs
+  (`dashboard/public/`). **What changes with a merge to `main`** is only the Worker
+  (`dashboard/worker/index.js`, `dashboard/wrangler.jsonc`), which Cloudflare rebuilds.
 
 ## 2. What a snapshot, and therefore the site, may never carry
 

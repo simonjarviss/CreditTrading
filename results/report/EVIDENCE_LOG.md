@@ -5506,12 +5506,12 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current
 
-### E-2026-11-23-10 · Ruling: a public investor site served from the VM at eventdriven.quantt.ca, built on Lucy's dashboard, with every active book's live paper results
+### E-2026-11-23-10 · Ruling: a public investor site served from the VM at event-driven.quantt.ca, built on Lucy's dashboard, with every active book's live paper results
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-23
 - figures:
-  - none (a ruling). Through question prompts and messages: the dashboard is a "website all can see", served from the VM, at `eventdriven.quantt.ca`; Lucy's PR #62 is built on in a new PR with her commits kept; snapshots stay on the VM ("VM only"), superseding 2026-10-26's repository route; an agent installs it after the release check
+  - none (a ruling). Through question prompts and messages: the dashboard is a "website all can see", served from the VM, at `event-driven.quantt.ca`; Lucy's PR #62 is built on in a new PR with her commits kept; snapshots stay on the VM ("VM only"), superseding 2026-10-26's repository route; an agent installs it after the release check
   - the content asked for: team overview with full names, bios and LinkedIn; the in-depth deck "with the same tweaks that were applied to make Event Driven Trading"; "our library (all literary sources)"; "anything any R&D website would have"; "connected to our live P&L and live updates ... presentable to VC / investors"; contact `simon.jarvis@queensu.ca`; quantt.ca is "just inspiration" [V]
   - the site's statistics reproduce `ops/orient.py` PNL on the VM's records of 2026-11-20 to the cent: core cumulative -$632.20, high-water $101,474.24 (2026-10-12), drawdown -2.08%, volatility 6.97%; C4 +$1,958.13, volatility 9.07%; the two accounts combined $201,325.93, +$1,325.95 on $199,999.98 over 38 common sessions [V]
 - source: `dashboard/README.md` @ `87728af` (the 2026-10-26 repository route it supersedes) and `ops/orient.py` @ `87728af` (the PNL figures it reproduces); `dashboard/` (export.py, metrics.py, build.py, site.py), `dashboard/tests/test_metrics.py` (parity with `ops.orient.official_pnl`), `docs/SYSTEM.md` §5 "the public site" and `docs/RUNBOOK.md` §8.13 are in the commit that carries this entry
@@ -5541,6 +5541,33 @@ that adds it does not exist when it is written.
   - none (a ruling). "Go, keep the caches" on the list of 116 worktrees, 147 local and 88 GitHub branches, each fully merged into `main`; "Yes, if VERIFY passes" for AUTO_ARMED (not created: the session's send failed, E-2026-11-23-03)
   - applied at 15:52 to 15:53 ET with no skips: 116 worktrees removed after their ignored files (research caches and one-off wrappers, 35 GB) were moved to a folder outside the repository; 147 local and 88 GitHub branches deleted; 185 `archive/*` tags kept on the laptop and not pushed. The inventory afterwards: 55 local branches (10 with no reason, each holding commits not on main), 28 worktrees, 16 GitHub branches [V]
 - source: `ops/branch_inventory.py` @ `87728af` (the inventory, read before and after); `docs/STANDARD.md` @ `87728af` (A1.2)
+- supports: §5
+- status: current
+
+### E-2026-11-23-11 · Release: release-20261123-1, the public site, installed in its own clone on the VM; the trading clone and every book's arming unchanged
+- kind: release
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - release check on 83a7b14: GO with conditions. pytest exit 0, doc_audit 0 DRIFT in 95 checks, orient exit 0, preview exit 4 (nothing sent); quant-reviewer and execution-engineer found no defect on the order path (in quantt/ only install_vm.py's SITE_UNIT_FILES and its test changed). Its follow-ups (the .gitignore the merge had indented, the installer's unguarded daemon-reload, one empty change_usd failing the whole build, the combined figure's start date) are fixed in PR #101 [V]
+  - merged as exactly 83a7b14 through PR #102 (`--admin --match-head-commit`), origin/main's tree equal to 83a7b14; tagged release-20261123-1 on merge commit 1f93b56 [V]
+  - VM, 19:05 to 19:07 ET: no quantt job queued or running and NeedDaemonReload=no on all 39 quantt unit files before the install; caddy 2.6.2 from Ubuntu's archive; the site clone at release-20261123-1; first build published; quantt-site.timer active (every 30 minutes at :20 and :50) [V]
+  - read back after: the trading clone still at release-20261122-2, cef DRY_RUN=0 and AUTO_ARMED present, as before [V]
+  - live over HTTPS on the VM's own name: every page 200, an unknown path 404, the Content-Security-Policy, HSTS and frame headers sent; the performance page built 19:06 ET shows the 2026-11-23 after-close reading beside the official history to 2026-11-20 [V]
+- source: `dashboard/deploy/install_site_vm.sh` @ `83a7b14`; `docs/RUNBOOK.md` §8.13 @ `83a7b14`; the release check's verdict (workflow run wf_22fe6f40-95c) and the install's read-back, 2026-11-23
+- supports: §5
+- status: current
+
+### E-2026-11-23-12 · Ruling: the public site without the slideshow, the team first, quantt.ca's photographs and logo, served at event-driven.quantt.ca by a read-only Cloudflare Worker
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - none (a ruling). Through messages after release-20261123-1: the address is `event-driven.quantt.ca`, "running on a cloudflare worker called quantt-event-driven", which "deploys [our] repository ... all needs to be run on main"; "use the same pictures on the quant site"; "include the quant logo too"; "a higher resolution image in the back"; it looked "not professionally made and ... not well organized"; "take out the slideshow and make the team the first thing"; on the team page "the 2nd photo (the one in the middle) ... should be taken out"; the footer "is organized bad" [V]
+  - done: the strategy page, its 63 slide images and the deck PDF removed; Team first in the menu and the overview's first section; quantt.ca's photographs at 2400 px and its logo; serif headlines over Inter on a 12-column grid; the footer in three columns. The Worker (PR #103, merged as 3247a23) is a read-only caching proxy to the VM: GET and HEAD only, the target host fixed to the variable ORIGIN, off-site redirects refused, a 503 page when the VM is down; its config sits in `dashboard/` so the build installs no Python [V]
+  - the release check's review findings fixed: the overview's combined P&L names the books it sums and is withheld when a book is unmeasured; the site installer's guard runs before caddy's package can reload systemd, refuses on a unit file changed on disk (NeedDaemonReload) and on a failed systemctl query, and its two `enable` calls pass `--no-reload` [V]
+  - not yet done: Cloudflare's build of `main` has failed on every commit so far (6d2786ba at the repository root; 3247a23 not yet read), so `event-driven.quantt.ca` does not serve the site yet [V]
+- source: `dashboard/worker/index.js` @ `3247a23` and `dashboard/wrangler.jsonc` @ `3247a23` (the Worker, PR #103); `dashboard/site.py` @ `3858e67` (the redesign, no slideshow, the team first); the combined figure's label, the installer's guard and `docs/SYSTEM.md` §5 "the public site" are in the commit that carries this entry
 - supports: §5
 - status: current
 

@@ -43,7 +43,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from dashboard import snapshot as S
+from dashboard import metrics as M, snapshot as S
 
 # (state directory name, title on the site, runner kind). The titles are the names the
 # team lead approved for the investor deck (2026-11-22).
@@ -170,6 +170,10 @@ def official(book: str, book_dir: Path) -> dict:
         dates = [r["date"] for r in out]
         if dates != sorted(dates) or len(set(dates)) != len(dates):
             raise Unreadable("eod_equity.csv dates are not strictly increasing")
+        try:                        # what the page computes must be computable: a defect is this book's gap,
+            M.summary(out)          # never a failed build of the whole site (release-check review, 2026-11-23)
+        except ValueError as e:
+            raise Unreadable(f"eod_equity.csv: {e}") from e
         return reading({"rows": out}, OFFICIAL_SOURCE.format(book=book), newest_read or mtime_z(p),
                        "broker-confirmed")
     except (Unreadable, OSError) as e:

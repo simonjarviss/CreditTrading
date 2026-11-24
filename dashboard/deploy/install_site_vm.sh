@@ -1,5 +1,5 @@
 #!/bin/sh
-# Root install of the public site (team lead, 2026-11-23: eventdriven.quantt.ca, "website all can
+# Root install of the public site (team lead, 2026-11-23: event-driven.quantt.ca, "website all can
 # see", served from the VM) on the prod VM.
 #
 #   sudo sh install_site_vm.sh --hosts "<name> [<name> ...]"
@@ -15,7 +15,8 @@
 # and a trading release without moving the site. Both are at release tags: prod is this repository
 # at a tag and nothing else.
 #
-# WHAT IT MAKES (no unit, file or state of any trading book is written, started or stopped)
+# WHAT IT MAKES (no unit, file or state of any trading book is written, started or stopped; its one
+# daemon-reload is guarded, see THE RELOAD IS GUARDED)
 #   caddy (Ubuntu package)          the web server, user `caddy`, static files only. Its Caddyfile
 #                                   is rendered from dashboard/deploy/Caddyfile.tmpl. Let's Encrypt
 #                                   certificates for each host name, automatically.
@@ -45,6 +46,19 @@
 # build every half hour puts each new record on the site within 30 minutes. :20 and :50 stay off
 # :00/:30 (sessions) and :10/:40 (collectors): the VM has 1 GiB. A build reads files only, so a
 # run in the trading window cannot touch the send.
+#
+# THE RELOAD IS GUARDED (release check of 83a7b14, execution review, 2026-11-23). `systemctl
+# daemon-reload` applies to EVERY unit on the machine: a drop-in left on disk for a book's unit
+# (say Environment=DRY_RUN=0 on a disarmed book) would go live through this install without a
+# word (quantt/deploy/install_vm.py scan_units says why the C4 install refuses first). So before
+# each reload this script refuses, as the other installers do, on: any drop-in for a quantt- unit
+# other than the site's own; any quantt- unit whose file changed on disk since systemd last read it
+# (NeedDaemonReload, the same risk without a drop-in); any quantt- job queued or running; and the
+# send windows, weekdays 12:30-13:00 and 15:30-16:00 New York (install_vm.py
+# RESTART_REFUSE_RANGES_ET's neighbourhood). The guard runs FIRST, before caddy's package is
+# installed: a package's post-install reloads systemd too (release-check review, 2026-11-23). The
+# two `systemctl enable` calls pass --no-reload, so the install's one reload is the guarded one.
+# A systemctl query that fails refuses the install; it never reads as "nothing running".
 #
 # THE INSTALLER'S UNIT NAMES ARE REGISTERED in quantt/deploy/install_vm.py SITE_UNIT_FILES, so a
 # C4 or --reports install does not refuse beside them (pinned by a test).
@@ -112,6 +126,42 @@ check_clone() {
     *) die "the site clone is not checked out at a release tag (HEAD $(as_quantt git -C "${SITE_CLONE}" rev-parse --short HEAD))" ;;
   esac
   [ -z "$(as_quantt git -C "${SITE_CLONE}" status --porcelain)" ] || die "the site clone has local changes"
+}
+
+check_safe_to_reload() {
+  dow="$(date +%u)"
+  hm="$(date +%H%M)"
+  if [ "${dow}" -le 5 ]; then
+    if { [ "${hm}" -ge 1230 ] && [ "${hm}" -lt 1300 ]; } || { [ "${hm}" -ge 1530 ] && [ "${hm}" -lt 1600 ]; }; then
+      die "it is ${hm} New York on a weekday, inside a send window (12:30-13:00, 15:30-16:00); re-run after it"
+    fi
+  fi
+  jobs="$(systemctl list-jobs --no-legend 'quantt-*')" || die "cannot list systemd jobs"
+  [ -z "${jobs}" ] || die "a quantt job is queued or running: ${jobs}"
+  running="$(systemctl list-units --type=service --state=activating,running --no-legend --plain 'quantt-*')" \
+    || die "cannot list the running quantt units"
+  active="$(printf '%s\n' "${running}" | awk 'NF {print $1}' | grep -v '^quantt-site\.service$' | tr '\n' ' ')"
+  [ -z "$(echo "${active}" | tr -d ' ')" ] || die "a quantt job is running: ${active}; run this between the books' jobs"
+  loaded="$(systemctl list-units --all --no-legend --plain 'quantt-*')" || die "cannot list the quantt units"
+  stale=""
+  for u in $(printf '%s\n' "${loaded}" | awk 'NF {print $1}'); do
+    case "${u}" in quantt-site.service|quantt-site.timer) continue ;; esac
+    need="$(systemctl show -p NeedDaemonReload --value "${u}")" || die "cannot read NeedDaemonReload of ${u}"
+    [ "${need}" = "no" ] || stale="${stale} ${u}"
+  done
+  [ -z "${stale}" ] || die "unit file(s) changed on disk since systemd read them would go live at this install's daemon-reload:${stale}. Find out why, and re-run"
+  found=""
+  for root in /etc/systemd/system /run/systemd/system /usr/lib/systemd/system /lib/systemd/system \
+              /etc/systemd/system.control /run/systemd/system.control /run/systemd/transient; do
+    for d in "${root}"/quantt-*.d "${root}"/service.d "${root}"/timer.d; do
+      [ -d "${d}" ] || continue
+      case "$(basename "${d}")" in quantt-site.service.d|quantt-site.timer.d) continue ;; esac
+      for f in "${d}"/*.conf; do
+        [ -e "${f}" ] && found="${found} ${f}"
+      done
+    done
+  done
+  [ -z "${found}" ] || die "drop-in(s) on disk would go live at this install's daemon-reload:${found}. Read them, remove them, and re-run"
 }
 
 unit_file() {
@@ -205,6 +255,7 @@ write_caddyfile() {
 do_install() {
   check_root
   check_clone
+  check_safe_to_reload                          # first: caddy's package post-install reloads systemd
   install_caddy
   step "site root ${SITE_ROOT}"
   install -d -m 0755 -o "${RUN_USER}" -g "${RUN_USER}" "${SITE_ROOT}"
@@ -214,15 +265,16 @@ do_install() {
   systemctl start quantt-site.service || die "the first build failed: journalctl -u quantt-site.service"
   [ -L "${SITE_ROOT}/current" ] || die "the build left no ${SITE_ROOT}/current"
   write_caddyfile
-  systemctl enable caddy >/dev/null 2>&1
+  systemctl enable --no-reload caddy >/dev/null 2>&1
   systemctl restart caddy
-  systemctl enable --now quantt-site.timer
+  systemctl enable --no-reload --now quantt-site.timer
   step "done. caddy: $(systemctl is-active caddy); timer: $(systemctl is-active quantt-site.timer)"
   systemctl list-timers quantt-site.timer --no-pager | sed -n 1,3p
 }
 
 do_uninstall() {
   check_root
+  check_safe_to_reload
   systemctl disable --now quantt-site.timer 2>/dev/null || true
   rm -f "${UNIT_DIR}/quantt-site.service" "${UNIT_DIR}/quantt-site.timer"
   systemctl daemon-reload

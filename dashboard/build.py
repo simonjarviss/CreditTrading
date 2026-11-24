@@ -118,7 +118,7 @@ def monthly_table(rows: list) -> str:
     body = [(dt.date.fromisoformat(m + "-01").strftime("%B %Y"),
              f'<span class="{tone(p)}">{usd(p, True)}</span>', f'<span class="{tone(r)}">{pct(r, True)}</span>')
             for m, p, r in ms]
-    return "<h3 style=\"margin-top:28px\">Monthly results</h3>" + tbl(["Month", "P&L", "Return"], body, right=(1, 2))
+    return "<h3>Monthly results</h3>" + tbl(["Month", "P&L", "Return"], body, right=(1, 2))
 
 
 def risk_block(r: dict) -> str:
@@ -259,6 +259,31 @@ def book_section(b: dict) -> str:
     return "".join(parts)
 
 
+def summary_table(snap: dict) -> str:
+    """One row per book with an official history: the figures an allocator reads first."""
+    rows = []
+    for b in snap["books"]:
+        o = b["official"]
+        if "value" not in o:
+            started = (f'trading since {fmt_short(b["session"]["value"]["date"])}' if "value" in b["session"]
+                       else "no record yet")
+            rows.append((f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
+                         f'{escape(b["title"])}', f'<span class="meta">Official history to follow; {started}</span>',
+                         "", "", "", "", ""))
+            continue
+        s = M.summary(o["value"]["rows"])
+        rows.append((f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
+                     f'{escape(b["title"])}', fmt_short(s["first_date"]), usd(s["equity"]),
+                     f'<span class="{tone(s["cum_pnl"])}">{usd(s["cum_pnl"], True)}</span>',
+                     f'<span class="{tone(s["cum_return"])}">{pct(s["cum_return"], True)}</span>',
+                     "n/a" if s["sharpe"] is None else f'{s["sharpe"]:.2f}', pct(s["max_drawdown"])))
+    head = ["Book", "Since", "Equity", "P&L", "Return", "Sharpe", "Max drawdown"]
+    th = "".join(f'<th class="{"r" if i >= 2 else ""}">{escape(h)}</th>' for i, h in enumerate(head))
+    body = "".join("<tr>" + "".join(f'<td class="{"r" if i >= 2 else ""}">{c}</td>' for i, c in enumerate(r)) + "</tr>"
+                   for r in rows)
+    return f'<div class="tbl-wrap"><table class="summary"><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table></div>'
+
+
 def combined_section(books: list) -> str:
     series = {b["name"]: b["official"]["value"]["rows"] for b in books if "value" in b["official"]}
     if not series:
@@ -291,12 +316,13 @@ def combined_section(books: list) -> str:
             + fig(pct(s["drawdown"]), f"Drawdown from the peak of {usd(s['hwm'])}", tone(s["drawdown"]))
             + "</div>"
             + charts.line_chart(lines, "Cumulative P&L of each account and combined, official end-of-day equity")
+            + summary_table({"books": books})
             + '<p class="meta">Cumulative P&amp;L in dollars from each account\'s first funded day. '
               'Hover for each session\'s values.</p>' + miss_txt + "</div></section>")
 
 
 def shadow_section(r: dict) -> str:
-    head = ('<section class="section panel"><div class="wrap"><div class="eyebrow">Incubation</div>'
+    head = ('<section class="section soft"><div class="wrap"><div class="eyebrow">Incubation</div>'
             '<h2>Strategies in simulation</h2>'
             '<p class="narrow">New strategies run first as simulated books on live data before they receive a '
             'paper account. These figures are simulated and are not trading results.</p>')
