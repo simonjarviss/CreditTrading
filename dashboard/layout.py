@@ -1,7 +1,7 @@
 """The page shell shared by every page of the public site: head, navigation, footer, disclaimer.
 
 Standard library only. Every page is static HTML; the one script (static/site.js) only
-draws chart tooltips and turns slides. The Content-Security-Policy the web server sends
+draws chart tooltips. The Content-Security-Policy the web server sends
 (dashboard/deploy/Caddyfile.tmpl) allows nothing from another origin.
 """
 from __future__ import annotations
@@ -13,9 +13,8 @@ SITE_NAME = "Event Driven Trading"
 TEAM_LINE = "QUANTT · Queen's University"
 CONTACT_EMAIL = "simon.jarvis@queensu.ca"       # team lead, 2026-11-23: the site's contact address
 REPO_URL = "https://github.com/quanttqueensu/CreditTrading"
-NAV = (("overview", "/", "Overview"), ("strategy", "/strategy/", "Strategy"),
-       ("performance", "/performance/", "Performance"), ("research", "/research/", "Research"),
-       ("library", "/library/", "Library"), ("team", "/team/", "Team"), ("contact", "/contact/", "Contact"))
+NAV = (("overview", "/", "Overview"), ("team", "/team/", "Team"), ("performance", "/performance/", "Performance"),
+       ("research", "/research/", "Research"), ("library", "/library/", "Library"), ("contact", "/contact/", "Contact"))
 
 DISCLAIMER = (
     "All performance on this site comes from paper-trading accounts at Alpaca Markets or from "
@@ -72,9 +71,10 @@ def tone(v) -> str:
 
 def page(active: str, title: str, body: str, description: str) -> str:
     cur = ' aria-current="page"'
-    nav = "".join(f'<a href="{href}"{cur if key == active else ""}>{escape(label)}</a>'
-                  for key, href, label in NAV)
-    foot_nav = "".join(f'<li><a href="{href}">{escape(label)}</a></li>' for _, href, label in NAV)
+    cta = ' class="nav-cta"'
+    nav = "".join(f'<a href="{href}"{cur if key == active else ""}{cta if key == "contact" else ""}>'
+                  f'{escape(label)}</a>' for key, href, label in NAV if key != "overview")
+    foot_nav = "".join(f'<li><a href="{href}">{escape(label)}</a></li>' for key, href, label in NAV if key != "contact")
     full_title = SITE_NAME if active == "overview" else f"{title} · {SITE_NAME}"
     return f"""<!doctype html>
 <html lang="en-CA">
@@ -90,30 +90,43 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <meta name="theme-color" content="#0f2547">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/static/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/static/fonts/source-serif-4-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/static/site.css">
 <script src="/static/site.js" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-<a class="brand" href="/"><b>{SITE_NAME}</b><span>{escape(TEAM_LINE)}</span></a>
+<a class="brand" href="/" aria-label="{SITE_NAME}, home"><img src="/static/img/quantt-logo.png" alt="QUANTT" width="113" height="28"><span>{SITE_NAME}</span></a>
 <nav class="nav" aria-label="Main">{nav}</nav>
 </div></header>
 <main id="main">
 {body}
 </main>
 <footer class="site-footer"><div class="wrap">
-<div class="cols">
-<div><h4>{SITE_NAME}</h4><p>A systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts and scheduled corporate events.</p></div>
-<div><h4>Pages</h4><ul style="list-style:none;padding:0;margin:0;columns:2">{foot_nav}</ul></div>
-<div><h4>Contact</h4><p>Simon Jarvis, Portfolio Manager<br><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
+<div class="foot-grid">
+<div class="foot-brand"><img class="logo" src="/static/img/quantt-logo-white.png" alt="QUANTT" width="105" height="26">
+<p><span class="foot-name">{SITE_NAME}</span>A systematic trading team at QUANTT, Queen's University.</p></div>
+<nav class="foot-nav" aria-label="Footer"><h4>Site</h4><ul>{foot_nav}</ul></nav>
+<div class="foot-contact"><h4>Contact</h4><p>Simon Jarvis<br>Portfolio Manager</p><p><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
 </div>
 <p class="disclaimer">{escape(DISCLAIMER)}</p>
+<p class="foot-base"><span>&copy; {dt.date.today().year} {SITE_NAME}</span><span>QUANTT &middot; Queen's University, Kingston, Ontario</span></p>
 </div></footer>
 </body>
 </html>
 """
 
 
-def page_head(eyebrow: str, title: str, lede: str, extra: str = "") -> str:
-    return (f'<section class="page-head"><div class="wrap"><div class="eyebrow">{escape(eyebrow)}</div>'
+# quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
+PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "hero-office", "research": "roundtable",
+          "library": "group-lights", "team": "group-office", "contact": "hero-office", "": "hero-office"}
+
+
+def photo_style(key: str) -> str:
+    return f' style="background-image:url(/static/img/{PHOTOS.get(key, "hero-office")}.webp)"'
+
+
+def page_head(eyebrow: str, title: str, lede: str, extra: str = "", photo: str = "") -> str:
+    return (f'<section class="page-head"{photo_style(photo or eyebrow.lower())}><div class="wrap">'
+            f'<div class="eyebrow">{escape(eyebrow)}</div>'
             f'<h1>{escape(title)}</h1><p class="lede">{escape(lede)}</p>{extra}</div></section>')

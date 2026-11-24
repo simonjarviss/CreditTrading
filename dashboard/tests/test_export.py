@@ -143,3 +143,15 @@ def test_main_writes_the_snapshot(state, tmp_path):
     out = tmp_path / "snap.json"
     assert E.main(["--state-root", str(st), "--shadow-scoreboard", str(sb), "-o", str(out)]) == 0
     assert S.validate(json.loads(out.read_text())) == []
+
+
+def test_an_empty_change_after_funding_is_that_books_gap_not_a_failed_site(state):
+    """Release-check review, 2026-11-23: one empty change_usd used to stop the whole site build."""
+    st, _ = state
+    p = st / "cef" / "eod_equity.csv"
+    p.write_text(p.read_text().replace("2026-11-19,100100.0,200.0,", "2026-11-19,100100.0,,"))
+    s = snap_of(state)
+    assert S.UNMEASURED in book(s, "cef")["official"] and "no change_usd" in book(s, "cef")["official"][S.UNMEASURED]
+    assert "value" in book(s, "c4")["official"]
+    from dashboard import build as B
+    assert "Fixed Income Book" in B.render(s)

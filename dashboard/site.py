@@ -2,16 +2,18 @@
 
     python3 -m dashboard.site --snapshot snapshot.json --out /srv/quantt-site
 
-WHY (team lead, 2026-11-23): "a site that shows team overview, a slideshow ... everything
+WHY (team lead, 2026-11-23): "a site that shows team overview, ... everything
 someone who would want to give us capital would see", "our library (all literary sources)",
-"anything any R&D website would have", hosted from the VM at eventdriven.quantt.ca for anyone
+"anything any R&D website would have", hosted from the VM at event-driven.quantt.ca for anyone
 to read. quantt.ca, the club's site, is the style reference only.
 
 WHAT IS LIVE AND WHAT IS FIXED. The performance page and the figures on the overview come
 from the night's snapshot (dashboard/export.py), so they are measured at build time. The
-words, the team, the slides and the library are files in this repository
-(dashboard/content/, dashboard/static/), so they change only with a release. The research
-ledger count is read from results/IDEA_LEDGER.md of the same release.
+words, the team and the library are files in this repository
+(dashboard/content/, dashboard/public/static/), so they change only with a site release. The public
+address's Cloudflare Worker only relays and caches what the VM serves (dashboard/worker/index.js), so
+a page and its styles always come from the same release. The research ledger count is read from
+results/IDEA_LEDGER.md of the same release.
 
 PUBLISHING IS ATOMIC. Pages are written into a new directory beside the served one, then a
 symlink `current` is swapped to it with one rename, so a reader never sees half a site. The
@@ -31,13 +33,12 @@ from pathlib import Path
 
 from dashboard import build as perf, charts, metrics as M, snapshot as S
 from dashboard.layout import (BOOK_COLOURS, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
-                              tone, usd, when)
+                              photo_style, tone, usd, when)
 
 HERE = Path(__file__).resolve().parent
 CONTENT = HERE / "content"
-STATIC = HERE / "static"
+STATIC = HERE / "public" / "static"
 REPO = HERE.parent
-DECK_PDF = "QUANTT-Event-Driven-Trading.pdf"
 KEEP_BUILDS = 3
 
 BOOK_TEXT = {
@@ -68,9 +69,29 @@ def _official(snap: dict) -> dict:
     return {b["name"]: b["official"]["value"]["rows"] for b in snap["books"] if "value" in b["official"]}
 
 
+def combined_label(snap: dict) -> str | None:
+    """The label of the overview's combined P&L figure, or None when that figure is withheld.
+
+    WHY (release-check review, 2026-11-23): the figure sums only the books with an official
+    history, and used to be called "combined" whatever it left out. A book that is new (no
+    end-of-day history yet, `absent`) is named out of it: the label says which books it sums. A
+    book whose history could not be read tonight (UNMEASURED) withholds the figure, because the sum
+    would change basis from one night to the next with nothing on the page to say so; the
+    performance page names the book and the reason."""
+    if not _official(snap) or any(S.UNMEASURED in b["official"] for b in snap["books"]):
+        return None
+    summed = [b["title"] for b in snap["books"] if "value" in b["official"]]
+    if len(summed) == len(snap["books"]):
+        return "Combined paper P&amp;L"
+    short = [escape(t[:-len(" Book")] if t.endswith(" Book") else t) for t in summed]
+    if len(short) == 1:
+        return f"Paper P&amp;L of the {short[0]} Book"
+    return f"Paper P&amp;L of the {', '.join(short[:-1])} and {short[-1]} books"
+
+
 def stages_html() -> str:
-    return '<div class="stages">' + "".join(
-        f'<div class="stage"><span class="k">{i}</span><b>{escape(t)}</b><p class="meta">{escape(d)}</p></div>'
+    return '<div class="rows">' + "".join(
+        f'<div class="row slim"><div class="num">0{i}</div><div><h3>{escape(t)}</h3><p>{escape(d)}</p></div></div>'
         for i, (t, d) in enumerate(STAGES, start=1)) + "</div>"
 
 
@@ -80,117 +101,106 @@ def overview(snap: dict) -> str:
     series = _official(snap)
     figs = []
     n_books = sum(1 for b in snap["books"] if "value" in b["session"] or "value" in b["official"])
-    figs.append(perf.fig(str(n_books), "Books trading, each in its own paper account"))
+    figs.append(perf.fig(str(n_books), "Books trading"))
     ev = next((b for b in snap["books"] if b["name"] == "events"), None)
     if ev is not None and "value" in ev["sleeves"]:
         n_strat = len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
         figs.append(perf.fig(str(n_strat + sum(1 for b in snap["books"] if b["name"] != "events")),
-                             "Systematic strategies with fully specified rules"))
+                             "Systematic strategies"))
     if "cef" in series:
         s = M.summary(series["cef"])
-        figs.append(perf.fig(str(s["n_returns"]), f"Sessions traded since {fmt_date(series['cef'][1]['date'])}"))
-    if series:
+        figs.append(perf.fig(str(s["n_returns"]), f"Sessions traded since {fmt_short(series['cef'][1]['date'])}"))
+    label = combined_label(snap)
+    if label is not None:
         rows, _ = M.combined(series)
         c = M.summary(rows)
-        figs.append(perf.fig(usd(c["cum_pnl"], True), f"Combined paper P&amp;L to {fmt_date(c['last_date'])}"))
-    hero = ('<section class="hero"><div class="wrap"><div class="eyebrow">QUANTT · Queen\'s University</div>'
+        figs.append(perf.fig(usd(c["cum_pnl"], True), f"{label} to {fmt_short(c['last_date'])}",
+                             tone(c["cum_pnl"])))
+    hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
+            '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
             '<h1>Event Driven Trading</h1>'
-            '<p class="lede">We are a systematic trading team. We run three automated books that trade closed-end '
-            'fund discounts and scheduled corporate events, each in its own paper account.</p>'
-            '<div class="buttons"><a class="btn primary" href="/performance/">Live performance</a>'
-            '<a class="btn ghost" href="/strategy/">Strategy presentation</a></div>'
-            f'<div class="figures">{"".join(figs)}</div>'
-            f'<p class="meta" style="color:rgba(255,255,255,0.6);margin-top:10px">Live figures updated '
-            f'{escape(when(snap["exported_at_utc"]))} from the trading system\'s records. Paper trading only.</p>'
+            '<p class="lede">A systematic trading team. Three automated books trade closed-end fund discounts '
+            'and scheduled corporate events, each in its own paper account.</p>'
+            '<div class="buttons"><a class="btn primary" href="/team/">Meet the team</a>'
+            '<a class="btn ghost" href="/performance/">Live performance</a></div>'
             '</div></section>')
-    cards = []
-    for b in snap["books"]:
-        foot = ""
+    kf = (f'<section class="kf"><div class="wrap"><div class="figures">{"".join(figs)}</div>'
+          f'<p class="meta note">Live figures, updated {escape(when(snap["exported_at_utc"]))} from the trading '
+          'system\'s records. Paper trading only.</p></div></section>')
+    rows_html = []
+    for i, b in enumerate(snap["books"], start=1):
+        stat = ""
         if b["name"] in series:
             s = M.summary(series[b["name"]])
-            foot = (f'Paper P&amp;L since {fmt_short(s["first_date"])}: <b class="{tone(s["cum_pnl"])}">'
-                    f'{usd(s["cum_pnl"], True)}</b> to {fmt_short(s["last_date"])}')
+            stat = (f'<b class="{tone(s["cum_pnl"])}">{usd(s["cum_pnl"], True)}</b>'
+                    f'<span>Paper P&amp;L since {fmt_short(s["first_date"])}</span>')
         elif "value" in b["session"]:
-            foot = f'Trading since {fmt_short(b["session"]["value"]["date"])}; official history to follow'
-        cards.append(f'<div class="card"><span class="tag" style="background:{BOOK_COLOURS.get(b["name"], "#101213")}"></span>'
-                     f'<h3>{escape(b["title"])}</h3><p>{escape(BOOK_TEXT.get(b["name"], ""))}</p>'
-                     f'<div class="foot">{foot}<br><a href="/performance/#{escape(b["name"])}">Results</a></div></div>')
-    books = ('<section class="section"><div class="wrap"><div class="eyebrow">The books</div>'
-             '<h2>Three books, one portfolio</h2>'
-             '<p class="lede" style="margin-top:12px">Each book runs a fully specified rule set. The system decides '
-             'after the close, trades at the next close and reports each morning, with no manual intervention.</p>'
-             f'<div class="grid" style="margin-top:28px">{"".join(cards)}</div></div></section>')
-    edge = ('<section class="section panel"><div class="wrap"><div class="eyebrow">The opportunity</div>'
-            '<h2>Why the mispricing persists</h2><div class="grid" style="margin-top:24px">'
-            '<div><h3>No arbitrage link</h3><p>A closed-end fund has a fixed share count and no creation or '
-            'redemption mechanism, so nothing forces its price to converge to net asset value.</p></div>'
-            '<div><h3>Retail, income-driven holders</h3><p>The holder base is mostly retail investors buying for '
-            'distribution yield. Discounts track their sentiment and their year-end tax-loss selling.</p></div>'
-            '<div><h3>Forced, scheduled flows</h3><p>Income investors buy ahead of distributions, and unit trusts '
-            'must sell their holdings by a termination date fixed in the prospectus.</p></div>'
-            '<div><h3>Too small for large funds</h3><p>Most of these securities trade a few million dollars a day '
-            'with limited stock borrow, which keeps institutional capital out.</p></div>'
-            '</div></div></section>')
-    process = ('<section class="section"><div class="wrap"><div class="eyebrow">Process</div>'
-               '<h2>From idea to live capital</h2>' + stages_html()
-               + '<p style="margin-top:24px"><a href="/research/">How we research</a></p></div></section>')
-    more = ('<section class="section panel"><div class="wrap"><div class="grid">'
-            '<div class="card"><h3>Strategy presentation</h3><p>The full presentation: each book\'s rules, '
-            'backtests, portfolio construction and paper results.</p><div class="foot"><a href="/strategy/">View the slides</a></div></div>'
-            '<div class="card"><h3>Research library</h3><p>The academic papers, industry research and regulation '
-            'our strategies rest on, with links to each source.</p><div class="foot"><a href="/library/">Browse the library</a></div></div>'
-            '<div class="card"><h3>The team</h3><p>Four Queen\'s University students covering portfolio '
-            'management, risk, research and data.</p><div class="foot"><a href="/team/">Meet the team</a></div></div>'
-            '</div></div></section>')
-    live = ""
+            stat = f'<b>New</b><span>Trading since {fmt_short(b["session"]["value"]["date"])}</span>'
+        stat += f'<a class="link-arrow" href="/performance/#{escape(b["name"])}">Results</a>'
+        rows_html.append(f'<div class="row"><div class="num">0{i}</div><div><h3>'
+                         f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
+                         f'{escape(b["title"])}</h3><p>{escape(BOOK_TEXT.get(b["name"], ""))}</p></div>'
+                         f'<div class="stat">{stat}</div></div>')
+    approach = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
+                '<div class="eyebrow">Approach</div><h2>Three books, one portfolio</h2>'
+                '<p class="lede">Each book runs a fully specified rule set. The system decides after the close, '
+                'trades at the next close and reports each morning, with no manual intervention.</p>'
+                '<a class="link-arrow" href="/research/">How we research</a></div>'
+                f'<div class="sec-body"><div class="rows">{"".join(rows_html)}</div></div></div></section>')
+    performance = ""
     if series:
         rows, _ = M.combined(series)
-        lines = [{"name": b["title"], "color": BOOK_COLOURS.get(b["name"], "#101213"),
+        lines = [{"name": b["title"], "color": BOOK_COLOURS.get(b["name"], "#111418"),
                   "points": perf.cum_points(series[b["name"]])} for b in snap["books"] if b["name"] in series]
-        if len(series) > 1:
-            lines.append({"name": "Accounts combined", "color": "#101213", "points": perf.cum_points(rows), "bold": True})
-        live = ('<section class="section" style="padding-bottom:0"><div class="wrap"><div class="eyebrow">Live</div>'
-                '<h2>Paper results to date</h2>'
-                '<p class="lede" style="margin-top:12px">Cumulative profit and loss of each account, from Alpaca\'s '
-                'official end-of-day records. The page updates automatically through the day.</p>'
-                + charts.line_chart(lines, "Cumulative P&L of each account and combined")
-                + '<p style="margin-top:16px"><a href="/performance/">Full performance and risk</a></p></div></section>')
-    return page("overview", "Overview", hero + live + books + edge + process + more + contact_band(),
+        if len(series) > 1 and combined_label(snap) is not None:
+            lines.append({"name": "Accounts combined", "color": "#111418", "points": perf.cum_points(rows), "bold": True})
+        performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
+                       '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'
+                       '<p class="lede">Cumulative profit and loss of each account, from Alpaca\'s official '
+                       'end-of-day records, gross of the costs a paper account does not charge.</p>'
+                       '<a class="link-arrow" href="/performance/">Performance and risk</a></div>'
+                       '<div class="sec-body">' + charts.line_chart(lines, "Cumulative P&L of each account and combined")
+                       + '</div><div class="sec-full">' + perf.summary_table(snap) + '</div></div></section>')
+    opportunity = ('<section class="section"><div class="wrap split">'
+                   '<img class="photo" src="/static/img/group-lights.webp" alt="QUANTT members at a firm visit, January 2026" loading="lazy">'
+                   '<div><div class="eyebrow">The opportunity</div><h2>Why the mispricing persists</h2>'
+                   '<div class="grid" style="margin-top:40px;gap:28px 36px">'
+                   '<div><h3>No arbitrage link</h3><p class="meta">A closed-end fund has a fixed share count and no '
+                   'creation or redemption, so nothing forces its price to net asset value.</p></div>'
+                   '<div><h3>Income-driven holders</h3><p class="meta">Most holders buy for yield. Discounts track '
+                   'their sentiment and their year-end tax-loss selling.</p></div>'
+                   '<div><h3>Forced, scheduled flows</h3><p class="meta">Income buyers crowd distribution dates, and '
+                   'unit trusts must sell their holdings by a fixed termination date.</p></div>'
+                   '<div><h3>Too small for large funds</h3><p class="meta">A few million dollars a day of volume and '
+                   'limited borrow keep institutional capital out.</p></div>'
+                   '</div></div></div></section>')
+    process = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
+               '<div class="eyebrow">Process</div><h2>From idea to live capital</h2>'
+               '<a class="link-arrow" href="/research/">How we research</a></div>'
+               '<div class="sec-body">' + stages_html() + '</div></div></section>')
+    members = json.loads((CONTENT / "team.json").read_text())["members"]
+    people = "".join(
+        f'<div class="person"><h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div>'
+        f'<p>{escape(m["bio"])}</p>'
+        + (f'<a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a>' if m.get("linkedin") else "")
+        + '</div>' for m in members)
+    team = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
+            '<div class="eyebrow">The team</div><h2>Who we are</h2>'
+            '<p class="lede">Four Queen\'s University students at QUANTT, covering portfolio management, risk, '
+            'research and data.</p><a class="link-arrow" href="/team/">The team</a></div>'
+            f'<div class="sec-body"><div class="people">{people}</div></div></div></section>')
+    return page("overview", "Overview", hero + team + kf + approach + performance + opportunity + process + contact_band(),
                 "A systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts "
                 "and scheduled corporate events.")
 
 
 def contact_band() -> str:
-    return ('<section class="section"><div class="wrap narrow"><div class="eyebrow">Contact</div>'
-            '<h2>Speak with the team</h2><p class="lede" style="margin-top:12px">For questions about the strategies, '
-            'the results or an allocation, contact Simon Jarvis, Portfolio Manager.</p>'
-            f'<div class="buttons"><a class="btn blue" href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></div>'
-            '</div></section>')
-
-
-# ------------------------------------------------------------------- strategy --
-
-def strategy(slides: list) -> str:
-    first = slides[0]
-    thumbs = "".join(
-        f'<a href="/static/slides/slide-{s["n"]:02d}.webp" data-title="{escape(s["title"])}" id="t{i + 1}">'
-        f'<img loading="lazy" src="/static/slides/slide-{s["n"]:02d}.webp" alt="">'
-        f'<span>{i + 1}. {escape(s["title"])}</span></a>' for i, s in enumerate(slides))
-    head = page_head("Strategy", "Strategy presentation",
-                     "Our strategies in full: the opportunity, each book's rules and backtest, the event strategies, "
-                     "portfolio construction, infrastructure and paper results to date.",
-                     f'<div class="buttons"><a class="btn primary" href="/static/{DECK_PDF}">Download the PDF</a></div>')
-    body = (head + '<section class="section"><div class="wrap">'
-            f'<div class="deck" data-count="{len(slides)}"><div class="slide-frame">'
-            f'<img src="/static/slides/slide-{first["n"]:02d}.webp" alt="{escape(first["title"])}"></div>'
-            '<div class="deck-controls"><button class="prev" type="button">Previous</button>'
-            f'<span class="deck-count">Slide 1 of {len(slides)}: {escape(first["title"])}</span>'
-            '<button class="next" type="button">Next</button></div>'
-            '<p class="meta">Use the arrow keys to move between slides. Backtest figures are gross of costs unless '
-            'a slide states otherwise.</p></div>'
-            f'<div class="thumbs">{thumbs}</div></div></section>')
-    return page("strategy", "Strategy presentation", body,
-                "The Event Driven Trading team's strategy presentation: rules, backtests and paper results.")
+    return ('<section class="section dark"><div class="wrap sec-grid"><div class="sec-label">'
+            '<div class="eyebrow">Contact</div><h2>Speak with the team</h2></div>'
+            '<div class="sec-body"><p class="lede">For questions about the strategies, the results or an allocation, '
+            'contact Simon Jarvis, Portfolio Manager.</p>'
+            f'<div class="buttons"><a class="btn primary" href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></div>'
+            '</div></div></section>')
 
 
 # ------------------------------------------------------------------- research --
@@ -212,9 +222,9 @@ def research(snap: dict, ledger: tuple) -> str:
     head = page_head("Research", "Research",
                      "How we find, test and promote trading strategies, and the infrastructure that runs them.")
     card = ('<section class="section"><div class="wrap"><div class="eyebrow">Method</div><h2>The research pipeline</h2>'
-            '<p class="lede" style="margin-top:12px">Every strategy passes through the same five stages. Breadth is '
+            '<p class="lede" style="margin-top:14px">Every strategy passes through the same five stages. Breadth is '
             'the main lever: we keep many ideas in testing and in paper trading at once.</p>' + stages_html()
-            + '<div class="grid" style="margin-top:40px">'
+            + '<div class="grid" style="margin-top:72px">'
             '<div><h3>The idea card</h3><p>Each idea is written up before it is tested: the mechanism that creates '
             'the mispricing, the counterparty and why they keep trading that way, why the effect persists, where it '
             'has appeared in past markets, the data that tests it, its capacity and its expected correlation with '
@@ -228,13 +238,14 @@ def research(snap: dict, ledger: tuple) -> str:
             'regimes, and reported with its exposure to equity, rates and credit and its correlation with the books '
             'already held.</p></div>'
             '</div></div></section>')
-    record = ('<section class="section panel"><div class="wrap"><div class="eyebrow">Record</div>'
+    record = ('<section class="section soft"><div class="wrap split"><div><div class="eyebrow">Record</div>'
               '<h2>The research ledger</h2>'
-              f'<p class="lede" style="margin-top:12px">Our research ledger records {n_ledger} ideas since {since}, '
+              f'<p class="lede" style="margin-top:14px">Our research ledger records {n_ledger} ideas since {since}, '
               'each with its data, gross result and status, including every idea we set aside.</p>'
               f'<div class="buttons"><a class="btn blue" href="{REPO_URL}/blob/main/results/IDEA_LEDGER.md">Read the ledger</a>'
-              f'<a class="btn" style="border-color:var(--line);color:var(--ink)" href="{REPO_URL}">Source code on GitHub</a></div>'
-              '<p class="meta" style="margin-top:12px">The research code, notes and trading system are public.</p>'
+              f'<a class="btn line" href="{REPO_URL}">Source code on GitHub</a></div>'
+              '<p class="meta" style="margin-top:14px">The research code, notes and trading system are public.</p>'
+              '</div><img class="photo" src="/static/img/team-atrium.webp" alt="QUANTT members" loading="lazy">'
               '</div></section>')
     infra = ('<section class="section"><div class="wrap"><div class="eyebrow">Infrastructure</div>'
              '<h2>The trading day</h2><div class="stages">'
@@ -246,7 +257,7 @@ def research(snap: dict, ledger: tuple) -> str:
                            ("Before the close", "Send", "Orders go to Alpaca for execution at the close."),
                            ("17:30 ET", "Reconcile", "Fills and positions are reconciled with the broker."),
                            ("Morning", "Report", "P&L, risk and data-quality reports are written for each book.")))
-             + '</div><div class="grid" style="margin-top:40px">'
+             + '</div><div class="grid" style="margin-top:72px">'
              '<div><h3>Automated</h3><p>The books run on a cloud server from tagged releases of the code only. '
              'Every change runs the test suite before it reaches the server.</p></div>'
              '<div><h3>Separate accounts</h3><p>Each book trades in its own paper account, because the broker rejects '
@@ -291,7 +302,7 @@ def library(lib: dict) -> str:
                         f'<div class="src">{escape(src)}</div>'
                         + (f'<div class="use">{escape(e["used_for"])}</div>' if e.get("used_for") else "")
                         + (f'<div class="links">{"".join(links)}</div>' if links else "") + "</div>")
-        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2 style="font-size:24px">{escape(t)}</h2>{"".join(rows)}</div>')
+        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2>{escape(t)}</h2>{"".join(rows)}</div>')
     n_pdf = sum(1 for e in entries if e.get("oa_pdf_url"))
     head = page_head("Library", "Research library",
                      f"The {len(entries)} sources our strategies rest on: academic papers, industry research and the "
@@ -310,14 +321,15 @@ def team(t: dict) -> str:
     cards = []
     for m in t["members"]:
         initials = "".join(w[0] for w in m["name"].split()[:2])
-        li = f'<p><a href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>' if m.get("linkedin") else ""
+        li = (f'<p><a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>'
+              if m.get("linkedin") else "")
         cards.append(f'<div class="person"><div class="avatar" aria-hidden="true">{escape(initials)}</div>'
                      f'<h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div>'
                      f'<p>{escape(m["bio"])}</p>{li}</div>')
     head = page_head("Team", "The team",
                      "Four students at Queen's University, part of QUANTT, the Queen's University Algorithmic Network "
                      "and Trading Team.")
-    body = (head + f'<section class="section"><div class="wrap"><div class="grid">{"".join(cards)}</div></div></section>'
+    body = (head + f'<section class="section"><div class="wrap"><div class="people">{"".join(cards)}</div></div></section>'
             + contact_band())
     return page("team", "Team", body, "The Event Driven Trading team at QUANTT, Queen's University.")
 
@@ -343,11 +355,9 @@ def not_found() -> str:
 
 def pages(snap: dict, *, content: Path = CONTENT, repo: Path = REPO) -> dict:
     """{relative path: html}. Raises on a missing content file: a page is never built from a default."""
-    slides = json.loads((content / "slides.json").read_text())
     return {
         "index.html": overview(snap),
         "performance/index.html": perf.render(snap),
-        "strategy/index.html": strategy(slides),
         "research/index.html": research(snap, ledger_count(repo / "results" / "IDEA_LEDGER.md")),
         "library/index.html": library(json.loads((content / "library.json").read_text())),
         "team/index.html": team(json.loads((content / "team.json").read_text())),
