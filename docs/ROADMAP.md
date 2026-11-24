@@ -112,7 +112,7 @@ live path follows `docs/TEAM.md` §2 and reaches the VM only in a release.
 | 7.2 | The events account on every state surface (`ops.prod_state` per account, the banner, `ops.daily_page`) | A8.5, A5.2 | 2 | A | open |
 | 7.3 | A P&L of record for the events account (collector, `pnl_report`, report units) | A6.2 | 3 | A | open |
 | 7.4 | HALVE and KILL defined and reported for the events account | A4.3 | 4 | A, TL sets levels | open |
-| 7.5 | A corporate-action gate in the events runner; correct `quantt/sleeves/ledger.py`'s claim | A7.3 | 5 | A | open |
+| 7.5 | A corporate-action gate in the events runner; correct `quantt/sleeves/ledger.py`'s claim | A7.3 | 5 | A | open. The core and C4 half of A7.3 (the bond-ISIN fix and the CUSIP check, PR #68) is live from release-20261124-13, both books in `report` (team lead 2026-11-24, "Fix first, block later"; E-2026-11-24-13); the events runner still has no gate |
 | 7.6 | One ruling on who may merge, tag, install and arm; then `docs/RUNBOOK.md:968` and `CLAUDE.md` point at it | A1.3, A10.4 | 6 | TL, then A | done 2026-11-23: "Agents release; arming is yours" (`docs/SYSTEM.md` §5); `CLAUDE.md`, RUNBOOK §8.6 and `docs/TEAM.md` follow it |
 
 **7b. Stopping and recovering.**
@@ -157,6 +157,9 @@ live path follows `docs/TEAM.md` §2 and reaches the VM only in a release.
 | 7.32 | Data terms per source, with a ruling each | A7.5 | 32 | A, TL rules | open |
 | 7.35 | Events send capacity after pacing: read the assets in one request (`AlpacaClient.assets()`) instead of one per symbol before gate 4; correct the capacity figures in `quantt/sleeves/deploy/README.md` and `ops/sleeves/events_sleeves.json` (`max_orders`); extend the budget test to the reads before the gate (release check of df7f6fc) | A3.3 | — | A | open |
 | 7.36 | A non-429 4xx on a resend after a 429 is read as ambiguous and stops the batch, not booked `rejected` (release check of df7f6fc) | A3.6 | — | A | open |
+| 7.37 | The C4 families names table (`results/cef/cef_families/names_2026-10-12.csv`) carries per-fund CRSP fields (`current_shrcds`, `crsp_first`, `crsp_last`, `crsp_trade_rows` and the `crsp_cmp_*` comparisons) in a public repository, and `scripts/cef/tests/test_c4_paper_benchmark.py` needs it (15 tests, among them the frozen-spec-against-trial check). Split the CRSP columns into an ignored file the research scripts read, keep the columns the tests need tracked, then add the old file to the history rewrite (release check of 22cfa9b: untracking it whole failed those tests) | A10.1 | — | A; TL for the rewrite | open |
+| 7.38 | `_CaCusipTable.load` (`quantt/broker/alpaca.py`) skips the shape checks the gate's own corporate-action read applies, so an odd response can build a partial CUSIP table that still reads PROVED. Harmless in `report` (a wrong record); under `halt` a missed block. Must land before any `halt` ruling (release check of 22cfa9b, quant-reviewer finding 2) | A3.6 | — | A | open |
+| 7.39 | The CUSIP table adds two unpaced data-host reads at every late-market send; one stalled GET (about 250 s with retries) could push the 15:55 retry past its window. Give the table a deadline at the send, or skip it at the send while the mode is `report` (release check of 22cfa9b, execution-engineer R1) | A3.3 | — | A | open |
 | 7.33 | Small document contradictions (the audit's F7, F8, F13, F15, F16), including phase 4 above | A1.5 | 33 | A | open |
 
 **7e. Already built.**

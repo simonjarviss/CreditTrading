@@ -4,7 +4,7 @@ WHY THIS EXISTS (2026-11-02). The core's release-check on 3478159 found three
 market-wide rows in Alpaca's real corporate-action feed with a party symbol
 missing, and under the team lead's 2026-11-02 unresolved-rows ruling each one
 halts for every held fund, so the core shipped with its gate in `report`
-(ops/books/cef_discount_book.json `_mode_report_note`). C4's book json then
+(the core's book json, then `_mode_report_note`). C4's book json then
 kept `halt`, and this file measured what that would do to C4's dry sessions.
 
 THE RULING IT INFORMED (team lead, 2026-11-02). C4's gate runs in REPORT, the

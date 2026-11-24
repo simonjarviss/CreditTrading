@@ -579,6 +579,7 @@ team lead's, sent to the analysts directly, and never tracked.
 | The third lane's scope | **The dashboard and the research data platform**: the fetchers and data builds the other lanes build on, and the event store once the EVENTS work on `simon` (was `pm/work`) is merged into `main`. CI (`.github/`, `pytest.ini`, `conftest.py`) stays with the team lead |
 | The dashboard's data | *(Superseded 2026-11-23, "the public site", below: snapshots stay on the VM.)* **A nightly read-only snapshot of the book, held in the repository** under dashboard/snapshots/. The exporter that writes it runs on the VM, so the dashboard lane writes its spec and its tests and the team lead installs it. How a snapshot travels from the VM to the repository is **open**, for the team lead when the exporter is ready. The repository is public: a committed snapshot is published (`dashboard/README.md` says what it may never carry) |
 | The analysts' tools | **Claude Code, for all three**, with the repository's skills and agents |
+| Sharing the desk's data | *(Ruled 2026-10-26; confirmed 2026-11-24, "Yes, update it".)* **The team lead's `data/` folder is copied into the private R2 bucket under `team-data/`**, and the analysts download it with their read-only R2 tokens (`scripts/data/team_data.py`; `docs/DATA.md` §3). Never on GitHub: the repository is public and most of `data/` is WRDS-derived. The team lead pushes it; it is as fresh as its last push |
 | The branches | **Named for the people, not the lanes**: `simon` (was `pm/work`), `ryan` (was `macro/work`), `james` (was `equities/work`), `lucy` (was `dashboard/work`), renamed on GitHub with their history. Still five on GitHub with `main`. This supersedes 2026-10-22's "names in the repository: none" for the branch names and the lane map in `docs/TEAM.md`; the repository is public, so those first names are public. Nothing else names a person |
 
 *(Partly superseded 2026-10-09, above: one pre-registered standalone short-premium test may reopen options.)*
@@ -679,6 +680,17 @@ Answered interactively. Day by day, what was found, shipped and earned is in
 | Raising the core's vol target (×1.24, about 6% → 7.4%) | **Pre-register it as CEF trial 53** (`results/cef/PREREG_VOLTARGET_2026-10-30.md`; approved 2026-11-01 at the milder ×1.13 / ×1.27, see the next section) through /spec-change. The counter moves on approval |
 | C4's HALVE/KILL drawdown levels | **The core's levels**, in report mode, until a C4-specific derivation exists |
 | PCEF holdings | **Invesco gave written consent** (team lead, 2026-10-30). The team lead saves a copy outside the public repo; its date and scope are cited in `docs/REFERENCES.md` before any automated download |
+
+### Team lead, 2026-11-09 — the corporate-action CUSIP check, and the three rows
+
+Relayed by the coordinating session, 2026-11-09, on `results/ops/CA_UNRESOLVED_ROWS_2026-11-08.md`.
+
+| question | decision |
+|---|---|
+| CUSIP-format parties on corporate-action rows, unresolved after the bond-ISIN fix | **"Build a check against our CUSIPs".** A CUSIP-format party matching none of the funds of the book's universe, read at run time from Alpaca across a stated lookback, names nobody and blocks nothing; a party matching one of ours is that fund. Every CUSIP seen for a fund is held. If any fund's CUSIP cannot be read, the read fails, or a split, reorganisation or CUSIP change inside the lookback cannot be confirmed, such rows stay unresolved, naming the fund and the reason; never "not ours". A rule may only move a row from unresolved to resolved on proof of non-membership, and no row naming one of our tickers or CUSIPs may stop blocking. Letter-led CUSIPs take the same path as digit-led ones |
+| The three unresolved rows brought for a ruling | **"Accept all three"**: db0847b7 no action; e34ddd44 and 6abeb209 acked with `ca-ack`, both books, at the return to `halt`. Amended by the last row below |
+| How the gate goes back to `halt` (asked after the check was built, answered directly) | *(Superseded 2026-11-24, "Fix first, block later", below: never shipped; the fix goes out in `report`.)* **"Halt in tonight's release".** One release, after the day's verify and subject to release-check GO, carries the fix and `halt` for both books. The first `halt` decide is that night's, for the 2026-11-10 session. Cost accepted: on a day the CUSIP table cannot be proved, a CUSIP-format row inside a held or targeted name's window refuses the session |
+| The two acks, since `ca-ack` refuses a row the table proves foreign (answered directly) | **"Drop them unless needed".** No acks at the release. If the table cannot be proved on a day either row is in a window, it blocks again and comes to the team lead that day |
 
 ### Team lead, 2026-11-08 — research is not pass or fail
 
@@ -996,6 +1008,21 @@ our active books", and then for an investor site around it.
 | No GitHub link on the site, 2026-11-24 (afternoon). **Supersedes** the 2026-11-23 GitHub link in the top right corner | The team lead, through session 2027-bc: take every GitHub link off event-driven.quantt.ca, because the repository is going private. The header's GitHub link and the research page's "Read the ledger" and "Source code on GitHub" buttons and its "the research code ... are public" sentence are gone; the QUANTT link stays |
 | Installing it | **"Yes, when the check passes."** An agent in the team lead's session runs the release check, merges, tags and installs only the site's own units, Caddy and the network rule for ports 80 and 443. No trading unit, `DRY_RUN` or `AUTO_ARMED` is touched |
 
+### Team lead, 2026-11-24 — the old pull requests and the corporate-action gate
+
+Answered through question prompts on 2026-11-24, after the seven pull requests open since
+October were compared with `main` (`EVIDENCE_LOG` E-2026-11-24-11).
+
+| question | ruling |
+|---|---|
+| Before any build: the state of the books on the VM | **"Make sure all our sleeves are live on the VM and armed."** Read back at 00:15 ET: the core, C4 and the events book armed, all eight events sleeves enabled, each with its decision file for the next session. Nothing was changed |
+| The clean-up of 2026-11-24 (`docs/STANDARD.md` A1.2): five worktrees, a dead worktree record and two merged GitHub branches | **"Go"**: each archive-tagged first (tags kept local) |
+| The seven pull requests open since October | **"Check each, then propose"**, then the rows below |
+| #68, the bond-ISIN fix and the CUSIP check, which also set both books' gate back to `halt`. **Supersedes** 2026-11-09's "Halt in tonight's release", which never shipped | **"Fix first, block later."** The fix ships with both books' `corporate_actions.mode` still `report` (the book files unchanged). `halt` returns only on a later ruling, after the team lead has read what the gate would have refused |
+| #73 (the halt alert's recipient from config), #23 (the stale-NAV note that would switch the missing-NAV hold off), #46 (the agent-desk design the nightly checks cite), #17 (the retired research loop) | **"Go on all four"**: #73 and #23 merged after the tests, #46 merged with a status box, #17 closed |
+| #70, row-level CRSP tables and the R2 inventories out of the tree | **"Update it now"**: brought up to date, the C4 families names table added, merged. *(Corrected the same day: the names table went back under tracking, because 15 C4 tests read it; splitting its CRSP columns is `docs/ROADMAP.md` 7.37. E-2026-11-24-12.)* The history rewrite stays the team lead's to push |
+| #3, the team's `data/` copy in R2: do the analysts still need it? | **"Yes, update it"** (row "Sharing the desk's data", 2026-10-26, above) |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
@@ -1047,3 +1074,5 @@ our active books", and then for an investor site around it.
 | 2026-11-23 | §5 records the public site's rulings: public, on the VM at `event-driven.quantt.ca`, its content, snapshots kept on the VM (superseding 2026-10-26's repository route). | the public site, for the team lead |
 | 2026-11-23 | §5 records the clean-up's go, AUTO_ARMED on a passing VERIFY, and the rulings after the events book's partial first send (disarm, hold, fix and release). | the 429 incident, for the team lead |
 | 2026-11-23 | §5 records "AUTO_ARMED now" for the events book, superseding "Yes, if VERIFY passes". | release-20261123-2, for the team lead |
+| 2026-11-24 | §5 records the team's `data/` copy in R2 (ruled 2026-10-26, merged with pull request #3 after the team lead confirmed on 2026-11-24 that the analysts still need it). | team data, for the team lead |
+| 2026-11-24 | §5 records the rulings on the seven old pull requests and the corporate-action gate ("Fix first, block later", superseding 2026-11-09's "Halt in tonight's release"), the clean-up's go and the arming read-back. | the old pull requests, for the team lead |

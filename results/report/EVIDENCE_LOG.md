@@ -5718,7 +5718,141 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-09 · Release: release-20261124-8 on the VM; its release check returned GO, and the event book's caption is built from what its figures are
+### E-2026-11-09-61 · Four row-level CRSP tables and the R2 inventories leave the repository and are git-ignored
+- kind: incident
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - none (a repository clean-up asked for by the team lead; no figure)
+- source: `.gitignore` @ `3595ec8` (the block is added by this commit, on top of that main)
+- supports: §5
+- status: current
+
+### E-2026-11-09-62 · Rulings on the repository's public exposure: secret scanning and push protection on, the halt alert's address moves to config, the admin list stays as it is
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - none (rulings by the team lead: "Turn both on", "Gmail in ops/halt.py", "Keep all four")
+- source: `.gitignore` @ `3595ec8` (the section is added by this commit, on top of that main)
+- supports: §5
+- status: current. The address change is PR #73
+
+### E-2026-11-24-09 · Pull request #70 brought up to date, and a fifth CRSP-derived table joins it: the C4 families names table
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (the team lead's go, by question prompt: "Update it now"; no figure)
+- source: `.gitignore` @ `b5c9913` (the `names_*.csv` line and its comment are added by the commit that carries this entry, on top of that main); `results/cef/cef_families/names_2026-10-12.csv` @ `b5c9913` (its columns include `current_shrcds`, `crsp_first`, `crsp_last` and `crsp_trade_rows` per fund)
+- supports: §5
+- status: current. E-2026-11-09-61 and -62 are this pull request's entries of 2026-11-09, renumbered on the merge because main had since used -01 and -02. The files leave the tree from this merge on; they stay in git history until the history rewrite, which is the team lead's to push
+
+### E-2026-11-24-10 · The team's data/ copy in R2 for the analysts is merged (pull request #3): the team lead confirmed the analysts still need it
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (the team lead's answer by question prompt, "Yes, update it", to whether the analysts still need the R2 copy; no figure)
+- source: `scripts/data/team_data.py` @ `56c2dd0`; `docs/SYSTEM.md` §5 "Sharing the desk's data" @ `b5c9913` (the row is added by the commit that carries this entry)
+- supports: §5
+- status: current. Ruled 2026-10-26, unmerged until now. On the merge, boto3 moved from requirements.txt to requirements-research.txt so the VM's trading venv is not rebuilt for a research package. The copy is as fresh as the team lead's last push (`team_data.py status` says when)
+
+### E-2026-11-08-30 · The corporate-action gate's bond-ISIN misread is fixed on a branch: 58 of the 208 unreadable-party rows are bonds and leave the gate; the other 150 stay unresolved, two of the team lead's three rows among them
+- kind: result
+- era: ALPACA
+- date: 2026-11-08
+- figures:
+  - over process dates 2025-11-01..2028-11-08 (feed read 2026-11-08, 3,638 rows) 208 rows had a party value the parser read as missing; 58 are US ISINs of bonds (57 partial calls, one reorganization), 148 a 9-character CUSIP-format value, 2 an exchange-suffixed code, 0 null or empty [V]
+  - the fix classifies only the 58 as bonds: no other event changes (`saw` aside), the 24 malformed-row records are the same [V]
+  - all 88 CUSIPs of the 87 funds carry numeric issue codes (84 `10`, 3 `20`, one `87`), so an alphabetic issue code cannot be a share of one of them [V]
+  - a flat book would be refused on 17 of 23 sessions 2026-10-01..11-02 before the fix and 15 of 23 after it, and on 4 of 5 sessions 2026-11-03..11-09 before and after (feed as read 2026-11-08) [V]
+  - db0847b7 (an Office Properties 8.375% 2029 Reg S bond) is resolved by the fix; e34ddd44 (SNTI CVRs, 816CVR021) and 6abeb209 (JAGX Series R conversion, 47010C847) stay unresolved; none of the three can be one of the funds [V]
+  - the 25 new tests of `quantt/session/tests/test_ca_isin.py` fail on `a5b94c8`; the pins of what must not change also fail against a naive fix that classifies any 12-character string as a bond [V]
+- source: `results/ops/CA_UNRESOLVED_ROWS_2026-11-08.md` @ `95d429c`; `quantt/broker/alpaca.py` @ `95d429c`; `results/ops/ca_unresolved_2026-11-08/measure.py` @ `95d429c`
+- supports: §1, §5
+- status: open. Fix unreleased; both books stay in report until the team lead's rulings and a release. A CUSIP-format party needs its own ruling before halt returns
+
+### E-2026-11-09-30 · Team lead: "Build a check against our CUSIPs" and "Accept all three"; the corporate-action CUSIP check is built on a branch, not released
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - rulings: "Build a check against our CUSIPs"; "Accept all three" (db0847b7 no action; e34ddd44 and 6abeb209 acked with `ca-ack`, both books, at the return to `halt`), relayed by the coordinating session [S]
+  - the CUSIP table reads PROVED for both books over a 731-day lookback: 13 funds and 13 CUSIPs for the core, 74 funds and 75 CUSIPs for C4; IGR's old and new CUSIPs are both held [V]
+  - `halt` over 2026-10-01..11-09 (28 sessions, the table as read 2026-11-09), before any fix, ISIN fix alone, with this check: flat book 21, 19, 0 of 28; the core as actually held 25, 25, 5 of 28 [V]
+  - the core's 5 sessions are 10-01 to 10-07, on two worthless removals with `NOEA:XETR` and `NOEA:XTER` as party, dated 2026-09-28, the only rows still unresolved in the read [V]
+  - C4 as held: 0 blocking on 11-04 and 11-05 (recorded), 0 on 11-06 and 11-09 (upper bound on 11-05's windows; C4's account keys are not on this machine) [V]
+  - the 25 new tests of `quantt/session/tests/test_ca_cusip_table.py` fail on `0153db3` and on `935d1e3` [V]
+- source: `results/ops/CA_UNRESOLVED_ROWS_2026-11-08.md` @ `d8f1c70`; `docs/SYSTEM.md` @ `d8f1c70`; `quantt/broker/alpaca.py` @ `d8f1c70`; `results/ops/ca_unresolved_2026-11-08/measure.py` @ `d8f1c70`
+- supports: §1, §5
+- status: open. Built on `ca-isin-fix`, unreleased; both books stay in report until reviewed and released, with `mode` and its two pins changed in that release
+
+### E-2026-11-09-31 · Team lead: the corporate-action gate goes back to halt in tonight's release, and the two acks are dropped unless needed
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - rulings: "Halt in tonight's release"; the acks for e34ddd44 and 6abeb209 "Drop them unless needed", answered directly [V]
+  - `corporate_actions.mode` is `halt` in both book files from `1aab61d` [V]
+  - with the gate's `"mode": "halt"` mapped back to `"report"`, all 50 fields of the core's synthetic session pin and all 12 of C4's equal the earlier pins byte for byte: against a clear feed halt and report trade the same [V]
+  - on the real panels the core's pin moved only in `book`, `plan_json`, `run_record` and `send_json` [V]
+- source: `ops/books/cef_discount_book.json` @ `1aab61d`; `ops/books/c4_families_book.json` @ `1aab61d`; `quantt/session/tests/test_panels_noop.py` @ `a822c44`; `src/deploy/tests/test_level_signal.py` @ `a822c44`; `docs/SYSTEM.md` @ `a822c44`
+- supports: §1, §5
+- status: open. Installs only on release-check GO, after the 2026-11-09 verify; cut from `ca-isin-fix`, so te4's dark code is not in it
+
+### E-2026-11-09-32 · The release-check on dd2c084 returned NO-GO: four defects in the CUSIP table, fixed and re-measured
+- kind: result
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - NO-GO on `dd2c084`: a renamed fund's old CUSIP was not held, so a row quoting only it was proved foreign; an unreadable field on a CUSIP row raised out of the read; a list-valued party on another lookback row turned the table off; a repeated page token made 1,000 GETs. All reproduced on a fake session [V]
+  - 12 new tests in `quantt/session/tests/test_ca_cusip_table.py` fail on `dd2c084` and pass on `4a3cf51` [V]
+  - re-measured at `4a3cf51`: table PROVED, core 13 funds and 13 CUSIPs, C4 74 funds and 75 CUSIPs, unchanged, so no fund of ours carries a rename the table had missed [V]
+  - `halt` over 2026-10-01..11-09 (28 sessions, the table as read that evening): flat 0 of 28, the core as held 5 of 28, 10-01 to 10-07 [V]
+  - the real table read took 1.22 s (core) and 1.61 s (C4) from the laptop; not measured on the VM [V]
+  - one fund row with no CUSIP keeps the table unproved until the row leaves the 731-day lookback; no such row exists today [V]
+- source: `quantt/broker/alpaca.py` @ `4a3cf51`; `quantt/session/tests/test_ca_cusip_table.py` @ `4a3cf51`; `results/ops/ca_unresolved_2026-11-08/measure.py` @ `4a3cf51`
+- supports: §1, §5
+- status: open. A new release-check is needed on the fixed commit, with the preview run on current panels
+
+### E-2026-11-24-11 · The team lead's rulings on the seven old pull requests: the corporate-action fix ships in report, "block later"; four merged or closed; #70 and #3 updated
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings by question prompt: "Fix first, block later", "Go on all four", "Update it now", "Yes, update it", "Check each, then propose", the clean-up "Go", and "make sure all our sleeves are live on the vm and armed")
+- source: `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — the old pull requests and the corporate-action gate" @ `c42686d` (the block is added by the commit that carries this entry); `ops/books/cef_discount_book.json` and `ops/books/c4_families_book.json` @ `c42686d` (`corporate_actions.mode` "report", unchanged by #68)
+- supports: §5
+- status: supersedes the 2026-11-09 ruling "Halt in tonight's release" (E-2026-11-09-31), which never shipped. #68 now carries the bond-ISIN fix and the CUSIP check with both books in report. E-2026-11-09-32's measurement (a flat book under `halt` refused 0 of 28 sessions over 2026-10-01..11-09, the core as held 5 of 28) is what blocking would have cost then; the team lead decides on `halt` after reading what the gate would have refused under report
+
+### E-2026-11-24-12 · Correction: the C4 families names table stays tracked; untracking it broke 15 C4 tests, and the release check of 22cfa9b said NO-GO
+- kind: correction
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release check of `22cfa9b`: pytest exit 1, 15 errors, all in `scripts/cef/tests/test_c4_paper_benchmark.py`, all `FileNotFoundError` on `results/cef/cef_families/names_2026-10-12.csv` [S]
+  - doc_audit 0 DRIFT, 2 NOTE, 95 checks; orient and the DRY_RUN=1 cef preview as expected; both reviewers found no order-path defect in `report` [S]
+- source: the release-check workflow's result, 2026-11-24 (run in a fresh worktree at `22cfa9b`); `.gitignore` @ `22cfa9b` (the `names_*.csv` line this entry's commit removes); `scripts/cef/c4_feasibility.py` @ `22cfa9b` (`NAMES_CSV`, also read by `scripts/cef/c4_families.py`, `scripts/data/fetch_alpaca_split_bars.py` and `scripts/data/stage_crsp_cef_families.py`)
+- supports: §5
+- status: supersedes the names-table part of E-2026-11-24-09. The table is restored byte for byte from `release-20261124-8`. Why the merge's own tests passed: `git rm --cached` left the file on disk in the worktree that ran them, so only a fresh checkout showed the fault. Splitting off its CRSP columns is `docs/ROADMAP.md` 7.37; the review's two other findings are 7.38 (the CUSIP table's shape checks, before any `halt`) and 7.39 (a deadline for the table's reads at the send)
+
+### E-2026-11-24-13 · Release: release-20261124-13 carries the corporate-action fix with both books' gates in report; installed for the core and C4 armed, the events book untouched and armed
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - `release-20261124-13` is 8674d2a: main after PRs #73, #23, #46, #70, #3, #68 and #116. Two release checks: NO-GO on 22cfa9b (15 C4 tests read a table #70's update had untracked; E-2026-11-24-12), GO on 8674d2a (pytest exit 0 with no failure or error in a fresh worktree; doc_audit 0 DRIFT; both reviewers covered release-20261124-8..8674d2a and found no order-path defect in `report`) [S]
+  - nothing under `quantt/deploy/`, `quantt/sleeves/`, `ops/sleeves/` or `requirements.txt` changed since release-20261123-2, so no venv step and no events install [V]
+  - the replay through the tagged code (RUNBOOK §8.6 step 2): 98 runs replayed, none refused now [V]
+  - installed 16:04 to 16:05 ET, after the day's sends, moved forward from 17:52 because the repository may go private (installs read the tag anonymously): a read-only precheck first (the VM saw the tag on origin at 8674d2a, no job running), then the core and C4 `--armed` (DRY_RUN=0 and AUTO_ARMED as before, timers read back active and enabled); `install_events_vm.sh` not run, the events send unit still DRY_RUN=0 with AUTO_ARMED. ops.prod_state read back: the VM ARMED at release-20261124-13 for the core and C4 [V]
+  - the tags release-20261124-1 to -12 and -14 to -16 are the public site's (its own clone); -13 is this release [V]
+  - follow-ups from the release checks, not blockers in `report`: docs/ROADMAP.md 7.37 (the names table's CRSP columns), 7.38 (the CUSIP table's shape checks, before any `halt`), 7.39 (a deadline for the CUSIP table's reads at the send) [S]
+- source: `quantt/broker/alpaca.py` @ `8674d2a`; `quantt/session/corp_actions.py` @ `8674d2a`; `ops/books/cef_discount_book.json` and `ops/books/c4_families_book.json` @ `8674d2a` (`corporate_actions.mode` "report"); the VM's installer output and `ops.prod_state`, read on 2026-11-24
+- supports: §1, §5
+- status: current. `halt` for either book waits for the team lead's ruling (E-2026-11-24-11)
+
+### E-2026-11-24-14 · Release: release-20261124-8 on the VM; its release check returned GO, and the event book's caption is built from what its figures are
 - kind: release
 - era: ALPACA
 - date: 2026-11-24
@@ -5730,7 +5864,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-10 · Ruling: the team page opens the site, Toronto photographs on research and contact, and a shorter portfolio section
+### E-2026-11-24-15 · Ruling: the team page opens the site, Toronto photographs on research and contact, and a shorter portfolio section
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5742,7 +5876,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-11 · Ruling: the portfolio's record starts on 24 Nov 2026, the earlier record kept apart; team titles; photograph credits in the footer
+### E-2026-11-24-16 · Ruling: the portfolio's record starts on 24 Nov 2026, the earlier record kept apart; team titles; photograph credits in the footer
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5756,7 +5890,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-12 · Ruling: a pod overview on the team page, and a performance page for investors
+### E-2026-11-24-17 · Ruling: a pod overview on the team page, and a performance page for investors
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5768,7 +5902,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-13 · Ruling and release: release-20261124-9 live on the site; the pages then cut to headings and figures, the team first
+### E-2026-11-24-18 · Ruling and release: release-20261124-9 live on the site; the pages then cut to headings and figures, the team first
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5780,7 +5914,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-14 · Ruling and release: release-20261124-10 live; the overview deleted, the performance page as charts
+### E-2026-11-24-19 · Ruling and release: release-20261124-10 live; the overview deleted, the performance page as charts
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5792,7 +5926,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-15 · Release: release-20261124-11 live; the release check of b76a7f4 found three site wordings and gaps, fixed
+### E-2026-11-24-20 · Release: release-20261124-11 live; the release check of b76a7f4 found three site wordings and gaps, fixed
 - kind: release
 - era: ALPACA
 - date: 2026-11-24
@@ -5804,7 +5938,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-16 · Ruling and release: release-20261124-12 live; the team page's four working rules taken out
+### E-2026-11-24-21 · Ruling and release: release-20261124-12 live; the team page's four working rules taken out
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5815,7 +5949,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-17 · Ruling: the performance page drops the record before 24 Nov and its date heading; positioning in detail
+### E-2026-11-24-22 · Ruling: the performance page drops the record before 24 Nov and its date heading; positioning in detail
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5826,7 +5960,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-18 · Release and ruling: release-20261124-14 live after a tag collision; the research page under construction
+### E-2026-11-24-23 · Release and ruling: release-20261124-14 live after a tag collision; the research page under construction
 - kind: release
 - era: ALPACA
 - date: 2026-11-24
@@ -5837,7 +5971,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-19 · Ruling: the pod described as QUANTT's event-driven and special situations desk; a link to quantt.ca; a LinkedIn share card
+### E-2026-11-24-24 · Ruling: the pod described as QUANTT's event-driven and special situations desk; a link to quantt.ca; a LinkedIn share card
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24
@@ -5848,7 +5982,7 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
-### E-2026-11-24-20 · Ruling: no GitHub link on the site, the repository going private
+### E-2026-11-24-26 · Ruling: no GitHub link on the site, the repository going private
 - kind: ruling
 - era: ALPACA
 - date: 2026-11-24

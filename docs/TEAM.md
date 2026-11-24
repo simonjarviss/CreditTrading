@@ -139,7 +139,7 @@ access. The rest are rules.
 | what | from | where it lives |
 |---|---|---|
 | Write access to this repository as a collaborator: push branches, open PRs | the team lead adds you; GitHub e-mails you the invitation | GitHub |
-| A read-only Cloudflare R2 token (the WRDS mirror; research only) | the team lead | your own `config/.env` |
+| A read-only Cloudflare R2 token (the WRDS mirror and the team's `data/` copy, `docs/DATA.md` §3; research only) | the team lead | your own `config/.env` |
 | Your own free Alpaca **paper** account: market data and asset and borrow flags | you open it | your own `config/.env` |
 | Your own SEC EDGAR contact (`SEC_USER_AGENT`) | you | your own `config/.env` |
 

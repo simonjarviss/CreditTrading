@@ -44,6 +44,8 @@ rounding of up to 0.0005 per share per event. That is small, but it is not zero.
 ```
 s3://<bucket>/wrds/<schema>/<table>.parquet          one file per WRDS table
 s3://<bucket>/options/<SYM>/tick/<YYYY-MM>.parquet   one file per underlying-month
+s3://<bucket>/team-data/<path under data/>           the team's data/ copy (below)
+s3://<bucket>/team-data/MANIFEST.json                its path, size and sha256 per file
 ```
 
 `src/data/r2.py` builds both paths: `r2_path(schema, table)` and
@@ -51,7 +53,9 @@ s3://<bucket>/options/<SYM>/tick/<YYYY-MM>.parquet   one file per underlying-mon
 
 ### What is in it
 
-**`results/data/R2_CATALOG.md` is the inventory.** Regenerate it with
+**`results/data/R2_CATALOG.md` is the inventory.** It is git-ignored (decided 2026-11-09,
+out of the tree from 2026-11-24, pull request #70) because this repository is public, so it exists only on a machine that has generated
+it. Generate it with
 `python3 scripts/data/r2_catalog.py` (read-only, about 2 minutes). For each curated
 table it gives the columns, the row count and the min/max of every DATE-typed column.
 It lists every object under the research schemas, and it enumerates every options
@@ -87,7 +91,8 @@ The following are consequences of those dates. Re-measure before you act on any 
   MSRB trades, OTC end-of-day, FJC bankruptcies and others), written as one snapshot
   2026-06-26 → 07-03 and not refreshed since. Inventory:
   `results/events/ssx/ssx_data/R2_FULL_INVENTORY_2026-10-19.md`, by
-  `python3 scripts/events/ssx/ssx_data_r2_inventory.py` [V]. `docs/REFERENCES.md` §12ssx.)*
+  `python3 scripts/events/ssx/ssx_data_r2_inventory.py` [V]. `docs/REFERENCES.md` §12ssx.
+  Git-ignored since 2026-11-09, like the catalogue above: run the script to get it.)*
 - The only options underlyings present are SPY, QQQ, TLT, IWM, GLD and SLV. **There is no
   HYG or LQD.** `docs/SYSTEM.md` names "the R2 trades source if it carries HYG/LQD/TLT"
   for options. As of this run, R2 carries only TLT of those three.
@@ -98,6 +103,29 @@ The following are consequences of those dates. Re-measure before you act on any 
   Those funds share the CEFs' retail base, which makes them a candidate flow series
   (`results/cef/RESEARCH_AGENDA_2026-10-08.md` §4, parked). *Until 2026-10-08 this bullet
   read "not measured".*
+
+### The team's `data/` copy (`team-data/`, from 2026-10-26)
+
+The team lead's `data/` folder, copied into the bucket so the analysts start from the
+same panels instead of rebuilding them (team lead, 2026-10-26). It is not on GitHub
+because the repository is public and most of `data/` is WRDS-derived.
+`scripts/data/team_data.py` does both directions; its docstring is the contract.
+
+```bash
+python3 scripts/data/team_data.py status      # when the copy was pushed, how many files
+python3 scripts/data/team_data.py pull        # download into your data/
+python3 scripts/data/team_data.py push        # team lead: what would upload
+python3 scripts/data/team_data.py push --go   # team lead: upload it (needs a write key)
+```
+
+- **The copy is as of its `pushed_at`**, in the manifest. It is not refreshed on any
+  schedule; a panel in it is as stale as it was on the team lead's machine that day.
+  Check a panel's last date before you use it.
+- `pull` checks every file's sha256 against the manifest, refuses to overwrite a file
+  of yours that differs (unless `--overwrite`), and writes nothing outside `data/`.
+- Backups (`*.bak*`) and dotfiles are not copied. Nothing deletes from the bucket.
+- **Never run `pull` in a prod clone**: the live book decides on `data/cef/`
+  (`CLAUDE.md`, landmine 9).
 
 ### Credentials
 

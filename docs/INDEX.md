@@ -52,6 +52,7 @@ Figures are not owned by any document: `python3 -m ops.orient` produces them.
 | `results/ops/NAV_SOURCE_WORKAROUND_2026-10-19.md` | reference | legitimate routes to a NAV source this desk may trade on (NFN's licence upstream of the vendors, IBKR and Alpaca data terms, the non-professional definitions, a CEFConnect-free gate design), the Nasdaq enquiry draft, and the ranked shortlist; open until the team lead picks | — |
 | `results/ops/IBKR_SECOND_BROKER_2026-10-19.md` | reference | the IBKR second-broker design and plan (routing, per-broker gates, what to revive, the step list), until a build contract replaces it | `ops.doc_audit` (reproducer) |
 | `results/ops/IBKR_WORTH_IT_2026-10-19.md` | reference | whether IBKR is worth opening: the core-book benefit of the shorts Alpaca will not lend (measured, fit period), the option value through E1, NAV tenders and SPACs, the costs, and the triggers; open until the team lead rules | `scripts/ops/tests/test_ibkr_worth_it.py` |
+| `results/ops/CA_UNRESOLVED_ROWS_2026-11-08.md` | reference | the corporate-action gate's bond-ISIN fix, the three unresolved rows brought for the team lead's ruling (facts, whether each could be ours, the recommended ruling), and what else stands between those rulings and `halt` | `ops.doc_audit` (reproducer) |
 | `.claude/README.md` | desk | the map of the agent layer | — |
 | `.claude/rules/*.md` | desk | path-scoped rules loaded when matching files are opened | `ops.doc_audit` |
 | `.claude/skills/*/SKILL.md` | desk | one workflow each | `ops.doc_audit` (desk inventory) |
