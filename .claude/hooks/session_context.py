@@ -135,7 +135,26 @@ def main() -> int:
                         + ", ".join(_probe_text(b, p) for b, p in probes.items()))
         g = s.get("git") or {}
         if g:
-            body.append(f"  git {g.get('branch')}, {g.get('dirty')} file(s) uncommitted.")
+            am = g.get("against_main")
+            # docs/STANDARD.md A1.1: on 2026-11-22 this banner said only the branch
+            # and the dirty count while the folder sat 841 commits behind main.
+            if am is None:
+                rel = "against origin/main UNMEASURED (book_state gave no reading)"
+            elif "UNMEASURED" in am:
+                rel = f"against origin/main UNMEASURED ({am['UNMEASURED']})"
+            else:
+                rel = (f"{am['behind']} behind origin/main as of the last fetch "
+                       f"({am.get('last_fetch') or 'never fetched'})")
+            body.append(f"  git {g.get('branch')}, {g.get('dirty')} file(s) uncommitted, {rel}.")
+            if am and "UNMEASURED" not in am and am.get("behind"):
+                # Below any prod WARNING (two armed schedulers outranks a stale checkout;
+                # release check of 93021c8, 2026-11-23), above everything else.
+                at = 0
+                while at < len(body) and body[at].strip().startswith("WARNING"):
+                    at += 1
+                body.insert(at, f"  WARNING — this checkout is {am['behind']} commit(s) behind "
+                               f"origin/main: the CLAUDE.md and rules this session loaded may be "
+                               f"superseded. Work from origin/main (docs/STANDARD.md A1.1).")
     except Exception as e:  # a state this banner cannot format is said, not skipped
         body = [f"  PROD UNMEASURED (the banner could not format the state: "
                 f"{type(e).__name__}: {e}). Run python3 -m ops.orient."]

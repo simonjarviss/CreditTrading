@@ -1,0 +1,278 @@
+{
+ "panel_last": "2025-12-31",
+ "events": 147,
+ "first_listing_range": [
+  "1995-02-14",
+  "2025-05-02"
+ ],
+ "events_by_era": {
+  "1995-2001": 51,
+  "2002-2008": 60,
+  "2009-2015": 19,
+  "2016-2025": 17
+ },
+ "median_dollar_volume_days_6_60": 165038.0,
+ "dollar_volume_days_6_60_quartiles": [
+  63068.0,
+  165038.0,
+  429962.0
+ ],
+ "median_spread_day5_pct": 0.6,
+ "events_liquid_100k_first_week": 139,
+ "books": {
+  "YEAR1": {
+   "mean_names": 4.8,
+   "share_of_sessions_invested": 0.95,
+   "mean_gross": 0.45,
+   "held_days_without_return": 2,
+   "vs seasoned thrifts": {
+    "full": {
+     "n_days": 7767,
+     "ann_ret_pct": 2.46,
+     "vol_pct": 7.6,
+     "sharpe": 0.32,
+     "t": 1.79,
+     "max_dd_pct": -21.9
+    },
+    "halves": [
+     0.56,
+     -0.08
+    ],
+    "eras": {
+     "1995-2001": 0.21,
+     "2002-2008": 0.94,
+     "2009-2015": 0.09,
+     "2016-2025": -0.29
+    }
+   },
+   "vs IWM": {
+    "full": {
+     "n_days": 6437,
+     "ann_ret_pct": 3.8,
+     "vol_pct": 10.62,
+     "sharpe": 0.36,
+     "t": 1.81,
+     "max_dd_pct": -24.4
+    },
+    "halves": [
+     0.56,
+     -0.09
+    ],
+    "eras": {
+     "1995-2001": 1.61,
+     "2002-2008": 0.47,
+     "2009-2015": 0.26,
+     "2016-2025": -0.18
+    }
+   },
+   "long only": {
+    "n_days": 7767,
+    "ann_ret_pct": 8.59,
+    "vol_pct": 7.78,
+    "sharpe": 1.1,
+    "t": 6.13,
+    "max_dd_pct": -21.5
+   }
+  },
+  "LATER": {
+   "mean_names": 7.3,
+   "share_of_sessions_invested": 0.96,
+   "mean_gross": 0.6,
+   "held_days_without_return": 100,
+   "vs seasoned thrifts": {
+    "full": {
+     "n_days": 7522,
+     "ann_ret_pct": -1.21,
+     "vol_pct": 10.26,
+     "sharpe": -0.12,
+     "t": -0.65,
+     "max_dd_pct": -60.1
+    },
+    "halves": [
+     -0.06,
+     -0.27
+    ],
+    "eras": {
+     "1995-2001": -0.44,
+     "2002-2008": 0.63,
+     "2009-2015": -0.39,
+     "2016-2025": -0.35
+    }
+   },
+   "vs IWM": {
+    "full": {
+     "n_days": 6437,
+     "ann_ret_pct": 1.87,
+     "vol_pct": 14.39,
+     "sharpe": 0.13,
+     "t": 0.66,
+     "max_dd_pct": -57.4
+    },
+    "halves": [
+     0.24,
+     -0.11
+    ],
+    "eras": {
+     "1995-2001": 0.92,
+     "2002-2008": 0.32,
+     "2009-2015": -0.13,
+     "2016-2025": -0.19
+    }
+   },
+   "long only": {
+    "n_days": 7522,
+    "ann_ret_pct": 7.41,
+    "vol_pct": 10.73,
+    "sharpe": 0.69,
+    "t": 3.77,
+    "max_dd_pct": -58.1
+   }
+  },
+  "YEAR1 liquid": {
+   "mean_names": 4.6,
+   "share_of_sessions_invested": 0.95,
+   "mean_gross": 0.43,
+   "held_days_without_return": 2,
+   "vs seasoned thrifts": {
+    "full": {
+     "n_days": 7767,
+     "ann_ret_pct": 2.4,
+     "vol_pct": 7.3,
+     "sharpe": 0.33,
+     "t": 1.83,
+     "max_dd_pct": -21.0
+    },
+    "halves": [
+     0.57,
+     -0.07
+    ],
+    "eras": {
+     "1995-2001": 0.21,
+     "2002-2008": 0.95,
+     "2009-2015": 0.11,
+     "2016-2025": -0.29
+    }
+   },
+   "vs IWM": {
+    "full": {
+     "n_days": 6437,
+     "ann_ret_pct": 3.56,
+     "vol_pct": 10.12,
+     "sharpe": 0.35,
+     "t": 1.78,
+     "max_dd_pct": -24.8
+    },
+    "halves": [
+     0.55,
+     -0.09
+    ],
+    "eras": {
+     "1995-2001": 1.74,
+     "2002-2008": 0.45,
+     "2009-2015": 0.27,
+     "2016-2025": -0.18
+    }
+   },
+   "long only": {
+    "n_days": 7767,
+    "ann_ret_pct": 8.07,
+    "vol_pct": 7.56,
+    "sharpe": 1.07,
+    "t": 5.92,
+    "max_dd_pct": -21.5
+   }
+  }
+ },
+ "per_event": {
+  "days 2-5, raw": {
+   "n": 147,
+   "mean_pct": 0.1,
+   "median_pct": -0.0,
+   "share_positive": 0.48,
+   "t": 0.27,
+   "p5_pct": -5.8,
+   "p95_pct": 6.5
+  },
+  "days 6-250, raw": {
+   "n": 147,
+   "mean_pct": 19.72,
+   "median_pct": 16.72,
+   "share_positive": 0.78,
+   "t": 6.23,
+   "p5_pct": -26.9,
+   "p95_pct": 68.9
+  },
+  "days 6-250 less seasoned thrifts": {
+   "n": 147,
+   "mean_pct": 3.01,
+   "median_pct": -1.93,
+   "share_positive": 0.45,
+   "t": 1.13,
+   "p5_pct": -31.9,
+   "p95_pct": 40.0
+  },
+  "days 6-250 less IWM": {
+   "n": 107,
+   "mean_pct": 8.69,
+   "median_pct": 3.57,
+   "share_positive": 0.56,
+   "t": 2.66,
+   "p5_pct": -26.0,
+   "p95_pct": 45.2
+  },
+  "days 251-630 less seasoned thrifts": {
+   "n": 145,
+   "mean_pct": -8.23,
+   "median_pct": -6.97,
+   "share_positive": 0.37,
+   "t": -3.27,
+   "p5_pct": -59.8,
+   "p95_pct": 34.8
+  },
+  "days 251-630 less IWM": {
+   "n": 107,
+   "mean_pct": 2.3,
+   "median_pct": -3.09,
+   "share_positive": 0.46,
+   "t": 0.76,
+   "p5_pct": -38.8,
+   "p95_pct": 48.8
+  },
+  "days 6-250 less seasoned thrifts, listed 1995-2001": {
+   "n": 51,
+   "mean_pct": -0.49,
+   "median_pct": -7.64,
+   "share_positive": 0.27,
+   "t": -0.09,
+   "p5_pct": -37.7,
+   "p95_pct": 51.3
+  },
+  "days 6-250 less seasoned thrifts, listed 2002-2008": {
+   "n": 60,
+   "mean_pct": 9.85,
+   "median_pct": 6.44,
+   "share_positive": 0.65,
+   "t": 2.3,
+   "p5_pct": -22.7,
+   "p95_pct": 41.2
+  },
+  "days 6-250 less seasoned thrifts, listed 2009-2015": {
+   "n": 19,
+   "mean_pct": -0.3,
+   "median_pct": -1.5,
+   "share_positive": 0.47,
+   "t": -0.08,
+   "p5_pct": -26.9,
+   "p95_pct": 19.4
+  },
+  "days 6-250 less seasoned thrifts, listed 2016-2025": {
+   "n": 17,
+   "mean_pct": -6.91,
+   "median_pct": -9.06,
+   "share_positive": 0.24,
+   "t": -1.89,
+   "p5_pct": -23.5,
+   "p95_pct": 18.6
+  }
+ }
+}

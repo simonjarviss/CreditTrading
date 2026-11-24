@@ -1,0 +1,11 @@
+{
+ "slug": "month_end_ief",
+ "card": "results/ideas/2026-11-10_month_end_treasury.md",
+ "signal": "shadow.signals.month_end:signal",
+ "panels": {},
+ "refresh": [],
+ "fill": "next_close",
+ "notional_usd": 1000000,
+ "started": "2026-11-10",
+ "enabled": true
+}

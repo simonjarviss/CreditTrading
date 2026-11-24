@@ -253,10 +253,15 @@ def check_desk_inventory(rep: Report) -> None:
 _KNOWN_DESK_NAMES = {
     "skill": {"book-status", "preflight", "morning-brief", "next-task",
               "graveyard", "harness", "repro", "prereg", "spec-change",
-              "fill-audit", "dashboard-ui", "incident"},   # the IBKR-era five
+              "fill-audit", "dashboard-ui", "incident",    # the IBKR-era five
               # (book-status, preflight, incident, fill-audit, dashboard-ui)
               # were archived 2026-09-28; kept here so CLAUDE.md naming one is
               # caught as a ghost rather than read as an unrelated backtick.
+              # The 2026-11-09 mission rebuild (docs/MISSION.md §9): prereg was
+              # removed (it stays above, so naming it is a ghost) and the
+              # pipeline's seven were added.
+              "hunt", "idea", "explore", "paper", "scoreboard", "combine",
+              "go-live"},
     "agent": {"alpha-finder", "beta-detector", "unique-angle-researcher",
               "execution-trader", "portfolio-manager", "market-structure-analyst",
               "equity-research", "quant-reviewer", "dashboard-designer",
@@ -274,7 +279,16 @@ _KNOWN_DESK_NAMES = {
               # merges. The 2026-10-28 merge of simon kept both seats (a merge
               # drops nothing); deleting them is the team lead's call.
               "event-scout", "filings-analyst", "deal-analyst",
-              "credit-situations-analyst", "data-librarian", "event-econometrician"},
+              "credit-situations-analyst", "data-librarian", "event-econometrician",
+              # the 2026-11-09 mission rebuild (docs/MISSION.md §9;
+              # results/mission/PHASE0_2026-11-09.md §3). Removed, and kept above
+              # so that CLAUDE.md naming one is a ghost: quant-researcher,
+              # backtest-engineer and event-scout (merged into signal-hunter),
+              # data-engineer (renamed data-scout), data-librarian,
+              # portfolio-manager (renamed portfolio-architect), quant-trader
+              # (renamed execution-engineer), event-econometrician.
+              "market-historian-economist", "signal-hunter", "data-scout",
+              "portfolio-architect", "execution-engineer", "go-live-reviewer"},
 }
 
 

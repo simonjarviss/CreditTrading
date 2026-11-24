@@ -622,7 +622,7 @@ def test_end_to_end_through_the_real_client_shapes(state, tmp_path):
         headers = {}
         posts = []
 
-        def get(self, url, params=None, timeout=None):
+        def get(self, url, params=None, timeout=None, allow_redirects=None):
             for base in (al.PAPER_BASE, al.DATA_BASE):
                 if url.startswith(base):
                     path = url[len(base):]

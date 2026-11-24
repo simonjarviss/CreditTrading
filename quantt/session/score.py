@@ -52,9 +52,14 @@ here]. The team lead's ruling (`docs/SYSTEM.md` §5, 2026-10-19):
       marks, which is what a live account's P&L would have been had every
       fill been an auction fill.
 
-All three are GROSS. Alpaca paper charges no borrow, pays no dividends and levies no
-regulatory fees [V: docs.alpaca.markets/us/docs/paper-trading, fetched
-2026-09-28], and (b) adds none either. `COST_BASIS` says so on every row. The
+All three are GROSS. Alpaca paper charges no borrow and pays no dividends
+[V: docs.alpaca.markets/us/docs/paper-trading, fetched 2026-09-28], and (b)
+adds none either. The same page says paper does not account for regulatory
+fees, but the account's own record disagrees: the core paper account carries
+FEE activity rows (61 CAT fee rows, $12.01, 2026-09-29 to 2026-11-17, read
+2026-11-18; 37 SEC and CAT rows, $6.16, to 2026-10-30, docs/JOURNAL.md). So (o)
+and (a) are net of those few dollars and (b) is not; `COST_BASIS` below still
+says "no fees" because every scores.csv row already written carries that text. `COST_BASIS` says so on every row. The
 real-money view (the 5 / 15 / 30bp grid and borrow) is research's job, never
 mixed in here (CLAUDE.md research rules).
 

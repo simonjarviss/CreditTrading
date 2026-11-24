@@ -1,0 +1,235 @@
+{
+ "panel_last_date": "2022-12-30",
+ "merger_delistings_with_no_dlret": 36,
+ "deals_left_out_no_first_proxy_date": 1595,
+ "sources_used": [
+  "extension_2001"
+ ],
+ "one_step": {
+  "full": {
+   "first": "2001-01-31",
+   "last": "2010-03-31",
+   "n_days": 2304,
+   "n_active_days": 2304,
+   "ann_ret": 0.07034090645846758,
+   "ann_vol": 0.19606197194683622,
+   "sharpe": 0.358768739087971,
+   "t": 1.0848146992125591,
+   "mean_bp_per_active_day": 2.7913058118439515,
+   "hit_rate_active_days": 0.5078125,
+   "max_drawdown": -0.5511106220488661
+  },
+  "split_date": "2005-09-01",
+  "early_half": {
+   "first": "2001-01-31",
+   "last": "2005-09-01",
+   "n_days": 1153,
+   "n_active_days": 1153,
+   "ann_ret": 0.021689261907246925,
+   "ann_vol": 0.17494572840118572,
+   "sharpe": 0.12397708766863452,
+   "t": 0.2651891879455846,
+   "mean_bp_per_active_day": 0.8606849963193224,
+   "hit_rate_active_days": 0.49696444058976585,
+   "max_drawdown": -0.5511106220488661
+  },
+  "late_half": {
+   "first": "2005-09-01",
+   "last": "2010-03-31",
+   "n_days": 1152,
+   "n_active_days": 1152,
+   "ann_ret": 0.11860689879713288,
+   "ann_vol": 0.21508967522210817,
+   "sharpe": 0.5514299962313661,
+   "t": 1.1790069249644672,
+   "mean_bp_per_active_day": 4.706622968140193,
+   "hit_rate_active_days": 0.5182291666666666,
+   "max_drawdown": -0.4702608007563737
+  },
+  "eras": {
+   "2002-2008": {
+    "first": "2002-01-02",
+    "last": "2008-12-31",
+    "n_days": 1763,
+    "n_active_days": 1763,
+    "ann_ret": 0.04064681812326084,
+    "ann_vol": 0.17393887839487357,
+    "sharpe": 0.23368449019767168,
+    "t": 0.6180957745771155,
+    "mean_bp_per_active_day": 1.6129689731452714,
+    "hit_rate_active_days": 0.5087918321043675,
+    "max_drawdown": -0.4702608007563739
+   },
+   "2009-2010": {
+    "first": "2009-01-02",
+    "last": "2010-03-31",
+    "n_days": 313,
+    "n_active_days": 313,
+    "ann_ret": 0.3536918376415916,
+    "ann_vol": 0.2740028835430082,
+    "sharpe": 1.2908325382133257,
+    "t": 1.4386057856719094,
+    "mean_bp_per_active_day": 14.035390382602841,
+    "hit_rate_active_days": 0.5335463258785943,
+    "max_drawdown": -0.3588081727272727
+   }
+  },
+  "controls": {},
+  "deals": 1171,
+  "eligible": 565,
+  "live_per_day_median": 17.0,
+  "flat_day_share": 0.0,
+  "first_proxy_days_after_announcement_median": 0.0,
+  "excess_over_bills": {
+   "first": "2001-01-31",
+   "last": "2010-03-31",
+   "n_days": 2304,
+   "n_active_days": 2304,
+   "ann_ret": 0.047222807500134245,
+   "ann_vol": 0.1961024933720633,
+   "sharpe": 0.24080676735985648,
+   "t": 0.7281312233777899,
+   "mean_bp_per_active_day": 1.8739209325450097,
+   "hit_rate_active_days": 0.4982638888888889,
+   "max_drawdown": -0.5941923680806122
+  },
+  "market": {
+   "beta": 0.6867578713462137,
+   "beta_same_day": 0.6631300806756444,
+   "alpha_per_year": 0.04599828096912444,
+   "alpha_t_newey_west": 0.979974175568411,
+   "months_market_below_minus_4pct": 16,
+   "beta_in_those_months": 0.6326911012214018,
+   "mean_return_in_those_months": -0.0815844296391008,
+   "beta_other_months": 1.0233724835893547
+  }
+ },
+ "tender": {
+  "full": {
+   "first": "2001-02-21",
+   "last": "2010-02-05",
+   "n_days": 2253,
+   "n_active_days": 1594,
+   "ann_ret": 0.10001677733840136,
+   "ann_vol": 0.18541020068061934,
+   "sharpe": 0.539435138796309,
+   "t": 1.612944999487085,
+   "mean_bp_per_active_day": 5.609771746813903,
+   "hit_rate_active_days": 0.5232120451693852,
+   "max_drawdown": -0.6279242884973697
+  },
+  "split_date": "2005-08-16",
+  "early_half": {
+   "first": "2001-02-21",
+   "last": "2005-08-16",
+   "n_days": 1127,
+   "n_active_days": 649,
+   "ann_ret": 0.18133643963055573,
+   "ann_vol": 0.11833690478344783,
+   "sharpe": 1.5323743675939026,
+   "t": 3.240608497368755,
+   "mean_bp_per_active_day": 12.495791294521263,
+   "hit_rate_active_days": 0.5670261941448382,
+   "max_drawdown": -0.1203475404761905
+  },
+  "late_half": {
+   "first": "2005-08-16",
+   "last": "2010-02-05",
+   "n_days": 1127,
+   "n_active_days": 945,
+   "ann_ret": 0.018608369014890835,
+   "ann_vol": 0.2338754156605966,
+   "sharpe": 0.07956530600845868,
+   "t": 0.16826175913632033,
+   "mean_bp_per_active_day": 0.8806429780709655,
+   "hit_rate_active_days": 0.4931216931216931,
+   "max_drawdown": -0.6279242884973687
+  },
+  "eras": {
+   "2002-2008": {
+    "first": "2002-01-02",
+    "last": "2008-12-31",
+    "n_days": 1763,
+    "n_active_days": 1156,
+    "ann_ret": 0.05726685058926425,
+    "ann_vol": 0.15271910544401684,
+    "sharpe": 0.3749815743273648,
+    "t": 0.9918267422881283,
+    "mean_bp_per_active_day": 3.465750040810982,
+    "hit_rate_active_days": 0.5173010380622838,
+    "max_drawdown": -0.5184168384973691
+   },
+   "2009-2010": {
+    "first": "2009-01-02",
+    "last": "2010-02-05",
+    "n_days": 276,
+    "n_active_days": 254,
+    "ann_ret": 0.27059048135704866,
+    "ann_vol": 0.34092959481163687,
+    "sharpe": 0.793684342676527,
+    "t": 0.8306194253065149,
+    "mean_bp_per_active_day": 11.667756039017847,
+    "hit_rate_active_days": 0.515748031496063,
+    "max_drawdown": -0.3597821555555556
+   }
+  },
+  "controls": {},
+  "deals": 429,
+  "eligible": 220,
+  "live_per_day_median": 6.0,
+  "flat_day_share": 0.2924988903683977,
+  "first_proxy_days_after_announcement_median": 0.0,
+  "excess_over_bills": {
+   "first": "2001-02-21",
+   "last": "2010-02-05",
+   "n_days": 2253,
+   "n_active_days": 1594,
+   "ann_ret": 0.08461322651727397,
+   "ann_vol": 0.1854217685996718,
+   "sharpe": 0.45632844059402283,
+   "t": 1.3644507438322346,
+   "mean_bp_per_active_day": 4.745812654184798,
+   "hit_rate_active_days": 0.5169385194479298,
+   "max_drawdown": -0.6699324098537901
+  },
+  "market": {
+   "beta": 0.5394265224911815,
+   "beta_same_day": 0.5126389460949429,
+   "alpha_per_year": 0.08519349740588898,
+   "alpha_t_newey_west": 1.6462494734942288,
+   "months_market_below_minus_4pct": 15,
+   "beta_in_those_months": 1.0933646612460246,
+   "mean_return_in_those_months": -0.025699123507957184,
+   "beta_other_months": 0.5934964498850294
+  }
+ },
+ "sdc_friendly_same_sessions": {
+  "stats": {
+   "first": "2001-01-31",
+   "last": "2010-03-31",
+   "n_days": 2304,
+   "n_active_days": 1863,
+   "ann_ret": 0.051404657275491386,
+   "ann_vol": 0.08398656174978543,
+   "sharpe": 0.6120581222105181,
+   "t": 1.8506898048985252,
+   "mean_bp_per_active_day": 2.522734503206387,
+   "hit_rate_active_days": 0.5593129361245304,
+   "max_drawdown": -0.13484377914511608
+  },
+  "edgar_stats_same_rows": {
+   "first": "2001-01-31",
+   "last": "2010-03-31",
+   "n_days": 2304,
+   "n_active_days": 2304,
+   "ann_ret": 0.07034090645846758,
+   "ann_vol": 0.19606197194683622,
+   "sharpe": 0.358768739087971,
+   "t": 1.0848146992125591,
+   "mean_bp_per_active_day": 2.7913058118439515,
+   "hit_rate_active_days": 0.5078125,
+   "max_drawdown": -0.5511106220488661
+  },
+  "daily_correlation": 0.4818806017762614
+ }
+}

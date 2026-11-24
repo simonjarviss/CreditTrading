@@ -1,0 +1,1109 @@
+{
+ "UNCAPPED": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 7.6,
+    "vol_pct": 6.6,
+    "sharpe": 1.152,
+    "t": 4.2,
+    "max_dd_pct": -14.36
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.28,
+    "vol_pct": 2.56,
+    "sharpe": -0.109,
+    "t": -0.4,
+    "max_dd_pct": -10.86
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.47,
+    "vol_pct": 0.97,
+    "sharpe": 0.485,
+    "t": 1.77,
+    "max_dd_pct": -3.94
+   },
+   "win34_book": {
+    "worst": -7.75,
+    "p1": -4.55,
+    "p5": -2.56,
+    "mean": 1.36,
+    "sd": 2.76,
+    "worst_date": "2017-10-20",
+    "worst_in_sd": -2.8
+   },
+   "win34_nav": {
+    "worst": -3.52,
+    "p1": -2.6,
+    "p5": -1.82,
+    "mean": -0.03,
+    "sd": 1.07,
+    "worst_date": "2016-03-18",
+    "worst_in_sd": -3.29
+   },
+   "win34_muni_nav": {
+    "worst": -3.62,
+    "p1": -2.02,
+    "p5": -0.39,
+    "mean": 0.08,
+    "sd": 0.65,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -5.6
+   },
+   "turnover_per_year": 22.5,
+   "mean_gross": 1.327,
+   "diff_vs_uncapped": null
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 9.09,
+    "vol_pct": 6.42,
+    "sharpe": 1.417,
+    "t": 3.68,
+    "max_dd_pct": -4.96
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.1,
+    "vol_pct": 2.55,
+    "sharpe": -0.039,
+    "t": -0.1,
+    "max_dd_pct": -7.05
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.92,
+    "vol_pct": 1.36,
+    "sharpe": 0.68,
+    "t": 1.77,
+    "max_dd_pct": -3.94
+   },
+   "win34_book": {
+    "worst": -5.46,
+    "p1": -3.06,
+    "p5": -1.98,
+    "mean": 1.65,
+    "sd": 2.59,
+    "worst_date": "2020-02-28",
+    "worst_in_sd": -2.11
+   },
+   "win34_nav": {
+    "worst": -3.09,
+    "p1": -2.3,
+    "p5": -1.84,
+    "mean": -0.0,
+    "sd": 1.09,
+    "worst_date": "2020-05-06",
+    "worst_in_sd": -2.84
+   },
+   "win34_muni_nav": {
+    "worst": -3.62,
+    "p1": -2.61,
+    "p5": -0.75,
+    "mean": 0.16,
+    "sd": 0.9,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -4.01
+   },
+   "turnover_per_year": 34.7,
+   "mean_gross": 1.343,
+   "diff_vs_uncapped": null
+  },
+  "nav_windows_below_minus3pct_share": 0.0051,
+  "nav_windows_below_minus2pct_share": 0.0347,
+  "last12_nav_part_pct_at_mult": -2.84,
+  "last12_book_pct_at_mult": -0.42,
+  "turnover_vs_uncapped": 0.0
+ },
+ "F25/PRORATA": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 6.04,
+    "vol_pct": 5.35,
+    "sharpe": 1.128,
+    "t": 4.11,
+    "max_dd_pct": -10.84
+   },
+   "nav_part": {
+    "ann_ret_pct": 0.04,
+    "vol_pct": 2.03,
+    "sharpe": 0.021,
+    "t": 0.08,
+    "max_dd_pct": -6.55
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.22,
+    "vol_pct": 0.64,
+    "sharpe": 0.342,
+    "t": 1.25,
+    "max_dd_pct": -3.48
+   },
+   "win34_book": {
+    "worst": -8.19,
+    "p1": -3.79,
+    "p5": -2.05,
+    "mean": 1.06,
+    "sd": 2.44,
+    "worst_date": "2017-10-20",
+    "worst_in_sd": -3.36
+   },
+   "win34_nav": {
+    "worst": -3.0,
+    "p1": -1.97,
+    "p5": -1.26,
+    "mean": 0.01,
+    "sd": 0.83,
+    "worst_date": "2020-05-07",
+    "worst_in_sd": -3.61
+   },
+   "win34_muni_nav": {
+    "worst": -3.21,
+    "p1": -1.79,
+    "p5": -0.38,
+    "mean": 0.03,
+    "sd": 0.45,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -7.1
+   },
+   "turnover_per_year": 15.4,
+   "mean_gross": 1.054,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -1.57,
+    "t": -2.35
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 6.42,
+    "vol_pct": 4.99,
+    "sharpe": 1.285,
+    "t": 3.34,
+    "max_dd_pct": -4.4
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.21,
+    "vol_pct": 1.89,
+    "sharpe": -0.108,
+    "t": -0.28,
+    "max_dd_pct": -6.55
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.43,
+    "vol_pct": 0.9,
+    "sharpe": 0.479,
+    "t": 1.25,
+    "max_dd_pct": -3.48
+   },
+   "win34_book": {
+    "worst": -4.63,
+    "p1": -2.76,
+    "p5": -1.68,
+    "mean": 1.14,
+    "sd": 2.3,
+    "worst_date": "2021-08-03",
+    "worst_in_sd": -2.01
+   },
+   "win34_nav": {
+    "worst": -3.0,
+    "p1": -2.17,
+    "p5": -1.48,
+    "mean": -0.05,
+    "sd": 0.86,
+    "worst_date": "2020-05-07",
+    "worst_in_sd": -3.5
+   },
+   "win34_muni_nav": {
+    "worst": -3.21,
+    "p1": -2.31,
+    "p5": -0.74,
+    "mean": 0.07,
+    "sd": 0.63,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -5.06
+   },
+   "turnover_per_year": 24.0,
+   "mean_gross": 1.035,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -2.68,
+    "t": -2.8
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0003,
+  "nav_windows_below_minus2pct_share": 0.0094,
+  "last12_nav_part_pct_at_mult": -0.83,
+  "last12_book_pct_at_mult": 0.24,
+  "turnover_vs_uncapped": -0.315
+ },
+ "F25/NEUTRAL": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 6.81,
+    "vol_pct": 5.73,
+    "sharpe": 1.187,
+    "t": 4.33,
+    "max_dd_pct": -11.21
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.22,
+    "vol_pct": 2.09,
+    "sharpe": -0.106,
+    "t": -0.39,
+    "max_dd_pct": -8.43
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.18,
+    "vol_pct": 0.54,
+    "sharpe": 0.335,
+    "t": 1.22,
+    "max_dd_pct": -3.47
+   },
+   "win34_book": {
+    "worst": -8.18,
+    "p1": -4.07,
+    "p5": -2.47,
+    "mean": 1.2,
+    "sd": 2.55,
+    "worst_date": "2017-10-20",
+    "worst_in_sd": -3.21
+   },
+   "win34_nav": {
+    "worst": -2.97,
+    "p1": -2.17,
+    "p5": -1.39,
+    "mean": -0.03,
+    "sd": 0.86,
+    "worst_date": "2020-05-06",
+    "worst_in_sd": -3.45
+   },
+   "win34_muni_nav": {
+    "worst": -3.2,
+    "p1": -1.79,
+    "p5": -0.3,
+    "mean": 0.03,
+    "sd": 0.41,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -7.9
+   },
+   "turnover_per_year": 18.3,
+   "mean_gross": 1.15,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -0.79,
+    "t": -1.43
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 7.12,
+    "vol_pct": 5.39,
+    "sharpe": 1.32,
+    "t": 3.43,
+    "max_dd_pct": -4.81
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.42,
+    "vol_pct": 1.89,
+    "sharpe": -0.221,
+    "t": -0.58,
+    "max_dd_pct": -5.78
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.36,
+    "vol_pct": 0.76,
+    "sharpe": 0.47,
+    "t": 1.22,
+    "max_dd_pct": -3.47
+   },
+   "win34_book": {
+    "worst": -5.39,
+    "p1": -3.36,
+    "p5": -2.14,
+    "mean": 1.28,
+    "sd": 2.42,
+    "worst_date": "2021-08-03",
+    "worst_in_sd": -2.23
+   },
+   "win34_nav": {
+    "worst": -2.97,
+    "p1": -2.36,
+    "p5": -1.54,
+    "mean": -0.07,
+    "sd": 0.86,
+    "worst_date": "2020-05-06",
+    "worst_in_sd": -3.47
+   },
+   "win34_muni_nav": {
+    "worst": -3.2,
+    "p1": -2.3,
+    "p5": -0.55,
+    "mean": 0.06,
+    "sd": 0.57,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -5.62
+   },
+   "turnover_per_year": 27.8,
+   "mean_gross": 1.133,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -1.97,
+    "t": -2.28
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0,
+  "nav_windows_below_minus2pct_share": 0.0157,
+  "last12_nav_part_pct_at_mult": -0.73,
+  "last12_book_pct_at_mult": -0.03,
+  "turnover_vs_uncapped": -0.186
+ },
+ "P75/PRORATA": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 5.33,
+    "vol_pct": 5.99,
+    "sharpe": 0.89,
+    "t": 3.24,
+    "max_dd_pct": -15.29
+   },
+   "nav_part": {
+    "ann_ret_pct": -1.06,
+    "vol_pct": 2.24,
+    "sharpe": -0.472,
+    "t": -1.72,
+    "max_dd_pct": -17.67
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "win34_book": {
+    "worst": -8.91,
+    "p1": -5.12,
+    "p5": -2.75,
+    "mean": 0.96,
+    "sd": 2.6,
+    "worst_date": "2017-11-14",
+    "worst_in_sd": -3.43
+   },
+   "win34_nav": {
+    "worst": -5.37,
+    "p1": -3.53,
+    "p5": -1.88,
+    "mean": -0.17,
+    "sd": 1.1,
+    "worst_date": "2020-03-31",
+    "worst_in_sd": -4.89
+   },
+   "win34_muni_nav": {
+    "worst": 0.0,
+    "never_held": true
+   },
+   "turnover_per_year": 16.9,
+   "mean_gross": 1.059,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -2.27,
+    "t": -3.27
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 6.03,
+    "vol_pct": 5.88,
+    "sharpe": 1.025,
+    "t": 2.67,
+    "max_dd_pct": -6.2
+   },
+   "nav_part": {
+    "ann_ret_pct": -1.5,
+    "vol_pct": 2.06,
+    "sharpe": -0.726,
+    "t": -1.89,
+    "max_dd_pct": -10.81
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "win34_book": {
+    "worst": -7.52,
+    "p1": -4.34,
+    "p5": -2.6,
+    "mean": 1.11,
+    "sd": 2.41,
+    "worst_date": "2020-03-18",
+    "worst_in_sd": -3.12
+   },
+   "win34_nav": {
+    "worst": -5.37,
+    "p1": -4.55,
+    "p5": -2.08,
+    "mean": -0.26,
+    "sd": 1.17,
+    "worst_date": "2020-03-31",
+    "worst_in_sd": -4.57
+   },
+   "win34_muni_nav": {
+    "worst": 0.0,
+    "never_held": true
+   },
+   "turnover_per_year": 25.8,
+   "mean_gross": 0.999,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -3.07,
+    "t": -2.65
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0145,
+  "nav_windows_below_minus2pct_share": 0.0438,
+  "last12_nav_part_pct_at_mult": -0.21,
+  "last12_book_pct_at_mult": 0.38,
+  "turnover_vs_uncapped": -0.249
+ },
+ "P75/NEUTRAL": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 5.9,
+    "vol_pct": 5.63,
+    "sharpe": 1.047,
+    "t": 3.82,
+    "max_dd_pct": -14.38
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.65,
+    "vol_pct": 2.07,
+    "sharpe": -0.315,
+    "t": -1.15,
+    "max_dd_pct": -12.5
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": -0.0,
+    "vol_pct": 0.01,
+    "sharpe": -0.301,
+    "t": -1.1,
+    "max_dd_pct": -0.07
+   },
+   "win34_book": {
+    "worst": -8.71,
+    "p1": -4.71,
+    "p5": -2.6,
+    "mean": 1.05,
+    "sd": 2.49,
+    "worst_date": "2017-10-20",
+    "worst_in_sd": -3.49
+   },
+   "win34_nav": {
+    "worst": -3.13,
+    "p1": -2.33,
+    "p5": -1.48,
+    "mean": -0.11,
+    "sd": 0.84,
+    "worst_date": "2016-03-23",
+    "worst_in_sd": -3.72
+   },
+   "win34_muni_nav": {
+    "worst": -0.04,
+    "p1": -0.03,
+    "p5": 0.0,
+    "mean": -0.0,
+    "sd": 0.0,
+    "worst_date": "2026-10-02",
+    "worst_in_sd": -11.01
+   },
+   "turnover_per_year": 17.8,
+   "mean_gross": 1.066,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -1.7,
+    "t": -2.32
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 6.43,
+    "vol_pct": 5.0,
+    "sharpe": 1.287,
+    "t": 3.35,
+    "max_dd_pct": -4.71
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.7,
+    "vol_pct": 1.69,
+    "sharpe": -0.411,
+    "t": -1.07,
+    "max_dd_pct": -6.0
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": -0.01,
+    "vol_pct": 0.02,
+    "sharpe": -0.422,
+    "t": -1.1,
+    "max_dd_pct": -0.07
+   },
+   "win34_book": {
+    "worst": -5.24,
+    "p1": -3.29,
+    "p5": -1.8,
+    "mean": 1.16,
+    "sd": 2.18,
+    "worst_date": "2021-08-03",
+    "worst_in_sd": -2.4
+   },
+   "win34_nav": {
+    "worst": -2.93,
+    "p1": -2.25,
+    "p5": -1.45,
+    "mean": -0.13,
+    "sd": 0.7,
+    "worst_date": "2025-10-13",
+    "worst_in_sd": -4.16
+   },
+   "win34_muni_nav": {
+    "worst": -0.04,
+    "p1": -0.03,
+    "p5": -0.01,
+    "mean": -0.0,
+    "sd": 0.01,
+    "worst_date": "2026-10-02",
+    "worst_in_sd": -7.89
+   },
+   "turnover_per_year": 27.0,
+   "mean_gross": 1.012,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -2.66,
+    "t": -2.06
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0012,
+  "nav_windows_below_minus2pct_share": 0.0199,
+  "last12_nav_part_pct_at_mult": 0.07,
+  "last12_book_pct_at_mult": 0.09,
+  "turnover_vs_uncapped": -0.209
+ },
+ "MED/PRORATA": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 3.93,
+    "vol_pct": 4.91,
+    "sharpe": 0.8,
+    "t": 2.92,
+    "max_dd_pct": -13.26
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.73,
+    "vol_pct": 1.87,
+    "sharpe": -0.394,
+    "t": -1.43,
+    "max_dd_pct": -12.92
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "win34_book": {
+    "worst": -8.7,
+    "p1": -4.64,
+    "p5": -2.15,
+    "mean": 0.7,
+    "sd": 2.22,
+    "worst_date": "2017-11-14",
+    "worst_in_sd": -3.91
+   },
+   "win34_nav": {
+    "worst": -2.65,
+    "p1": -2.1,
+    "p5": -1.46,
+    "mean": -0.12,
+    "sd": 0.8,
+    "worst_date": "2016-03-18",
+    "worst_in_sd": -3.3
+   },
+   "win34_muni_nav": {
+    "worst": 0.0,
+    "never_held": true
+   },
+   "turnover_per_year": 13.2,
+   "mean_gross": 0.888,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -3.67,
+    "t": -3.97
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 4.05,
+    "vol_pct": 4.35,
+    "sharpe": 0.931,
+    "t": 2.42,
+    "max_dd_pct": -4.68
+   },
+   "nav_part": {
+    "ann_ret_pct": -1.04,
+    "vol_pct": 1.62,
+    "sharpe": -0.642,
+    "t": -1.67,
+    "max_dd_pct": -7.71
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.0,
+    "vol_pct": 0.0,
+    "sharpe": null,
+    "t": null,
+    "max_dd_pct": 0.0
+   },
+   "win34_book": {
+    "worst": -5.77,
+    "p1": -2.88,
+    "p5": -1.83,
+    "mean": 0.74,
+    "sd": 1.9,
+    "worst_date": "2020-03-12",
+    "worst_in_sd": -3.04
+   },
+   "win34_nav": {
+    "worst": -2.44,
+    "p1": -2.1,
+    "p5": -1.56,
+    "mean": -0.19,
+    "sd": 0.77,
+    "worst_date": "2020-04-17",
+    "worst_in_sd": -3.18
+   },
+   "win34_muni_nav": {
+    "worst": 0.0,
+    "never_held": true
+   },
+   "turnover_per_year": 20.2,
+   "mean_gross": 0.801,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -5.05,
+    "t": -3.59
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0,
+  "nav_windows_below_minus2pct_share": 0.0148,
+  "last12_nav_part_pct_at_mult": 0.05,
+  "last12_book_pct_at_mult": 0.48,
+  "turnover_vs_uncapped": -0.413
+ },
+ "MED/NEUTRAL": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 6.08,
+    "vol_pct": 5.38,
+    "sharpe": 1.13,
+    "t": 4.12,
+    "max_dd_pct": -11.89
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.42,
+    "vol_pct": 1.92,
+    "sharpe": -0.219,
+    "t": -0.8,
+    "max_dd_pct": -9.34
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": -0.0,
+    "vol_pct": 0.01,
+    "sharpe": -0.301,
+    "t": -1.1,
+    "max_dd_pct": -0.07
+   },
+   "win34_book": {
+    "worst": -8.71,
+    "p1": -4.41,
+    "p5": -2.46,
+    "mean": 1.07,
+    "sd": 2.43,
+    "worst_date": "2017-10-20",
+    "worst_in_sd": -3.58
+   },
+   "win34_nav": {
+    "worst": -2.81,
+    "p1": -1.9,
+    "p5": -1.31,
+    "mean": -0.07,
+    "sd": 0.77,
+    "worst_date": "2025-10-13",
+    "worst_in_sd": -3.65
+   },
+   "win34_muni_nav": {
+    "worst": -0.04,
+    "p1": -0.03,
+    "p5": 0.0,
+    "mean": -0.0,
+    "sd": 0.0,
+    "worst_date": "2026-10-02",
+    "worst_in_sd": -11.01
+   },
+   "turnover_per_year": 16.3,
+   "mean_gross": 1.008,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -1.52,
+    "t": -1.8
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 6.31,
+    "vol_pct": 4.83,
+    "sharpe": 1.306,
+    "t": 3.4,
+    "max_dd_pct": -4.87
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.6,
+    "vol_pct": 1.58,
+    "sharpe": -0.378,
+    "t": -0.98,
+    "max_dd_pct": -5.28
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": -0.01,
+    "vol_pct": 0.02,
+    "sharpe": -0.422,
+    "t": -1.1,
+    "max_dd_pct": -0.07
+   },
+   "win34_book": {
+    "worst": -5.45,
+    "p1": -3.44,
+    "p5": -1.87,
+    "mean": 1.13,
+    "sd": 2.19,
+    "worst_date": "2021-08-03",
+    "worst_in_sd": -2.48
+   },
+   "win34_nav": {
+    "worst": -2.81,
+    "p1": -2.11,
+    "p5": -1.39,
+    "mean": -0.11,
+    "sd": 0.69,
+    "worst_date": "2025-10-13",
+    "worst_in_sd": -4.1
+   },
+   "win34_muni_nav": {
+    "worst": -0.04,
+    "p1": -0.03,
+    "p5": -0.01,
+    "mean": -0.0,
+    "sd": 0.01,
+    "worst_date": "2026-10-02",
+    "worst_in_sd": -7.89
+   },
+   "turnover_per_year": 24.5,
+   "mean_gross": 0.969,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -2.78,
+    "t": -1.99
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0,
+  "nav_windows_below_minus2pct_share": 0.0066,
+  "last12_nav_part_pct_at_mult": 0.08,
+  "last12_book_pct_at_mult": 0.22,
+  "turnover_vs_uncapped": -0.275
+ },
+ "MUNI25/PRORATA": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 7.14,
+    "vol_pct": 6.56,
+    "sharpe": 1.089,
+    "t": 3.97,
+    "max_dd_pct": -14.36
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.53,
+    "vol_pct": 2.49,
+    "sharpe": -0.213,
+    "t": -0.78,
+    "max_dd_pct": -10.9
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.22,
+    "vol_pct": 0.64,
+    "sharpe": 0.342,
+    "t": 1.25,
+    "max_dd_pct": -3.48
+   },
+   "win34_book": {
+    "worst": -7.75,
+    "p1": -4.55,
+    "p5": -2.58,
+    "mean": 1.28,
+    "sd": 2.73,
+    "worst_date": "2017-10-20",
+    "worst_in_sd": -2.83
+   },
+   "win34_nav": {
+    "worst": -3.52,
+    "p1": -2.62,
+    "p5": -1.82,
+    "mean": -0.07,
+    "sd": 1.05,
+    "worst_date": "2016-03-18",
+    "worst_in_sd": -3.37
+   },
+   "win34_muni_nav": {
+    "worst": -3.21,
+    "p1": -1.79,
+    "p5": -0.38,
+    "mean": 0.03,
+    "sd": 0.45,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -7.1
+   },
+   "turnover_per_year": 21.9,
+   "mean_gross": 1.314,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -0.46,
+    "t": -3.18
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 8.19,
+    "vol_pct": 6.34,
+    "sharpe": 1.292,
+    "t": 3.36,
+    "max_dd_pct": -4.96
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.59,
+    "vol_pct": 2.42,
+    "sharpe": -0.244,
+    "t": -0.63,
+    "max_dd_pct": -7.16
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.43,
+    "vol_pct": 0.9,
+    "sharpe": 0.479,
+    "t": 1.25,
+    "max_dd_pct": -3.48
+   },
+   "win34_book": {
+    "worst": -5.46,
+    "p1": -3.17,
+    "p5": -2.09,
+    "mean": 1.5,
+    "sd": 2.54,
+    "worst_date": "2020-02-28",
+    "worst_in_sd": -2.14
+   },
+   "win34_nav": {
+    "worst": -3.09,
+    "p1": -2.28,
+    "p5": -1.86,
+    "mean": -0.09,
+    "sd": 1.03,
+    "worst_date": "2020-05-06",
+    "worst_in_sd": -2.99
+   },
+   "win34_muni_nav": {
+    "worst": -3.21,
+    "p1": -2.31,
+    "p5": -0.74,
+    "mean": 0.07,
+    "sd": 0.63,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -5.06
+   },
+   "turnover_per_year": 33.7,
+   "mean_gross": 1.318,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -0.9,
+    "t": -3.18
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0051,
+  "nav_windows_below_minus2pct_share": 0.0344,
+  "last12_nav_part_pct_at_mult": -1.62,
+  "last12_book_pct_at_mult": 0.05,
+  "turnover_vs_uncapped": -0.026
+ },
+ "MUNI25/NEUTRAL": {
+  "from_first_held": {
+   "book": {
+    "ann_ret_pct": 7.36,
+    "vol_pct": 6.51,
+    "sharpe": 1.131,
+    "t": 4.12,
+    "max_dd_pct": -14.36
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.37,
+    "vol_pct": 2.47,
+    "sharpe": -0.148,
+    "t": -0.54,
+    "max_dd_pct": -10.77
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.22,
+    "vol_pct": 0.65,
+    "sharpe": 0.344,
+    "t": 1.25,
+    "max_dd_pct": -3.48
+   },
+   "win34_book": {
+    "worst": -7.75,
+    "p1": -4.55,
+    "p5": -2.53,
+    "mean": 1.31,
+    "sd": 2.72,
+    "worst_date": "2017-10-20",
+    "worst_in_sd": -2.85
+   },
+   "win34_nav": {
+    "worst": -3.52,
+    "p1": -2.6,
+    "p5": -1.79,
+    "mean": -0.05,
+    "sd": 1.04,
+    "worst_date": "2016-03-18",
+    "worst_in_sd": -3.39
+   },
+   "win34_muni_nav": {
+    "worst": -3.21,
+    "p1": -1.79,
+    "p5": -0.38,
+    "mean": 0.04,
+    "sd": 0.45,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -7.05
+   },
+   "turnover_per_year": 22.0,
+   "mean_gross": 1.309,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -0.24,
+    "t": -1.72
+   }
+  },
+  "from_2020": {
+   "book": {
+    "ann_ret_pct": 8.62,
+    "vol_pct": 6.24,
+    "sharpe": 1.383,
+    "t": 3.6,
+    "max_dd_pct": -4.96
+   },
+   "nav_part": {
+    "ann_ret_pct": -0.27,
+    "vol_pct": 2.37,
+    "sharpe": -0.113,
+    "t": -0.29,
+    "max_dd_pct": -6.96
+   },
+   "muni_nav_part": {
+    "ann_ret_pct": 0.44,
+    "vol_pct": 0.91,
+    "sharpe": 0.481,
+    "t": 1.25,
+    "max_dd_pct": -3.48
+   },
+   "win34_book": {
+    "worst": -5.46,
+    "p1": -3.06,
+    "p5": -1.98,
+    "mean": 1.57,
+    "sd": 2.51,
+    "worst_date": "2020-02-28",
+    "worst_in_sd": -2.17
+   },
+   "win34_nav": {
+    "worst": -3.09,
+    "p1": -2.22,
+    "p5": -1.79,
+    "mean": -0.05,
+    "sd": 1.02,
+    "worst_date": "2020-05-06",
+    "worst_in_sd": -3.02
+   },
+   "win34_muni_nav": {
+    "worst": -3.21,
+    "p1": -2.31,
+    "p5": -0.74,
+    "mean": 0.07,
+    "sd": 0.64,
+    "worst_date": "2022-09-28",
+    "worst_in_sd": -5.02
+   },
+   "turnover_per_year": 33.8,
+   "mean_gross": 1.307,
+   "diff_vs_uncapped": {
+    "ann_ret_pct": -0.47,
+    "t": -1.72
+   }
+  },
+  "nav_windows_below_minus3pct_share": 0.0051,
+  "nav_windows_below_minus2pct_share": 0.0317,
+  "last12_nav_part_pct_at_mult": -1.47,
+  "last12_book_pct_at_mult": -0.4,
+  "turnover_vs_uncapped": -0.022
+ },
+ "SCALED_MATCHED as F25/PRORATA": {
+  "scale": 0.794,
+  "band_width_used": 0.02466,
+  "book": {
+   "ann_ret_pct": 6.32,
+   "vol_pct": 5.25,
+   "sharpe": 1.204,
+   "t": 4.39,
+   "max_dd_pct": -11.69
+  },
+  "win34_book": {
+   "worst": -6.36,
+   "p1": -3.69,
+   "p5": -2.01,
+   "mean": 1.13,
+   "sd": 2.26,
+   "worst_date": "2017-10-20",
+   "worst_in_sd": -2.81
+  },
+  "win34_nav": {
+   "worst": -2.98,
+   "p1": -2.1,
+   "p5": -1.43,
+   "mean": -0.04,
+   "sd": 0.86,
+   "worst_date": "2016-03-23",
+   "worst_in_sd": -3.46
+  },
+  "turnover_per_year": 22.5,
+  "matched_capped_sharpe": 1.207
+ },
+ "SCALED_MATCHED as F25/NEUTRAL": {
+  "scale": 0.867,
+  "band_width_used": 0.03169,
+  "book": {
+   "ann_ret_pct": 6.8,
+   "vol_pct": 5.75,
+   "sharpe": 1.184,
+   "t": 4.32,
+   "max_dd_pct": -12.71
+  },
+  "win34_book": {
+   "worst": -6.87,
+   "p1": -4.06,
+   "p5": -2.2,
+   "mean": 1.21,
+   "sd": 2.45,
+   "worst_date": "2017-10-20",
+   "worst_in_sd": -2.8
+  },
+  "win34_nav": {
+   "worst": -3.21,
+   "p1": -2.28,
+   "p5": -1.56,
+   "mean": -0.04,
+   "sd": 0.94,
+   "worst_date": "2016-03-23",
+   "worst_in_sd": -3.42
+  },
+  "turnover_per_year": 22.6,
+  "matched_capped_sharpe": 1.226
+ }
+}

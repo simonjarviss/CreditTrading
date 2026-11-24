@@ -27,9 +27,12 @@ print('rebalance:', {k: v for k, v in d.get('rebalance', {}).items() if not k.st
 
 ## The procedure
 
-**1. Pre-register first.** Run `/prereg`. Anything that changes traded behaviour
-needs a dated note in `results/cef/` and a trial on the CEF or GAMMA counter,
-*before* the session that trades it.
+**1. Know what authorises the change.** Until 2026-11-09 this step required a
+pre-registration and a move of a trial counter. The team lead dropped both that
+day (`docs/SYSTEM.md` §5); every other step below is unchanged. The core and C4
+books may be changed, on paper first, and a change to what prod runs reaches the
+VM only as a release, which is the team lead's alone. The reasoning for the
+change goes in the sibling note (step 4).
 
 **2. The new key must default to current behaviour.** With the key absent, the
 sleeve must do exactly what it does today. The code change alone should be a
@@ -51,7 +54,8 @@ the key, and the exact **REVERT** (usually "delete this key").
 revert path. No `.bak` copies (clean slate, 2026-09-28). Example:
 `spec-cef_discount.v6.20260906`.
 
-**6. Update `docs/RESEARCH_STATE.md` in the same commit** as the trial.
+**6. Log it in the same commit**: an entry in `results/report/EVIDENCE_LOG.md`,
+and a line in `results/IDEA_LEDGER.md` if the change came from a tested idea.
 
 ## The units trap
 

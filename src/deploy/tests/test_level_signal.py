@@ -78,8 +78,12 @@ BASE_COMMIT = "f7f7be5"            # the code before the key (the target pins)
 SESSION_BASE = "4485a96"           # origin/main merged in: the runner the session pins were made on
 # sha256 of C4's spec file at BASE_COMMIT (c4_families.v4.20261102), and of its `frozen` block
 # as canonical JSON (sort_keys, no spaces): what "the key absent" must leave.
+# RE-PINNED 2026-11-11 for a note-only edit (team lead 2026-11-11: edit the note, regenerate C4's
+# artifacts, no spec_id bump): `frozen._sizing_multiplier_note` now also names
+# scripts/cef/exposure_readout.py. No value moved. v4's own frozen block hashed to 59a4c00d6d60...;
+# this is that block with the one note edited. The target pins below did not move.
 V4_FILE_SHA = "a419959d38d2a2447593ea3f4f4ce308216461fa30efe3f7af5a5809687064b3"
-V4_FROZEN_SHA = "59a4c00d6d60ff6da08de08345bde31e40fb29017e3d284858f9493d54ec6be7"
+V4_FROZEN_SHA = "d781e41ed07dd57b0e8457733a64fe5ea72292cb3d5e0c4d137fd29b970c0d13"
 TRIAL_KEYS = ("level_signal", "_level_signal_note")
 
 ASOF = dt.date(2026, 9, 25)                  # test_c4_book's as-of: the session is Monday 09-28

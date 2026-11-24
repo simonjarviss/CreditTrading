@@ -1,0 +1,352 @@
+"""Checks on the special-dividend result. NONE of this was pre-specified: it was written
+after results/ideas/special_dividends/explore.py had been run once (2026-11-15), to find out
+whether the WAIT and AFTER books are an artifact. Nothing here changes those books.
+
+    python3 results/ideas/special_dividends/checks.py
+
+  beta        each book regressed on IWM and SPY daily returns; alpha and its t.
+  best events the book with its ten best events (by summed P&L contribution) removed.
+  liquidity   the same book on events with 21-session dollar volume >= $5M and >= $20M
+              (a $10M book at 10% a name is $1M a name: 5% of a $20M day).
+  wait split  WAIT's earning sessions cut in two: the first three (drift after the news)
+              and the rest (the run-up into the ex-date).
+  per event   the distribution of WAIT's summed return less IWM, per event.
+  bills       WAIT and AFTER less the 13-week bill are not computed: both books are
+              dollar-neutral (IWM is the other side), so there is no cash leg to charge.
+"""
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+REPO = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO))
+from scripts.research import explore, harness  # noqa: E402
+
+HERE = Path(__file__).resolve().parent
+_spec = importlib.util.spec_from_file_location("sd_explore", HERE / "explore.py")
+ex = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(ex)
+
+
+def ols(y: pd.Series, X: pd.DataFrame) -> dict:
+    d = pd.concat([y.rename("y"), X], axis=1).dropna()
+    A = np.column_stack([np.ones(len(d)), d[X.columns].to_numpy()])
+    b, *_ = np.linalg.lstsq(A, d["y"].to_numpy(), rcond=None)
+    e = d["y"].to_numpy() - A @ b
+    cov = np.linalg.inv(A.T @ A) * (e @ e) / (len(d) - A.shape[1])
+    return {"alpha_per_year": float(b[0] * 252), "alpha_t": float(b[0] / np.sqrt(cov[0, 0])),
+            **{f"beta_{c}": float(v) for c, v in zip(X.columns, b[1:])}}
+
+
+def event_pnl(e, which, sessions, R) -> pd.Series:
+    """Each traded event's own summed contribution (name leg and its IWM hedge), no cap scaling."""
+    L = harness.EXEC_LAG
+    r, iwm = R.drop(columns="IWM"), R["IWM"].to_numpy()
+    rn = r.fillna(0.0).to_numpy()
+    cpos = r.columns.get_indexer(e["permno"])
+    out = {}
+    for i, x, d1, c, ok in zip(e.index, e["x"].to_numpy(), e["d1"].to_numpy(), cpos, e[f"ok_{which}"].to_numpy()):
+        if not ok:
+            continue
+        first, last, side = (d1 + L, x - 1, 1.0) if which == "wait" else (x + 1, min(x + ex.AFTER_HOLD, len(rn) - 1), -1.0)
+        if last < first or first - L < d1:
+            continue
+        out[i] = side * float((rn[first:last + 1, c] - iwm[first:last + 1]).sum())
+    return pd.Series(out)
+
+
+def main() -> int:
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    yf = pd.read_parquet(ex.RES / "yf_daily.parquet")
+    spy = yf[yf["ticker"] == "SPY"].assign(date=lambda d: pd.to_datetime(d["date"])).set_index("date")["ret_total"].reindex(sessions)
+    sd = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    advn, cols = adv.to_numpy(), prc.columns.get_indexer(sd["permno"])
+    out = {"note": "not pre-specified; written after the first run", "panel_last_date": str(sessions[-1].date())}
+    for which, drow in (("wait", sd["d1"]), ("after", sd["x"] - 1)):
+        pnl, meta = ex.run(sd, which, sessions, R)
+        o = {"base": explore.stats(pnl), "regression": ols(pnl, pd.DataFrame({"IWM": iwm, "SPY": spy}))}
+        ep = event_pnl(sd, which, sessions, R)
+        o["per_event_pct"] = {"n": int(len(ep)), "mean": float(ep.mean() * 100), "median": float(ep.median() * 100),
+                              "share_positive": float((ep > 0).mean()), "p5": float(ep.quantile(.05) * 100),
+                              "p95": float(ep.quantile(.95) * 100), "worst": float(ep.min() * 100), "best": float(ep.max() * 100),
+                              "t_by_decision_month": None}
+        m = ep.groupby(sessions[drow.loc[ep.index].to_numpy()].to_period("M")).mean()
+        o["per_event_pct"]["t_by_decision_month"] = float(m.mean() / m.std() * np.sqrt(len(m)))
+        best = ep.nlargest(10).index
+        o["without_ten_best_events"] = explore.stats(ex.run(sd.drop(index=best), which, sessions, R)[0])
+        a_dec = advn[np.clip(drow.to_numpy(), 0, len(advn) - 1), cols]
+        for label, floor in (("adv_5m", 5e6), ("adv_20m", 2e7)):
+            sub = sd[a_dec >= floor]
+            p2, m2 = ex.run(sub, which, sessions, R)
+            o[label] = {**explore.stats(p2), "events_traded": m2["events_traded"], "share_of_days_invested": m2["share_of_days_invested"]}
+        o["late_2023_on"] = explore.stats(pnl.loc["2023-01-01":])
+        out[which] = o
+        print(f"\n== {which}")
+        print("  regression:", {k: round(v, 3) for k, v in o["regression"].items()})
+        print("  per event %:", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in o["per_event_pct"].items()})
+        for k in ("base", "without_ten_best_events", "adv_5m", "adv_20m"):
+            s = o[k]
+            print(f"  {k}: SR {s['sharpe']:.2f} t {s['t']:.2f} ret/yr {s['ann_ret']:.2%} dd {s['max_drawdown']:.1%}" + (f" events {s['events_traded']} invested {s['share_of_days_invested']:.0%}" if "events_traded" in s else ""))
+    # WAIT cut in two by earning session
+    L = harness.EXEC_LAG
+    for label, (a, b) in {"first_three_sessions": (0, 2), "the_rest": (3, 10_000)}.items():
+        W = np.zeros((len(sessions), ret.shape[1]))
+        for x, d1, c, ok in zip(sd["x"].to_numpy(), sd["d1"].to_numpy(), cols, sd["ok_wait"].to_numpy()):
+            first, last = d1 + L + a, min(d1 + L + b, x - 1)
+            if ok and last >= first and x - 1 >= d1 + L:
+                W[first - L:last - L + 1, c] += ex.UNIT
+        tot = W.sum(axis=1)
+        W *= np.where(tot > ex.SIDE_CAP, ex.SIDE_CAP / np.where(tot > 0, tot, 1), 1.0)[:, None]
+        H = pd.DataFrame(W, index=sessions, columns=ret.columns); H["IWM"] = -H.sum(axis=1)
+        p = harness.evaluate(H, R.fillna(0.0))["pnl"].iloc[L:]
+        out[f"wait_{label}"] = explore.stats(p)
+        print(f"  wait, {label}: SR {out[f'wait_{label}']['sharpe']:.2f} t {out[f'wait_{label}']['t']:.2f} ret/yr {out[f'wait_{label}']['ann_ret']:.2%}")
+    (HERE / "checks.json").write_text(json.dumps(out, indent=1))
+    return 0
+
+
+if __name__ == "__main__" and not {"--shifted", "--late", "--small", "--small-controls", "--spread"} & set(sys.argv):
+    sys.exit(main())
+
+
+def shifted_controls() -> dict:
+    """WAIT on the same names with the whole window moved in time (added 2026-11-15, after the
+    checks above): do companies that pay specials simply beat IWM around then, whatever the
+    date? Eligibility flags are the real event's, read at its own decision date; only the
+    holding window moves, so the names and the window lengths are identical."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    sd = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    out = {}
+    for k in (-60, -40, -20, 20, 40, 60):
+        e = sd.copy()
+        e["d1"] += k; e["x"] += k
+        e = e[(e["d1"] >= 0) & (e["x"] < len(sessions) - 1)]
+        p, m = ex.run(e, "wait", sessions, R)
+        out[f"{k:+d}"] = {**explore.stats(p), "events_traded": m["events_traded"]}
+        print(f"  wait window moved {k:+d} sessions: SR {out[f'{k:+d}']['sharpe']:.2f} t {out[f'{k:+d}']['t']:.2f} ret/yr {out[f'{k:+d}']['ann_ret']:.2%} events {m['events_traded']}")
+    return out
+
+
+if __name__ == "__main__" and "--shifted" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["wait_window_moved"] = shifted_controls()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def late_start() -> dict:
+    """WAIT decided 1, 2 or 3 sessions later than D1, eligibility re-read at the later close
+    (added 2026-11-15, after edgar_dates.py showed the first 8-K naming the dividend arrives
+    0 to 4 days after CRSP's declaration date). The independent review ran this probe first
+    (0.93, 0.98, 0.89); this stores it so the card's figures have a reproducer."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    sd = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    P, A = prc.to_numpy(), adv.to_numpy()
+    cols = prc.columns.get_indexer(sd["permno"])
+    out = {}
+    for k in (1, 2, 3, 5):
+        e = sd.copy()
+        e["d1"] = e["d1"] + k
+        row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+        p, a = P[row, cols], A[row, cols]
+        e["ok_wait"] = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (a >= ex.MIN_ADV) & (e["amount"].to_numpy() / p >= ex.MIN_YIELD)
+        pnl, m = ex.run(e, "wait", sessions, R)
+        out[f"+{k}"] = {**explore.stats(pnl), "events_traded": m["events_traded"],
+                        "late_2023_on": explore.stats(pnl.loc["2023-01-01":])["sharpe"]}
+        print(f"  wait decided {k} session(s) later: SR {out[f'+{k}']['sharpe']:.2f} t {out[f'+{k}']['t']:.2f} events {m['events_traded']} | 2023 on {out[f'+{k}']['late_2023_on']:.2f}")
+    return out
+
+
+if __name__ == "__main__" and "--late" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["wait_late_start"] = late_start()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def small_names(delay: int = 1) -> dict:
+    """WAIT by the size of the name, decided ONE session later than D1 (the corrected entry),
+    with the dollar-volume floor lowered to $100,000 for the smallest band (added 2026-11-15,
+    after the team lead asked for ideas a small book can exploit). Not pre-specified. Bands are
+    21-session average dollar volume at the decision close. Each band is its own book: 10% a
+    name against IWM, pro rata above 50%."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    sd = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    P, A = prc.to_numpy(), adv.to_numpy()
+    cols = prc.columns.get_indexer(sd["permno"])
+    e = sd.copy()
+    e["d1"] = e["d1"] + delay
+    row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+    p, a = P[row, cols], A[row, cols]
+    base = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (e["amount"].to_numpy() / np.where(p > 0, p, np.nan) >= ex.MIN_YIELD)
+    eras = {"2000-07": ("2000", "2007"), "2008-12": ("2008", "2012"), "2013-17": ("2013", "2017"), "2018-22": ("2018", "2022"), "2023-25": ("2023", "2025")}
+    out = {}
+    for label, lo, hi in (("$100k to $1M a day", 1e5, 1e6), ("$1M to $5M", 1e6, 5e6), ("$5M and over", 5e6, np.inf), ("$100k to $5M", 1e5, 5e6)):
+        x = e.copy()
+        x["ok_wait"] = base & (a >= lo) & (a < hi)
+        pnl, m = ex.run(x, "wait", sessions, R)
+        ep = event_pnl(x, "wait", sessions, R)
+        out[label] = {**explore.stats(pnl), "events_traded": m["events_traded"], "share_of_days_invested": m["share_of_days_invested"],
+                      "per_event_mean_pct": float(ep.mean() * 100), "per_event_median_pct": float(ep.median() * 100),
+                      "by_era": {k: explore.stats(pnl.loc[lo_:hi_])["sharpe"] for k, (lo_, hi_) in eras.items()}}
+        o = out[label]
+        print(f"  {label}: SR {o['sharpe']:.2f} t {o['t']:.2f} ret/yr {o['ann_ret']:.2%} events {o['events_traded']} invested {o['share_of_days_invested']:.0%} "
+              f"per event {o['per_event_mean_pct']:+.2f}% (median {o['per_event_median_pct']:+.2f}%) | " + " ".join(f"{k}:{v:.2f}" for k, v in o["by_era"].items()))
+    return out
+
+
+if __name__ == "__main__" and "--small" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["wait_one_session_late_by_size"] = small_names(1)
+    for k in (2, 3):
+        print(f"decided {k} sessions later:")
+        j[f"wait_{k}_sessions_late_by_size"] = small_names(k)
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def small_controls() -> dict:
+    """Controls for the $100k-$5M band, one session late (added 2026-11-15, not pre-specified):
+    (1) ORDINARY cash dividends of the same companies in the same band (yield floor 0, as in
+    explore.py's control): is this just what thin dividend payers earn before an ex-date?
+    (2) the special-dividend window moved 20, 40 and 60 sessions LATER, eligibility kept.
+    (3) the band without its ten best events, and its per-event tails.
+    (4) yield buckets inside the band."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    adv = dv.rolling(21, min_periods=10).mean()
+    R = ret.copy(); R["IWM"] = iwm
+    P, A = prc.to_numpy(), adv.to_numpy()
+
+    def band(kind, min_yield, lo=1e5, hi=5e6):
+        e = ex.place(ev[ev["distype"] == kind], sessions, prc, adv, min_yield=min_yield)
+        e["d1"] = e["d1"] + 1
+        cols = prc.columns.get_indexer(e["permno"])
+        row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+        p, a = P[row, cols], A[row, cols]
+        e["yield_dec"] = e["amount"].to_numpy() / np.where(p > 0, p, np.nan)
+        e["ok_wait"] = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (e["yield_dec"] >= min_yield) & (a >= lo) & (a < hi)
+        return e
+
+    sd, cd = band("SD", ex.MIN_YIELD), band("CD", 0.0)
+    out = {}
+    pnl, m = ex.run(sd, "wait", sessions, R)
+    out["special"] = {**explore.stats(pnl), "events_traded": m["events_traded"]}
+    pc, mc = ex.run(cd, "wait", sessions, R)
+    out["ordinary_same_band"] = {**explore.stats(pc), "events_traded": mc["events_traded"],
+                                 "by_era": {k: explore.stats(pc.loc[a:b])["sharpe"] for k, (a, b) in {"2000-12": ("2000", "2012"), "2013-22": ("2013", "2022"), "2023-25": ("2023", "2025")}.items()}}
+    for k in (20, 40, 60):
+        e = sd.copy(); e["d1"] += k; e["x"] += k
+        e = e[e["x"] < len(sessions) - 1]
+        out[f"moved_{k}_later"] = explore.stats(ex.run(e, "wait", sessions, R)[0])
+    ep = event_pnl(sd, "wait", sessions, R)
+    out["per_event_pct"] = {"n": int(len(ep)), "mean": float(ep.mean() * 100), "median": float(ep.median() * 100), "share_positive": float((ep > 0).mean()),
+                            "p5": float(ep.quantile(.05) * 100), "p95": float(ep.quantile(.95) * 100), "worst": float(ep.min() * 100), "best": float(ep.max() * 100)}
+    out["without_ten_best_events"] = explore.stats(ex.run(sd.drop(index=ep.nlargest(10).index), "wait", sessions, R)[0])
+    d = pd.concat([pnl.rename("y"), iwm.rename("IWM")], axis=1).dropna()
+    X = np.column_stack([np.ones(len(d)), d["IWM"].to_numpy()])
+    b, *_ = np.linalg.lstsq(X, d["y"].to_numpy(), rcond=None)
+    out["beta_IWM"] = float(b[1])
+    for label, (lo, hi) in ex.BUCKETS.items():
+        s = sd.copy(); s["ok_wait"] &= (s["yield_dec"] >= lo) & (s["yield_dec"] < hi)
+        p2, m2 = ex.run(s, "wait", sessions, R)
+        out[f"yield {label}"] = {**explore.stats(p2), "events_traded": m2["events_traded"]}
+    for k, v in out.items():
+        if isinstance(v, dict) and "sharpe" in v:
+            print(f"  {k}: SR {v['sharpe']:.2f} t {v['t']:.2f} ret/yr {v['ann_ret']:.2%} dd {v['max_drawdown']:.1%}" + (f" n {v['events_traded']}" if "events_traded" in v else "") + (f" {v['by_era']}" if "by_era" in v else ""))
+        else:
+            print(f"  {k}:", v if not isinstance(v, dict) else {a: round(x, 2) for a, x in v.items()})
+    return out
+
+
+if __name__ == "__main__" and "--small-controls" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["small_band_controls"] = small_controls()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))
+
+
+def small_spread() -> dict:
+    """The closing bid-ask spread of the small-name book's own trades (added 2026-11-15).
+
+    WHY: the $100k-$5M band's median event is about 1% and the card said the spread was
+    unmeasured. CRSP's daily file has a closing bid and ask. For each traded event of the
+    band (decided one session late) this reads the quoted spread at the entry close and at
+    the exit close, and re-scores the event on the worst terms a market order could get:
+    bought at the entry session's closing ASK, sold at the exit session's closing BID,
+    everything between at CRSP's returns (dividends and splits included), less IWM.
+    THIS IS A REAL-MONEY VIEW, kept apart from the gross figures: the desk does not model
+    costs in research (docs/MISSION.md), and a closing-auction order pays less than the
+    quoted spread. It is an upper bound on the cost of one round trip, not an estimate.
+    A quote is used only when bid > 0 and ask >= bid; events without both quotes are counted."""
+    ev, ret, prc, dv, iwm, sessions = ex.load()
+    px = pd.read_parquet(ex.RES / "crsp_specdiv_daily.parquet", columns=["permno", "date", "bid", "ask"])
+    px["date"] = pd.to_datetime(px["date"])
+    bid = px.pivot(index="date", columns="permno", values="bid").reindex(index=sessions, columns=prc.columns).to_numpy()
+    ask = px.pivot(index="date", columns="permno", values="ask").reindex(index=sessions, columns=prc.columns).to_numpy()
+    adv = dv.rolling(21, min_periods=10).mean()
+    P, A = prc.to_numpy(), adv.to_numpy()
+    rn, im = ret.fillna(0.0).to_numpy(), iwm.to_numpy()
+    L = harness.EXEC_LAG
+    e = ex.place(ev[ev["distype"] == "SD"], sessions, prc, adv, min_yield=ex.MIN_YIELD)
+    e["d1"] = e["d1"] + 1
+    cols = prc.columns.get_indexer(e["permno"])
+    row = np.clip(e["d1"].to_numpy(), 0, len(P) - 1)
+    p, a = P[row, cols], A[row, cols]
+    ok = (e["d1"].to_numpy() < len(P)) & (p >= ex.MIN_PRICE) & (e["amount"].to_numpy() / np.where(p > 0, p, np.nan) >= ex.MIN_YIELD)
+    rows = []
+    for d1, x, c, good, av in zip(e["d1"].to_numpy(), e["x"].to_numpy(), cols, ok, a):
+        fill, last = d1 + 1, x - 1                 # filled at the close of d1+1; earns d1+2 .. x-1; sold at the close of x-1
+        if not good or not (1e5 <= av) or last < d1 + L:
+            continue
+        gross = float((rn[d1 + L:x, c] - im[d1 + L:x]).sum())
+        b0, a0, b1, a1 = bid[fill, c], ask[fill, c], bid[last, c], ask[last, c]
+        q0, q1 = (b0 > 0) and (a0 >= b0), (b1 > 0) and (a1 >= b1)
+        s0 = (a0 - b0) / ((a0 + b0) / 2) if q0 else np.nan
+        s1 = (a1 - b1) / ((a1 + b1) / 2) if q1 else np.nan
+        # worst terms: pay ask instead of the close at entry, receive bid instead of the close at exit
+        cost = (a0 / P[fill, c] - 1 if q0 else np.nan) + (1 - b1 / P[last, c] if q1 else np.nan)
+        rows.append((sessions[d1].year, av, gross, s0, s1, cost))
+    d = pd.DataFrame(rows, columns=["yr", "adv", "gross", "spread_in", "spread_out", "cost"])
+    d["net"] = d["gross"] - d["cost"]
+    d["band"] = pd.cut(d["adv"], [1e5, 1e6, 5e6, np.inf], labels=["$100k to $1M", "$1M to $5M", "$5M and over"], right=False)
+    d["era"] = pd.cut(d["yr"], [1999, 2007, 2012, 2017, 2022, 2025], labels=["2000-07", "2008-12", "2013-17", "2018-22", "2023-25"])
+    out = {"events": int(len(d)), "events_without_both_quotes": int(d["cost"].isna().sum())}
+
+    def summ(g):
+        q = g.dropna(subset=["cost"])
+        return {"n": int(len(g)), "n_quoted": int(len(q)), "median_spread_in_pct": float(q["spread_in"].median() * 100),
+                "mean_spread_in_pct": float(q["spread_in"].mean() * 100), "p90_spread_in_pct": float(q["spread_in"].quantile(.9) * 100),
+                "gross_mean_pct": float(q["gross"].mean() * 100), "gross_median_pct": float(q["gross"].median() * 100),
+                "round_trip_cost_mean_pct": float(q["cost"].mean() * 100), "round_trip_cost_median_pct": float(q["cost"].median() * 100),
+                "ask_to_bid_mean_pct": float(q["net"].mean() * 100), "ask_to_bid_median_pct": float(q["net"].median() * 100),
+                "ask_to_bid_share_positive": float((q["net"] > 0).mean())}
+
+    for k, g in d.groupby("band", observed=True):
+        out[str(k)] = summ(g)
+    small = d[d["adv"] < 5e6]
+    out["$100k to $5M"] = summ(small)
+    for k, g in small.groupby("era", observed=True):
+        out[f"$100k to $5M, {k}"] = summ(g)
+    for k, v in out.items():
+        if isinstance(v, dict):
+            print(f"  {k}: n {v['n_quoted']}/{v['n']} | spread at entry median {v['median_spread_in_pct']:.2f}% mean {v['mean_spread_in_pct']:.2f}% p90 {v['p90_spread_in_pct']:.2f}% | "
+                  f"gross {v['gross_mean_pct']:+.2f}% (median {v['gross_median_pct']:+.2f}%) | round trip {v['round_trip_cost_mean_pct']:.2f}% (median {v['round_trip_cost_median_pct']:.2f}%) | "
+                  f"ask-to-bid {v['ask_to_bid_mean_pct']:+.2f}% (median {v['ask_to_bid_median_pct']:+.2f}%, {v['ask_to_bid_share_positive']:.0%} positive)")
+        else:
+            print(f"  {k}: {v}")
+    return out
+
+
+if __name__ == "__main__" and "--spread" in sys.argv:
+    j = json.loads((HERE / "checks.json").read_text())
+    j["small_band_spread"] = small_spread()
+    (HERE / "checks.json").write_text(json.dumps(j, indent=1))

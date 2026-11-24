@@ -1,6 +1,6 @@
 ---
 name: next-task
-description: Decide what to work on next, ranked by value per hour against the book's actual constraints. Use at the start of a work session, when the queue is unclear, or when asked what matters most right now. Reads live state first (python3 -m ops.orient PROD: which machine is prod and whether it is armed), because operations outrank research whenever the book is not trading cleanly.
+description: Decide what to work on next, ranked by the pipeline (idea, explore, paper, go-live proposal) after operations. Use at the start of a work session, when the queue is unclear, or when asked what matters most right now. Reads live state first (python3 -m ops.orient PROD: which machine is prod and whether it is armed), because operations outrank research whenever a book is not trading cleanly.
 allowed-tools: Bash(python3 -m ops.orient*) Read Grep Glob
 ---
 
@@ -13,67 +13,59 @@ python3 -m ops.orient --no-tests 2>/dev/null | sed -n '1,60p'
 ```
 
 ```!
-grep -nE "^\| [0-9]|^## Phase" docs/ROADMAP.md 2>/dev/null | head -60
+grep -c "" results/IDEA_LEDGER.md 2>/dev/null; grep -nE "\| (IDEA|EXPLORE|SHADOW|PAPER|PROPOSED)[ |]" results/IDEA_LEDGER.md 2>/dev/null | tail -30
 ```
 
 ---
 
 ## The ranking rule
 
-`IR ≈ IC · TC · √BR` (`docs/SYSTEM.md` §3). The IC is good; the **transfer
-coefficient** and **effective breadth** are the binding problems, and uptime
-multiplies all three. **Take no figure from this file.** Measure TC with
-`python3 scripts/cef/band_frontier.py`; breadth and uptime have no live
-measurement until the Alpaca runner exists (the IBKR-era tools were deleted).
+**Take no figure from this file.** The mission is more, stronger and more
+independent sources of return, combined into one book and run reliably
+(`docs/MISSION.md`). Breadth is the main lever. Rank work by the pipeline in
+`docs/MISSION.md` §7, after operations:
 
-So the order is almost always:
+**1. Keep the live books trading.** `python3 -m ops.orient` PROD says which
+machine is prod and whether it is armed, and the last verify line says whether
+the last session passed. A FAIL, a missed send or an unarmed prod outranks
+everything below. The open operations steps are in `docs/ROADMAP.md`. Anything
+that needs a release, an arming or a real-money order is the team lead's: say
+what you need from them.
 
-**1. Keep the book trading.** Measure it first: `python3 -m ops.orient` PROD
-says which machine is prod and whether it is armed, and the last verify line
-says whether the last session PASSed. A FAIL, a missed send, or an unarmed prod
-outranks everything below, because research on a book with no uptime is wasted.
-The open operations steps, with owners, are `docs/ROADMAP.md`; take the first
-open one you can do.
+**2. Unblock paper.** The paper/shadow runner is the bottleneck between Explore
+and a paper record. If its design approval is not recorded in `docs/SYSTEM.md`
+§5, the next task is whatever gets the design to the team lead; if it is
+approved and unbuilt, build it (`execution-engineer`), with tests.
 
-**2. Build the fill record from the first Alpaca session.** Execution cost
-converges far faster than Sharpe. Alpaca paper fills MOC at the quote, so keep
-the auction-print P&L beside every paper fill (`CLAUDE.md`, research rules).
+**3. Promote what has cleared Explore.** Ledger rows at `EXPLORE` that meet the
+Explore bar go to `/paper`.
 
-**3. The broker is the fact.** Reconcile from Alpaca's positions and account
-activities, never from a local reconstruction: the IBKR design's ledger desyncs
-halted every book in September (`pre-clean-slate:_archive/prod_state_2026-09-28/`).
+**4. Explore the top cards.** Ledger rows at `IDEA`, and the `REVIVE?` rows of
+the backfill, ranked by strength of mechanism × independence from what is held ×
+capacity × ease of testing. `/explore <slug>`. Keep several running at once.
 
-**4. The vol target.** The value in force is orient SPEC `vol_target_annual`; the
-standing decision on how it should be set is `docs/SYSTEM.md` §5. Sizing is a
-larger lever on absolute return than any signal improvement, and it is gated on
-measured borrow and a stated drawdown tolerance (W6).
+**5. Hunt.** If the top of the card list is thin or all one asset class,
+`/hunt` on a theme the ledger has not covered.
 
-**5. Raise breadth.** Most of the book's variance is one factor, municipal CEFs
-against taxable ones. *Hard* group neutrality was tested and lost gross Sharpe
-(`docs/RESEARCH_STATE.md`, KILLED — CEF construction variants): **size the group
-bet deliberately**, do not eliminate it.
+**6. The combined book and the market-state layer.** `/combine` when a sleeve
+joins or leaves; the state variables and regimes
+(`market-historian-economist`).
 
-**6. Deploy the joint optimiser** — only after the band has live evidence (W12).
+**7. Go-live proposals.** `/go-live <slug>` for a book whose paper record is
+long enough to propose. The team decides.
 
-**7. Sharpen the signal.** Last. It has been measured repeatedly as the least
-productive place to work (see the same KILLED table).
-
-## The queue
-
-`docs/ROADMAP.md` is the queue. The old work orders were deleted in the
-2026-09-28 clean slate (git tag `pre-clean-slate`); their research ideas are
-provenance for new work, not a queue.
-
-## Budget discipline
-
-Every research prompt that ran its maximum would spend many trials, and **they
-should not all run**. Several parts are built to close themselves on a gate or a
-derived budget of zero; a prompt that closes itself has done its job at the cost
-of one trial rather than a year. Read the counters from `docs/RESEARCH_STATE.md`
-(orient TRIALS derives each bar). Rank by *information gained per trial*, not
-expected Sharpe.
+**8. Data and reliability.** Freshness of the research panels (the laptop's
+`data/` is known to lag: measure it), new fetchers (`data-scout`), the fill
+record against the auction print.
 
 ## Before starting anything
 
-Check `/graveyard`. The most common cause of death on this desk is a stale-price
-artifact.
+Read `results/IDEA_LEDGER.md` and check `/graveyard`. Nothing is banned; the two
+bugs to check for in any new test are a stale-price artifact and a control that
+scores as well as the treatment.
+
+## At the end of a phase
+
+Report to the team: what was found (gross results, labelled numbers), what is
+now on paper, what you need from them, and the next three things
+(`docs/MISSION.md` §10).
