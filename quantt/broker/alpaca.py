@@ -132,8 +132,11 @@ GET_BACKOFF_S = (2, 5, 15, 30)
 # here, did not. So every request to the trading host first takes a token from a bucket of
 # TRADING_BURST tokens refilled at TRADING_MAX_PER_MIN a minute: no 60 s window can hold
 # more than TRADING_BURST + TRADING_MAX_PER_MIN requests, 190, under Alpaca's 200 [S], with
-# room for a GET retry. A book that sends a few dozen orders never waits (the core and C4
-# are unchanged); a large set is smoothed to one request every 0.4 s. The data host is not
+# room for a GET retry. A set of a few dozen requests never waits; past TRADING_BURST each
+# request waits its turn, one every 0.4 s. The core's sends fit in the burst. C4's late send
+# reads about 85 assets first, so it is paced by about 18 s (release check of 4cf8431): in its
+# 15:55 retry slot gate 4 has that much less time, and a set near its limit is refused, which
+# sends nothing (VERIFY then records a missed day); C4 has sent a handful a day. The data host is not
 # paced: the send path does not use it, and its jobs keep their timing. The limit is per
 # client object, and the runner makes one per process and account.
 TRADING_MAX_PER_MIN = 150

@@ -68,13 +68,14 @@ RUNNER.md "The session, in order"; the reasons for the order are the incidents:
                (CLAUDE.md order-path rule 2).
   6. transmit  in `decide.transmit_sequence` order (running net kept near
                zero); the Alpaca clock re-read before every POST and the batch
-               stopped at the cutoff. One POST per order, each attempt and response appended to
-               orders.jsonl as it happens. ANY failure stops the batch: an
-               `AmbiguousSubmit` is resolved by looking the id up, never by
-               resending (a resend of an accepted order doubles it in the same
-               auction), and a rejection or a bad echo stops the rest too,
-               because the list that was approved is no longer the list that
-               is going.
+               stopped at the cutoff. Each attempt and response is appended to
+               orders.jsonl as it happens. An `AmbiguousSubmit` stops the batch
+               and is resolved by looking the id up, never by resending (a
+               resend of an accepted order doubles it). A 4xx rejection skips
+               that symbol and the rest go (team lead, 2026-09-28; `_transmit`).
+               Since 2026-11-23 one id can be POSTed up to four times: a 429 is
+               waited out and the id read, and it is resent only when Alpaca
+               has no such order (`_submit_one`, POST_429_WAITS_S).
   7. confirm   every sent id is re-read from Alpaca by client_order_id; one
                missing or different is FAIL.
 

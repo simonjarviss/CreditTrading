@@ -125,9 +125,10 @@ _DAY_DIR = re.compile(r"\d{4}-\d{2}-\d{2}")
 # also come AFTER a submit, on the resend after a 429; such an order then also has `rejected`.
 PRE_SUBMIT_EVENTS = ("cutoff", "clock_error", "skipped_after_rejection")
 # A recorded order Alpaca does not hold is expected only when the submit did not land: a
-# rejection, an ambiguous submit, an error, or a 429 (`rate_limited`, answered before the order
-# service; `_submit_one` also writes `rejected` for such an order, so this is belt and braces).
-NOT_AT_BROKER_OK = ("rejected", "ambiguous", "error", "rate_limited")
+# rejection, an ambiguous submit or an error. A 429 is NOT on this list (release check of
+# 4cf8431): it is not an outcome, and an order resent after one and accepted must be at Alpaca.
+# `_submit_one` writes `rejected` for every 429 path that does not end accepted.
+NOT_AT_BROKER_OK = ("rejected", "ambiguous", "error")
 
 
 class Refused(RuntimeError):
