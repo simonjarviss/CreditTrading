@@ -89,8 +89,18 @@ Check what is set without printing a value:
 `python3 -m quantt.broker.alpaca_probe --check-keys`. Never paste a key into a
 chat, an issue, a commit or a Claude session.
 
-**2.4 Data.** `data/` is gitignored: you build your own copy. The core CEF price
-and NAV panels:
+**2.4 Data.** `data/` is gitignored and never goes on GitHub: the repository is
+public and most of it is licensed. Download the team's copy from R2 with your
+read-only token (about 4 GB; `docs/DATA.md` §3, "The team's data/ copy"):
+
+```bash
+python3 scripts/data/team_data.py status  # when the team copy was last pushed
+python3 scripts/data/team_data.py pull    # download it into data/
+```
+
+`pull` checks every file against the manifest and never overwrites a file of yours
+that differs unless you pass `--overwrite`. To bring the core CEF panels up to date
+after that, or to build them from scratch:
 
 ```bash
 python3 scripts/cef/stage_cef.py          # full history (network: Yahoo)

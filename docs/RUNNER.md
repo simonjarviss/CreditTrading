@@ -572,7 +572,8 @@ its CEFConnect fallback has failed with JSONDecodeError since 2026-10-21. Gate 5
 then refused all 13 names, and the book missed the day. The why of each choice is
 in `quantt/session/gate.py` `missing_nav_hold`.
 
-- **Off by default.** The book json key is `data.missing_nav`, and `hold` is its only
+- **Off by default in code; ON in the book json since 2026-10-29** (team lead: `hold`,
+  `missing_nav_max_sessions` 2). The book json key is `data.missing_nav`, and `hold` is its only
   value. With the key absent, `Deps.missing_nav` is None and the session is bd87144's
   (release-20261029-1), byte for byte. The proof is hashes computed by bd87144's code
   on the real panel and on a synthetic panel that never skips: a complete day, and a

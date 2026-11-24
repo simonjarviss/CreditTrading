@@ -5718,6 +5718,46 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
+### E-2026-11-09-61 · Four row-level CRSP tables and the R2 inventories leave the repository and are git-ignored
+- kind: incident
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - none (a repository clean-up asked for by the team lead; no figure)
+- source: `.gitignore` @ `3595ec8` (the block is added by this commit, on top of that main)
+- supports: §5
+- status: current
+
+### E-2026-11-09-62 · Rulings on the repository's public exposure: secret scanning and push protection on, the halt alert's address moves to config, the admin list stays as it is
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-09
+- figures:
+  - none (rulings by the team lead: "Turn both on", "Gmail in ops/halt.py", "Keep all four")
+- source: `.gitignore` @ `3595ec8` (the section is added by this commit, on top of that main)
+- supports: §5
+- status: current. The address change is PR #73
+
+### E-2026-11-24-09 · Pull request #70 brought up to date, and a fifth CRSP-derived table joins it: the C4 families names table
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (the team lead's go, by question prompt: "Update it now"; no figure)
+- source: `.gitignore` @ `b5c9913` (the `names_*.csv` line and its comment are added by the commit that carries this entry, on top of that main); `results/cef/cef_families/names_2026-10-12.csv` @ `b5c9913` (its columns include `current_shrcds`, `crsp_first`, `crsp_last` and `crsp_trade_rows` per fund)
+- supports: §5
+- status: current. E-2026-11-09-61 and -62 are this pull request's entries of 2026-11-09, renumbered on the merge because main had since used -01 and -02. The files leave the tree from this merge on; they stay in git history until the history rewrite, which is the team lead's to push
+
+### E-2026-11-24-10 · The team's data/ copy in R2 for the analysts is merged (pull request #3): the team lead confirmed the analysts still need it
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (the team lead's answer by question prompt, "Yes, update it", to whether the analysts still need the R2 copy; no figure)
+- source: `scripts/data/team_data.py` @ `56c2dd0`; `docs/SYSTEM.md` §5 "Sharing the desk's data" @ `b5c9913` (the row is added by the commit that carries this entry)
+- supports: §5
+- status: current. Ruled 2026-10-26, unmerged until now. On the merge, boto3 moved from requirements.txt to requirements-research.txt so the VM's trading venv is not rebuilt for a research package. The copy is as fresh as the team lead's last push (`team_data.py status` says when)
+
 ### E-2026-11-08-30 · The corporate-action gate's bond-ISIN misread is fixed on a branch: 58 of the 208 unreadable-party rows are bonds and leave the gate; the other 150 stay unresolved, two of the team lead's three rows among them
 - kind: result
 - era: ALPACA
