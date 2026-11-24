@@ -5517,3 +5517,17 @@ that adds it does not exist when it is written.
 - source: `dashboard/README.md` @ `87728af` (the 2026-10-26 repository route it supersedes) and `ops/orient.py` @ `87728af` (the PNL figures it reproduces); `dashboard/` (export.py, metrics.py, build.py, site.py), `dashboard/tests/test_metrics.py` (parity with `ops.orient.official_pnl`), `docs/SYSTEM.md` §5 "the public site" and `docs/RUNBOOK.md` §8.13 are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-23-11 · Release: release-20261123-1, the public site, installed in its own clone on the VM; the trading clone and every book's arming unchanged
+- kind: release
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - release check on 83a7b14: GO with conditions. pytest exit 0, doc_audit 0 DRIFT in 95 checks, orient exit 0, preview exit 4 (nothing sent); quant-reviewer and execution-engineer found no defect on the order path (in quantt/ only install_vm.py's SITE_UNIT_FILES and its test changed). Its follow-ups (the .gitignore the merge had indented, the installer's unguarded daemon-reload, one empty change_usd failing the whole build, the combined figure's start date) are fixed in PR #101 [V]
+  - merged as exactly 83a7b14 through PR #102 (`--admin --match-head-commit`), origin/main's tree equal to 83a7b14; tagged release-20261123-1 on merge commit 1f93b56 [V]
+  - VM, 19:05 to 19:07 ET: no quantt job queued or running and NeedDaemonReload=no on all 39 quantt unit files before the install; caddy 2.6.2 from Ubuntu's archive; the site clone at release-20261123-1; first build published; quantt-site.timer active (every 30 minutes at :20 and :50) [V]
+  - read back after: the trading clone still at release-20261122-2, cef DRY_RUN=0 and AUTO_ARMED present, as before [V]
+  - live over HTTPS on the VM's own name: every page 200, an unknown path 404, the Content-Security-Policy, HSTS and frame headers sent; the performance page built 19:06 ET shows the 2026-11-23 after-close reading beside the official history to 2026-11-20 [V]
+- source: `dashboard/deploy/install_site_vm.sh` @ `83a7b14`; `docs/RUNBOOK.md` §8.13 @ `83a7b14`; the release check's verdict (workflow run wf_22fe6f40-95c) and the install's read-back, 2026-11-23
+- supports: §5
+- status: current
