@@ -183,6 +183,27 @@ def sleeves_block(r: dict) -> str:
             + f'<p class="meta">{escape(r["value"]["basis"])}.</p>' + prov(r))
 
 
+def reading_note(b: dict, kind) -> str:
+    """The caption under a book's after-close figures, built from what each figure is.
+
+    The equity is the reading at verify. The session's P&L is whatever session_pnl returned: the change
+    from the previous reading when the after-close record holds the session; the reading's own change
+    when that record could not be read (a snapshot figure, not the P&L of record); nothing when neither
+    has one (the record's first reading). Alpaca's history is "not yet collected" or "could not be read"
+    as the official record says. WHY (release-check review of 65c0aa7): the caption printed "None" when
+    there was no P&L, dropped "(not the P&L of record)" from a snapshot figure, and said the history was
+    not yet collected when it was there but unreadable."""
+    o, ac = b["official"], b.get("after_close", {})
+    out = ["Account equity read by verify after the close."]
+    if kind == "after-close reading" and "value" in ac:
+        out.append("The session's P&amp;L is the change from the previous reading.")
+    elif kind == "after-close reading":
+        out.append("The session's P&amp;L is the account's change in that reading (not the P&amp;L of record).")
+    hist = "could not be read" if S.UNMEASURED in o else "is not yet collected"
+    out.append(f"Alpaca's end-of-day history {hist} for this account.")
+    return " ".join(out)
+
+
 def book_section(b: dict) -> str:
     """One book in detail: what it trades, its official record's source, the latest session, its
     exposure and its execution. The headline statistics are in the comparison table above."""
@@ -200,16 +221,10 @@ def book_section(b: dict) -> str:
         if "value" in sess and sess["value"].get("equity_snapshot"):
             e = sess["value"]["equity_snapshot"]
             ch, kind = session_pnl(b, sess["value"]["date"])
-            # Say what each figure is (release-check review of 8daa34a): the equity is the reading at
-            # verify; the session's P&L comes from session_pnl, which for an after-close record is the
-            # change from the previous reading, not the reading's own change.
-            note = (f"Account equity read by verify after the close. The session's P&amp;L is the "
-                    f"{'change from the previous reading' if kind == 'after-close reading' and 'value' in b.get('after_close', {}) else kind}; "
-                    "Alpaca's end-of-day history is not yet collected for this account.")
             parts.append('<div class="figures">'
                          + fig(usd(e["equity"]), f"Account equity, {fmt_short(sess['value']['date'])}")
                          + (fig(usd(ch, True), "That session") if ch is not None else "")
-                         + f'</div><p class="meta">{note}</p>')
+                         + f'</div><p class="meta">{reading_note(b, kind)}</p>')
     parts.append(sleeves_block(b["sleeves"]))
     parts.append('<div class="book-grid"><div>' + session_block(sess) + "</div><div>" + risk_block(b["risk"])
                  + "</div><div>" + execution_block(b["execution"]) + "</div></div>")

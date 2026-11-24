@@ -5717,3 +5717,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `a4385db` (`book_section` printed `equity_snapshot.kind`); the VM's site journal, read 2026-11-24 ~05:00 ET; the caption is in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-09 · Release: release-20261124-8 on the VM; its release check returned GO, and the event book's caption is built from what its figures are
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-8 on 84a58e7 (PR #114, head 65c0aa7). The VM's site clone is at that tag; its 11:20 ET build published, and the site answered 200 [V]
+  - the release check of 65c0aa7 (workflow run wf_9227d531-0fb) passed pytest, doc_audit, orient and preview, and returned GO with one low-severity finding [V]
+  - that finding, fixed in the commit that carries this entry: the event book's caption printed "None" for a session with no P&L, dropped "(not the P&L of record)" from a snapshot figure, and said an unreadable end-of-day history was "not yet collected". `reading_note` builds the caption from the figure's source and the official record's state; three tests cover the three cases and fail on 84a58e7 [V]
+- source: `dashboard/build.py` @ `84a58e7` (`book_section`); the VM's site clone and site journal, read 2026-11-24 ~11:30 ET; the caption is in the commit that carries this entry
+- supports: §5
+- status: current

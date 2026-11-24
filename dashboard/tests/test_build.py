@@ -212,3 +212,34 @@ def test_the_event_books_tile_caption_says_what_its_figures_are(snap):
     section = page(snap).split('id="events"', 1)[1].split("Session of", 1)[0]
     assert "The session's P&amp;L is the change from the previous reading" in section
     assert "account snapshot at verify" not in section
+
+
+def event_caption(snap):
+    section = page(snap).split('id="events"', 1)[1].split("Session of", 1)[0]
+    return section.split('<div class="figures">', 1)[1]
+
+
+def test_the_event_books_caption_from_a_snapshot_figure_says_it_is_not_the_pnl_of_record(snap):
+    """Release-check review of 65c0aa7: with the after-close record unreadable the figure falls back to the
+    reading's own change, and the caption dropped "(not the P&L of record)"."""
+    book(snap, "events")["after_close"] = {"UNMEASURED": "events/2026-11-23/verify.json: no equity"}
+    cap = event_caption(snap)
+    assert "That session" in cap and "(not the P&amp;L of record)" in cap
+    assert "change from the previous reading" not in cap
+
+
+def test_the_event_books_caption_says_nothing_of_a_pnl_it_does_not_have(snap):
+    """Release-check review of 65c0aa7: a session with no P&L (the record's first reading) printed the
+    word None in its caption."""
+    ev = book(snap, "events")
+    ev["after_close"]["value"]["rows"][-1]["change_usd"] = None
+    cap = event_caption(snap)
+    assert "None" not in cap and "That session" not in cap and "The session's P&amp;L" not in cap
+    assert "Account equity read by verify after the close." in cap
+
+
+def test_the_event_books_caption_says_an_unreadable_history_could_not_be_read(snap):
+    """Release-check review of 65c0aa7: an unreadable official history was captioned "not yet collected"."""
+    book(snap, "events")["official"] = {"UNMEASURED": "eod_equity.csv: read failed"}
+    cap = event_caption(snap)
+    assert "end-of-day history could not be read" in cap and "not yet collected" not in cap
