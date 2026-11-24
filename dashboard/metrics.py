@@ -10,7 +10,10 @@ the cent (dashboard/tests/test_metrics.py pins that on a recorded series):
   * drawdown is measured on equity from its running high-water mark.
 
 The Sharpe ratio is mean(r) / sd(r) x sqrt(252), with no risk-free rate subtracted (the
-paper accounts earn no interest on cash). It is printed with its session count, because
+paper accounts earn no interest on cash). The Sortino ratio is mean(r) / downside deviation x
+sqrt(252), the downside deviation being sqrt(mean(min(r, 0)^2)) over every session (Sortino and
+Price's definition, target 0). The correlation of two books is Pearson's on the daily returns of
+the sessions both have. It is printed with its session count, because
 on a record of a few dozen sessions its standard error is about as large as the ratio.
 
 No fallbacks: a statistic that needs more rows than the series has is None, and the page
@@ -93,7 +96,48 @@ def summary(rows: list) -> dict:
         s["vol"] = sd * math.sqrt(TRADING_DAYS)
         s["ann_return"] = mean * TRADING_DAYS
         s["sharpe"] = (mean / sd) * math.sqrt(TRADING_DAYS) if sd > 0 else None
+        dd_dev = math.sqrt(sum(min(r, 0.0) ** 2 for r in rs) / len(rs))
+        s["sortino"] = (mean / dd_dev) * math.sqrt(TRADING_DAYS) if dd_dev > 0 else None
+    else:
+        s["sortino"] = None
     return s
+
+
+def return_points(rows: list) -> list:
+    """[(date, cumulative return since the funded row, as a fraction)]: growth on one scale for
+    books of different sizes."""
+    rows = funded(rows)
+    base = rows[0]["equity"]
+    return [(r["date"], r["equity"] / base - 1.0) for r in rows]
+
+
+def drawdown_points(rows: list) -> list:
+    """[(date, drawdown from the running high-water mark, as a negative fraction)]."""
+    return [(d, x) for d, x, _ in drawdowns(funded(rows))]
+
+
+def pnl_points(rows: list) -> list:
+    """[(date, the session's P&L in dollars)] for every session after the funded row."""
+    rows = funded(rows)
+    return [(r["date"], r["change_usd"]) for r in rows[1:]]
+
+
+def correlation(a: list, b: list) -> tuple:
+    """(Pearson correlation of two books' daily returns on their common sessions, n). The
+    correlation is None below MIN_RETURNS_FOR_RATIOS common sessions or when either is constant."""
+    ra, rb = dict(returns(funded(a))), dict(returns(funded(b)))
+    common = sorted(set(ra) & set(rb))
+    n = len(common)
+    if n < MIN_RETURNS_FOR_RATIOS:
+        return None, n
+    xs, ys = [ra[d] for d in common], [rb[d] for d in common]
+    mx, my = sum(xs) / n, sum(ys) / n
+    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    sxx = sum((x - mx) ** 2 for x in xs)
+    syy = sum((y - my) ** 2 for y in ys)
+    if sxx == 0 or syy == 0:
+        return None, n
+    return sxy / math.sqrt(sxx * syy), n
 
 
 def monthly(rows: list) -> list:

@@ -32,7 +32,7 @@ from html import escape
 from pathlib import Path
 
 from dashboard import build as perf, charts, metrics as M, snapshot as S
-from dashboard.layout import (BOOK_COLOURS, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
+from dashboard.layout import (BOOK_COLOURS, BOOK_TEXT, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
                               photo_style, tone, usd, when)
 
 HERE = Path(__file__).resolve().parent
@@ -41,16 +41,6 @@ STATIC = HERE / "public" / "static"
 REPO = HERE.parent
 KEEP_BUILDS = 3
 
-BOOK_TEXT = {
-    "cef": ("A dollar-neutral discount mean-reversion book on 13 leveraged credit closed-end funds. It buys funds "
-            "trading at unusually wide discounts to their own history and shorts funds trading unusually rich, "
-            "sized to a 6% annual volatility target."),
-    "c4": ("The same discount signal, blended at equal risk with a relative-value signal against comparable funds, "
-           "applied to 74 equity, preferred and multi-asset closed-end funds. Its returns are close to uncorrelated "
-           "with the Fixed Income Book."),
-    "events": ("Eight strategies around scheduled events: distribution ex-dates in closed-end funds and partnership "
-               "units, special dividends, post-earnings drift in smaller companies, and unit trust terminations."),
-}
 
 STAGES = (
     ("Idea", "Every idea starts from a mechanism and a counterparty: who loses money to the trade, and why they keep "
@@ -190,11 +180,7 @@ def overview(snap: dict) -> str:
                '<a class="link-arrow" href="/research/">How we research</a></div>'
                '<div class="sec-body">' + stages_html() + '</div></div></section>')
     members = json.loads((CONTENT / "team.json").read_text())["members"]
-    people = "".join(
-        f'<div class="person"><h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div>'
-        f'<p>{escape(m["bio"])}</p>'
-        + (f'<a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a>' if m.get("linkedin") else "")
-        + '</div>' for m in members)
+    people = "".join(person_card(m) for m in members)
     team = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
             '<div class="eyebrow">The team</div><h2>Who we are</h2>'
             '<p class="lede">Four Queen\'s University students at QUANTT, covering portfolio management, risk, '
@@ -328,15 +314,18 @@ def library(lib: dict) -> str:
 
 # ----------------------------------------------------------------------- team --
 
+def person_card(m: dict) -> str:
+    """One team member: headshot, name and LinkedIn (team lead, 2026-11-23: "use the same headshots
+    on quantt.ca"; "delete the teams bios, just name and linkedin"; dashboard/content/team.json)."""
+    photo = (f'<img class="headshot" src="{escape(m["photo"])}" alt="{escape(m["name"])}" width="480" height="480" '
+             'loading="lazy" decoding="async">' if m.get("photo") else "")
+    li = (f'<p><a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>'
+          if m.get("linkedin") else "")
+    return f'<div class="person">{photo}<h3>{escape(m["name"])}</h3>{li}</div>'
+
+
 def team(t: dict) -> str:
-    cards = []
-    for m in t["members"]:
-        initials = "".join(w[0] for w in m["name"].split()[:2])
-        li = (f'<p><a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>'
-              if m.get("linkedin") else "")
-        cards.append(f'<div class="person"><div class="avatar" aria-hidden="true">{escape(initials)}</div>'
-                     f'<h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div>'
-                     f'<p>{escape(m["bio"])}</p>{li}</div>')
+    cards = [person_card(m) for m in t["members"]]
     head = page_head("Team", "The team",
                      "Four students at Queen's University, part of QUANTT, the Queen's University Algorithmic Network "
                      "and Trading Team.")

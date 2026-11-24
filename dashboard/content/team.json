@@ -1,17 +1,13 @@
 {
- "_note": "Names, titles and LinkedIn links as published on quantt.ca (content/team/2026-2027, read 2026-11-23). Bios are drafted from each person's role on the desk (docs/TEAM.md) and await each person's approval.",
+ "_note": "Names and LinkedIn links as published on quantt.ca (content/team/2026-2027, read 2026-11-23); titles kept for reference, not shown. Headshots are quantt.ca's own (https://quantt.ca/team/photos/<name>, fetched 2026-11-23, 600 px JPEG), re-encoded to 480 px WebP with their metadata removed (team lead, 2026-11-23: \"use the same headshots on quantt.ca\"). Bios removed (team lead, 2026-11-23: \"just name and linkedin\").",
  "members": [
-  {"name": "Simon Jarvis", "title": "Portfolio Manager",
-   "bio": "Leads the team and manages its three trading books. Responsible for strategy design, portfolio construction, execution and the production trading system.",
-   "linkedin": "https://uk.linkedin.com/in/jarvissimon"},
-  {"name": "Ryan Press", "title": "Quantitative Trading Analyst",
-   "bio": "Covers fixed income and credit risk across the books, and researches fixed income and macro event strategies.",
-   "linkedin": "https://ca.linkedin.com/in/ryan-press-9a9304338"},
-  {"name": "James Simone", "title": "Quantitative Trading Analyst",
-   "bio": "Covers equity risk across the books, and researches equity and exchange-traded fund strategies.",
-   "linkedin": "https://ca.linkedin.com/in/-james-simone"},
-  {"name": "Lucy Keith", "title": "Quantitative Trading Analyst",
-   "bio": "Builds the team's performance dashboard and research data platform, and researches cross-asset signals.",
-   "linkedin": "https://ca.linkedin.com/in/lucy-keith-200591365"}
+  {"name": "Simon Jarvis", "title": "Portfolio Manager", "linkedin": "https://uk.linkedin.com/in/jarvissimon",
+   "photo": "/static/img/team/simon-jarvis.webp"},
+  {"name": "Ryan Press", "title": "Quantitative Trading Analyst", "linkedin": "https://ca.linkedin.com/in/ryan-press-9a9304338",
+   "photo": "/static/img/team/ryan-press.webp"},
+  {"name": "James Simone", "title": "Quantitative Trading Analyst", "linkedin": "https://ca.linkedin.com/in/-james-simone",
+   "photo": "/static/img/team/james-simone.webp"},
+  {"name": "Lucy Keith", "title": "Quantitative Trading Analyst", "linkedin": "https://ca.linkedin.com/in/lucy-keith-200591365",
+   "photo": "/static/img/team/lucy-keith.webp"}
  ]
 }

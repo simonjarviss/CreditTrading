@@ -5603,3 +5603,18 @@ that adds it does not exist when it is written.
 - source: `dashboard/deploy/install_site_vm.sh` @ `4ecc202`; `dashboard/export.py` @ `4ecc202` (`scrub`, which kept order ids); the VM's site journal, `/srv/quantt-site` and the event book's verify.json, read 2026-11-23 22:35 to 22:50 ET; the withholding, the privacy pattern and the three fixes are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-23-14 · Release: release-20261123-4, the public site in aggregates only, on the VM; event-driven.quantt.ca serving through the Worker
+- kind: release
+- era: ALPACA
+- date: 2026-11-23
+- figures:
+  - release check (workflow run wf_87329e9e-eca) GO on ed56ade: pytest 5097 passed and 2 skipped, doc_audit 0 DRIFT, orient exit 0 with prod the VM and core and C4 armed, preview exit 4; no order-path file in the range [V]
+  - merged as 4c75294 (PR #105, `--admin --match-head-commit` ed56ade; the merge's tree equal to ed56ade's) and tagged release-20261123-4 after the verdict [V]
+  - VM, 23:29 ET: the site clone moved from release-20261123-3 to release-20261123-4 and is clean; the build published; no client order id on any page. The trading clone still at release-20261123-2; cef and c4 AUTO_ARMED present [V]
+  - `event-driven.quantt.ca` answers 200 on every page through the Worker since Cloudflare's build of 4ecc202 succeeded (04:06 UTC); an unknown path is answered `no-store` by the Worker. Every cached answer reached browsers as `max-age=14400`, the zone's Browser Cache TTL, so a returning visitor could see figures four hours old; the Worker now sends `no-cache` with 304 revalidation (the commit that carries this entry) [V]
+  - the review's site findings fixed in the same commit: exposure is not measured when any position has no close (it was summed over the priced names only); a core FAIL's unmeasured items are counted as notes; the two exposure rows are labelled by their source [V]
+  - ruled after release-20261123-4 and done in the same commit: quantt.ca's headshots, team cards with name and LinkedIn only, Toronto night photographs on the team and library pages (Andrew Gosine, CC0; Ken Lund, CC BY-SA 2.0; credited), a GitHub link in the header, and the performance page rebuilt as a tearsheet (team lead, 2026-11-23 and 2026-11-24) [V]
+- source: `dashboard/export.py` @ `4c75294` (exposure over the priced names, notes from `problems` only); `dashboard/worker/index.js` @ `4c75294` (the edge lifetime sent to browsers); the VM's site journal and `/srv/quantt-site`, read 2026-11-23 23:29 ET; response headers of `event-driven.quantt.ca`, read 2026-11-24 04:25 UTC; the fixes, the photographs and the tearsheet are in the commit that carries this entry
+- supports: §5
+- status: current

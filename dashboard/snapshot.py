@@ -98,9 +98,10 @@ def _check_value(kind: str, v, where: str, out: list) -> None:
             out.append(f"{where}.n_notes: must be a count")
         pos = v.get("positions")
         if not isinstance(pos, dict) or not all(_is_count(pos.get(k)) for k in ("n", "n_long", "n_short", "n_unpriced")) \
-                or not all(_num(pos.get(k)) for k in ("gross_usd", "net_usd")) \
-                or not all(_opt_num(pos.get(k)) for k in ("gross_x", "net_x")):
-            out.append(f"{where}.positions: needs counts n, n_long, n_short, n_unpriced, gross_usd and net_usd")
+                or not all(_opt_num(pos.get(k)) for k in ("gross_usd", "net_usd", "gross_x", "net_x")) \
+                or (pos.get("n_unpriced") and any(pos.get(k) is not None for k in ("gross_usd", "net_usd"))):
+            out.append(f"{where}.positions: needs counts n, n_long, n_short, n_unpriced, and gross_usd and net_usd "
+                       "(null when any position is unpriced)")
         o = v.get("orders")
         if not isinstance(o, dict) or not all(_is_count(o.get(k)) for k in ("n", "n_filled", "n_partial", "n_unfilled")) \
                 or not _opt_num(o.get("fill_rate_shares")):

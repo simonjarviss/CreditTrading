@@ -204,3 +204,33 @@ def test_the_first_send_is_the_oldest_day_with_started_not_a_dry_run(state):
     assert book(snap_of(state), "events")["session"]["value"]["first_send"] == "2026-11-23"
     (st / "events" / "2026-11-23" / "STARTED").unlink()
     assert book(snap_of(state), "events")["session"]["value"]["first_send"] is None
+
+
+def test_exposure_is_not_measured_when_a_close_is_missing(state):
+    """Release-check review, 2026-11-23: summed over the priced names only, a book with every close
+    missing showed 0.00x. Any unpriced name now withholds gross and net."""
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    del r["auction_prints_d"]["prices"]["BBB"]
+    p.write_text(json.dumps(r))
+    pos = book(snap_of(state), "cef")["session"]["value"]["positions"]
+    assert pos["n"] == 2 and pos["n_unpriced"] == 1
+    assert pos["gross_usd"] is None and pos["net_usd"] is None and pos["gross_x"] is None and pos["net_x"] is None
+    from dashboard import build as B
+    h = B.render(snap_of(state))
+    assert "not measured: 1 position has no close on record" in h and "Gross exposure at the close" not in h.split(
+        "Fixed Income Book")[1].split("Equity Cross-Asset Book")[0]
+
+
+def test_a_core_fails_unmeasured_items_are_counted_as_notes(state):
+    """verify.py writes a core FAIL's unmeasured items only into the verdict line, never into problems."""
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    r["verdict"] = ("2026-11-20 FAIL UNMEASURED auction print for AAA; UNMEASURED official change | "
+                    "traded 1 order(s), 1 filled; P&L pending")
+    r["problems"] = []
+    p.write_text(json.dumps(r))
+    v = book(snap_of(state), "cef")["session"]["value"]
+    assert v["verdict"] == "FAIL" and v["n_notes"] == 2

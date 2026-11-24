@@ -217,18 +217,19 @@ def _verdict(text: str, date: str):
 # UNMEASURED reading's text is published.
 
 def _positions_summary(holdings: list, equity) -> dict:
-    """holdings: (qty, close or None) per name, from the record. Gross and net are summed over the
-    priced names only, and n_unpriced says how many were left out, so a partial total is never
-    shown as a whole one."""
+    """holdings: (qty, close or None) per name, from the record. Gross and net are measured only when
+    every held name has a close: with any name unpriced they are None and n_unpriced says how many,
+    because a sum over part of the book would read as the whole book (release-check review,
+    2026-11-23: with every close missing, a fully invested book showed 0.00x)."""
     held = [(q, c) for q, c in holdings if q]
-    priced = [(q, c) for q, c in held if c is not None]
-    gross = sum(abs(q * c) for q, c in priced)
-    net = sum(q * c for q, c in priced)
+    unpriced = sum(1 for _, c in held if c is None)
+    gross = None if unpriced else sum(abs(q * c) for q, c in held)
+    net = None if unpriced else sum(q * c for q, c in held)
     eq = equity if equity else None
     return {"n": len(held), "n_long": sum(1 for q, _ in held if q > 0), "n_short": sum(1 for q, _ in held if q < 0),
-            "n_unpriced": len(held) - len(priced),
-            "gross_usd": gross if held else 0.0, "net_usd": net if held else 0.0,
-            "gross_x": None if eq is None else gross / eq, "net_x": None if eq is None else net / eq}
+            "n_unpriced": unpriced, "gross_usd": gross, "net_usd": net,
+            "gross_x": None if eq is None or gross is None else gross / eq,
+            "net_x": None if eq is None or net is None else net / eq}
 
 
 def _orders_summary(rows: list) -> dict:
@@ -259,13 +260,17 @@ def session_core(book: str, book_dir: Path) -> dict:
     p = day / "reconcile.json"
     try:
         r = read_json(p)
-        verdict, _reason = _verdict(r.get("verdict", ""), day.name)
+        verdict, reason = _verdict(r.get("verdict", ""), day.name)
+        # A core FAIL's items are `problems` plus the score's unmeasured items, which verify writes
+        # only into the verdict line, as "UNMEASURED <item>" before " | " (quantt/session/verify.py,
+        # `fails`). Both are counted, as the event book counts problems and fails.
+        n_unmeasured = reason.rsplit(" | ", 1)[0].count("UNMEASURED ") if " | " in reason else 0
         prints = (r.get("auction_prints_d") or {}).get("prices") or {}
         snap = r.get("snapshot") or {}
         equity = _float(snap.get("equity"), "the snapshot's equity")
         holdings = [(_float(q, "a position's quantity"), _float(prints.get(s), "a position's close"))
                     for s, q in (r.get("positions_after") or {}).items()]
-        value = {"date": day.name, "verdict": verdict, "n_notes": len(r.get("problems") or []),
+        value = {"date": day.name, "verdict": verdict, "n_notes": len(r.get("problems") or []) + n_unmeasured,
                  "positions": _positions_summary(holdings, equity),
                  "close_basis": "official closing print (primary exchange)",
                  "orders": _orders_summary(r.get("orders") or []),

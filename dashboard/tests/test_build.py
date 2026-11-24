@@ -70,9 +70,11 @@ def test_the_newest_session_shows_its_after_close_reading_until_the_official_poi
     s["date"] = "2026-11-23"
     s["equity_snapshot"]["change_usd"] = 123.0
     h = page(snap)
-    assert "23 Nov 2026 session, after-close reading" in h and "+$123" in h
+    latest = h.split("Latest session", 1)[1]
+    assert "23 Nov 2026" in latest and "+$123</span> <span class=\"meta\">after-close reading" in latest
     s["date"] = "2026-11-20"                                 # official already covers it: no snapshot tile
-    assert "after-close reading" not in page(snap)
+    cef_row = page(snap).split("Latest session", 1)[1].split("Fixed Income Book", 1)[1].split("</tr>", 1)[0]
+    assert "after-close reading" not in cef_row and "official" in cef_row
 
 
 def test_text_from_a_record_cannot_inject_markup(snap):
@@ -83,7 +85,9 @@ def test_text_from_a_record_cannot_inject_markup(snap):
 
 def test_the_page_loads_nothing_from_another_origin(snap):
     h = page(snap)
-    assert not re.search(r"(src|href)\s*=\s*[\"']?(https?:)?//", h, re.I)
+    # what the page LOADS: src= and <link href=. A plain link to another site (LinkedIn, GitHub) loads nothing.
+    assert not re.search(r"(\bsrc\s*=|<link\b[^>]*\bhref\s*=)\s*[\"']?(https?:)?//", h, re.I)
+    assert not re.search(r"url\(\s*[\"']?(https?:)?//", h, re.I)
     assert re.findall(r"<script[^>]*>", h) == ['<script src="/static/site.js" defer>']
 
 

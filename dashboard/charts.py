@@ -1,8 +1,8 @@
 """Server-side SVG charts for the site. Standard library only; the page needs no chart library.
 
-One chart form is used: a line chart of cumulative P&L in dollars over trading sessions,
-one line per book and one for the accounts combined. One y-axis only (every series is in
-dollars). The x-axis is the session index, so weekends and holidays leave no gaps. A
+Two chart forms. A line chart over trading sessions, one line per book and one for the
+accounts combined, in dollars or in percent (growth since inception, drawdown from the peak).
+A bar chart of each session's P&L in dollars, coloured by sign. One y-axis per chart, always. The x-axis is the session index, so weekends and holidays leave no gaps. A
 session a book has no official row for is a break in that book's line, never a value
 carried from the session before. The hover layer (static/site.js) reads the same numbers
 from the container's data-series attribute; with scripts off, the chart and its table
@@ -41,9 +41,63 @@ def usd_axis(v: float) -> str:
     return ("−" if v < 0 else "") + s.replace(".0k", "k")
 
 
-def line_chart(series: list, label: str) -> str:
-    """series: [{"name", "color" (a CSS colour or var), "points": [(date, value)]}].
-    Returns the chart's HTML (container, SVG, legend, hover data)."""
+def pct_axis(v: float) -> str:
+    if v == 0:
+        return "0%"
+    a = abs(v) * 100
+    s = f"{a:.1f}%" if a < 10 else f"{a:.0f}%"
+    return ("−" if v < 0 else "+") + s.replace(".0%", "%")
+
+
+AXIS = {"usd": usd_axis, "pct": pct_axis}
+
+
+def _month_labels(dates: list, x, height: int) -> list:
+    out, seen, last_x = [], None, -1e9
+    for i, d in enumerate(dates):            # one label at each month's first session, if it has room
+        if d[:7] != seen and x(i) - last_x >= 70:
+            seen, last_x = d[:7], x(i)
+            out.append(f'<text class="axis" x="{x(i):.1f}" y="{height - 10}" text-anchor="middle">'
+                       f'{MONTHS[int(d[5:7]) - 1]} {d[:4]}</text>')
+    return out
+
+
+def bar_chart(points: list, label: str, height: int = 260) -> str:
+    """points: [(date, dollars)]. One bar per session, green up and red down, on one dollar axis."""
+    if len(points) < 2:
+        return '<p class="meta">The chart needs at least two sessions.</p>'
+    h = height
+    dates = [d for d, _ in points]
+    vals = [v for _, v in points]
+    ticks = nice_ticks(min(min(vals), 0.0), max(max(vals), 0.0), 4)
+    lo, hi = ticks[0], ticks[-1]
+    n = len(points)
+    slot = (W - PAD_L - PAD_R) / n
+    bw = max(1.5, min(14.0, slot * 0.7))
+    x = lambda i: PAD_L + slot * (i + 0.5)                                    # noqa: E731
+    y = lambda v: PAD_T + (h - PAD_T - PAD_B) * (hi - v) / (hi - lo)          # noqa: E731
+    parts = [f'<svg viewBox="0 0 {W} {h}" role="img" aria-label="{escape(label)}">']
+    for t in ticks:
+        cls = "zero" if t == 0 else "grid-line"
+        parts.append(f'<line class="{cls}" x1="{PAD_L}" x2="{W - PAD_R}" y1="{y(t):.1f}" y2="{y(t):.1f}"/>')
+        parts.append(f'<text class="axis" x="{PAD_L - 8}" y="{y(t) + 4:.1f}" text-anchor="end">{usd_axis(t)}</text>')
+    parts += _month_labels(dates, x, h)
+    for i, v in enumerate(vals):
+        top, bot = (y(v), y(0)) if v >= 0 else (y(0), y(v))
+        parts.append(f'<rect class="{"bar-pos" if v >= 0 else "bar-neg"}" x="{x(i) - bw / 2:.1f}" y="{top:.1f}" '
+                     f'width="{bw:.1f}" height="{max(bot - top, 0.8):.1f}"/>')
+    parts.append(f'<line class="hair" x1="0" x2="0" y1="{PAD_T}" y2="{h - PAD_B}"/>')
+    parts.append("</svg>")
+    data = {"x": [round(x(i), 1) for i in range(n)], "dates": dates, "fmt": "usd",
+            "series": [{"name": "Session P&L", "color": "#5f6670", "v": [round(v, 2) for v in vals]}]}
+    return (f'<div class="chart" data-series="{escape(json.dumps(data, separators=(",", ":")))}">'
+            + "".join(parts) + '<div class="tip"></div></div>')
+
+
+def line_chart(series: list, label: str, fmt: str = "usd", height: int = H) -> str:
+    """series: [{"name", "color" (a CSS colour or var), "points": [(date, value)]}]; fmt "usd" or
+    "pct" (values as fractions). Returns the chart's HTML (container, SVG, legend, hover data)."""
+    axis = AXIS[fmt]
     dates = sorted({d for s in series for d, _ in s["points"]})
     if len(dates) < 2:
         return '<p class="meta">The chart needs at least two sessions.</p>'
@@ -52,18 +106,13 @@ def line_chart(series: list, label: str) -> str:
     ticks = nice_ticks(min(min(vals), 0.0), max(max(vals), 0.0))
     lo, hi = ticks[0], ticks[-1]
     x = lambda i: PAD_L + (W - PAD_L - PAD_R) * i / (len(dates) - 1)          # noqa: E731
-    y = lambda v: PAD_T + (H - PAD_T - PAD_B) * (hi - v) / (hi - lo)          # noqa: E731
-    parts = [f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="{escape(label)}">']
+    y = lambda v: PAD_T + (height - PAD_T - PAD_B) * (hi - v) / (hi - lo)          # noqa: E731
+    parts = [f'<svg viewBox="0 0 {W} {height}" role="img" aria-label="{escape(label)}">']
     for t in ticks:
         cls = "zero" if t == 0 else "grid-line"
         parts.append(f'<line class="{cls}" x1="{PAD_L}" x2="{W - PAD_R}" y1="{y(t):.1f}" y2="{y(t):.1f}"/>')
-        parts.append(f'<text class="axis" x="{PAD_L - 8}" y="{y(t) + 4:.1f}" text-anchor="end">{usd_axis(t)}</text>')
-    seen, last_x = None, -1e9
-    for i, d in enumerate(dates):            # one label at each month's first session, if it has room
-        if d[:7] != seen and x(i) - last_x >= 70:
-            seen, last_x = d[:7], x(i)
-            parts.append(f'<text class="axis" x="{x(i):.1f}" y="{H - 10}" text-anchor="middle">'
-                         f'{MONTHS[int(d[5:7]) - 1]} {d[:4]}</text>')
+        parts.append(f'<text class="axis" x="{PAD_L - 8}" y="{y(t) + 4:.1f}" text-anchor="end">{axis(t)}</text>')
+    parts += _month_labels(dates, x, height)
     hover = []
     for s in series:
         pts = dict(s["points"])
@@ -83,10 +132,11 @@ def line_chart(series: list, label: str) -> str:
                 parts.append(f'<circle cx="{cx}" cy="{cy}" r="4" fill="{s["color"]}"/>')
             else:
                 parts.append(f'<polyline class="series" stroke="{s["color"]}"{width} points="{" ".join(seg)}"/>')
-        hover.append({"name": s["name"], "color": s["color"], "v": [round(pts[d], 2) if d in pts else None for d in dates]})
-    parts.append(f'<line class="hair" x1="0" x2="0" y1="{PAD_T}" y2="{H - PAD_B}"/>')
+        hover.append({"name": s["name"], "color": s["color"],
+                      "v": [round(pts[d], 6 if fmt == "pct" else 2) if d in pts else None for d in dates]})
+    parts.append(f'<line class="hair" x1="0" x2="0" y1="{PAD_T}" y2="{height - PAD_B}"/>')
     parts.append("</svg>")
-    data = {"x": [round(x(i), 1) for i in range(len(dates))], "dates": dates, "series": hover}
+    data = {"x": [round(x(i), 1) for i in range(len(dates))], "dates": dates, "fmt": fmt, "series": hover}
     legend = "".join(f'<span><span class="sw" style="background:{s["color"]}"></span>{escape(s["name"])}</span>'
                      for s in series)
     return (f'<div class="chart" data-series="{escape(json.dumps(data, separators=(",", ":")))}">'
