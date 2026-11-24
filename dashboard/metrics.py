@@ -5,8 +5,11 @@ agrees with orient to the cent (dashboard/tests/test_metrics.py pins that on a r
 performance page's figures come from `profile` over each book from its first traded session and
 over the portfolio composite (below), so they differ from orient's, which count from funding:
 
-  * daily return r_t = change_usd_t / equity_{t-1}  (Alpaca's own change, never a
-    difference we compute: the change carries cash flows Alpaca knows about and we do not);
+  * daily return r_t = change_usd_t / equity_{t-1}. On an official series the change is Alpaca's
+    own, never a difference we compute: it carries cash flows Alpaca knows about and we do not. On
+    the event book's after-close record (until it has an official history) the change IS the
+    difference between consecutive readings (export.after_close), so a deposit there would read as
+    P&L; the paper accounts take none;
   * annualised volatility = sample standard deviation of r_t x sqrt(252);
   * cumulative P&L = last equity - first equity (the first row is the funded account);
   * drawdown is measured on equity from its running high-water mark.

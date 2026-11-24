@@ -199,10 +199,10 @@ def book_section(b: dict) -> str:
         parts.append(f'<p class="meta">{escape(started[:1].upper() + started[1:])}.</p>')
         if "value" in sess and sess["value"].get("equity_snapshot"):
             e = sess["value"]["equity_snapshot"]
+            ch, _ = session_pnl(b, sess["value"]["date"])
             parts.append('<div class="figures">'
                          + fig(usd(e["equity"]), f"Account equity, {fmt_short(sess['value']['date'])}")
-                         + (fig(usd(e["change_usd"], True), "That session")
-                            if e["change_usd"] is not None else "")
+                         + (fig(usd(ch, True), "That session") if ch is not None else "")
                          + f'</div><p class="meta">{escape(e["kind"])}.</p>')
     parts.append(sleeves_block(b["sleeves"]))
     parts.append('<div class="book-grid"><div>' + session_block(sess) + "</div><div>" + risk_block(b["risk"])
@@ -401,6 +401,26 @@ def contribution_table(pf: dict) -> str:
     return tbl(["Book", "First traded session", "P&L", "Share of portfolio P&L"], rows, right=(2, 3))
 
 
+def session_pnl(b: dict, date: str) -> tuple:
+    """(P&L of one session, its kind) as every figure on the page shows it: Alpaca's official change when
+    it has landed; else, for a book whose daily record is its after-close readings, that record's change
+    (the move between readings, export.after_close); else the session's own after-close reading. None
+    when none exists. WHY (release-check review of 596ba7f): the event book's tile and its row took
+    Alpaca's change while its record took the move between readings, so the same session read twice."""
+    off = {r["date"]: r for r in b["official"]["value"]["rows"]} if "value" in b["official"] else {}
+    if date in off and off[date]["change_usd"] is not None:
+        return off[date]["change_usd"], "official"
+    ac = b.get("after_close", {})
+    if "value" in ac:
+        row = next((r for r in ac["value"]["rows"] if r["date"] == date), None)
+        if row is not None and row["change_usd"] is not None:
+            return row["change_usd"], "after-close reading"
+    e = (b["session"].get("value") or {}).get("equity_snapshot") if "value" in b["session"] else None
+    if e and e.get("change_usd") is not None and not ("value" in ac):
+        return e["change_usd"], "after-close reading"
+    return None, None
+
+
 def latest_sessions(books: list) -> str:
     """Each book's newest verified session, side by side, in aggregates, and the portfolio's sum when
     every trading book has a reading for the same session. A P&L is Alpaca's official figure when it
@@ -417,15 +437,10 @@ def latest_sessions(books: list) -> str:
             continue
         v = sess["value"]
         dates.add(v["date"])
-        off = {r["date"]: r for r in b["official"]["value"]["rows"]} if "value" in b["official"] else {}
         e = v.get("equity_snapshot")
-        ch = None
-        if v["date"] in off and off[v["date"]]["change_usd"] is not None:
-            ch = off[v["date"]]["change_usd"]
-            pnl = f'<span class="{tone(ch)}">{usd(ch, True)}</span> <span class="meta">official</span>'
-        elif e and e.get("change_usd") is not None:
-            ch = e["change_usd"]
-            pnl = f'<span class="{tone(ch)}">{usd(ch, True)}</span> <span class="meta">after-close reading</span>'
+        ch, kind = session_pnl(b, v["date"])
+        if ch is not None:
+            pnl = f'<span class="{tone(ch)}">{usd(ch, True)}</span> <span class="meta">{kind}</span>'
         else:
             pnl = '<span class="meta">not measured</span>'
             complete = False
@@ -472,8 +487,9 @@ def portfolio_section(snap: dict) -> str:
     if not pf["p"]:
         # Say why there is no portfolio (release-check review of 455eff4: with every book unreadable,
         # "no traded session yet" was false and dropped the reason).
-        why = ('<p class="gap">No portfolio tonight: no book\'s record could be read ('
-               + "; ".join(f"{escape(b['title'])}: {escape(w)}" for b, w in pf["blocked"]) + ").</p>"
+        why = ('<p class="gap">No portfolio tonight. '
+               + "; ".join([f"{escape(b['title'])}: its record could not be read ({escape(w)})" for b, w in pf["blocked"]]
+                           + [f"{escape(b['title'])}: {escape(w)}" for b, w in pf["excluded"]]) + ".</p>"
                if pf["blocked"] else '<p class="gap">No book has a traded session on record yet.</p>')
         return ('<section class="section"><div class="wrap"><div class="eyebrow">Portfolio</div>'
                 f'<h2>Portfolio results</h2>{why}</div></section>')

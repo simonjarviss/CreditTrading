@@ -5694,3 +5694,14 @@ that adds it does not exist when it is written.
 - source: the VM's `quantt_state/{cef,c4}/eod_equity.csv` and the page built by release-20261124-5, read 2026-11-24 ~04:00 ET; `dashboard/build.py` @ `5c947c4` (the combined label); the labelling is in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-07 · Release: release-20261124-6 on the VM; the event book's session P&L now reads the same in its tile, its row and its record
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-6 on 13eb3a0 (PR #112 merged `--admin --match-head-commit` a62bce4, trees equal), tagged after the release check's pytest, doc_audit, orient and preview steps passed on a62bce4. The VM's site clone moved to it; the build published; Cloudflare's build of 13eb3a0 succeeded; both addresses read "+0.06% Time-weighted return since 29 Sep 2026" and "−$472 P&L since 29 Sep 2026" as separate figures. The trading clone still at release-20261123-2, cef and c4 AUTO_ARMED present [V]
+  - the quant review of 596ba7f (workflow run wf_0e0e23f4-c81) found the event book's "That session" tile and its Latest session row still taking Alpaca's `change_usd` while its record takes the move between readings; they would first disagree at its second verified session, 2026-11-24. Fixed in the commit that carries this entry: one function gives a session's P&L to every figure (official, else the after-close record, else the reading). Its EXPORTER_SPEC row and the metrics docstring now say how the after-close record's change is made; the empty-portfolio message names every book and why [V]
+- source: `dashboard/build.py` @ `13eb3a0` (`book_section` and `latest_sessions` read `equity_snapshot.change_usd`); the VM's site journal and both addresses, read 2026-11-24 ~04:40 ET; the fix is in the commit that carries this entry
+- supports: §5
+- status: current
