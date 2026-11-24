@@ -199,11 +199,17 @@ def book_section(b: dict) -> str:
         parts.append(f'<p class="meta">{escape(started[:1].upper() + started[1:])}.</p>')
         if "value" in sess and sess["value"].get("equity_snapshot"):
             e = sess["value"]["equity_snapshot"]
-            ch, _ = session_pnl(b, sess["value"]["date"])
+            ch, kind = session_pnl(b, sess["value"]["date"])
+            # Say what each figure is (release-check review of 8daa34a): the equity is the reading at
+            # verify; the session's P&L comes from session_pnl, which for an after-close record is the
+            # change from the previous reading, not the reading's own change.
+            note = (f"Account equity read by verify after the close. The session's P&amp;L is the "
+                    f"{'change from the previous reading' if kind == 'after-close reading' and 'value' in b.get('after_close', {}) else kind}; "
+                    "Alpaca's end-of-day history is not yet collected for this account.")
             parts.append('<div class="figures">'
                          + fig(usd(e["equity"]), f"Account equity, {fmt_short(sess['value']['date'])}")
                          + (fig(usd(ch, True), "That session") if ch is not None else "")
-                         + f'</div><p class="meta">{escape(e["kind"])}.</p>')
+                         + f'</div><p class="meta">{note}</p>')
     parts.append(sleeves_block(b["sleeves"]))
     parts.append('<div class="book-grid"><div>' + session_block(sess) + "</div><div>" + risk_block(b["risk"])
                  + "</div><div>" + execution_block(b["execution"]) + "</div></div>")
