@@ -5851,3 +5851,13 @@ that adds it does not exist when it is written.
 - source: `quantt/broker/alpaca.py` @ `8674d2a`; `quantt/session/corp_actions.py` @ `8674d2a`; `ops/books/cef_discount_book.json` and `ops/books/c4_families_book.json` @ `8674d2a` (`corporate_actions.mode` "report"); the VM's installer output and `ops.prod_state`, read on 2026-11-24
 - supports: §1, §5
 - status: current. `halt` for either book waits for the team lead's ruling (E-2026-11-24-11)
+
+### E-2026-11-24-25 · Ruling: the repository goes private once the VM reads it with deploy keys; the installer accepts the ssh spelling first
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - GitHub traffic API, 2026-11-24: 1,276 clones from 338 sources in 14 days; CI, the VM and laptops are among them [S]
+- source: `quantt/deploy/install_vm.py` @ `8674d2a` (the exact-https origin check this entry's commit widens to `ORIGIN_URLS`, `clone_origin`); `docs/RUNBOOK.md` @ `8674d2a` (8.13's https set-url, which this commit moves to ssh and follows with 8.14); `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — a private repository" and four tests in `quantt/deploy/tests/`, which fail against `8674d2a`, all added in this entry's commit
+- supports: §5
+- status: current. The team lead's reason: "i just dont want people copying our stratgey". The order: the installer change ships in a release while the repository is public, then deploy keys for `quantt` and `quantt-shadow`, set-url to ssh in the three VM clones, then the switch, confirmed with the team lead just before. Already done: the team lead's fork `simonjarviss/CreditTrading` made private, and GitHub taken off the site (`release-20261124-16`, site session). Waiting on: an org owner turning on private forking for the analysts

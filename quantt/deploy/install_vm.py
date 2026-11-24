@@ -206,6 +206,16 @@ BOOK = ip.BOOK
 REQUIRED_TZ = ip.REQUIRED_TZ
 SERVICE_USER = "quantt"
 ORIGIN_URL = "https://github.com/quanttqueensu/CreditTrading.git"
+# The same repository over ssh, read with a read-only deploy key held by the VM's service
+# user. WHY: the repository goes private (team lead, 2026-11-24: "make github private ...
+# i just dont want people copying our stratgey"), and an anonymous https fetch of a private
+# repository fails, so a clone that still pointed at ORIGIN_URL could no longer read a tag.
+# Both spellings name ONE repository. The installer accepts either, and reads the tag from
+# whichever one the clone actually uses. So the release that ships this runs over https
+# while the repository is still public, and the clone is moved to ssh afterwards
+# (docs/RUNBOOK.md 8.14) without a second release.
+ORIGIN_URL_SSH = "git@github.com:quanttqueensu/CreditTrading.git"
+ORIGIN_URLS = (ORIGIN_URL, ORIGIN_URL_SSH)
 UNITS_DIR = Path("/etc/systemd/system")
 UNIT_PREFIX = "quantt-"
 TEMPLATE_DIR = "quantt/deploy/templates/systemd"
@@ -863,6 +873,22 @@ class Git:
         return r.stdout
 
 
+def clone_origin(git: Git, prod: Path, origin_url: str | tuple[str, ...]) -> str:
+    """The prod clone's origin URL, which must be one of the accepted spellings; raise otherwise.
+
+    The returned URL, not the first accepted spelling, is the one every later read uses. A clone
+    moved to the ssh spelling after the repository went private must have its tag read over ssh:
+    an ls-remote of the https spelling would ask for a password nobody is there to type
+    (ORIGIN_URL_SSH). `git remote get-url` expands any url.<base>.insteadOf rewrite, so a rewrite
+    cannot make a clone of something else pass this check."""
+    accepted = (origin_url,) if isinstance(origin_url, str) else tuple(origin_url)
+    url = git("remote", "get-url", "origin").strip()
+    if url not in accepted:
+        raise InstallRefused(f"{prod} is a clone of {url!r}, not of "
+                             f"{' or '.join(repr(u) for u in accepted)}")
+    return url
+
+
 def remote_tag_commit(git: Git, url: str, tag: str) -> str:
     """The commit `refs/tags/<tag>` names on `url`, peeled for annotated tags."""
     out = git("ls-remote", "--tags", url, f"refs/tags/{tag}", f"refs/tags/{tag}^{{}}")
@@ -1510,7 +1536,7 @@ def _manifest_seed_steps(vb: VmBook, data_dir: Path, seed_from, git: "Git", comm
 
 
 def build_plan(*, tag: str, vault: str, layout: Layout, python: Path, armed: bool,
-               enable: bool, seed_from, origin_url: str, localtime: Path,
+               enable: bool, seed_from, origin_url: str | tuple[str, ...], localtime: Path,
                run_cmd: Callable, as_user: list, euid: int, dont_write_bytecode: bool,
                user_ids: Callable, now_utc: dt.datetime,
                read_environ: Callable = _read_environ,
@@ -1556,14 +1582,12 @@ def build_plan(*, tag: str, vault: str, layout: Layout, python: Path, armed: boo
     if not (prod / ".git").is_dir():
         raise InstallRefused(f"no prod clone at {prod}; run quantt/deploy/vm/bootstrap.sh first")
     git = Git(prod, as_user, layout.home)
-    url = git("remote", "get-url", "origin").strip()
-    if url != origin_url:
-        raise InstallRefused(f"{prod} is a clone of {url!r}, not of {origin_url!r}")
+    url = clone_origin(git, prod, origin_url)
     dirty = git("status", "--porcelain").strip()
     if dirty:
         raise InstallRefused(f"prod clone {prod} has local modifications; refusing to "
                              f"update over them:\n{dirty}")
-    commit = remote_tag_commit(git, origin_url, tag)
+    commit = remote_tag_commit(git, url, tag)
     # Fetching changes only .git. A tag that moved on origin is refused by git
     # itself ("would clobber existing tag"), and the comparison below catches
     # anything else.
@@ -1574,7 +1598,7 @@ def build_plan(*, tag: str, vault: str, layout: Layout, python: Path, armed: boo
         raise InstallRefused(f"tag {tag} is {commit} on origin but "
                              f"{local.strip() if local else 'absent'} in {prod}; "
                              f"a tag must not move after release")
-    notes.append(f"release {tag} = commit {commit} (origin {origin_url})")
+    notes.append(f"release {tag} = commit {commit} (origin {url})")
     missing = [p for p in vb.required_at_tag
                if git("cat-file", "-e", f"{commit}:{p}", allow_fail=True) is None]
     if missing:
@@ -1920,7 +1944,7 @@ def _report_template(unit_file: str) -> str:
 
 
 def build_report_plan(*, tag: str, vault: str, layout: Layout, python: Path, enable: bool,
-                      origin_url: str, localtime: Path, run_cmd: Callable, as_user: list, euid: int,
+                      origin_url: str | tuple[str, ...], localtime: Path, run_cmd: Callable, as_user: list, euid: int,
                       dont_write_bytecode: bool, user_ids: Callable,
                       clock: Callable = lambda: dt.datetime.now(dt.timezone.utc)) -> Plan:
     """`--reports`: install the report-only units (module comment, report units) and
@@ -1952,13 +1976,11 @@ def build_report_plan(*, tag: str, vault: str, layout: Layout, python: Path, ena
     if not (prod / ".git").is_dir():
         raise InstallRefused(f"no prod clone at {prod}; run quantt/deploy/vm/bootstrap.sh first")
     git = Git(prod, as_user, layout.home)
-    url = git("remote", "get-url", "origin").strip()
-    if url != origin_url:
-        raise InstallRefused(f"{prod} is a clone of {url!r}, not of {origin_url!r}")
+    url = clone_origin(git, prod, origin_url)
     dirty = git("status", "--porcelain").strip()
     if dirty:
         raise InstallRefused(f"prod clone {prod} has local modifications; refusing:\n{dirty}")
-    commit = remote_tag_commit(git, origin_url, tag)
+    commit = remote_tag_commit(git, url, tag)
     git("fetch", "--quiet", "--tags", "origin")
     local = git("rev-parse", "--verify", "--quiet", f"refs/tags/{tag}^{{commit}}", allow_fail=True)
     if local is None or local.strip() != commit:
@@ -2204,7 +2226,8 @@ def _report_stopped_timers(plan: Plan) -> None:
               f"(`sudo systemctl start {' '.join(stopped)}`)")
 
 
-def main(argv=None, *, layout: Layout | None = None, origin_url: str = ORIGIN_URL,
+def main(argv=None, *, layout: Layout | None = None,
+         origin_url: str | tuple[str, ...] = ORIGIN_URLS,
          localtime: Path = Path("/etc/localtime"), run_cmd: Callable = _real_run,
          as_user: list | None = None, euid: int | None = None,
          dont_write_bytecode: bool | None = None, user_ids: Callable = _user_ids,
