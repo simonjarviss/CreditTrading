@@ -191,3 +191,16 @@ def test_the_return_is_named_time_weighted_and_shown_apart_from_the_pnl(snap):
     h = page(snap)
     assert "Time-weighted return since" in h and "P&amp;L since" in h
     assert not re.search(r"Return since [^<]*\(", h)
+
+
+def test_an_after_close_books_session_pnl_reads_the_same_in_its_tile_and_its_row(snap):
+    """Release-check review of 596ba7f: the tile and the row took Alpaca's change, the record the move
+    between readings, so one session read two ways."""
+    ev = book(snap, "events")
+    ev["session"]["value"]["equity_snapshot"]["change_usd"] = -90.0                   # Alpaca's, from its close
+    ev["after_close"]["value"]["rows"][-1]["change_usd"] = 200.0                      # the record's, between readings
+    h = page(snap)
+    row = h.split("Latest session", 1)[1].split("Event Book", 1)[1].split("</tr>", 1)[0]
+    assert "+$200" in row and "−$90" not in row
+    section = h.split('id="events"', 1)[1]
+    assert "+$200</div><div class=\"l\">That session" in section and "−$90" not in section.split("Session of", 1)[0]

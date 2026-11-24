@@ -248,5 +248,5 @@ def test_with_every_book_unreadable_the_page_says_why(snap, tmp_path, content):
         b["official"] = {"UNMEASURED": "unreadable"}
         b["after_close"] = {"UNMEASURED": "unreadable"}
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
-    assert "No book has a traded session" not in h and "No portfolio tonight: no book's record could be read" in h
+    assert "No book has a traded session" not in h and "No portfolio tonight. Fixed Income Book: its record could not be read" in h
     assert "The portfolio below is the other books only" not in h
