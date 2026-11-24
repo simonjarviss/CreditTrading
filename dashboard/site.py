@@ -70,8 +70,8 @@ def _official(snap: dict) -> dict:
 
 
 def stages_html() -> str:
-    return '<div class="stages">' + "".join(
-        f'<div class="stage"><span class="k">{i}</span><b>{escape(t)}</b><p class="meta">{escape(d)}</p></div>'
+    return '<div class="rows">' + "".join(
+        f'<div class="row slim"><div class="num">0{i}</div><div><h3>{escape(t)}</h3><p>{escape(d)}</p></div></div>'
         for i, (t, d) in enumerate(STAGES, start=1)) + "</div>"
 
 
@@ -81,97 +81,102 @@ def overview(snap: dict) -> str:
     series = _official(snap)
     figs = []
     n_books = sum(1 for b in snap["books"] if "value" in b["session"] or "value" in b["official"])
-    figs.append(perf.fig(str(n_books), "Books trading, each in its own paper account"))
+    figs.append(perf.fig(str(n_books), "Books trading"))
     ev = next((b for b in snap["books"] if b["name"] == "events"), None)
     if ev is not None and "value" in ev["sleeves"]:
         n_strat = len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
         figs.append(perf.fig(str(n_strat + sum(1 for b in snap["books"] if b["name"] != "events")),
-                             "Systematic strategies with fully specified rules"))
+                             "Systematic strategies"))
     if "cef" in series:
         s = M.summary(series["cef"])
-        figs.append(perf.fig(str(s["n_returns"]), f"Sessions traded since {fmt_date(series['cef'][1]['date'])}"))
+        figs.append(perf.fig(str(s["n_returns"]), f"Sessions traded since {fmt_short(series['cef'][1]['date'])}"))
     if series:
         rows, _ = M.combined(series)
         c = M.summary(rows)
-        figs.append(perf.fig(usd(c["cum_pnl"], True),
-                             f"Combined paper P&amp;L, {fmt_short(c['first_date'])} to {fmt_short(c['last_date'])}",
+        figs.append(perf.fig(usd(c["cum_pnl"], True), f"Combined paper P&amp;L to {fmt_short(c['last_date'])}",
                              tone(c["cum_pnl"])))
     hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
-            '<div class="eyebrow">QUANTT · Queen\'s University</div>'
+            '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
             '<h1>Event Driven Trading</h1>'
-            '<p class="lede">A systematic trading team. We run three automated books that trade closed-end fund '
-            'discounts and scheduled corporate events, each in its own paper account.</p>'
+            '<p class="lede">A systematic trading team. Three automated books trade closed-end fund discounts '
+            'and scheduled corporate events, each in its own paper account.</p>'
             '<div class="buttons"><a class="btn primary" href="/performance/">Live performance</a>'
             '<a class="btn ghost" href="/strategy/">Strategy presentation</a></div>'
-            f'<div class="figures">{"".join(figs)}</div>'
-            f'<p class="meta" style="color:rgba(255,255,255,0.55);margin-top:18px">Updated '
-            f'{escape(when(snap["exported_at_utc"]))} from the trading system\'s records. Paper trading only.</p>'
             '</div></section>')
-    live = ""
-    if series:
-        rows, _ = M.combined(series)
-        lines = [{"name": b["title"], "color": BOOK_COLOURS.get(b["name"], "#101213"),
-                  "points": perf.cum_points(series[b["name"]])} for b in snap["books"] if b["name"] in series]
-        if len(series) > 1:
-            lines.append({"name": "Accounts combined", "color": "#101213", "points": perf.cum_points(rows), "bold": True})
-        live = ('<section class="section"><div class="wrap"><div class="head-row"><div>'
-                '<div class="eyebrow">Live results</div><h2>Paper results to date</h2>'
-                '<p class="lede">Cumulative profit and loss of each account, from Alpaca\'s official end-of-day '
-                'records.</p></div><a class="link-arrow" href="/performance/">Performance and risk</a></div>'
-                + charts.line_chart(lines, "Cumulative P&L of each account and combined") + '</div></section>')
-    cards = []
-    for b in snap["books"]:
-        foot = ""
+    kf = (f'<section class="kf"><div class="wrap"><div class="figures">{"".join(figs)}</div>'
+          f'<p class="meta note">Live figures, updated {escape(when(snap["exported_at_utc"]))} from the trading '
+          'system\'s records. Paper trading only.</p></div></section>')
+    rows_html = []
+    for i, b in enumerate(snap["books"], start=1):
+        stat = ""
         if b["name"] in series:
             s = M.summary(series[b["name"]])
-            foot = (f'Paper P&amp;L since {fmt_short(s["first_date"])}: <b class="{tone(s["cum_pnl"])}">'
-                    f'{usd(s["cum_pnl"], True)}</b>')
+            stat = (f'<b class="{tone(s["cum_pnl"])}">{usd(s["cum_pnl"], True)}</b>'
+                    f'<span>Paper P&amp;L since {fmt_short(s["first_date"])}</span>')
         elif "value" in b["session"]:
-            foot = f'Trading since {fmt_short(b["session"]["value"]["date"])}'
-        cards.append(f'<div class="card"><span class="tag" style="background:{BOOK_COLOURS.get(b["name"], "#101213")}"></span>'
-                     f'<h3>{escape(b["title"])}</h3><p>{escape(BOOK_TEXT.get(b["name"], ""))}</p>'
-                     f'<div class="foot">{foot}<br><a class="link-arrow" href="/performance/#{escape(b["name"])}">Results</a></div></div>')
-    books = ('<section class="section soft"><div class="wrap"><div class="head-row"><div>'
-             '<div class="eyebrow">The books</div><h2>Three books, one portfolio</h2>'
-             '<p class="lede">Each book runs a fully specified rule set. The system decides after the close, trades '
-             'at the next close and reports each morning, with no manual intervention.</p></div></div>'
-             f'<div class="grid">{"".join(cards)}</div></div></section>')
-    edge = ('<section class="section"><div class="wrap split"><div>'
-            '<div class="eyebrow">The opportunity</div><h2>Why the mispricing persists</h2>'
-            '<div class="grid" style="margin-top:40px;gap:32px 32px">'
-            '<div><h3>No arbitrage link</h3><p>A closed-end fund has a fixed share count and no creation or '
-            'redemption mechanism, so nothing forces its price to converge to net asset value.</p></div>'
-            '<div><h3>Retail, income-driven holders</h3><p>Most holders buy for distribution yield. Discounts track '
-            'their sentiment and their year-end tax-loss selling.</p></div>'
-            '<div><h3>Forced, scheduled flows</h3><p>Income investors buy ahead of distributions, and unit trusts '
-            'must sell their holdings by a termination date fixed in the prospectus.</p></div>'
-            '<div><h3>Too small for large funds</h3><p>Most of these securities trade a few million dollars a day '
-            'with limited stock borrow, which keeps institutional capital out.</p></div>'
-            '</div></div><img class="photo" src="/static/img/firm-visit.webp" alt="QUANTT members on a firm visit" '
-            'loading="lazy"></div></section>')
-    process = ('<section class="section soft"><div class="wrap"><div class="head-row"><div>'
-               '<div class="eyebrow">Process</div><h2>From idea to live capital</h2></div>'
-               '<a class="link-arrow" href="/research/">How we research</a></div>' + stages_html() + '</div></section>')
-    more = ('<section class="section"><div class="wrap"><div class="grid">'
-            '<div class="card"><h3>Strategy presentation</h3><p>Each book\'s rules, backtests, portfolio '
-            'construction and paper results, slide by slide.</p><div class="foot"><a class="link-arrow" href="/strategy/">View the slides</a></div></div>'
-            '<div class="card"><h3>Research library</h3><p>The academic papers, industry research and regulation '
-            'our strategies rest on, with a link to each source.</p><div class="foot"><a class="link-arrow" href="/library/">Browse the library</a></div></div>'
-            '<div class="card"><h3>The team</h3><p>Four Queen\'s University students covering portfolio '
-            'management, risk, research and data.</p><div class="foot"><a class="link-arrow" href="/team/">Meet the team</a></div></div>'
-            '</div></div></section>')
-    return page("overview", "Overview", hero + live + books + edge + process + more + contact_band(),
+            stat = f'<b>New</b><span>Trading since {fmt_short(b["session"]["value"]["date"])}</span>'
+        stat += f'<a class="link-arrow" href="/performance/#{escape(b["name"])}">Results</a>'
+        rows_html.append(f'<div class="row"><div class="num">0{i}</div><div><h3>'
+                         f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
+                         f'{escape(b["title"])}</h3><p>{escape(BOOK_TEXT.get(b["name"], ""))}</p></div>'
+                         f'<div class="stat">{stat}</div></div>')
+    approach = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
+                '<div class="eyebrow">Approach</div><h2>Three books, one portfolio</h2>'
+                '<p class="lede">Each book runs a fully specified rule set. The system decides after the close, '
+                'trades at the next close and reports each morning, with no manual intervention.</p>'
+                '<a class="link-arrow" href="/strategy/">Read the strategy</a></div>'
+                f'<div class="sec-body"><div class="rows">{"".join(rows_html)}</div></div></div></section>')
+    performance = ""
+    if series:
+        rows, _ = M.combined(series)
+        lines = [{"name": b["title"], "color": BOOK_COLOURS.get(b["name"], "#111418"),
+                  "points": perf.cum_points(series[b["name"]])} for b in snap["books"] if b["name"] in series]
+        if len(series) > 1:
+            lines.append({"name": "Accounts combined", "color": "#111418", "points": perf.cum_points(rows), "bold": True})
+        performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
+                       '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'
+                       '<p class="lede">Cumulative profit and loss of each account, from Alpaca\'s official '
+                       'end-of-day records, gross of the costs a paper account does not charge.</p>'
+                       '<a class="link-arrow" href="/performance/">Performance and risk</a></div>'
+                       '<div class="sec-body">' + charts.line_chart(lines, "Cumulative P&L of each account and combined")
+                       + '</div><div class="sec-full">' + perf.summary_table(snap) + '</div></div></section>')
+    opportunity = ('<section class="section"><div class="wrap split">'
+                   '<img class="photo" src="/static/img/group-lights.webp" alt="QUANTT members at a firm visit, January 2026" loading="lazy">'
+                   '<div><div class="eyebrow">The opportunity</div><h2>Why the mispricing persists</h2>'
+                   '<div class="grid" style="margin-top:40px;gap:28px 36px">'
+                   '<div><h3>No arbitrage link</h3><p class="meta">A closed-end fund has a fixed share count and no '
+                   'creation or redemption, so nothing forces its price to net asset value.</p></div>'
+                   '<div><h3>Income-driven holders</h3><p class="meta">Most holders buy for yield. Discounts track '
+                   'their sentiment and their year-end tax-loss selling.</p></div>'
+                   '<div><h3>Forced, scheduled flows</h3><p class="meta">Income buyers crowd distribution dates, and '
+                   'unit trusts must sell their holdings by a fixed termination date.</p></div>'
+                   '<div><h3>Too small for large funds</h3><p class="meta">A few million dollars a day of volume and '
+                   'limited borrow keep institutional capital out.</p></div>'
+                   '</div></div></div></section>')
+    process = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
+               '<div class="eyebrow">Process</div><h2>From idea to live capital</h2>'
+               '<a class="link-arrow" href="/research/">How we research</a></div>'
+               '<div class="sec-body">' + stages_html() + '</div></div></section>')
+    members = json.loads((CONTENT / "team.json").read_text())["members"]
+    team = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
+                '<div class="eyebrow">Team</div><h2>The team</h2>'
+                '<p class="lede">Four Queen\'s University students covering portfolio management, risk, research '
+                'and data.</p><a class="link-arrow" href="/team/">Meet the team</a></div>'
+                '<div class="sec-body"><div class="people">'
+                + "".join(f'<div class="person"><h3>{escape(m["name"])}</h3><div class="role">{escape(m["title"])}</div></div>'
+                          for m in members) + '</div></div></div></section>')
+    return page("overview", "Overview", hero + kf + approach + performance + opportunity + process + team + contact_band(),
                 "A systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts "
                 "and scheduled corporate events.")
 
 
 def contact_band() -> str:
-    return (f'<section class="hero" style="padding:clamp(72px,9vw,120px) 0;background-image:url(/static/img/fiam-2026.webp)">'
-            '<div class="wrap"><div class="eyebrow">Contact</div>'
-            '<h2 style="color:#fff">Speak with the team</h2><p class="lede">For questions about the strategies, '
-            'the results or an allocation, contact Simon Jarvis, Portfolio Manager.</p>'
+    return ('<section class="section dark"><div class="wrap sec-grid"><div class="sec-label">'
+            '<div class="eyebrow">Contact</div><h2>Speak with the team</h2></div>'
+            '<div class="sec-body"><p class="lede">For questions about the strategies, the results or an allocation, '
+            'contact Simon Jarvis, Portfolio Manager.</p>'
             f'<div class="buttons"><a class="btn primary" href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></div>'
-            '</div></section>')
+            '</div></div></section>')
 
 
 # ------------------------------------------------------------------- strategy --

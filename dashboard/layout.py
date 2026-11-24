@@ -72,8 +72,9 @@ def tone(v) -> str:
 
 def page(active: str, title: str, body: str, description: str) -> str:
     cur = ' aria-current="page"'
-    nav = "".join(f'<a href="{href}"{cur if key == active else ""}>{escape(label)}</a>'
-                  for key, href, label in NAV)
+    cta = ' class="nav-cta"'
+    nav = "".join(f'<a href="{href}"{cur if key == active else ""}{cta if key == "contact" else ""}>'
+                  f'{escape(label)}</a>' for key, href, label in NAV if key != "overview")
     foot_nav = "".join(f'<li><a href="{href}">{escape(label)}</a></li>' for _, href, label in NAV)
     full_title = SITE_NAME if active == "overview" else f"{title} · {SITE_NAME}"
     return f"""<!doctype html>
@@ -90,12 +91,13 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <meta name="theme-color" content="#0f2547">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/static/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/static/fonts/source-serif-4-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/static/site.css">
 <script src="/static/site.js" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-<a class="brand" href="/" aria-label="{SITE_NAME}, home"><img src="/static/img/quantt-logo.png" alt="QUANTT" width="105" height="26"><span>{SITE_NAME}</span></a>
+<a class="brand" href="/" aria-label="{SITE_NAME}, home"><img src="/static/img/quantt-logo.png" alt="QUANTT" width="113" height="28"><span>{SITE_NAME}</span></a>
 <nav class="nav" aria-label="Main">{nav}</nav>
 </div></header>
 <main id="main">
@@ -115,12 +117,12 @@ def page(active: str, title: str, body: str, description: str) -> str:
 
 
 # quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
-PHOTOS = {"overview": "campus", "strategy": "firm-visit", "performance": "team-office", "research": "team-office",
-          "library": "campus", "team": "team-atrium", "contact": "fiam-2026", "": "campus"}
+PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "hero-office", "research": "roundtable",
+          "library": "group-lights", "team": "group-office", "contact": "hero-office", "": "hero-office"}
 
 
 def photo_style(key: str) -> str:
-    return f' style="background-image:url(/static/img/{PHOTOS.get(key, "campus")}.webp)"'
+    return f' style="background-image:url(/static/img/{PHOTOS.get(key, "hero-office")}.webp)"'
 
 
 def page_head(eyebrow: str, title: str, lede: str, extra: str = "", photo: str = "") -> str:
