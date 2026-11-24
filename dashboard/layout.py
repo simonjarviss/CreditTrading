@@ -7,7 +7,9 @@ draws chart tooltips. The Content-Security-Policy the web server sends
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 from html import escape
+from pathlib import Path
 
 SITE_NAME = "Event Driven Trading"
 TEAM_LINE = "QUANTT · Queen's University"
@@ -79,6 +81,22 @@ def tone(v) -> str:
     return "" if v is None or v == 0 else ("pos" if v > 0 else "neg")
 
 
+STATIC = Path(__file__).resolve().parent / "public" / "static"
+
+
+def asset_version() -> str:
+    """The first 12 hex digits of the SHA-256 of site.css and site.js, put on their URLs.
+
+    WHY (2026-11-24, release-20261123-5): Cloudflare keeps a static file at the edge for an hour and
+    a page for a minute, so for up to an hour after a release the new pages were served with the
+    previous release's stylesheet. A URL that changes with the file's content is a different cache
+    entry (the Worker keys /static/ on `v`), so a page always gets the styles it was built with."""
+    h = hashlib.sha256()
+    for name in ("site.css", "site.js"):
+        h.update((STATIC / name).read_bytes())
+    return h.hexdigest()[:12]
+
+
 def page(active: str, title: str, body: str, description: str) -> str:
     cur = ' aria-current="page"'
     cta = ' class="nav-cta"'
@@ -101,8 +119,8 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/static/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/static/fonts/source-serif-4-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/static/site.css">
-<script src="/static/site.js" defer></script>
+<link rel="stylesheet" href="/static/site.css?v={asset_version()}">
+<script src="/static/site.js?v={asset_version()}" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
@@ -129,17 +147,17 @@ def page(active: str, title: str, body: str, description: str) -> str:
 
 # quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
 PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "hero-office", "research": "roundtable",
-          "library": "toronto-financial-district", "team": "toronto-night", "contact": "hero-office", "": "hero-office"}
+          "library": "toronto-financial-day", "team": "toronto-skyline-day", "contact": "hero-office", "": "hero-office"}
 # Photographs not taken by QUANTT, credited where they are shown (team lead, 2026-11-23: "proper Toronto
-# landscaping / views that fit the darker vibe" on the team and library pages). Both from Wikimedia
-# Commons, fetched 2026-11-23 at 2400 px and re-encoded to WebP with their metadata removed. The
-# Financial District photograph is CC BY-SA 2.0, which requires the credit and licence beside it;
-# the night skyline is CC0 and is credited as a courtesy.
+# views that fit the darker vibe"; 2026-11-24: "a darker type image of Toronto's skyline / financial
+# district but it's day-ish"). Both from Wikimedia Commons, fetched 2026-11-24 at 2400 px and
+# re-encoded to WebP with their metadata removed. The skyline is CC BY-SA 4.0, which requires the
+# credit and licence beside it; the Financial District is CC0 and is credited as a courtesy.
 PHOTO_CREDITS = {
-    "toronto-night": ("Andrew Gosine", "CC0",
-                      "https://commons.wikimedia.org/wiki/File:Night_skyline_of_Toronto,_Canada_374759.jpg"),
-    "toronto-financial-district": ("Ken Lund", "CC BY-SA 2.0",
-                                   "https://commons.wikimedia.org/wiki/File:Financial_District,_Toronto,_Ontario_(21217652714).jpg"),
+    "toronto-skyline-day": ("Dlsz", "CC BY-SA 4.0",
+                            "https://commons.wikimedia.org/wiki/File:View_of_Toronto_Skyline_from_Toronto_Islands.jpg"),
+    "toronto-financial-day": ("Gregory Karastergios", "CC0",
+                              "https://commons.wikimedia.org/wiki/File:Toronto_Financial_District.jpg"),
 }
 # GitHub's mark (Octicons, MIT licence), inline so the page loads nothing from another origin.
 GITHUB_MARK = ('<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" '

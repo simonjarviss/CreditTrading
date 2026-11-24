@@ -1,5 +1,6 @@
-// Event Driven Trading: the only script on the site. One job, read-only and local: the chart
-// hover (a crosshair that snaps to the nearest session, with a tooltip). It fetches nothing.
+// Event Driven Trading: the only script on the site. Two jobs, both read-only and local: the chart
+// hover (a crosshair that snaps to the nearest session, with a tooltip), and the library's search,
+// which hides the sources that do not match. It fetches nothing.
 (function () {
   "use strict";
 
@@ -49,4 +50,24 @@
     svg.addEventListener("pointermove", show);
     svg.addEventListener("pointerleave", hide);
   });
+
+  var q = document.getElementById("lib-search");
+  if (q) {
+    var rows = Array.prototype.slice.call(document.querySelectorAll(".lib-row"));
+    var groups = Array.prototype.slice.call(document.querySelectorAll(".lib-group"));
+    var count = document.getElementById("lib-count");
+    q.hidden = false;
+    q.addEventListener("input", function () {
+      var words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+      var shown = 0;
+      rows.forEach(function (r) {
+        var text = r.getAttribute("data-text");
+        var hit = words.every(function (w) { return text.indexOf(w) >= 0; });
+        r.hidden = !hit;
+        if (hit) shown++;
+      });
+      groups.forEach(function (g) { g.hidden = !g.querySelector(".lib-row:not([hidden])"); });
+      count.textContent = words.length ? shown + " of " + rows.length + " sources" : "";
+    });
+  }
 })();

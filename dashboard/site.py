@@ -213,56 +213,81 @@ def ledger_count(path: Path) -> tuple:
     return len(dates), min(dates)
 
 
+PRINCIPLES = (
+    ("The idea card", "Each idea is written up before it is tested: the mechanism that creates the mispricing, the "
+                      "counterparty and why they keep trading that way, why the effect persists, where it has appeared "
+                      "in past markets, the data that tests it, its capacity and its expected correlation with the books "
+                      "we hold."),
+    ("No lookahead", "A signal uses only information available at the moment of the decision: net asset values at "
+                     "their publication lag, filings at their acceptance time, index membership as of the day and "
+                     "macroeconomic data at its first release."),
+    ("One execution convention", "Every backtest decides at the close of day t, trades at the close of day t+1 and "
+                                 "earns the return from there, which is how the books trade."),
+    ("Robustness", "Each result is split into early and late periods and into two or more market regimes, and reported "
+                   "with its exposure to equity, rates and credit and its correlation with the books already held."),
+)
+TRADING_DAY = (
+    ("Evening", "Collect", "Closing prices and net asset values are downloaded and checked."),
+    ("22:00 ET", "Decide", "Each book computes its targets and the order list."),
+    ("Pre-trade", "Check", "Nine pre-trade checks run before anything is sent."),
+    ("Before the close", "Send", "Orders go to Alpaca for execution at the close."),
+    ("17:30 ET", "Reconcile", "Fills and positions are reconciled with the broker."),
+    ("Morning", "Report", "P&L, risk and data-quality reports are written for each book."),
+)
+CONTROLS = (
+    ("Automated", "The books run on a cloud server from tagged releases of the code only. Every change runs the test "
+                  "suite before it reaches the server."),
+    ("Separate accounts", "Each book trades in its own paper account, because the broker rejects a buy and a sell in "
+                          "the same symbol from one account."),
+    ("Risk controls", "Each book has a gross exposure limit and drawdown limits at which its size is halved and then "
+                      "closed, checked in a risk report every morning."),
+)
+
+
+def _sec(cls: str, eyebrow: str, title: str, lede: str, body: str) -> str:
+    return (f'<section class="section{cls}"><div class="wrap sec-grid"><div class="sec-label">'
+            f'<div class="eyebrow">{escape(eyebrow)}</div><h2>{escape(title)}</h2>'
+            + (f'<p class="lede">{escape(lede)}</p>' if lede else "")
+            + f'</div><div class="sec-body">{body}</div></div></section>')
+
+
 def research(snap: dict, ledger: tuple) -> str:
+    """Pipeline, standards, the ledger, the trading day and the controls, each in the site's
+    label-and-content grid (team lead, 2026-11-24: "re organize the library / research")."""
     n_ledger, first = ledger
     since = dt.date.fromisoformat(first).strftime("%B %Y")
+    n_books = sum(1 for b in snap["books"] if "value" in b["session"] or "value" in b["official"])
     head = page_head("Research", "Research",
                      "How we find, test and promote trading strategies, and the infrastructure that runs them.")
-    card = ('<section class="section"><div class="wrap"><div class="eyebrow">Method</div><h2>The research pipeline</h2>'
-            '<p class="lede" style="margin-top:14px">Every strategy passes through the same five stages. Breadth is '
-            'the main lever: we keep many ideas in testing and in paper trading at once.</p>' + stages_html()
-            + '<div class="grid" style="margin-top:72px">'
-            '<div><h3>The idea card</h3><p>Each idea is written up before it is tested: the mechanism that creates '
-            'the mispricing, the counterparty and why they keep trading that way, why the effect persists, where it '
-            'has appeared in past markets, the data that tests it, its capacity and its expected correlation with '
-            'the books we hold.</p></div>'
-            '<div><h3>No lookahead</h3><p>A signal uses only information available at the moment of the decision: '
-            'net asset values at their publication lag, filings at their acceptance time, index membership as of '
-            'the day and macroeconomic data at its first release.</p></div>'
-            '<div><h3>One execution convention</h3><p>Every backtest decides at the close of day t, trades at the '
-            'close of day t+1 and earns the return from there, which is how the books trade.</p></div>'
-            '<div><h3>Robustness</h3><p>Each result is split into early and late periods and into two or more market '
-            'regimes, and reported with its exposure to equity, rates and credit and its correlation with the books '
-            'already held.</p></div>'
-            '</div></div></section>')
-    record = ('<section class="section soft"><div class="wrap split"><div><div class="eyebrow">Record</div>'
-              '<h2>The research ledger</h2>'
-              f'<p class="lede" style="margin-top:14px">Our research ledger records {n_ledger} ideas since {since}, '
-              'each with its data, gross result and status, including every idea we set aside.</p>'
-              f'<div class="buttons"><a class="btn blue" href="{REPO_URL}/blob/main/results/IDEA_LEDGER.md">Read the ledger</a>'
-              f'<a class="btn line" href="{REPO_URL}">Source code on GitHub</a></div>'
-              '<p class="meta" style="margin-top:14px">The research code, notes and trading system are public.</p>'
-              '</div><img class="photo" src="/static/img/team-atrium.webp" alt="QUANTT members" loading="lazy">'
-              '</div></section>')
-    infra = ('<section class="section"><div class="wrap"><div class="eyebrow">Infrastructure</div>'
-             '<h2>The trading day</h2><div class="stages">'
-             + "".join(f'<div class="stage"><span class="k">{t}</span><b>{escape(a)}</b><p class="meta">{escape(d)}</p></div>'
-                       for t, a, d in (
-                           ("Evening", "Collect", "Closing prices and net asset values are downloaded and checked."),
-                           ("22:00 ET", "Decide", "Each book computes its targets and the order list."),
-                           ("Pre-trade", "Check", "Nine pre-trade checks run before anything is sent."),
-                           ("Before the close", "Send", "Orders go to Alpaca for execution at the close."),
-                           ("17:30 ET", "Reconcile", "Fills and positions are reconciled with the broker."),
-                           ("Morning", "Report", "P&L, risk and data-quality reports are written for each book.")))
-             + '</div><div class="grid" style="margin-top:72px">'
-             '<div><h3>Automated</h3><p>The books run on a cloud server from tagged releases of the code only. '
-             'Every change runs the test suite before it reaches the server.</p></div>'
-             '<div><h3>Separate accounts</h3><p>Each book trades in its own paper account, because the broker rejects '
-             'a buy and a sell in the same symbol from one account.</p></div>'
-             '<div><h3>Risk controls</h3><p>Each book has a gross exposure limit and drawdown limits at which its size '
-             'is halved and then closed, checked in a risk report every morning.</p></div>'
-             '</div></div></section>')
-    return page("research", "Research", head + card + record + infra,
+    pipeline = _sec("", "Pipeline", "From idea to live capital",
+                    "Every strategy passes through the same five stages. Breadth is the main lever: we keep many ideas "
+                    "in testing and in paper trading at once.", stages_html())
+    standards = _sec(" soft", "Standards", "How a result is tested",
+                     "Four rules every backtest follows before a strategy reaches a paper account.",
+                     '<div class="principles">' + "".join(
+                         f'<div><span class="k">0{i}</span><h3>{escape(h)}</h3><p>{escape(d)}</p></div>'
+                         for i, (h, d) in enumerate(PRINCIPLES, start=1)) + "</div>")
+    record = ('<section class="section dark"><div class="wrap sec-grid"><div class="sec-label">'
+              '<div class="eyebrow">Record</div><h2>The research ledger</h2>'
+              '<p class="lede">Every idea we test is recorded with its data, gross result and status, including the '
+              'ideas we set aside. The research code, notes and trading system are public.</p>'
+              f'<div class="buttons"><a class="btn primary" href="{REPO_URL}/blob/main/results/IDEA_LEDGER.md" '
+              'rel="noopener">Read the ledger</a>'
+              f'<a class="btn ghost" href="{REPO_URL}" rel="noopener">Source code on GitHub</a></div></div>'
+              '<div class="sec-body"><div class="figures">'
+              + perf.fig(str(n_ledger), f"Ideas recorded since {since}")
+              + perf.fig(str(n_books), "Books trading on paper")
+              + perf.fig(str(len(STAGES)), "Stages from idea to live")
+              + "</div></div></div></section>")
+    day = _sec("", "Infrastructure", "The trading day",
+               "One automated cycle each session, from the evening's data to the morning's reports.",
+               '<div class="rows">' + "".join(
+                   f'<div class="row slim timed"><div class="num">{escape(w)}</div><div><h3>{escape(a)}</h3>'
+                   f'<p>{escape(d)}</p></div></div>' for w, a, d in TRADING_DAY) + "</div>")
+    controls = _sec(" soft", "Controls", "Safeguards", "",
+                    '<div class="principles three">' + "".join(
+                        f'<div><h3>{escape(h)}</h3><p>{escape(d)}</p></div>' for h, d in CONTROLS) + "</div>")
+    return page("research", "Research", head + pipeline + standards + record + day + controls,
                 "How the Event Driven Trading team researches, tests and runs systematic strategies.")
 
 
@@ -280,34 +305,52 @@ def _slug(s: str) -> str:
 
 
 def library(lib: dict) -> str:
+    """The sources by topic: a topic list with counts beside them, a search box (static/site.js),
+    and one compact row per source: year, title, authors and venue, the note on how we use it, and
+    its links (team lead, 2026-11-24: "re organize the library ... its ugly")."""
     entries = lib["entries"]
     topics = [t for t in TOPIC_ORDER if any(e["topic"] == t for e in entries)]
     topics += sorted({e["topic"] for e in entries} - set(topics))
-    toc = "".join(f'<a href="#{_slug(t)}">{escape(t)}</a>' for t in topics)
+    count = {t: sum(1 for e in entries if e["topic"] == t) for t in topics}
+    side = "".join(f'<a href="#{_slug(t)}"><span>{escape(t)}</span><span class="c">{count[t]}</span></a>' for t in topics)
     groups = []
     for t in topics:
         items = sorted((e for e in entries if e["topic"] == t), key=lambda e: (e.get("year") or 0, e.get("authors") or ""))
         rows = []
         for e in items:
-            src = ", ".join(x for x in (e.get("authors"), str(e["year"]) if e.get("year") else None, e.get("venue")) if x)
+            src = ", ".join(x for x in (e.get("authors"), e.get("venue")) if x)
+            title = (f'<a href="{escape(e["url"])}" rel="noopener">{escape(e["title"])}</a>' if e.get("url")
+                     else escape(e["title"]))
             links = []
             if e.get("url"):
                 links.append(f'<a href="{escape(e["url"])}" rel="noopener">Source</a>')
             if e.get("oa_pdf_url"):
                 links.append(f'<a href="{escape(e["oa_pdf_url"])}" rel="noopener">Free copy</a>')
-            rows.append(f'<div class="lib-item"><div class="t">{escape(e["title"])}</div>'
-                        f'<div class="src">{escape(src)}</div>'
-                        + (f'<div class="use">{escape(e["used_for"])}</div>' if e.get("used_for") else "")
-                        + (f'<div class="links">{"".join(links)}</div>' if links else "") + "</div>")
-        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2>{escape(t)}</h2>{"".join(rows)}</div>')
+            text = " ".join(str(x) for x in (e["title"], e.get("authors"), e.get("venue"), e.get("year"),
+                                             e.get("used_for")) if x).lower()
+            rows.append(f'<div class="lib-row" data-text="{escape(text)}">'
+                        f'<div class="yr">{escape(str(e["year"])) if e.get("year") else ""}</div>'
+                        f'<div><div class="t">{title}</div><div class="src">{escape(src)}</div>'
+                        + (f'<p class="use">{escape(e["used_for"])}</p>' if e.get("used_for") else "")
+                        + '</div>' + f'<div class="links">{"".join(links)}</div></div>')
+        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2>{escape(t)}<small>{count[t]} sources</small></h2>'
+                      f'{"".join(rows)}</div>')
     n_pdf = sum(1 for e in entries if e.get("oa_pdf_url"))
+    years = [e["year"] for e in entries if e.get("year")]
     head = page_head("Library", "Research library",
                      f"The {len(entries)} sources our strategies rest on: academic papers, industry research and the "
                      "rules that govern the markets we trade, each with a note on how we use it.")
-    body = (head + '<section class="section"><div class="wrap narrow">'
-            f'<p>Each entry links to the publisher or issuer, and {n_pdf} also link to a free, open-access copy. '
-            'Each link was matched to its citation by title, first author and year.</p>'
-            f'<nav class="toc" aria-label="Topics">{toc}</nav>{"".join(groups)}</div></section>')
+    figs = ('<div class="figures lib-figs">' + perf.fig(str(len(entries)), "Sources")
+            + perf.fig(str(n_pdf), "With a free, open-access copy") + perf.fig(str(len(topics)), "Topics")
+            + (perf.fig(f"{min(years)}–{max(years)}", "Years of publication") if years else "") + "</div>")
+    body = (head + '<section class="section"><div class="wrap">' + figs
+            + '<p class="meta lib-note">Each entry links to the publisher or issuer. Each link was matched to its '
+              'citation by title, first author and year.</p>'
+            + '<div class="lib-layout"><aside class="lib-side" aria-label="Topics">'
+              '<input class="lib-search" id="lib-search" type="search" placeholder="Search titles, authors, notes" '
+              'aria-label="Search the library" hidden><p class="meta" id="lib-count" aria-live="polite"></p>'
+              f'<div class="eyebrow">Topics</div><nav>{side}</nav></aside>'
+            + f'<div class="lib-main">{"".join(groups)}</div></div></div></section>')
     return page("library", "Research library", body,
                 "The academic literature, industry research and regulation behind the Event Driven Trading strategies.")
 

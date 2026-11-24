@@ -5618,3 +5618,17 @@ that adds it does not exist when it is written.
 - source: `dashboard/export.py` @ `4c75294` (exposure over the priced names, notes from `problems` only); `dashboard/worker/index.js` @ `4c75294` (the edge lifetime sent to browsers); the VM's site journal and `/srv/quantt-site`, read 2026-11-23 23:29 ET; response headers of `event-driven.quantt.ca`, read 2026-11-24 04:25 UTC; the fixes, the photographs and the tearsheet are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-01 · Release: release-20261123-5 put the performance tearsheet, the headshots and the Worker's browser caching live; the edge then paired new pages with the previous stylesheet for up to an hour
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - PR #106 merged as b5c9913 (`--admin --match-head-commit` b8ee07e; the merge's tree equal to b8ee07e's) and tagged release-20261123-5 at 23:59 ET on the team lead's "all the new made stuff", before the release check's last reviewer returned. Its pytest, doc_audit, orient and preview steps had passed and its execution review found no order-path change [V]
+  - VM: the site clone moved from release-20261123-4 to release-20261123-5 and is clean; the build published; no client order id on any page; the trading clone still at release-20261123-2, cef and c4 AUTO_ARMED present [V]
+  - Cloudflare's build of b5c9913 succeeded; every page answered `cache-control: no-cache` and a conditional request for the stylesheet answered 304 [V]
+  - the edge still held the previous stylesheet (age 2469 s of its 3600 s), so for up to an hour the new pages were served with the old styles. The stylesheet and script URLs now carry their content hash (`?v=`, dashboard/layout.py `asset_version`) and the Worker keys /static/ on it, so a page always gets its own release's styles (the commit that carries this entry) [V]
+  - ruled after the release and done in the same commit: daytime photographs of Toronto under cloud on the team and library pages (Dlsz, CC BY-SA 4.0; Gregory Karastergios, CC0; credited), and the research and library pages reorganised (team lead, 2026-11-24) [V]
+- source: `dashboard/layout.py` @ `b5c9913` (fixed stylesheet URL); `dashboard/worker/index.js` @ `b5c9913` (cache key without `v`); response headers of `event-driven.quantt.ca`, read 2026-11-24 00:02 ET; the VM's site journal, read 2026-11-23 23:59 ET; the versioning, the photographs and the two pages are in the commit that carries this entry
+- supports: §5
+- status: current
