@@ -67,11 +67,7 @@
      },
      "halve_drawdown": 0.12,
      "kill_drawdown": 0.18,
-     "largest": {
-      "share": 0.3,
-      "side": "long",
-      "symbol": "AAA"
-     },
+     "largest_share": 0.3,
      "net": 0.05,
      "severity": "WATCH",
      "top3_share": 0.7
@@ -89,30 +85,24 @@
       "equity": 100060.0,
       "kind": "account snapshot after the close (not the P&L of record)"
      },
-     "orders": [
-      {
-       "avg_price": 10.0,
-       "filled_qty": 5.0,
-       "qty": 5.0,
-       "side": "buy",
-       "status": "filled",
-       "symbol": "AAA"
-      }
-     ],
-     "positions": [
-      {
-       "close": 10.0,
-       "qty": 100.0,
-       "symbol": "AAA"
-      },
-      {
-       "close": 20.0,
-       "qty": -50.0,
-       "symbol": "BBB"
-      }
-     ],
-     "problems": [],
-     "reason": "cef traded 1 order(s), 1 filled; official PENDING",
+     "n_notes": 0,
+     "orders": {
+      "fill_rate_shares": 1.0,
+      "n": 1,
+      "n_filled": 1,
+      "n_partial": 0,
+      "n_unfilled": 0
+     },
+     "positions": {
+      "gross_usd": 2000.0,
+      "gross_x": 0.01998800719568259,
+      "n": 2,
+      "n_long": 1,
+      "n_short": 1,
+      "n_unpriced": 0,
+      "net_usd": 0.0,
+      "net_x": 0.0
+     },
      "verdict": "PASS"
     }
    },
@@ -183,11 +173,7 @@
      },
      "halve_drawdown": 0.12,
      "kill_drawdown": 0.18,
-     "largest": {
-      "share": 0.3,
-      "side": "long",
-      "symbol": "AAA"
-     },
+     "largest_share": 0.3,
      "net": 0.05,
      "severity": "WATCH",
      "top3_share": 0.7
@@ -205,30 +191,24 @@
       "equity": 100060.0,
       "kind": "account snapshot after the close (not the P&L of record)"
      },
-     "orders": [
-      {
-       "avg_price": 10.0,
-       "filled_qty": 5.0,
-       "qty": 5.0,
-       "side": "buy",
-       "status": "filled",
-       "symbol": "AAA"
-      }
-     ],
-     "positions": [
-      {
-       "close": 10.0,
-       "qty": 100.0,
-       "symbol": "AAA"
-      },
-      {
-       "close": 20.0,
-       "qty": -50.0,
-       "symbol": "BBB"
-      }
-     ],
-     "problems": [],
-     "reason": "c4 traded 1 order(s), 1 filled; official PENDING",
+     "n_notes": 0,
+     "orders": {
+      "fill_rate_shares": 1.0,
+      "n": 1,
+      "n_filled": 1,
+      "n_partial": 0,
+      "n_unfilled": 0
+     },
+     "positions": {
+      "gross_usd": 2000.0,
+      "gross_x": 0.01998800719568259,
+      "n": 2,
+      "n_long": 1,
+      "n_short": 1,
+      "n_unpriced": 0,
+      "net_usd": 0.0,
+      "net_x": 0.0
+     },
      "verdict": "PASS"
     }
    },
@@ -260,25 +240,25 @@
       "equity": 100010.0,
       "kind": "account snapshot at verify (not the P&L of record)"
      },
-     "orders": [
-      {
-       "avg_price": 30.5,
-       "filled_qty": 7.0,
-       "qty": 7.0,
-       "side": "sell",
-       "status": "filled",
-       "symbol": "CCC"
-      }
-     ],
-     "positions": [
-      {
-       "close": 30.0,
-       "qty": -7.0,
-       "symbol": "CCC"
-      }
-     ],
-     "problems": [],
-     "reason": "1 symbol(s) filled; ledger booked",
+     "first_send": "2026-11-23",
+     "n_notes": 0,
+     "orders": {
+      "fill_rate_shares": 1.0,
+      "n": 1,
+      "n_filled": 1,
+      "n_partial": 0,
+      "n_unfilled": 0
+     },
+     "positions": {
+      "gross_usd": 210.0,
+      "gross_x": 0.0020997900209979003,
+      "n": 1,
+      "n_long": 0,
+      "n_short": 1,
+      "n_unpriced": 0,
+      "net_usd": -210.0,
+      "net_x": -0.0020997900209979003
+     },
      "verdict": "PASS"
     }
    },
@@ -320,7 +300,7 @@
   }
  ],
  "exported_at_utc": "2026-11-23T23:20:00Z",
- "schema_version": "0.2",
+ "schema_version": "0.3",
  "shadow": {
   "label": "simulated",
   "read_at": "2026-11-23T22:40:00Z",

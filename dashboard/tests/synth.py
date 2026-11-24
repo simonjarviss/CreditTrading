@@ -104,8 +104,14 @@ def make_state(root: Path) -> tuple:
         (d / "reports" / "risk" / "2026-11-20.json").write_text(json.dumps(RISK))
         (d / "tca.csv").write_text(TCA)
     ev = st / "events"
+    # 2026-11-20 is a dry run (a verify.json, no STARTED), 2026-11-23 the first send, as on the VM.
+    (ev / "2026-11-20").mkdir(parents=True)
+    (ev / "2026-11-20" / "verify.json").write_text(json.dumps(
+        {**VERIFY, "session_date": "2026-11-20", "reason": "no trade: send ended DRY", "orders": [],
+         "fills_by_symbol": {}, "positions_after": {}, "marks": {}}))
     (ev / "2026-11-23").mkdir(parents=True)
     (ev / "2026-11-23" / "verify.json").write_text(json.dumps(VERIFY))
+    (ev / "2026-11-23" / "STARTED").write_text("{}")
     (ev / "sleeve_scores.csv").write_text(SLEEVES)
     sb = root / "SCOREBOARD.md"
     sb.write_text(SCOREBOARD)

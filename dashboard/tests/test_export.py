@@ -41,10 +41,12 @@ def test_official_rows_are_alpacas_and_the_read_time_is_theirs(state):
 def test_the_session_is_the_newest_day_that_has_a_reconcile_not_a_plan_directory(state):
     v = book(snap_of(state), "cef")["session"]["value"]
     assert v["date"] == "2026-11-20" and v["verdict"] == "PASS"
-    assert {p["symbol"]: (p["qty"], p["close"]) for p in v["positions"]} == {"AAA": (100.0, 10.0), "BBB": (-50.0, 20.0)}
-    assert v["orders"] == [{"symbol": "AAA", "side": "buy", "qty": 5.0, "status": "filled", "filled_qty": 5.0,
-                            "avg_price": 10.0}]
-    assert v["equity_snapshot"]["change_usd"] == -40.0
+    eq = v["equity_snapshot"]["equity"]
+    # AAA +100 at 10 and BBB -50 at 20: aggregates only (team lead, 2026-11-23)
+    assert v["positions"] == {"n": 2, "n_long": 1, "n_short": 1, "n_unpriced": 0, "gross_usd": 2000.0,
+                              "net_usd": 0.0, "gross_x": 2000.0 / eq, "net_x": 0.0}
+    assert v["orders"] == {"n": 1, "n_filled": 1, "n_partial": 0, "n_unfilled": 0, "fill_rate_shares": 1.0}
+    assert v["n_notes"] == 0 and v["equity_snapshot"]["change_usd"] == -40.0
 
 
 def test_order_and_fill_ids_never_reach_the_snapshot(state):
@@ -56,7 +58,8 @@ def test_order_and_fill_ids_never_reach_the_snapshot(state):
 def test_the_newest_risk_report_is_read_and_its_paths_are_not_copied(state):
     r = book(snap_of(state), "cef")["risk"]
     assert r["value"]["asof"] == "2026-11-20" and r["value"]["severity"] == "WATCH"
-    assert r["value"]["gross"] == 1.5 and r["value"]["largest"]["symbol"] == "AAA"
+    assert r["value"]["gross"] == 1.5 and r["value"]["largest_share"] is not None
+    assert "AAA" not in json.dumps(r)                       # the largest position's share, never its name
     assert r["read_at"] == "2026-11-21T10:45:00Z" and r["label"] == "modelled"
 
 
@@ -65,8 +68,10 @@ def test_the_event_book_reads_verify_json_and_its_strategy_scores(state):
     assert ev["official"] == {"absent": "no end-of-day equity history is recorded for this account yet"}
     v = ev["session"]["value"]
     assert v["date"] == "2026-11-23" and v["verdict"] == "PASS"
-    assert v["positions"] == [{"symbol": "CCC", "qty": -7.0, "close": 30.0}]      # the zero line is not a position
-    assert v["orders"][0]["avg_price"] == 30.5
+    # CCC -7 at 30; the zero line for DDD is not a position
+    assert v["positions"]["n"] == 1 and v["positions"]["n_short"] == 1
+    assert v["positions"]["gross_usd"] == 210.0 and v["positions"]["net_usd"] == -210.0
+    assert v["orders"]["n"] == 1 and v["orders"]["n_filled"] == 1
     assert v["equity_snapshot"]["change_usd"] == 10.0
     slugs = [r["slug"] for r in ev["sleeves"]["value"]["rows"]]
     assert slugs == ["cef_exdate_after", "uit_termination", "_book"]
@@ -118,14 +123,16 @@ def test_a_verdict_for_another_day_is_refused(state):
     assert S.UNMEASURED in book(snap_of(state), "cef")["session"]
 
 
-def test_problem_text_is_scrubbed_of_paths(state):
+def test_note_text_is_counted_never_copied(state):
+    """Aggregates only (team lead, 2026-11-23): a note can name a symbol, a share count or an order id."""
     st, _ = state
     p = st / "cef" / "2026-11-20" / "reconcile.json"
     r = json.loads(p.read_text())
-    r["problems"] = ["could not read /home/quantt/quantt_state/cef/x.json"]
+    r["problems"] = ["could not read /home/quantt/quantt_state/cef/x.json", "PDI holds +29 with no close"]
     p.write_text(json.dumps(r))
     s = snap_of(state)
-    assert book(s, "cef")["session"]["value"]["problems"] == ["could not read <path>"]
+    assert book(s, "cef")["session"]["value"]["n_notes"] == 2
+    assert "PDI" not in json.dumps(s) and "could not read" not in json.dumps(s)
     assert E.check(s) == []
 
 
@@ -155,3 +162,45 @@ def test_an_empty_change_after_funding_is_that_books_gap_not_a_failed_site(state
     assert "value" in book(s, "c4")["official"]
     from dashboard import build as B
     assert "Fixed Income Book" in B.render(s)
+
+
+def test_order_ids_in_a_verify_note_never_reach_the_snapshot(state):
+    """2026-11-23: the event book's first send listed its 173 rejected order ids in verify's reason and
+    problems, and the list reached the public page. Notes are now counted, and an id in an error text
+    (an UNMEASURED reading is published) is withheld."""
+    st, _ = state
+    p = st / "events" / "2026-11-23" / "verify.json"
+    v = json.loads(p.read_text())
+    ids = ["events-20261123-WRLD-1", "events-20261123-BRK.B-2"]
+    v["ok"] = False
+    v["reason"] = f"the send ended FAIL: 2 order(s) rejected by Alpaca {ids!r}"
+    v["fails"] = [f"{ids[0]}: Alpaca says filled_qty 0"]
+    p.write_text(json.dumps(v))
+    s = snap_of(state)
+    sess = book(s, "events")["session"]["value"]
+    assert sess["verdict"] == "FAIL" and sess["n_notes"] == 1
+    assert "events-20261123" not in json.dumps(s) and "WRLD" not in json.dumps(s) and E.check(s) == []
+    assert E.scrub(f"rejected {ids!r}") == "rejected (order ids withheld)"
+    assert E.scrub(f"{ids[0]}: HTTP 429") == "<order id>: HTTP 429"
+
+
+def test_an_unreadable_position_does_not_name_its_symbol(state):
+    st, _ = state
+    p = st / "cef" / "2026-11-20" / "reconcile.json"
+    r = json.loads(p.read_text())
+    r["positions_after"]["ZZZ"] = "lots"
+    p.write_text(json.dumps(r))
+    sess = book(snap_of(state), "cef")["session"]
+    assert S.UNMEASURED in sess and "ZZZ" not in sess[S.UNMEASURED] and "a position's quantity" in sess[S.UNMEASURED]
+
+
+def test_the_privacy_check_refuses_an_order_id():
+    assert any("client order id" in x for x in S.find_private({"basis": "see c4-20261120-PDI-1"}))
+    assert S.find_private({"basis": "events/2026-11-23/verify.json"}) == []
+
+
+def test_the_first_send_is_the_oldest_day_with_started_not_a_dry_run(state):
+    st, _ = state
+    assert book(snap_of(state), "events")["session"]["value"]["first_send"] == "2026-11-23"
+    (st / "events" / "2026-11-23" / "STARTED").unlink()
+    assert book(snap_of(state), "events")["session"]["value"]["first_send"] is None

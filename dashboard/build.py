@@ -101,7 +101,7 @@ def stats_figures(s: dict, sess: dict | None = None) -> str:
     if sess is not None and latest_figure(s, sess):
         out.append(latest_figure(s, sess))
     if s["sharpe"] is not None:
-        out.append(fig(f"{s['sharpe']:.2f}", f"Sharpe ratio, annualised ({s['n_returns']} sessions)"))
+        out.append(fig(f"{s['sharpe']:.2f}".replace("-", "\u2212"), f"Sharpe ratio, annualised ({s['n_returns']} sessions)"))
         out.append(fig(pct(s["vol"]), "Volatility, annualised"))
     else:
         out.append(fig("not yet", f"Sharpe ratio: needs {M.MIN_RETURNS_FOR_RATIOS} sessions, has {s['n_returns']}"))
@@ -131,10 +131,8 @@ def risk_block(r: dict) -> str:
         rows.append(("Gross exposure", f"{v['gross']:.2f}x equity{cap}"))
     if v["net"] is not None:
         rows.append(("Net exposure", f"{v['net']:+.2f}x equity"))
-    if v.get("largest"):
-        lg = v["largest"]
-        rows.append(("Largest position", f"{escape(str(lg['symbol']))}, {escape(str(lg['side']))}, "
-                                         f"{pct(lg['share'], dp=1)} of equity"))
+    if v.get("largest_share") is not None:
+        rows.append(("Largest position", f"{pct(v['largest_share'], dp=1)} of equity"))
     if v["top3_share"] is not None:
         rows.append(("Three largest positions", f"{pct(v['top3_share'], dp=1)} of equity"))
     if v.get("halve_drawdown") is not None and v.get("kill_drawdown") is not None:
@@ -160,51 +158,44 @@ def execution_block(r: dict) -> str:
             + f'<p class="meta">{escape(r["value"]["basis"])}.</p>' + prov(r))
 
 
-def positions_block(r: dict) -> str:
-    if "value" not in r:
-        return "<h3>Positions</h3>" + gap(r, "Positions")
-    v = r["value"]
-    pos = [p for p in v["positions"] if p["qty"]]
-    if not pos:
-        return f"<h3>Positions</h3><p>No positions after the close on {fmt_date(v['date'])}.</p>" + prov(r)
-    priced = [p for p in pos if p["close"] is not None]
-    gross = sum(abs(p["qty"] * p["close"]) for p in priced)
-    body = []
-    for p in sorted(pos, key=lambda p: -abs(p["qty"] * (p["close"] or 0))):
-        mv = None if p["close"] is None else p["qty"] * p["close"]
-        body.append((escape(p["symbol"]), "Long" if p["qty"] > 0 else "Short", f"{abs(p['qty']):,.0f}",
-                     "none" if p["close"] is None else f"${p['close']:,.2f}",
-                     "none" if mv is None else usd(mv),
-                     "none" if mv is None or not gross else pct(abs(mv) / gross, dp=1)))
-    unpriced = len(pos) - len(priced)
-    one = unpriced == 1
-    note = (f'<p class="meta">{unpriced} {"position has" if one else "positions have"} no close on record and '
-            f'{"is" if one else "are"} left out of the gross total.</p>' if unpriced else "")
-    return (f"<h3>Positions after the close, {fmt_date(v['date'])}</h3>"
-            + tbl(["Symbol", "Side", "Shares", "Close", "Market value", "Share of gross"], body, right=(2, 3, 4, 5))
-            + f'<p class="meta">Long {sum(1 for p in pos if p["qty"] > 0)}, short {sum(1 for p in pos if p["qty"] < 0)}. '
-              f'Prices are the {escape(v["close_basis"])}.</p>' + note + prov(r))
+def session_block(r: dict) -> str:
+    """The night's session in aggregates: the verdict, positions held, exposure and orders.
 
-
-def orders_block(r: dict) -> str:
+    WHY (team lead, 2026-11-23, "aggregates only"): the page used to list every position by symbol
+    with its shares and close, every order line, and the runners' own notes; the notes put client
+    order ids on the public page. The snapshot now carries counts and dollar figures only
+    (dashboard/snapshot.py 0.3), so this is all a page can show."""
     if "value" not in r:
-        return ""
+        return "<h3>Latest session</h3>" + gap(r, "Session record")
     v = r["value"]
-    o = v["orders"]
-    status = ("reconciled with the broker" if v["verdict"] == "PASS" else "flagged for review")
-    probs = ""
-    if v["problems"]:
-        probs = ('<details class="data"><summary>Review notes</summary><ul>'
-                 + "".join(f"<li>{escape(p)}</li>" for p in v["problems"]) + "</ul></details>")
-    if not o:
-        return (f"<h3>Orders, {fmt_date(v['date'])}</h3><p>No orders were needed. Session {status}.</p>" + probs)
-    body = [(escape(x["symbol"]), x["side"].capitalize(), f"{x['qty']:,.0f}",
-             "none" if x["filled_qty"] is None else f"{x['filled_qty']:,.0f}",
-             "none" if x["avg_price"] is None else f"${x['avg_price']:,.2f}", escape(x["status"].replace("_", " ")))
-            for x in o]
-    return (f"<h3>Orders, {fmt_date(v['date'])}</h3>"
-            + tbl(["Symbol", "Side", "Ordered", "Filled", "Average price", "Status"], body, right=(2, 3, 4))
-            + f'<p class="meta">Session {status}.</p>' + probs)
+    p, o = v["positions"], v["orders"]
+    status = "reconciled with the broker" if v["verdict"] == "PASS" else "flagged for review"
+    notes = (f' The trading system recorded {v["n_notes"]} {"note" if v["n_notes"] == 1 else "notes"} for review.'
+             if v["n_notes"] else "")
+    rows = [("Session", f"{escape(status.capitalize())}")]
+    if p["n"]:
+        rows.append(("Positions after the close", f'{p["n"]} ({p["n_long"]} long, {p["n_short"]} short)'))
+        if p["gross_x"] is not None:
+            rows.append(("Gross exposure", f'{p["gross_x"]:.2f}x equity ({usd(p["gross_usd"])})'))
+            net_x = f'{p["net_x"]:+.2f}'.replace("-", "\u2212")
+            rows.append(("Net exposure", f'{net_x}x equity ({usd(p["net_usd"], True)})'))
+    else:
+        rows.append(("Positions after the close", "none"))
+    if o["n"]:
+        part = f', {o["n_partial"]} partly' if o["n_partial"] else ""
+        rows.append(("Orders", f'{o["n"]} sent: {o["n_filled"]} filled in full{part}, {o["n_unfilled"]} not filled'))
+        if o["fill_rate_shares"] is not None:
+            rows.append(("Shares filled", pct(o["fill_rate_shares"], dp=1)))
+    else:
+        rows.append(("Orders", "none needed"))
+    unpriced = ""
+    if p["n_unpriced"]:
+        one = p["n_unpriced"] == 1
+        unpriced = (f' {p["n_unpriced"]} {"position has" if one else "positions have"} no close on record and '
+                    f'{"is" if one else "are"} left out of the exposure figures.')
+    return (f"<h3>Session of {fmt_date(v['date'])}</h3>" + tbl(["Measure", "Value"], rows)
+            + f'<p class="meta">Prices are the {escape(v["close_basis"])}.{unpriced}{notes} Holdings and '
+              'orders are reported in aggregate.</p>' + prov(r))
 
 
 def sleeves_block(r: dict) -> str:
@@ -251,12 +242,40 @@ def book_section(b: dict) -> str:
     parts.append(sleeves_block(b["sleeves"]))
     parts.append('<div class="cols"><div>' + risk_block(b["risk"]) + "</div><div>"
                  + execution_block(b["execution"]) + "</div></div>")
-    parts.append(positions_block(sess))
-    parts.append(orders_block(sess))
+    parts.append(session_block(sess))
     if "value" in o:
         parts.append(monthly_table(o["value"]["rows"]))
     parts.append("</section>")
     return "".join(parts)
+
+
+def started_text(b: dict) -> str:
+    """How long a book without an official history has traded, in words, from its session record.
+
+    WHY (release-check review, 2026-11-23): this used to print the newest session's date as
+    "trading since", a date that moves forward every session, and called a book whose record could
+    not be read "no record yet". The start is the first session that sent an order (first_send,
+    from the runner's STARTED record); an unreadable record says so."""
+    s = b["session"]
+    if S.UNMEASURED in s:
+        return "its session record could not be read tonight"
+    if "value" not in s:
+        return "no session recorded yet"
+    v = s["value"]
+    if "first_send" not in v:
+        return f"latest session {fmt_short(v['date'])}"
+    if v["first_send"] is None:
+        return "no order sent yet"
+    return f"trading since {fmt_short(v['first_send'])}"
+
+
+def sharpe_cell(s: dict) -> str:
+    """The Sharpe ratio with the number of daily returns behind it (release-check review, 2026-11-23:
+    a ratio from a few weeks of sessions must not read like a long record's)."""
+    n = s["n_returns"]
+    if s["sharpe"] is None:
+        return f'n/a <span class="meta">({n} sessions)</span>'
+    return f'{s["sharpe"]:.2f}'.replace("-", "\u2212") + f' <span class="meta">({n} sessions)</span>'
 
 
 def summary_table(snap: dict) -> str:
@@ -265,10 +284,10 @@ def summary_table(snap: dict) -> str:
     for b in snap["books"]:
         o = b["official"]
         if "value" not in o:
-            started = (f'trading since {fmt_short(b["session"]["value"]["date"])}' if "value" in b["session"]
-                       else "no record yet")
+            lead = ("Official history could not be read tonight" if S.UNMEASURED in o
+                    else "Official history to follow")
             rows.append((f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
-                         f'{escape(b["title"])}', f'<span class="meta">Official history to follow; {started}</span>',
+                         f'{escape(b["title"])}', f'<span class="meta">{lead}; {escape(started_text(b))}</span>',
                          "", "", "", "", ""))
             continue
         s = M.summary(o["value"]["rows"])
@@ -276,7 +295,7 @@ def summary_table(snap: dict) -> str:
                      f'{escape(b["title"])}', fmt_short(s["first_date"]), usd(s["equity"]),
                      f'<span class="{tone(s["cum_pnl"])}">{usd(s["cum_pnl"], True)}</span>',
                      f'<span class="{tone(s["cum_return"])}">{pct(s["cum_return"], True)}</span>',
-                     "n/a" if s["sharpe"] is None else f'{s["sharpe"]:.2f}', pct(s["max_drawdown"])))
+                     sharpe_cell(s), pct(s["max_drawdown"])))
     head = ["Book", "Since", "Equity", "P&L", "Return", "Sharpe", "Max drawdown"]
     th = "".join(f'<th class="{"r" if i >= 2 else ""}">{escape(h)}</th>' for i, h in enumerate(head))
     body = "".join("<tr>" + "".join(f'<td class="{"r" if i >= 2 else ""}">{c}</td>' for i, c in enumerate(r)) + "</tr>"
@@ -342,7 +361,7 @@ def shadow_section(r: dict) -> str:
 METHOD = """<section class="section"><div class="wrap narrow"><div class="eyebrow">Method</div><h2>How these figures are produced</h2>
 <p><b>Official P&amp;L.</b> Each account's results come from Alpaca's end-of-day portfolio history, the record we report against. A paper account differs from a live account in three ways: it charges no stock borrow fees, it does not credit or debit distributions on positions, and it fills orders at the current quote rather than in the closing auction. A live account's results would differ for those reasons.</p>
 <p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility and the Sharpe ratio are annualised with 252 sessions and shown once a book has 20 sessions; the Sharpe ratio subtracts no risk-free rate. Drawdown is measured from the running peak of end-of-day equity.</p>
-<p><b>Positions and orders.</b> Taken from the trading system's reconciliation with the broker after each close. Market values use each fund's closing price.</p>
+<p><b>Positions and orders.</b> Taken from the trading system's reconciliation with the broker after each close and reported in aggregate: how many positions each book holds, its gross and net exposure at the closing price, and how many orders were filled. Individual holdings and orders are not published.</p>
 <p><b>Updates.</b> The page rebuilds automatically each evening after the close and each morning after the broker publishes the previous day's end-of-day equity. A figure the system could not read is marked as not measured; it is never estimated or carried forward.</p>
 </div></section>"""
 
