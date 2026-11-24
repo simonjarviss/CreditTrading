@@ -5836,3 +5836,14 @@ that adds it does not exist when it is written.
 - source: `dashboard/site.py` @ `2ce506c` (the research page before the change); the VM's site builds directory (/srv/quantt-site/builds, 14:55:07 and 14:55:28 ET) and the public site's cache headers, read 2026-11-24; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-19 · Ruling: the pod described as QUANTT's event-driven and special situations desk; a link to quantt.ca; a LinkedIn share card
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead: "in the team, when it says the pod, we are a pod under quantt, running a event driven trading and special situations desk"; "add a link to quants website from ours: https://quantt.ca"; "can u give me a thumbnail logo for linkedin for the site" (verbatim) [V]
+  - the share card (static/img/og-card.png, 1200x627) and a square 800x800 logo are drawn from the site's own logo, fonts and colours; both were also saved to the team lead's Desktop [V]
+- source: `dashboard/layout.py` and `dashboard/site.py` @ `04be676` (before the change); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

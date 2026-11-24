@@ -298,8 +298,11 @@ def pod_overview(snap: dict) -> str:
         f'</span>{escape(b["title"])}</h3><p>{escape(pod_line(snap, b))}</p></div>'
         for b in snap["books"])
     return ('<section class="section soft"><div class="wrap"><div class="eyebrow">The pod</div>'
-            '<h2>A multi-strategy pod</h2>'
-            '<p class="lede narrow">Three systematic books, managed as one portfolio.</p>'
+            '<h2>Event-driven trading and special situations</h2>'
+            # Team lead, 2026-11-24: "we are a pod under QUANTT, running an event driven trading and special
+            # situations desk".
+            '<p class="lede narrow">A pod within QUANTT running an event-driven trading and special situations '
+            'desk: three systematic books, managed as one portfolio.</p>'
             f'<div class="pod-grid">{cards}</div>'
             '<a class="link-arrow" href="/performance/">Live performance</a></div></section>')
 

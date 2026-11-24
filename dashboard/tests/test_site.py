@@ -241,8 +241,8 @@ def test_the_team_page_shows_the_people_then_the_pod_and_its_books(snap, tmp_pat
     """Team lead, 2026-11-24: "a brief overview of the multi strategy pod we are running"; then "it should be
     the team pictures first then the pod description (which needs to be organized better)"."""
     home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert home.index('class="people"') < home.index("A multi-strategy pod")
-    pod = home.split("A multi-strategy pod", 1)[1].split("</section>", 1)[0]
+    assert home.index('class="people"') < home.index("Event-driven trading and special situations")
+    pod = home.split("Event-driven trading and special situations", 1)[1].split("</section>", 1)[0]
     assert pod.count('class="pod-card"') == 3 and "<h4>" not in pod and "Reconciled daily" not in pod
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
         assert title in pod, title
@@ -266,3 +266,16 @@ def test_the_research_page_is_under_construction(snap, tmp_path, content):
     assert "Under construction." in r and "This page is being rebuilt." in r and "How a result is tested" not in r
     nav = (target / "index.html").read_text().split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
     assert 'href="/research/"' in nav
+
+
+def test_every_page_links_to_quantt_and_carries_the_share_card(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "add a link to quants website from ours: https://quantt.ca", and "a thumbnail
+    logo for linkedin for the site": LinkedIn shows og:image for a shared link, from its absolute URL."""
+    from dashboard import layout as L
+    target = build(snap, tmp_path / "site", content)
+    assert (target / "static" / "img" / "og-card.png").is_file()
+    for page in target.rglob("*.html"):
+        h = page.read_text()
+        nav = h.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
+        assert 'href="https://quantt.ca"' in nav, page.name
+        assert f'<meta property="og:image" content="{L.SITE_URL}/static/img/og-card.png">' in h, page.name

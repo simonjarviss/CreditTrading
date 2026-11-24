@@ -16,6 +16,9 @@ SITE_NAME = "Event Driven Trading"
 TEAM_LINE = "QUANTT · Queen's University"
 CONTACT_EMAIL = "simon.jarvis@queensu.ca"       # team lead, 2026-11-23: the site's contact address
 REPO_URL = "https://github.com/quanttqueensu/CreditTrading"
+QUANTT_URL = "https://quantt.ca"                 # team lead, 2026-11-24: "add a link to quantt's website from ours"
+# The public address, for the share card's absolute URL: LinkedIn and others fetch og:image from outside.
+SITE_URL = "https://event-driven.quantt.ca"
 # The team page is the home page (team lead, 2026-11-24: "when we open the page, it should be the team
 # page which shows first"); /team/ serves the same page so earlier links still work.
 # The overview page was deleted (team lead, 2026-11-24: "delete overview page").
@@ -124,6 +127,11 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <meta property="og:title" content="{escape(full_title)}">
 <meta property="og:description" content="{escape(description)}">
 <meta property="og:type" content="website">
+<meta property="og:image" content="{SITE_URL}/static/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="Event Driven Trading, an event-driven and special situations desk at QUANTT, Queen's University">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0f2547">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/static/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
@@ -134,7 +142,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <body>
 <header class="site-header"><div class="wrap">
 <a class="brand" href="/" aria-label="{SITE_NAME}, home"><img src="/static/img/quantt-logo.png" alt="QUANTT" width="113" height="28"><span>{SITE_NAME}</span></a>
-<nav class="nav" aria-label="Main">{nav}<a class="nav-gh" href="{REPO_URL}" rel="noopener" aria-label="The team's code on GitHub">{GITHUB_MARK}<span>GitHub</span></a></nav>
+<nav class="nav" aria-label="Main">{nav}<a class="nav-ext" href="{QUANTT_URL}" rel="noopener">QUANTT<span aria-hidden="true"> ↗</span></a><a class="nav-gh" href="{REPO_URL}" rel="noopener" aria-label="The team's code on GitHub">{GITHUB_MARK}<span>GitHub</span></a></nav>
 </div></header>
 <main id="main">
 {body}
@@ -142,7 +150,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <footer class="site-footer"><div class="wrap">
 <div class="foot-grid">
 <div class="foot-brand"><img class="logo" src="/static/img/quantt-logo-white.png" alt="QUANTT" width="105" height="26">
-<p><span class="foot-name">{SITE_NAME}</span>A systematic trading team at QUANTT, Queen's University.</p></div>
+<p><span class="foot-name">{SITE_NAME}</span>A systematic trading team at <a href="{QUANTT_URL}" rel="noopener">QUANTT</a>, Queen's University.</p></div>
 <nav class="foot-nav" aria-label="Footer"><h4>Site</h4><ul>{foot_nav}</ul></nav>
 <div class="foot-contact"><h4>Contact</h4><p>Simon Jarvis<br>Portfolio Manager</p><p><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
 </div>
