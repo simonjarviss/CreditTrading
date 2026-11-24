@@ -118,7 +118,7 @@ def monthly_table(rows: list) -> str:
     body = [(dt.date.fromisoformat(m + "-01").strftime("%B %Y"),
              f'<span class="{tone(p)}">{usd(p, True)}</span>', f'<span class="{tone(r)}">{pct(r, True)}</span>')
             for m, p, r in ms]
-    return "<h3 style=\"margin-top:28px\">Monthly results</h3>" + tbl(["Month", "P&L", "Return"], body, right=(1, 2))
+    return "<h3>Monthly results</h3>" + tbl(["Month", "P&L", "Return"], body, right=(1, 2))
 
 
 def risk_block(r: dict) -> str:
@@ -296,7 +296,7 @@ def combined_section(books: list) -> str:
 
 
 def shadow_section(r: dict) -> str:
-    head = ('<section class="section panel"><div class="wrap"><div class="eyebrow">Incubation</div>'
+    head = ('<section class="section soft"><div class="wrap"><div class="eyebrow">Incubation</div>'
             '<h2>Strategies in simulation</h2>'
             '<p class="narrow">New strategies run first as simulated books on live data before they receive a '
             'paper account. These figures are simulated and are not trading results.</p>')

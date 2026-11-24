@@ -95,7 +95,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 </head>
 <body>
 <header class="site-header"><div class="wrap">
-<a class="brand" href="/"><b>{SITE_NAME}</b><span>{escape(TEAM_LINE)}</span></a>
+<a class="brand" href="/" aria-label="{SITE_NAME}, home"><img src="/static/img/quantt-logo.png" alt="QUANTT" width="105" height="26"><span>{SITE_NAME}</span></a>
 <nav class="nav" aria-label="Main">{nav}</nav>
 </div></header>
 <main id="main">
@@ -103,7 +103,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 </main>
 <footer class="site-footer"><div class="wrap">
 <div class="cols">
-<div><h4>{SITE_NAME}</h4><p>A systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts and scheduled corporate events.</p></div>
+<div><img class="logo" src="/static/img/quantt-logo-white.png" alt="QUANTT" width="97" height="24"><p>{SITE_NAME}: a systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts and scheduled corporate events.</p></div>
 <div><h4>Pages</h4><ul style="list-style:none;padding:0;margin:0;columns:2">{foot_nav}</ul></div>
 <div><h4>Contact</h4><p>Simon Jarvis, Portfolio Manager<br><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
 </div>
@@ -114,6 +114,16 @@ def page(active: str, title: str, body: str, description: str) -> str:
 """
 
 
-def page_head(eyebrow: str, title: str, lede: str, extra: str = "") -> str:
-    return (f'<section class="page-head"><div class="wrap"><div class="eyebrow">{escape(eyebrow)}</div>'
+# quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
+PHOTOS = {"overview": "campus", "strategy": "firm-visit", "performance": "team-office", "research": "team-office",
+          "library": "campus", "team": "team-atrium", "contact": "fiam-2026", "": "campus"}
+
+
+def photo_style(key: str) -> str:
+    return f' style="background-image:url(/static/img/{PHOTOS.get(key, "campus")}.webp)"'
+
+
+def page_head(eyebrow: str, title: str, lede: str, extra: str = "", photo: str = "") -> str:
+    return (f'<section class="page-head"{photo_style(photo or eyebrow.lower())}><div class="wrap">'
+            f'<div class="eyebrow">{escape(eyebrow)}</div>'
             f'<h1>{escape(title)}</h1><p class="lede">{escape(lede)}</p>{extra}</div></section>')
