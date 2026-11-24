@@ -577,7 +577,7 @@ team lead's, sent to the analysts directly, and never tracked.
 | Whether any of the team lead's work moves to an analyst | **None.** The EVENTS rows (the special-situations slate and reserves, the ETF hedge overlay for event longs), the S3 forced-deletion row on WATCH and GAMMA stay with the team lead. The analysts bring new signals only |
 | The MACRO lane's scope | **All of fixed income**, widened from "macro and thematic events": macro events (central-bank decisions, economic releases, Treasury auctions), credit events, and fixed-income instruments (rate and credit ETFs, preferreds, baby bonds), each tied to how it helps the book. Still all on MACRO, and still excluding the rows above |
 | The third lane's scope | **The dashboard and the research data platform**: the fetchers and data builds the other lanes build on, and the event store once the EVENTS work on `simon` (was `pm/work`) is merged into `main`. CI (`.github/`, `pytest.ini`, `conftest.py`) stays with the team lead |
-| The dashboard's data | **A nightly read-only snapshot of the book, held in the repository** under `dashboard/snapshots/`. The exporter that writes it runs on the VM, so the dashboard lane writes its spec and its tests and the team lead installs it. How a snapshot travels from the VM to the repository is **open**, for the team lead when the exporter is ready. The repository is public: a committed snapshot is published (`dashboard/README.md` says what it may never carry) |
+| The dashboard's data | *(Superseded 2026-11-23, "the public site", below: snapshots stay on the VM.)* **A nightly read-only snapshot of the book, held in the repository** under dashboard/snapshots/. The exporter that writes it runs on the VM, so the dashboard lane writes its spec and its tests and the team lead installs it. How a snapshot travels from the VM to the repository is **open**, for the team lead when the exporter is ready. The repository is public: a committed snapshot is published (`dashboard/README.md` says what it may never carry) |
 | The analysts' tools | **Claude Code, for all three**, with the repository's skills and agents |
 | The branches | **Named for the people, not the lanes**: `simon` (was `pm/work`), `ryan` (was `macro/work`), `james` (was `equities/work`), `lucy` (was `dashboard/work`), renamed on GitHub with their history. Still five on GitHub with `main`. This supersedes 2026-10-22's "names in the repository: none" for the branch names and the lane map in `docs/TEAM.md`; the repository is public, so those first names are public. Nothing else names a person |
 
@@ -959,6 +959,24 @@ Answered through question prompts on 2026-11-23, after the first audit against `
 | `AUTO_ARMED` for the events book | **"Yes, if VERIFY passes."** Not created: that session's send failed (next row) |
 | The events book's first send went out partly: Alpaca answered HTTP 429 to 173 of 219 orders (E-2026-11-23-03) | **"Disarm until the fix ships"** (send unit `DRY_RUN=1` again, 16:57 ET); **"Hold them"** for the 46 filled positions; **"Build it now and release"** for the fix: the client paces the trading host and a 429 is waited out and looked up before any resend. Re-arming is the team lead's go |
 
+### Team lead, 2026-11-23: the public site
+
+Answered through question prompts and messages on 2026-11-23, when the team lead asked for
+Lucy's dashboard (PR #62) to be set up properly and hosted on the VM, "showing analytics for all
+our active books", and then for an investor site around it.
+
+| question | ruling |
+|---|---|
+| Who can see the dashboard | **"Website all can see."** A public website, served from the VM. Asked with the alternative of a private page behind an ssh tunnel, and told the VM holds the three accounts' keys |
+| Its address | **`eventdriven.quantt.ca`**, a subdomain of the club's domain. The host names are an installer argument and are never written in this repository (`CLAUDE.md`, "Where it runs") |
+| What the site holds | **"Team overview, a slideshow ... everything someone who would want to give us capital would see"; "our library (all literary sources, the actual PDFs / links)"; "anything any R&D website would have"; "connected to our live P&L and live updates, very professional and presentable to VC / investors."** quantt.ca is "just inspiration": nothing is added to the club's site |
+| The team section | **Full names, bios and LinkedIn.** Names, titles and links as published on quantt.ca; the bios are drafted from each person's role on the desk and await each person's approval |
+| The slideshow | **"The most in-depth version we have, with the same tweaks that were applied to make Event Driven Trading (like the name change)."** The 63-slide in-depth deck with Ethan's edits applied; the three blank analyst slides and "Questions?" are left off the site |
+| The contact address on the site | **`simon.jarvis@queensu.ca`** |
+| Lucy's PR #62 | **"Build on it, new PR."** Her commits are kept as they are in the new branch; #62 is closed pointing at it |
+| Where snapshots live. **Supersedes** 2026-10-26 "The dashboard's data" (a nightly snapshot committed to dashboard/snapshots/, now removed) | **"VM only."** The site is built and served on the VM; nothing about positions or P&L is committed |
+| Installing it | **"Yes, when the check passes."** An agent in the team lead's session runs the release check, merges, tags and installs only the site's own units, Caddy and the network rule for ports 80 and 443. No trading unit, `DRY_RUN` or `AUTO_ARMED` is touched |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
@@ -1007,4 +1025,5 @@ Answered through question prompts on 2026-11-23, after the first audit against `
 | 2026-11-09 | §5 records the mission (`docs/MISSION.md`): open scope, paper as the test, no costs in research, the research gates dropped, self-promotion to paper through a separate path, releases by the team lead only, alpha-only dropped. §1 and §6 point at it. | the mission, for the team lead |
 | 2026-11-22 | §5 records the standard's rulings (`docs/STANDARD.md`); §6 points at it. | the standard, for the team lead |
 | 2026-11-23 | §5 records the rulings after the first audit: the `shadow` ruleset, events arming kept for Monday, who runs a release (superseding the two 2026-11-19 rows), and the events book's first go. | the standard's audit, for the team lead |
+| 2026-11-23 | §5 records the public site's rulings: public, on the VM at `eventdriven.quantt.ca`, its content, snapshots kept on the VM (superseding 2026-10-26's repository route). | the public site, for the team lead |
 | 2026-11-23 | §5 records the clean-up's go, AUTO_ARMED on a passing VERIFY, and the rulings after the events book's partial first send (disarm, hold, fix and release). | the 429 incident, for the team lead |

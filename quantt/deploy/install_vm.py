@@ -588,6 +588,13 @@ SHADOW_UNIT_FILES = ("quantt-shadow-secret.service", "quantt-shadow.service", "q
 EVENTS_UNIT_FILES = ("quantt-events-secret.service",) + tuple(
     f"quantt-events-{job}.{kind}" for job in ("plan", "send", "verify") for kind in ("service", "timer"))
 
+# The public site's nightly build (dashboard/deploy/install_site_vm.sh, team lead 2026-11-23):
+# one service and its timer, as user quantt, with no network and the state read-only. It sends
+# nothing and holds no key. Registered here in the PR that brought its installer, as the note on
+# SHADOW_UNIT_FILES asks, so a C4 or `--reports` install does not refuse beside it. Pinned to the
+# shell installer by test_site_unit_names_are_the_ones_the_site_installer_writes.
+SITE_UNIT_FILES = ("quantt-site.service", "quantt-site.timer")
+
 
 class ReportVm(VmBook):
     @property
@@ -996,7 +1003,8 @@ def dormant_overrides(run_cmd: Callable, layout: "Layout", units=ALL_UNIT_FILES,
     # The shadow runner's units are installed by the repository's own
     # shadow/deploy/install_shadow_vm.sh (RUNBOOK 8.10), which runs its own daemon-reload.
     # They are ours too. See SHADOW_UNIT_FILES for what refusing them cost.
-    known = set(units) | set(REPORT_UNIT_FILES) | set(SHADOW_UNIT_FILES) | set(EVENTS_UNIT_FILES)
+    known = (set(units) | set(REPORT_UNIT_FILES) | set(SHADOW_UNIT_FILES) | set(EVENTS_UNIT_FILES)
+             | set(SITE_UNIT_FILES))
     for d in roots if unexpected_prefixes else ():
         for f in sorted(d.glob("*")) if d.is_dir() else ():
             if (f.name.startswith(unexpected_prefixes) and f.suffix in (".service", ".timer")

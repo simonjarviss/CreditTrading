@@ -115,4 +115,12 @@ results/events/cef_corp_action_events_full.csv
 # This repository is public; the module also refuses any path git can see.
 results/cef/exposure_readout/_cache/
 results/cef/exposure_readout/_out/
-results/cef/exposure_readout/_out_c4/
+   # Exposure readout (scripts/cef/exposure_readout.py, 2026-11-02, report only): the keyless
+   # yfinance cache, and the analyse outputs, which carry the caller's positions and equity.
+   # This repository is public; the module also refuses any path git can see.
+   results/cef/exposure_readout/_cache/
+   results/cef/exposure_readout/_out/
+   results/cef/exposure_readout/_out_c4/
+
+   # Generated dashboard page (dashboard/build.py); rebuilt from a snapshot, never committed.
+   /dashboard/out/

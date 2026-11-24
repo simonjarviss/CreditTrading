@@ -465,6 +465,24 @@ def test_events_unit_names_are_the_ones_the_events_installer_writes():
     assert literal | {u[:-len(".timer")] + ".service" for u in timers} == set(iv.EVENTS_UNIT_FILES)
 
 
+def test_site_unit_names_are_the_ones_the_site_installer_writes():
+    """SITE_UNIT_FILES is a copy of names owned by a shell script (the public site's build).
+    Pin it: exactly the units that script writes, and every one of them registered."""
+    import re
+    from pathlib import Path
+    sh = (Path(iv.__file__).resolve().parents[2] / "dashboard" / "deploy" / "install_site_vm.sh").read_text()
+    written = set(re.findall(r"^\s*unit_file (quantt-[a-z-]+\.(?:service|timer)) <<", sh, flags=re.M))
+    assert written == set(iv.SITE_UNIT_FILES), written
+
+
+def test_a_site_unit_beside_c4_is_known_not_refused(c4world, capsys):
+    """The site's units on disk do not make a C4 install refuse (the SHADOW_UNIT_FILES lesson)."""
+    for name in iv.SITE_UNIT_FILES:
+        _dormant(c4world, f"etc/systemd/system/{name}", "[Unit]\n")
+    rc, out = c4world.c4("--apply", capsys=capsys)
+    assert rc == 0, out
+
+
 def test_book_c4_installs_over_the_cores_own_units_and_its_lower_copies(c4world, capsys):
     """Not over-strict: the core's installed units, and a lower-priority copy of one, are
     known units, so a clean C4 install still goes through after the core's."""
