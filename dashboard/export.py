@@ -16,8 +16,9 @@ send an order, change a record or reach anything outside the machine.
 WHAT EACH BOOK'S RECORDS ARE (read by header name, never by position):
   * core `cef` and `c4` (quantt/session): `eod_equity.csv` is Alpaca's end-of-day equity
     history, the P&L of record (team lead, 2026-10-19). The newest day directory with a
-    `reconcile.json` is the last verified session: verdict, problems, orders, positions
-    after the close, and the official closing prints. `tca.csv` is fill quality.
+    `reconcile.json` is the last verified session: its verdict, notes, orders, positions
+    after the close and the official closing prints, which are reduced to counts and dollar
+    exposure here (AGGREGATES ONLY, below). `tca.csv` is fill quality.
     `reports/risk/<date>.json` is the nightly risk report (scripts/ops/risk_daily.py).
   * the event book `events` (quantt/sleeves): the newest day directory with a
     `verify.json`, and `sleeve_scores.csv`, the per-strategy P&L booked by its ledger.
@@ -28,8 +29,8 @@ WHAT EACH BOOK'S RECORDS ARE (read by header name, never by position):
 
 NO FALLBACKS (CLAUDE.md). A file that is missing or does not parse becomes
 {"UNMEASURED": "<what was tried>"} for that section only. Nothing is carried forward,
-zero-filled or taken from another file. Error text is scrubbed of paths before it is
-written, because the snapshot is published.
+zero-filled or taken from another file. Error text is scrubbed of paths and order ids
+before it is written, because what the snapshot holds is published.
 """
 from __future__ import annotations
 
@@ -207,15 +208,48 @@ def _verdict(text: str, date: str):
     return m.group(2), m.group(3).strip()
 
 
-def _orders_session(rows: list, avg_by_symbol: dict | None = None) -> list:
-    out = []
+# AGGREGATES ONLY (team lead, 2026-11-23, after the release check found order ids on the page): the
+# public site shows no symbol, share count, order line or note text from the trading system. Each
+# session is reduced HERE, so the snapshot never holds a per-name figure for any later code to print:
+# counts of positions and orders, dollar exposure, the verdict word and how many notes the record
+# has. The per-name rows stay on the VM, in the runners' own records (the report rule: "aggregates
+# in the repository, rows private"). Error texts below never name a symbol either, because an
+# UNMEASURED reading's text is published.
+
+def _positions_summary(holdings: list, equity) -> dict:
+    """holdings: (qty, close or None) per name, from the record. Gross and net are summed over the
+    priced names only, and n_unpriced says how many were left out, so a partial total is never
+    shown as a whole one."""
+    held = [(q, c) for q, c in holdings if q]
+    priced = [(q, c) for q, c in held if c is not None]
+    gross = sum(abs(q * c) for q, c in priced)
+    net = sum(q * c for q, c in priced)
+    eq = equity if equity else None
+    return {"n": len(held), "n_long": sum(1 for q, _ in held if q > 0), "n_short": sum(1 for q, _ in held if q < 0),
+            "n_unpriced": len(held) - len(priced),
+            "gross_usd": gross if held else 0.0, "net_usd": net if held else 0.0,
+            "gross_x": None if eq is None else gross / eq, "net_x": None if eq is None else net / eq}
+
+
+def _orders_summary(rows: list) -> dict:
+    """Counts only: filled in full, partly, or not at all; shares filled over shares ordered."""
+    n_full = n_part = n_none = 0
+    ordered = filled = 0.0
     for r in rows:
-        avg = r.get("filled_avg_price") if avg_by_symbol is None else avg_by_symbol.get(r.get("symbol"))
-        out.append({"symbol": str(r.get("symbol")), "side": r.get("side"),
-                    "qty": _float(r.get("qty"), "order qty"), "status": str(r.get("status")),
-                    "filled_qty": _float(r.get("filled_qty"), "order filled_qty"),
-                    "avg_price": _float(avg, "order average price")})
-    return sorted(out, key=lambda o: (o["symbol"], o["side"]))
+        q = _float(r.get("qty"), "an order's quantity")
+        f = _float(r.get("filled_qty"), "an order's filled quantity") or 0.0
+        if q is None:
+            raise Unreadable("an order has no quantity")
+        ordered += abs(q)
+        filled += abs(f)
+        if abs(f) >= abs(q):
+            n_full += 1
+        elif f:
+            n_part += 1
+        else:
+            n_none += 1
+    return {"n": len(rows), "n_filled": n_full, "n_partial": n_part, "n_unfilled": n_none,
+            "fill_rate_shares": (filled / ordered) if ordered else None}
 
 
 def session_core(book: str, book_dir: Path) -> dict:
@@ -225,20 +259,18 @@ def session_core(book: str, book_dir: Path) -> dict:
     p = day / "reconcile.json"
     try:
         r = read_json(p)
-        verdict, reason = _verdict(r.get("verdict", ""), day.name)
+        verdict, _reason = _verdict(r.get("verdict", ""), day.name)
         prints = (r.get("auction_prints_d") or {}).get("prices") or {}
-        positions = [{"symbol": s, "qty": _float(q, f"position {s}"),
-                      "close": _float(prints.get(s), f"close {s}")}
-                     for s, q in sorted((r.get("positions_after") or {}).items())]
         snap = r.get("snapshot") or {}
-        value = {"date": day.name, "verdict": verdict, "reason": scrub(reason),
-                 "problems": [scrub(x) for x in r.get("problems") or []],
-                 "positions": positions,
+        equity = _float(snap.get("equity"), "the snapshot's equity")
+        holdings = [(_float(q, "a position's quantity"), _float(prints.get(s), "a position's close"))
+                    for s, q in (r.get("positions_after") or {}).items()]
+        value = {"date": day.name, "verdict": verdict, "n_notes": len(r.get("problems") or []),
+                 "positions": _positions_summary(holdings, equity),
                  "close_basis": "official closing print (primary exchange)",
-                 "orders": _orders_session(r.get("orders") or []),
-                 "equity_snapshot": None if _float(snap.get("equity"), "snapshot equity") is None else {
-                     "equity": _float(snap.get("equity"), "snapshot equity"),
-                     "change_usd": _float(snap.get("change_usd"), "snapshot change"),
+                 "orders": _orders_summary(r.get("orders") or []),
+                 "equity_snapshot": None if equity is None else {
+                     "equity": equity, "change_usd": _float(snap.get("change_usd"), "the snapshot's change"),
                      "kind": "account snapshot after the close (not the P&L of record)"}}
         read_at = iso_to_z(r["read_at"]) if r.get("read_at") else mtime_z(p)
         return reading(value, f"{book}/{day.name}/reconcile.json (written by the session's verify)", read_at,
@@ -257,24 +289,23 @@ def session_sleeves(book: str, book_dir: Path) -> dict:
         if r.get("session_date") != day.name:
             raise Unreadable(f"session_date {r.get('session_date')!r} is not its directory's date")
         marks = r.get("marks") or {}
-        fbs = {s: v.get("avg_price") for s, v in (r.get("fills_by_symbol") or {}).items()}
-        positions = [{"symbol": s, "qty": _float(q, f"position {s}"), "close": _float(marks.get(s), f"close {s}")}
-                     for s, q in sorted((r.get("positions_after") or {}).items()) if _float(q, f"position {s}")]
         eq = r.get("equity") or {}
+        equity = _float(eq.get("equity"), "the account's equity")
+        holdings = [(_float(q, "a position's quantity"), _float(marks.get(s), "a position's close"))
+                    for s, q in (r.get("positions_after") or {}).items()]
         # The first session that sent an order: the oldest day with STARTED, which the runner writes
         # before its first order (CLAUDE.md order-path rule 2). A dry-run day has a verify.json and no
         # STARTED, so the book's start is never dated by a session that sent nothing (release-check
         # review, 2026-11-23: "Trading since" used to print the newest session's date).
         first = oldest_day_with(book_dir, "STARTED")
         value = {"date": day.name, "first_send": first.name if first else None,
-                 "verdict": "PASS" if r.get("ok") else "FAIL", "reason": scrub(r.get("reason", "")),
-                 "problems": [scrub(x) for x in (r.get("problems") or []) + (r.get("fails") or [])],
-                 "positions": positions,
+                 "verdict": "PASS" if r.get("ok") else "FAIL",
+                 "n_notes": len((r.get("problems") or []) + (r.get("fails") or [])),
+                 "positions": _positions_summary(holdings, equity),
                  "close_basis": "daily bar close (consolidated feed)",
-                 "orders": _orders_session(r.get("orders") or [], fbs),
-                 "equity_snapshot": None if _float(eq.get("equity"), "equity") is None else {
-                     "equity": _float(eq.get("equity"), "equity"),
-                     "change_usd": _float(eq.get("change_usd"), "equity change"),
+                 "orders": _orders_summary(r.get("orders") or []),
+                 "equity_snapshot": None if equity is None else {
+                     "equity": equity, "change_usd": _float(eq.get("change_usd"), "the account's change"),
                      "kind": "account snapshot at verify (not the P&L of record)"}}
         read_at = iso_to_z(r["read_at"]) if r.get("read_at") else mtime_z(p)
         return reading(value, f"{book}/{day.name}/verify.json (written by the event book's verify)", read_at,
@@ -299,8 +330,8 @@ def risk(book: str, book_dir: Path) -> dict:
         value = {"asof": r.get("asof"), "severity": r.get("severity"),
                  "gross": _float(ex.get("gross"), "gross"), "net": _float(ex.get("net"), "net"),
                  "cap": _float(ex.get("cap"), "gross cap"),
-                 "largest": None if not largest else {"symbol": largest.get("symbol"), "side": largest.get("side"),
-                                                      "share": _float(largest.get("share"), "largest share")},
+                 # the largest position's share of equity, never its name (aggregates only, above)
+                 "largest_share": None if not largest else _float(largest.get("share"), "largest share"),
                  "top3_share": _float(conc.get("top3_share"), "top-3 share"),
                  "groups": {str(k): _float(v, f"group {k}") for k, v in (conc.get("group_share") or {}).items()},
                  "halve_drawdown": _float(levels.get("halve"), "halve level"),

@@ -1,4 +1,4 @@
-"""The snapshot format (0.2: every book on one page) and its checks.
+"""The snapshot format (0.3: every book on one page, aggregates only) and its checks.
 
 Standard library only, on purpose: the dashboard imports nothing that can open a
 connection (dashboard/README.md section 1).
@@ -20,6 +20,13 @@ verify.json and sleeve_scores.csv), plus the simulated shadow books. 0.2 keeps 0
 reading convention and its privacy check unchanged and replaces the single-book body with
 a list of books.
 
+WHY 0.3 (team lead, 2026-11-23, "aggregates only"): 0.2 carried each session's positions and
+orders by symbol and the runners' note text, and the event book's notes put 173 client order ids
+on the public page. A session is now counts and dollar exposure only: positions (long, short,
+unpriced, gross and net), orders (filled in full, partly, not at all) and the number of notes.
+The risk reading keeps the largest position's share of equity without its name. No symbol, share
+count, order line or note text is in a snapshot, and find_private refuses one that has any.
+
 `validate` checks the shape. `find_private` checks what a snapshot may never carry
 (dashboard/README.md section 2). Both return a list of problems; empty means clean.
 Neither raises on bad data, so a test can show every problem.
@@ -28,7 +35,7 @@ from __future__ import annotations
 
 import re
 
-SCHEMA_VERSION = "0.2"
+SCHEMA_VERSION = "0.3"
 LABELS = ("broker-confirmed", "modelled", "simulated")
 UNMEASURED = "UNMEASURED"
 
@@ -38,6 +45,10 @@ SYMBOL = re.compile(r"^[A-Z][A-Z0-9.\-]{0,6}$")
 BOOK_NAME = re.compile(r"^[a-z][a-z0-9_]{0,31}$")
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 ISO_UTC = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$")
+
+
+def _is_count(x) -> bool:
+    return isinstance(x, int) and not isinstance(x, bool) and x >= 0
 
 
 def _num(x) -> bool:
@@ -83,13 +94,17 @@ def _check_value(kind: str, v, where: str, out: list) -> None:
             out.append(f"{where}.first_send: must be YYYY-MM-DD or null")
         if v.get("verdict") not in ("PASS", "FAIL"):
             out.append(f"{where}.verdict: must be PASS or FAIL")
-        if not isinstance(v.get("problems"), list):
-            out.append(f"{where}.problems: must be a list")
-        _rows(v.get("positions"), f"{where}.positions", out,
-              {"symbol": _is_sym, "qty": _num, "close": _opt_num})
-        _rows(v.get("orders"), f"{where}.orders", out,
-              {"symbol": _is_sym, "side": _is_side, "qty": _num, "status": _is_str, "filled_qty": _opt_num,
-               "avg_price": _opt_num})
+        if not _is_count(v.get("n_notes")):
+            out.append(f"{where}.n_notes: must be a count")
+        pos = v.get("positions")
+        if not isinstance(pos, dict) or not all(_is_count(pos.get(k)) for k in ("n", "n_long", "n_short", "n_unpriced")) \
+                or not all(_num(pos.get(k)) for k in ("gross_usd", "net_usd")) \
+                or not all(_opt_num(pos.get(k)) for k in ("gross_x", "net_x")):
+            out.append(f"{where}.positions: needs counts n, n_long, n_short, n_unpriced, gross_usd and net_usd")
+        o = v.get("orders")
+        if not isinstance(o, dict) or not all(_is_count(o.get(k)) for k in ("n", "n_filled", "n_partial", "n_unfilled")) \
+                or not _opt_num(o.get("fill_rate_shares")):
+            out.append(f"{where}.orders: needs counts n, n_filled, n_partial, n_unfilled")
         snap = v.get("equity_snapshot")
         if snap is not None and not (isinstance(snap, dict) and _num(snap.get("equity"))
                                      and _opt_num(snap.get("change_usd"))):
@@ -183,6 +198,10 @@ FORBIDDEN_KEYS = re.compile(
     r"(api[_-]?key|secret|token|passw|credential|key[_-]?id|account[_-]?(number|id|no)|"
     r"cusip|permno|isin|sedol|crsp|trace|compustat|host(name)?|server|vm[_-]?(addr|ip|name)|"
     r"vault|subscription|endpoint|bucket|client[_-]?order[_-]?id|order[_-]?id|\bssh\b)", re.I)
+# Per-name fields (team lead, 2026-11-23: the public site shows aggregates only). A key with one of
+# these names anywhere in a snapshot means a per-name row got through.
+PER_NAME_KEYS = frozenset({"symbol", "symbols", "qty", "shares", "positions_after", "fills_by_symbol", "marks",
+                           "problems", "fails", "notes", "reason", "orders_by_symbol"})
 # Value patterns that never appear in any string.
 FORBIDDEN_VALUES = {
     "IPv4 address": re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b"),
@@ -208,6 +227,8 @@ def find_private(node, path: str = "$") -> list:
         for k, v in node.items():
             if FORBIDDEN_KEYS.search(str(k)):
                 out.append(f"{path}.{k}: forbidden key name")
+            elif str(k) in PER_NAME_KEYS:
+                out.append(f"{path}.{k}: a per-name or note field (the site shows aggregates only)")
             out.extend(find_private(v, f"{path}.{k}"))
     elif isinstance(node, list):
         for i, v in enumerate(node):

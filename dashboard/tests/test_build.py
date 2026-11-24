@@ -34,8 +34,9 @@ def test_every_book_has_its_section(snap):
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Combined paper results",
                   "Strategies in simulation"):
         assert title in h, title
-    for sym in ("AAA", "BBB", "CCC"):
-        assert sym in h
+    for sym in ("AAA", "BBB", "CCC"):                   # aggregates only (team lead, 2026-11-23)
+        assert sym not in h, sym
+    assert "2 (1 long, 1 short)" in h and "1 sent: 1 filled in full, 0 not filled" in h
 
 
 def test_every_figure_shows_its_source_and_read_time(snap):
@@ -75,7 +76,7 @@ def test_the_newest_session_shows_its_after_close_reading_until_the_official_poi
 
 
 def test_text_from_a_record_cannot_inject_markup(snap):
-    book(snap, "cef")["session"]["value"]["problems"] = ["<script>alert(1)</script>"]
+    book(snap, "cef")["risk"]["value"]["groups"] = {"<script>alert(1)</script>": 0.5}
     h = page(snap)
     assert "<script>alert" not in h and "&lt;script&gt;" in h
 
@@ -87,7 +88,7 @@ def test_the_page_loads_nothing_from_another_origin(snap):
 
 
 def test_build_refuses_a_snapshot_with_a_secret_and_writes_nothing(snap, tmp_path):
-    book(snap, "cef")["session"]["value"]["reason"] = "key 24c4da2f21d9064a4c02b26e92046258"
+    book(snap, "cef")["session"]["value"]["close_basis"] = "key 24c4da2f21d9064a4c02b26e92046258"
     src, out = tmp_path / "s.json", tmp_path / "out" / "index.html"
     src.write_text(json.dumps(snap))
     with pytest.raises(SystemExit, match="refused"):

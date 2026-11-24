@@ -5586,7 +5586,7 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current
 
-### E-2026-11-23-13 · Release and incident: release-20261123-3 put the redesigned site on the VM; the event book's rejected order ids were on the public performance page from 19:06 ET and are withheld from the next release
+### E-2026-11-23-13 · Release, incident and ruling: release-20261123-3 put the redesigned site on the VM; the event book's rejected order ids were on the public performance page from 19:06 ET; the site shows aggregates only from the next release
 - kind: release
 - era: ALPACA
 - date: 2026-11-23
@@ -5599,6 +5599,7 @@ that adds it does not exist when it is written.
   - incident: the event book's 2026-11-23 verify (written 17:35 ET) lists its 173 rejected orders by client order id in `reason` and `problems`; every site build from the first (19:06 ET) carried that list on the performance page, at the VM's own address only. `dashboard/README.md` §2 forbids order ids on the site. The exporter now withholds them ("order ids withheld") and `find_private` refuses a snapshot that still carries one; on a copy of tonight's records the built pages hold none [V]
   - the release check's three findings, fixed in the same change: the overview's combined P&L states its window (29 Sep to 20 Nov 2026), a new book is dated by its first send (the oldest STARTED record: 23 Nov 2026 for the event book; 20 Nov was a dry run), and each Sharpe ratio shows its session count [V]
   - correction to E-2026-11-23-11: its "the combined figure's start date" was fixed on the performance page in PR #101; the overview's headline figure gains it here [V]
+  - ruling, through a question prompt after the other session counted order ids in nearly every per-day record of every book: the public site shows **"Aggregates only"**. Snapshot 0.3 reduces each session to counts and dollar exposure and copies no symbol, share count, order line or note text; `find_private` refuses a snapshot with a per-name key. On a copy of tonight's records, none of the 219 symbols held or traded and no order id appears on any built page [V]
 - source: `dashboard/deploy/install_site_vm.sh` @ `4ecc202`; `dashboard/export.py` @ `4ecc202` (`scrub`, which kept order ids); the VM's site journal, `/srv/quantt-site` and the event book's verify.json, read 2026-11-23 22:35 to 22:50 ET; the withholding, the privacy pattern and the three fixes are in the commit that carries this entry
 - supports: §5
 - status: current

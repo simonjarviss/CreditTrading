@@ -76,10 +76,10 @@ def test_unmeasured_and_absent_are_valid_readings(snap):
      "equity"),
     (lambda s: s["books"][0]["official"]["value"]["rows"].append({"date": "2026-11-21", "equity": float("nan"),
                                                                   "change_usd": 1}), "equity"),
-    (lambda s: s["books"][0]["session"]["value"]["positions"].append({"symbol": "bad symbol", "qty": 1, "close": 1}),
-     "symbol"),
-    (lambda s: s["books"][0]["session"]["value"]["orders"].append(
-        {"symbol": "AAA", "side": "hold", "qty": 1, "status": "x", "filled_qty": 1, "avg_price": 1}), "side"),
+    (lambda s: s["books"][0]["session"]["value"]["positions"].update({"n": -1}), "positions"),
+    (lambda s: s["books"][0]["session"]["value"]["positions"].pop("gross_usd"), "positions"),
+    (lambda s: s["books"][0]["session"]["value"]["orders"].update({"n_filled": 1.5}), "orders"),
+    (lambda s: s["books"][0]["session"]["value"].update({"n_notes": "two"}), "n_notes"),
     (lambda s: s["books"][0]["session"]["value"].update({"verdict": "MAYBE"}), "verdict"),
     (lambda s: s.update({"schema_version": "0.1-draft"}), "schema_version"),
     (lambda s: s.update({"exported_at_utc": "Nov 6"}), "exported_at_utc"),
@@ -119,14 +119,21 @@ def test_forbidden_key_names_are_caught(snap, key):
     ("/home/quantt/quantt_state/cef", "home directory"),
 ])
 def test_forbidden_values_are_caught_anywhere(snap, value, what):
-    cef(snap)["session"]["value"]["reason"] = f"note {value} end"
+    cef(snap)["session"]["value"]["close_basis"] = f"note {value} end"
     found = S.find_private(snap)
     assert any(what.lower() in p.lower() for p in found), found
 
 
 def test_privacy_check_reaches_nested_lists(snap):
-    cef(snap)["session"]["value"]["orders"][0]["note"] = "10.1.2.3"
-    assert any("orders[0]" in p for p in S.find_private(snap))
+    cef(snap)["official"]["value"]["rows"][0]["basis"] = "10.1.2.3"
+    assert any("rows[0]" in p for p in S.find_private(snap))
+
+
+@pytest.mark.parametrize("key", ["symbol", "qty", "positions_after", "problems", "reason", "fails", "marks"])
+def test_a_per_name_or_note_field_is_refused(snap, key):
+    """Team lead, 2026-11-23: the public site shows aggregates only."""
+    cef(snap)["session"]["value"][key] = "x"
+    assert any("aggregates only" in p for p in S.find_private(snap))
 
 
 def test_a_time_is_not_mistaken_for_an_address(snap):
