@@ -80,7 +80,7 @@ def test_the_statistics_table_has_every_group_and_needs_twenty_sessions_for_rati
     h = page(snap)
     for label in ("Returns", "Risk", "Risk-adjusted return", "Daily returns", "Value at risk, 95%, one day",
                   "Expected shortfall, 95%, one day", "Sortino ratio", "Calmar ratio", "Profit factor", "Skewness",
-                  "Longest drawdown", "Month to date"):
+                  "Longest drawdown", "Month to date", "Since inception, time-weighted"):
         assert f"<td>{label}</td>" in h or re.search(rf'colspan="\d+">{re.escape(label)}</td>', h), label
     assert "needs 20 sessions, has 4" in h                       # the fixture's portfolio has 4 sessions
 
@@ -184,3 +184,10 @@ def test_dashboard_code_has_no_route_to_a_broker_or_the_network(name):
            "urlopen", "http")
     used = _identifiers(DASH / name)
     assert not [w for w in bad if w in used], [w for w in bad if w in used]
+
+
+def test_the_return_is_named_time_weighted_and_shown_apart_from_the_pnl(snap):
+    """2026-11-24: the portfolio read "+0.06% (-$472)", both right and read as an error."""
+    h = page(snap)
+    assert "Time-weighted return since" in h and "P&amp;L since" in h
+    assert not re.search(r"Return since [^<]*\(", h)

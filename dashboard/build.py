@@ -296,8 +296,8 @@ STAT_GROUPS = (
         ("Last session", lambda p: "none" if p["last"] is None else _sgn(p["last"])),
         ("Last 5 sessions", lambda p: "none" if p["last5"] is None else _sgn(p["last5"])),
         ("Month to date", lambda p: "none" if p["mtd"] is None else _sgn(p["mtd"])),
-        ("Since inception", lambda p: _sgn(p["cum_return"])),
-        ("Annualised", lambda p: _num(p["ann_return"], p, _sgn)),
+        ("Since inception, time-weighted", lambda p: _sgn(p["cum_return"])),
+        ("Annualised, time-weighted", lambda p: _num(p["ann_return"], p, _sgn)),
         ("P&L since inception", lambda p: f'<span class="{tone(p["pnl"])}">{usd(p["pnl"], True)}</span>'),
     )),
     ("Risk", (
@@ -485,11 +485,14 @@ def portfolio_section(snap: dict) -> str:
     left = (f' {pf["left"]} {"session is" if pf["left"] == 1 else "sessions are"} left out because a trading book has no '
             'record for it yet.' if pf["left"] else "")
     out_txt = ("".join(f' {escape(b["title"])} is not included: {escape(w)}.' for b, w in pf["excluded"]))
-    kpis = [fig(pct(p["cum_return"], True), f"Return since {fmt_short(pf['first'])} ({usd(p['pnl'], True)})"),
+    # Return and P&L are shown apart and the return is named time-weighted: on 2026-11-24 the portfolio
+    # read +0.06% beside -$472, both right, because its losses fell when three books were trading and
+    # its gains when one was. A reader shown "+0.06% (-$472)" would read an error.
+    kpis = [fig(pct(p["cum_return"], True), f"Time-weighted return since {fmt_short(pf['first'])}"),
+            fig(usd(p["pnl"], True), f"P&amp;L since {fmt_short(pf['first'])}"),
             fig(_ratio_s(p["sharpe"]) if p["sharpe"] is not None else "n/a", f"Sharpe ratio ({p['n']} sessions)"),
             fig(pct(p["vol"]) if p["vol"] is not None else "n/a", "Volatility, annualised"),
-            fig(pct(p["max_drawdown"]), "Maximum drawdown"),
-            fig(pct(p["ann_return"], True) if p["ann_return"] is not None else "n/a", "Annualised return")]
+            fig(pct(p["max_drawdown"]), "Maximum drawdown")]
     growth = [{"name": "Portfolio", "color": PORTFOLIO_COLOUR, "bold": True,
                "points": M.index_points(pf["dated"], pf["base"])}]
     under = [{"name": "Portfolio", "color": PORTFOLIO_COLOUR, "bold": True,
@@ -561,7 +564,7 @@ def summary_table(snap: dict) -> str:
     for b, why in pf["excluded"] + pf["blocked"]:
         rows.append((dot(BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)) + escape(b["title"]),
                      f'<span class="meta">{escape(why[:1].upper() + why[1:])}</span>', "", "", "", ""))
-    head = ["", "From", "P&L", "Return", "Sharpe", "Max drawdown"]
+    head = ["", "From", "P&L", "Return, time-weighted", "Sharpe", "Max drawdown"]
     th = "".join(f'<th class="{"r" if i >= 2 else ""}">{escape(h)}</th>' for i, h in enumerate(head))
     body = "".join("<tr>" + "".join(f'<td class="{"r" if i >= 2 else ""}">{c}</td>' for i, c in enumerate(r)) + "</tr>"
                    for r in rows)
@@ -588,7 +591,7 @@ def shadow_section(r: dict) -> str:
 
 METHOD = """<section class="section"><div class="wrap narrow"><div class="eyebrow">Method</div><h2>How these figures are produced</h2>
 <p><b>Official P&amp;L.</b> Each account's results come from Alpaca's end-of-day portfolio history, the record we report against. A paper account differs from a live account in three ways: it charges no stock borrow fees, it does not credit or debit distributions on positions, and it fills orders at the current quote rather than in the closing auction. A live account's results would differ for those reasons.</p>
-<p><b>The portfolio.</b> A composite of the books that are trading, each from its first traded session, so an account's idle cash before it trades never dilutes the result. Each session's return is the books' combined P&amp;L divided by their combined equity at the previous close, and the returns compound. A session on which a trading book has no record is left out, never filled. The event book counts from its first traded session; until Alpaca's end-of-day history is collected for it, its daily figures are the account equity read after each close.</p><p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility, downside deviation, the Sharpe, Sortino and Calmar ratios, value at risk, expected shortfall, skewness and kurtosis are shown once a series has 20 sessions, and are annualised with 252 sessions where they are rates. No ratio subtracts a risk-free rate. The Sortino ratio divides by the downside deviation of daily returns; the Calmar ratio divides the annualised return by the maximum drawdown. Value at risk and expected shortfall are historical and one-day: the 5th percentile of daily returns and the average of the returns at or below it. Drawdown is measured on the compounded return from its running peak. A record of a few dozen sessions measures every ratio only loosely.</p>
+<p><b>The portfolio.</b> A composite of the books that are trading, each from its first traded session, so an account's idle cash before it trades never dilutes the result. Each session's return is the books' combined P&amp;L divided by their combined equity at the previous close, and the returns compound: the return is time-weighted, the standard for a composite. Because a session counts by its return and not by its dollars, the portfolio's return and its dollar P&amp;L can differ, even in sign, when the capital trading changes, as it does when a book joins. A session on which a trading book has no record is left out, never filled. The event book counts from its first traded session; until Alpaca's end-of-day history is collected for it, its daily figures are the account equity read after each close.</p><p><b>Statistics.</b> Daily return is the day's change in equity divided by the previous day's equity. Volatility, downside deviation, the Sharpe, Sortino and Calmar ratios, value at risk, expected shortfall, skewness and kurtosis are shown once a series has 20 sessions, and are annualised with 252 sessions where they are rates. No ratio subtracts a risk-free rate. The Sortino ratio divides by the downside deviation of daily returns; the Calmar ratio divides the annualised return by the maximum drawdown. Value at risk and expected shortfall are historical and one-day: the 5th percentile of daily returns and the average of the returns at or below it. Drawdown is measured on the compounded return from its running peak. A record of a few dozen sessions measures every ratio only loosely.</p>
 <p><b>Positions and orders.</b> Taken from the trading system's reconciliation with the broker after each close and reported in aggregate: how many positions each book holds, its gross and net exposure at the closing price, and how many orders were filled. Individual holdings and orders are not published.</p>
 <p><b>Updates.</b> The page rebuilds automatically every 30 minutes from the trading system's records, so a session appears shortly after the close and its official figure after Alpaca publishes it overnight. A figure the system could not read is marked as not measured; it is never estimated or carried forward.</p>
 </div></section>"""

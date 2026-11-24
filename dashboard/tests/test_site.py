@@ -73,7 +73,7 @@ def test_the_overviews_portfolio_figure_states_its_window(snap, tmp_path, conten
     from dashboard import build as B
     pf = B.portfolio(snap)
     h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert f"Portfolio return, {SITE.date_range(pf['first'], pf['p']['last_date'])}<" in h
+    assert f"Portfolio return, time-weighted, {SITE.date_range(pf['first'], pf['p']['last_date'])}<" in h
     assert SITE.date_range("2026-09-29", "2026-11-20") == "29 Sep to 20 Nov 2026"
     assert SITE.date_range("2025-12-30", "2026-01-05") == "30 Dec 2025 to 5 Jan 2026"
 

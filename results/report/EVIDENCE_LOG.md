@@ -5682,3 +5682,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/export.py` @ `591f4db` (`after_close` took `change_usd` from verify); the VM's site journal and `/srv/quantt-site`, read 2026-11-24 ~03:00 ET; the fix is in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-06 · Release: release-20261124-5 on the VM; with the 2026-11-23 official figures the portfolio read +0.06% time-weighted beside −$472, so the page names the return time-weighted and shows the P&L apart
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-5 on 5c947c4 (PR #111 merged `--admin --match-head-commit` 596ba7f, trees equal), tagged after the release check's pytest, doc_audit, orient and preview steps passed on 596ba7f. The VM's site clone moved to it and the build published. The trading clone still at release-20261123-2, cef and c4 AUTO_ARMED present [V]
+  - the 2026-11-23 official end-of-day rows had landed: cef +$485.25 (equity $99,853.05), C4 −$2,253.57 ($99,704.56); the event book's after-close reading −$29.86. The session's −$1,798.18 takes the portfolio's P&L from +$1,325.93 to −$472.25; by book cef −$146.95, C4 −$295.44, events −$29.86, which the page's contribution table shows [V]
+  - the portfolio's time-weighted return over the same 40 sessions is +0.06%: its gains came while one book traded and most of its losses on 2026-11-23, when three did, on about three times the capital. Both figures are right; the page showed them as "+0.06% (−$472)". The commit that carries this entry names the return time-weighted everywhere, shows the P&L as its own figure, and explains the difference in the method note [V]
+- source: the VM's `quantt_state/{cef,c4}/eod_equity.csv` and the page built by release-20261124-5, read 2026-11-24 ~04:00 ET; `dashboard/build.py` @ `5c947c4` (the combined label); the labelling is in the commit that carries this entry
+- supports: §5
+- status: current

@@ -95,7 +95,7 @@ def overview(snap: dict) -> str:
         p = pf["p"]
         not_read = "".join(f" (without the {escape(b['title'])}: not read tonight)" for b, _ in pf["blocked"])
         figs.append(perf.fig(pct(p["cum_return"], True),
-                             f"Portfolio return, {date_range(pf['first'], p['last_date'])}{not_read}"))
+                             f"Portfolio return, time-weighted, {date_range(pf['first'], p['last_date'])}{not_read}"))
         figs.append(perf.fig(usd(p["pnl"], True), f"Portfolio P&amp;L over {p['n']} sessions{not_read}"))
     hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
             '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
