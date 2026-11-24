@@ -5755,3 +5755,15 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `ee05e4c` (each book from its first send before the change); the VM's events state for 2026-11-23 and 2026-11-24; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-12 · Ruling: a pod overview on the team page, and a performance page for investors
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead: "team page should have a brief overview of the multi strategy pod we are running (written in plain english that is easy to understand using proper industry terminolog and no weird ai endings to sentences thaat run off / are weird), and the live perfromance shouldtnt have so much data as we scroll (no one rly cares about ome of the tables that are there, this should be intended for investors / public to view how we are performaing and show our fund statistics" (verbatim) [V]
+  - the team lead, while that change was being made: "it should still demonstrate the live trading , risk ect (all regular metrics) for our portoflio and books" (verbatim) [V]
+  - from the VM's records exported 2026-11-24 16:46 UTC, the fund facts after the close of 23 Nov 2026 read: paper capital $299,610, 77 positions (59 long, 18 short), gross exposure 107% and net exposure +4% of capital, 10 strategies [V]
+- source: `dashboard/build.py` @ `6626d0e` (each book's own session, risk, execution and strategy tables, and the simulation scoreboard); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current

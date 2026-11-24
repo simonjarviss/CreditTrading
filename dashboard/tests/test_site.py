@@ -111,7 +111,8 @@ def test_an_unreadable_session_is_not_called_new_or_missing(snap, tmp_path, cont
     ev = next(b for b in snap["books"] if b["name"] == "events")
     ev["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
-    assert "Session record: not measured." in h and "no record yet" not in h
+    row = h.split("Latest session", 1)[1].split("Event Book", 1)[1].split("</tr>", 1)[0]
+    assert "not measured" in row and "none yet" not in row and "no record yet" not in h
 
 
 def test_an_unmeasured_book_withholds_the_overviews_combined_figure(snap, tmp_path, content):
@@ -283,3 +284,12 @@ def test_the_overview_says_when_the_record_starts_before_its_first_session_close
     h = (build(snap, tmp_path / "site", content) / "overview" / "index.html").read_text()
     assert "record starts with the 24 Nov 2026 session" in h and "Record before 24 Nov 2026" in h
     assert "Portfolio return, time-weighted" not in h
+
+
+def test_the_team_page_opens_with_the_pod_and_its_books(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "team page should have a brief overview of the multi strategy pod we are running"."""
+    home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    assert home.index("A multi-strategy pod") < home.index("Simon Jarvis")
+    pod = home.split("A multi-strategy pod", 1)[1].split('class="people"', 1)[0]
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
+        assert title in pod, title

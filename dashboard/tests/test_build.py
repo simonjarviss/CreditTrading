@@ -38,12 +38,15 @@ def book(snap, name):
 
 def test_every_book_has_its_section(snap):
     h = page(snap)
-    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio results",
-                  "Strategies in simulation"):
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book", "Portfolio results", "Fund facts",
+                  "What each book trades", "Latest session"):
         assert title in h, title
     for sym in ("AAA", "BBB", "CCC"):                   # aggregates only (team lead, 2026-11-23)
         assert sym not in h, sym
-    assert "2 (1 long, 1 short)" in h and "1 sent: 1 filled in full, 0 not filled" in h
+    # Team lead, 2026-11-24: an investor page, without each book's own tables or the simulation scoreboard.
+    assert "Strategies in simulation" not in h and "Session of" not in h and "Gross exposure, risk report" not in h
+    cef = h.split("Latest session", 1)[1].split("Fixed Income Book", 1)[1].split("</tr>", 1)[0]
+    assert '2 <span class="meta">(1 long, 1 short)</span>' in cef and "1 of 1" in cef
 
 
 def test_every_figure_shows_its_source_and_read_time(snap):
@@ -83,12 +86,14 @@ def test_the_portfolio_view_switch_hides_the_books_until_chosen(snap):
     assert 'class="series bk"' in h and "By book" in h
 
 
-def test_the_portfolio_shows_eight_key_figures_and_needs_twenty_sessions_for_ratios(snap):
-    """Team lead, 2026-11-24: "the portfolio results is too many analytics". Four headline figures, one
-    chart, eight key figures and the latest session; nothing else."""
+def test_the_portfolio_shows_the_regular_figures_and_needs_twenty_sessions_for_ratios(snap):
+    """Team lead, 2026-11-24: "the portfolio results is too many analytics", then "it should still demonstrate
+    the live trading, risk etc. (all regular metrics) for our portfolio and books". Four headline figures,
+    one chart, the factsheet's return and risk measures for the portfolio and each book, and the latest
+    session's trading and exposure."""
     h = page(snap)
-    labels = ("Sessions", "Since inception, time-weighted", "P&amp;L since inception", "Sessions with a gain",
-              "Volatility, annualised", "Sharpe ratio", "Maximum drawdown", "Current drawdown")
+    labels = ("Sessions", "Return, time-weighted", "Annualised return", "P&amp;L", "Sessions with a gain",
+              "Volatility, annualised", "Sharpe ratio", "Sortino ratio", "Maximum drawdown", "Current drawdown")
     table = h.split("Key figures", 1)[1].split("</table>", 1)[0]
     assert re.findall(r"<tr><td>([^<]+)</td>", table) == list(labels)
     assert re.findall(r'colspan="\d+">([^<]+)</td>', table) == ["Return", "Risk"]
@@ -96,9 +101,8 @@ def test_the_portfolio_shows_eight_key_figures_and_needs_twenty_sessions_for_rat
     kpis = h.split('class="figures kpis"', 1)[1].split("</div></div></div>", 1)[0]
     assert kpis.count('class="fig"') == 4
     for gone in ("Drawdown from the peak", "Monthly returns", "Correlation of daily returns", "Contribution to",
-                 "Sortino", "Value at risk", "Skewness", "Profit factor"):
+                 "Value at risk", "Skewness", "Profit factor", "Calmar"):
         assert gone not in h, gone
-
 
 def test_an_unreadable_book_is_left_out_of_the_portfolio_and_named(snap):
     """Release-check review of 904bd35: withholding the whole portfolio over one unreadable record hid
@@ -122,7 +126,7 @@ def test_the_newest_session_shows_its_after_close_reading_until_the_official_poi
 
 
 def test_text_from_a_record_cannot_inject_markup(snap):
-    book(snap, "cef")["risk"]["value"]["groups"] = {"<script>alert(1)</script>": 0.5}
+    book(snap, "cef")["official"]["source"] = "<script>alert(1)</script>"
     h = page(snap)
     assert "<script>alert" not in h and "&lt;script&gt;" in h
 
@@ -216,48 +220,7 @@ def test_an_after_close_books_session_pnl_reads_the_same_in_its_tile_and_its_row
     ev["after_close"]["value"]["rows"][-1]["change_usd"] = 200.0                      # the record's, between readings
     h = page(snap)
     row = h.split("Latest session", 1)[1].split("Event Book", 1)[1].split("</tr>", 1)[0]
-    assert "+$200" in row and "−$90" not in row
-    section = h.split('id="events"', 1)[1]
-    assert "+$200</div><div class=\"l\">That session" in section and "−$90" not in section.split("Session of", 1)[0]
-
-
-def test_the_event_books_tile_caption_says_what_its_figures_are(snap):
-    """Release-check review of 8daa34a: the caption still said "account snapshot at verify (not the
-    P&L of record)" under a figure taken from the after-close record."""
-    section = page(snap).split('id="events"', 1)[1].split("Session of", 1)[0]
-    assert "The session's P&amp;L is the change from the previous reading" in section
-    assert "account snapshot at verify" not in section
-
-
-def event_caption(snap):
-    section = page(snap).split('id="events"', 1)[1].split("Session of", 1)[0]
-    return section.split('<div class="figures">', 1)[1]
-
-
-def test_the_event_books_caption_from_a_snapshot_figure_says_it_is_not_the_pnl_of_record(snap):
-    """Release-check review of 65c0aa7: with the after-close record unreadable the figure falls back to the
-    reading's own change, and the caption dropped "(not the P&L of record)"."""
-    book(snap, "events")["after_close"] = {"UNMEASURED": "events/2026-11-23/verify.json: no equity"}
-    cap = event_caption(snap)
-    assert "That session" in cap and "(not the P&amp;L of record)" in cap
-    assert "change from the previous reading" not in cap
-
-
-def test_the_event_books_caption_says_nothing_of_a_pnl_it_does_not_have(snap):
-    """Release-check review of 65c0aa7: a session with no P&L (the record's first reading) printed the
-    word None in its caption."""
-    ev = book(snap, "events")
-    ev["after_close"]["value"]["rows"][-1]["change_usd"] = None
-    cap = event_caption(snap)
-    assert "None" not in cap and "That session" not in cap and "The session's P&amp;L" not in cap
-    assert "Account equity read by verify after the close." in cap
-
-
-def test_the_event_books_caption_says_an_unreadable_history_could_not_be_read(snap):
-    """Release-check review of 65c0aa7: an unreadable official history was captioned "not yet collected"."""
-    book(snap, "events")["official"] = {"UNMEASURED": "eod_equity.csv: read failed"}
-    cap = event_caption(snap)
-    assert "end-of-day history could not be read" in cap and "not yet collected" not in cap
+    assert "+$200" in row and "−$90" not in row and "−$90" not in h
 
 
 def test_the_record_starts_on_the_ruled_date():
@@ -295,3 +258,16 @@ def test_before_its_first_session_closes_the_record_says_when_it_starts(snap, mo
     earlier = h.split("Record before 24 Nov 2026", 1)[1].split("</table>", 1)[0]
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
         assert title in earlier, title
+
+
+def test_the_fund_facts_sum_the_books_only_when_every_book_is_read_and_priced(snap):
+    """Team lead, 2026-11-24: "show our fund statistics". Capital and exposure are the books' sums, or not
+    measured; never a sum over part of the portfolio."""
+    h = page(snap)
+    facts = h.split('<dl class="facts">', 1)[1].split("</dl>", 1)[0]
+    assert "Record starts" in facts and "Capital, paper" in facts and "Gross exposure" in facts
+    assert "not measured" not in facts
+    book(snap, "events")["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
+    facts = page(snap).split('<dl class="facts">', 1)[1].split("</dl>", 1)[0]
+    cap = facts.split("Capital, paper", 1)[1].split("</dd>", 1)[0]
+    assert "not measured" in cap and "$" not in cap
