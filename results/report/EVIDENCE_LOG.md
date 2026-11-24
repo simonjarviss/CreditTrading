@@ -5825,3 +5825,14 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — the old pull requests and the corporate-action gate" @ `c42686d` (the block is added by the commit that carries this entry); `ops/books/cef_discount_book.json` and `ops/books/c4_families_book.json` @ `c42686d` (`corporate_actions.mode` "report", unchanged by #68)
 - supports: §5
 - status: supersedes the 2026-11-09 ruling "Halt in tonight's release" (E-2026-11-09-31), which never shipped. #68 now carries the bond-ISIN fix and the CUSIP check with both books in report. E-2026-11-09-32's measurement (a flat book under `halt` refused 0 of 28 sessions over 2026-10-01..11-09, the core as held 5 of 28) is what blocking would have cost then; the team lead decides on `halt` after reading what the gate would have refused under report
+
+### E-2026-11-24-12 · Correction: the C4 families names table stays tracked; untracking it broke 15 C4 tests, and the release check of 22cfa9b said NO-GO
+- kind: correction
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release check of `22cfa9b`: pytest exit 1, 15 errors, all in `scripts/cef/tests/test_c4_paper_benchmark.py`, all `FileNotFoundError` on `results/cef/cef_families/names_2026-10-12.csv` [S]
+  - doc_audit 0 DRIFT, 2 NOTE, 95 checks; orient and the DRY_RUN=1 cef preview as expected; both reviewers found no order-path defect in `report` [S]
+- source: the release-check workflow's result, 2026-11-24 (run in a fresh worktree at `22cfa9b`); `.gitignore` @ `22cfa9b` (the `names_*.csv` line this entry's commit removes); `scripts/cef/c4_feasibility.py` @ `22cfa9b` (`NAMES_CSV`, also read by `scripts/cef/c4_families.py`, `scripts/data/fetch_alpaca_split_bars.py` and `scripts/data/stage_crsp_cef_families.py`)
+- supports: §5
+- status: supersedes the names-table part of E-2026-11-24-09. The table is restored byte for byte from `release-20261124-8`. Why the merge's own tests passed: `git rm --cached` left the file on disk in the worktree that ran them, so only a fresh checkout showed the fault. Splitting off its CRSP columns is `docs/ROADMAP.md` 7.37; the review's two other findings are 7.38 (the CUSIP table's shape checks, before any `halt`) and 7.39 (a deadline for the table's reads at the send)

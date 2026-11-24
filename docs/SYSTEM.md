@@ -1011,7 +1011,7 @@ October were compared with `main` (`EVIDENCE_LOG` E-2026-11-24-11).
 | The seven pull requests open since October | **"Check each, then propose"**, then the rows below |
 | #68, the bond-ISIN fix and the CUSIP check, which also set both books' gate back to `halt`. **Supersedes** 2026-11-09's "Halt in tonight's release", which never shipped | **"Fix first, block later."** The fix ships with both books' `corporate_actions.mode` still `report` (the book files unchanged). `halt` returns only on a later ruling, after the team lead has read what the gate would have refused |
 | #73 (the halt alert's recipient from config), #23 (the stale-NAV note that would switch the missing-NAV hold off), #46 (the agent-desk design the nightly checks cite), #17 (the retired research loop) | **"Go on all four"**: #73 and #23 merged after the tests, #46 merged with a status box, #17 closed |
-| #70, row-level CRSP tables and the R2 inventories out of the tree | **"Update it now"**: brought up to date, the C4 families names table added, merged. The history rewrite stays the team lead's to push |
+| #70, row-level CRSP tables and the R2 inventories out of the tree | **"Update it now"**: brought up to date, the C4 families names table added, merged. *(Corrected the same day: the names table went back under tracking, because 15 C4 tests read it; splitting its CRSP columns is `docs/ROADMAP.md` 7.37. E-2026-11-24-12.)* The history rewrite stays the team lead's to push |
 | #3, the team's `data/` copy in R2: do the analysts still need it? | **"Yes, update it"** (row "Sharing the desk's data", 2026-10-26, above) |
 
 ## 6. Governance — where each rule lives
