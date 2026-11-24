@@ -23,7 +23,7 @@ results/IDEA_LEDGER.md │   (read only, no network)              (pages, atomic
 dashboard/content,     ┘
 dashboard/public (at the release tag)
 
-event-driven.quantt.ca  =  Cloudflare Worker `quantt-event-driven`, deployed from `main` (wrangler.jsonc):
+event-driven.quantt.ca  =  Cloudflare Worker `quantt-event-driven`, deployed from `main` (dashboard/wrangler.jsonc, build root `dashboard`):
                            /static/* from dashboard/public in main; every page fetched from the origin above
 ```
 

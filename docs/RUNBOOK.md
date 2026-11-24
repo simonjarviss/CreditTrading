@@ -1472,7 +1472,7 @@ Before the first install, from the laptop: the network security group allows TCP
 from the internet (rule `site-http-https`). Caddy fetches the certificate itself.
 
 **The public address, `event-driven.quantt.ca`, is Cloudflare's**, not the VM's: the Worker
-`quantt-event-driven` (`dashboard/worker/index.js`, `wrangler.jsonc`) is deployed by Cloudflare
+`quantt-event-driven` (`dashboard/worker/index.js`, `dashboard/wrangler.jsonc`; the build's Root directory is `dashboard`, because at the repository root the build image pip-installs `requirements.txt` and fails) is deployed by Cloudflare
 Workers Builds from `main`. It serves `dashboard/public/` (styles, script, slides, font, PDF)
 itself and fetches every page from the VM, caching it for 60 seconds. Its variable `ORIGIN`
 (`https://` + the VM's DNS name) is set once in the Cloudflare dashboard (Worker, Settings,

@@ -127,7 +127,10 @@ def test_the_worker_config_names_the_worker_and_no_address():
     """wrangler.jsonc is what Cloudflare Workers Builds deploys from `main`. It must name the Worker the
     team lead created, point at dashboard/public, keep the dashboard's ORIGIN variable across deploys,
     and carry no address of the VM (CLAUDE.md, "Where it runs")."""
-    root = DASH.parent
+    root = DASH                                    # the Workers Builds root directory is `dashboard`
+    assert not (DASH.parent / "wrangler.jsonc").exists(), "a root wrangler.jsonc would build with requirements.txt"
+    assert not any((DASH / n).exists() for n in ("requirements.txt", "pyproject.toml", "Pipfile", "package.json")), \
+        "the Worker's root must not look like a Python or Node project to the build image"
     text = (root / "wrangler.jsonc").read_text()
     body = json.loads("\n".join(ln for ln in text.splitlines() if not ln.lstrip().startswith("//")))
     assert body["name"] == "quantt-event-driven"

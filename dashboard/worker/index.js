@@ -1,7 +1,7 @@
 // The public site's Cloudflare Worker, `quantt-event-driven` (event-driven.quantt.ca).
 //
 // WHY (team lead, 2026-11-23): the site's front end deploys from this repository's `main` through
-// Cloudflare Workers Builds (`npx wrangler deploy` at the repository root, wrangler.jsonc). The
+// Cloudflare Workers Builds (`npx wrangler deploy`, build root directory `dashboard`, dashboard/wrangler.jsonc). The
 // live pages cannot be built here: they come from the trading records, which live on the VM and
 // never enter the repository (docs/SYSTEM.md §5, "the public site": snapshots stay on the VM).
 //
