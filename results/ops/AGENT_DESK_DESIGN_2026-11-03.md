@@ -1,5 +1,13 @@
 # Agent desk, phase 1: nightly data QA per book, and a daily risk agent (DRAFT for the team lead)
 
+> **Status, 2026-11-24.** Built on 2026-11-08 in 65a0919: `scripts/ops/data_qa.py` and
+> `scripts/ops/risk_daily.py`, report-only, on VM timers (`install_vm --reports`). Those two
+> scripts and `docs/RUNBOOK.md` cite this file as their design, which is why it is merged now,
+> unchanged below this box (team lead, 2026-11-24). Where it differs from the code, the code is
+> what runs. Its trial counts and "every tuned parameter is a trial" are superseded: the team lead
+> dropped pre-registration and the trial counters on 2026-11-09 (`docs/SYSTEM.md` section 5,
+> `docs/MISSION.md`).
+
 Date: 2026-11-03   Status: **DRAFT, for the team lead's ruling**. Nothing here is built or scheduled. Zero trials.
 
 The team lead asked on 2026-11-03 whether autonomous agents (risk manager, traders, short- and long-term
