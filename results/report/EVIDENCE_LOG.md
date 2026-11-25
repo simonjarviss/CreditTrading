@@ -6090,3 +6090,13 @@ that adds it does not exist when it is written.
 - source: `quantt/session/nav_gate.py` @ `b912a56`; `src/deploy/sleeves/cef_discount.py` @ `b912a56`; `results/ops/late_nav_2026-11-24/measure.py` and `results/ops/late_nav_2026-11-24/by_session.csv`; `results/ops/HEALTH_CHECK_2026-11-24.md` §4 (all in the commit that carries this entry); VM plans, fills and NAV panels copied read-only 2026-11-24 ~21:30 ET, not in the repository
 - supports: §4, §5
 - status: current
+
+### E-2026-11-24-63 · Rulings after the health check: research C4's equity tilt first; wait on repeated NAVs and decide as is at the final check; HALVE/KILL on the previous close; symbol-less corporate-action rows recorded, not blocking; the events cap to 1.6×; release after the half day
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings, by question prompt on 2026-11-24 after E-2026-11-24-60 and -62: C4 "Research a fix first"; late NAVs "Measure it first", then "Wait on repeated NAVs" and, at the final check, "Decide on it as is"; HALVE/KILL "Previous close, labelled"; corporate-action rows with no symbol and no CUSIP "Record, don't block"; the events gross cap "Raise the cap to 1.6x instead", after Alpaca's paper docs said a paper balance cannot be changed after creation; the release "After the half day"; the reboot "Tonight around 23:00 ET"; this record "Yes, PR to main")
+- source: `docs/SYSTEM.md` @ `b912a56` (§5, before the rows this commit adds); `results/ops/HEALTH_CHECK_2026-11-24.md` and `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry); https://docs.alpaca.markets/us/docs/paper-trading (fetched 2026-11-24)
+- supports: §5
+- status: current

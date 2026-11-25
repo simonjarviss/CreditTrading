@@ -1043,6 +1043,24 @@ dashboard", above); only the repository changes.
 | GitHub on the site | Taken off the site in `release-20261124-16` (site session, 2026-11-24). **Supersedes** "put github link in top right corner" in the site rows above |
 | Later the same day, with deploy keys and private forking still waiting on an org owner. **Supersedes** "Go private" above | **"We are gonna keep it public for now."** The repository stays public and the analysts keep write access. The rulesets stay enforced, and every VM clone stays on anonymous https; `bootstrap.sh` clones over https again. What stays from the preparation: the site without GitHub, the team lead's fork private, the installer that accepts both spellings (`release-20261124-17`), and an unregistered key for each VM user. `docs/RUNBOOK.md` 8.14 is the route if this is revisited (`EVIDENCE_LOG` E-2026-11-24-40) |
 
+### Team lead, 2026-11-24 — the health check of the three books
+
+Asked in the team lead's session: "go over our deployed 3 sleeves and overall portfolio, make sure
+all our 3 sleeves are deployed porperly with no erros and overall portfolio layer is working as
+intended". The read-back and the measurements are in `results/ops/HEALTH_CHECK_2026-11-24.md`
+(`EVIDENCE_LOG` E-2026-11-24-60 and -62). Answered through question prompts the same evening.
+
+| question | ruling |
+|---|---|
+| C4 is short the equity market (realised vol 17.53%/yr over 15 sessions against 7.56%; beta −0.60 to its universe) | **"Research a fix first."** A beta- or family-neutral C4 on the harness, and as a shadow book after it; the live C4 book is unchanged until the result is seen |
+| NAVs that arrive after the 22:00 decide | **"Measure it first"**, then, on the measurement (`results/ops/late_nav_2026-11-24/`, read 2026-11-24: E-2026-11-24-62), **"Wait on repeated NAVs"**: a NAV for D equal to the previous row defers the decide as a missing one does, and at the final check (close − 90 minutes) **"Decide on it as is"**: no replacement and no hold, so the core uses the value and C4's pre-registered mask applies as today. This narrows 2026-11-19's "no stale-NAV hold gate": still no hold, but a wait |
+| HALVE/KILL at the 22:00 decide (`UNMEASURED` every session; an acting mode would refuse every session) | **"Previous close, labelled."** The main drawdown check reads the as-of's own official row if it exists, else the session before, labelled one session stale (the rule ruled for te4's K0, 2026-11-03/04). Still report-only on paper |
+| Corporate-action rows with neither a symbol nor a CUSIP (both books' gate reads BLOCKING on every session because of them; none has matched a held name) | **"Record, don't block."** Recorded and shown in data QA, blocking nothing; both books stay in `report`. A row with a CUSIP or a symbol is judged as before. `halt` is still a later ruling |
+| The events account's 1.5× gross cap, binding at quarter size (every sleeve scaled by 0.9586 on 2026-11-24) | Asked "Keep, raise the cap, or ask about capital"; asked whether Alpaca says how to raise paper capital (its paper-trading docs, fetched 2026-11-24: "You cannot change the account balance after it is created, unless you reset it"; the dashboard now opens new paper accounts instead of resetting). Then **"Raise the cap to 1.6x instead."** `ops/sleeves/events_sleeves.json` `max_gross_x_equity` 1.5 → 1.6, in the release below. This narrows 2026-11-22's "Keep $100,000 for now": the account keeps $100,000 |
+| When the runner changes above are released | **"After the half day."** Built and reviewed now; release check and install on the weekend of 28-29 November, so the first session on them is Monday 30 November. Nothing changes on the VM during the holiday week |
+| The VM's pending reboot (system updates) | **"Tonight around 23:00 ET."** E-2026-11-24-61 |
+| Recording the check | **"Yes, PR to main."** |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
@@ -1098,3 +1116,4 @@ dashboard", above); only the repository changes.
 | 2026-11-24 | §5 records the rulings on the seven old pull requests and the corporate-action gate ("Fix first, block later", superseding 2026-11-09's "Halt in tonight's release"), the clean-up's go and the arming read-back. | the old pull requests, for the team lead |
 | 2026-11-24 | §5 records the private repository: why, analysts to read access with private forks, the club accounts kept, the team lead's fork made private, the VM's deploy keys, GitHub off the site. | a private repository, for the team lead |
 | 2026-11-24 | §5 records that the repository stays public for now, superseding the same day's "Go private". | keep it public, for the team lead |
+| 2026-11-24 | §5 records the rulings after the health check of the three books: C4's research, waiting on repeated NAVs, HALVE/KILL on the previous close, symbol-less corporate-action rows, the events cap at 1.6×, the weekend release, the reboot. | the health check, for the team lead |
