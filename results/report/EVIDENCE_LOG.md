@@ -5885,3 +5885,174 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — a private repository" @ `7ce6fc1` (the "Go private" row this ruling supersedes); `quantt/deploy/vm/bootstrap.sh` @ `7ce6fc1` (the ssh `ORIGIN` this entry's commit moves back to https); `docs/RUNBOOK.md` 8.13 and 8.14 @ `7ce6fc1`
 - supports: §5
 - status: supersedes the "go private" part of E-2026-11-24-25. The team lead: "we are gonna keep it public for now", given after the VM install of release-20261124-17 (E-2026-11-24-27), while deploy keys and private forking still waited on an org owner. Kept from the preparation: the site without GitHub (release-20261124-16), the team lead's fork `simonjarviss/CreditTrading` private, the installer accepting both spellings (release-20261124-17, which changes nothing while every clone is on https), and an unregistered `~/.ssh/github_deploy` for each VM user. Analysts keep write access and the rulesets stay enforced. `docs/ROADMAP.md` 7.40 and 7.41 are parked
+
+### E-2026-11-24-14 · Release: release-20261124-8 on the VM; its release check returned GO, and the event book's caption is built from what its figures are
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-8 on 84a58e7 (PR #114, head 65c0aa7). The VM's site clone is at that tag; its 11:20 ET build published, and the site answered 200 [V]
+  - the release check of 65c0aa7 (workflow run wf_9227d531-0fb) passed pytest, doc_audit, orient and preview, and returned GO with one low-severity finding [V]
+  - that finding, fixed in the commit that carries this entry: the event book's caption printed "None" for a session with no P&L, dropped "(not the P&L of record)" from a snapshot figure, and said an unreadable end-of-day history was "not yet collected". `reading_note` builds the caption from the figure's source and the official record's state; three tests cover the three cases and fail on 84a58e7 [V]
+- source: `dashboard/build.py` @ `84a58e7` (`book_section`); the VM's site clone and site journal, read 2026-11-24 ~11:30 ET; the caption is in the commit that carries this entry
+- supports: §5
+- status: current
+
+### E-2026-11-24-15 · Ruling: the team page opens the site, Toronto photographs on research and contact, and a shorter portfolio section
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, 2026-11-24: "when we open the page, it should be the team page which shows first, use toronto photos for research and contact pages, the protfolio results is too many analytics" (verbatim) [V]
+  - the home page is the team page; the overview is at /overview/. The research page carries Ken Lund's "Financial District, Toronto, Ontario" and the contact page Dillan Payne's "Bay Street, Toronto, March 8 2025", both CC BY-SA 2.0 on Wikimedia Commons, credited on the page [V]
+  - the portfolio section keeps four headline figures, the growth chart with its by-book switch, eight key figures and the latest session's P&L; the drawdown and daily P&L charts, monthly returns, correlation, contribution, and the Sortino, Calmar, VaR, expected shortfall and daily-distribution rows are removed. Built from the VM's records exported 2026-11-24 16:46 UTC, it read +0.06% time-weighted, −$472, Sharpe 0.08 over 40 sessions and a −2.65% maximum drawdown, as on the live page [V]
+- source: `dashboard/build.py` @ `7a7d118` (the portfolio section before the change); the VM's records, exported 2026-11-24 16:46 UTC; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-16 · Ruling: the portfolio's record starts on 24 Nov 2026, the earlier record kept apart; team titles; photograph credits in the footer
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, asked whether to restart the site's figures at 24 Nov: "we should use today as the frist day for all books , but keep the old recrods too" (verbatim) [V]
+  - the team lead: "on site tke away the Photograph: Dlsz, CC BY-SA 4.0 (and same for others), add portoflio manager under me, and quantitative trading analyst under the other 3" (verbatim) [V]
+  - 24 Nov 2026 is the first session on which all three books trade a full plan: the event book's 23 Nov send placed 46 of its 219 orders, and Alpaca answered HTTP 429 "rate limit exceeded" to the other 173 (the VM's events send log and send.json for 2026-11-23, read 2026-11-24 ~12:25 ET); release-20261123-2 paces the trading host and waits out a 429 [V]
+  - the record before 24 Nov, from the VM's records exported 2026-11-24 16:46 UTC: portfolio 29 Sep to 23 Nov 2026, −$472, +0.06% time-weighted, Sharpe 0.08 over 40 sessions, maximum drawdown −2.65%; Fixed Income Book −$147, Equity Cross-Asset Book −$295 from 4 Nov, Event Book −$30 on 23 Nov [V]
+  - the 2026-11-24 event plan, decided 12:16 ET: 205 orders, gross $146,130.56 against the $149,937 exposure limit, no check predicting a refusal at send, `DRY_RUN=0` and `AUTO_ARMED` present [V]
+- source: `dashboard/build.py` @ `ee05e4c` (each book from its first send before the change); the VM's events state for 2026-11-23 and 2026-11-24; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-17 · Ruling: a pod overview on the team page, and a performance page for investors
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead: "team page should have a brief overview of the multi strategy pod we are running (written in plain english that is easy to understand using proper industry terminolog and no weird ai endings to sentences thaat run off / are weird), and the live perfromance shouldtnt have so much data as we scroll (no one rly cares about ome of the tables that are there, this should be intended for investors / public to view how we are performaing and show our fund statistics" (verbatim) [V]
+  - the team lead, while that change was being made: "it should still demonstrate the live trading , risk ect (all regular metrics) for our portoflio and books" (verbatim) [V]
+  - from the VM's records exported 2026-11-24 16:46 UTC, the fund facts after the close of 23 Nov 2026 read: paper capital $299,610, 77 positions (59 long, 18 short), gross exposure 107% and net exposure +4% of capital, 10 strategies [V]
+- source: `dashboard/build.py` @ `6626d0e` (each book's own session, risk, execution and strategy tables, and the simulation scoreboard); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-18 · Ruling and release: release-20261124-9 live on the site; the pages then cut to headings and figures, the team first
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-9 on 5edb846, a site-only release, was installed in the VM's site clone at 13:18 ET. The build published, and `/` served the team page with the three analysts' titles (read through event-driven.quantt.ca). The trading clone stays at release-20261123-2, with cef, c4 and events AUTO_ARMED present. Its release check (workflow run wf_e041438c-b22) passed every mechanical step; the execution review found no order-path change; the quant review failed on a network error [V]
+  - the team lead: "there is too much uncesssary writing on the website, the live performance needs a more applicable pciture, this too much writing is in headers, explanations, tables ect. the performance page is fucking awful man" and "on the team page is should be the team icutes first then the pod descritption (which needs to be organized better)" (verbatim) [V]
+  - the performance page's photograph is Francisco Gonzalez's "Tickers" (CC BY 2.0, Wikimedia Commons), credited in the footer [V]
+- source: `dashboard/build.py` @ `5edb846` (the performance page before the change); the VM's site clone and site journal, read 2026-11-24 ~13:20 ET; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-19 · Ruling and release: release-20261124-10 live; the overview deleted, the performance page as charts
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-10 on b76a7f4, a site-only release, was installed in the VM's site clone at 13:41 ET on the team lead's go ("just fucking check it and get it going"), after pytest and doc_audit passed on that commit and its diff from release-20261124-9 touched only `dashboard/`, docs and the evidence log. The public pages showed the change, and the trading clone stayed at release-20261123-2 [V]
+  - the team lead: "delete overview page"; "delete fund facts and sources and methods on performance page, performance should be graphs and bar charts demonstrate returns, risk and positioning"; "with tables for overall stats" (verbatim) [V]
+  - from the VM's records exported 2026-11-24 16:46 UTC, positioning after the close of 23 Nov 2026 read: session P&L −$1,798 (Fixed Income +$485, Equity Cross-Asset −$2,254, Event −$30 after close); 59 long and 18 short; gross 1.07x and net +0.04x of equity [V]
+- source: `dashboard/build.py` @ `b76a7f4` (fund facts, sources and method, the latest-session table) and `dashboard/site.py` @ `b76a7f4` (the overview); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-20 · Release: release-20261124-11 live; the release check of b76a7f4 found three site wordings and gaps, fixed
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-11 on 866d5ba, site only, was installed in the VM's site clone at about 14:05 ET. The public performance page showed the positioning charts and the earlier record; /overview/ answered 404. The trading clone stayed at release-20261123-2 [V]
+  - the release check of b76a7f4 (workflow run wf_03cbeb9e-719): pytest, doc_audit and orient passed; the cef preview exited 4 on this laptop's stale panels (last close 2026-10-15), as before; both reviewers covered the range and found no order-path defect [V]
+  - its three site findings, fixed in the commit that carries this entry: the team page said positions are "set from the day's data", wrong for the core books, which decide one evening and send at the next close; with no portfolio, a book left out for a reason other than an unreadable record went unnamed; "Eight strategies" was written into the text instead of read from the event book's record [V]
+- source: `dashboard/site.py` and `dashboard/build.py` @ `866d5ba`; the VM's site clone, read 2026-11-24 ~14:06 ET; the fixes are in the commit that carries this entry
+- supports: §5
+- status: current
+
+### E-2026-11-24-21 · Ruling and release: release-20261124-12 live; the team page's four working rules taken out
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - release-20261124-12 on 0535b46, site only, was installed in the VM's site clone at 14:28 ET. The team page read "8 strategies around scheduled corporate events", counted from the event book's record. The trading clone stayed at release-20261123-2 [V]
+  - the team lead, quoting the team page's four working rules (Systematic, At the close, Reconciled daily, Tested first): "take out this shit on team page" (verbatim). The pod section keeps its line and the three book cards [V]
+- source: `dashboard/site.py` @ `0535b46` (`POD_RULES`); the change is in the commit that carries this entry
+- supports: §5
+- status: current
+
+### E-2026-11-24-22 · Ruling: the performance page drops the record before 24 Nov and its date heading; positioning in detail
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead: "on performance, delete since 24 Nov 2026"; "on performance delte: Record before 24 Nov 2026 section (this is repalced by new starting nowthat will be at the top"; "the position could also be more detailed" (verbatim) [V]
+  - from the VM's records exported 2026-11-24 16:46 UTC, positioning after the close of 23 Nov 2026 read: capital $299,610; long $166,319 and short $153,647; Fixed Income Book largest position 29% and top three 70% of gross; Equity Cross-Asset Book 15% and 42%; the event book's largest strategy by capital, unit trust termination, $34,750 in 15 names [V]
+- source: `dashboard/build.py` @ `4c72747` (the record before 24 Nov and the four positioning charts); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-23 · Release and ruling: release-20261124-14 live after a tag collision; the research page under construction
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the site was meant to be tagged release-20261124-13, but the other session had already tagged its trading release there (8674d2a). The tag command failed and the install after it still ran, so the site clone built the public site once from 8674d2a; the public site served that build from about 14:55:07 to 14:56:07 ET. The site was re-tagged release-20261124-14 (2ce506c) and reinstalled at 14:55:28. The trading clone stayed at release-20261123-2. The other session confirmed that its tag was unchanged and that main's privacy check held during that minute (aggregates only) [V]
+  - the team lead: "make the research tab under consturction right now" (verbatim). The research page shows "Under construction"; its content is kept behind `RESEARCH_UNDER_CONSTRUCTION` [V]
+- source: `dashboard/site.py` @ `2ce506c` (the research page before the change); the VM's site builds directory (/srv/quantt-site/builds, 14:55:07 and 14:55:28 ET) and the public site's cache headers, read 2026-11-24; the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-24 · Ruling: the pod described as QUANTT's event-driven and special situations desk; a link to quantt.ca; a LinkedIn share card
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead: "in the team, when it says the pod, we are a pod under quantt, running a event driven trading and special situations desk"; "add a link to quants website from ours: https://quantt.ca"; "can u give me a thumbnail logo for linkedin for the site" (verbatim) [V]
+  - the share card (static/img/og-card.png, 1200x627) and a square 800x800 logo are drawn from the site's own logo, fonts and colours; both were also saved to the team lead's Desktop [V]
+- source: `dashboard/layout.py` and `dashboard/site.py` @ `04be676` (before the change); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-26 · Ruling: no GitHub link on the site, the repository going private
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - session 2027-bc relayed the team lead's request to take every GitHub link off event-driven.quantt.ca because the repository is going private; this session folded the change into its next site release, as agreed with 2027-bc [S]
+  - removed: the header's GitHub link and mark, the research page's "Read the ledger" (a link into the repository) and "Source code on GitHub" buttons, and the sentence saying the research code is public. A test fails on any page that names GitHub [V]
+- source: `dashboard/layout.py` and `dashboard/site.py` @ `65d72ee` (before the change); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-32 · Ruling and site change: AUM at the top; every book in the evening portfolio; one figure per session
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead asked for "our capital at the top (or AUM)" and why only the Event Book's P&L showed; by question prompt chose "AUM" and "Join on reading" [V]
+  - why: the Fixed Income and Equity Cross-Asset books counted only on Alpaca's official end-of-day history, which lands at about 05:20 New York time; the Event Book, with no official history, counts on its after-close readings. So each evening the portfolio held the Event Book alone (live page, 24 Nov 2026 18:20 ET: "−$239", "Fixed Income Book not included: its first session from 24 Nov 2026 has not closed yet") [V]
+  - the after-close reading's base (equity minus change, Alpaca's `last_equity`) equals the last official close to the cent on every session read on the VM: cef and c4, 19, 20, 23 and 24 Nov 2026 [V]
+  - the after-close reading differs from the official close that later replaces it: cef 20 Nov $99,531.92 against $99,367.80 (+$164.12); c4 20 Nov $101,338.99 against $101,958.13 (−$619.14); cef 23 Nov +$73.89; c4 23 Nov +$8.26 [V]
+  - the team lead then: "the portfolio numbers on the site also dont match and arnt uniform, we have 2 different pnl for portfolio". The live page showed the portfolio's P&L as −$239 in the headline and key figures (the Event Book alone) and +$1,293 in the positioning's session bars (all three books). After the official figures landed, the positioning's capital would still have been the evening reading while the record used the official close; it now takes the same record [V]
+  - the page built with this change from the VM's records at 23:39 UTC on 24 Nov: AUM $300,821, return +0.43% time-weighted, P&L +$1,293 (Fixed Income −$68, Equity Cross-Asset +$1,600, Event −$239), every figure for 24 Nov an after-close reading, labelled; AUM equals the positioning's portfolio capital ($300,821) and the total P&L equals the key figures and the latest session's bars (+$1,293) [V]
+- source: `dashboard/build.py` @ `1a4987b` (before the change); `pending_reading`, `portfolio` and `reading_note` with their tests in `dashboard/tests/test_build.py` are in the commit that carries this entry; VM records `cef|c4/eod_equity.csv` and `<day>/reconcile.json` read 2026-11-24 ~18:35 ET; `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
+### E-2026-11-24-33 · Rulings: the after-close note off; one set of figures in every state; the team page (campus, title case, QUANTT spelled out, no Queen's logo)
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, quoting the two lines under the portfolio's headline figures ("Fixed Income Book and Equity Cross-Asset Book, 24 Nov 2026: account reading after the close. ..." and "Event Book: account readings after each close. ..."): "delete this" [V]
+  - removed: the note and the function that wrote it. The latest session's bars still mark each after-close figure "(after close)", so the provisional figures stay labelled on the page [V]
+  - the team lead: "the performance tab should always be consistent numbers throughout (even when alpaca numbers replace them), always". Every figure now comes from one computation; a session the portfolio leaves out is left out of every book; the positioning's capital and P&L are the portfolio's rows, and its total is shown only when it is the portfolio's newest session with every book in it. `test_every_figure_of_the_portfolio_agrees_in_every_state` checks six states [V]
+  - tonight's page from the VM's records after the change: AUM $300,821 = the positioning's portfolio capital; total P&L +$1,293 in the headline, the key figures and the latest session's bars; books −$68, +$1,600, −$239 everywhere [V]
+  - the team lead: "for the team tab lets use a queen's university campus picture instead, capitalize the titles (The Team), spell out what QUANTT means, small queens logo in the corner maybe". Done: Queen's campus, first quantt.ca's Grant Hall aerial, then (team lead: "the queens logo is too blurry"; "Sharper campus photo") the Douglas Library at dusk from Wikimedia Commons, 3008 px against the aerial's 1920 px, everettjsj2, CC BY-SA 3.0, credited; the team page's line on one line ("should be 1 line its 2 lines"); title case on every page title and section heading; "Queen's University Algorithmic Network & Trading Team", as quantt.ca's page title writes it (fetched 2026-11-24) [V]
+  - not done: the Queen's logo. Queen's Student Group Identification Guidelines (August 2025, fetched 2026-11-24): "Student groups are not permitted to use Queen's University trademarked logos, graphics, or any extracted element from these logos/graphics in their logo or communications" [V]
+- source: `dashboard/build.py` @ `89bc849` (before the change, `reading_note`, `positioning`); the change is in the commit that carries this entry, with `dashboard/layout.py`, `dashboard/site.py`, their tests and `docs/SYSTEM.md` §5; https://www.queensu.ca/brand-central/sites/bcwww/files/uploaded_files/Queens-University-Student-Group-Identification-Guidelines.pdf
+- supports: §5
+- status: current

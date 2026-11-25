@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from dashboard import build as B
 from dashboard import site as SITE
 
 DASH = Path(__file__).resolve().parents[1]
@@ -25,6 +26,13 @@ def content(tmp_path):
     shutil.copytree(DASH / "content", c)
     (c / "library.json").write_text(json.dumps(LIB))
     return c
+
+
+@pytest.fixture(autouse=True)
+def record_from_the_fixtures_first_send(monkeypatch):
+    """The fixture's books trade from 17 Nov 2026, before the shipped RECORD_START (24 Nov), which would
+    leave them no session. Tests of the record start set their own."""
+    monkeypatch.setattr(B, "RECORD_START", "2026-11-17")
 
 
 @pytest.fixture
@@ -58,24 +66,16 @@ def test_every_local_link_and_asset_exists(snap, tmp_path, content):
     assert not missing, missing
 
 
-def test_the_overview_leads_with_the_team_and_there_is_no_slideshow(snap, tmp_path, content):
-    """Team lead, 2026-11-23: "take out the slideshow and make the team the first thing"."""
+def test_the_team_page_is_the_home_page(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "when we open the page, it should be the team page which shows first"."""
     target = build(snap, tmp_path / "site", content)
-    h = (target / "index.html").read_text()
-    assert h.index("Who we are") < h.index("Books trading") < h.index("Three books, one portfolio")
-    assert not (target / "strategy").exists() and "/strategy/" not in h and "slide-" not in h
-    nav = h.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
-    assert nav.index("/team/") < nav.index("/performance/")
-
-
-def test_the_overviews_portfolio_figure_states_its_window(snap, tmp_path, content):
-    """Release-check review, 2026-11-23: without a start date the figure read as P&L since inception."""
-    from dashboard import build as B
-    pf = B.portfolio(snap)
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert f"Portfolio return, time-weighted, {SITE.date_range(pf['first'], pf['p']['last_date'])}<" in h
-    assert SITE.date_range("2026-09-29", "2026-11-20") == "29 Sep to 20 Nov 2026"
-    assert SITE.date_range("2025-12-30", "2026-01-05") == "30 Dec 2025 to 5 Jan 2026"
+    home = (target / "index.html").read_text()
+    assert "Lucy Keith" in home and home.count(">LinkedIn</a>") == 4 and "<title>Event Driven Trading</title>" in home
+    assert (target / "team" / "index.html").read_text() == home                       # earlier links still work
+    nav = home.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
+    assert nav.index('href="/"') < nav.index('href="/performance/"')
+    # Team lead, 2026-11-24: "delete overview page"; and no slideshow (2026-11-23).
+    assert "/overview/" not in home and not (target / "overview").exists() and not (target / "strategy").exists()
 
 
 def test_a_new_book_is_dated_by_its_first_send_not_its_newest_session(snap, tmp_path, content):
@@ -84,8 +84,12 @@ def test_a_new_book_is_dated_by_its_first_send_not_its_newest_session(snap, tmp_
     ev = next(b for b in snap["books"] if b["name"] == "events")
     assert ev["start"]["value"]["first_send"] == "2026-11-23"
     ev["session"]["value"]["date"] = "2026-11-25"           # two sessions later
+    for b in snap["books"]:                                  # the core books have 23 Nov too, so it is counted
+        if b["name"] in ("cef", "c4"):
+            last = b["official"]["value"]["rows"][-1]["equity"]
+            b["official"]["value"]["rows"].append({"date": "2026-11-23", "equity": last + 10.0, "change_usd": 10.0})
     target = build(snap, tmp_path / "site", content)
-    assert "rading since 23 Nov 2026" in (target / "performance" / "index.html").read_text()
+    assert "Event Book<br><span class=\"meta\">from 23 Nov 2026" in (target / "performance" / "index.html").read_text()
     for page in ("index.html", "performance/index.html"):
         h = (target / page).read_text()
         assert "since 25 Nov 2026" not in h, page
@@ -95,16 +99,7 @@ def test_an_unreadable_session_is_not_called_new_or_missing(snap, tmp_path, cont
     ev = next(b for b in snap["books"] if b["name"] == "events")
     ev["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
-    assert "Session record: not measured." in h and "no record yet" not in h
-
-
-def test_an_unmeasured_book_withholds_the_overviews_combined_figure(snap, tmp_path, content):
-    """A book whose history could not be read would change the sum's basis silently: no figure, no line."""
-    cef = next(b for b in snap["books"] if b["name"] == "cef")
-    cef["official"] = {"UNMEASURED": "eod_equity.csv: not a number in column equity"}
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert "Paper P&amp;L of the" not in h and "Combined paper P&amp;L" not in h
-    assert "Accounts combined" not in h and "Books trading" in h
+    assert "Event Book: session not read." in h and "no record yet" not in h
 
 
 def test_the_team_page_lists_the_four_members_with_their_links(snap, tmp_path, content):
@@ -112,6 +107,10 @@ def test_the_team_page_lists_the_four_members_with_their_links(snap, tmp_path, c
     for name in ("Simon Jarvis", "Ryan Press", "James Simone", "Lucy Keith"):
         assert name in h
     assert h.count(">LinkedIn</a>") == 4
+    # Team lead, 2026-11-24: "add portfolio manager under me, and quantitative trading analyst under the other 3".
+    assert re.findall(r'<h3>([^<]+)</h3><p class="role">([^<]+)</p>', h) == [
+        ("Simon Jarvis", "Portfolio Manager"), ("Ryan Press", "Quantitative Trading Analyst"),
+        ("James Simone", "Quantitative Trading Analyst"), ("Lucy Keith", "Quantitative Trading Analyst")]
 
 
 def test_the_library_links_each_source(snap, tmp_path, content):
@@ -125,13 +124,6 @@ def test_a_missing_library_file_stops_the_build(snap, tmp_path, content):
     with pytest.raises(FileNotFoundError):
         build(snap, tmp_path / "site", content)
     assert not (tmp_path / "site" / "current").exists()
-
-
-def test_the_overview_figures_come_from_the_snapshot(snap, tmp_path, content):
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert "Books trading" in h and ">3<" in h                         # three books with a session or history
-    assert "Systematic strategies" in h                                # 2 core books + the event book's strategies
-    assert "Paper results to date" in h                                # the live chart
 
 
 def test_publish_swaps_atomically_and_keeps_three_builds(snap, tmp_path, content):
@@ -193,25 +185,30 @@ def test_the_stylesheet_and_script_urls_change_with_their_content(snap, tmp_path
     assert f'href="/static/site.css?v={v}"' in h and f'src="/static/site.js?v={v}"' in h
 
 
-def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, content):
+def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, content, monkeypatch):
     """Team lead, 2026-11-24: "re organize the library / research its ugly"."""
+    monkeypatch.setattr(SITE, "RESEARCH_UNDER_CONSTRUCTION", False)
     target = build(snap, tmp_path / "site", content)
     h = (target / "library" / "index.html").read_text()
     assert 'id="lib-search"' in h and 'class="lib-side"' in h and h.count('class="lib-row"') == len(LIB["entries"])
     assert '<span>Closed-end fund discounts</span><span class="c">1</span>' in h
     r = (target / "research" / "index.html").read_text()
-    assert r.count('class="row slim timed"') == 6 and "team-atrium" not in r and "How a result is tested" in r
+    assert r.count('class="row slim timed"') == 6 and "team-atrium" not in r and "How a Result Is Tested" in r
 
 
-def test_every_page_photo_not_taken_by_quantt_is_credited(snap, tmp_path, content):
+def test_every_page_photo_not_taken_by_quantt_is_credited_in_the_footer(snap, tmp_path, content):
+    """Team lead, 2026-11-24: take the credit off the photographs. CC BY-SA still requires one, so every
+    page's footer names each photograph's author and licence."""
     from dashboard import layout as L
     target = build(snap, tmp_path / "site", content)
-    for page_name, key in (("team", "team"), ("library", "library")):
+    for page_name, key in (("team", "team"), ("library", "library"), ("research", "research"), ("contact", "contact")):
         h = (target / page_name / "index.html").read_text()
         photo = L.PHOTOS[key]
         assert photo in L.PHOTO_CREDITS, photo
-        who, lic, url = L.PHOTO_CREDITS[photo]
-        assert f"{who}</a>, {lic}" in h and url in h, page_name
+        assert 'class="credit"' not in h and "Photograph:" not in h, page_name
+        foot = h.split('class="foot-credits"', 1)[1].split("</p>", 1)[0]
+        for who, lic, url in L.PHOTO_CREDITS.values():
+            assert f"{who}</a> ({lic})" in foot and url in foot, (page_name, who)
 
 
 def test_the_pages_hash_the_stylesheet_the_build_serves(snap, tmp_path, content):
@@ -223,24 +220,16 @@ def test_the_pages_hash_the_stylesheet_the_build_serves(snap, tmp_path, content)
     assert f'site.css?v={h.hexdigest()[:12]}"' in (target / "index.html").read_text()
 
 
-def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content):
+def test_books_trading_counts_books_that_sent_an_order(snap, tmp_path, content, monkeypatch):
     """Release-check review, 2026-11-24: a dry-run book counted as trading; an unreadable one vanished."""
+    monkeypatch.setattr(SITE, "RESEARCH_UNDER_CONSTRUCTION", False)
     assert SITE.books_trading(snap) == (3, 0)
     ev = next(b for b in snap["books"] if b["name"] == "events")
     ev["start"] = {"absent": "no session has sent an order yet"}
     assert SITE.books_trading(snap) == (2, 0)
     ev["start"] = {"UNMEASURED": "STARTED unreadable"}
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert ">2<" in h and "Books trading (1 not read tonight)" in h
-
-
-def test_the_overview_names_a_book_left_out_beside_every_portfolio_figure(snap, tmp_path, content):
-    """Release-check review of 455eff4: with one book unreadable, the overview's P&L figure and chart
-    did not name it."""
-    next(b for b in snap["books"] if b["name"] == "c4")["official"] = {"UNMEASURED": "eod_equity.csv: not a number"}
-    h = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert h.count("without the Equity Cross-Asset Book: not read tonight") == 2         # return and P&L figures
-    assert "Not included tonight: Equity Cross-Asset Book (its official history could not be read)." in h
+    h = (build(snap, tmp_path / "site", content) / "research" / "index.html").read_text()
+    assert ">2<" in h and "(1 not read tonight)" in h
 
 
 def test_with_every_book_unreadable_the_page_says_why(snap, tmp_path, content):
@@ -248,5 +237,110 @@ def test_with_every_book_unreadable_the_page_says_why(snap, tmp_path, content):
         b["official"] = {"UNMEASURED": "unreadable"}
         b["after_close"] = {"UNMEASURED": "unreadable"}
     h = (build(snap, tmp_path / "site", content) / "performance" / "index.html").read_text()
-    assert "No book has a traded session" not in h and "No portfolio tonight. Fixed Income Book: its record could not be read" in h
-    assert "The portfolio below is the other books only" not in h
+    assert "No book has a traded session" not in h and "Not included: Fixed Income Book (its official history could not be read)" in h
+    assert "First figures after the close" not in h and "Key figures" not in h
+
+
+def test_the_team_page_shows_the_people_then_the_pod_and_its_books(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "a brief overview of the multi strategy pod we are running"; then "it should be
+    the team pictures first then the pod description (which needs to be organized better)"."""
+    home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    assert home.index('class="people"') < home.index("Event-Driven Trading and Special Situations")
+    pod = home.split("Event-Driven Trading and Special Situations", 1)[1].split("</section>", 1)[0]
+    assert pod.count('class="pod-card"') == 3 and "<h4>" not in pod and "Reconciled daily" not in pod
+    for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
+        assert title in pod, title
+
+
+def test_the_event_books_strategy_count_comes_from_its_record(snap, tmp_path, content):
+    """Release-check review of b76a7f4: "Eight strategies" was written into the text."""
+    n = SITE.event_strategies(snap)
+    home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
+    assert f"{n} strategies around scheduled corporate events" in home and "Eight strategies" not in home
+    ev = next(b for b in snap["books"] if b["name"] == "events")
+    ev["sleeves"] = {"UNMEASURED": "sleeve_scores.csv: unreadable"}
+    home = (build(snap, tmp_path / "site2", content) / "index.html").read_text()
+    assert "Strategies around scheduled corporate events" in home
+
+
+def test_the_research_page_is_under_construction(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "make the research tab under construction right now"."""
+    target = build(snap, tmp_path / "site", content)
+    r = (target / "research" / "index.html").read_text()
+    assert "Under construction." in r and "This page is being rebuilt." in r and "How a result is tested" not in r
+    nav = (target / "index.html").read_text().split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
+    assert 'href="/research/"' in nav
+
+
+def test_every_page_links_to_quantt_and_carries_the_share_card(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "add a link to quants website from ours: https://quantt.ca", and "a thumbnail
+    logo for linkedin for the site": LinkedIn shows og:image for a shared link, from its absolute URL."""
+    from dashboard import layout as L
+    target = build(snap, tmp_path / "site", content)
+    assert (target / "static" / "img" / "og-card.png").is_file()
+    for page in target.rglob("*.html"):
+        h = page.read_text()
+        nav = h.split('<nav class="nav"', 1)[1].split("</nav>", 1)[0]
+        assert 'href="https://quantt.ca"' in nav, page.name
+        assert f'<meta property="og:image" content="{L.SITE_URL}/static/img/og-card.png">' in h, page.name
+
+
+def test_no_page_links_to_github(snap, tmp_path, content, monkeypatch):
+    """Team lead, 2026-11-24 (through session 2027-bc): the repository is going private, so the site links to
+    no GitHub page, the research page's content included."""
+    monkeypatch.setattr(SITE, "RESEARCH_UNDER_CONSTRUCTION", False)
+    target = build(snap, tmp_path / "site", content)
+    for page in target.rglob("*.html"):
+        h = page.read_text()
+        assert "github.com" not in h and "GitHub" not in h, page
+
+
+def test_every_credited_photograph_is_shown_and_shipped(snap, tmp_path, content):
+    """A credit for a photograph no page shows, or a CC BY-SA file shipped without its credit, are both
+    wrong: the team page's Toronto skyline was replaced by the campus (team lead, 2026-11-24)."""
+    from dashboard import layout as L
+    shown = set(L.PHOTOS.values())
+    assert set(L.PHOTO_CREDITS) <= shown
+    target = build(snap, tmp_path / "site", content)
+    assert not (target / "static" / "img" / "toronto-skyline-day.webp").exists()
+
+
+def test_the_team_page_shows_the_campus_spells_out_quantt_and_titles_are_capitalised(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "for the team tab lets use a queen's university campus picture instead, capitalize
+    the titles (The Team), spell out what QUANTT means". QUANTT's name as quantt.ca writes it."""
+    target = build(snap, tmp_path / "site", content)
+    h = (target / "index.html").read_text()
+    assert "/static/img/queens-douglas-dusk" in h.split('class="page-head"', 1)[1].split(">", 1)[0]
+    assert "<h1>The Team</h1>" in h and "<h2>Speak with the Team</h2>" in h
+    assert "QUANTT, the Queen&#x27;s University Algorithmic Network &amp; Trading Team" in h
+    lib = (target / "library" / "index.html").read_text()
+    assert "<h1>Research Library</h1>" in lib and "<h2>Closed-End Fund Discounts<small>" in lib
+    assert (target / "404.html").read_text().count("<h1>Page Not Found</h1>") == 1
+
+
+def test_title_case():
+    from dashboard.layout import title_case
+    assert title_case("the team") == "The Team"
+    assert title_case("Event-driven anomalies (ex-dates, dividends, earnings, index and fund flows)") == \
+        "Event-Driven Anomalies (Ex-Dates, Dividends, Earnings, Index and Fund Flows)"
+    assert title_case("Speak with the team") == "Speak with the Team"
+    assert title_case("Stale pricing and NAV mechanics") == "Stale Pricing and NAV Mechanics"
+
+
+def test_a_page_heads_line_is_not_cut_to_a_narrow_column():
+    """Team lead, 2026-11-24: "Four students in QUANTT, the Queen's University Algorithmic Network & Trading Team."
+    "should be 1 line its 2 lines". The 56-character column broke it; the page head's line takes the page's width."""
+    css = (Path(__file__).resolve().parents[1] / "public" / "static" / "site.css").read_text()
+    assert ".page-head .lede { max-width: none; }" in css
+
+
+def test_every_page_head_photograph_is_sharp_at_twice_the_page_width():
+    """Team lead, 2026-11-24: "too blurry". quantt.ca's 1920 px campus photograph was stretched over a head that a
+    high-density screen draws at 2560 px or more. Every page head's photograph is at least 2400 px wide."""
+    from PIL import Image
+    from dashboard import layout as L
+    img = Path(__file__).resolve().parents[1] / "public" / "static" / "img"
+    for key in [k for k, _, _ in L.NAV] + [""]:                 # the pages the site builds, and the 404
+        name = L.PHOTOS[key]
+        w = Image.open(img / f"{name}.webp").size[0]
+        assert w >= 2400, (key, name, w)

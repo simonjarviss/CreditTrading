@@ -31,9 +31,8 @@ import sys
 from html import escape
 from pathlib import Path
 
-from dashboard import build as perf, charts, layout as L, metrics as M, snapshot as S
-from dashboard.layout import (BOOK_COLOURS, BOOK_TEXT, CONTACT_EMAIL, REPO_URL, fmt_date, fmt_short, page, page_head, pct,
-                              photo_style, tone, usd, when)
+from dashboard import build as perf, layout as L, snapshot as S
+from dashboard.layout import BOOK_COLOURS, CONTACT_EMAIL, page, page_head
 
 HERE = Path(__file__).resolve().parent
 CONTENT = HERE / "content"
@@ -64,118 +63,15 @@ def books_trading(snap: dict) -> tuple:
     return started, unread
 
 
-def date_range(first: str, last: str) -> str:
-    """"29 Sep to 20 Nov 2026"; both years when they differ."""
-    a, b = fmt_short(first), fmt_short(last)
-    return f"{a.rsplit(' ', 1)[0] if first[:4] == last[:4] else a} to {b}"
-
-
 def stages_html() -> str:
     return '<div class="rows">' + "".join(
         f'<div class="row slim"><div class="num">0{i}</div><div><h3>{escape(t)}</h3><p>{escape(d)}</p></div></div>'
         for i, (t, d) in enumerate(STAGES, start=1)) + "</div>"
 
 
-# ------------------------------------------------------------------- overview --
-
-def overview(snap: dict) -> str:
-    """The front page. Its figures are the portfolio's (build.portfolio: each book from its first
-    traded session, the event book included once it trades; team lead, 2026-11-24). A portfolio
-    withheld because a book's record could not be read shows no portfolio figure at all."""
-    pf = perf.portfolio(snap)
-    figs = []
-    n_books, n_unread = books_trading(snap)
-    figs.append(perf.fig(str(n_books), "Books trading" + (f" ({n_unread} not read tonight)" if n_unread else "")))
-    ev = next((b for b in snap["books"] if b["name"] == "events"), None)
-    if ev is not None and "value" in ev["sleeves"]:
-        n_strat = len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
-        figs.append(perf.fig(str(n_strat + sum(1 for b in snap["books"] if b["name"] != "events")),
-                             "Systematic strategies"))
-    if pf["p"]:
-        p = pf["p"]
-        not_read = "".join(f" (without the {escape(b['title'])}: not read tonight)" for b, _ in pf["blocked"])
-        figs.append(perf.fig(pct(p["cum_return"], True),
-                             f"Portfolio return, time-weighted, {date_range(pf['first'], p['last_date'])}{not_read}"))
-        figs.append(perf.fig(usd(p["pnl"], True), f"Portfolio P&amp;L over {p['n']} sessions{not_read}"))
-    hero = (f'<section class="hero"{photo_style("overview")}><div class="wrap">'
-            '<div class="eyebrow">QUANTT &middot; Queen\'s University</div>'
-            '<h1>Event Driven Trading</h1>'
-            '<p class="lede">A systematic trading team. Three automated books trade closed-end fund discounts '
-            'and scheduled corporate events, each in its own paper account.</p>'
-            '<div class="buttons"><a class="btn primary" href="/team/">Meet the team</a>'
-            '<a class="btn ghost" href="/performance/">Live performance</a></div>'
-            '</div></section>')
-    kf = (f'<section class="kf"><div class="wrap"><div class="figures">{"".join(figs)}</div>'
-          f'<p class="meta note">Live figures, updated {escape(when(snap["exported_at_utc"]))} from the trading '
-          'system\'s records. Paper trading only.</p></div></section>')
-    traded = {x["b"]["name"]: x for x in pf["books"]}
-    rows_html = []
-    for i, b in enumerate(snap["books"], start=1):
-        if b["name"] in traded:
-            x = traded[b["name"]]
-            stat = (f'<b class="{tone(x["p"]["pnl"])}">{usd(x["p"]["pnl"], True)}</b>'
-                    f'<span>Paper P&amp;L since {fmt_short(x["first"])}</span>')
-        else:
-            why = next((w for bb, w in pf["excluded"] + pf["blocked"] if bb is b), perf.started_text(b))
-            stat = f'<span>{escape(why[:1].upper() + why[1:])}</span>'
-        stat += f'<a class="link-arrow" href="/performance/#{escape(b["name"])}">Results</a>'
-        rows_html.append(f'<div class="row"><div class="num">0{i}</div><div><h3>'
-                         f'<span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}"></span>'
-                         f'{escape(b["title"])}</h3><p>{escape(BOOK_TEXT.get(b["name"], ""))}</p></div>'
-                         f'<div class="stat">{stat}</div></div>')
-    approach = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
-                '<div class="eyebrow">Approach</div><h2>Three books, one portfolio</h2>'
-                '<p class="lede">Each book runs a fully specified rule set. The system decides after the close, '
-                'trades at the next close and reports each morning, with no manual intervention.</p>'
-                '<a class="link-arrow" href="/research/">How we research</a></div>'
-                f'<div class="sec-body"><div class="rows">{"".join(rows_html)}</div></div></div></section>')
-    performance = ""
-    if pf["p"]:
-        line = [{"name": "Portfolio", "color": "#111418", "bold": True,
-                 "points": M.index_points(pf["dated"], pf["base"])}]
-        # A book left out because its record could not be read is named beside the chart and the
-        # table (release-check review of 455eff4: the overview showed both without saying so).
-        missing = "".join(f'<p class="gap">Not included tonight: {escape(b["title"])} ({escape(w)}).</p>'
-                          for b, w in pf["blocked"])
-        performance = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
-                       '<div class="eyebrow">Performance</div><h2>Paper results to date</h2>'
-                       '<p class="lede">The portfolio\'s cumulative return, each book from its first traded session, '
-                       'from Alpaca\'s records, gross of the costs a paper account does not charge.</p>'
-                       '<a class="link-arrow" href="/performance/">Performance and risk</a></div>'
-                       '<div class="sec-body">' + missing + charts.line_chart(line, "Cumulative return of the portfolio", fmt="pct")
-                       + '</div><div class="sec-full">' + perf.summary_table(snap) + '</div></div></section>')
-    opportunity = ('<section class="section"><div class="wrap split">'
-                   '<img class="photo" src="/static/img/group-lights.webp" alt="QUANTT members at a firm visit, January 2026" loading="lazy">'
-                   '<div><div class="eyebrow">The opportunity</div><h2>Why the mispricing persists</h2>'
-                   '<div class="grid" style="margin-top:40px;gap:28px 36px">'
-                   '<div><h3>No arbitrage link</h3><p class="meta">A closed-end fund has a fixed share count and no '
-                   'creation or redemption, so nothing forces its price to net asset value.</p></div>'
-                   '<div><h3>Income-driven holders</h3><p class="meta">Most holders buy for yield. Discounts track '
-                   'their sentiment and their year-end tax-loss selling.</p></div>'
-                   '<div><h3>Forced, scheduled flows</h3><p class="meta">Income buyers crowd distribution dates, and '
-                   'unit trusts must sell their holdings by a fixed termination date.</p></div>'
-                   '<div><h3>Too small for large funds</h3><p class="meta">A few million dollars a day of volume and '
-                   'limited borrow keep institutional capital out.</p></div>'
-                   '</div></div></div></section>')
-    process = ('<section class="section soft"><div class="wrap sec-grid"><div class="sec-label">'
-               '<div class="eyebrow">Process</div><h2>From idea to live capital</h2>'
-               '<a class="link-arrow" href="/research/">How we research</a></div>'
-               '<div class="sec-body">' + stages_html() + '</div></div></section>')
-    members = json.loads((CONTENT / "team.json").read_text())["members"]
-    people = "".join(person_card(m) for m in members)
-    team = ('<section class="section"><div class="wrap sec-grid"><div class="sec-label">'
-            '<div class="eyebrow">The team</div><h2>Who we are</h2>'
-            '<p class="lede">Four Queen\'s University students at QUANTT, covering portfolio management, risk, '
-            'research and data.</p><a class="link-arrow" href="/team/">The team</a></div>'
-            f'<div class="sec-body"><div class="people">{people}</div></div></div></section>')
-    return page("overview", "Overview", hero + team + kf + approach + performance + opportunity + process + contact_band(),
-                "A systematic trading team at QUANTT, Queen's University, trading closed-end fund discounts "
-                "and scheduled corporate events.")
-
-
 def contact_band() -> str:
     return ('<section class="section dark"><div class="wrap sec-grid"><div class="sec-label">'
-            '<div class="eyebrow">Contact</div><h2>Speak with the team</h2></div>'
+            '<div class="eyebrow">Contact</div><h2>Speak with the Team</h2></div>'
             '<div class="sec-body"><p class="lede">For questions about the strategies, the results or an allocation, '
             'contact Simon Jarvis, Portfolio Manager.</p>'
             f'<div class="buttons"><a class="btn primary" href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></div>'
@@ -228,9 +124,27 @@ CONTROLS = (
 
 def _sec(cls: str, eyebrow: str, title: str, lede: str, body: str) -> str:
     return (f'<section class="section{cls}"><div class="wrap sec-grid"><div class="sec-label">'
-            f'<div class="eyebrow">{escape(eyebrow)}</div><h2>{escape(title)}</h2>'
+            f'<div class="eyebrow">{escape(eyebrow)}</div><h2>{escape(L.title_case(title))}</h2>'
             + (f'<p class="lede">{escape(lede)}</p>' if lede else "")
             + f'</div><div class="sec-body">{body}</div></div></section>')
+
+
+# The research page shows "Under construction" while it is rebuilt (team lead, 2026-11-24: "make the
+# research tab under construction right now"). Its content is kept below; set False to show it again.
+RESEARCH_UNDER_CONSTRUCTION = True
+
+
+def research_page(snap: dict, ledger_path: Path) -> str:
+    if RESEARCH_UNDER_CONSTRUCTION:
+        return under_construction()
+    return research(snap, ledger_count(ledger_path))
+
+
+def under_construction() -> str:
+    head = page_head("Research", "Research", "Under construction.")
+    body = (head + '<section class="section"><div class="wrap narrow"><p>This page is being rebuilt.</p>'
+            '<p><a class="link-arrow" href="/performance/">Live performance</a></p></div></section>')
+    return page("research", "Research", body, "The Event Driven Trading team's research.")
 
 
 def research(snap: dict, ledger: tuple) -> str:
@@ -240,7 +154,7 @@ def research(snap: dict, ledger: tuple) -> str:
     since = dt.date.fromisoformat(first).strftime("%B %Y")
     n_books, n_unread = books_trading(snap)
     head = page_head("Research", "Research",
-                     "How we find, test and promote trading strategies, and the infrastructure that runs them.")
+                     "How we find, test and run our strategies.")
     pipeline = _sec("", "Pipeline", "From idea to live capital",
                     "Every strategy passes through the same five stages. Breadth is the main lever: we keep many ideas "
                     "in testing and in paper trading at once.", stages_html())
@@ -252,10 +166,7 @@ def research(snap: dict, ledger: tuple) -> str:
     record = ('<section class="section dark"><div class="wrap sec-grid"><div class="sec-label">'
               '<div class="eyebrow">Record</div><h2>The research ledger</h2>'
               '<p class="lede">Every idea we test is recorded with its data, gross result and status, including the '
-              'ideas we set aside. The research code, notes and trading system are public.</p>'
-              f'<div class="buttons"><a class="btn primary" href="{REPO_URL}/blob/main/results/IDEA_LEDGER.md" '
-              'rel="noopener">Read the ledger</a>'
-              f'<a class="btn ghost" href="{REPO_URL}" rel="noopener">Source code on GitHub</a></div></div>'
+              'ideas we set aside.</p></div>'
               '<div class="sec-body"><div class="figures">'
               + perf.fig(str(n_ledger), f"Ideas recorded since {since}")
               + perf.fig(str(n_books), "Books trading on paper" + (f" ({n_unread} not read tonight)" if n_unread else ""))
@@ -315,13 +226,12 @@ def library(lib: dict) -> str:
                         f'<div><div class="t">{title}</div><div class="src">{escape(src)}</div>'
                         + (f'<p class="use">{escape(e["used_for"])}</p>' if e.get("used_for") else "")
                         + '</div>' + f'<div class="links">{"".join(links)}</div></div>')
-        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2>{escape(t)}<small>{count[t]} sources</small></h2>'
+        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2>{escape(L.title_case(t))}<small>{count[t]} sources</small></h2>'
                       f'{"".join(rows)}</div>')
     n_pdf = sum(1 for e in entries if e.get("oa_pdf_url"))
     years = [e["year"] for e in entries if e.get("year")]
     head = page_head("Library", "Research library",
-                     f"The {len(entries)} sources our strategies rest on: academic papers, industry research and the "
-                     "rules that govern the markets we trade, each with a note on how we use it.")
+                     f"The {len(entries)} sources behind our strategies.")
     figs = ('<div class="figures lib-figs">' + perf.fig(str(len(entries)), "Sources")
             + perf.fig(str(n_pdf), "With a free, open-access copy") + perf.fig(str(len(topics)), "Topics")
             + (perf.fig(f"{min(years)}–{max(years)}", "Years of publication") if years else "") + "</div>")
@@ -340,22 +250,66 @@ def library(lib: dict) -> str:
 # ----------------------------------------------------------------------- team --
 
 def person_card(m: dict) -> str:
-    """One team member: headshot, name and LinkedIn (team lead, 2026-11-23: "use the same headshots
-    on quantt.ca"; "delete the teams bios, just name and linkedin"; dashboard/content/team.json)."""
+    """One team member: headshot, name, title and LinkedIn (team lead, 2026-11-23: "use the same
+    headshots on quantt.ca"; "delete the teams bios, just name and linkedin"; 2026-11-24: "add
+    portfolio manager under me, and quantitative trading analyst under the other 3")."""
     photo = (f'<img class="headshot" src="{escape(m["photo"])}" alt="{escape(m["name"])}" width="480" height="480" '
              'loading="lazy" decoding="async">' if m.get("photo") else "")
     li = (f'<p><a class="link-arrow" href="{escape(m["linkedin"])}" rel="noopener">LinkedIn</a></p>'
           if m.get("linkedin") else "")
-    return f'<div class="person">{photo}<h3>{escape(m["name"])}</h3>{li}</div>'
+    role = f'<p class="role">{escape(m["title"])}</p>' if m.get("title") else ""
+    return f'<div class="person">{photo}<h3>{escape(m["name"])}</h3>{role}{li}</div>'
 
 
-def team(t: dict) -> str:
+# The pod in a line per book and four working rules, for the team page (team lead, 2026-11-24: "a brief
+# overview of the multi strategy pod ... organized better", after the team's photographs). The event
+# book's line starts with its strategy count, read from its record (event_strategies).
+POD_BOOKS = {
+    "cef": "Leveraged credit closed-end funds. Long the widest discounts, short the richest, dollar-neutral.",
+    "c4": "Equity, preferred and multi-asset closed-end funds, on discount and relative-value signals.",
+    "events": "strategies around scheduled corporate events, from fund distributions to trust terminations.",
+}
+def event_strategies(snap: dict):
+    """How many strategies the event book runs, from its sleeve reading; None when that could not be read.
+    WHY (release-check review of b76a7f4): "Eight strategies" was written into the text twice, and would
+    have gone on saying eight after a sleeve was added or dropped."""
+    ev = next((b for b in snap["books"] if b["name"] == "events"), None)
+    if ev is None or "value" not in ev["sleeves"]:
+        return None
+    return len({r["slug"] for r in ev["sleeves"]["value"]["rows"] if r["slug"] != "_book"})
+
+
+def pod_line(snap: dict, b: dict) -> str:
+    text = POD_BOOKS.get(b["name"], "")
+    if b["name"] != "events":
+        return text
+    n = event_strategies(snap)
+    return f"{n} {text}" if n is not None else text[:1].upper() + text[1:]
+
+
+def pod_overview(snap: dict) -> str:
+    """The pod under the team: one line and a card per book (team lead, 2026-11-24: the four working rules
+    taken out)."""
+    cards = "".join(
+        f'<div class="pod-card"><h3><span class="dot" style="background:{BOOK_COLOURS.get(b["name"], "#111418")}">'
+        f'</span>{escape(b["title"])}</h3><p>{escape(pod_line(snap, b))}</p></div>'
+        for b in snap["books"])
+    return ('<section class="section soft"><div class="wrap"><div class="eyebrow">The pod</div>'
+            '<h2>Event-Driven Trading and Special Situations</h2>'
+            # Team lead, 2026-11-24: "we are a pod under QUANTT, running an event driven trading and special
+            # situations desk".
+            '<p class="lede narrow">A pod within QUANTT running an event-driven trading and special situations '
+            'desk: three systematic books, managed as one portfolio.</p>'
+            f'<div class="pod-grid">{cards}</div>'
+            '<a class="link-arrow" href="/performance/">Live performance</a></div></section>')
+
+
+def team(t: dict, snap: dict) -> str:
     cards = [person_card(m) for m in t["members"]]
-    head = page_head("Team", "The team",
-                     "Four students at Queen's University, part of QUANTT, the Queen's University Algorithmic Network "
-                     "and Trading Team.")
+    # Team lead, 2026-11-24: "spell out what QUANTT means".
+    head = page_head("Team", "The Team", f"Four students in QUANTT, the {L.QUANTT_NAME}.", photo="team")
     body = (head + f'<section class="section"><div class="wrap"><div class="people">{"".join(cards)}</div></div></section>'
-            + contact_band())
+            + pod_overview(snap) + contact_band())
     return page("team", "Team", body, "The Event Driven Trading team at QUANTT, Queen's University.")
 
 
@@ -372,7 +326,7 @@ def contact() -> str:
 def not_found() -> str:
     return page("", "Page not found", page_head("Error 404", "Page not found",
                                                  "The page you asked for does not exist.",
-                                                 '<div class="buttons"><a class="btn primary" href="/">Go to the overview</a></div>'),
+                                                 '<div class="buttons"><a class="btn primary" href="/">Go to the home page</a></div>'),
                 "Page not found.")
 
 
@@ -380,12 +334,13 @@ def not_found() -> str:
 
 def pages(snap: dict, *, content: Path = CONTENT, repo: Path = REPO) -> dict:
     """{relative path: html}. Raises on a missing content file: a page is never built from a default."""
+    team_page = team(json.loads((content / "team.json").read_text()), snap)
     return {
-        "index.html": overview(snap),
+        "index.html": team_page,                     # the home page (team lead, 2026-11-24)
         "performance/index.html": perf.render(snap),
-        "research/index.html": research(snap, ledger_count(repo / "results" / "IDEA_LEDGER.md")),
+        "research/index.html": research_page(snap, repo / "results" / "IDEA_LEDGER.md"),
         "library/index.html": library(json.loads((content / "library.json").read_text())),
-        "team/index.html": team(json.loads((content / "team.json").read_text())),
+        "team/index.html": team_page,                # earlier links to /team/
         "contact/index.html": contact(),
         "404.html": not_found(),
     }
