@@ -209,12 +209,15 @@ yourself with bad code.
   This repository takes only what the VM runs: a promoted book's config and code,
   with a one-line docstring and no research write-up or results. Where a path below
   says `results/...` for new research, read it as `desk/results/...` there.
-  Analysts' sessions are not covered yet: until the team lead rules, ask before an
-  analyst's research reaches either repository.
+  **Analysts' research stays here**, by pull request, as `docs/TEAM.md` has it:
+  the rule covers the team lead's research and agents' research in the team lead's
+  sessions. **Generic harness and library code with no results also comes here**,
+  so research in both repositories can import it; anything study-specific stays
+  private.
 - **Keep the idea ledger.** Every idea tested gets one line in
   `desk/results/IDEA_LEDGER.md` (private) in the same commit: date, idea, data, gross
   result, status. `results/IDEA_LEDGER.md` here holds every line up to 2026-11-24
-  and takes none after it. It is a record, not a gate. Read both, and `/graveyard`, before starting:
+  and, after it, analysts' lines only. It is a record, not a gate. Read both, and `/graveyard`, before starting:
   a dead idea may be revived with a new angle (new data, mechanism, horizon or
   instrument). The most common past failure is a stale-price artifact; the second,
   a control group scoring as well as the treatment. Both are bugs to check for.

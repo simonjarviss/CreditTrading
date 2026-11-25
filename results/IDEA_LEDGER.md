@@ -1,9 +1,10 @@
 # Idea ledger
 
-**Closed to new lines after 2026-11-24.** New research is private (team lead, 2026-11-24,
-`docs/SYSTEM.md` §5): from that date the ledger continues in the team lead's private
-repository, `simonjarviss/quantt-research`, at `desk/results/IDEA_LEDGER.md`. Every line
-below stays as it is.
+**After 2026-11-24, analysts' lines only.** New research from the team lead's sessions is
+private (team lead, 2026-11-24, `docs/SYSTEM.md` §5): from that date its ledger continues in
+the team lead's private repository, `simonjarviss/quantt-research`, at
+`desk/results/IDEA_LEDGER.md`. The analysts' research stays public, so their lines still come
+here ("Their research stays public", the same evening). Every line below stays as it is.
 
 **One line per idea tested: date, idea, data, gross result, status.** It is a record, not a
 gate (team lead, 2026-11-09, `docs/SYSTEM.md` §5; `docs/MISSION.md` §2). It stops an idea
