@@ -1043,6 +1043,20 @@ dashboard", above); only the repository changes.
 | GitHub on the site | Taken off the site in `release-20261124-16` (site session, 2026-11-24). **Supersedes** "put github link in top right corner" in the site rows above |
 | Later the same day, with deploy keys and private forking still waiting on an org owner. **Supersedes** "Go private" above | **"We are gonna keep it public for now."** The repository stays public and the analysts keep write access. The rulesets stay enforced, and every VM clone stays on anonymous https; `bootstrap.sh` clones over https again. What stays from the preparation: the site without GitHub, the team lead's fork private, the installer that accepts both spellings (`release-20261124-17`), and an unregistered key for each VM user. `docs/RUNBOOK.md` 8.14 is the route if this is revisited (`EVIDENCE_LOG` E-2026-11-24-40) |
 
+### Team lead, 2026-11-24 (evening) — new research is private
+
+Asked in the team lead's session, through question prompts, after reading the research packs
+kept outside this repository (`~/Desktop/R2_export`: index rebalancing, options gamma, external
+data). `EVIDENCE_LOG` E-2026-11-24-70.
+
+| question | ruling |
+|---|---|
+| The research packs outside this repository | **"I want this research for myself."** They go to a private repository on the team lead's own GitHub account, `simonjarviss/quantt-research`, not into this repository |
+| This repository | **"Keep public, new research private."** It stays public, as "keep it public for now" above ruled. What it already holds stays as it is |
+| What still goes into this repository | **"Only what the VM runs."** From 2026-11-24, idea cards, Explore results, research scripts, research findings notes, idea-ledger lines and the evidence-log entries of research results go to `simonjarviss/quantt-research` (under `desk/`, mirroring this repository's paths). This repository takes a promoted book's config and code only, with a one-line docstring and no research write-up or results. Rulings, releases, incidents and live-P&L days are still logged here. `results/IDEA_LEDGER.md` keeps every line up to 2026-11-24 and takes none after it |
+| The site's Research tab | **"Maybe our outlook, but i want this research for myself."** It stays under construction. If it opens, it carries an outlook, not research findings |
+| The team lead's fork. **Supersedes** "Make it private" above, for a new fork | **"I want this repo shown on my github account repos."** A new public fork, `simonjarviss/CreditTrading`, made 2026-11-24 from `main` at `b912a56`, main branch only. It does not update by itself. If this repository is ever made private, delete that fork first: GitHub keeps a public fork public when its parent goes private |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
@@ -1098,3 +1112,4 @@ dashboard", above); only the repository changes.
 | 2026-11-24 | §5 records the rulings on the seven old pull requests and the corporate-action gate ("Fix first, block later", superseding 2026-11-09's "Halt in tonight's release"), the clean-up's go and the arming read-back. | the old pull requests, for the team lead |
 | 2026-11-24 | §5 records the private repository: why, analysts to read access with private forks, the club accounts kept, the team lead's fork made private, the VM's deploy keys, GitHub off the site. | a private repository, for the team lead |
 | 2026-11-24 | §5 records that the repository stays public for now, superseding the same day's "Go private". | keep it public, for the team lead |
+| 2026-11-24 | §5 records that new research is private (`simonjarviss/quantt-research`), what still comes here, the Research tab, and the team lead's new public fork. | private research, for the team lead |
