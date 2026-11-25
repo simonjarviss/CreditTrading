@@ -1041,6 +1041,7 @@ dashboard", above); only the repository changes.
 | The team lead's own public fork, `simonjarviss/CreditTrading` (last pushed 2026-08-16) | **"Make it private."** Done 2026-11-24 |
 | The VM's read-only deploy keys | **"Yes, go ahead"**, with the switch: created on the VM by an agent over ssh, and never printed |
 | GitHub on the site | Taken off the site in `release-20261124-16` (site session, 2026-11-24). **Supersedes** "put github link in top right corner" in the site rows above |
+| Later the same day, with deploy keys and private forking still waiting on an org owner. **Supersedes** "Go private" above | **"We are gonna keep it public for now."** The repository stays public and the analysts keep write access. The rulesets stay enforced, and every VM clone stays on anonymous https; `bootstrap.sh` clones over https again. What stays from the preparation: the site without GitHub, the team lead's fork private, the installer that accepts both spellings (`release-20261124-17`), and an unregistered key for each VM user. `docs/RUNBOOK.md` 8.14 is the route if this is revisited (`EVIDENCE_LOG` E-2026-11-24-40) |
 
 ## 6. Governance — where each rule lives
 
@@ -1096,3 +1097,4 @@ dashboard", above); only the repository changes.
 | 2026-11-24 | §5 records the team's `data/` copy in R2 (ruled 2026-10-26, merged with pull request #3 after the team lead confirmed on 2026-11-24 that the analysts still need it). | team data, for the team lead |
 | 2026-11-24 | §5 records the rulings on the seven old pull requests and the corporate-action gate ("Fix first, block later", superseding 2026-11-09's "Halt in tonight's release"), the clean-up's go and the arming read-back. | the old pull requests, for the team lead |
 | 2026-11-24 | §5 records the private repository: why, analysts to read access with private forks, the club accounts kept, the team lead's fork made private, the VM's deploy keys, GitHub off the site. | a private repository, for the team lead |
+| 2026-11-24 | §5 records that the repository stays public for now, superseding the same day's "Go private". | keep it public, for the team lead |

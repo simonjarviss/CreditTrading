@@ -1468,7 +1468,7 @@ book: `dashboard/README.md`. It runs beside the books and is installed on its ow
 # on the VM. The site runs from its OWN clone, so releasing it never moves the trading clone.
 # First time only (a local clone of the prod clone, then GitHub as its origin):
 sudo -u quantt git clone -q /home/quantt/prod/quantt-alpaca /home/quantt/site/quantt-alpaca
-sudo -u quantt git -C /home/quantt/site/quantt-alpaca remote set-url origin git@github.com:quanttqueensu/CreditTrading.git   # ssh: the repository is private (8.14)
+sudo -u quantt git -C /home/quantt/site/quantt-alpaca remote set-url origin https://github.com/quanttqueensu/CreditTrading.git
 # Each site release (T = a release tag that carries dashboard/):
 sudo -u quantt git -C /home/quantt/site/quantt-alpaca fetch -q --tags origin
 sudo -u quantt git -C /home/quantt/site/quantt-alpaca checkout -q --detach T
@@ -1511,6 +1511,14 @@ record carried something §2 of `dashboard/README.md` forbids; read it before an
 
 ### 8.14 A private repository: the VM reads it with deploy keys (2026-11-24)
 
+**Prepared, not in use.** The team lead kept the repository public later the same day
+("we are gonna keep it public for now"; `docs/SYSTEM.md` §5). Every VM clone stays on
+anonymous https, and `bootstrap.sh` clones over https again. What remains from the
+preparation: the installer accepts both spellings (`release-20261124-17`), and each VM user
+has a key at `~/.ssh/github_deploy` that is not registered on GitHub, so it can read nothing.
+The organisation also has deploy keys disabled, so an owner must allow them before step 3.
+The steps below are the route if the repository goes private.
+
 **Why.** The team lead decided on 2026-11-24 to make `quanttqueensu/CreditTrading` private:
 "make github private for everyone except ethan solnik, me and my team ... i just dont want
 people copying our stratgey". An anonymous https fetch of a private repository fails. Three
@@ -1550,14 +1558,14 @@ matters, and each step is checked before the next:
    install dry run (`install_vm --tag <installed tag>` without `--apply`), which must not
    refuse on the origin.
 
-**A fresh VM, once the repository is private** (corrected the same day, from the release check
+**A fresh VM, if the repository goes private** (corrected the same day, from the release check
 of `428d588`: the first version said to make the `quantt` key before bootstrap, but bootstrap
 creates the `quantt` user). The raw.githubusercontent.com downloads in 8.2 and 8.10 need a login
 once the repository is private, so copy each script over `scp` from a clone at the tag
-instead. Bootstrap clones over ssh: run it once, and it stops at the clone with "Permission
-denied (publickey)". Then do step 2 and step 3 for `quantt`, and run it again (re-running is
+instead. Move bootstrap's `ORIGIN` to the ssh spelling (`install_vm.ORIGIN_URL_SSH`) and run it
+once: it stops at the clone with "Permission denied (publickey)". Then do step 2 and step 3 for `quantt`, and run it again (re-running is
 safe; every step checks before it acts). `shadow/deploy/install_shadow_vm.sh`, on `main` and on
-`shadow`, still clones over https (`ORIGIN`, line 42). A fresh shadow install needs the
+`shadow`, clones over https (`ORIGIN`, line 42). A fresh shadow install needs the
 `quantt-shadow` key and that line moved to the ssh URL first (`docs/ROADMAP.md` 7.41).
 
 **Undo.** A deploy key is removed in the repository's Settings, Deploy keys, or with
