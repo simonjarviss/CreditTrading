@@ -6056,3 +6056,17 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `89bc849` (before the change, `reading_note`, `positioning`); the change is in the commit that carries this entry, with `dashboard/layout.py`, `dashboard/site.py`, their tests and `docs/SYSTEM.md` §5; https://www.queensu.ca/brand-central/sites/bcwww/files/uploaded_files/Queens-University-Student-Group-Identification-Guidelines.pdf
 - supports: §5
 - status: current
+
+### E-2026-11-24-70 · Ruling: this repository stays public and new research goes to the team lead's private repository; the Research tab stays under construction; a new public fork on the team lead's account
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, on the research packs kept outside this repository (`~/Desktop/R2_export`: index rebalancing, options gamma, external data): "i want this research for myself"; by question prompt, "private repo on my personal github". Created: `simonjarviss/quantt-research`, private [V]
+  - by question prompt, on this repository: "Keep public, new research private"; and on what still comes here: "Only what the VM runs". From 2026-11-24, idea cards, Explore results, research scripts, findings notes, ledger lines and research results' evidence entries go to the private repository under `desk/`; this repository takes a promoted book's config and code only. `results/IDEA_LEDGER.md` is closed to new lines after 2026-11-24 [V]
+  - on the site's Research tab: "Maybe our outlook, but i want this research for myself". It stays under construction (`RESEARCH_UNDER_CONSTRUCTION` in `dashboard/site.py`, unchanged) [V]
+  - "i want this repo shown on my github account repos": a public fork `simonjarviss/CreditTrading` was made from `main` at `b912a56`, main branch only (GitHub API, 2026-11-24). The earlier fork of that name, made private earlier the same day, no longer exists (the API returned 404) [V]
+  - open, not ruled: whether analysts' research follows the same rule, and whether generic harness code (no results) may still come here [U]
+- source: `docs/SYSTEM.md` @ `b912a56` (before the ruling); `CLAUDE.md` @ `b912a56` (before the ruling); the ruling's §5 block, the `CLAUDE.md` research rules and the ledger's closing note are in the commit that carries this entry
+- supports: §5
+- status: current
