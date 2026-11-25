@@ -6100,3 +6100,13 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` @ `b912a56` (§5, before the rows this commit adds); `results/ops/HEALTH_CHECK_2026-11-24.md` and `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry); https://docs.alpaca.markets/us/docs/paper-trading (fetched 2026-11-24)
 - supports: §5
 - status: current
+
+### E-2026-11-24-65 · Rulings: shadow-trade a SPY hedge on C4, in the shadow runner, with a read-only export of C4's plans; the live C4 book unchanged
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings, by question prompt on 2026-11-24 after the C4 research ruled by E-2026-11-24-63 and its independent review: "Shadow the full hedge"; and, asked where it runs, "In the shadow runner", chosen over C4's morning P&L report and C4's runner record; the research write-up is kept in the team lead's private repository under the same evening's ruling that new research stays private)
+- source: `docs/SYSTEM.md` @ `9fd8bc2` (§5, before the rows this commit adds); `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry)
+- supports: §5
+- status: current
