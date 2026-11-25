@@ -91,6 +91,8 @@ img { max-width: 100%; display: block; }
 .hero h1 { color: #fff; font-size: clamp(46px, 6.4vw, 92px); line-height: 0.98; letter-spacing: -0.02em; max-width: 12ch; }
 .page-head h1 { color: #fff; font-size: clamp(38px, 4.6vw, 64px); line-height: 1.04; }
 .hero .lede, .page-head .lede { color: rgba(255,255,255,0.86); margin-top: 24px; max-width: 56ch; }
+/* A page head's line runs the width of the page (team lead, 2026-11-24: the team page's line "should be 1 line its 2 lines"). */
+.page-head .lede { max-width: none; }
 .hero .eyebrow, .page-head .eyebrow { color: rgba(255,255,255,0.72); }
 .page-head .meta { color: rgba(255,255,255,0.66); margin-top: 18px; }
 .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }

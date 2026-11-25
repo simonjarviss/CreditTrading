@@ -325,3 +325,10 @@ def test_title_case():
         "Event-Driven Anomalies (Ex-Dates, Dividends, Earnings, Index and Fund Flows)"
     assert title_case("Speak with the team") == "Speak with the Team"
     assert title_case("Stale pricing and NAV mechanics") == "Stale Pricing and NAV Mechanics"
+
+
+def test_a_page_heads_line_is_not_cut_to_a_narrow_column():
+    """Team lead, 2026-11-24: "Four students in QUANTT, the Queen's University Algorithmic Network & Trading Team."
+    "should be 1 line its 2 lines". The 56-character column broke it; the page head's line takes the page's width."""
+    css = (Path(__file__).resolve().parents[1] / "public" / "static" / "site.css").read_text()
+    assert ".page-head .lede { max-width: none; }" in css
