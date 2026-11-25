@@ -201,9 +201,23 @@ yourself with bad code.
 - **Split time at least once before paper**: early against late, and at least two
   market regimes. It takes five minutes and catches most bugs and flukes. Report by
   era where the sample allows (landmine 8).
+- **New research is private (team lead, 2026-11-24, `docs/SYSTEM.md` §5).** This
+  repository is public. From 2026-11-24, idea cards, Explore results, research
+  scripts, findings notes, ledger lines and the evidence entries of research results
+  go to the team lead's private repository `simonjarviss/quantt-research` (working
+  copy `~/Desktop/R2_export`, under `desk/`, which mirrors this repository's paths).
+  This repository takes only what the VM runs: a promoted book's config and code,
+  with a one-line docstring and no research write-up or results. Where a path below
+  says `results/...` for new research, read it as `desk/results/...` there.
+  **Analysts' research stays here**, by pull request, as `docs/TEAM.md` has it:
+  the rule covers the team lead's research and agents' research in the team lead's
+  sessions. **Generic harness and library code with no results also comes here**,
+  so research in both repositories can import it; anything study-specific stays
+  private.
 - **Keep the idea ledger.** Every idea tested gets one line in
-  `results/IDEA_LEDGER.md` in the same commit: date, idea, data, gross result,
-  status. It is a record, not a gate. Read it, and `/graveyard`, before starting:
+  `desk/results/IDEA_LEDGER.md` (private) in the same commit: date, idea, data, gross
+  result, status. `results/IDEA_LEDGER.md` here holds every line up to 2026-11-24
+  and, after it, analysts' lines only. It is a record, not a gate. Read both, and `/graveyard`, before starting:
   a dead idea may be revived with a new angle (new data, mechanism, horizon or
   instrument). The most common past failure is a stale-price artifact; the second,
   a control group scoring as well as the treatment. Both are bugs to check for.
@@ -222,7 +236,9 @@ yourself with bad code.
 - **No decision rule may key on a number written in a document** (H14). Re-measure
   at run time and say what you do under either outcome.
 - **Log it for the report.** Every result, ruling, release, incident or live-P&L
-  day gets an entry in `results/report/EVIDENCE_LOG.md`, in the same commit, with
+  day gets an entry, in the same commit: a research result's in the private
+  repository's `desk/results/<family>/`, everything else in
+  `results/report/EVIDENCE_LOG.md`, with
   provenance (`results/report/README.md`; `.claude/rules/report.md`). Live data:
   daily aggregates in the repo; rows only in the gitignored `results/report/_cache_live/`.
 

@@ -6057,6 +6057,32 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
+### E-2026-11-24-70 · Ruling: this repository stays public and new research goes to the team lead's private repository; the Research tab stays under construction; a new public fork on the team lead's account
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, on the research packs kept outside this repository (`~/Desktop/R2_export`: index rebalancing, options gamma, external data): "i want this research for myself"; by question prompt, "private repo on my personal github". Created: `simonjarviss/quantt-research`, private [V]
+  - by question prompt, on this repository: "Keep public, new research private"; and on what still comes here: "Only what the VM runs". From 2026-11-24, idea cards, Explore results, research scripts, findings notes, ledger lines and research results' evidence entries go to the private repository under `desk/`; this repository takes a promoted book's config and code only. `results/IDEA_LEDGER.md` is closed to new lines after 2026-11-24 [V]
+  - on the site's Research tab: "Maybe our outlook, but i want this research for myself". It stays under construction (`RESEARCH_UNDER_CONSTRUCTION` in `dashboard/site.py`, unchanged) [V]
+  - "i want this repo shown on my github account repos": a public fork `simonjarviss/CreditTrading` was made from `main` at `b912a56`, main branch only (GitHub API, 2026-11-24). The earlier fork of that name, made private earlier the same day, no longer exists (the API returned 404) [V]
+  - open, not ruled: whether analysts' research follows the same rule, and whether generic harness code (no results) may still come here [U]
+- source: `docs/SYSTEM.md` @ `b912a56` (before the ruling); `CLAUDE.md` @ `b912a56` (before the ruling); the ruling's §5 block, the `CLAUDE.md` research rules and the ledger's closing note are in the commit that carries this entry
+- supports: §5
+- status: current
+
+### E-2026-11-24-71 · Ruling: the analysts' research stays public; generic harness code with no results stays public
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, by question prompt, on the analysts' research (they have no access to `simonjarviss/quantt-research`): "Their research stays public". The analysts keep delivering research to this repository by pull request, with their ledger lines in `results/IDEA_LEDGER.md` [V]
+  - on generic harness and library code with no results: "Public, if it shows no results (Recommended)". Study-specific scripts, notes, tables and ledger lines stay private [V]
+  - these settle the two open lines of E-2026-11-24-70 [V]
+- source: `docs/SYSTEM.md` @ `4ab7ab4` (before the ruling); `CLAUDE.md` @ `4ab7ab4` (before the ruling); the rows and wording are in the commit that carries this entry
+- supports: §5
+- status: current
+
 ### E-2026-11-24-60 · Result: the three paper books are deployed and traded cleanly on 24 Nov; the portfolio layer's sums agree with the accounts, and it leaves the events book outside the combined reads
 - kind: result
 - era: ALPACA
@@ -6108,5 +6134,38 @@ that adds it does not exist when it is written.
 - figures:
   - none (rulings, by question prompt on 2026-11-24 after the C4 research ruled by E-2026-11-24-63 and its independent review: "Shadow the full hedge"; and, asked where it runs, "In the shadow runner", chosen over C4's morning P&L report and C4's runner record; the research write-up is kept in the team lead's private repository under the same evening's ruling that new research stays private)
 - source: `docs/SYSTEM.md` @ `9fd8bc2` (§5, before the rows this commit adds); `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry)
+- supports: §5
+- status: current
+
+### E-2026-11-24-61 · Incident: the VM reboot ruled for about 23:00 ET did not run; the session's own scheduled step fires only while the session is idle, and it stayed busy until morning
+- kind: incident
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the ruling: "Tonight around 23:00 ET", by question prompt on 2026-11-24; the step was a session-only scheduled job for 22:56, which runs only when the session is idle; the session was answering agents and question prompts until morning, so the job was still pending at 08:30 ET on 2026-11-25 and was cancelled then rather than reboot during a trading day [V]
+  - nothing else was affected. VM read at about 08:31 ET on 2026-11-25: clone at `release-20261124-17`; up 5 days 9 hours; `/var/run/reboot-required` still present; the 2026-11-25 plans decided for the core (13 orders) and C4 (6 orders), 0 refusals each; core, C4 and the events send each `DRY_RUN=0` with `AUTO_ARMED` present, as before [V]
+  - the team lead's ruling on 2026-11-25: reboot "With the weekend release" (E-2026-11-25-60) [V]
+  - the lesson: a step that must happen at a time is watched from the session, not left to a session-only timer [V]
+- source: `docs/SYSTEM.md` @ `61219ed` (§5, the reboot row); the VM read is ssh output of this session, not in the repository
+- supports: §5
+- status: current
+
+### E-2026-11-24-67 · Rulings on the runner build: the late-NAV wait ends at 06:00, no CEFConnect under `wait`, and corporate-action rows that name nothing are INFO in data QA
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings, by question prompt on 2026-11-24 after the build of E-2026-11-24-63's changes showed that, with CEFConnect down, most decides would wait until 14:30: the wait's cutoff "At the first morning slot, 06:00", superseding "at the final check"; CEFConnect under `wait` "Stop reading it"; rows that name nothing in data QA "Show them as INFO". Built on branch `runner-rulings-20261124` and reviewed GO for the weekend release check)
+- source: `docs/SYSTEM.md` @ `61219ed` (§5, before the rows this commit adds); `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry)
+- supports: §5
+- status: current
+
+### E-2026-11-25-60 · Rulings: the reboot moves to the weekend release; the C4 hedge books stay off the public site; the C4 study goes to the private repository with its helper inside
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-25
+- figures:
+  - none (rulings, by question prompt on 2026-11-25: the missed reboot (E-2026-11-24-61) "With the weekend release"; the two simulated C4 hedge books on event-driven.quantt.ca "Keep them off the site"; the C4 study "Push; helper inside the study", committed to `simonjarviss/quantt-research` under `desk/` with `neutralise_row` in the study's own script, so this repository's harness is unchanged)
+- source: `docs/SYSTEM.md` @ `61219ed` (§5, before the rows this commit adds); `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry)
 - supports: §5
 - status: current

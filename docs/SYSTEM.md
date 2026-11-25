@@ -1043,6 +1043,22 @@ dashboard", above); only the repository changes.
 | GitHub on the site | Taken off the site in `release-20261124-16` (site session, 2026-11-24). **Supersedes** "put github link in top right corner" in the site rows above |
 | Later the same day, with deploy keys and private forking still waiting on an org owner. **Supersedes** "Go private" above | **"We are gonna keep it public for now."** The repository stays public and the analysts keep write access. The rulesets stay enforced, and every VM clone stays on anonymous https; `bootstrap.sh` clones over https again. What stays from the preparation: the site without GitHub, the team lead's fork private, the installer that accepts both spellings (`release-20261124-17`), and an unregistered key for each VM user. `docs/RUNBOOK.md` 8.14 is the route if this is revisited (`EVIDENCE_LOG` E-2026-11-24-40) |
 
+### Team lead, 2026-11-24 (evening) — new research is private
+
+Asked in the team lead's session, through question prompts, after reading the research packs
+kept outside this repository (`~/Desktop/R2_export`: index rebalancing, options gamma, external
+data). `EVIDENCE_LOG` E-2026-11-24-70.
+
+| question | ruling |
+|---|---|
+| The research packs outside this repository | **"I want this research for myself."** They go to a private repository on the team lead's own GitHub account, `simonjarviss/quantt-research`, not into this repository |
+| This repository | **"Keep public, new research private."** It stays public, as "keep it public for now" above ruled. What it already holds stays as it is |
+| What still goes into this repository | **"Only what the VM runs."** From 2026-11-24, idea cards, Explore results, research scripts, research findings notes, idea-ledger lines and the evidence-log entries of research results go to `simonjarviss/quantt-research` (under `desk/`, mirroring this repository's paths). This repository takes a promoted book's config and code only, with a one-line docstring and no research write-up or results. Rulings, releases, incidents and live-P&L days are still logged here. `results/IDEA_LEDGER.md` keeps every line up to 2026-11-24 and, after it, takes analysts' lines only (the analysts' row below) |
+| The analysts' research, with no access to the private repository | **"Their research stays public."** Lucy, Ryan and James keep delivering research to this repository by pull request, as `docs/TEAM.md` has it, with their lines in `results/IDEA_LEDGER.md`. The rule above covers the team lead's research and agents' research in the team lead's sessions |
+| Generic harness and library code with no results (e.g. a beta-neutral helper in `scripts/research/harness.py`) | **"Public, if it shows no results."** It comes to this repository, so research in both repositories can import it. Anything study-specific (the study's scripts, notes, tables and ledger line) stays private |
+| The site's Research tab | **"Maybe our outlook, but i want this research for myself."** It stays under construction. If it opens, it carries an outlook, not research findings |
+| The team lead's fork. **Supersedes** "Make it private" above, for a new fork | **"I want this repo shown on my github account repos."** A new public fork, `simonjarviss/CreditTrading`, made 2026-11-24 from `main` at `b912a56`, main branch only. It does not update by itself. If this repository is ever made private, delete that fork first: GitHub keeps a public fork public when its parent goes private |
+
 ### Team lead, 2026-11-24 — the health check of the three books
 
 Asked in the team lead's session: "go over our deployed 3 sleeves and overall portfolio, make sure
@@ -1062,6 +1078,12 @@ intended". The read-back and the measurements are in `results/ops/HEALTH_CHECK_2
 | C4's hedge, after the research and its independent review (the write-up is in the team lead's private research repository, by the same evening's ruling that new research stays private) | **"Shadow the full hedge."** A simulated book only: C4's own plan targets plus a SPY position at minus the plan's ex-ante market beta, scored against a simulated C4 without it. No account, no order, the live C4 book unchanged. The "hedge only when short" variant is not shadowed |
 | Where the hedge book runs | **"In the shadow runner"**, chosen over C4's morning report and C4's own runner record, knowing it needs a read path on the VM: C4's plans are private to the trading user, so a read-only export of each plan's targets goes to a folder the shadow user can read. Built now; installed with the weekend release |
 | Recording the check | **"Yes, PR to main."** |
+| The late-NAV wait's cutoff, asked when the build showed that, with CEFConnect down, most decides would wait until 14:30 (a repeat at the decide on 24 of 28 core and 15 of 15 C4 sessions in `results/ops/late_nav_2026-11-24/`). **Supersedes** "at the final check" in the late-NAV row above | **"At the first morning slot, 06:00."** A repeated NAV defers the decide through the evening slots only; from 06:00 ET on the session date the decide goes ahead on the panel as it is. The 14:30 final check is unchanged for `on` and for the missing-NAV hold |
+| CEFConnect under `wait` (13 requests at every deferred slot; it has failed for every fund since about 21 October; its terms forbid "repeated automated access") | **"Stop reading it."** No `wait` gate reads CEFConnect, the core's included, so the `cc_prev` trigger is off while a book is in `wait`. A replacement second source is a separate decision |
+| Data QA for the corporate-action rows that name nothing | **"Show them as INFO."** Listed and labelled; they no longer make the day's data QA a FLAG. A blocking or other unresolved row still does |
+| The reboot ruled for "tonight around 23:00 ET" did not run: the session's own scheduled step fires only when the session is idle, and it stayed busy until morning; cancelled at 08:30 ET on 2026-11-25 (E-2026-11-24-61). **Supersedes** "Tonight around 23:00 ET" | **"With the weekend release"** (2026-11-25). Rebooted on Saturday 28 November before the release is installed, with each book's arming read back after each step |
+| The two C4 hedge books on the public site, which copies the shadow scoreboard (2026-11-25) | **"Keep them off the site."** They stay on the VM's scoreboard and the morning page |
+| Where the C4 study goes, and its `neutralise_row` helper (2026-11-25) | **"Push; helper inside the study."** The note, script, tables and ledger line are in `simonjarviss/quantt-research` under `desk/`; the helper lives in the study's own script, so this repository's harness is unchanged |
 
 ## 6. Governance — where each rule lives
 
@@ -1118,4 +1140,6 @@ intended". The read-back and the measurements are in `results/ops/HEALTH_CHECK_2
 | 2026-11-24 | §5 records the rulings on the seven old pull requests and the corporate-action gate ("Fix first, block later", superseding 2026-11-09's "Halt in tonight's release"), the clean-up's go and the arming read-back. | the old pull requests, for the team lead |
 | 2026-11-24 | §5 records the private repository: why, analysts to read access with private forks, the club accounts kept, the team lead's fork made private, the VM's deploy keys, GitHub off the site. | a private repository, for the team lead |
 | 2026-11-24 | §5 records that the repository stays public for now, superseding the same day's "Go private". | keep it public, for the team lead |
+| 2026-11-24 | §5 records that new research is private (`simonjarviss/quantt-research`), what still comes here, the Research tab, and the team lead's new public fork. | private research, for the team lead |
 | 2026-11-24 | §5 records the rulings after the health check of the three books: C4's research, waiting on repeated NAVs, HALVE/KILL on the previous close, symbol-less corporate-action rows, the events cap at 1.6×, the weekend release, the reboot. | the health check, for the team lead |
+| 2026-11-25 | §5 records the rulings on the build after the health check: the wait's 06:00 cutoff, no CEFConnect under `wait`, INFO for rows that name nothing; the missed reboot moved to the weekend release; the C4 hedge books off the public site; the C4 study private with its helper. | the health check, for the team lead |
