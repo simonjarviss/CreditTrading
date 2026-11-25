@@ -1025,6 +1025,23 @@ October were compared with `main` (`EVIDENCE_LOG` E-2026-11-24-11).
 | #70, row-level CRSP tables and the R2 inventories out of the tree | **"Update it now"**: brought up to date, the C4 families names table added, merged. *(Corrected the same day: the names table went back under tracking, because 15 C4 tests read it; splitting its CRSP columns is `docs/ROADMAP.md` 7.37. E-2026-11-24-12.)* The history rewrite stays the team lead's to push |
 | #3, the team's `data/` copy in R2: do the analysts still need it? | **"Yes, update it"** (row "Sharing the desk's data", 2026-10-26, above) |
 
+### Team lead, 2026-11-24 — a private repository
+
+Asked in the team lead's session: "is it possible to take github off the site and make github
+private for evryone excep ethan solnkik, me and my team". Answered through question prompts the
+same day (`EVIDENCE_LOG` E-2026-11-24-25). The public site stays public (row "Who can see the
+dashboard", above); only the repository changes.
+
+| question | ruling |
+|---|---|
+| Why | **"I just dont want people copying our stratgey."** Going private stops new readers. It cannot recall copies already made (GitHub's traffic API, 2026-11-24: 1,276 clones from 338 sources in 14 days; CI, the VM and laptops are among them) |
+| Go private, at about one release of work | **"Yes, go ahead."** The switch to private comes last, after the VM can read the repository with deploy keys (`docs/RUNBOOK.md` 8.14), and is confirmed with the team lead just before |
+| The rulesets: on GitHub Free, a private repository's rulesets are not enforced | **"Analysts read + forks."** Lucy, Ryan and James drop to read access and open pull requests from private forks. Turning on private forking is an org owner's setting: the team lead asks Ethan. `docs/TEAM.md` changes with the switch |
+| The club accounts `quanttgroup` and `quantt-ams` (admin) | **"Keep them."** |
+| The team lead's own public fork, `simonjarviss/CreditTrading` (last pushed 2026-08-16) | **"Make it private."** Done 2026-11-24 |
+| The VM's read-only deploy keys | **"Yes, go ahead"**, with the switch: created on the VM by an agent over ssh, and never printed |
+| GitHub on the site | Taken off the site in `release-20261124-16` (site session, 2026-11-24). **Supersedes** "put github link in top right corner" in the site rows above |
+
 ## 6. Governance — where each rule lives
 
 | subject | owner |
@@ -1078,3 +1095,4 @@ October were compared with `main` (`EVIDENCE_LOG` E-2026-11-24-11).
 | 2026-11-23 | §5 records "AUTO_ARMED now" for the events book, superseding "Yes, if VERIFY passes". | release-20261123-2, for the team lead |
 | 2026-11-24 | §5 records the team's `data/` copy in R2 (ruled 2026-10-26, merged with pull request #3 after the team lead confirmed on 2026-11-24 that the analysts still need it). | team data, for the team lead |
 | 2026-11-24 | §5 records the rulings on the seven old pull requests and the corporate-action gate ("Fix first, block later", superseding 2026-11-09's "Halt in tonight's release"), the clean-up's go and the arming read-back. | the old pull requests, for the team lead |
+| 2026-11-24 | §5 records the private repository: why, analysts to read access with private forks, the club accounts kept, the team lead's fork made private, the VM's deploy keys, GitHub off the site. | a private repository, for the team lead |

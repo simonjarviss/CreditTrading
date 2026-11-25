@@ -5852,6 +5852,30 @@ that adds it does not exist when it is written.
 - supports: §1, §5
 - status: current. `halt` for either book waits for the team lead's ruling (E-2026-11-24-11)
 
+### E-2026-11-24-25 · Ruling: the repository goes private once the VM reads it with deploy keys; the installer accepts the ssh spelling first
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - GitHub traffic API, 2026-11-24: 1,276 clones from 338 sources in 14 days; CI, the VM and laptops are among them [S]
+- source: `quantt/deploy/install_vm.py` @ `8674d2a` (the exact-https origin check this entry's commit widens to `ORIGIN_URLS`, `clone_origin`); `docs/RUNBOOK.md` @ `8674d2a` (8.13's https set-url, which this commit moves to ssh and follows with 8.14); `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — a private repository" and four tests in `quantt/deploy/tests/`, which fail against `8674d2a`, all added in this entry's commit
+- supports: §5
+- status: current. The team lead's reason: "i just dont want people copying our stratgey". The order: the installer change ships in a release while the repository is public, then deploy keys for `quantt` and `quantt-shadow`, set-url to ssh in the three VM clones, then the switch, confirmed with the team lead just before. Already done: the team lead's fork `simonjarviss/CreditTrading` made private, and GitHub taken off the site (`release-20261124-16`, site session). Waiting on: an org owner turning on private forking for the analysts
+
+### E-2026-11-24-27 · Release: release-20261124-17 lets the VM installer read the repository over ssh; installed for the core and C4 armed, the events book untouched and armed
+- kind: release
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - `release-20261124-17` is 428d588 (PR #118, merged as d11bc26 after origin/main was merged in and the `checks` workflow passed on the new head 7190f49). The release check said GO on 428d588: pytest exit 0 ("5204 passed, 2 skipped"); doc_audit 0 DRIFT, 2 NOTE; orient exit 0; preview DRY_RUN=1 exit 4 on this laptop's stale panels (not a code fault); both reviewers covered release-20261124-13..428d588 and found no order-path defect. A first attempt lost its connection to the API and returned nothing [S]
+  - changed since release-20261124-13, among the paths the order path runs: only `quantt/deploy/vm/bootstrap.sh`. No session, broker, sleeve, unit-template or `requirements.txt` change, so no replay, no venv step and no events install [V]
+  - installed 19:11 to 19:12 ET, after the 19:00 sessions and 19:10 collectors had finished. A read-only precheck came first (the VM saw the tag on origin at 428d588). Then C4's timers were disabled and the core's stopped. The `-13` installer's dry run accepted the tag over https. Then the core and C4 were installed `--armed`: DRY_RUN=0 and AUTO_ARMED as before, timers read back active. `install_events_vm.sh` was not run. Read back by `ops.prod_state`: the VM clone at release-20261124-17, the core and C4 ARMED, the events send DRY_RUN=0 with AUTO_ARMED present [V]
+  - the shadow runner exited 3 at 18:50 ET with "3 (session, symbol) pair(s) have no primary print", after writing its marks, as on 2026-11-23. Unrelated to this release [V]
+  - the release check's follow-ups, none on the order path: RUNBOOK 8.14's order for a fresh VM, corrected in PR #118; `docs/ROADMAP.md` 7.40 (ssh BatchMode for the installer's git calls) and 7.41 (`install_shadow_vm.sh` over ssh) [S]
+- source: `quantt/deploy/install_vm.py` @ `428d588` (`ORIGIN_URLS`, `clone_origin`); `docs/RUNBOOK.md` 8.14 @ `d11bc26`; `docs/ROADMAP.md` 7.40 and 7.41 @ `d11bc26`; the release-check workflow's result and the VM's installer output, read on 2026-11-24
+- supports: §5
+- status: current. The repository is still public. The switch waits on two organisation settings an owner must turn on: deploy keys (the VM's two keys exist on the VM, and GitHub refused to add them: "Deploy keys are disabled for this repository") and private forking (E-2026-11-24-25)
+
 ### E-2026-11-24-14 · Release: release-20261124-8 on the VM; its release check returned GO, and the event book's caption is built from what its figures are
 - kind: release
 - era: ALPACA
