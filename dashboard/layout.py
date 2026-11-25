@@ -16,6 +16,9 @@ SITE_NAME = "Event Driven Trading"
 TEAM_LINE = "QUANTT · Queen's University"
 CONTACT_EMAIL = "simon.jarvis@queensu.ca"       # team lead, 2026-11-23: the site's contact address
 QUANTT_URL = "https://quantt.ca"                 # team lead, 2026-11-24: "add a link to quantt's website from ours"
+# What QUANTT stands for, as quantt.ca writes it (its page title, fetched 2026-11-24; team lead, 2026-11-24:
+# "spell out what QUANTT means").
+QUANTT_NAME = "Queen's University Algorithmic Network & Trading Team"
 # No link to the code: the repository is going private (team lead, 2026-11-24, through session 2027-bc), so the
 # GitHub link in the header and the research page's ledger and source-code buttons were removed.
 # The public address, for the share card's absolute URL: LinkedIn and others fetch og:image from outside.
@@ -32,7 +35,7 @@ DISCLAIMER = (
     "shown gross of transaction costs and borrow fees unless stated otherwise, and do not represent "
     "actual trading. Past performance does not guarantee future results. Nothing on this site is an "
     "offer to sell, or a solicitation of an offer to buy, any security or investment product. The "
-    "team is part of QUANTT, the Queen's University Algorithmic Network and Trading Team, a student "
+    "team is part of QUANTT, the Queen's University Algorithmic Network & Trading Team, a student "
     "organisation at Queen's University.")
 
 # Colours of the books, fixed by book and never by rank (validated together on white:
@@ -151,7 +154,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 <footer class="site-footer"><div class="wrap">
 <div class="foot-grid">
 <div class="foot-brand"><img class="logo" src="/static/img/quantt-logo-white.png" alt="QUANTT" width="105" height="26">
-<p><span class="foot-name">{SITE_NAME}</span>A systematic trading team at <a href="{QUANTT_URL}" rel="noopener">QUANTT</a>, Queen's University.</p></div>
+<p><span class="foot-name">{SITE_NAME}</span>A systematic trading team at <a href="{QUANTT_URL}" rel="noopener">QUANTT</a>, the {QUANTT_NAME}.</p></div>
 <nav class="foot-nav" aria-label="Footer"><h4>Site</h4><ul>{foot_nav}</ul></nav>
 <div class="foot-contact"><h4>Contact</h4><p>Simon Jarvis<br>Portfolio Manager</p><p><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></p></div>
 </div>
@@ -166,7 +169,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 
 # quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
 PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "markets-ticker",
-          "research": "toronto-financial-street", "library": "toronto-financial-day", "team": "toronto-skyline-day",
+          "research": "toronto-financial-street", "library": "toronto-financial-day", "team": "campus",
           "contact": "toronto-bay-street", "": "hero-office"}
 # Photographs not taken by QUANTT, credited where they are shown (team lead, 2026-11-23: "proper Toronto
 # views that fit the darker vibe"; 2026-11-24: "a darker type image of Toronto's skyline / financial
@@ -174,9 +177,10 @@ PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "m
 # Commons, fetched 2026-11-24 at 2400 px and re-encoded to WebP with their metadata removed. CC BY-SA
 # requires the author and licence to be credited, so the credits are in the footer of every page
 # (team lead, 2026-11-24: take the credit off the photographs); the CC0 one is credited as a courtesy.
+# The team page shows quantt.ca's campus photograph, Grant Hall from the air (team lead, 2026-11-24: "for the
+# team tab lets use a queen's university campus picture instead"); like quantt.ca's other photographs it is
+# not credited here. The Toronto skyline it replaced, and its credit, were removed.
 PHOTO_CREDITS = {
-    "toronto-skyline-day": ("Dlsz", "CC BY-SA 4.0",
-                            "https://commons.wikimedia.org/wiki/File:View_of_Toronto_Skyline_from_Toronto_Islands.jpg"),
     "toronto-financial-day": ("Gregory Karastergios", "CC0",
                               "https://commons.wikimedia.org/wiki/File:Toronto_Financial_District.jpg"),
     "toronto-financial-street": ("Ken Lund", "CC BY-SA 2.0",
@@ -198,8 +202,35 @@ def photo_style(key: str) -> str:
     return f' style="background-image:url(/static/img/{PHOTOS.get(key, "hero-office")}.webp)"'
 
 
+# Titles in title case (team lead, 2026-11-24: "capitalize the titles (The Team)"): every page title and
+# section heading goes through title_case, so they all follow one rule. Short words stay lower case
+# unless first or last; a word that already has a capital (NAV, QUANTT, a name) is kept as written.
+SMALL_WORDS = {"a", "an", "and", "as", "at", "but", "by", "for", "from", "in", "into", "nor", "of", "on", "or",
+               "per", "the", "to", "vs", "with"}
+
+
+def title_case(s: str) -> str:
+    words = s.split(" ")
+    out = []
+    for i, w in enumerate(words):
+        lead = ""
+        while w and w[0] in "(\"'“‘":
+            lead, w = lead + w[0], w[1:]
+        parts = []
+        for j, p in enumerate(w.split("-")):
+            keep_small = j == 0 and p.lower() in SMALL_WORDS and 0 < i < len(words) - 1 and not lead
+            if not p or any(c.isupper() for c in p):
+                parts.append(p)
+            elif keep_small:
+                parts.append(p.lower())
+            else:
+                parts.append(p[:1].upper() + p[1:])
+        out.append(lead + "-".join(parts))
+    return " ".join(out)
+
+
 def page_head(eyebrow: str, title: str, lede: str, extra: str = "", photo: str = "") -> str:
     key = photo or eyebrow.lower()
     return (f'<section class="page-head"{photo_style(key)}><div class="wrap">'
             f'<div class="eyebrow">{escape(eyebrow)}</div>'
-            f'<h1>{escape(title)}</h1><p class="lede">{escape(lede)}</p>{extra}</div></section>')
+            f'<h1>{escape(title_case(title))}</h1><p class="lede">{escape(lede)}</p>{extra}</div></section>')

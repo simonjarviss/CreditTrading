@@ -84,6 +84,10 @@ def test_a_new_book_is_dated_by_its_first_send_not_its_newest_session(snap, tmp_
     ev = next(b for b in snap["books"] if b["name"] == "events")
     assert ev["start"]["value"]["first_send"] == "2026-11-23"
     ev["session"]["value"]["date"] = "2026-11-25"           # two sessions later
+    for b in snap["books"]:                                  # the core books have 23 Nov too, so it is counted
+        if b["name"] in ("cef", "c4"):
+            last = b["official"]["value"]["rows"][-1]["equity"]
+            b["official"]["value"]["rows"].append({"date": "2026-11-23", "equity": last + 10.0, "change_usd": 10.0})
     target = build(snap, tmp_path / "site", content)
     assert "Event Book<br><span class=\"meta\">from 23 Nov 2026" in (target / "performance" / "index.html").read_text()
     for page in ("index.html", "performance/index.html"):
@@ -189,7 +193,7 @@ def test_the_library_is_grouped_with_counts_and_searchable(snap, tmp_path, conte
     assert 'id="lib-search"' in h and 'class="lib-side"' in h and h.count('class="lib-row"') == len(LIB["entries"])
     assert '<span>Closed-end fund discounts</span><span class="c">1</span>' in h
     r = (target / "research" / "index.html").read_text()
-    assert r.count('class="row slim timed"') == 6 and "team-atrium" not in r and "How a result is tested" in r
+    assert r.count('class="row slim timed"') == 6 and "team-atrium" not in r and "How a Result Is Tested" in r
 
 
 def test_every_page_photo_not_taken_by_quantt_is_credited_in_the_footer(snap, tmp_path, content):
@@ -197,7 +201,7 @@ def test_every_page_photo_not_taken_by_quantt_is_credited_in_the_footer(snap, tm
     page's footer names each photograph's author and licence."""
     from dashboard import layout as L
     target = build(snap, tmp_path / "site", content)
-    for page_name, key in (("team", "team"), ("library", "library"), ("research", "research"), ("contact", "contact")):
+    for page_name, key in (("library", "library"), ("research", "research"), ("contact", "contact")):
         h = (target / page_name / "index.html").read_text()
         photo = L.PHOTOS[key]
         assert photo in L.PHOTO_CREDITS, photo
@@ -241,8 +245,8 @@ def test_the_team_page_shows_the_people_then_the_pod_and_its_books(snap, tmp_pat
     """Team lead, 2026-11-24: "a brief overview of the multi strategy pod we are running"; then "it should be
     the team pictures first then the pod description (which needs to be organized better)"."""
     home = (build(snap, tmp_path / "site", content) / "index.html").read_text()
-    assert home.index('class="people"') < home.index("Event-driven trading and special situations")
-    pod = home.split("Event-driven trading and special situations", 1)[1].split("</section>", 1)[0]
+    assert home.index('class="people"') < home.index("Event-Driven Trading and Special Situations")
+    pod = home.split("Event-Driven Trading and Special Situations", 1)[1].split("</section>", 1)[0]
     assert pod.count('class="pod-card"') == 3 and "<h4>" not in pod and "Reconciled daily" not in pod
     for title in ("Fixed Income Book", "Equity Cross-Asset Book", "Event Book"):
         assert title in pod, title
@@ -289,3 +293,35 @@ def test_no_page_links_to_github(snap, tmp_path, content, monkeypatch):
     for page in target.rglob("*.html"):
         h = page.read_text()
         assert "github.com" not in h and "GitHub" not in h, page
+
+
+def test_every_credited_photograph_is_shown_and_shipped(snap, tmp_path, content):
+    """A credit for a photograph no page shows, or a CC BY-SA file shipped without its credit, are both
+    wrong: the team page's Toronto skyline was replaced by the campus (team lead, 2026-11-24)."""
+    from dashboard import layout as L
+    shown = set(L.PHOTOS.values())
+    assert set(L.PHOTO_CREDITS) <= shown
+    target = build(snap, tmp_path / "site", content)
+    assert not (target / "static" / "img" / "toronto-skyline-day.webp").exists()
+
+
+def test_the_team_page_shows_the_campus_spells_out_quantt_and_titles_are_capitalised(snap, tmp_path, content):
+    """Team lead, 2026-11-24: "for the team tab lets use a queen's university campus picture instead, capitalize
+    the titles (The Team), spell out what QUANTT means". QUANTT's name as quantt.ca writes it."""
+    target = build(snap, tmp_path / "site", content)
+    h = (target / "index.html").read_text()
+    assert "/static/img/campus" in h.split('class="page-head"', 1)[1].split(">", 1)[0]
+    assert "<h1>The Team</h1>" in h and "<h2>Speak with the Team</h2>" in h
+    assert "QUANTT, the Queen&#x27;s University Algorithmic Network &amp; Trading Team" in h
+    lib = (target / "library" / "index.html").read_text()
+    assert "<h1>Research Library</h1>" in lib and "<h2>Closed-End Fund Discounts<small>" in lib
+    assert (target / "404.html").read_text().count("<h1>Page Not Found</h1>") == 1
+
+
+def test_title_case():
+    from dashboard.layout import title_case
+    assert title_case("the team") == "The Team"
+    assert title_case("Event-driven anomalies (ex-dates, dividends, earnings, index and fund flows)") == \
+        "Event-Driven Anomalies (Ex-Dates, Dividends, Earnings, Index and Fund Flows)"
+    assert title_case("Speak with the team") == "Speak with the Team"
+    assert title_case("Stale pricing and NAV mechanics") == "Stale Pricing and NAV Mechanics"

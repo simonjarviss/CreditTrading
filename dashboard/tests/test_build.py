@@ -70,16 +70,26 @@ def test_a_gap_is_shown_as_not_measured_never_as_a_number(snap):
 
 def test_the_portfolio_takes_each_book_from_its_first_send_and_the_event_book_on_its_readings(snap):
     """Team lead, 2026-11-24: one portfolio line, the event book "included automatically". The event
-    book has no end-of-day history, so it joins on its after-close readings, labelled; a session a
-    trading book has no record for is left out and counted."""
+    book has no end-of-day history, so it joins on its after-close readings, labelled on its bar."""
+    _evening_of_the_23rd(snap)
     h = page(snap)
     head = h.split("Key figures", 1)[1].split("</thead>", 1)[0]
     assert "Equity Cross-Asset Book<br><span class=\"meta\">from 19 Nov 2026" in head
     assert "Event Book<br><span class=\"meta\">from 23 Nov 2026" in head
     assert "Fixed Income Book<br>" not in head                       # it starts with the portfolio
-    assert "1 session left out" in h
     pnl = h.split("P&amp;L of the latest session", 1)[1].split("</svg>", 1)[0]
     assert "+$10 (after close)" in pnl                              # the event book's after-close reading
+
+
+def test_a_session_the_portfolio_leaves_out_is_left_out_of_every_book(snap):
+    """Team lead, 2026-11-24: "the performance tab should always be consistent numbers throughout". In the
+    fixture the core books have no record for 23 Nov, the event book's only session: the portfolio leaves
+    the session out, so the event book is not shown with a P&L the portfolio does not contain; it is named."""
+    pf = B.portfolio(snap)
+    assert pf["left"] == 1 and "events" not in {x["b"]["name"] for x in pf["books"]}
+    h = page(snap)
+    assert "1 session left out" in h
+    assert "Event Book not included: its sessions are not in the portfolio yet" in h
 
 
 def test_the_portfolio_view_switch_hides_the_books_until_chosen(snap):
@@ -232,9 +242,11 @@ def test_the_record_counts_from_its_start(snap, monkeypatch):
     """From 20 Nov: the Fixed Income Book's 20 Nov session (-$50) is the record; its 17-19 Nov sessions are not
     in it, and the page no longer shows them (team lead, 2026-11-24: "delete: Record before 24 Nov 2026")."""
     monkeypatch.setattr(B, "RECORD_START", "2026-11-20")
+    _evening_of_the_23rd(snap)
     pf = B.portfolio(snap)
     cef = next(x for x in pf["books"] if x["b"]["name"] == "cef")
-    assert cef["first"] == "2026-11-20" and cef["base"] == "2026-11-19" and cef["p"]["pnl"] == -50.0
+    # 20 Nov (-$50, official) and 23 Nov (+$100, the evening's reading); nothing before 20 Nov.
+    assert cef["first"] == "2026-11-20" and cef["base"] == "2026-11-19" and cef["p"]["pnl"] == 50.0
     ev = next(x for x in pf["books"] if x["b"]["name"] == "events")
     assert ev["first"] == "2026-11-23"                                   # a book that starts later joins later
     h = page(snap)
@@ -251,8 +263,7 @@ def test_before_its_first_session_closes_the_record_says_when_it_starts(snap, mo
 def test_the_positioning_totals_only_when_every_book_is_read_and_priced(snap):
     """The portfolio's bar in each positioning chart is the books' sum, or absent; never a sum over part of
     the portfolio. A book whose session could not be read is named."""
-    for name in ("cef", "c4"):                                    # every book's latest session on one date
-        book(snap, name)["session"]["value"]["date"] = "2026-11-23"
+    _evening_of_the_23rd(snap)                                   # every book's latest session on one date
     gross = page(snap).split("Gross exposure, x equity", 1)[1].split("</svg>", 1)[0]
     assert ">Portfolio</text>" in gross
     book(snap, "events")["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
@@ -326,7 +337,7 @@ def _evening_of_the_23rd(snap):
 def test_each_evening_the_core_books_join_on_their_after_close_reading_and_say_so(snap):
     """Team lead, 2026-11-24: "why is only event pnl showing", answered "Join on reading". On the evening
     the official figures have not landed, the portfolio counts every book, the core books on their
-    reading after the close, labelled; nothing is left out."""
+    reading after the close, marked on the latest session's bars; nothing is left out."""
     _evening_of_the_23rd(snap)
     pf = B.portfolio(snap)
     assert pf["left"] == 0 and pf["dated"][-1] == ("2026-11-23", pytest.approx((100 - 50 + 10) / (100050 + 100300 + 100000)), 60.0)
@@ -334,10 +345,13 @@ def test_each_evening_the_core_books_join_on_their_after_close_reading_and_say_s
     assert pf["aum"] == ("2026-11-23", 100150.0 + 100250.0 + 100010.0)
     h = page(snap)
     assert "left out" not in h
-    after = h.split('class="figures kpis"', 1)[1]                  # under the headline figures, AUM first
-    assert ("Fixed Income Book and Equity Cross-Asset Book, 23 Nov 2026: account reading after the close. "
-            "Alpaca&#x27;s official end-of-day figure replaces it the next morning.") in after
-    assert "Event Book: account readings after each close. It has no official end-of-day history yet." in after
+    # No note under the headline figures (team lead, 2026-11-24: "delete this"); the bars still mark each
+    # after-close figure.
+    assert "account reading" not in h and "official end-of-day history yet" not in h
+    bars = h.split("P&amp;L of the latest session", 1)[1].split("</svg>", 1)[0]
+    for t in ("Fixed Income Book: +$100 (after close)", "Equity Cross-Asset Book: −$50 (after close)",
+              "Event Book: +$10 (after close)"):
+        assert t in bars, t
 
 
 def test_the_official_figure_replaces_the_reading_when_it_lands(snap):
@@ -348,7 +362,8 @@ def test_the_official_figure_replaces_the_reading_when_it_lands(snap):
     pf = B.portfolio(snap)
     assert all(x["pending"] is None for x in pf["books"])
     assert pf["dated"][-1][2] == 120.0 - 70.0 + 10.0 and pf["aum"][1] == 100170.0 + 100230.0 + 100010.0
-    assert "account reading after the close" not in page(snap)
+    bars = page(snap).split("P&amp;L of the latest session", 1)[1].split("</svg>", 1)[0]
+    assert "Fixed Income Book: +$120<" in bars and "Fixed Income Book: +$120 (after close)" not in bars
 
 
 def test_a_reading_that_does_not_follow_the_last_official_close_is_not_joined_and_is_named(snap):
@@ -366,7 +381,7 @@ def test_a_reading_that_does_not_follow_the_last_official_close_is_not_joined_an
 
 def _same_figures(snap):
     """The portfolio's newest session read the same in the headline and in the positioning."""
-    pf, ps = B.portfolio(snap), B.positioning(snap)
+    pf = B.portfolio(snap); ps = B.positioning(snap, pf)
     assert ps["total"] is not None and ps["date"] == pf["aum"][0]
     assert ps["total"]["equity"] == pytest.approx(pf["aum"][1])
     assert ps["total"]["pnl"] == pytest.approx(pf["dated"][-1][2])
@@ -391,3 +406,98 @@ def test_the_headline_pnl_is_named_the_total_and_the_bars_the_latest_session(sna
     """From the second session the record's P&L and the latest session's differ; each says which it is."""
     h = page(snap)
     assert '<div class="l">Total P&amp;L</div>' in _kpis(h) and "P&amp;L of the latest session" in h
+
+
+# --------------------------------------------------- the same numbers everywhere --
+# Team lead, 2026-11-24: "the performance tab should always be consistent numbers throughout (even when
+# alpaca numbers replace them), always". Every state the page can be built in must show one set of figures.
+
+def _official(snap, name, date, eq, ch):
+    book(snap, name)["official"]["value"]["rows"].append({"date": date, "equity": eq, "change_usd": ch})
+
+
+def _figures(h):
+    """(headline AUM, headline total P&L, key-figures P&L row, positioning portfolio capital or None,
+    latest-session bars {label: text}) as printed."""
+    k = _kpis(h)
+    aum = re.search(r'<div class="n [^"]*">([^<]+)</div><div class="l">AUM</div>', k).group(1)
+    tot = re.search(r'<div class="n [^"]*">([^<]+)</div><div class="l">Total P&amp;L</div>', k).group(1)
+    kf = h.split("Key figures", 1)[1].split("</table>", 1)[0]
+    row = re.findall(r'<td class="r"><span class="[^"]*">([^<]+)</span></td>',
+                     re.search(r"<tr><td>P&amp;L</td>(.*?)</tr>", kf).group(1))
+    pos = h.split("<h2>Positioning</h2>", 1)[1].split("</section>", 1)[0]
+    cap = re.search(r"<b>Portfolio</b></td><td class=\"r\">([^<]+)</td>", pos)
+    bars = dict(t.split(": ", 1) for t in re.findall(r"<title>([^<]+)</title>",
+                                                     pos.split("P&amp;L of the latest session", 1)[1].split("</svg>", 1)[0]))
+    return aum, tot, row, cap.group(1) if cap else None, bars
+
+
+def _states():
+    """Every state of an evening and the next morning, built from the fixture."""
+    def evening(s):
+        _evening_of_the_23rd(s)
+
+    def morning(s):
+        evening(s)
+        _official(s, "cef", "2026-11-23", 100170.0, 120.0)
+        _official(s, "c4", "2026-11-23", 100230.0, -70.0)
+
+    def half_morning(s):                                     # one book's official figure landed, not the other's
+        evening(s)
+        _official(s, "cef", "2026-11-23", 100170.0, 120.0)
+
+    def event_official(s):                                   # the event book gains an official history
+        morning(s)
+        ev = book(s, "events")
+        ev["official"] = {"value": {"rows": [{"date": "2026-11-20", "equity": 100000.0, "change_usd": 0.0},
+                                             {"date": "2026-11-23", "equity": 100004.0, "change_usd": 4.0}]},
+                          "source": "x", "read_at": "2026-11-24T08:40:00Z", "label": "broker-confirmed"}
+
+    def event_session_unread(s):
+        evening(s)
+        book(s, "events")["session"] = {"UNMEASURED": "events/2026-11-23/verify.json: not JSON"}
+
+    def core_reading_off_base(s):                            # 20 Nov's official row missing: the reading cannot join
+        evening(s)
+        book(s, "cef")["official"]["value"]["rows"].pop()
+
+    return {"evening": evening, "morning": morning, "half_morning": half_morning, "event_official": event_official,
+            "event_session_unread": event_session_unread, "core_reading_off_base": core_reading_off_base}
+
+
+@pytest.mark.parametrize("state", list(_states()))
+def test_every_figure_of_the_portfolio_agrees_in_every_state(snap, state):
+    _states()[state](snap)
+    pf = B.portfolio(snap)
+    ps = B.positioning(snap, pf)
+    h = page(snap)
+    aum, tot, row, cap, bars = _figures(h)
+    # The headline, the key figures and the P&L-by-session bars: one total.
+    assert tot == B.usd(pf["p"]["pnl"], True) == row[0]
+    assert pf["p"]["pnl"] == pytest.approx(sum(p for _, _, p in pf["dated"]))
+    # The books' P&L sums to the portfolio's: every book counts the portfolio's sessions and no other.
+    assert sum(x["p"]["pnl"] for x in pf["books"]) == pytest.approx(pf["p"]["pnl"])
+    assert [B.usd(x["p"]["pnl"], True) for x in pf["books"]] == row[1:]
+    # The positioning's total, when shown, is the AUM and the newest session's P&L; when not, it says why.
+    if cap is None:
+        assert ps["total"] is None and "No portfolio total:" in h
+    else:
+        assert cap == aum == B.usd(pf["aum"][1])
+        assert bars["Portfolio"] == B.usd(pf["dated"][-1][2], True)
+        assert ps["total"]["pnl"] == pytest.approx(sum(r["pnl"] for r in ps["rows"]))
+    # Each book's latest-session bar is the same session's figure in its own record on the page.
+    for x in pf["books"]:
+        r = next((r for r in ps["rows"] if r["b"]["name"] == x["b"]["name"]), None)
+        hit = r and next((t for t in x["dated"] if t[0] == r["date"]), None)
+        if hit:
+            assert bars[x["b"]["title"]].split(" (")[0] == B.usd(hit[2], True), (state, x["b"]["name"])
+
+
+def test_the_states_cover_a_total_and_its_absence(snap):
+    """The parametrised states include both a positioning total and none, so both branches are checked."""
+    seen = set()
+    for name, f in _states().items():
+        s = json.loads(json.dumps(snap))
+        f(s)
+        seen.add(B.positioning(s, B.portfolio(s))["total"] is None)
+    assert seen == {True, False}

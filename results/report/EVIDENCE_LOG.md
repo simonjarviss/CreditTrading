@@ -6008,3 +6008,18 @@ that adds it does not exist when it is written.
 - supports: §5
 - status: current
 
+### E-2026-11-24-33 · Rulings: the after-close note off; one set of figures in every state; the team page (campus, title case, QUANTT spelled out, no Queen's logo)
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, quoting the two lines under the portfolio's headline figures ("Fixed Income Book and Equity Cross-Asset Book, 24 Nov 2026: account reading after the close. ..." and "Event Book: account readings after each close. ..."): "delete this" [V]
+  - removed: the note and the function that wrote it. The latest session's bars still mark each after-close figure "(after close)", so the provisional figures stay labelled on the page [V]
+  - the team lead: "the performance tab should always be consistent numbers throughout (even when alpaca numbers replace them), always". Every figure now comes from one computation; a session the portfolio leaves out is left out of every book; the positioning's capital and P&L are the portfolio's rows, and its total is shown only when it is the portfolio's newest session with every book in it. `test_every_figure_of_the_portfolio_agrees_in_every_state` checks six states [V]
+  - tonight's page from the VM's records after the change: AUM $300,821 = the positioning's portfolio capital; total P&L +$1,293 in the headline, the key figures and the latest session's bars; books −$68, +$1,600, −$239 everywhere [V]
+  - the team lead: "for the team tab lets use a queen's university campus picture instead, capitalize the titles (The Team), spell out what QUANTT means, small queens logo in the corner maybe". Done: quantt.ca's campus photograph (Grant Hall); title case on every page title and section heading; "Queen's University Algorithmic Network & Trading Team", as quantt.ca's page title writes it (fetched 2026-11-24) [V]
+  - not done: the Queen's logo. Queen's Student Group Identification Guidelines (August 2025, fetched 2026-11-24): "Student groups are not permitted to use Queen's University trademarked logos, graphics, or any extracted element from these logos/graphics in their logo or communications" [V]
+- source: `dashboard/build.py` @ `89bc849` (before the change, `reading_note`, `positioning`); the change is in the commit that carries this entry, with `dashboard/layout.py`, `dashboard/site.py`, their tests and `docs/SYSTEM.md` §5; https://www.queensu.ca/brand-central/sites/bcwww/files/uploaded_files/Queens-University-Student-Group-Identification-Guidelines.pdf
+- supports: §5
+- status: current
+

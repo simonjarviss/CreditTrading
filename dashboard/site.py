@@ -71,7 +71,7 @@ def stages_html() -> str:
 
 def contact_band() -> str:
     return ('<section class="section dark"><div class="wrap sec-grid"><div class="sec-label">'
-            '<div class="eyebrow">Contact</div><h2>Speak with the team</h2></div>'
+            '<div class="eyebrow">Contact</div><h2>Speak with the Team</h2></div>'
             '<div class="sec-body"><p class="lede">For questions about the strategies, the results or an allocation, '
             'contact Simon Jarvis, Portfolio Manager.</p>'
             f'<div class="buttons"><a class="btn primary" href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></div>'
@@ -124,7 +124,7 @@ CONTROLS = (
 
 def _sec(cls: str, eyebrow: str, title: str, lede: str, body: str) -> str:
     return (f'<section class="section{cls}"><div class="wrap sec-grid"><div class="sec-label">'
-            f'<div class="eyebrow">{escape(eyebrow)}</div><h2>{escape(title)}</h2>'
+            f'<div class="eyebrow">{escape(eyebrow)}</div><h2>{escape(L.title_case(title))}</h2>'
             + (f'<p class="lede">{escape(lede)}</p>' if lede else "")
             + f'</div><div class="sec-body">{body}</div></div></section>')
 
@@ -226,7 +226,7 @@ def library(lib: dict) -> str:
                         f'<div><div class="t">{title}</div><div class="src">{escape(src)}</div>'
                         + (f'<p class="use">{escape(e["used_for"])}</p>' if e.get("used_for") else "")
                         + '</div>' + f'<div class="links">{"".join(links)}</div></div>')
-        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2>{escape(t)}<small>{count[t]} sources</small></h2>'
+        groups.append(f'<div class="lib-group" id="{_slug(t)}"><h2>{escape(L.title_case(t))}<small>{count[t]} sources</small></h2>'
                       f'{"".join(rows)}</div>')
     n_pdf = sum(1 for e in entries if e.get("oa_pdf_url"))
     years = [e["year"] for e in entries if e.get("year")]
@@ -295,7 +295,7 @@ def pod_overview(snap: dict) -> str:
         f'</span>{escape(b["title"])}</h3><p>{escape(pod_line(snap, b))}</p></div>'
         for b in snap["books"])
     return ('<section class="section soft"><div class="wrap"><div class="eyebrow">The pod</div>'
-            '<h2>Event-driven trading and special situations</h2>'
+            '<h2>Event-Driven Trading and Special Situations</h2>'
             # Team lead, 2026-11-24: "we are a pod under QUANTT, running an event driven trading and special
             # situations desk".
             '<p class="lede narrow">A pod within QUANTT running an event-driven trading and special situations '
@@ -306,7 +306,8 @@ def pod_overview(snap: dict) -> str:
 
 def team(t: dict, snap: dict) -> str:
     cards = [person_card(m) for m in t["members"]]
-    head = page_head("Team", "The team", "Four students at Queen's University, part of QUANTT.")
+    # Team lead, 2026-11-24: "spell out what QUANTT means".
+    head = page_head("Team", "The Team", f"Four students in QUANTT, the {L.QUANTT_NAME}.", photo="team")
     body = (head + f'<section class="section"><div class="wrap"><div class="people">{"".join(cards)}</div></div></section>'
             + pod_overview(snap) + contact_band())
     return page("team", "Team", body, "The Event Driven Trading team at QUANTT, Queen's University.")

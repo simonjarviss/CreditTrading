@@ -64,7 +64,8 @@ def pending_reading(b: dict, rows: list) -> tuple:
     official end-of-day figures for the Fixed Income and Equity Cross-Asset books land at about 05:20
     New York time, so every evening the portfolio held only the Event Book, which has no official
     history and counts on its after-close readings. Each evening now uses every book's after-close
-    reading for that session, labelled on the page; the morning rebuild replaces it with the official
+    reading for that session, marked "(after close)" on the latest session's bars; the morning rebuild
+    replaces it with the official
     figure. The two differ: by $164 (cef) and $619 (c4) on 20 Nov 2026.
 
     The reading is used only when it continues the official record: its base (equity minus change)
@@ -91,7 +92,9 @@ def portfolio(snap: dict) -> dict:
 
     A book's daily record is its official end-of-day history, plus its newest session's after-close
     reading until the official figure for that session lands (pending_reading); or, while it has no
-    official history, its after-close readings (the event book). Both are labelled. A book that has
+    official history, its after-close readings (the event book). The latest session's bars mark an
+    after-close figure "(after close)"; the note that said so under the headline figures was taken off
+    (team lead, 2026-11-24: "delete this"). A book that has
     not sent an order is left out and named. A book whose record could not be read is left out too,
     and named in a warning above the figures and in every label that sums the books, so the composite
     never reads as the whole without saying so. (Release-check review of 904bd35, 2026-11-24:
@@ -152,30 +155,24 @@ def portfolio(snap: dict) -> dict:
             d, active = comp[-1][0], comp[-1][4]
             aum = sum(next(r["equity"] for r in x["rows"] if r["date"] == d)
                       for x in books if x["b"]["name"] in active)
-            out.update(dated=dated, comp=comp, left=left, p=M.profile(dated), base=min(x["base"] for x in books),
-                       first=min(x["first"] for x in books), aum=(d, aum))
+            # ONE SET OF SESSIONS (team lead, 2026-11-24: "the performance tab should always be consistent
+            # numbers throughout (even when alpaca numbers replace them), always"). A session the portfolio
+            # leaves out (a book has no record for it) is left out of every book's figures too, so the
+            # books' P&L always sums to the portfolio's and every chart covers the same sessions. A book
+            # with no session in the portfolio yet is named, not shown.
+            counted = {(n, t[0]) for t in comp for n in t[4]}
+            kept = []
+            for x in books:
+                own = [t for t in x["dated"] if (x["b"]["name"], t[0]) in counted]
+                if not own:
+                    excluded.append((x["b"], "its sessions are not in the portfolio yet: another book has no record for them"))
+                    continue
+                if len(own) != len(x["dated"]):
+                    x = dict(x, dated=own, p=M.profile(own))
+                kept.append(x)
+            out.update(books=kept, dated=dated, comp=comp, left=left, p=M.profile(dated),
+                       base=min(x["base"] for x in kept), first=min(x["first"] for x in kept), aum=(d, aum))
     return out
-
-
-def reading_note(pf: dict) -> str:
-    """Which figures are account readings after the close rather than Alpaca's official end-of-day
-    history (CLAUDE.md: label each record). A book's pending session is named with its date; a book
-    whose whole record is after-close readings (the event book) says so."""
-    by_date = {}
-    for x in pf["books"]:
-        if x["pending"]:
-            by_date.setdefault(x["pending"], []).append(x["b"]["title"])
-    parts = []
-    for d, titles in sorted(by_date.items()):
-        names = titles[0] if len(titles) == 1 else ", ".join(titles[:-1]) + " and " + titles[-1]
-        parts.append(f"{names}, {fmt_short(d)}: account reading after the close. Alpaca's official end-of-day "
-                     "figure replaces it the next morning.")
-    for x in pf["books"]:
-        if x["kind"] == "after-close":
-            parts.append(f"{x['b']['title']}: account readings after each close. It has no official end-of-day "
-                         "history yet.")
-    return (f'<div class="reading-note" style="margin-top:20px">'
-            + "".join(f'<p class="meta">{escape(t)}</p>' for t in parts) + '</div>') if parts else ""
 
 
 def _na(p: dict) -> str:
@@ -278,10 +275,21 @@ def session_equity(b: dict, date: str):
     return e["equity"] if e else None
 
 
-def positioning(snap: dict) -> dict:
-    """Each book's newest verified session in aggregates, and the portfolio's totals when every book has a
-    priced reading for the same session: {rows: [...], total: {...} or None, date: str or None}.
-    A P&L is Alpaca's official figure when it has landed, else the after-close reading (session_pnl)."""
+def positioning(snap: dict, pf: dict) -> dict:
+    """Each book's newest verified session in aggregates, and the portfolio's totals:
+    {rows: [...], total: {...} or None, date: str or None, why: str or None}.
+
+    ONE SOURCE (team lead, 2026-11-24: "we have 2 different pnl for portfolio", then "the performance tab
+    should always be consistent numbers throughout (even when alpaca numbers replace them), always"). A
+    book's capital and P&L for a session the portfolio counts are read from the portfolio's own rows
+    (pf), so they are the numbers in the headline, the key figures and the charts, official or
+    after-close exactly as those are. Only a session the portfolio does not count falls back to the
+    book's record (session_pnl, session_equity). The portfolio's row and bars are shown only when every
+    book's latest session is the portfolio's newest session with every book in it: then its P&L is that
+    session's P&L in the chart above, and its capital is the AUM. Otherwise there is no total, and the
+    page says why."""
+    in_pf = {x["b"]["name"]: x for x in pf["books"]}
+    last = pf["comp"][-1] if pf["comp"] else None
     rows, complete, dates = [], True, set()
     for b in snap["books"]:
         sess = b["session"]
@@ -289,25 +297,39 @@ def positioning(snap: dict) -> dict:
             complete = False
             continue
         v = sess["value"]
-        dates.add(v["date"])
-        ch, kind = session_pnl(b, v["date"])
-        eq = session_equity(b, v["date"])
+        d = v["date"]
+        dates.add(d)
+        x = in_pf.get(b["name"])
+        hit = next((t for t in x["dated"] if t[0] == d), None) if x else None
+        if hit:
+            ch = hit[2]
+            eq = next(r["equity"] for r in x["rows"] if r["date"] == d)
+            kind = "after-close reading" if x["kind"] == "after-close" or x["pending"] == d else "official"
+        else:
+            ch, kind = session_pnl(b, d)
+            eq = session_equity(b, d)
         pos = v["positions"]
         priced = not pos["n"] or (not pos["n_unpriced"] and pos["gross_x"] is not None)
         if priced and pos["n"] and eq:
             # Exposure over the same equity the capital column shows, so a book's row and the total agree.
             pos = dict(pos, gross_x=pos["gross_usd"] / eq, net_x=pos["net_usd"] / eq)
-        rows.append({"b": b, "date": v["date"], "pnl": ch, "kind": kind, "equity": eq, "pos": pos,
-                     "priced": priced})
+        rows.append({"b": b, "date": d, "pnl": ch, "kind": kind, "equity": eq, "pos": pos, "priced": priced})
         complete = complete and ch is not None and eq is not None and priced
-    total = None
-    if complete and rows and len(dates) == 1:
-        eq = sum(r["equity"] for r in rows)
-        total = {"pnl": sum(r["pnl"] for r in rows), "equity": eq,
+    total, why = None, None
+    names = {r["b"]["name"] for r in rows}
+    if not rows:
+        why = None
+    elif not complete:
+        why = "a book's latest session could not be read or priced"
+    elif last is None or dates != {last[0]} or names != set(last[4]) or len(rows) != len(snap["books"]):
+        why = "the books' latest sessions are not all in the portfolio's record yet"
+    else:
+        eq = pf["aum"][1]
+        total = {"pnl": last[2], "equity": eq,
                  "gross_x": sum(r["pos"]["gross_usd"] or 0.0 for r in rows) / eq,
                  "net_x": sum(r["pos"]["net_usd"] or 0.0 for r in rows) / eq,
                  "n_long": sum(r["pos"]["n_long"] for r in rows), "n_short": sum(r["pos"]["n_short"] for r in rows)}
-    return {"rows": rows, "total": total, "date": next(iter(dates)) if len(dates) == 1 else None}
+    return {"rows": rows, "total": total, "date": next(iter(dates)) if len(dates) == 1 else None, "why": why}
 
 
 def _x(v: float, signed: bool = False) -> str:
@@ -369,14 +391,14 @@ def positioning_table(snap: dict, ps: dict) -> str:
                rows, right=(1, 2, 3, 4, 5, 6, 7, 8))
 
 
-def positioning_section(snap: dict) -> str:
+def positioning_section(snap: dict, pf: dict) -> str:
     """Positioning after each book's newest session (team lead, 2026-11-24: "the position could also be more
     detailed"): a table of capital, positions, long and short value, exposure and concentration; bar charts
     of each book's session P&L, positions, gross and net exposure; the core books' exposure by fund group
     (their risk reports); the event book's capital and names by strategy (its sleeve reading); and
     concentration. Books whose session could not be read are named; a book with an unpriced position has
     no exposure bar. Aggregates only, never a holding."""
-    ps = positioning(snap)
+    ps = positioning(snap, pf)
     colour = lambda b: BOOK_COLOURS.get(b["name"], COMBINED_COLOUR)                        # noqa: E731
     t = ps["total"]
     pnl, gross, net, held = [], [], [], []
@@ -433,6 +455,7 @@ def positioning_section(snap: dict) -> str:
     when_txt = fmt_short(ps["date"]) if ps["date"] else "each book's latest session"
     return ('<section class="section soft"><div class="wrap">'
             f'<h2>Positioning</h2><p class="meta">After the close of {when_txt}.</p>{gap_txt}'
+            + (f'<p class="meta">No portfolio total: {escape(ps["why"])}.</p>' if ps["why"] else "")
             + positioning_table(snap, ps)
             + f'<div class="chart-grid">{"".join(cells)}</div></div></section>')
 
@@ -443,12 +466,11 @@ SWITCH = ('<div class="view-switch" role="group" aria-label="Chart view" hidden>
           '<button type="button" data-view="books" aria-pressed="false">By book</button></div>')
 
 
-def portfolio_section(snap: dict) -> str:
+def portfolio_section(snap: dict, pf: dict) -> str:
     """Returns and risk since RECORD_START: four headline figures; the cumulative return of the portfolio
     and, on a switch, of each book; each session's P&L; the drawdown; and the overall statistics as a
     table (team lead, 2026-11-24: "graphs and bar charts demonstrate returns, risk and positioning ...
     with tables for overall stats")."""
-    pf = portfolio(snap)
     warn = "".join(f'<p class="gap">Not included: {escape(b["title"])} ({escape(w)}).</p>' for b, w in pf["blocked"])
     if not pf["p"]:
         # Say why there is no portfolio (release-check review of 455eff4: with every book unreadable,
@@ -486,7 +508,7 @@ def portfolio_section(snap: dict) -> str:
     cols = [("Portfolio", PORTFOLIO_COLOUR, p, pf["first"])] + [(x["b"]["title"], colour(x), x["p"], x["first"])
                                                               for x in pf["books"]]
     return (f'<section class="section"><div class="wrap"><h2>Portfolio</h2>'
-            f'{warn}{notes}<div class="figures kpis">{"".join(kpis)}</div>{reading_note(pf)}'
+            f'{warn}{notes}<div class="figures kpis">{"".join(kpis)}</div>'
             f'<div class="chart-head"><h3 class="chart-title">Returns: cumulative</h3>{switch}</div>'
             + charts.line_chart(growth, "Cumulative return of the portfolio and of each book", fmt="pct")
             + '<h3 class="chart-title">Returns: P&amp;L by session</h3>'
@@ -502,7 +524,8 @@ def render_body(snap: dict) -> str:
               'invented for testing and is not the book.</p></div>') if snap["synthetic"] else ""
     head = page_head("Performance", "Performance", "Live results of our three paper-trading books.",
                      f'<p class="meta" style="color:rgba(255,255,255,0.7);margin-top:14px">Updated {escape(when(exported))}</p>')
-    return head + banner + portfolio_section(snap) + positioning_section(snap)
+    pf = portfolio(snap)               # one computation feeds every figure on the page
+    return head + banner + portfolio_section(snap, pf) + positioning_section(snap, pf)
 
 
 def render(snap: dict) -> str:
