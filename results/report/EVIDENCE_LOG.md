@@ -6070,3 +6070,15 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` @ `b912a56` (before the ruling); `CLAUDE.md` @ `b912a56` (before the ruling); the ruling's §5 block, the `CLAUDE.md` research rules and the ledger's closing note are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-71 · Ruling: the analysts' research stays public; generic harness code with no results stays public
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead, by question prompt, on the analysts' research (they have no access to `simonjarviss/quantt-research`): "Their research stays public". The analysts keep delivering research to this repository by pull request, with their ledger lines in `results/IDEA_LEDGER.md` [V]
+  - on generic harness and library code with no results: "Public, if it shows no results (Recommended)". Study-specific scripts, notes, tables and ledger lines stay private [V]
+  - these settle the two open lines of E-2026-11-24-70 [V]
+- source: `docs/SYSTEM.md` @ `4ab7ab4` (before the ruling); `CLAUDE.md` @ `4ab7ab4` (before the ruling); the rows and wording are in the commit that carries this entry
+- supports: §5
+- status: current
