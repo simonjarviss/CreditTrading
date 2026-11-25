@@ -23,7 +23,7 @@ Figures are not owned by any document: `python3 -m ops.orient` produces them.
 | path or glob | role | owns | checked by |
 |---|---|---|---|
 | `CLAUDE.md` | rules | the hard rules for agents: order path, code, data, research; landmines; the desk | `ops.doc_audit` (desk inventory, entry point) |
-| `README.md` | entry | where a human starts, setup, and the repo layout | `ops.doc_audit` (entry point) |
+| `README.md` | entry | the public front page: what the repository is, the site, the top-level layout, and where a team member goes next | `ops.doc_audit` (entry point) |
 | `docs/INDEX.md` | manifest | which file owns which question | `ops.doc_audit` (manifest) |
 | `docs/SYSTEM.md` | canonical | what we trade, how it runs, what we know, standing decisions | `ops.doc_audit` (pointers) |
 | `docs/MISSION.md` | canonical | the team lead's standing brief of 2026-11-09, verbatim: the mission, what stays and what was dropped, how to think about edges, the pipeline from idea to live, the engineering and agent-layer build, the phases | — |

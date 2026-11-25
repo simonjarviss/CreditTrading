@@ -178,7 +178,7 @@ Everyone, in your first days:
 
 | # | read | for |
 |---|---|---|
-| 1 | `README.md` | the layout and the commands |
+| 1 | `README.md` | what the repository is, and the site |
 | 2 | `docs/SYSTEM.md` §0–§4 | what we trade, what is known and what is not, what binds, how it runs |
 | 3 | `CLAUDE.md` | the hard rules. They bind people as much as agents |
 | 4 | `docs/TEAM.md` | your lane, and how your work reaches `main` |
