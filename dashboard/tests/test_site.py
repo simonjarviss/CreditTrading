@@ -201,7 +201,7 @@ def test_every_page_photo_not_taken_by_quantt_is_credited_in_the_footer(snap, tm
     page's footer names each photograph's author and licence."""
     from dashboard import layout as L
     target = build(snap, tmp_path / "site", content)
-    for page_name, key in (("library", "library"), ("research", "research"), ("contact", "contact")):
+    for page_name, key in (("team", "team"), ("library", "library"), ("research", "research"), ("contact", "contact")):
         h = (target / page_name / "index.html").read_text()
         photo = L.PHOTOS[key]
         assert photo in L.PHOTO_CREDITS, photo
@@ -310,7 +310,7 @@ def test_the_team_page_shows_the_campus_spells_out_quantt_and_titles_are_capital
     the titles (The Team), spell out what QUANTT means". QUANTT's name as quantt.ca writes it."""
     target = build(snap, tmp_path / "site", content)
     h = (target / "index.html").read_text()
-    assert "/static/img/campus" in h.split('class="page-head"', 1)[1].split(">", 1)[0]
+    assert "/static/img/queens-douglas-dusk" in h.split('class="page-head"', 1)[1].split(">", 1)[0]
     assert "<h1>The Team</h1>" in h and "<h2>Speak with the Team</h2>" in h
     assert "QUANTT, the Queen&#x27;s University Algorithmic Network &amp; Trading Team" in h
     lib = (target / "library" / "index.html").read_text()
@@ -332,3 +332,15 @@ def test_a_page_heads_line_is_not_cut_to_a_narrow_column():
     "should be 1 line its 2 lines". The 56-character column broke it; the page head's line takes the page's width."""
     css = (Path(__file__).resolve().parents[1] / "public" / "static" / "site.css").read_text()
     assert ".page-head .lede { max-width: none; }" in css
+
+
+def test_every_page_head_photograph_is_sharp_at_twice_the_page_width():
+    """Team lead, 2026-11-24: "too blurry". quantt.ca's 1920 px campus photograph was stretched over a head that a
+    high-density screen draws at 2560 px or more. Every page head's photograph is at least 2400 px wide."""
+    from PIL import Image
+    from dashboard import layout as L
+    img = Path(__file__).resolve().parents[1] / "public" / "static" / "img"
+    for key in [k for k, _, _ in L.NAV] + [""]:                 # the pages the site builds, and the 404
+        name = L.PHOTOS[key]
+        w = Image.open(img / f"{name}.webp").size[0]
+        assert w >= 2400, (key, name, w)

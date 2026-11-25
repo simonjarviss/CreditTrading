@@ -169,7 +169,7 @@ def page(active: str, title: str, body: str, description: str) -> str:
 
 # quantt.ca's photographs (team lead, 2026-11-23: "use the same pictures"), one per page head.
 PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "markets-ticker",
-          "research": "toronto-financial-street", "library": "toronto-financial-day", "team": "campus",
+          "research": "toronto-financial-street", "library": "toronto-financial-day", "team": "queens-douglas-dusk",
           "contact": "toronto-bay-street", "": "hero-office"}
 # Photographs not taken by QUANTT, credited where they are shown (team lead, 2026-11-23: "proper Toronto
 # views that fit the darker vibe"; 2026-11-24: "a darker type image of Toronto's skyline / financial
@@ -177,10 +177,15 @@ PHOTOS = {"overview": "hero-office", "strategy": "presenting", "performance": "m
 # Commons, fetched 2026-11-24 at 2400 px and re-encoded to WebP with their metadata removed. CC BY-SA
 # requires the author and licence to be credited, so the credits are in the footer of every page
 # (team lead, 2026-11-24: take the credit off the photographs); the CC0 one is credited as a courtesy.
-# The team page shows quantt.ca's campus photograph, Grant Hall from the air (team lead, 2026-11-24: "for the
-# team tab lets use a queen's university campus picture instead"); like quantt.ca's other photographs it is
-# not credited here. The Toronto skyline it replaced, and its credit, were removed.
+# The team page shows Queen's campus (team lead, 2026-11-24: "for the team tab lets use a queen's university
+# campus picture instead"). quantt.ca's Grant Hall aerial was tried first and was too soft at the head's width
+# (1920 px, compressed; "the queens logo is too blurry", the tower's banner); the Douglas Library at dusk is
+# 3008 px, fetched 2026-11-24 at full size from Commons and re-encoded to WebP without its metadata. No
+# university logo is in view (Queen's student-group guidelines forbid using one). The Toronto skyline it
+# replaced, and its credit, were removed.
 PHOTO_CREDITS = {
+    "queens-douglas-dusk": ("everettjsj2", "CC BY-SA 3.0",
+                            "https://commons.wikimedia.org/wiki/File:Douglas_Library_at_Dusk,_Queen%27s_University,_Kingston,_Canada.jpg"),
     "toronto-financial-day": ("Gregory Karastergios", "CC0",
                               "https://commons.wikimedia.org/wiki/File:Toronto_Financial_District.jpg"),
     "toronto-financial-street": ("Ken Lund", "CC BY-SA 2.0",
