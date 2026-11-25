@@ -5992,3 +5992,19 @@ that adds it does not exist when it is written.
 - source: `dashboard/layout.py` and `dashboard/site.py` @ `65d72ee` (before the change); the change is in the commit that carries this entry, with `docs/SYSTEM.md` §5
 - supports: §5
 - status: current
+
+### E-2026-11-24-32 · Ruling and site change: AUM at the top; every book in the evening portfolio; one figure per session
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the team lead asked for "our capital at the top (or AUM)" and why only the Event Book's P&L showed; by question prompt chose "AUM" and "Join on reading" [V]
+  - why: the Fixed Income and Equity Cross-Asset books counted only on Alpaca's official end-of-day history, which lands at about 05:20 New York time; the Event Book, with no official history, counts on its after-close readings. So each evening the portfolio held the Event Book alone (live page, 24 Nov 2026 18:20 ET: "−$239", "Fixed Income Book not included: its first session from 24 Nov 2026 has not closed yet") [V]
+  - the after-close reading's base (equity minus change, Alpaca's `last_equity`) equals the last official close to the cent on every session read on the VM: cef and c4, 19, 20, 23 and 24 Nov 2026 [V]
+  - the after-close reading differs from the official close that later replaces it: cef 20 Nov $99,531.92 against $99,367.80 (+$164.12); c4 20 Nov $101,338.99 against $101,958.13 (−$619.14); cef 23 Nov +$73.89; c4 23 Nov +$8.26 [V]
+  - the team lead then: "the portfolio numbers on the site also dont match and arnt uniform, we have 2 different pnl for portfolio". The live page showed the portfolio's P&L as −$239 in the headline and key figures (the Event Book alone) and +$1,293 in the positioning's session bars (all three books). After the official figures landed, the positioning's capital would still have been the evening reading while the record used the official close; it now takes the same record [V]
+  - the page built with this change from the VM's records at 23:39 UTC on 24 Nov: AUM $300,821, return +0.43% time-weighted, P&L +$1,293 (Fixed Income −$68, Equity Cross-Asset +$1,600, Event −$239), every figure for 24 Nov an after-close reading, labelled; AUM equals the positioning's portfolio capital ($300,821) and the total P&L equals the key figures and the latest session's bars (+$1,293) [V]
+- source: `dashboard/build.py` @ `1a4987b` (before the change); `pending_reading`, `portfolio` and `reading_note` with their tests in `dashboard/tests/test_build.py` are in the commit that carries this entry; VM records `cef|c4/eod_equity.csv` and `<day>/reconcile.json` read 2026-11-24 ~18:35 ET; `docs/SYSTEM.md` §5
+- supports: §5
+- status: current
+
