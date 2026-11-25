@@ -6082,3 +6082,90 @@ that adds it does not exist when it is written.
 - source: `docs/SYSTEM.md` @ `4ab7ab4` (before the ruling); `CLAUDE.md` @ `4ab7ab4` (before the ruling); the rows and wording are in the commit that carries this entry
 - supports: §5
 - status: current
+
+### E-2026-11-24-60 · Result: the three paper books are deployed and traded cleanly on 24 Nov; the portfolio layer's sums agree with the accounts, and it leaves the events book outside the combined reads
+- kind: result
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - asked by the team lead: "make sure all our 3 sleeves are deployed porperly with no erros and overall portfolio layer is working as intended"; read 20:50 to 21:10 ET, read-only [V]
+  - core: `DRY_RUN=0` + `AUTO_ARMED`, no HALT; 8 orders, 8 filled; VERIFY PASS. C4: same arming; 10 orders, 10 filled; VERIFY PASS [V]
+  - events: all 8 sleeves decided on fresh shadow decisions; 205 orders sent, 0 rejected, 205 filled in full; the backup slot refused (exit 11); VERIFY PASS, ledger booked to 2026-11-24; the sleeves' ledger equals Alpaca's positions on all 222 symbols [V]
+  - the events book's 1.5× gross cap binds with every sleeve at a quarter size: every sleeve scaled by 0.9586, to a gross of 1.46× equity [V]
+  - HALVE/KILL (report) OK on both books, drawdown 1.60% (core) and 2.21% (C4) on the official series; `UNMEASURED` at every 22:00 decide, whose `would_on` is "refuse the decide" [V]
+  - the corporate-action gate (report) reads BLOCKING on every session on both books, from Alpaca rows with no symbol; none of the rows resolves to a held name [V]
+  - `ops.daily_page` sums core and C4 only; the public page's AUM $300,821 equals the three books' after-close readings summed, and its P&L +$1,293 their changes [V]
+  - C4 since 2026-11-03 (15 sessions): realised vol 17.53%/yr against an effective target of 7.56%; beta to its universe's median return −0.60 (correlation −0.85); its factor report's EQUITY line at −0.440 of equity, REVIEW on 14 of 14 dates [V]
+  - the vol raise's stops measured on the official series since 2026-11-03: core drawdown 1.13% (R1 10.14%), vol 5.85%/yr (R3 12.07%); C4 drawdown 2.43% (R1 10.04%), vol 17.53%/yr (R3 9.90%, judged at 60 sessions); neither due [V]
+  - the team lead's rulings by question prompt the same evening: C4 "Research a fix first"; late NAVs "Measure it first"; the VM reboot "Tonight around 23:00 ET"; this record "Yes, PR to main" [V]
+- source: `ops/orient.py` @ `b912a56`; `ops/daily_page.py` @ `b912a56`; `quantt/session/drawdown.py` @ `b912a56`; `results/ops/HEALTH_CHECK_2026-11-24.md` (in the commit that carries this entry); VM records read 2026-11-24 ~21:00 ET over ssh, not in the repository
+- supports: §4, §5
+- status: current
+
+### E-2026-11-24-62 · Result: late NAVs at the 22:00 decide. The core decided on a NAV that later changed on 22 of 28 sessions; C4's NAV-repeat mask trimmed held funds for 39% of its dollars traded since its opening build
+- kind: result
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - core, 28 sessions with the stale-NAV gate's record (as-of 2026-10-14 to 2026-11-23): at least one late NAV on 22; 4.9 of 13 funds repeated at the decide on average; 85 of 136 repeats (62%) later replaced by a different NAV in the VM's panel [V]
+  - core: size of the NAV error on the 85 late cases, median 24bp, 90th percentile 58bp, largest 131bp; $261,091 of $1,047,477 filled (25%) was in funds decided on a NAV that later changed [V]
+  - C4, 15 sessions (2026-11-04 to 2026-11-24): 13.8 of 74 funds repeated at the decide on average; 148 of 207 (71%) later replaced; $48,273 of $124,550 filled after the opening build (39%) trimmed held masked funds, $26,575 of it on NAVs that later changed [V]
+  - worst as-of weekday is Monday: core 7.0 repeated / 5.5 late, C4 27.3 / 18.0, on average [V]
+  - on the 2026-11-24 session: the core decided 7 of 13 funds on the previous session's NAV; C4 trimmed five held funds for $23,523 of the $37,874 it filled [V]
+  - not measured: when each NAV lands, and whether the later value is right (same source, no second source) [V]
+- source: `quantt/session/nav_gate.py` @ `b912a56`; `src/deploy/sleeves/cef_discount.py` @ `b912a56`; `results/ops/late_nav_2026-11-24/measure.py` and `results/ops/late_nav_2026-11-24/by_session.csv`; `results/ops/HEALTH_CHECK_2026-11-24.md` §4 (all in the commit that carries this entry); VM plans, fills and NAV panels copied read-only 2026-11-24 ~21:30 ET, not in the repository
+- supports: §4, §5
+- status: current
+
+### E-2026-11-24-63 · Rulings after the health check: research C4's equity tilt first; wait on repeated NAVs and decide as is at the final check; HALVE/KILL on the previous close; symbol-less corporate-action rows recorded, not blocking; the events cap to 1.6×; release after the half day
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings, by question prompt on 2026-11-24 after E-2026-11-24-60 and -62: C4 "Research a fix first"; late NAVs "Measure it first", then "Wait on repeated NAVs" and, at the final check, "Decide on it as is"; HALVE/KILL "Previous close, labelled"; corporate-action rows with no symbol and no CUSIP "Record, don't block"; the events gross cap "Raise the cap to 1.6x instead", after Alpaca's paper docs said a paper balance cannot be changed after creation; the release "After the half day"; the reboot "Tonight around 23:00 ET"; this record "Yes, PR to main")
+- source: `docs/SYSTEM.md` @ `b912a56` (§5, before the rows this commit adds); `results/ops/HEALTH_CHECK_2026-11-24.md` and `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry); https://docs.alpaca.markets/us/docs/paper-trading (fetched 2026-11-24)
+- supports: §5
+- status: current
+
+### E-2026-11-24-65 · Rulings: shadow-trade a SPY hedge on C4, in the shadow runner, with a read-only export of C4's plans; the live C4 book unchanged
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings, by question prompt on 2026-11-24 after the C4 research ruled by E-2026-11-24-63 and its independent review: "Shadow the full hedge"; and, asked where it runs, "In the shadow runner", chosen over C4's morning P&L report and C4's runner record; the research write-up is kept in the team lead's private repository under the same evening's ruling that new research stays private)
+- source: `docs/SYSTEM.md` @ `9fd8bc2` (§5, before the rows this commit adds); `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry)
+- supports: §5
+- status: current
+
+### E-2026-11-24-61 · Incident: the VM reboot ruled for about 23:00 ET did not run; the session's own scheduled step fires only while the session is idle, and it stayed busy until morning
+- kind: incident
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - the ruling: "Tonight around 23:00 ET", by question prompt on 2026-11-24; the step was a session-only scheduled job for 22:56, which runs only when the session is idle; the session was answering agents and question prompts until morning, so the job was still pending at 08:30 ET on 2026-11-25 and was cancelled then rather than reboot during a trading day [V]
+  - nothing else was affected. VM read at about 08:31 ET on 2026-11-25: clone at `release-20261124-17`; up 5 days 9 hours; `/var/run/reboot-required` still present; the 2026-11-25 plans decided for the core (13 orders) and C4 (6 orders), 0 refusals each; core, C4 and the events send each `DRY_RUN=0` with `AUTO_ARMED` present, as before [V]
+  - the team lead's ruling on 2026-11-25: reboot "With the weekend release" (E-2026-11-25-60) [V]
+  - the lesson: a step that must happen at a time is watched from the session, not left to a session-only timer [V]
+- source: `docs/SYSTEM.md` @ `61219ed` (§5, the reboot row); the VM read is ssh output of this session, not in the repository
+- supports: §5
+- status: current
+
+### E-2026-11-24-67 · Rulings on the runner build: the late-NAV wait ends at 06:00, no CEFConnect under `wait`, and corporate-action rows that name nothing are INFO in data QA
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (rulings, by question prompt on 2026-11-24 after the build of E-2026-11-24-63's changes showed that, with CEFConnect down, most decides would wait until 14:30: the wait's cutoff "At the first morning slot, 06:00", superseding "at the final check"; CEFConnect under `wait` "Stop reading it"; rows that name nothing in data QA "Show them as INFO". Built on branch `runner-rulings-20261124` and reviewed GO for the weekend release check)
+- source: `docs/SYSTEM.md` @ `61219ed` (§5, before the rows this commit adds); `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry)
+- supports: §5
+- status: current
+
+### E-2026-11-25-60 · Rulings: the reboot moves to the weekend release; the C4 hedge books stay off the public site; the C4 study goes to the private repository with its helper inside
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-25
+- figures:
+  - none (rulings, by question prompt on 2026-11-25: the missed reboot (E-2026-11-24-61) "With the weekend release"; the two simulated C4 hedge books on event-driven.quantt.ca "Keep them off the site"; the C4 study "Push; helper inside the study", committed to `simonjarviss/quantt-research` under `desk/` with `neutralise_row` in the study's own script, so this repository's harness is unchanged)
+- source: `docs/SYSTEM.md` @ `61219ed` (§5, before the rows this commit adds); `docs/SYSTEM.md` §5 "the health check of the three books" (in the commit that carries this entry)
+- supports: §5
+- status: current
