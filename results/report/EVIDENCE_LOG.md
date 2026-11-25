@@ -6056,3 +6056,37 @@ that adds it does not exist when it is written.
 - source: `dashboard/build.py` @ `89bc849` (before the change, `reading_note`, `positioning`); the change is in the commit that carries this entry, with `dashboard/layout.py`, `dashboard/site.py`, their tests and `docs/SYSTEM.md` §5; https://www.queensu.ca/brand-central/sites/bcwww/files/uploaded_files/Queens-University-Student-Group-Identification-Guidelines.pdf
 - supports: §5
 - status: current
+
+### E-2026-11-24-60 · Result: the three paper books are deployed and traded cleanly on 24 Nov; the portfolio layer's sums agree with the accounts, and it leaves the events book outside the combined reads
+- kind: result
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - asked by the team lead: "make sure all our 3 sleeves are deployed porperly with no erros and overall portfolio layer is working as intended"; read 20:50 to 21:10 ET, read-only [V]
+  - core: `DRY_RUN=0` + `AUTO_ARMED`, no HALT; 8 orders, 8 filled; VERIFY PASS. C4: same arming; 10 orders, 10 filled; VERIFY PASS [V]
+  - events: all 8 sleeves decided on fresh shadow decisions; 205 orders sent, 0 rejected, 205 filled in full; the backup slot refused (exit 11); VERIFY PASS, ledger booked to 2026-11-24; the sleeves' ledger equals Alpaca's positions on all 222 symbols [V]
+  - the events book's 1.5× gross cap binds with every sleeve at a quarter size: every sleeve scaled by 0.9586, to a gross of 1.46× equity [V]
+  - HALVE/KILL (report) OK on both books, drawdown 1.60% (core) and 2.21% (C4) on the official series; `UNMEASURED` at every 22:00 decide, whose `would_on` is "refuse the decide" [V]
+  - the corporate-action gate (report) reads BLOCKING on every session on both books, from Alpaca rows with no symbol; none of the rows resolves to a held name [V]
+  - `ops.daily_page` sums core and C4 only; the public page's AUM $300,821 equals the three books' after-close readings summed, and its P&L +$1,293 their changes [V]
+  - C4 since 2026-11-03 (15 sessions): realised vol 17.53%/yr against an effective target of 7.56%; beta to its universe's median return −0.60 (correlation −0.85); its factor report's EQUITY line at −0.440 of equity, REVIEW on 14 of 14 dates [V]
+  - the vol raise's stops measured on the official series since 2026-11-03: core drawdown 1.13% (R1 10.14%), vol 5.85%/yr (R3 12.07%); C4 drawdown 2.43% (R1 10.04%), vol 17.53%/yr (R3 9.90%, judged at 60 sessions); neither due [V]
+  - the team lead's rulings by question prompt the same evening: C4 "Research a fix first"; late NAVs "Measure it first"; the VM reboot "Tonight around 23:00 ET"; this record "Yes, PR to main" [V]
+- source: `ops/orient.py` @ `b912a56`; `ops/daily_page.py` @ `b912a56`; `quantt/session/drawdown.py` @ `b912a56`; `results/ops/HEALTH_CHECK_2026-11-24.md` (in the commit that carries this entry); VM records read 2026-11-24 ~21:00 ET over ssh, not in the repository
+- supports: §4, §5
+- status: current
+
+### E-2026-11-24-62 · Result: late NAVs at the 22:00 decide. The core decided on a NAV that later changed on 22 of 28 sessions; C4's NAV-repeat mask trimmed held funds for 39% of its dollars traded since its opening build
+- kind: result
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - core, 28 sessions with the stale-NAV gate's record (as-of 2026-10-14 to 2026-11-23): at least one late NAV on 22; 4.9 of 13 funds repeated at the decide on average; 85 of 136 repeats (62%) later replaced by a different NAV in the VM's panel [V]
+  - core: size of the NAV error on the 85 late cases, median 24bp, 90th percentile 58bp, largest 131bp; $261,091 of $1,047,477 filled (25%) was in funds decided on a NAV that later changed [V]
+  - C4, 15 sessions (2026-11-04 to 2026-11-24): 13.8 of 74 funds repeated at the decide on average; 148 of 207 (71%) later replaced; $48,273 of $124,550 filled after the opening build (39%) trimmed held masked funds, $26,575 of it on NAVs that later changed [V]
+  - worst as-of weekday is Monday: core 7.0 repeated / 5.5 late, C4 27.3 / 18.0, on average [V]
+  - on the 2026-11-24 session: the core decided 7 of 13 funds on the previous session's NAV; C4 trimmed five held funds for $23,523 of the $37,874 it filled [V]
+  - not measured: when each NAV lands, and whether the later value is right (same source, no second source) [V]
+- source: `quantt/session/nav_gate.py` @ `b912a56`; `src/deploy/sleeves/cef_discount.py` @ `b912a56`; `results/ops/late_nav_2026-11-24/measure.py` and `results/ops/late_nav_2026-11-24/by_session.csv`; `results/ops/HEALTH_CHECK_2026-11-24.md` §4 (all in the commit that carries this entry); VM plans, fills and NAV panels copied read-only 2026-11-24 ~21:30 ET, not in the repository
+- supports: §4, §5
+- status: current
