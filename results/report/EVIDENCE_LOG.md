@@ -5875,3 +5875,13 @@ that adds it does not exist when it is written.
 - source: `quantt/deploy/install_vm.py` @ `428d588` (`ORIGIN_URLS`, `clone_origin`); `docs/RUNBOOK.md` 8.14 @ `d11bc26`; `docs/ROADMAP.md` 7.40 and 7.41 @ `d11bc26`; the release-check workflow's result and the VM's installer output, read on 2026-11-24
 - supports: §5
 - status: current. The repository is still public. The switch waits on two organisation settings an owner must turn on: deploy keys (the VM's two keys exist on the VM, and GitHub refused to add them: "Deploy keys are disabled for this repository") and private forking (E-2026-11-24-25)
+
+### E-2026-11-24-40 · Ruling: the repository stays public for now; the switch to private is withdrawn, and bootstrap clones over https again
+- kind: ruling
+- era: ALPACA
+- date: 2026-11-24
+- figures:
+  - none (a ruling)
+- source: `docs/SYSTEM.md` §5 "Team lead, 2026-11-24 — a private repository" @ `7ce6fc1` (the "Go private" row this ruling supersedes); `quantt/deploy/vm/bootstrap.sh` @ `7ce6fc1` (the ssh `ORIGIN` this entry's commit moves back to https); `docs/RUNBOOK.md` 8.13 and 8.14 @ `7ce6fc1`
+- supports: §5
+- status: supersedes the "go private" part of E-2026-11-24-25. The team lead: "we are gonna keep it public for now", given after the VM install of release-20261124-17 (E-2026-11-24-27), while deploy keys and private forking still waited on an org owner. Kept from the preparation: the site without GitHub (release-20261124-16), the team lead's fork `simonjarviss/CreditTrading` private, the installer accepting both spellings (release-20261124-17, which changes nothing while every clone is on https), and an unregistered `~/.ssh/github_deploy` for each VM user. Analysts keep write access and the rulesets stay enforced. `docs/ROADMAP.md` 7.40 and 7.41 are parked

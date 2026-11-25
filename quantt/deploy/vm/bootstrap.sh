@@ -53,10 +53,10 @@
 # stubs); executing it runs main.
 set -euo pipefail
 
-# = install_vm.ORIGIN_URL_SSH. The repository is private (team lead, 2026-11-24), so the
-# quantt user reads it over ssh with its read-only deploy key, which must exist before this
-# runs (docs/RUNBOOK.md 8.14). Without it the clone fails with "Permission denied (publickey)".
-ORIGIN="git@github.com:quanttqueensu/CreditTrading.git"
+# = install_vm.ORIGIN_URL. Anonymous https, because the repository is public: the team lead
+# kept it public on 2026-11-24 ("we are gonna keep it public for now"), so there is no deploy
+# key to clone with. If it goes private, this moves to install_vm.ORIGIN_URL_SSH (docs/RUNBOOK.md 8.14).
+ORIGIN="https://github.com/quanttqueensu/CreditTrading.git"
 SVC_USER="quantt"
 HOME_DIR="/home/${SVC_USER}"
 PROD="${HOME_DIR}/prod/quantt-alpaca"

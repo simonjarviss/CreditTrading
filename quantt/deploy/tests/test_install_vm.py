@@ -1445,7 +1445,7 @@ def test_bootstrap_builds_the_layout_the_installer_expects():
     assert _sh_var("PROD").replace("${HOME_DIR}", str(home)) == str(lay.prod_dir)
     assert Path(_sh_var("VENV").replace("${HOME_DIR}", str(home))) / "bin" / "python" \
         == lay.venv_python
-    assert _sh_var("ORIGIN") == iv.ORIGIN_URL_SSH          # the repository is private (RUNBOOK 8.14)
+    assert _sh_var("ORIGIN") == iv.ORIGIN_URL              # public: anonymous https (RUNBOOK 8.14)
     assert _sh_var("TZ_NAME") == iv.REQUIRED_TZ
 
 
