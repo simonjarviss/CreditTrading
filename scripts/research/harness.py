@@ -20,7 +20,11 @@ backtest-infrastructure research, 3-0 verified:
     2. policy    how much of the target to trade (`band_frontier.band`,
                  `calendar`, `band_gross_capped`)
     3. held      `held(H)` = H.shift(EXEC_LAG). This is the ONLY place the lag
-                 exists.
+                 exists. A book that does not trade at the next close (it
+                 decides and fills inside a session, or holds from one auction
+                 to the next) is scored by `evaluate_window` instead, which takes
+                 no lag: it takes each row's decision, entry and exit times and
+                 asserts them.
     4. gross     `evaluate(H, R)["pnl"]`
     5. costs     `cost_grid`: turnover x bp, one labelled column per grid point,
                  never folded into gross (H3)
@@ -77,14 +81,21 @@ COST_GRID_BP = (5, 15, 30)
 
 
 class LookaheadError(ValueError):
-    """A target row changed when data after its own date was removed."""
+    """A weight that could have used data from after its own decision.
+
+    Raised by `truncation_check` when a target row changes once the data after its
+    date is removed, and by `evaluate_window` when a held row's declared inputs, its
+    entry or its decision time are not where the window convention needs them (an
+    input at or after the decision, an entry at or before it, a decision on another
+    row's session). Both check what the caller's code and declared times say; neither
+    can see a price whose own timestamp differs from the one declared."""
 
 
 # ---------------------------------------------------------------------------
 # Stage 3-4: the accounting. One definition of the lag.
 # ---------------------------------------------------------------------------
 
-def _check_frames(H: pd.DataFrame, R: pd.DataFrame) -> None:
+def _check_frames(H: pd.DataFrame, R: pd.DataFrame, *, same_row: bool = False) -> None:
     """Refuse frames the accounting would otherwise misread without a sound.
 
     `H` with a NaN is refused because `.fillna(0.0)` below exists only to empty
@@ -93,6 +104,12 @@ def _check_frames(H: pd.DataFrame, R: pd.DataFrame) -> None:
     HOLDS the name is refused because pandas' `sum(axis=1)` skips it, and that
     books zero P&L for a day whose return is unknown. A NaN in `R` where nothing
     is held is fine: the book earned nothing there either way.
+
+    `same_row` (added for `evaluate_window`, which shares these refusals rather than
+    keeping a copy): the cells held are H's own non-zero cells on the same row, not
+    `held(H)`, and the EXEC_LAG row count is not required, because a window book
+    has no lag. Every other caller leaves it False and gets exactly the checks
+    above, in the same order, with the same messages.
     """
     if not isinstance(H, pd.DataFrame) or not isinstance(R, pd.DataFrame):
         raise TypeError("H and R must be DataFrames (dates x names)")
@@ -102,13 +119,13 @@ def _check_frames(H: pd.DataFrame, R: pd.DataFrame) -> None:
         raise ValueError("H and R must share one column set, in one order")
     if not H.index.is_monotonic_increasing or not H.index.is_unique:
         raise ValueError("the index must be sorted and unique")
-    if len(H) <= EXEC_LAG:
+    if not same_row and len(H) <= EXEC_LAG:
         raise ValueError(f"need more than {EXEC_LAG} rows, got {len(H)}")
     if H.isna().any().any():
         raise ValueError("H holds NaN; every weight must be decided (0.0 for flat)")
     if not np.isfinite(H.to_numpy(dtype=float)).all():
         raise ValueError("H holds an infinite weight")
-    held_mask = held(H).ne(0.0)
+    held_mask = H.ne(0.0) if same_row else held(H).ne(0.0)
     unknown = R.isna() & held_mask
     if unknown.any().any():
         i, j = np.argwhere(unknown.to_numpy())[0]
@@ -191,6 +208,146 @@ def label(R: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
+# A window inside or across sessions: the one convention here that is not
+# shift(2).
+# ---------------------------------------------------------------------------
+
+# The exchange clock that session dates are read on. A window's decision and
+# exit times are converted to this zone to find the session each falls on.
+SESSION_TZ = "America/New_York"
+
+
+def _session_date(ts: pd.Series) -> pd.Series:
+    """Each tz-aware timestamp's calendar date in SESSION_TZ, as a naive midnight."""
+    return ts.dt.tz_convert(SESSION_TZ).dt.normalize().dt.tz_localize(None)
+
+
+def evaluate_window(H: pd.DataFrame, R: pd.DataFrame, *, info: pd.DataFrame,
+                    decided: pd.Series, entered: pd.Series, exited: pd.Series) -> dict:
+    """Score a book that decides inside a session and holds over a stated window.
+
+    WHY. `evaluate` scores the close convention: decide at t, fill at t+1's close,
+    earn t+2 (EXEC_LAG, which is not a knob). A book that decides at 15:29 on the
+    day's move so far, buys at 15:30's quote and sells in that session's closing
+    auction cannot be scored there; nor can one that buys in t's closing auction
+    and sells in t+1's opening auction. So this convention is declared row by row,
+    as timestamps, and asserted.
+
+    INPUTS. One row per session of the book, flat rows included.
+      H        weights decided on each row's session (0.0 for flat).
+      R        each name's return from its price at entered[t] to its price at
+               exited[t]: the entry and exit prices only.
+      info     for each cell, the time of the newest datum its weight was built
+               from (tz-aware).
+      decided, entered, exited   one tz-aware time per row.
+    A row whose weights are all zero holds nothing and earns nothing: its times
+    and its info may be NaT. A row that holds anything must give all of them.
+
+    REFUSALS, each naming the first offending row:
+      * `_check_frames(same_row=True)`: frames not aligned, an index not sorted and
+        unique, a NaN or infinite weight, a NaN return on a held cell;
+      * an index that is not session dates (tz-naive midnights);
+      * a time series not on H's index, not tz-aware, or NaT on a held row; info
+        not on H's index and columns, not tz-aware, or NaT on a held cell;
+      * decided[t] not on row t's session date in SESSION_TZ. Without this, a set
+        of times shifted by one row passes every other check: the shift(1) bug of
+        the close convention, in this one's clothing;
+      * on a held row, decided >= entered, or entered >= exited;
+      * a held row's window ending after the next held row's entry (two rows
+        would hold the same capital at once);
+      * a held weight whose info is at or after its decision;
+      * a window ending on a date that is not a session of H's index. A window may
+        end after the last row; that date is added to `pnl`.
+
+    WHAT IT DOES NOT CHECK. It checks the times the caller declares, not each
+    price's own timestamp. A caller that declares a quote time other than the one
+    its code used, or that prices R from a print other than the one at `exited`,
+    passes. The declared times are the contract; the caller proves R matches them,
+    for instance by recomputing sample rows from the raw prices.
+
+    OUTPUT. `pnl` is dated by the session each window ENDS on (exited's date in
+    SESSION_TZ), as `evaluate` dates P&L by the session it is earned on: a window
+    entered at t's close and exited at t+1's open is t+1's P&L. A session on which
+    no window ends earns 0.0. `pnl_by_row` is the same P&L on its decision row, and
+    `exit_session` the session each held row's window ends on. gross_sr, ann_ret
+    and vol are annualised over every session of `pnl` (H's rows, plus any exit
+    date after the last row), so the caller must pass the whole session index and
+    not only the rows that hold something: a book on one session in five, passed
+    as its held rows alone, would have its return and Sharpe overstated about
+    five-fold and two-fold. Turnover counts both legs of each row (in at the entry,
+    out at the exit), 2 x gross, annualised the same way.
+    """
+    _check_frames(H, R, same_row=True)
+    idx = H.index
+    if not isinstance(idx, pd.DatetimeIndex) or idx.tz is not None or not (idx == idx.normalize()).all():
+        raise ValueError("H's index must be session dates: tz-naive midnights")
+    held_cell = H.ne(0.0)
+    held_row = held_cell.any(axis=1)
+    for name, s in (("decided", decided), ("entered", entered), ("exited", exited)):
+        if not isinstance(s, pd.Series) or not s.index.equals(idx):
+            raise ValueError(f"{name} must be a Series on H's index")
+        if not isinstance(s.dtype, pd.DatetimeTZDtype):
+            raise ValueError(f"{name} must hold tz-aware timestamps")
+        miss = s.isna() & held_row
+        if miss.any():
+            raise ValueError(f"{name} is NaT on {int(miss.sum())} row(s) that hold a position, "
+                             f"first {idx[miss.to_numpy()][0].date()}")
+    if not isinstance(info, pd.DataFrame) or not (info.index.equals(idx) and info.columns.equals(H.columns)):
+        raise ValueError("info must be a frame on H's index and columns")
+    naive = [c for c, dt_ in info.dtypes.items() if not isinstance(dt_, pd.DatetimeTZDtype)]
+    if naive:
+        raise ValueError(f"info must hold tz-aware timestamps in every column; {naive[:3]} do not")
+    hr = held_row.to_numpy()
+    rows = idx[hr]
+    d, e, x = decided[hr], entered[hr], exited[hr]
+    off_day = _session_date(d).to_numpy() != rows.to_numpy()
+    if off_day.any():
+        k = int(np.argmax(off_day))
+        raise LookaheadError(f"row {rows[k].date()}: decided {d.iloc[k]} is not on that row's session "
+                             f"in {SESSION_TZ}; the times are not this row's")
+    if (d >= e).any():
+        k = int(np.argmax((d >= e).to_numpy()))
+        raise LookaheadError(f"row {rows[k].date()}: entered {e.iloc[k]} is not after decided {d.iloc[k]}")
+    if (e >= x).any():
+        k = int(np.argmax((e >= x).to_numpy()))
+        raise ValueError(f"row {rows[k].date()}: exited {x.iloc[k]} is not after entered {e.iloc[k]}")
+    nxt = e.shift(-1)
+    over = ((x > nxt) & nxt.notna()).to_numpy()
+    if over.any():
+        k = int(np.argmax(over))
+        raise ValueError(f"row {rows[k].date()}: its window ends at {x.iloc[k]}, after the next held "
+                         f"row's entry {nxt.iloc[k]}")
+    if (held_cell & info.isna()).any().any():
+        i, j = np.argwhere((held_cell & info.isna()).to_numpy())[0]
+        raise LookaheadError(f"row {idx[i].date()} {H.columns[j]}: info is NaT on a held cell; every "
+                             "weight must say how old its newest datum is")
+    late = held_cell & info.ge(decided, axis=0)
+    if late.any().any():
+        i, j = np.argwhere(late.to_numpy())[0]
+        raise LookaheadError(f"row {idx[i].date()} {H.columns[j]}: built from data at {info.iat[i, j]}, "
+                             f"not before its decision at {decided.iloc[i]}")
+    exit_session = pd.Series(_session_date(x).to_numpy(), index=rows, name="exit_session")
+    inside = exit_session[exit_session <= idx[-1]]
+    stray = ~inside.isin(idx)
+    if stray.any():
+        k = inside.index[stray.to_numpy()][0]
+        raise ValueError(f"row {k.date()}: its window ends on {inside[k].date()}, which is not a session "
+                         "of H's index")
+    pnl_by_row = (H * R.where(held_cell, 0.0)).sum(axis=1)
+    dates = idx.union(pd.DatetimeIndex(exit_session[exit_session > idx[-1]].unique()))
+    pnl = pd.Series(0.0, index=dates)
+    if hr.any():
+        by_exit = pnl_by_row[hr].groupby(exit_session.to_numpy()).sum()
+        pnl.loc[by_exit.index] += by_exit.to_numpy()
+    turn = 2.0 * H.abs().sum(axis=1)
+    sd = pnl.std()
+    return dict(gross_sr=pnl.mean() / sd * np.sqrt(PERIODS) if sd > 0 else np.nan,
+                ann_ret=pnl.mean() * PERIODS, vol=sd * np.sqrt(PERIODS),
+                turn=turn.sum() * PERIODS / len(pnl), turn_series=turn,
+                pnl=pnl, pnl_by_row=pnl_by_row, exit_session=exit_session)
+
+
+# ---------------------------------------------------------------------------
 # Stage 5 and 7: costs, eras, fit and holdout. Labelled, never mixed.
 # ---------------------------------------------------------------------------
 
@@ -229,6 +386,10 @@ def report(H: pd.DataFrame, R: pd.DataFrame, *, bps: Iterable[float] = COST_GRID
 
     Borrow is not here. It scales with holdings, not turnover (H4), so it is
     charged by `band_frontier.borrow_charge` and reported as its own line.
+
+    There is no path here for a window book: `report` calls `evaluate`, which is
+    shift(2). A book scored by `evaluate_window` takes its statistics from that
+    function's own output, and its splits and eras from its `pnl`, by the caller.
     """
     bps = tuple(bps)
     res = evaluate(H, R)

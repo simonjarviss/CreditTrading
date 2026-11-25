@@ -267,3 +267,214 @@ def test_calendar_time_gross_is_one_after_netting():
     assert W["A"].iloc[2:5].eq(0).all() and W["B"].iloc[2:5].eq(1.0).all()
     cancel = pd.DataFrame({"decided": [idx[2]] * 2, "ticker": ["A", "A"], "side": [1, -1]})
     assert hz.event_weights(cancel, idx, ["A", "B"], hold=3, sizing="calendar_time").eq(0).all().all()
+
+
+# ---------------------------------------------------------------------------
+# evaluate_window: a book that decides inside a session and holds over a stated
+# window (for example 15:30 to the closing auction, or one close to the next
+# open). Each refusal test below was checked to fail with that refusal deleted
+# from evaluate_window, and the flat-row and dating tests to fail against the
+# first version of the function (which took only held rows and dated P&L by the
+# decision row).
+# ---------------------------------------------------------------------------
+
+def _ny(days, hh, mm, day_offset=0):
+    return pd.Series([pd.Timestamp(f"{(d + pd.Timedelta(days=day_offset)).date()} {hh:02d}:{mm:02d}",
+                                   tz="America/New_York") for d in days], index=days)
+
+
+def _window_frames(n=40, k=3, seed=1):
+    """A 15:30-to-close book: decide 15:29, enter 15:30, exit 16:00, inputs from 15:28."""
+    rng = np.random.default_rng(seed)
+    days = pd.bdate_range("2024-01-02", periods=n)
+    cols = [f"N{i}" for i in range(k)]
+    H = pd.DataFrame(rng.choice([-0.5, 0.5], size=(n, k)), index=days, columns=cols)
+    R = pd.DataFrame(rng.normal(0, 0.003, (n, k)), index=days, columns=cols)
+    info = pd.DataFrame({c: _ny(days, 15, 28) for c in cols})
+    return H, R, info, _ny(days, 15, 29), _ny(days, 15, 30), _ny(days, 16, 0)
+
+
+def _ev(H, R, info, d, e, x):
+    return hz.evaluate_window(H, R, info=info, decided=d, entered=e, exited=x)
+
+
+def test_window_earns_its_own_row_and_dates_it_on_that_session():
+    H, R, info, d, e, x = _window_frames()
+    res = _ev(H, R, info, d, e, x)
+    want = (H * R).sum(axis=1)
+    assert res["pnl"].index.equals(H.index)
+    assert np.allclose(res["pnl"].to_numpy(), want.to_numpy())
+    assert np.allclose(res["pnl_by_row"].to_numpy(), want.to_numpy())
+    assert (res["exit_session"] == H.index).all()
+    # moving R by one row changes the P&L: the window is the row's own return, not a lagged one
+    res2 = _ev(H, R.shift(1).fillna(0.0), info, d, e, x)
+    assert not np.allclose(res["pnl"].to_numpy(), res2["pnl"].to_numpy())
+    assert np.isclose(res["turn"], 2.0 * H.abs().sum(axis=1).sum() * hz.PERIODS / len(H))
+    assert hz.EXEC_LAG == 2                                     # the close convention is untouched
+
+
+def test_window_takes_flat_rows_and_annualises_over_every_session():
+    H, R, info, d, e, x = _window_frames(n=100)
+    flat = np.arange(len(H)) % 5 != 0                           # a position on one session in five
+    H.loc[flat] = 0.0
+    for s in (d, e, x):
+        s[flat] = pd.NaT                                        # flat rows need no times
+    info.loc[flat] = pd.NaT
+    res = _ev(H, R, info, d, e, x)
+    p = (H * R).sum(axis=1)
+    assert len(res["pnl"]) == len(H)
+    assert np.isclose(res["ann_ret"], p.mean() * hz.PERIODS)
+    assert np.isclose(res["gross_sr"], p.mean() / p.std() * np.sqrt(hz.PERIODS))
+    held_only = p[~flat]
+    assert not np.isclose(res["ann_ret"], held_only.mean() * hz.PERIODS)
+    assert np.isclose(res["turn"], 2.0 * H.abs().sum(axis=1).sum() * hz.PERIODS / len(H))
+
+
+def test_window_dates_an_overnight_window_on_the_session_it_ends():
+    H, R, info, d, e, x = _window_frames(n=30)
+    # enter at the close, exit at the next session's 09:30 open
+    entered = _ny(H.index, 16, 0)
+    nxt = list(H.index[1:]) + [H.index[-1] + pd.offsets.BDay(1)]
+    exited = pd.Series([pd.Timestamp(f"{n_.date()} 09:30", tz="America/New_York") for n_ in nxt], index=H.index)
+    res = _ev(H, R, info, d, entered, exited)
+    p = (H * R).sum(axis=1)
+    assert (res["exit_session"].to_numpy() == pd.DatetimeIndex(nxt).to_numpy()).all()
+    assert res["pnl"].iloc[0] == 0.0                            # nothing ends on the first session
+    assert np.allclose(res["pnl"].iloc[1:].to_numpy(), p.to_numpy())
+    assert res["pnl"].index[-1] == nxt[-1]                      # the last window ends after the last row
+    assert np.allclose(res["pnl_by_row"].to_numpy(), p.to_numpy())
+
+
+def test_window_refuses_times_shifted_by_one_row():
+    H, R, info, d, e, x = _window_frames()
+    for shift in (1, -1):                                       # every time one session late, or early
+        moved = [s.shift(shift) for s in (d, e, x)]
+        info_m = info.shift(shift)
+        for s in moved:
+            s.iloc[0 if shift == 1 else -1] = s.iloc[1 if shift == 1 else -2] - pd.Timedelta(days=shift)
+        info_m.iloc[0 if shift == 1 else -1] = info_m.iloc[1 if shift == 1 else -2] - pd.Timedelta(days=shift)
+        with pytest.raises(hz.LookaheadError, match="not on that row's session"):
+            _ev(H, R, info_m, *moved)
+
+
+def test_window_refuses_an_index_that_is_not_session_dates():
+    H, R, info, d, e, x = _window_frames()
+    idx = H.index + pd.Timedelta(hours=16)
+    H2, R2, info2 = H.set_axis(idx), R.set_axis(idx), info.set_axis(idx)
+    with pytest.raises(ValueError, match="session dates"):
+        _ev(H2, R2, info2, d.set_axis(idx), e.set_axis(idx), x.set_axis(idx))
+
+
+def test_window_refuses_a_weight_built_from_data_at_its_decision_time():
+    H, R, info, d, e, x = _window_frames()
+    info.iat[3, 1] = d.iloc[3]                                  # equal is already too late
+    with pytest.raises(hz.LookaheadError, match="not before its decision"):
+        _ev(H, R, info, d, e, x)
+
+
+def test_window_refuses_a_held_cell_with_no_info_time():
+    H, R, info, d, e, x = _window_frames()
+    info.iat[5, 0] = pd.NaT
+    with pytest.raises(hz.LookaheadError, match="info is NaT"):
+        _ev(H, R, info, d, e, x)
+
+
+def test_window_ignores_info_on_cells_it_does_not_hold():
+    H, R, info, d, e, x = _window_frames()
+    H.iat[4, 2] = 0.0
+    info.iat[4, 2] = x.iloc[4]                                  # a future datum on a flat cell is harmless
+    _ev(H, R, info, d, e, x)
+
+
+def test_window_refuses_a_held_row_with_no_time():
+    for which in range(3):
+        H, R, info, d, e, x = _window_frames()
+        times = [d, e, x]
+        times[which].iloc[6] = pd.NaT
+        with pytest.raises(ValueError, match="NaT on 1 row"):
+            _ev(H, R, info, *times)
+
+
+def test_window_refuses_an_entry_at_or_before_the_decision():
+    H, R, info, d, e, x = _window_frames()
+    e.iloc[5] = d.iloc[5]
+    with pytest.raises(hz.LookaheadError, match="not after decided"):
+        _ev(H, R, info, d, e, x)
+
+
+def test_window_refuses_overlapping_and_backward_windows():
+    H, R, info, d, e, x = _window_frames()
+    x2 = x.copy(); x2.iloc[3] = e.iloc[4] + pd.Timedelta(minutes=1)
+    with pytest.raises(ValueError, match="after the next held row's entry"):
+        _ev(H, R, info, d, e, x2)
+    x3 = x.copy(); x3.iloc[3] = e.iloc[3]
+    with pytest.raises(ValueError, match="not after entered"):
+        _ev(H, R, info, d, e, x3)
+
+
+def test_window_refuses_a_window_that_ends_off_the_session_index():
+    H, R, info, d, e, x = _window_frames()
+    x2 = x.copy(); x2.iloc[3] = pd.Timestamp(f"{(H.index[3] + pd.Timedelta(days=1)).date()} 09:30", tz="America/New_York")
+    H2 = H.drop(index=H.index[4]); R2 = R.drop(index=H.index[4]); info2 = info.drop(index=H.index[4])
+    dd, ee, xx = (s.drop(index=H.index[4]) for s in (d, e, x2))
+    with pytest.raises(ValueError, match="not a session"):
+        _ev(H2, R2, info2, dd, ee, xx)
+
+
+def test_window_refuses_naive_times():
+    H, R, info, d, e, x = _window_frames()
+    for which in range(3):
+        times = [d, e, x]
+        times[which] = times[which].dt.tz_localize(None)
+        with pytest.raises(ValueError, match="tz-aware"):
+            _ev(H, R, info, *times)
+    with pytest.raises(ValueError, match="tz-aware"):
+        _ev(H, R, info.apply(lambda s: s.dt.tz_localize(None)), d, e, x)
+
+
+def test_window_refuses_inputs_off_the_book_index():
+    H, R, info, d, e, x = _window_frames()
+    with pytest.raises(ValueError, match="on H's index"):
+        _ev(H, R, info, d.iloc[1:], e, x)
+    with pytest.raises(ValueError, match="on H's index"):
+        _ev(H, R, info, d, e, x.set_axis(x.index + pd.Timedelta(days=1)))
+    with pytest.raises(ValueError, match="index and columns"):
+        _ev(H, R, info.drop(columns=info.columns[0]), d, e, x)
+
+
+def test_window_refuses_misaligned_unsorted_and_infinite_frames():
+    H, R, info, d, e, x = _window_frames()
+    with pytest.raises(ValueError, match="one column set"):
+        _ev(H, R[list(reversed(R.columns))], info, d, e, x)
+    with pytest.raises(ValueError, match="one index"):
+        _ev(H, R.iloc[::-1], info, d, e, x)
+    rev = H.index[::-1]
+    with pytest.raises(ValueError, match="sorted and unique"):
+        _ev(H.loc[rev], R.loc[rev], info.loc[rev], d.loc[rev], e.loc[rev], x.loc[rev])
+    dup = H.index[[0, 0] + list(range(2, len(H)))]
+    with pytest.raises(ValueError, match="sorted and unique"):
+        _ev(H.loc[dup], R.loc[dup], info.loc[dup], d.loc[dup], e.loc[dup], x.loc[dup])
+    H2 = H.copy(); H2.iat[0, 0] = np.inf
+    with pytest.raises(ValueError, match="infinite"):
+        _ev(H2, R, info, d, e, x)
+
+
+def test_window_refuses_nan_returns_and_nan_weights():
+    H, R, info, d, e, x = _window_frames()
+    R2 = R.copy(); R2.iat[2, 1] = np.nan
+    with pytest.raises(ValueError, match="the book holds"):
+        _ev(H, R2, info, d, e, x)
+    H2 = H.copy(); H2.iat[0, 0] = np.nan
+    with pytest.raises(ValueError, match="holds NaN"):
+        _ev(H2, R, info, d, e, x)
+
+
+def test_window_shares_check_frames_and_leaves_its_default_path_alone():
+    H, R = _panel(n=10, k=3)
+    R.iloc[1, 0] = np.nan                       # held by H's own row 1, but not by held(H) on row 1
+    hz._check_frames(H, R)                      # the default path looks EXEC_LAG rows back: fine
+    with pytest.raises(ValueError, match="the book holds"):
+        hz._check_frames(H, R, same_row=True)
+    with pytest.raises(ValueError, match="need more than"):
+        hz._check_frames(H.iloc[:2], R.iloc[:2])
+    hz._check_frames(H.iloc[:2].fillna(0.0), R.iloc[:2].fillna(0.0), same_row=True)
